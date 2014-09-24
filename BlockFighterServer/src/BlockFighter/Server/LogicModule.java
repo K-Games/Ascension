@@ -26,6 +26,7 @@ public class LogicModule extends Thread{
     private TestMap map;
     private ConcurrentLinkedQueue<Player> pAddQueue = new ConcurrentLinkedQueue<>();
     private ConcurrentLinkedQueue<byte[]> pMoveQueue = new ConcurrentLinkedQueue<>();
+    private  ConcurrentLinkedQueue<byte[]> knockQueue = new ConcurrentLinkedQueue<>();
     private byte numPlayers = 0;
     
     /**
@@ -127,7 +128,17 @@ public class LogicModule extends Thread{
     public void queuePlayerMove(byte[] data) {
         pMoveQueue.add(data);
     }
-
+    
+    /**
+     * Queue move update for a player.
+     * Data is only referenced here.
+     * Data to be processed in the queue later.
+     * @param data Bytes to be processed - 1:Index, 2:direction, 3:1 = true, 0 = false
+     */
+    public void queueKnockback(byte[] data) {
+        knockQueue.add(data);
+    }
+    
     private void processQueues(){
         while (!pAddQueue.isEmpty()) {
             Player newPlayer = pAddQueue.remove();
@@ -139,6 +150,15 @@ public class LogicModule extends Thread{
             byte[] data = pMoveQueue.remove();
             if (players[data[1]] == null) continue;
             players[data[1]].setMove(data[2], data[3] == 1);
+        }
+        
+        while (!knockQueue.isEmpty()) {
+            byte[] data = knockQueue.remove();
+            if (players[data[1]] == null) continue;
+            double x = 0;
+            if (players[data[1]].getFacing() == Globals.LEFT) x = 8; else x = -8;
+            
+            players[data[1]].setKnockback(500000000, x, -8);
         }
     }
     

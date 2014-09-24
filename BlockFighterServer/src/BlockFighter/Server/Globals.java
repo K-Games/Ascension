@@ -24,11 +24,14 @@ public class Globals {
     
     public final static double GRAVITY = 0.35, MAX_FALLSPEED = 11.5;
     
-    public final static int NUM_PLAYER_STATE = 3;
+    public final static int NUM_PLAYER_STATE = 5;
     public final static byte
             PLAYER_STATE_STAND = 0x00,
             PLAYER_STATE_WALK = 0x01,
-            PLAYER_STATE_JUMP = 0x02;
+            PLAYER_STATE_JUMP = 0x02,
+            PLAYER_STATE_STUN = 0x03,
+            PLAYER_STATE_KNOCKBACK = 0x04;
+    
     
     //Packet globals
     public final static int PACKET_MAX_SIZE = 128;
@@ -57,5 +60,6 @@ public class Globals {
             DATA_SET_PLAYER_MOVE = 0x03,
             DATA_GET_PLAYER_POS = 0x04,
             DATA_SET_PLAYER_FACING = 0x05,
-            DATA_SET_PLAYER_STATE = 0x06;
+            DATA_SET_PLAYER_STATE = 0x06,
+            DATA_KNOCK_TEST = 0x07;
 }

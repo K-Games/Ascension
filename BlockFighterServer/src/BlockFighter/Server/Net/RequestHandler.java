@@ -42,14 +42,15 @@ public class RequestHandler extends Thread{
         InetAddress address = requestPacket.getAddress();
         int port = requestPacket.getPort();
         switch (dataType){
-            case Globals.DATA_LOGIN: requestLogin(address, port); break;
-            case Globals.DATA_GET_ALL_PLAYER: requestGetAllPlayer(address, port); break;
-            case Globals.DATA_SET_PLAYER_MOVE: requestSetPlayerMove(data); break;
-            case Globals.DATA_PING: requestPing(address, port, data); break;
+            case Globals.DATA_LOGIN: receiveLogin(address, port); break;
+            case Globals.DATA_GET_ALL_PLAYER: receiveGetAllPlayer(address, port); break;
+            case Globals.DATA_SET_PLAYER_MOVE: receiveSetPlayerMove(data); break;
+            case Globals.DATA_PING: receiveGetPing(address, port, data); break;
+            case Globals.DATA_KNOCK_TEST: receiveKnockTest(data); break;
         }
     }
     
-    private void requestPing(InetAddress address, int port, byte[] data){
+    private void receiveGetPing(InetAddress address, int port, byte[] data){
         //Buffer header
         byte[] bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_BYTE];
         //Index
@@ -58,7 +59,11 @@ public class RequestHandler extends Thread{
         broadcaster.sendPlayer(bytes, address, port);
     }
     
-    private void requestLogin(InetAddress address, int port){
+    private void receiveKnockTest(byte[] data){
+        logic.queueKnockback(data);
+    }
+    
+    private void receiveLogin(InetAddress address, int port){
         System.out.println("DATA_LOGIN");
         byte freeIndex = logic.getNextIndex();
         
@@ -100,7 +105,7 @@ public class RequestHandler extends Thread{
         broadcaster.sendAll(bytes);
     }
     
-    private void requestGetAllPlayer(InetAddress address, int port){
+    private void receiveGetAllPlayer(InetAddress address, int port){
         Player[] players = Arrays.copyOf(logic.getPlayers(), logic.getPlayers().length);
         for (Player player : players) {
             if (player == null) continue;
@@ -137,7 +142,7 @@ public class RequestHandler extends Thread{
         }
     }
     
-    private void requestSetPlayerMove(byte[] data){
+    private void receiveSetPlayerMove(byte[] data){
         logic.queuePlayerMove(data);
     }
 }

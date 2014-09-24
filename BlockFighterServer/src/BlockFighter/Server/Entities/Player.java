@@ -16,7 +16,7 @@ import java.net.InetAddress;
  * @author Ken
  */
 public class Player extends Thread {
-    private byte index;
+    private final byte index;
     private double x, y, ySpeed, xSpeed;
     private boolean[] isMove = new boolean[4];
     private boolean isFalling = false, isJumping = false;
@@ -24,10 +24,12 @@ public class Player extends Thread {
     private byte playerState, facing, frame;
     private double nextFrameTime = 0;
     
-    private InetAddress address;
-    private int port;
-    private Broadcaster broadcaster;
-    private TestMap map;
+    private double stunDuration = 0, kbDuration = 0;
+    
+    private final InetAddress address;
+    private final int port;
+    private final Broadcaster broadcaster;
+    private final TestMap map;
     
     /**
      * Return this player's current X position.
@@ -98,7 +100,7 @@ public class Player extends Thread {
      * @param x New x location in double
      * @param y New y location in double
      */
-    public void setPos(double x, double y) { this.x = x; this.y = y;}
+    public void setPos(double x, double y) { this.x = x; this.y = y; updatePos = true;}
     
     /**
      * Set change in Y on the next tick.
@@ -148,63 +150,14 @@ public class Player extends Thread {
      * Specific logic updates should be private.
      */
     public void update(){
-        if (isMove[Globals.RIGHT] && !isMove[Globals.LEFT]) {
-            setXSpeed(4.5);
-            if (updateX(xSpeed)) {
-                if (facing != Globals.RIGHT){
-                    facing = Globals.RIGHT;
-                    updateFacing = true;
-                }
-                if (ySpeed == 0) {
-                    updateState(Globals.PLAYER_STATE_WALK);
-                }
-                updatePos = true;
-            } else {
-                if (ySpeed == 0) {
-                    updateState(Globals.PLAYER_STATE_STAND);
-                }
-            }
-        } else if (isMove[Globals.LEFT] && !isMove[Globals.RIGHT]){
-            setXSpeed(-4.5);
-            if (updateX(-4.5)){
-                if (facing != Globals.LEFT){
-                    facing = Globals.LEFT;
-                    updateFacing = true;
-                }
-                if (ySpeed == 0) {
-                    updateState(Globals.PLAYER_STATE_WALK);
-                }
-                updatePos = true;
-            } else {
-                if (ySpeed == 0) {
-                    updateState(Globals.PLAYER_STATE_STAND);
-                }
-            }
-        } else {
-            if (ySpeed == 0) {
-                updateState(Globals.PLAYER_STATE_STAND);
-            }
-        }
-
-        if (ySpeed != 0) {
-            updateY(ySpeed);
-            updateState(Globals.PLAYER_STATE_JUMP);
-            updatePos = true;
-        }
+        boolean stunned = updateStun(),
+                knocked = updateKnockback();
         
-        ySpeed += Globals.GRAVITY;
-        if (ySpeed >= Globals.MAX_FALLSPEED) ySpeed = Globals.MAX_FALLSPEED;
-         
-        isFalling = map.isFalling(x,y,ySpeed);
-        if (!isFalling  && ySpeed > 0) {
-            y = map.getValidY(x, y, ySpeed);
-            ySpeed = 0;
-            isJumping = false;
-        }
+        updateFall();
         
-        if (isMove[Globals.UP] && !isFalling && !isJumping){
-            isJumping = true;
-            setYSpeed(-12.5);
+        if (!stunned && !knocked) {
+            updateWalk();
+            updateJump();
         }
         
         updateFrame();
@@ -212,22 +165,117 @@ public class Player extends Thread {
         if (updatePos) sendPos();
         if (updateFacing) sendFacing();
         if (updateState) sendState();
-
+        
+    }
+    
+    private boolean updateStun(){
+        stunDuration -= Globals.LOGIC_UPDATE;
+        return stunDuration > 0;
+    }
+    
+    private boolean updateKnockback(){
+        kbDuration -= Globals.LOGIC_UPDATE;
+        if (kbDuration > 0) updateX(xSpeed);
+        return kbDuration > 0;
+    }
+    
+    /**
+     * Set a stun duration for this player
+     * Stun duration is in nanoseconds 100000ns = 1ms;
+     * @param duration Duration in ns
+     */
+    public void setStun(double duration) {
+        stunDuration = duration;
+    }
+    
+    /**
+     * Set a knockback duration for this player
+     * Stun duration is in nanoseconds 100000ns = 1ms;
+     * @param duration Duration in ns
+     * @param xS Change in x per tick over the duration
+     * @param yS Change in y per tick over the duration
+     */
+    public void setKnockback(double duration, double xS, double yS) {
+        kbDuration = duration;
+        setXSpeed(xS);
+        setYSpeed(yS);
+    }
+    
+    private void updateJump() {
+        if (isMove[Globals.UP] && !isFalling && !isJumping){
+            isJumping = true;
+            setYSpeed(-12.5);
+        }
+    }
+    
+    private void updateFall(){
+        if (ySpeed != 0) {
+            updateY(ySpeed);
+            setPlayerState(Globals.PLAYER_STATE_JUMP);
+        }
+        
+        setYSpeed(ySpeed + Globals.GRAVITY);
+        if (ySpeed >= Globals.MAX_FALLSPEED) setYSpeed(Globals.MAX_FALLSPEED);
+         
+        isFalling = map.isFalling(x,y,ySpeed);
+        if (!isFalling  && ySpeed > 0) {
+            y = map.getValidY(x, y, ySpeed);
+            setYSpeed(0);
+            isJumping = false;
+            setPlayerState(Globals.PLAYER_STATE_STAND);
+        }
+    }
+    
+    private void updateWalk() {
+        if (isMove[Globals.RIGHT] && !isMove[Globals.LEFT]) {
+            setXSpeed(4.5);
+            if (facing != Globals.RIGHT) setFacing(Globals.RIGHT);
+            if (updateX(xSpeed)) {
+                if (ySpeed == 0) setPlayerState(Globals.PLAYER_STATE_WALK);
+            } else {
+                if (ySpeed == 0) setPlayerState(Globals.PLAYER_STATE_STAND);
+            }
+        } else if (isMove[Globals.LEFT] && !isMove[Globals.RIGHT]){
+            setXSpeed(-4.5);
+            if (facing != Globals.LEFT) setFacing(Globals.LEFT);
+            if (updateX(xSpeed)){
+                if (ySpeed == 0) setPlayerState(Globals.PLAYER_STATE_WALK);
+            } else {
+                if (ySpeed == 0) setPlayerState(Globals.PLAYER_STATE_STAND);
+            }
+        }
+    }
+    
+    /**
+     * Set player facing direction
+     * Direction constants in Globals
+     * @param f Direction in byte
+     */
+    public void setFacing(byte f) {
+        facing = f;
+        updateFacing = true;
     }
     
     private boolean updateX(double change){
         if (map.isOutOfBounds(x+change, y)) return false;
         x=x+change;
+        updatePos = true;
         return true;
     }
     
     private boolean updateY(double change){
         if (map.isOutOfBounds(x, y+change)) return false;
         y=y+change;
+        updatePos = true;
         return true;
     }
     
-    private void updateState(byte newState){
+    /**
+     * Set player state
+     * States constants in Globals
+     * @param newState
+     */
+    public void setPlayerState(byte newState){
         if (playerState != newState) {
             playerState = newState;
             updateState = true;
