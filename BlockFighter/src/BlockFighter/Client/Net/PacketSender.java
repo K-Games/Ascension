@@ -30,7 +30,7 @@ public class PacketSender {
         } catch (UnknownHostException ex) {}
     }
     
-    public void requestLogin(){
+    public void sendLogin(){
         byte[] bytes = new byte[Globals.PACKET_BYTE];
         bytes[0] = Globals.DATA_LOGIN;
         
@@ -38,7 +38,7 @@ public class PacketSender {
         sendPacket(requestPacket);
     }
     
-    public void requestAll() {
+    public void sendGetAll() {
         byte[] bytes = new byte[Globals.PACKET_BYTE];
         bytes[0] = Globals.DATA_GET_ALL_PLAYER;
         
@@ -46,7 +46,7 @@ public class PacketSender {
         sendPacket(requestPacket);
     }
     
-    public void requestMove(byte index, byte direction, boolean move) {
+    public void sendMove(byte index, byte direction, boolean move) {
         byte[] bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_BYTE + Globals.PACKET_BYTE + Globals.PACKET_BYTE];
         bytes[0] = Globals.DATA_SET_PLAYER_MOVE;
         bytes[1] = index;
@@ -56,7 +56,15 @@ public class PacketSender {
         sendPacket(requestPacket);
     }
     
-    public void requestPing(byte pID){
+    public void sendKnockTest(byte index) {
+        byte[] bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_BYTE];
+        bytes[0] = Globals.DATA_KNOCK_TEST;
+        bytes[1] = index;
+        DatagramPacket requestPacket = createPacket(bytes);
+        sendPacket(requestPacket);
+    }
+    
+    public void sendGetPing(byte pID){
         byte[] bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_BYTE ];
         bytes[0] = Globals.DATA_PING;
         bytes[1] = pID;

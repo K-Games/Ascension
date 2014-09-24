@@ -43,7 +43,7 @@ public class RenderPanel extends JPanel {
                 }
             }
         }
-        g.drawRect(0, 620, 1280, 30);
+        g.drawRect(0, 620, 5000, 30);
         g.drawRect(200,400,300,30);
         g.drawRect(600,180,300,30);
         
