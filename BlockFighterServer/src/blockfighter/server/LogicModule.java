@@ -31,7 +31,7 @@ public class LogicModule extends Thread{
     private ConcurrentLinkedQueue<Player> pAddQueue = new ConcurrentLinkedQueue<>();
     private ConcurrentLinkedQueue<byte[]> pMoveQueue = new ConcurrentLinkedQueue<>();
     private ConcurrentLinkedQueue<ProjBase> pKnockQueue = new ConcurrentLinkedQueue<>();
-    private  ConcurrentLinkedQueue<byte[]> addProj = new ConcurrentLinkedQueue<>();
+    private  ConcurrentLinkedQueue<ProjBase> addProj = new ConcurrentLinkedQueue<>();
     private byte numPlayers = 0;
     
     /**
@@ -150,7 +150,7 @@ public class LogicModule extends Thread{
     }
     
     /**
-     * Queue move update for a player.
+     * Queue move update to be applied for a player.
      * Data is only referenced here.
      * Data to be processed in the queue later.
      * @param data Bytes to be processed - 1:Index, 2:direction, 3:1 = true, 0 = false
@@ -160,15 +160,18 @@ public class LogicModule extends Thread{
     }
     
     /**
-     * Queue move update for a player.
-     * Data is only referenced here.
-     * Data to be processed in the queue later.
-     * @param data Bytes to be processed - 1:Index, 2:direction, 3:1 = true, 0 = false
+     * Queue projectile entity to be added to the game
+     * Projectile must have been created when calling this.
+     * @param p New projectil to be added
      */
-    public void queueAddProj(byte[] data) {
-        addProj.add(data);
+    public void queueAddProj(ProjBase p) {
+        addProj.add(p);
     }
     
+    /**
+     * Queue knockback to be applied to player.
+     * @param p Projectile which will knockback the player
+     */
     public void queueKnockPlayer(ProjBase p) {
         pKnockQueue.add(p);
     }
@@ -192,8 +195,7 @@ public class LogicModule extends Thread{
         }
         
         while (!addProj.isEmpty()) {
-            byte[] data = addProj.remove();
-            projectiles.add(new ProjBase(this, players[data[1]], players[data[1]].getX(),players[data[1]].getY(),500000000));
+            projectiles.add(addProj.remove());
         }
     }
     

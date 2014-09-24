@@ -79,6 +79,10 @@ public class ProjBase extends Thread implements Projectile{
     @Override
     public boolean isExpired() { return duration <= 0; }
     
+    /**
+     * Process any knockbacks to be applied to players hit
+     * by this projectile.
+     */
     public void processQueue() {
         while (!queue.isEmpty()) {
             Player p = queue.pop();

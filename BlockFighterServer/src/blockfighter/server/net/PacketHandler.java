@@ -60,7 +60,7 @@ public class PacketHandler extends Thread{
     }
     
     private void receivePlayerKnock(byte[] data){
-        logic.queueAddProj(data);
+        logic.getPlayers()[data[1]].attackKnockback(data);
     }
     
     private void receiveLogin(InetAddress address, int port){
@@ -68,7 +68,7 @@ public class PacketHandler extends Thread{
         byte freeIndex = logic.getNextIndex();
         
         if (freeIndex == -1) return;
-        Player newPlayer = new Player(freeIndex, address, port, Math.random()* 1180.0 + 100, 0, broadcaster, logic.getMap());
+        Player newPlayer = new Player(freeIndex, address, port, Math.random()* 1180.0 + 100, 0, broadcaster, logic.getMap(), logic);
         logic.queueAddPlayer(newPlayer);
         //Buffer header
         byte[] bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_BYTE + Globals.PACKET_BYTE];

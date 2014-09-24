@@ -9,6 +9,8 @@ package blockfighter.server.entities;
 import blockfighter.server.maps.TestMap;
 import blockfighter.server.net.Broadcaster;
 import blockfighter.server.Globals;
+import blockfighter.server.LogicModule;
+import blockfighter.server.entities.Projectiles.ProjBase;
 import java.awt.geom.Rectangle2D;
 import java.net.InetAddress;
 
@@ -18,6 +20,7 @@ import java.net.InetAddress;
  */
 public class Player extends Thread {
     private final byte index;
+    private final LogicModule logic;
     private double x, y, ySpeed, xSpeed;
     private boolean[] isMove = new boolean[4];
     private boolean isFalling = false, isJumping = false;
@@ -123,12 +126,14 @@ public class Player extends Thread {
      * @param port Connected port
      * @param x Spawning x location in double
      * @param y Spawning y location in double
-     * @param bc Server Broadcaster used to send bytes to players
-     * @param map Server's loaded map
+     * @param bc Reference to Server Broadcaster
+     * @param map Reference to server's loaded map
+     * @param l Reference to Logic module
      */
-    public Player(byte index, InetAddress address, int port, double x, double y, Broadcaster bc, TestMap map){
+    public Player(byte index, InetAddress address, int port, double x, double y, Broadcaster bc, TestMap map, LogicModule l){
         System.out.println(address+":"+port+" Index:"+index);
         broadcaster = bc;
+        logic = l;
         this.index = index;
         this.address = address;
         this.port = port;
@@ -153,13 +158,13 @@ public class Player extends Thread {
      * Specific logic updates should be private.
      */
     public void update(){
-        boolean stunned = updateStun(),
-                knocked = updateKnockback();
+        updateStun();
+        updateKnockback();
         
         updateFall();
         hitbox.x = x-48;
         hitbox.y = y-96;
-        if (!stunned && !knocked) {
+        if (!isStunned() && !isKnockback()) {
             updateWalk();
             updateJump();
         }
@@ -172,19 +177,40 @@ public class Player extends Thread {
         
     }
     
+    /**
+     * Check if a rectangle intersects with this player's hitbox
+     * @param box Box to be checked
+     * @return True of the boxes intersect
+     */
     public boolean intersectHitbox(Rectangle2D.Double box){
         return hitbox.intersects(box);
     }
     
+    /**
+     * Return if player is stunned
+     * @return True if stun duration is > 0
+     */
+    public boolean isStunned() {
+        return stunDuration > 0;
+    }
+    
+    /**
+     * Return if player is being knocked back. 
+     * @return true if knockback duration is > 0
+     */
+    public boolean isKnockback() {
+        return kbDuration > 0;
+    }
+    
     private boolean updateStun(){
         stunDuration -= Globals.LOGIC_UPDATE;
-        return stunDuration > 0;
+        return isStunned();
     }
     
     private boolean updateKnockback(){
         kbDuration -= Globals.LOGIC_UPDATE;
         if (kbDuration > 0) updateX(xSpeed);
-        return kbDuration > 0;
+        return isKnockback();
     }
     
     /**
@@ -252,6 +278,17 @@ public class Player extends Thread {
                 if (ySpeed == 0) setPlayerState(Globals.PLAYER_STATE_STAND);
             }
         }
+    }
+    
+    /**
+     * Template attack. Does nothing, only knocks back.
+     * Attacks and projectiles should always be queued from
+     * the player to allow condition checking.
+     * Projectiles must be created in the player entity
+     * @param data Received data bytes from client
+     */
+    public void attackKnockback(byte[] data) {
+        if (!isStunned() || !isKnockback()) logic.queueAddProj(new ProjBase(logic, this, x, y,500000000));
     }
     
     /**
