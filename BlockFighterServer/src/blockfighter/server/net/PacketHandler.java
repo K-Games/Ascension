@@ -60,7 +60,7 @@ public class PacketHandler extends Thread{
     }
     
     private void receivePlayerKnock(byte[] data){
-        logic.queuePlayerKnock(data);
+        logic.queueAddProj(data);
     }
     
     private void receiveLogin(InetAddress address, int port){

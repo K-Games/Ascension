@@ -11,6 +11,7 @@ import blockfighter.server.entities.Projectile;
 import blockfighter.server.LogicModule;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 /**
  * This is the base projectile class. Create projectile classes off this.
@@ -23,21 +24,26 @@ public class ProjBase extends Thread implements Projectile{
     private ArrayList<Player> pHit = new ArrayList<>();
     private double duration;
     private Rectangle2D.Double hitbox;
-    
+    private LinkedList<Player> queue = new LinkedList<>();
     /**
      * Create a basic projectile. Does nothing.
      * @param l Reference to Logic module
+     * @param o
      * @param x Spawning x
      * @param y Spawning y
+     * @param duration
      */
     public ProjBase(LogicModule l, Player o, double x, double y, double duration) {
         owner = o;
         logic = l;
-        if (owner.getFacing() == Globals.LEFT) xSpeed = 8; else xSpeed = -8;
+        if (owner.getFacing() == Globals.LEFT) xSpeed = -6; else xSpeed = 6;
         ySpeed = -8;
         this.x = x;
         this.y = y;
-        hitbox = new Rectangle2D.Double(x,y,30,-30);
+        if (owner.getFacing() == Globals.LEFT) 
+            hitbox = new Rectangle2D.Double(x-35,y-96,35,96);
+        else
+            hitbox = new Rectangle2D.Double(x,y-96,35,96);
         this.duration = duration;
     }
     
@@ -45,9 +51,10 @@ public class ProjBase extends Thread implements Projectile{
     public void update() {
         duration -= Globals.LOGIC_UPDATE;
         for (Player p:logic.getPlayers()) {
-            if (!pHit.contains(p) && p.intersectHitbox(hitbox)) {
-                p.setKnockback(500000000, xSpeed, ySpeed);
+            if (p != owner && p != null && !pHit.contains(p) && p.intersectHitbox(hitbox)) {
+                queue.add(p);
                 pHit.add(p);
+                logic.queueKnockPlayer(this);
             }
         }
     }
@@ -68,8 +75,14 @@ public class ProjBase extends Thread implements Projectile{
     public void run() {
         update();
     }
-
+    
     @Override
     public boolean isExpired() { return duration <= 0; }
     
+    public void processQueue() {
+        while (!queue.isEmpty()) {
+            Player p = queue.pop();
+            p.setKnockback(500000000, xSpeed, ySpeed);
+        }
+    }
 }

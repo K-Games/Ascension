@@ -134,7 +134,7 @@ public class Player extends Thread {
         this.port = port;
         this.x = x;
         this.y = y;
-        hitbox = new Rectangle2D.Double(x-48,y,96,-96);
+        hitbox = new Rectangle2D.Double(x-48,y-96,96,96);
         this.map = map;
         facing = Globals.RIGHT;
         playerState = Globals.PLAYER_STATE_STAND;
@@ -157,7 +157,8 @@ public class Player extends Thread {
                 knocked = updateKnockback();
         
         updateFall();
-        
+        hitbox.x = x-48;
+        hitbox.y = y-96;
         if (!stunned && !knocked) {
             updateWalk();
             updateJump();

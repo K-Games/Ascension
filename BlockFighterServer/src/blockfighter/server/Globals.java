@@ -32,6 +32,8 @@ public class Globals {
             PLAYER_STATE_STUN = 0x03,
             PLAYER_STATE_KNOCKBACK = 0x04;
     
+    public final static int NUM_PARTICLE_EFFECTS = 1;
+    public final static byte PARTICLE_TEMP = 0x00;
     
     //Packet globals
     public final static int PACKET_MAX_SIZE = 128;
@@ -61,5 +63,6 @@ public class Globals {
             DATA_GET_PLAYER_POS = 0x04,
             DATA_SET_PLAYER_FACING = 0x05,
             DATA_SET_PLAYER_STATE = 0x06,
-            DATA_PLAYER_KNOCK = 0x07;
+            DATA_PLAYER_KNOCK = 0x07,
+            DATA_PARTICLE_EFFECT = 0x08;
 }
