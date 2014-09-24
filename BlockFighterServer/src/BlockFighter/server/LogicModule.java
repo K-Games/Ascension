@@ -4,11 +4,11 @@
  * and open the template in the editor.
  */
 
-package BlockFighter.Server;
+package blockfighter.server;
 
-import BlockFighter.Server.Entities.Player;
-import BlockFighter.Server.Maps.TestMap;
-import BlockFighter.Server.Net.Broadcaster;
+import blockfighter.server.entities.Player;
+import blockfighter.server.maps.TestMap;
+import blockfighter.server.net.Broadcaster;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;

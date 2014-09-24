@@ -4,11 +4,11 @@
  * and open the template in the editor.
  */
 
-package BlockFighter.Server.Entities;
+package blockfighter.server.entities;
 
-import BlockFighter.Server.Maps.TestMap;
-import BlockFighter.Server.Net.Broadcaster;
-import BlockFighter.Server.Globals;
+import blockfighter.server.maps.TestMap;
+import blockfighter.server.net.Broadcaster;
+import blockfighter.server.Globals;
 import java.net.InetAddress;
 
 /**

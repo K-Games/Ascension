@@ -4,11 +4,11 @@
  * and open the template in the editor.
  */
 
-package BlockFighter.Server.Net;
+package blockfighter.server.net;
 
-import BlockFighter.Server.Globals;
-import BlockFighter.Server.LogicModule;
-import BlockFighter.Server.Entities.Player;
+import blockfighter.server.Globals;
+import blockfighter.server.LogicModule;
+import blockfighter.server.entities.Player;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.util.Arrays;

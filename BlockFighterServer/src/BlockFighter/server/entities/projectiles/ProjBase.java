@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package BlockFighter.Server.Entities.Projectiles;
+package blockfighter.server.entities.Projectiles;
 
-import BlockFighter.Server.Entities.Player;
-import BlockFighter.Server.Entities.Projectile;
-import BlockFighter.Server.LogicModule;
+import blockfighter.server.entities.Player;
+import blockfighter.server.entities.Projectile;
+import blockfighter.server.LogicModule;
 
 /**
  * This is the base projectile class. Create projectile classes off this.

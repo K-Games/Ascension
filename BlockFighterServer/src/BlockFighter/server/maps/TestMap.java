@@ -1,6 +1,6 @@
-package BlockFighter.Server.Maps;
+package blockfighter.server.maps;
 
-import BlockFighter.Server.Globals;
+import blockfighter.server.Globals;
 import java.awt.geom.Rectangle2D;
 
 /**

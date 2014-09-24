@@ -4,10 +4,10 @@
  * and open the template in the editor.
  */
 
-package BlockFighter.Server;
+package blockfighter.server;
 
-import BlockFighter.Server.Net.ConnectionThread;
-import BlockFighter.Server.Net.Broadcaster;
+import blockfighter.server.net.ConnectionThread;
+import blockfighter.server.net.Broadcaster;
 
 /**
  * Start module of server

@@ -1,7 +1,7 @@
-package BlockFighter.Server.Net;
+package blockfighter.server.net;
 
-import BlockFighter.Server.Globals;
-import BlockFighter.Server.LogicModule;
+import blockfighter.server.Globals;
+import blockfighter.server.LogicModule;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;

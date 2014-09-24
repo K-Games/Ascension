@@ -1,4 +1,4 @@
-package BlockFighter.Server.Entities;
+package blockfighter.server.entities;
 
 /**
  * This is the interface of projectiles and attacks.
