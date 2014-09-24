@@ -36,7 +36,7 @@ public class LogicModule extends Thread {
     private Player[] players = null;
     private byte myIndex = -1;
 
-    private PacketSender requests = null;
+    private PacketSender sender = null;
     private long pingTime = 0;
     private int ping = -1;
     private byte pID = 0;
@@ -44,7 +44,7 @@ public class LogicModule extends Thread {
     boolean[] keyDownMove = {false, false, false, false};
     
     public LogicModule(DatagramSocket socket){
-        requests = new PacketSender(socket);
+        sender = new PacketSender(socket);
         isRunning = true;
     }
     
@@ -61,7 +61,7 @@ public class LogicModule extends Thread {
             lock.lock();
             try {
                 attempt++;
-                requests.requestLogin();
+                sender.sendLogin();
                 System.out.println("Login Attempt #" + attempt);
                 gotLogin.await(5000, TimeUnit.MILLISECONDS);
             } catch (InterruptedException ex) {
@@ -75,7 +75,7 @@ public class LogicModule extends Thread {
             System.out.println("Cannot connect");
             return;
         }
-        requests.requestAll();
+        sender.sendGetAll();
         
         while (isRunning) {
             double now = System.nanoTime(); //Get time now
@@ -86,22 +86,22 @@ public class LogicModule extends Thread {
             }
             
             if (now - lastUpdateTime >= Globals.LOGIC_UPDATE) {
-                requests.requestMove(myIndex,Globals.UP, keyDownMove[Globals.UP]);
-                requests.requestMove(myIndex,Globals.DOWN, keyDownMove[Globals.DOWN]);
-                requests.requestMove(myIndex,Globals.LEFT, keyDownMove[Globals.LEFT]);
-                requests.requestMove(myIndex,Globals.RIGHT, keyDownMove[Globals.RIGHT]);
+                sender.sendMove(myIndex,Globals.UP, keyDownMove[Globals.UP]);
+                sender.sendMove(myIndex,Globals.DOWN, keyDownMove[Globals.DOWN]);
+                sender.sendMove(myIndex,Globals.LEFT, keyDownMove[Globals.LEFT]);
+                sender.sendMove(myIndex,Globals.RIGHT, keyDownMove[Globals.RIGHT]);
                 lastUpdateTime = now;
             }
             
             if (now - lastRequestTime >= Globals.REQUESTALL_UPDATE) {
-                requests.requestAll();
+                sender.sendGetAll();
                 lastRequestTime = now;
             }
             
             if (now - lastPingTime >= Globals.PING_UPDATE) {
                 pID = (byte)(Math.random() * 256);
                 pingTime = System.currentTimeMillis();
-                requests.requestPing(pID);
+                sender.sendGetPing(pID);
                 lastPingTime = now;
             }
             
@@ -164,6 +164,7 @@ public class LogicModule extends Thread {
     public void setKeyDown(int direction, boolean move) {
         keyDownMove[direction] = move;
     }
+    
     public void setMyIndex(byte index){
         myIndex = index;
         lock.lock();

@@ -16,14 +16,14 @@ import java.net.DatagramSocket;
  * @author Ken
  */
 public class KeyHandler implements KeyListener{
-    private PacketSender requests = null;
+    private PacketSender sender = null;
     DatagramSocket socket = null;
     LogicModule logic = null;
 
     public KeyHandler(LogicModule logic, DatagramSocket socket){
         this.logic = logic;
         this.socket = socket;
-        requests = new PacketSender(socket);    
+        sender = new PacketSender(socket);    
     }
         
     @Override
@@ -49,6 +49,7 @@ public class KeyHandler implements KeyListener{
             case KeyEvent.VK_DOWN: logic.setKeyDown(Globals.DOWN, false); break;
             case KeyEvent.VK_LEFT: logic.setKeyDown(Globals.LEFT, false); break;
             case KeyEvent.VK_RIGHT: logic.setKeyDown(Globals.RIGHT, false); break;
+            case KeyEvent.VK_A: sender.sendKnockTest(logic.getMyIndex()); break;
         }
     }
 }
