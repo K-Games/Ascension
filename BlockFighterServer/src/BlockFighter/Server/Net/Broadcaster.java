@@ -59,7 +59,7 @@ public class Broadcaster {
         try {
             socket.send(packet);
         } catch (IOException ex) {
-            System.out.println("ServerBroadcast:sendPlayer: " + ex);
+            System.err.println("ServerBroadcast:sendPlayer: " + ex);
         }
     }
     
@@ -76,7 +76,7 @@ public class Broadcaster {
                 try {
                     socket.send(packet);
                 } catch (IOException ex) {
-                    System.out.println("ServerBroadcast:sendAll: " + ex);
+                    System.err.println("ServerBroadcast:sendAll: " + ex);
                 }
             }
         }

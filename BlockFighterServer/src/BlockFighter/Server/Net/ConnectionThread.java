@@ -45,7 +45,7 @@ public class ConnectionThread extends Thread{
                 DatagramPacket packet = new DatagramPacket(request, request.length);
                 try {
                     socket.receive(packet);
-                    tpes.execute(new RequestHandler(broadcaster, packet, logic));
+                    tpes.execute(new PacketHandler(broadcaster, packet, logic));
                 } catch (IOException e) {
                 }
             }

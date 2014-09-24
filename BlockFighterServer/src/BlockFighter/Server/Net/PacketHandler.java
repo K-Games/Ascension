@@ -17,7 +17,7 @@ import java.util.Arrays;
  * Threads to handle incoming requests.
  * @author Ken
  */
-public class RequestHandler extends Thread{
+public class PacketHandler extends Thread{
     private DatagramPacket requestPacket = null;
     private final LogicModule logic;
     private Broadcaster broadcaster;
@@ -28,7 +28,7 @@ public class RequestHandler extends Thread{
      * @param request Packet that is received
      * @param logic Reference to Logic module
      */
-    public RequestHandler(Broadcaster bc, DatagramPacket request, LogicModule logic) {
+    public PacketHandler(Broadcaster bc, DatagramPacket request, LogicModule logic) {
         requestPacket = request;
         this.broadcaster = bc;
         this.logic = logic;
