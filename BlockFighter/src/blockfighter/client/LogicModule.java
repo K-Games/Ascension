@@ -71,7 +71,7 @@ public class LogicModule extends Thread {
             }
         }
         
-        if (attempt > 1) {
+        if (myIndex == -1) {
             System.out.println("Cannot connect");
             return;
         }

@@ -23,6 +23,9 @@ public class Main {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        if (args.length >= 1) {
+            Globals.SERVER_ADDRESS = args[0];
+        }
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {

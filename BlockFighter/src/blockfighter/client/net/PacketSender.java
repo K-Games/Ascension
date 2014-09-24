@@ -31,6 +31,7 @@ public class PacketSender {
     }
     
     public void sendLogin(){
+        System.out.println("Connecting to " + Globals.SERVER_ADDRESS);
         byte[] bytes = new byte[Globals.PACKET_BYTE];
         bytes[0] = Globals.DATA_LOGIN;
         
