@@ -15,29 +15,34 @@ import java.util.logging.Logger;
 
 /**
  * Thread to accept incoming connections.
+ *
  * @author Ken
  */
-public class ConnectionThread extends Thread{
+public class ConnectionThread extends Thread {
+
     private final LogicModule logic;
     private final Broadcaster broadcaster;
-    
+
     /**
      * A new thread for accepting connections.
+     * <p>
      * Logic module and broadcaster must have been initialized
+     * </p>
+     *
      * @param logic Logic module
      * @param broadcaster Server broadcaster
      */
-    public ConnectionThread(LogicModule logic, Broadcaster broadcaster){
+    public ConnectionThread(LogicModule logic, Broadcaster broadcaster) {
         this.logic = logic;
         this.broadcaster = broadcaster;
     }
-    
+
     @Override
     public void run() {
         ExecutorService tpes = Executors.newCachedThreadPool();
         DatagramSocket socket = null;
         try {
-            socket = new DatagramSocket(Globals.SERVER_PORT,InetAddress.getByName("0.0.0.0"));
+            socket = new DatagramSocket(Globals.SERVER_PORT, InetAddress.getByName("0.0.0.0"));
             System.out.println("Server listening on port " + Globals.SERVER_PORT);
             broadcaster.setSocket(socket);
             while (true) {

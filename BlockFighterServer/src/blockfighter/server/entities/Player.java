@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package blockfighter.server.entities;
 
 import blockfighter.server.maps.TestMap;
@@ -16,9 +15,11 @@ import java.net.InetAddress;
 
 /**
  * Player entities on the server.
+ *
  * @author Ken
  */
 public class Player extends Thread {
+
     private final byte index;
     private final LogicModule logic;
     private double x, y, ySpeed, xSpeed;
@@ -28,99 +29,147 @@ public class Player extends Thread {
     private byte playerState, facing, frame;
     private double nextFrameTime = 0;
     private Rectangle2D.Double hitbox;
-    
+
     private double stunDuration = 0, kbDuration = 0;
-    
+
     private final InetAddress address;
     private final int port;
     private final Broadcaster broadcaster;
     private final TestMap map;
-    
+
     /**
      * Return this player's current X position.
+     *
      * @return The player's X in double
      */
-    public double getX() { return x; }
+    public double getX() {
+        return x;
+    }
 
     /**
      * Return this player's current Y position.
+     *
      * @return The player's Y in double
      */
-    public double getY() { return y; }    
+    public double getY() {
+        return y;
+    }
 
     /**
      * Return this player's array index.
-     * This index is the same index in the player array in the logic module. 
+     * <p>
+     * This index is the same index in the player array in the logic module.
+     * </p>
+     *
      * @return The index of this player in byte
      */
-    public byte getIndex() { return index; }
+    public byte getIndex() {
+        return index;
+    }
 
     /**
      * Return this player's current state.
-     * Used for updating animation state and player interactions.
-     * States are listed in Globals.
+     * <p>
+     * Used for updating animation state and player interactions. States are listed in Globals.
+     * </p>
+     *
      * @return The player's state in byte
      */
-    public byte getPlayerState() { return playerState; }
+    public byte getPlayerState() {
+        return playerState;
+    }
 
     /**
      * Return this player's IP address.
+     * <p>
      * Used for broadcasting to player with UDP.
+     * </p>
+     *
      * @return The player's IP
      */
-    public InetAddress getAddress() { return address; }
+    public InetAddress getAddress() {
+        return address;
+    }
 
     /**
-     * Return this player's connected port
+     * Return this player's connected port.
+     * <p>
      * Used for broadcasting to player with UDP.
+     * </p>
+     *
      * @return The player's port in int
      */
-    public int getPort() { return port; }
+    public int getPort() {
+        return port;
+    }
 
     /**
      * Return this player's facing direction.
+     * <p>
      * Direction value is found in Globals.
+     * </p>
+     *
      * @return The player's facing direction in byte
      */
-    public byte getFacing() { return facing; }
+    public byte getFacing() {
+        return facing;
+    }
 
     /**
      * Return this player's current animation frame.
+     *
      * @return The player's current animation frame
      */
-    public byte getFrame() { return frame; }
+    public byte getFrame() {
+        return frame;
+    }
 
     /**
-     * Set this player's movement when server receives packet
-     * that key is pressed.
+     * Set this player's movement when server receives packet that key is pressed.
+     *
      * @param direction The direction to be set
      * @param move True when pressed, false when released
      */
-    public void setMove(int direction, boolean move) { isMove[direction] = move; }
+    public void setMove(int direction, boolean move) {
+        isMove[direction] = move;
+    }
 
     /**
      * Set the player's x and y position.
-     * This does not interpolate. The player is instantly moved
-     * to this location.
+     * <p>
+     * This does not interpolate. The player is instantly moved to this location.
+     * </p>
+     *
      * @param x New x location in double
      * @param y New y location in double
      */
-    public void setPos(double x, double y) { this.x = x; this.y = y; updatePos = true;}
-    
+    public void setPos(double x, double y) {
+        this.x = x;
+        this.y = y;
+        updatePos = true;
+    }
+
     /**
      * Set change in Y on the next tick.
+     *
      * @param speed Distance in double
      */
-    public void setYSpeed(double speed) { ySpeed = speed;}
+    public void setYSpeed(double speed) {
+        ySpeed = speed;
+    }
 
     /**
      * Set change in X on the next tick.
+     *
      * @param speed Distance in double
      */
-    public void setXSpeed(double speed) { xSpeed = speed;}
-    
+    public void setXSpeed(double speed) {
+        xSpeed = speed;
+    }
+
     /**
      * Create a new player entity in the server.
+     *
      * @param index The index of this player in the player array in logic module
      * @param address IP address of player
      * @param port Connected port
@@ -130,8 +179,8 @@ public class Player extends Thread {
      * @param map Reference to server's loaded map
      * @param l Reference to Logic module
      */
-    public Player(byte index, InetAddress address, int port, double x, double y, Broadcaster bc, TestMap map, LogicModule l){
-        System.out.println(address+":"+port+" Index:"+index);
+    public Player(byte index, InetAddress address, int port, double x, double y, Broadcaster bc, TestMap map, LogicModule l) {
+        System.out.println(address + ":" + port + " Index:" + index);
         broadcaster = bc;
         logic = l;
         this.index = index;
@@ -139,92 +188,109 @@ public class Player extends Thread {
         this.port = port;
         this.x = x;
         this.y = y;
-        hitbox = new Rectangle2D.Double(x-48,y-96,96,96);
+        hitbox = new Rectangle2D.Double(x - 48, y - 96, 96, 96);
         this.map = map;
         facing = Globals.RIGHT;
         playerState = Globals.PLAYER_STATE_STAND;
         frame = 0;
     }
-    
+
     @Override
     public void run() {
         update();
     }
-    
+
     /**
      * Updates all logic of this player.
-     * Should be called every tick.
-     * Specific logic updates are separated into other methods.
-     * Specific logic updates should be private.
+     * <p>
+     * Should be called every tick. Specific logic updates are separated into other methods. Specific logic updates should be private.
+     * </p>
      */
-    public void update(){
+    public void update() {
         updateStun();
         updateKnockback();
-        
+
         updateFall();
-        hitbox.x = x-48;
-        hitbox.y = y-96;
+        hitbox.x = x - 48;
+        hitbox.y = y - 96;
         if (!isStunned() && !isKnockback()) {
             updateWalk();
             updateJump();
         }
-        
+
         updateFrame();
-        
-        if (updatePos) sendPos();
-        if (updateFacing) sendFacing();
-        if (updateState) sendState();
-        
+
+        if (updatePos) {
+            sendPos();
+        }
+        if (updateFacing) {
+            sendFacing();
+        }
+        if (updateState) {
+            sendState();
+        }
+
     }
-    
+
     /**
      * Check if a rectangle intersects with this player's hitbox
+     *
      * @param box Box to be checked
      * @return True of the boxes intersect
      */
-    public boolean intersectHitbox(Rectangle2D.Double box){
+    public boolean intersectHitbox(Rectangle2D.Double box) {
         return hitbox.intersects(box);
     }
-    
+
     /**
      * Return if player is stunned
+     *
      * @return True if stun duration is > 0
      */
     public boolean isStunned() {
         return stunDuration > 0;
     }
-    
+
     /**
-     * Return if player is being knocked back. 
+     * Return if player is being knocked back.
+     *
      * @return true if knockback duration is > 0
      */
     public boolean isKnockback() {
         return kbDuration > 0;
     }
-    
-    private boolean updateStun(){
+
+    private boolean updateStun() {
         stunDuration -= Globals.LOGIC_UPDATE;
         return isStunned();
     }
-    
-    private boolean updateKnockback(){
+
+    private boolean updateKnockback() {
         kbDuration -= Globals.LOGIC_UPDATE;
-        if (kbDuration > 0) updateX(xSpeed);
+        if (kbDuration > 0) {
+            updateX(xSpeed);
+        }
         return isKnockback();
     }
-    
+
     /**
      * Set a stun duration for this player
+     * <p>
      * Stun duration is in nanoseconds 100000ns = 1ms;
+     * </p>
+     *
      * @param duration Duration in ns
      */
     public void setStun(double duration) {
         stunDuration = duration;
     }
-    
+
     /**
      * Set a knockback duration for this player
-     * Stun duration is in nanoseconds 100000ns = 1ms;
+     * <p>
+     * Duration is in nanoseconds 100000ns = 1ms;
+     * </p>
+     * 
      * @param duration Duration in ns
      * @param xS Change in x per tick over the duration
      * @param yS Change in y per tick over the duration
@@ -234,117 +300,144 @@ public class Player extends Thread {
         setXSpeed(xS);
         setYSpeed(yS);
     }
-    
+
     private void updateJump() {
-        if (isMove[Globals.UP] && !isFalling && !isJumping){
+        if (isMove[Globals.UP] && !isFalling && !isJumping) {
             isJumping = true;
             setYSpeed(-12.5);
         }
     }
-    
-    private void updateFall(){
+
+    private void updateFall() {
         if (ySpeed != 0) {
             updateY(ySpeed);
             setPlayerState(Globals.PLAYER_STATE_JUMP);
         }
-        
+
         setYSpeed(ySpeed + Globals.GRAVITY);
-        if (ySpeed >= Globals.MAX_FALLSPEED) setYSpeed(Globals.MAX_FALLSPEED);
-         
-        isFalling = map.isFalling(x,y,ySpeed);
-        if (!isFalling  && ySpeed > 0) {
+        if (ySpeed >= Globals.MAX_FALLSPEED) {
+            setYSpeed(Globals.MAX_FALLSPEED);
+        }
+
+        isFalling = map.isFalling(x, y, ySpeed);
+        if (!isFalling && ySpeed > 0) {
             y = map.getValidY(x, y, ySpeed);
             setYSpeed(0);
             isJumping = false;
             setPlayerState(Globals.PLAYER_STATE_STAND);
         }
     }
-    
+
     private void updateWalk() {
         if (isMove[Globals.RIGHT] && !isMove[Globals.LEFT]) {
             setXSpeed(4.5);
-            if (facing != Globals.RIGHT) setFacing(Globals.RIGHT);
-            if (updateX(xSpeed)) {
-                if (ySpeed == 0) setPlayerState(Globals.PLAYER_STATE_WALK);
-            } else {
-                if (ySpeed == 0) setPlayerState(Globals.PLAYER_STATE_STAND);
+            if (facing != Globals.RIGHT) {
+                setFacing(Globals.RIGHT);
             }
-        } else if (isMove[Globals.LEFT] && !isMove[Globals.RIGHT]){
-            setXSpeed(-4.5);
-            if (facing != Globals.LEFT) setFacing(Globals.LEFT);
-            if (updateX(xSpeed)){
-                if (ySpeed == 0) setPlayerState(Globals.PLAYER_STATE_WALK);
+            if (updateX(xSpeed)) {
+                if (ySpeed == 0) {
+                    setPlayerState(Globals.PLAYER_STATE_WALK);
+                }
             } else {
-                if (ySpeed == 0) setPlayerState(Globals.PLAYER_STATE_STAND);
+                if (ySpeed == 0) {
+                    setPlayerState(Globals.PLAYER_STATE_STAND);
+                }
+            }
+        } else if (isMove[Globals.LEFT] && !isMove[Globals.RIGHT]) {
+            setXSpeed(-4.5);
+            if (facing != Globals.LEFT) {
+                setFacing(Globals.LEFT);
+            }
+            if (updateX(xSpeed)) {
+                if (ySpeed == 0) {
+                    setPlayerState(Globals.PLAYER_STATE_WALK);
+                }
+            } else {
+                if (ySpeed == 0) {
+                    setPlayerState(Globals.PLAYER_STATE_STAND);
+                }
             }
         }
     }
-    
+
     /**
-     * Template attack. Does nothing, only knocks back.
-     * Attacks and projectiles should always be queued from
-     * the player to allow condition checking.
-     * Projectiles must be created in the player entity
+     * Template attack.
+     * <p>
+     * Does nothing, only knocks back. Attacks and projectiles should always be queued from the player to allow condition checking. Projectiles must be created in the player entity
+     * </p>
+     * 
      * @param data Received data bytes from client
      */
     public void attackKnockback(byte[] data) {
-        if (!isStunned() || !isKnockback()) logic.queueAddProj(new ProjBase(logic, this, x, y,500000000));
+        if (!isStunned() || !isKnockback()) {
+            logic.queueAddProj(new ProjBase(logic, this, x, y, 500000000));
+        }
     }
-    
+
     /**
-     * Set player facing direction
+     * Set player facing direction.
+     * <p>
      * Direction constants in Globals
+     * </p>
+     * 
      * @param f Direction in byte
      */
     public void setFacing(byte f) {
         facing = f;
         updateFacing = true;
     }
-    
-    private boolean updateX(double change){
-        if (map.isOutOfBounds(x+change, y)) return false;
-        x=x+change;
+
+    private boolean updateX(double change) {
+        if (map.isOutOfBounds(x + change, y)) {
+            return false;
+        }
+        x = x + change;
         updatePos = true;
         return true;
     }
-    
-    private boolean updateY(double change){
-        if (map.isOutOfBounds(x, y+change)) return false;
-        y=y+change;
+
+    private boolean updateY(double change) {
+        if (map.isOutOfBounds(x, y + change)) {
+            return false;
+        }
+        y = y + change;
         updatePos = true;
         return true;
     }
-    
+
     /**
-     * Set player state
+     * Set player state.
+     * <p>
      * States constants in Globals
+     * </p>
+     * 
      * @param newState
      */
-    public void setPlayerState(byte newState){
+    public void setPlayerState(byte newState) {
         if (playerState != newState) {
             playerState = newState;
             updateState = true;
         }
     }
-    
+
     private void updateFrame() {
         switch (playerState) {
-            case Globals.PLAYER_STATE_STAND: 
+            case Globals.PLAYER_STATE_STAND:
                 if (frame != 0) {
                     frame = 0;
                     updateState = true;
                 }
                 break;
-                    
+
             case Globals.PLAYER_STATE_WALK:
                 nextFrameTime -= Globals.LOGIC_UPDATE;
-                if (nextFrameTime <= 0){
-                    frame = (byte) ((frame == 0)?1:0);
+                if (nextFrameTime <= 0) {
+                    frame = (byte) ((frame == 0) ? 1 : 0);
                     nextFrameTime = 250000000;
                     updateState = true;
                 }
                 break;
-            case Globals.PLAYER_STATE_JUMP: 
+            case Globals.PLAYER_STATE_JUMP:
                 if (frame != 0) {
                     frame = 0;
                     updateState = true;
@@ -352,30 +445,26 @@ public class Player extends Thread {
                 break;
         }
     }
-    
+
     /**
      * Send the player's current position to every connected player
+     * <p>
      * X and y are casted and sent as int.
-     * Uses Server Broadcaster to send to all
-     * Byte sent:
-     * 0 - Data type
-     * 1 - Index
-     * 2,3,4,5 - x
-     * 6,7,8,9 - y
+     * <br/>
+     * Uses Server Broadcaster to send to all<br/>
+     * Byte sent: 0 - Data type 1 - Index 2,3,4,5 - x 6,7,8,9 - y
+     * </p>
      */
-    public void sendPos(){
-        //Buffer header
+    public void sendPos() {
         byte[] bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_BYTE + Globals.PACKET_INT + Globals.PACKET_INT];
-        //Index
         bytes[0] = Globals.DATA_GET_PLAYER_POS;
         bytes[1] = index;
-        //Send Pos
-        byte[] posXInt = Globals.intToByte((int)x);
+        byte[] posXInt = Globals.intToByte((int) x);
         bytes[2] = posXInt[0];
         bytes[3] = posXInt[1];
         bytes[4] = posXInt[2];
         bytes[5] = posXInt[3];
-        byte[] posYInt = Globals.intToByte((int)y);
+        byte[] posYInt = Globals.intToByte((int) y);
         bytes[6] = posYInt[0];
         bytes[7] = posYInt[1];
         bytes[8] = posYInt[2];
@@ -386,14 +475,13 @@ public class Player extends Thread {
 
     /**
      * Send the player's current facing direction to every connected player
-     * Facing uses direction constants in Globals.
+     * <p>
+     * Facing uses direction constants in Globals.<br/>
      * Uses Server Broadcaster to send to all
-     * Byte sent:
-     * 0 - Data type
-     * 1 - Index
-     * 2 - Facing direction
+     * <br/>Byte sent: 0 - Data type 1 - Index 2 - Facing direction
+     * </p>
      */
-    public void sendFacing(){
+    public void sendFacing() {
         byte[] bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_BYTE + Globals.PACKET_BYTE];
         bytes[0] = Globals.DATA_SET_PLAYER_FACING;
         bytes[1] = index;
@@ -403,17 +491,14 @@ public class Player extends Thread {
     }
 
     /**
-     * Send the player's current state(for animation) and current
-     * frame of animation to every connected player
-     * State constants are in Globals.
-     * Uses Server Broadcaster to send to all
-     * Byte sent:
-     * 0 - Data type
-     * 1 - Index
-     * 2 - Player state
-     * 3 - Current frame
+     * Send the player's current state(for animation) and current frame of animation to every connected player
+     * <p>
+     * State constants are in Globals.<br/>
+     * Uses Server Broadcaster to send to all<br/>
+     * Byte sent: 0 - Data type 1 - Index 2 - Player state 3 - Current frame
+     * </p>
      */
-    public void sendState(){
+    public void sendState() {
         byte[] bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_BYTE + Globals.PACKET_BYTE + Globals.PACKET_BYTE];
         bytes[0] = Globals.DATA_SET_PLAYER_STATE;
         bytes[1] = index;

@@ -15,18 +15,24 @@ import java.util.LinkedList;
 
 /**
  * This is the base projectile class. Create projectile classes off this.
+ *
  * @author Ken
  */
-public class ProjBase extends Thread implements Projectile{
+public class ProjBase extends Thread implements Projectile {
+
     private final LogicModule logic;
-    private double x,y, xSpeed, ySpeed;
+    private double x, y, xSpeed, ySpeed;
     private Player owner;
     private ArrayList<Player> pHit = new ArrayList<>();
     private double duration;
     private Rectangle2D.Double hitbox;
     private LinkedList<Player> queue = new LinkedList<>();
+
     /**
-     * Create a basic projectile. Does nothing.
+     * Create a basic projectile.
+     * <p>
+     * Does nothing.
+     * </p>
      * @param l Reference to Logic module
      * @param o
      * @param x Spawning x
@@ -36,21 +42,26 @@ public class ProjBase extends Thread implements Projectile{
     public ProjBase(LogicModule l, Player o, double x, double y, double duration) {
         owner = o;
         logic = l;
-        if (owner.getFacing() == Globals.LEFT) xSpeed = -6; else xSpeed = 6;
+        if (owner.getFacing() == Globals.LEFT) {
+            xSpeed = -6;
+        } else {
+            xSpeed = 6;
+        }
         ySpeed = -8;
         this.x = x;
         this.y = y;
-        if (owner.getFacing() == Globals.LEFT) 
-            hitbox = new Rectangle2D.Double(x-35,y-96,35,96);
-        else
-            hitbox = new Rectangle2D.Double(x,y-96,35,96);
+        if (owner.getFacing() == Globals.LEFT) {
+            hitbox = new Rectangle2D.Double(x - 35, y - 96, 35, 96);
+        } else {
+            hitbox = new Rectangle2D.Double(x, y - 96, 35, 96);
+        }
         this.duration = duration;
     }
-    
+
     @Override
     public void update() {
         duration -= Globals.LOGIC_UPDATE;
-        for (Player p:logic.getPlayers()) {
+        for (Player p : logic.getPlayers()) {
             if (p != owner && p != null && !pHit.contains(p) && p.intersectHitbox(hitbox)) {
                 queue.add(p);
                 pHit.add(p);
@@ -60,28 +71,37 @@ public class ProjBase extends Thread implements Projectile{
     }
 
     @Override
-    public double getX() { return x; }
+    public double getX() {
+        return x;
+    }
 
     @Override
-    public double getY() { return y; }
+    public double getY() {
+        return y;
+    }
 
     @Override
-    public void setOwner(Player owner) { this.owner = owner; }
+    public void setOwner(Player owner) {
+        this.owner = owner;
+    }
 
     @Override
-    public Player getOwner() { return owner;}
+    public Player getOwner() {
+        return owner;
+    }
 
     @Override
     public void run() {
         update();
     }
-    
+
     @Override
-    public boolean isExpired() { return duration <= 0; }
-    
+    public boolean isExpired() {
+        return duration <= 0;
+    }
+
     /**
-     * Process any knockbacks to be applied to players hit
-     * by this projectile.
+     * Process any knockbacks to be applied to players hit by this projectile.
      */
     public void processQueue() {
         while (!queue.isEmpty()) {
