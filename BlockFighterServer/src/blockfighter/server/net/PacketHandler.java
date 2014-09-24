@@ -46,7 +46,7 @@ public class PacketHandler extends Thread{
             case Globals.DATA_GET_ALL_PLAYER: receiveGetAllPlayer(address, port); break;
             case Globals.DATA_SET_PLAYER_MOVE: receiveSetPlayerMove(data); break;
             case Globals.DATA_PING: receiveGetPing(address, port, data); break;
-            case Globals.DATA_KNOCK_TEST: receiveKnockTest(data); break;
+            case Globals.DATA_PLAYER_KNOCK: receivePlayerKnock(data); break;
         }
     }
     
@@ -59,8 +59,8 @@ public class PacketHandler extends Thread{
         broadcaster.sendPlayer(bytes, address, port);
     }
     
-    private void receiveKnockTest(byte[] data){
-        logic.queueKnockback(data);
+    private void receivePlayerKnock(byte[] data){
+        logic.queuePlayerKnock(data);
     }
     
     private void receiveLogin(InetAddress address, int port){

@@ -9,6 +9,7 @@ package blockfighter.server.entities;
 import blockfighter.server.maps.TestMap;
 import blockfighter.server.net.Broadcaster;
 import blockfighter.server.Globals;
+import java.awt.geom.Rectangle2D;
 import java.net.InetAddress;
 
 /**
@@ -23,6 +24,7 @@ public class Player extends Thread {
     private boolean updatePos = false, updateFacing = false, updateState = false;
     private byte playerState, facing, frame;
     private double nextFrameTime = 0;
+    private Rectangle2D.Double hitbox;
     
     private double stunDuration = 0, kbDuration = 0;
     
@@ -132,6 +134,7 @@ public class Player extends Thread {
         this.port = port;
         this.x = x;
         this.y = y;
+        hitbox = new Rectangle2D.Double(x-48,y,96,-96);
         this.map = map;
         facing = Globals.RIGHT;
         playerState = Globals.PLAYER_STATE_STAND;
@@ -166,6 +169,10 @@ public class Player extends Thread {
         if (updateFacing) sendFacing();
         if (updateState) sendState();
         
+    }
+    
+    public boolean intersectHitbox(Rectangle2D.Double box){
+        return hitbox.intersects(box);
     }
     
     private boolean updateStun(){

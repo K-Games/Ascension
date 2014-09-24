@@ -7,8 +7,10 @@
 package blockfighter.server;
 
 import blockfighter.server.entities.Player;
+import blockfighter.server.entities.Projectiles.ProjBase;
 import blockfighter.server.maps.TestMap;
 import blockfighter.server.net.Broadcaster;
+import java.util.ArrayList;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -22,11 +24,12 @@ import java.util.logging.Logger;
 public class LogicModule extends Thread{
     private boolean isRunning = false;
     private Player[] players = new Player[Globals.MAX_PLAYERS];
+    private ArrayList<ProjBase> projectiles = new ArrayList<>();
     private Broadcaster broadcaster;
     private TestMap map;
     private ConcurrentLinkedQueue<Player> pAddQueue = new ConcurrentLinkedQueue<>();
     private ConcurrentLinkedQueue<byte[]> pMoveQueue = new ConcurrentLinkedQueue<>();
-    private  ConcurrentLinkedQueue<byte[]> knockQueue = new ConcurrentLinkedQueue<>();
+    private  ConcurrentLinkedQueue<byte[]> addProj = new ConcurrentLinkedQueue<>();
     private byte numPlayers = 0;
     
     /**
@@ -43,7 +46,7 @@ public class LogicModule extends Thread{
     public void run(){
         double lastUpdateTime = System.nanoTime();
         long lastRefreshAll = System.currentTimeMillis();
-        ExecutorService playerPool = Executors.newCachedThreadPool();
+        ExecutorService threadPool = Executors.newCachedThreadPool();
         
         while (isRunning) {
             processQueues();
@@ -51,7 +54,7 @@ public class LogicModule extends Thread{
             long nowMs = System.currentTimeMillis();
             if (now - lastUpdateTime >= Globals.LOGIC_UPDATE) {
                 for (Player player : players) {
-                   if (player!=null) playerPool.execute(player);
+                   if (player!=null) threadPool.execute(player);
                 }
                 
                 for (Player player : players) {
@@ -61,6 +64,19 @@ public class LogicModule extends Thread{
                         Logger.getLogger(LogicModule.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
+                
+                for (ProjBase p : projectiles) {
+                   if (p!=null) threadPool.execute(p);
+                }
+                
+                for (ProjBase p : projectiles) {
+                    try {
+                        if (p!=null) p.join();
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(LogicModule.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                
                 lastUpdateTime = now;
             }
             
@@ -135,8 +151,8 @@ public class LogicModule extends Thread{
      * Data to be processed in the queue later.
      * @param data Bytes to be processed - 1:Index, 2:direction, 3:1 = true, 0 = false
      */
-    public void queueKnockback(byte[] data) {
-        knockQueue.add(data);
+    public void queuePlayerKnock(byte[] data) {
+        addProj.add(data);
     }
     
     private void processQueues(){
@@ -152,13 +168,9 @@ public class LogicModule extends Thread{
             players[data[1]].setMove(data[2], data[3] == 1);
         }
         
-        while (!knockQueue.isEmpty()) {
-            byte[] data = knockQueue.remove();
-            if (players[data[1]] == null) continue;
-            double x = 0;
-            if (players[data[1]].getFacing() == Globals.LEFT) x = 8; else x = -8;
-            
-            players[data[1]].setKnockback(500000000, x, -8);
+        while (!addProj.isEmpty()) {
+            byte[] data = addProj.remove();
+            projectiles.add(new ProjBase(this, players[data[1]], players[data[1]].getX(),players[data[1]].getY(),500000000));
         }
     }
     

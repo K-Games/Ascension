@@ -37,4 +37,9 @@ public interface Projectile {
      */
     public abstract double getY();
     
+    /**
+     * Check if projectile expired(duration=0). 
+     * @return True if duration <= 0
+     */
+    public abstract boolean isExpired();
 }
