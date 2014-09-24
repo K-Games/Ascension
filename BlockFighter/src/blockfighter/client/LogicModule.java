@@ -10,6 +10,7 @@ import blockfighter.client.entities.Player;
 import blockfighter.client.net.PacketSender;
 import java.net.DatagramSocket;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
@@ -32,8 +33,10 @@ public class LogicModule extends Thread {
     private ConcurrentLinkedQueue<byte[]> playersMoveQueue = new ConcurrentLinkedQueue<>();
     private ConcurrentLinkedQueue<byte[]> playersFacingQueue = new ConcurrentLinkedQueue<>();
     private ConcurrentLinkedQueue<byte[]> playersStateQueue = new ConcurrentLinkedQueue<>();
+    private ConcurrentLinkedQueue<byte[]> particlesQueue = new ConcurrentLinkedQueue<>();
     
     private Player[] players = null;
+    private LinkedList<Byte> particles = new LinkedList<>();
     private byte myIndex = -1;
 
     private PacketSender sender = null;
@@ -156,7 +159,14 @@ public class LogicModule extends Thread {
                 players[index].setFrame(frame);
             }
         }
-
+        
+        while (!particlesQueue.isEmpty()){
+            byte[] data = particlesQueue.remove();
+            byte particleID = data[1];
+            int x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
+            int y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
+            particles.add(particleID);
+        }
     }
         
     public boolean isRunning(){ return isRunning; }
@@ -195,6 +205,10 @@ public class LogicModule extends Thread {
     
     public void setPlayerState(byte[] data){
         playersStateQueue.add(data);
+    }
+    
+    public void queueParticleEffect(byte[] data){
+        particlesQueue.add(data);
     }
     
     public void setPing(byte rID){

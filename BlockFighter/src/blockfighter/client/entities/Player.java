@@ -40,8 +40,7 @@ public class Player {
         int drawSrcX = x - ((facing==Globals.RIGHT) ? 1:-1) * 2*sprite.getWidth()/2;
         int drawSrcY = y - 2*sprite.getHeight();
         int drawDscX = x + ((facing==Globals.RIGHT) ? 1:-1) * 2*sprite.getWidth()/2;
-        g.drawImage(sprite, drawSrcX, drawSrcY, drawDscX, y, 0, 0, sprite.getWidth(), sprite.getHeight(), null);
-        g.fillRect(x-2,y,4,4);
+        g.drawImage(sprite, drawSrcX, drawSrcY, drawDscX, y, 0, 0, sprite.getWidth(), sprite.getHeight(), null);       
     }
 
 }
