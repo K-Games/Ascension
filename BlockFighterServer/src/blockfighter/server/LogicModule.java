@@ -5,7 +5,6 @@ import blockfighter.server.entities.projectiles.ProjBase;
 import blockfighter.server.maps.Map;
 import blockfighter.server.maps.TestMap;
 import blockfighter.server.net.Broadcaster;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
