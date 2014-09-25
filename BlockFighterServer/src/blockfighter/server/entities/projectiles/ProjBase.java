@@ -1,73 +1,105 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package blockfighter.server.entities.Projectiles;
+package blockfighter.server.entities.projectiles;
 
 import blockfighter.server.Globals;
+import blockfighter.server.LogicModule;
 import blockfighter.server.entities.Player;
 import blockfighter.server.entities.Projectile;
-import blockfighter.server.LogicModule;
+import blockfighter.server.net.Broadcaster;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
-import java.util.LinkedList;
 
 /**
- * This is the base projectile class. Create projectile classes off this.
+ * Abstract class for projectiles/attacks
  *
- * @author Ken
+ * @author ckwa290
  */
-public class ProjBase extends Thread implements Projectile {
-
-    private final LogicModule logic;
-    private double x, y, xSpeed, ySpeed;
-    private Player owner;
-    private ArrayList<Player> pHit = new ArrayList<>();
-    private double duration;
-    private Rectangle2D.Double hitbox;
-    private LinkedList<Player> queue = new LinkedList<>();
+public abstract class ProjBase extends Thread implements Projectile {
+    
+    protected final int key;
+    /**
+     * Reference to Logic Module.
+     */
+    protected final LogicModule logic;
 
     /**
-     * Create a basic projectile.
-     * <p>
-     * Does nothing.
-     * </p>
+     * Projectile x position.
+     */
+    protected double x,
+            /**
+             * Projectile y position.
+             */
+            y,
+            /**
+             * Projectile knockback x distance per tick
+             */
+            xSpeed,
+            /**
+             * Projectile knockback y distance per tick
+             */
+            ySpeed;
+
+    /**
+     * Projectile's owning player
+     */
+    protected Player owner;
+
+    /**
+     * Array of players hit by this projectile
+     */
+    protected ArrayList<Player> pHit = new ArrayList<>();
+
+    /**
+     * The duration of this projectile in ns.
+     */
+    protected double duration;
+
+    /**
+     * Hitbox(es) of this projectile
+     */
+    protected Rectangle2D.Double[] hitbox;
+
+    /**
+     * Reference to Server Broadcaster
+     */
+    protected Broadcaster broadcaster;
+
+    /**
+     * Constructor called by subclasses to reference broadcaster and logic.
+     *
+     * @param b Reference to server broadcaster
      * @param l Reference to Logic module
-     * @param o
+     */
+    public ProjBase(Broadcaster b, LogicModule l, int k) {
+        broadcaster = b;
+        logic = l;
+        key = k;
+    }
+
+    /**
+     * Constructor for a empty projectile.
+     *
+     * @param b Reference to server broadcaster
+     * @param l Reference to Logic module
+     * @param o Owning player
      * @param x Spawning x
      * @param y Spawning y
      * @param duration
      */
-    public ProjBase(LogicModule l, Player o, double x, double y, double duration) {
+    public ProjBase(Broadcaster b, LogicModule l, int k, Player o, double x, double y, double duration) {
+        this(b, l, k);
         owner = o;
-        logic = l;
-        if (owner.getFacing() == Globals.LEFT) {
-            xSpeed = -6;
-        } else {
-            xSpeed = 6;
-        }
-        ySpeed = -8;
+        xSpeed = 0;
+        ySpeed = 0;
         this.x = x;
         this.y = y;
-        if (owner.getFacing() == Globals.LEFT) {
-            hitbox = new Rectangle2D.Double(x - 35, y - 96, 35, 96);
-        } else {
-            hitbox = new Rectangle2D.Double(x, y - 96, 35, 96);
-        }
+        hitbox = new Rectangle2D.Double[1];
+        hitbox[0] = new Rectangle2D.Double(0, 0, 0, 0);
         this.duration = duration;
     }
 
     @Override
     public void update() {
         duration -= Globals.LOGIC_UPDATE;
-        for (Player p : logic.getPlayers()) {
-            if (p != owner && p != null && !pHit.contains(p) && p.intersectHitbox(hitbox)) {
-                queue.add(p);
-                pHit.add(p);
-                logic.queueKnockPlayer(this);
-            }
-        }
     }
 
     @Override
@@ -100,13 +132,4 @@ public class ProjBase extends Thread implements Projectile {
         return duration <= 0;
     }
 
-    /**
-     * Process any knockbacks to be applied to players hit by this projectile.
-     */
-    public void processQueue() {
-        while (!queue.isEmpty()) {
-            Player p = queue.pop();
-            p.setKnockback(500000000, xSpeed, ySpeed);
-        }
-    }
 }

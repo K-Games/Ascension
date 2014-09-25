@@ -80,7 +80,7 @@ public class PacketHandler extends Thread {
         if (freeIndex == -1) {
             return;
         }
-        Player newPlayer = new Player(freeIndex, address, port, Math.random() * 1180.0 + 100, 0, broadcaster, logic.getMap(), logic);
+        Player newPlayer = new Player(broadcaster, logic, freeIndex, address, port, logic.getMap(), Math.random() * 1180.0 + 100, 0);
         logic.queueAddPlayer(newPlayer);
         byte[] bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_BYTE + Globals.PACKET_BYTE];
         bytes[0] = Globals.DATA_LOGIN;

@@ -1,10 +1,13 @@
 package blockfighter.server;
 
 import blockfighter.server.entities.Player;
-import blockfighter.server.entities.Projectiles.ProjBase;
+import blockfighter.server.entities.projectiles.ProjBase;
+import blockfighter.server.maps.Map;
 import blockfighter.server.maps.TestMap;
 import blockfighter.server.net.Broadcaster;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
@@ -21,13 +24,14 @@ public class LogicModule extends Thread {
 
     private boolean isRunning = false;
     private Player[] players = new Player[Globals.MAX_PLAYERS];
-    private ArrayList<ProjBase> projectiles = new ArrayList<>();
+    private HashMap<Integer, ProjBase> projectiles = new HashMap<>();
+
     private Broadcaster broadcaster;
-    private TestMap map;
+    private Map map;
     private ConcurrentLinkedQueue<Player> pAddQueue = new ConcurrentLinkedQueue<>();
     private ConcurrentLinkedQueue<byte[]> pMoveQueue = new ConcurrentLinkedQueue<>();
-    private ConcurrentLinkedQueue<ProjBase> pKnockQueue = new ConcurrentLinkedQueue<>();
-    private ConcurrentLinkedQueue<ProjBase> addProj = new ConcurrentLinkedQueue<>();
+    private ConcurrentLinkedQueue<ProjBase> projEffectQueue = new ConcurrentLinkedQueue<>();
+    private ConcurrentLinkedQueue<ProjBase> projAddQueue = new ConcurrentLinkedQueue<>();
     private byte numPlayers = 0;
 
     /**
@@ -69,21 +73,42 @@ public class LogicModule extends Thread {
                     }
                 }
 
-                for (ProjBase p : projectiles) {
-                    if (p != null) {
-                        threadPool.execute(p);
+                Iterator<Integer> projItr = projectiles.keySet().iterator();
+                while (projItr.hasNext()) {
+                    Integer key = projItr.next();
+                    if (projectiles.get(key) != null) {
+                        threadPool.execute(projectiles.get(key));
                     }
                 }
 
-                for (ProjBase p : projectiles) {
-                    try {
-                        if (p != null) {
-                            p.join();
+                projItr = projectiles.keySet().iterator();
+                while (projItr.hasNext()) {
+                    Integer key = projItr.next();
+                    if (projectiles.get(key) != null) {
+                        try {
+                            projectiles.get(key).join();
+                        } catch (InterruptedException ex) {
+                            Logger.getLogger(LogicModule.class.getName()).log(Level.SEVERE, null, ex);
                         }
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(LogicModule.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
+                /*
+                 for (ProjBase p : projectiles) {
+                 if (p != null) {
+                 threadPool.execute(p);
+                 }
+                 }
+
+                 for (ProjBase p : projectiles) {
+                 try {
+                 if (p != null) {
+                 p.join();
+                 }
+                 } catch (InterruptedException ex) {
+                 Logger.getLogger(LogicModule.class.getName()).log(Level.SEVERE, null, ex);
+                 }
+                 }
+                 */
 
                 removeProjectiles();
                 lastUpdateTime = now;
@@ -104,13 +129,23 @@ public class LogicModule extends Thread {
     }
 
     private void removeProjectiles() {
-        LinkedList<ProjBase> remove = new LinkedList<>();
-        for (ProjBase p : projectiles) {
-            if (p != null && p.isExpired()) {
-                remove.add(p);
+        LinkedList<Integer> remove = new LinkedList<>();
+        Iterator<Integer> projItr = projectiles.keySet().iterator();
+
+        while (projItr.hasNext()) {
+            Integer key = projItr.next();
+            ProjBase p = projectiles.get(key);
+            if (p.isExpired()) {
+                remove.add(key);
             }
         }
 
+        /*
+         for (ProjBase p : projectiles) {
+         if (p != null && p.isExpired()) {
+         remove.add(p);
+         }
+         }*/
         while (!remove.isEmpty()) {
             projectiles.remove(remove.pop());
         }
@@ -135,11 +170,20 @@ public class LogicModule extends Thread {
     }
 
     /**
+     * Return the hash map of projectiles
+     *
+     * @return Array of connected players
+     */
+    public HashMap getProj() {
+        return projectiles;
+    }
+
+    /**
      * Return the loaded server map
      *
      * @return Server Map
      */
-    public TestMap getMap() {
+    public Map getMap() {
         return map;
     }
 
@@ -180,7 +224,8 @@ public class LogicModule extends Thread {
      * Data to be processed in the queue later.
      * </p>
      *
-     * @param data Bytes to be processed - 1:Index, 2:direction, 3:1 = true, 0 = false
+     * @param data Bytes to be processed - 1:Index, 2:direction, 3:1 = true, 0 =
+     * false
      */
     public void queuePlayerMove(byte[] data) {
         pMoveQueue.add(data);
@@ -195,7 +240,7 @@ public class LogicModule extends Thread {
      * @param p New projectile to be added
      */
     public void queueAddProj(ProjBase p) {
-        addProj.add(p);
+        projAddQueue.add(p);
     }
 
     /**
@@ -204,7 +249,7 @@ public class LogicModule extends Thread {
      * @param p Projectile which will knockback the player
      */
     public void queueKnockPlayer(ProjBase p) {
-        pKnockQueue.add(p);
+        projEffectQueue.add(p);
     }
 
     private void processQueues() {
@@ -222,13 +267,14 @@ public class LogicModule extends Thread {
             players[data[1]].setMove(data[2], data[3] == 1);
         }
 
-        while (!pKnockQueue.isEmpty()) {
-            ProjBase proj = pKnockQueue.remove();
+        while (!projEffectQueue.isEmpty()) {
+            ProjBase proj = projEffectQueue.remove();
             proj.processQueue();
         }
 
-        while (!addProj.isEmpty()) {
-            projectiles.add(addProj.remove());
+        while (!projAddQueue.isEmpty()) {
+            ProjBase p = projAddQueue.remove();
+            projectiles.put(p.getKey(), p);
         }
     }
 

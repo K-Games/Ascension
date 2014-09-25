@@ -5,11 +5,11 @@
  */
 package blockfighter.server.entities;
 
-import blockfighter.server.maps.TestMap;
+import blockfighter.server.maps.Map;
 import blockfighter.server.net.Broadcaster;
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
-import blockfighter.server.entities.Projectiles.ProjBase;
+import blockfighter.server.entities.Projectiles.ProjTest;
 import java.awt.geom.Rectangle2D;
 import java.net.InetAddress;
 
@@ -35,7 +35,7 @@ public class Player extends Thread {
     private final InetAddress address;
     private final int port;
     private final Broadcaster broadcaster;
-    private final TestMap map;
+    private final Map map;
 
     /**
      * Return this player's current X position.
@@ -70,7 +70,8 @@ public class Player extends Thread {
     /**
      * Return this player's current state.
      * <p>
-     * Used for updating animation state and player interactions. States are listed in Globals.
+     * Used for updating animation state and player interactions. States are
+     * listed in Globals.
      * </p>
      *
      * @return The player's state in byte
@@ -125,7 +126,8 @@ public class Player extends Thread {
     }
 
     /**
-     * Set this player's movement when server receives packet that key is pressed.
+     * Set this player's movement when server receives packet that key is
+     * pressed.
      *
      * @param direction The direction to be set
      * @param move True when pressed, false when released
@@ -137,7 +139,8 @@ public class Player extends Thread {
     /**
      * Set the player's x and y position.
      * <p>
-     * This does not interpolate. The player is instantly moved to this location.
+     * This does not interpolate. The player is instantly moved to this
+     * location.
      * </p>
      *
      * @param x New x location in double
@@ -179,7 +182,7 @@ public class Player extends Thread {
      * @param map Reference to server's loaded map
      * @param l Reference to Logic module
      */
-    public Player(byte index, InetAddress address, int port, double x, double y, Broadcaster bc, TestMap map, LogicModule l) {
+    public Player(Broadcaster bc, LogicModule l, byte index, InetAddress address, int port, Map map, double x, double y) {
         System.out.println(address + ":" + port + " Index:" + index);
         broadcaster = bc;
         logic = l;
@@ -203,7 +206,8 @@ public class Player extends Thread {
     /**
      * Updates all logic of this player.
      * <p>
-     * Should be called every tick. Specific logic updates are separated into other methods. Specific logic updates should be private.
+     * Should be called every tick. Specific logic updates are separated into
+     * other methods. Specific logic updates should be private.
      * </p>
      */
     public void update() {
@@ -247,7 +251,7 @@ public class Player extends Thread {
      *
      * @return True if stun duration is > 0
      */
-    public boolean isStunned() {
+    public synchronized boolean isStunned() {
         return stunDuration > 0;
     }
 
@@ -256,7 +260,7 @@ public class Player extends Thread {
      *
      * @return true if knockback duration is > 0
      */
-    public boolean isKnockback() {
+    public synchronized boolean isKnockback() {
         return kbDuration > 0;
     }
 
@@ -290,7 +294,7 @@ public class Player extends Thread {
      * <p>
      * Duration is in nanoseconds 100000ns = 1ms;
      * </p>
-     * 
+     *
      * @param duration Duration in ns
      * @param xS Change in x per tick over the duration
      * @param yS Change in y per tick over the duration
@@ -363,14 +367,20 @@ public class Player extends Thread {
     /**
      * Template attack.
      * <p>
-     * Does nothing, only knocks back. Attacks and projectiles should always be queued from the player to allow condition checking. Projectiles must be created in the player entity
+     * Does nothing, only knocks back. Attacks and projectiles should always be
+     * queued from the player to allow condition checking. Projectiles must be
+     * created in the player entity
      * </p>
-     * 
+     *
      * @param data Received data bytes from client
      */
     public void attackKnockback(byte[] data) {
         if (!isStunned() || !isKnockback()) {
-            logic.queueAddProj(new ProjBase(logic, this, x, y, 500000000));
+            int newKey = 0x00000000;
+            while (logic.getProj().containsKey(newKey)) {
+                newKey++;
+            }
+            logic.queueAddProj(new ProjTest(broadcaster, logic, newKey, this, x, y, 500000000));
         }
     }
 
@@ -379,7 +389,7 @@ public class Player extends Thread {
      * <p>
      * Direction constants in Globals
      * </p>
-     * 
+     *
      * @param f Direction in byte
      */
     public void setFacing(byte f) {
@@ -410,7 +420,7 @@ public class Player extends Thread {
      * <p>
      * States constants in Globals
      * </p>
-     * 
+     *
      * @param newState
      */
     public void setPlayerState(byte newState) {
@@ -491,7 +501,8 @@ public class Player extends Thread {
     }
 
     /**
-     * Send the player's current state(for animation) and current frame of animation to every connected player
+     * Send the player's current state(for animation) and current frame of
+     * animation to every connected player
      * <p>
      * State constants are in Globals.<br/>
      * Uses Server Broadcaster to send to all<br/>

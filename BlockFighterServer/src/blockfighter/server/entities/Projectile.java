@@ -35,7 +35,14 @@ public interface Projectile {
      * @return current x location in double
      */
     public abstract double getX();
-
+    
+    /**
+     * Return the key of this projectile.
+     *
+     * @return Key value
+     */
+    public abstract int getKey();
+    
     /**
      * Return the y position of this projectile.
      *
@@ -49,4 +56,9 @@ public interface Projectile {
      * @return True if duration <= 0
      */
     public abstract boolean isExpired();
+    
+    /**
+     * Process any effects to be applied to players hit by this projectile.
+     */
+    public abstract void processQueue();
 }
