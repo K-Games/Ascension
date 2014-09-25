@@ -38,11 +38,11 @@ public class PacketHandler extends Thread {
     }
     
     private void receiveParticleEffect(byte[] data){
-        
+        logic.queueParticleEffect(data);
     }
     
     private void receiveGetPlayerPos(byte[] data){
-        logic.setPlayerPos(data);
+        logic.queueSetPlayerPos(data);
     }
     
     private void receiveLogin(byte[] data){
@@ -50,7 +50,7 @@ public class PacketHandler extends Thread {
         byte size = data[2];
         logic.setPlayersSize(size);
         logic.setMyIndex(index);
-        logic.addPlayer(index);
+        logic.queueAddPlayer(index);
     }
     
     private void receiveGetPing(byte[] data){
@@ -58,11 +58,11 @@ public class PacketHandler extends Thread {
     }
     
     private void receiveSetPlayerFacing(byte[] data){
-        logic.setPlayerFacing(data);
+        logic.queueSetPlayerFacing(data);
     }
     
     private void receiveSetPlayerState(byte[] data){
-        logic.setPlayerState(data);
+        logic.queueSetPlayerState(data);
     }
 
 }

@@ -2,6 +2,7 @@ package blockfighter.client.entities;
 
 import blockfighter.client.Globals;
 import blockfighter.client.LogicModule;
+import java.awt.Color;
 import java.awt.Graphics;
 
 /**
@@ -55,6 +56,7 @@ public class Particle extends Thread {
     }
 
     public void draw(Graphics g) {
-        g.drawRect((int) (x - size / 2), (int) (y - size / 2), (int) size, (int) size);
+        g.setColor(Color.blue);
+        g.fillRect((int) (x - size / 2), (int) (y - size / 2), (int) size, (int) size);
     }
 }

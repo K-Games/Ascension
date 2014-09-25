@@ -265,19 +265,19 @@ public class LogicModule extends Thread {
         return particles;
     }
 
-    public void addPlayer(byte index) {
+    public void queueAddPlayer(byte index) {
         playersAddQueue.add(index);
     }
 
-    public void setPlayerPos(byte[] data) {
+    public void queueSetPlayerPos(byte[] data) {
         playersMoveQueue.add(data);
     }
 
-    public void setPlayerFacing(byte[] data) {
+    public void queueSetPlayerFacing(byte[] data) {
         playersFacingQueue.add(data);
     }
 
-    public void setPlayerState(byte[] data) {
+    public void queueSetPlayerState(byte[] data) {
         playersStateQueue.add(data);
     }
 
