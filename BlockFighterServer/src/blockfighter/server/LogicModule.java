@@ -173,7 +173,7 @@ public class LogicModule extends Thread {
      *
      * @return Array of connected players
      */
-    public HashMap getProj() {
+    public HashMap<Integer, ProjBase> getProj() {
         return projectiles;
     }
 
