@@ -261,7 +261,7 @@ public class LogicModule extends Thread {
         return players;
     }
 
-    public ConcurrentHashMap getParticles() {
+    public ConcurrentHashMap<Integer, Particle> getParticles() {
         return particles;
     }
 
