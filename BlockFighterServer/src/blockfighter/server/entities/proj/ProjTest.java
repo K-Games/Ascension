@@ -53,6 +53,7 @@ public class ProjTest extends ProjBase {
     @Override
     public void update() {
         duration -= Globals.LOGIC_UPDATE;
+
         byte[] bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_BYTE + Globals.PACKET_INT + Globals.PACKET_INT];
         bytes[0] = Globals.DATA_PARTICLE_EFFECT;
         bytes[1] = 0;
