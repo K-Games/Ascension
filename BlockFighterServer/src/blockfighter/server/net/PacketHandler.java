@@ -65,7 +65,7 @@ public class PacketHandler extends Thread {
     }
 
     private void receivePlayerKnock(byte[] data) {
-        Globals.log("DATA_PLAYER_KNOCK", "Index: " + data[1], Globals.LOG_TYPE_DATA, true);
+        Globals.log("DATA_PLAYER_KNOCK", "Index: " + data[1], Globals.LOG_TYPE_DATA, false);
         logic.getPlayers()[data[1]].attackKnockback(data);
     }
 

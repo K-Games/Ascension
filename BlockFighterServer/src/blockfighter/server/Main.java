@@ -27,7 +27,7 @@ public class Main {
             logic.start();
             server.start();
         } catch (Exception ex) {
-            Globals.log(ex.getLocalizedMessage(), ex.getStackTrace()[1].toString() + "\n" + ex.getStackTrace()[2].toString() + "\n" + ex.getStackTrace()[3].toString(), Globals.LOG_TYPE_ERR, true);
+            Globals.log(ex.getLocalizedMessage(), ex, true);
         }
     }
 

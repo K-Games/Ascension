@@ -20,6 +20,8 @@ public class Globals {
     public final static byte LOG_TYPE_ERR = 0x00,
             LOG_TYPE_DATA = 0x01;
 
+    private final static int SERVER_ID = (int) (Math.random() * 50000);
+
     private final static ExecutorService LOG_THREADS = Executors.newCachedThreadPool();
 
     public final static void log(final String ex, final String s, final byte logType, final boolean console) {
@@ -46,7 +48,7 @@ public class Globals {
                             logT = "DATA:";
                             break;
                     }
-                    out.println(ex + "@" + s);
+                    out.println("[" + SERVER_ID + "]" + ex + "@" + s);
                     if (console) {
                         System.out.println(logT + ex + "@" + s);
                     }
@@ -59,6 +61,28 @@ public class Globals {
         LOG_THREADS.execute(logging);
     }
 
+    public final static void log(final String ex, final Exception e, final boolean console) {
+        Runnable logging = new Runnable() {
+            @Override
+            public void run() {
+                String logFile = ERRLOG_FILE;
+
+                try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(logFile, true)))) {
+                    out.println("[" + SERVER_ID + "]" + ex + "@");
+                    for (StackTraceElement s : e.getStackTrace()) {
+                        out.println("[" + SERVER_ID + "]" + s.toString());
+                    }
+                    if (console) {
+                        System.out.println("ERROR:" + ex + "@" + e.getStackTrace()[1]);
+                    }
+                } catch (IOException e) {
+                    System.err.println(e);
+                }
+            }
+        };
+
+        LOG_THREADS.execute(logging);
+    }
     public final static int SERVER_PORT = 45645;
     public final static byte MAX_PLAYERS = 10;
 

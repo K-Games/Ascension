@@ -212,9 +212,11 @@ public class Player extends Thread {
         updateFall();
         hitbox.x = x - 48;
         hitbox.y = y - 96;
-        
+
         boolean movedX = updateX(xSpeed);
-        updateFacing();
+        if (!isStunned() && !isKnockback()) {
+            updateFacing();
+        }
         if (!isJumping && !isFalling && !isStunned() && !isKnockback()) {
             updateWalk(movedX);
             updateJump();
@@ -269,9 +271,6 @@ public class Player extends Thread {
 
     private boolean updateKnockback() {
         kbDuration -= Globals.LOGIC_UPDATE;
-        if (kbDuration > 0) {
-            updateX(xSpeed);
-        }
         return isKnockback();
     }
 
@@ -357,6 +356,7 @@ public class Player extends Thread {
             setXSpeed(0);
         }
     }
+
     private void updateFacing() {
         if (isMove[Globals.RIGHT] && !isMove[Globals.LEFT]) {
             if (facing != Globals.RIGHT) {
@@ -368,6 +368,7 @@ public class Player extends Thread {
             }
         }
     }
+
     /**
      * Template attack.
      * <p>
@@ -402,6 +403,10 @@ public class Player extends Thread {
     }
 
     private boolean updateX(double change) {
+        if (change == 0) {
+            return false;
+        }
+
         if (map.isOutOfBounds(x + change, y)) {
             return false;
         }
@@ -411,6 +416,10 @@ public class Player extends Thread {
     }
 
     private boolean updateY(double change) {
+        if (change == 0) {
+            return false;
+        }
+        
         if (map.isOutOfBounds(x, y + change)) {
             return false;
         }
