@@ -111,7 +111,6 @@ public class LogicModule extends Thread {
                         try {
                             particles.get(key).join();
                         } catch (InterruptedException ex) {
-                            Logger.getLogger(LogicModule.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
                 }
