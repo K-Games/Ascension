@@ -1,5 +1,6 @@
 package blockfighter.server.net;
 
+import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.Player;
 import java.io.IOException;
@@ -8,10 +9,11 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 
 /**
- * The server broadcaster. 
+ * The server broadcaster.
  * <p>
  * Sends data to players. Only one is created on the server.
  * </p>
+ *
  * @author Ken
  */
 public class Broadcaster {
@@ -39,7 +41,8 @@ public class Broadcaster {
     /**
      * Create a broadcaster to send bytes to connected players.
      * <p>
-     * Server should only have one broadcaster. The broadcaster should always be referenced after construction and never initialized again.
+     * Server should only have one broadcaster. The broadcaster should always be
+     * referenced after construction and never initialized again.
      * </p>
      *
      * @param logic
@@ -62,6 +65,7 @@ public class Broadcaster {
      * <p>
      * Get IP address and port from the player object.
      * </p>
+     *
      * @param bytes Data to be sent in bytes
      * @param address IP address of player
      * @param port Connected port of player
@@ -72,7 +76,7 @@ public class Broadcaster {
         try {
             socket.send(packet);
         } catch (IOException ex) {
-            System.err.println("ServerBroadcast:sendPlayer: " + ex);
+            Globals.log(ex.getLocalizedMessage(), ex.getStackTrace()[1].toString() + "\n" + ex.getStackTrace()[2].toString() + "\n" + ex.getStackTrace()[3].toString(), Globals.LOG_TYPE_ERR, true);
         }
     }
 
@@ -90,7 +94,7 @@ public class Broadcaster {
                 try {
                     socket.send(packet);
                 } catch (IOException ex) {
-                    System.err.println("ServerBroadcast:sendAll: " + ex);
+                    Globals.log(ex.getLocalizedMessage(), ex.getStackTrace()[1].toString() + "\n" + ex.getStackTrace()[2].toString() + "\n" + ex.getStackTrace()[3].toString(), Globals.LOG_TYPE_ERR, true);
                 }
             }
         }

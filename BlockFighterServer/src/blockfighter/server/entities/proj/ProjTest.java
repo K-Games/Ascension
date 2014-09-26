@@ -24,6 +24,7 @@ public class ProjTest extends ProjBase {
      *
      * @param b Reference to server broadcaster
      * @param l Reference to Logic module
+     * @param k Hash map key
      * @param o Owning player
      * @param x Spawning x
      * @param y Spawning y
@@ -56,18 +57,18 @@ public class ProjTest extends ProjBase {
         bytes[0] = Globals.DATA_PARTICLE_EFFECT;
         bytes[1] = 0;
 
-        byte[] posInt = Globals.intToByte((int)(Math.random() * hitbox[0].width + hitbox[0].x));
+        byte[] posInt = Globals.intToByte((int) (Math.random() * hitbox[0].width + hitbox[0].x));
         bytes[2] = posInt[0];
         bytes[3] = posInt[1];
         bytes[4] = posInt[2];
         bytes[5] = posInt[3];
-        
-        posInt = Globals.intToByte((int)(Math.random() * hitbox[0].height + hitbox[0].y));
+
+        posInt = Globals.intToByte((int) (Math.random() * hitbox[0].height + hitbox[0].y));
         bytes[6] = posInt[0];
         bytes[7] = posInt[1];
         bytes[8] = posInt[2];
         bytes[9] = posInt[3];
-        
+
         broadcaster.sendAll(bytes);
         for (Player p : logic.getPlayers()) {
             if (p != owner && p != null && !pHit.contains(p) && p.intersectHitbox(hitbox[0])) {

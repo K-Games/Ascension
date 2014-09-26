@@ -5,14 +5,12 @@ import blockfighter.server.entities.proj.ProjBase;
 import blockfighter.server.maps.Map;
 import blockfighter.server.maps.TestMap;
 import blockfighter.server.net.Broadcaster;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Logic module of the server. Updates all objects and their interactions.
@@ -22,15 +20,15 @@ import java.util.logging.Logger;
 public class LogicModule extends Thread {
 
     private boolean isRunning = false;
-    private Player[] players = new Player[Globals.MAX_PLAYERS];
-    private HashMap<Integer, ProjBase> projectiles = new HashMap<>();
+    private final Player[] players = new Player[Globals.MAX_PLAYERS];
+    private final ConcurrentHashMap<Integer, ProjBase> projectiles = new ConcurrentHashMap<>();
 
     private Broadcaster broadcaster;
-    private Map map;
-    private ConcurrentLinkedQueue<Player> pAddQueue = new ConcurrentLinkedQueue<>();
-    private ConcurrentLinkedQueue<byte[]> pMoveQueue = new ConcurrentLinkedQueue<>();
-    private ConcurrentLinkedQueue<ProjBase> projEffectQueue = new ConcurrentLinkedQueue<>();
-    private ConcurrentLinkedQueue<ProjBase> projAddQueue = new ConcurrentLinkedQueue<>();
+    private final Map map;
+    private final ConcurrentLinkedQueue<Player> pAddQueue = new ConcurrentLinkedQueue<>();
+    private final ConcurrentLinkedQueue<byte[]> pMoveQueue = new ConcurrentLinkedQueue<>();
+    private final ConcurrentLinkedQueue<ProjBase> projEffectQueue = new ConcurrentLinkedQueue<>();
+    private final ConcurrentLinkedQueue<ProjBase> projAddQueue = new ConcurrentLinkedQueue<>();
     private byte numPlayers = 0;
 
     /**
@@ -52,64 +50,12 @@ public class LogicModule extends Thread {
         ExecutorService threadPool = Executors.newCachedThreadPool();
 
         while (isRunning) {
-            processQueues();
+            processQueues(threadPool);
             double now = System.nanoTime();
             long nowMs = System.currentTimeMillis();
             if (now - lastUpdateTime >= Globals.LOGIC_UPDATE) {
-                for (Player player : players) {
-                    if (player != null) {
-                        threadPool.execute(player);
-                    }
-                }
-
-                for (Player player : players) {
-                    try {
-                        if (player != null) {
-                            player.join();
-                        }
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(LogicModule.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-
-                Iterator<Integer> projItr = projectiles.keySet().iterator();
-                while (projItr.hasNext()) {
-                    Integer key = projItr.next();
-                    if (projectiles.get(key) != null) {
-                        threadPool.execute(projectiles.get(key));
-                    }
-                }
-
-                projItr = projectiles.keySet().iterator();
-                while (projItr.hasNext()) {
-                    Integer key = projItr.next();
-                    if (projectiles.get(key) != null) {
-                        try {
-                            projectiles.get(key).join();
-                        } catch (InterruptedException ex) {
-                            Logger.getLogger(LogicModule.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    }
-                }
-                /*
-                 for (ProjBase p : projectiles) {
-                 if (p != null) {
-                 threadPool.execute(p);
-                 }
-                 }
-
-                 for (ProjBase p : projectiles) {
-                 try {
-                 if (p != null) {
-                 p.join();
-                 }
-                 } catch (InterruptedException ex) {
-                 Logger.getLogger(LogicModule.class.getName()).log(Level.SEVERE, null, ex);
-                 }
-                 }
-                 */
-
-                removeProjectiles();
+                updatePlayers(threadPool);
+                updateProjectiles(threadPool);
                 lastUpdateTime = now;
             }
 
@@ -125,6 +71,47 @@ public class LogicModule extends Thread {
                 now = System.nanoTime();
             }
         }
+    }
+
+    private void updatePlayers(ExecutorService threadPool) {
+        for (Player player : players) {
+            if (player != null) {
+                threadPool.execute(player);
+            }
+        }
+
+        for (Player player : players) {
+            try {
+                if (player != null) {
+                    player.join();
+                }
+            } catch (InterruptedException ex) {
+                Globals.log(ex.getLocalizedMessage(), ex.getStackTrace()[1].toString() + "\n" + ex.getStackTrace()[2].toString() + "\n" + ex.getStackTrace()[3].toString() , Globals.LOG_TYPE_ERR, true);
+            }
+        }
+    }
+
+    private void updateProjectiles(ExecutorService threadPool) {
+        Iterator<Integer> projItr = projectiles.keySet().iterator();
+        while (projItr.hasNext()) {
+            Integer key = projItr.next();
+            if (projectiles.get(key) != null) {
+                threadPool.execute(projectiles.get(key));
+            }
+        }
+
+        projItr = projectiles.keySet().iterator();
+        while (projItr.hasNext()) {
+            Integer key = projItr.next();
+            if (projectiles.get(key) != null) {
+                try {
+                    projectiles.get(key).join();
+                } catch (InterruptedException ex) {
+                    Globals.log(ex.getLocalizedMessage(), ex.getStackTrace()[1].toString() + "\n" + ex.getStackTrace()[2].toString() + "\n" + ex.getStackTrace()[3].toString(), Globals.LOG_TYPE_ERR, true);
+                }
+            }
+        }
+        removeProjectiles();
     }
 
     private void removeProjectiles() {
@@ -173,7 +160,7 @@ public class LogicModule extends Thread {
      *
      * @return Array of connected players
      */
-    public HashMap<Integer, ProjBase> getProj() {
+    public ConcurrentHashMap<Integer, ProjBase> getProj() {
         return projectiles;
     }
 
@@ -251,29 +238,63 @@ public class LogicModule extends Thread {
         projEffectQueue.add(p);
     }
 
-    private void processQueues() {
-        while (!pAddQueue.isEmpty()) {
-            Player newPlayer = pAddQueue.remove();
-            byte index = newPlayer.getIndex();
-            players[index] = newPlayer;
-        }
+    private void processQueues(ExecutorService threadPool) {
+        Thread[] queues = new Thread[4];
 
-        while (!pMoveQueue.isEmpty()) {
-            byte[] data = pMoveQueue.remove();
-            if (players[data[1]] == null) {
-                continue;
+        queues[0] = new Thread() {
+            @Override
+            public void run() {
+                while (!pAddQueue.isEmpty()) {
+                    Player newPlayer = pAddQueue.remove();
+                    byte index = newPlayer.getIndex();
+                    players[index] = newPlayer;
+                }
             }
-            players[data[1]].setMove(data[2], data[3] == 1);
+        };
+
+        queues[1] = new Thread() {
+            @Override
+            public void run() {
+                while (!pMoveQueue.isEmpty()) {
+                    byte[] data = pMoveQueue.remove();
+                    if (players[data[1]] == null) {
+                        continue;
+                    }
+                    players[data[1]].setMove(data[2], data[3] == 1);
+                }
+            }
+        };
+
+        queues[2] = new Thread() {
+            @Override
+            public void run() {
+                while (!projEffectQueue.isEmpty()) {
+                    ProjBase proj = projEffectQueue.remove();
+                    proj.processQueue();
+                }
+            }
+        };
+
+        queues[3] = new Thread() {
+            @Override
+            public void run() {
+                while (!projAddQueue.isEmpty()) {
+                    ProjBase p = projAddQueue.remove();
+                    projectiles.put(p.getKey(), p);
+                }
+            }
+        };
+
+        for (Thread t : queues) {
+            threadPool.execute(t);
         }
 
-        while (!projEffectQueue.isEmpty()) {
-            ProjBase proj = projEffectQueue.remove();
-            proj.processQueue();
-        }
-
-        while (!projAddQueue.isEmpty()) {
-            ProjBase p = projAddQueue.remove();
-            projectiles.put(p.getKey(), p);
+        for (Thread t : queues) {
+            try {
+                t.join();
+            } catch (InterruptedException ex) {
+                Globals.log(ex.getLocalizedMessage(), ex.getStackTrace()[1].toString() + "\n" + ex.getStackTrace()[2].toString() + "\n" + ex.getStackTrace()[3].toString(), Globals.LOG_TYPE_ERR, true);
+            }
         }
     }
 

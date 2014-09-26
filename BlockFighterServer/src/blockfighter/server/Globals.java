@@ -1,11 +1,63 @@
 package blockfighter.server;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 /**
  * All the server globals constants and helper methods.
  *
  * @author Ken
  */
 public class Globals {
+
+    public final static String ERRLOG_FILE = "ErrorLog.log",
+            DATALOG_FILE = "DataLog.log";
+
+    public final static byte LOG_TYPE_ERR = 0x00,
+            LOG_TYPE_DATA = 0x01;
+
+    private final static ExecutorService LOG_THREADS = Executors.newCachedThreadPool();
+
+    public final static void log(final String ex, final String s, final byte logType, final boolean console) {
+        Runnable logging = new Runnable() {
+            @Override
+            public void run() {
+                String logFile = ERRLOG_FILE;
+                switch (logType) {
+                    case LOG_TYPE_ERR:
+                        logFile = ERRLOG_FILE;
+                        break;
+                    case LOG_TYPE_DATA:
+                        logFile = DATALOG_FILE;
+                        break;
+                }
+
+                try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(logFile, true)))) {
+                    String logT = "?:";
+                    switch (logType) {
+                        case LOG_TYPE_ERR:
+                            logT = "ERROR:";
+                            break;
+                        case LOG_TYPE_DATA:
+                            logT = "DATA:";
+                            break;
+                    }
+                    out.println(ex + "@" + s);
+                    if (console) {
+                        System.out.println(logT + ex + "@" + s);
+                    }
+                } catch (IOException e) {
+                    System.err.println(e);
+                }
+            }
+        };
+
+        LOG_THREADS.execute(logging);
+    }
 
     public final static int SERVER_PORT = 45645;
     public final static byte MAX_PLAYERS = 10;

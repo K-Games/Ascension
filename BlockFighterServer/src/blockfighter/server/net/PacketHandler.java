@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package blockfighter.server.net;
 
 import blockfighter.server.Globals;
@@ -21,7 +16,7 @@ public class PacketHandler extends Thread {
 
     private DatagramPacket requestPacket = null;
     private final LogicModule logic;
-    private Broadcaster broadcaster;
+    private final Broadcaster broadcaster;
 
     /**
      * Initialize request handler when a request is received by the socket.
@@ -70,11 +65,13 @@ public class PacketHandler extends Thread {
     }
 
     private void receivePlayerKnock(byte[] data) {
+        Globals.log("DATA_PLAYER_KNOCK", "Index: " + data[1], Globals.LOG_TYPE_DATA, true);
         logic.getPlayers()[data[1]].attackKnockback(data);
     }
 
     private void receiveLogin(InetAddress address, int port) {
-        System.out.println("DATA_LOGIN");
+        Globals.log("DATA_LOGIN", address + ":" + port, Globals.LOG_TYPE_DATA, true);
+
         byte freeIndex = logic.getNextIndex();
 
         if (freeIndex == -1) {
@@ -91,17 +88,18 @@ public class PacketHandler extends Thread {
         bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_BYTE + Globals.PACKET_INT + Globals.PACKET_INT];
         bytes[0] = Globals.DATA_GET_PLAYER_POS;
         bytes[1] = newPlayer.getIndex();
+
         byte[] posXInt = Globals.intToByte((int) newPlayer.getX());
         bytes[2] = posXInt[0];
         bytes[3] = posXInt[1];
         bytes[4] = posXInt[2];
         bytes[5] = posXInt[3];
+
         byte[] posYInt = Globals.intToByte((int) newPlayer.getY());
         bytes[6] = posYInt[0];
         bytes[7] = posYInt[1];
         bytes[8] = posYInt[2];
         bytes[9] = posYInt[3];
-
         broadcaster.sendAll(bytes);
 
         bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_BYTE + Globals.PACKET_BYTE];
@@ -119,7 +117,6 @@ public class PacketHandler extends Thread {
             }
 
             byte[] bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_INT + Globals.PACKET_INT + Globals.PACKET_INT];
-
             bytes[0] = Globals.DATA_GET_PLAYER_POS;
             bytes[1] = player.getIndex();
 

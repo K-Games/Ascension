@@ -3,8 +3,6 @@ package blockfighter.server.entities.proj;
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.Player;
-import blockfighter.server.entities.Player;
-import blockfighter.server.entities.Projectile;
 import blockfighter.server.entities.Projectile;
 import blockfighter.server.net.Broadcaster;
 import java.awt.geom.Rectangle2D;
@@ -16,7 +14,10 @@ import java.util.ArrayList;
  * @author ckwa290
  */
 public abstract class ProjBase extends Thread implements Projectile {
-    
+
+    /**
+     * Hash map key paired with this
+     */
     protected final int key;
     /**
      * Reference to Logic Module.
@@ -70,6 +71,7 @@ public abstract class ProjBase extends Thread implements Projectile {
      *
      * @param b Reference to server broadcaster
      * @param l Reference to Logic module
+     * @param k Hash map key
      */
     public ProjBase(Broadcaster b, LogicModule l, int k) {
         broadcaster = b;
@@ -82,6 +84,7 @@ public abstract class ProjBase extends Thread implements Projectile {
      *
      * @param b Reference to server broadcaster
      * @param l Reference to Logic module
+     * @param k Hash map key
      * @param o Owning player
      * @param x Spawning x
      * @param y Spawning y

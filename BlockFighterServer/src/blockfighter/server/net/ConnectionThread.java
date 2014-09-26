@@ -10,8 +10,6 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Thread to accept incoming connections.
@@ -51,14 +49,13 @@ public class ConnectionThread extends Thread {
                 try {
                     socket.receive(packet);
                     tpes.execute(new PacketHandler(broadcaster, packet, logic));
-                } catch (IOException e) {
+                } catch (IOException ex) {
+                    Globals.log(ex.getLocalizedMessage(), ex.getStackTrace()[1].toString() + "\n" + ex.getStackTrace()[2].toString() + "\n" + ex.getStackTrace()[3].toString(), Globals.LOG_TYPE_ERR, true);
                 }
             }
-        } catch (SocketException e) {
+        } catch (SocketException | UnknownHostException ex) {
             logic.shutdown();
-            System.err.println("ServerConnectThread:run: " + e);
-        } catch (UnknownHostException ex) {
-            Logger.getLogger(ConnectionThread.class.getName()).log(Level.SEVERE, null, ex);
+            Globals.log(ex.getLocalizedMessage(), ex.getStackTrace()[1].toString() + "\n" + ex.getStackTrace()[2].toString() + "\n" + ex.getStackTrace()[3].toString(), Globals.LOG_TYPE_ERR, true);
         }
     }
 }

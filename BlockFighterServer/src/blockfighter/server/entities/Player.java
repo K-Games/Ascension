@@ -179,7 +179,6 @@ public class Player extends Thread {
      * @param l Reference to Logic module
      */
     public Player(Broadcaster bc, LogicModule l, byte index, InetAddress address, int port, Map map, double x, double y) {
-        System.out.println(address + ":" + port + " Index:" + index);
         broadcaster = bc;
         logic = l;
         this.index = index;
@@ -213,8 +212,11 @@ public class Player extends Thread {
         updateFall();
         hitbox.x = x - 48;
         hitbox.y = y - 96;
-        if (!isStunned() && !isKnockback()) {
-            updateWalk();
+        
+        boolean movedX = updateX(xSpeed);
+        updateFacing();
+        if (!isJumping && !isFalling && !isStunned() && !isKnockback()) {
+            updateWalk(movedX);
             updateJump();
         }
 
@@ -328,13 +330,10 @@ public class Player extends Thread {
         }
     }
 
-    private void updateWalk() {
+    private void updateWalk(boolean moved) {
         if (isMove[Globals.RIGHT] && !isMove[Globals.LEFT]) {
             setXSpeed(4.5);
-            if (facing != Globals.RIGHT) {
-                setFacing(Globals.RIGHT);
-            }
-            if (updateX(xSpeed)) {
+            if (moved) {
                 if (ySpeed == 0) {
                     setPlayerState(Globals.PLAYER_STATE_WALK);
                 }
@@ -345,10 +344,7 @@ public class Player extends Thread {
             }
         } else if (isMove[Globals.LEFT] && !isMove[Globals.RIGHT]) {
             setXSpeed(-4.5);
-            if (facing != Globals.LEFT) {
-                setFacing(Globals.LEFT);
-            }
-            if (updateX(xSpeed)) {
+            if (moved) {
                 if (ySpeed == 0) {
                     setPlayerState(Globals.PLAYER_STATE_WALK);
                 }
@@ -357,9 +353,21 @@ public class Player extends Thread {
                     setPlayerState(Globals.PLAYER_STATE_STAND);
                 }
             }
+        } else {
+            setXSpeed(0);
         }
     }
-
+    private void updateFacing() {
+        if (isMove[Globals.RIGHT] && !isMove[Globals.LEFT]) {
+            if (facing != Globals.RIGHT) {
+                setFacing(Globals.RIGHT);
+            }
+        } else if (isMove[Globals.LEFT] && !isMove[Globals.RIGHT]) {
+            if (facing != Globals.LEFT) {
+                setFacing(Globals.LEFT);
+            }
+        }
+    }
     /**
      * Template attack.
      * <p>

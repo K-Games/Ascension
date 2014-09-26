@@ -1,12 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package blockfighter.server;
 
 import blockfighter.server.net.ConnectionThread;
 import blockfighter.server.net.Broadcaster;
+import java.util.GregorianCalendar;
 
 /**
  * Start module of server
@@ -19,14 +15,20 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        try {
+            LogicModule logic = new LogicModule();
+            Broadcaster broadcaster = new Broadcaster(logic);
+            ConnectionThread server = new ConnectionThread(logic, broadcaster);
 
-        LogicModule logic = new LogicModule();
-        Broadcaster broadcaster = new Broadcaster(logic);
-        ConnectionThread server = new ConnectionThread(logic, broadcaster);
-
-        logic.setBroadcaster(broadcaster);
-        logic.start();
-        server.start();
+            logic.setBroadcaster(broadcaster);
+            GregorianCalendar date = new GregorianCalendar();
+            Globals.log("Server started", String.format("%1$td/%1$tm/%1$tY %1$tT", date), Globals.LOG_TYPE_ERR, false);
+            Globals.log("Server started", String.format("%1$td/%1$tm/%1$tY %1$tT", date), Globals.LOG_TYPE_DATA, true);
+            logic.start();
+            server.start();
+        } catch (Exception ex) {
+            Globals.log(ex.getLocalizedMessage(), ex.getStackTrace()[1].toString() + "\n" + ex.getStackTrace()[2].toString() + "\n" + ex.getStackTrace()[3].toString(), Globals.LOG_TYPE_ERR, true);
+        }
     }
 
 }
