@@ -217,7 +217,7 @@ public class LogicModule extends Thread {
             while (particles.containsKey(newKey)) {
                 newKey++;
             }
-            particles.put(newKey, new Particle(this, newKey, x, y, 500000000));
+            particles.put(newKey, new Particle(this, newKey, x, y, 500));
         }
     }
 

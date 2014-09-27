@@ -23,10 +23,10 @@ public class Particle extends Thread {
     /**
      * The duration of this projectile in ns.
      */
-    protected double duration;
+    protected long duration;
 
     public void update() {
-        duration -= Globals.LOGIC_UPDATE;
+        duration -= Globals.LOGIC_UPDATE/1000000;
         size -= 0.5;
     }
 
@@ -47,7 +47,7 @@ public class Particle extends Thread {
         return duration <= 0;
     }
 
-    public Particle(LogicModule l, int k, int x, int y, double d) {
+    public Particle(LogicModule l, int k, int x, int y, long d) {
         logic = l;
         key = k;
         this.x = x;

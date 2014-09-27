@@ -5,6 +5,9 @@ import blockfighter.client.render.RenderPanel;
 import blockfighter.client.net.ConnectionThread;
 import java.awt.*;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import javax.swing.*;
 
 /**
@@ -31,6 +34,7 @@ public class Main {
     private static void createAndShowGUI() {
         try {
             DatagramSocket socket = new DatagramSocket();
+            socket.connect(InetAddress.getByName(Globals.SERVER_ADDRESS), Globals.SERVER_PORT);
             Globals.loadCharSprites();
             JFrame frame = new JFrame("Block Fighter");
             RenderPanel render = new RenderPanel();
@@ -52,7 +56,7 @@ public class Main {
             logicCore.start();
             responseThread.start();
             renderCore.start();
-        } catch (Exception e) {
+        } catch (SocketException | UnknownHostException | HeadlessException e) {
             e.printStackTrace();
         }
     }

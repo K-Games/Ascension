@@ -70,12 +70,12 @@ public class PacketSender {
     private void sendPacket(DatagramPacket packet){
         try {
             socket.send(packet);
-        } catch (IOException ex) {
-            Logger.getLogger(PacketSender.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
     }
     
     private DatagramPacket createPacket(byte[] bytes){
-        return new DatagramPacket(bytes, bytes.length, address, Globals.SERVER_PORT);
+        return new DatagramPacket(bytes, bytes.length);
     }
 }
