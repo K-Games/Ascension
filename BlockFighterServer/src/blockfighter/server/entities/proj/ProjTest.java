@@ -30,13 +30,13 @@ public class ProjTest extends ProjBase {
      * @param y Spawning y
      * @param duration
      */
-    public ProjTest(Broadcaster b, LogicModule l, int k, Player o, double x, double y, double duration) {
+    public ProjTest(Broadcaster b, LogicModule l, int k, Player o, double x, double y, long duration) {
         super(b, l, k);
         owner = o;
         if (owner.getFacing() == Globals.LEFT) {
-            xSpeed = -6;
+            xSpeed = -12;
         } else {
-            xSpeed = 6;
+            xSpeed = 12;
         }
         ySpeed = -8;
         this.x = x;
@@ -52,7 +52,7 @@ public class ProjTest extends ProjBase {
 
     @Override
     public void update() {
-        duration -= Globals.LOGIC_UPDATE;
+        duration -= Globals.LOGIC_UPDATE/1000000;
 
         byte[] bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_BYTE + Globals.PACKET_INT + Globals.PACKET_INT];
         bytes[0] = Globals.DATA_PARTICLE_EFFECT;
@@ -87,7 +87,7 @@ public class ProjTest extends ProjBase {
     public void processQueue() {
         while (!queue.isEmpty()) {
             Player p = queue.pop();
-            p.setKnockback(500000000, xSpeed, ySpeed);
+            p.setKnockback(500, xSpeed, ySpeed);
         }
     }
 

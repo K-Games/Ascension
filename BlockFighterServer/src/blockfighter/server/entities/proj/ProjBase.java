@@ -54,7 +54,7 @@ public abstract class ProjBase extends Thread implements Projectile {
     /**
      * The duration of this projectile in ns.
      */
-    protected double duration;
+    protected long duration;
 
     /**
      * Hitbox(es) of this projectile
@@ -90,7 +90,7 @@ public abstract class ProjBase extends Thread implements Projectile {
      * @param y Spawning y
      * @param duration
      */
-    public ProjBase(Broadcaster b, LogicModule l, int k, Player o, double x, double y, double duration) {
+    public ProjBase(Broadcaster b, LogicModule l, int k, Player o, double x, double y, long duration) {
         this(b, l, k);
         owner = o;
         xSpeed = 0;
@@ -104,7 +104,7 @@ public abstract class ProjBase extends Thread implements Projectile {
 
     @Override
     public void update() {
-        duration -= Globals.LOGIC_UPDATE;
+        duration -= Globals.LOGIC_UPDATE/1000000;
     }
 
     @Override

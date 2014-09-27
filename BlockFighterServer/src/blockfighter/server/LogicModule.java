@@ -2,7 +2,6 @@ package blockfighter.server;
 
 import blockfighter.server.entities.Player;
 import blockfighter.server.entities.proj.ProjBase;
-import blockfighter.server.entities.proj.ProjTest;
 import blockfighter.server.maps.Map;
 import blockfighter.server.maps.TestMap;
 import blockfighter.server.net.Broadcaster;

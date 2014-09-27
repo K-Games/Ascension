@@ -83,7 +83,8 @@ public class Globals {
 
         LOG_THREADS.execute(logging);
     }
-    public final static int SERVER_PORT = 45645;
+    
+    public final static int SERVER_PORT = 25565;
     public final static byte MAX_PLAYERS = 10;
 
     public final static double LOGIC_TICKS_PER_SEC = 100.0;

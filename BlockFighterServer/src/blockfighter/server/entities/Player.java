@@ -26,7 +26,7 @@ public class Player extends Thread {
     private double nextFrameTime = 0;
     private Rectangle2D.Double hitbox;
 
-    private double stunDuration = 0, kbDuration = 0;
+    private long stunDuration = 0, kbDuration = 0;
 
     private final InetAddress address;
     private final int port;
@@ -66,8 +66,7 @@ public class Player extends Thread {
     /**
      * Return this player's current state.
      * <p>
-     * Used for updating animation state and player interactions. States are
-     * listed in Globals.
+     * Used for updating animation state and player interactions. States are listed in Globals.
      * </p>
      *
      * @return The player's state in byte
@@ -122,8 +121,7 @@ public class Player extends Thread {
     }
 
     /**
-     * Set this player's movement when server receives packet that key is
-     * pressed.
+     * Set this player's movement when server receives packet that key is pressed.
      *
      * @param direction The direction to be set
      * @param move True when pressed, false when released
@@ -135,8 +133,7 @@ public class Player extends Thread {
     /**
      * Set the player's x and y position.
      * <p>
-     * This does not interpolate. The player is instantly moved to this
-     * location.
+     * This does not interpolate. The player is instantly moved to this location.
      * </p>
      *
      * @param x New x location in double
@@ -201,8 +198,7 @@ public class Player extends Thread {
     /**
      * Updates all logic of this player.
      * <p>
-     * Should be called every tick. Specific logic updates are separated into
-     * other methods. Specific logic updates should be private.
+     * Should be called every tick. Specific logic updates are separated into other methods. Specific logic updates should be private.
      * </p>
      */
     public void update() {
@@ -265,12 +261,16 @@ public class Player extends Thread {
     }
 
     private boolean updateStun() {
-        stunDuration -= Globals.LOGIC_UPDATE;
+        if (kbDuration > 0) {
+            stunDuration -= Globals.LOGIC_UPDATE / 1000000;
+        }
         return isStunned();
     }
 
     private boolean updateKnockback() {
-        kbDuration -= Globals.LOGIC_UPDATE;
+        if (kbDuration > 0) {
+            kbDuration -= Globals.LOGIC_UPDATE / 1000000;
+        }
         return isKnockback();
     }
 
@@ -282,7 +282,7 @@ public class Player extends Thread {
      *
      * @param duration Duration in ns
      */
-    public void setStun(double duration) {
+    public void setStun(long duration) {
         stunDuration = duration;
     }
 
@@ -292,11 +292,11 @@ public class Player extends Thread {
      * Duration is in nanoseconds 100000ns = 1ms;
      * </p>
      *
-     * @param duration Duration in ns
+     * @param duration Duration in long
      * @param xS Change in x per tick over the duration
      * @param yS Change in y per tick over the duration
      */
-    public void setKnockback(double duration, double xS, double yS) {
+    public void setKnockback(long duration, double xS, double yS) {
         kbDuration = duration;
         setXSpeed(xS);
         setYSpeed(yS);
@@ -372,20 +372,18 @@ public class Player extends Thread {
     /**
      * Template attack.
      * <p>
-     * Does nothing, only knocks back. Attacks and projectiles should always be
-     * queued from the player to allow condition checking. Projectiles must be
-     * created in the player entity
+     * Does nothing, only knocks back. Attacks and projectiles should always be queued from the player to allow condition checking. Projectiles must be created in the player entity
      * </p>
      *
      * @param data Received data bytes from client
      */
     public void attackKnockback(byte[] data) {
-        if (!isStunned() || !isKnockback()) {
+        if (!isStunned() && !isKnockback()) {
             int newKey = 0x00000000;
             while (logic.getProj().containsKey(newKey)) {
                 newKey++;
             }
-            logic.queueAddProj(new ProjTest(broadcaster, logic, newKey, this, x, y, 500000000));
+            logic.queueAddProj(new ProjTest(broadcaster, logic, newKey, this, x, y, 100));
         }
     }
 
@@ -419,7 +417,7 @@ public class Player extends Thread {
         if (change == 0) {
             return false;
         }
-        
+
         if (map.isOutOfBounds(x, y + change)) {
             return false;
         }
@@ -514,8 +512,7 @@ public class Player extends Thread {
     }
 
     /**
-     * Send the player's current state(for animation) and current frame of
-     * animation to every connected player
+     * Send the player's current state(for animation) and current frame of animation to every connected player
      * <p>
      * State constants are in Globals.<br/>
      * Uses Server Broadcaster to send to all<br/>

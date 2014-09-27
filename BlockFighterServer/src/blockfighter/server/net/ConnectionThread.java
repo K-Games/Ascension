@@ -5,9 +5,7 @@ import blockfighter.server.LogicModule;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.InetAddress;
 import java.net.SocketException;
-import java.net.UnknownHostException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -40,7 +38,7 @@ public class ConnectionThread extends Thread {
         ExecutorService tpes = Executors.newCachedThreadPool();
         DatagramSocket socket = null;
         try {
-            socket = new DatagramSocket(Globals.SERVER_PORT, InetAddress.getByName("0.0.0.0"));
+            socket = new DatagramSocket(Globals.SERVER_PORT);
             System.out.println("Server listening on port " + Globals.SERVER_PORT);
             broadcaster.setSocket(socket);
             while (true) {
@@ -53,7 +51,7 @@ public class ConnectionThread extends Thread {
                     Globals.log(ex.getLocalizedMessage(), ex, true);
                 }
             }
-        } catch (SocketException | UnknownHostException ex) {
+        } catch (SocketException ex) {
             logic.shutdown();
             Globals.log(ex.getLocalizedMessage(), ex, true);
         }

@@ -35,7 +35,6 @@ public class PacketHandler extends Thread {
     public void run() {
         byte[] data = requestPacket.getData();
         byte dataType = data[0];
-
         InetAddress address = requestPacket.getAddress();
         int port = requestPacket.getPort();
         switch (dataType) {
@@ -54,10 +53,14 @@ public class PacketHandler extends Thread {
             case Globals.DATA_PLAYER_KNOCK:
                 receivePlayerKnock(data);
                 break;
+            default: 
+                Globals.log("DATA_UNKNOWN", address.toString(), Globals.LOG_TYPE_DATA, true);
+                break;
         }
     }
 
     private void receiveGetPing(InetAddress address, int port, byte[] data) {
+        //Globals.log("DATA_PING", address.toString(), Globals.LOG_TYPE_DATA, true);
         byte[] bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_BYTE];
         bytes[0] = Globals.DATA_PING;
         bytes[1] = data[1];
