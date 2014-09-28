@@ -188,6 +188,7 @@ public class LogicModule extends Thread {
      * @return
      */
     public byte getNextIndex() {
+        if (numPlayers >= Globals.MAX_PLAYERS) return -1;
         return numPlayers++;
     }
 

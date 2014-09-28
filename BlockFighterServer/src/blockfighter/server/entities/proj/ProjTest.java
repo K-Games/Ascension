@@ -52,27 +52,27 @@ public class ProjTest extends ProjBase {
 
     @Override
     public void update() {
-        duration -= Globals.LOGIC_UPDATE/1000000;
-
-        byte[] bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_BYTE + Globals.PACKET_INT + Globals.PACKET_INT];
-        bytes[0] = Globals.DATA_PARTICLE_EFFECT;
-        bytes[1] = 0;
-
-        byte[] posInt = Globals.intToByte((int) (Math.random() * hitbox[0].width + hitbox[0].x));
-        bytes[2] = posInt[0];
-        bytes[3] = posInt[1];
-        bytes[4] = posInt[2];
-        bytes[5] = posInt[3];
-
-        posInt = Globals.intToByte((int) (Math.random() * hitbox[0].height + hitbox[0].y));
-        bytes[6] = posInt[0];
-        bytes[7] = posInt[1];
-        bytes[8] = posInt[2];
-        bytes[9] = posInt[3];
-
-        broadcaster.sendAll(bytes);
+        duration -= Globals.LOGIC_UPDATE / 1000000;
         for (Player p : logic.getPlayers()) {
             if (p != owner && p != null && !pHit.contains(p) && p.intersectHitbox(hitbox[0])) {
+
+                byte[] bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_BYTE + Globals.PACKET_INT + Globals.PACKET_INT];
+                bytes[0] = Globals.DATA_PARTICLE_EFFECT;
+                bytes[1] = 0;
+
+                byte[] posInt = Globals.intToByte((int) (p.getX()));
+                bytes[2] = posInt[0];
+                bytes[3] = posInt[1];
+                bytes[4] = posInt[2];
+                bytes[5] = posInt[3];
+
+                posInt = Globals.intToByte((int) (p.getY()));
+                bytes[6] = posInt[0];
+                bytes[7] = posInt[1];
+                bytes[8] = posInt[2];
+                bytes[9] = posInt[3];
+
+                broadcaster.sendAll(bytes);
                 queue.add(p);
                 pHit.add(p);
                 logic.queueKnockPlayer(this);
