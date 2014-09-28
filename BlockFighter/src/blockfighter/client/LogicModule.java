@@ -2,6 +2,7 @@ package blockfighter.client;
 
 import blockfighter.client.entities.Particle;
 import blockfighter.client.entities.Player;
+import blockfighter.client.entities.particles.ParticleKnock;
 import blockfighter.client.net.PacketSender;
 import java.net.DatagramSocket;
 import java.util.Arrays;
@@ -217,7 +218,7 @@ public class LogicModule extends Thread {
             while (particles.containsKey(newKey)) {
                 newKey++;
             }
-            particles.put(newKey, new Particle(this, newKey, x, y, 500));
+            particles.put(newKey, new ParticleKnock(this, newKey, x, y, 500));
         }
     }
 

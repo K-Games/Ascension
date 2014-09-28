@@ -9,11 +9,14 @@ import java.awt.Graphics;
  *
  * @author ckwa290
  */
-public class Particle extends Thread {
+public abstract class Particle extends Thread {
 
-    private int x, y;
-    private double size = 10.0;
-
+    protected int x, y;
+    protected double size = 10.0;
+    protected long frameDuration;
+    protected int frame = 0;
+    protected byte facing = Globals.RIGHT;
+    
     protected final int key;
     /**
      * Reference to Logic Module.
@@ -21,13 +24,12 @@ public class Particle extends Thread {
     protected final LogicModule logic;
 
     /**
-     * The duration of this projectile in ns.
+     * The duration of this projectile in ms.
      */
     protected long duration;
 
     public void update() {
         duration -= Globals.LOGIC_UPDATE/1000000;
-        size -= 0.5;
     }
 
     public double getX() {
@@ -58,5 +60,9 @@ public class Particle extends Thread {
     public void draw(Graphics g) {
         g.setColor(Color.blue);
         g.fillRect((int) (x - size / 2), (int) (y - size / 2), (int) size, (int) size);
+    }
+    
+    public void setFacing(byte f) {
+        facing = f;
     }
 }

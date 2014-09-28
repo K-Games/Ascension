@@ -31,7 +31,7 @@ public class RenderPanel extends JPanel {
         AffineTransform resetForm = ((Graphics2D) g).getTransform();
 
         if (players != null && myIndex != -1 && players[myIndex] != null) {
-            ((Graphics2D) g).translate(640.0 - players[myIndex].getX(), 360.0 - players[myIndex].getY());
+            ((Graphics2D) g).translate(640.0 - players[myIndex].getX(), 440.0 - players[myIndex].getY());
         }
         g.setColor(Color.BLACK);
 
