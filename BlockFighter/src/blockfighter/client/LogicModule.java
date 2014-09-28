@@ -44,6 +44,7 @@ public class LogicModule extends Thread {
     private long pingTime = 0;
     private int ping = -1;
     private byte pID = 0;
+    private long lastAttackTime;
 
     boolean[] keyDownMove = {false, false, false, false};
 
@@ -58,6 +59,8 @@ public class LogicModule extends Thread {
         double lastRequestTime = lastUpdateTime;
         double lastQueueTime = lastUpdateTime;
         double lastPingTime = lastUpdateTime;
+        long last100 = System.currentTimeMillis();
+        lastAttackTime = 0;
 
         ExecutorService threadPool = Executors.newCachedThreadPool();
 
@@ -85,10 +88,15 @@ public class LogicModule extends Thread {
 
         while (isRunning) {
             double now = System.nanoTime(); //Get time now
-
+            long nowMs = System.currentTimeMillis();
             if (now - lastQueueTime >= Globals.QUEUES_UPDATE) {
                 processQueues();
                 lastQueueTime = now;
+            }
+
+            if (lastAttackTime > 0 && nowMs - last100 >= 100) {
+                lastAttackTime -= 100;
+                last100 = nowMs;
             }
 
             if (now - lastUpdateTime >= Globals.LOGIC_UPDATE) {
@@ -238,6 +246,14 @@ public class LogicModule extends Thread {
         } finally {
             lock.unlock();
         }
+    }
+
+    public void attack() {
+        lastAttackTime = 500;
+    }
+
+    public boolean canAttack() {
+        return lastAttackTime <= 0;
     }
 
     public byte getMyIndex() {
