@@ -135,5 +135,6 @@ public class Globals {
             DATA_SET_PLAYER_FACING = 0x05,
             DATA_SET_PLAYER_STATE = 0x06,
             DATA_PLAYER_KNOCK = 0x07,
-            DATA_PARTICLE_EFFECT = 0x08;
+            DATA_PARTICLE_EFFECT = 0x08,
+            DATA_PARTICLE_REMOVE = 0x09;
 }

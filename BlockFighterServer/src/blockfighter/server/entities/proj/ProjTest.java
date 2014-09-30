@@ -56,21 +56,28 @@ public class ProjTest extends ProjBase {
         for (Player p : logic.getPlayers()) {
             if (p != owner && p != null && !pHit.contains(p) && p.intersectHitbox(hitbox[0])) {
 
-                byte[] bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_BYTE + Globals.PACKET_INT + Globals.PACKET_INT];
+                byte[] bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_INT + Globals.PACKET_BYTE + Globals.PACKET_INT + Globals.PACKET_INT];
                 bytes[0] = Globals.DATA_PARTICLE_EFFECT;
-                bytes[1] = 0;
 
-                byte[] posInt = Globals.intToByte((int) (p.getX()));
-                bytes[2] = posInt[0];
-                bytes[3] = posInt[1];
-                bytes[4] = posInt[2];
-                bytes[5] = posInt[3];
+                byte[] int2byte = Globals.intToByte((int) (key));
+                bytes[1] = int2byte[0];
+                bytes[2] = int2byte[1];
+                bytes[3] = int2byte[2];
+                bytes[4] = int2byte[3];
 
-                posInt = Globals.intToByte((int) (p.getY()));
-                bytes[6] = posInt[0];
-                bytes[7] = posInt[1];
-                bytes[8] = posInt[2];
-                bytes[9] = posInt[3];
+                bytes[5] = 0;
+
+                int2byte = Globals.intToByte((int) (p.getX()));
+                bytes[6] = int2byte[0];
+                bytes[7] = int2byte[1];
+                bytes[8] = int2byte[2];
+                bytes[9] = int2byte[3];
+
+                int2byte = Globals.intToByte((int) (p.getY()));
+                bytes[10] = int2byte[0];
+                bytes[11] = int2byte[1];
+                bytes[12] = int2byte[2];
+                bytes[13] = int2byte[3];
 
                 broadcaster.sendAll(bytes);
                 queue.add(p);
