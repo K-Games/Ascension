@@ -28,6 +28,7 @@ public class PacketHandler extends Thread {
             case Globals.DATA_SET_PLAYER_FACING: receiveSetPlayerFacing(data); break;
             case Globals.DATA_SET_PLAYER_STATE: receiveSetPlayerState(data); break;
             case Globals.DATA_PARTICLE_EFFECT: receiveParticleEffect(data); break;
+            case Globals.DATA_PARTICLE_REMOVE: receiveParticleRemove(data); break;
         }
     }
     
@@ -58,5 +59,9 @@ public class PacketHandler extends Thread {
     private void receiveSetPlayerState(byte[] data){
         logic.queueSetPlayerState(data);
     }
-
+    
+    private void receiveParticleRemove(byte[] data){
+        logic.queueParticleRemove(data);
+    }
+    
 }
