@@ -24,7 +24,7 @@ public abstract class Particle extends Thread {
     protected final LogicModule logic;
 
     /**
-     * The duration of this projectile in ms.
+     * The duration of this particle in ms.
      */
     protected long duration;
 
@@ -64,5 +64,9 @@ public abstract class Particle extends Thread {
     
     public void setFacing(byte f) {
         facing = f;
+    }
+    
+    public void setExpire() {
+        duration = 0;
     }
 }

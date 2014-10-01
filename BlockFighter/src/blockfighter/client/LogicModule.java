@@ -36,7 +36,7 @@ public class LogicModule extends Thread {
     private ConcurrentLinkedQueue<byte[]> playersStateQueue = new ConcurrentLinkedQueue<>();
     private ConcurrentLinkedQueue<byte[]> particlesQueue = new ConcurrentLinkedQueue<>();
     private ConcurrentLinkedQueue<byte[]> particlesRemoveQueue = new ConcurrentLinkedQueue<>();
-    
+
     private Player[] players = null;
     private ConcurrentHashMap<Integer, Particle> particles = new ConcurrentHashMap<>();
     private byte myIndex = -1;
@@ -226,6 +226,12 @@ public class LogicModule extends Thread {
             int y = Globals.bytesToInt(Arrays.copyOfRange(data, 10, 14));
             particles.put(index, new ParticleKnock(this, index, x, y, 500));
         }
+
+        while (!particlesRemoveQueue.isEmpty()) {
+            byte[] data = particlesRemoveQueue.remove();
+            int index = Globals.bytesToInt(Arrays.copyOfRange(data, 1, 5));
+            particles.remove(index);
+        }
     }
 
     public boolean isRunning() {
@@ -293,11 +299,11 @@ public class LogicModule extends Thread {
     public void queueParticleEffect(byte[] data) {
         particlesQueue.add(data);
     }
-    
+
     public void queueParticleRemove(byte[] data) {
         particlesRemoveQueue.add(data);
     }
-    
+
     public void setPing(byte rID) {
         if (rID != pID) {
             return;
