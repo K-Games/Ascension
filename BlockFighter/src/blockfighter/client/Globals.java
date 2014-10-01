@@ -13,7 +13,7 @@ import javax.imageio.ImageIO;
 public class Globals {
 
     public final static int SERVER_PORT = 25565;
-    public static String SERVER_ADDRESS = "222.153.137.224";
+    public static String SERVER_ADDRESS = "127.0.0.1";
 
     public final static int WINDOW_WIDTH = 1280;
     public final static int WINDOW_HEIGHT = 720;
