@@ -39,6 +39,33 @@ public class Globals {
     public final static int NUM_PARTICLE_EFFECTS = 1;
     public final static byte PARTICLE_KNOCK = 0x00;
 
+    public final static int NUM_STATS = 11;
+    public final static int STAT_POWER = 0,
+            STAT_DEFENSE = 1,
+            STAT_SPIRIT = 2,
+            STAT_MINHP = 3,
+            STAT_MAXHP = 4,
+            STAT_MINDMG = 5,
+            STAT_MAXDMG = 6,
+            STAT_CRITCHANCE = 7,
+            STAT_CRITDMG = 8,
+            STAT_REGEN = 9,
+            STAT_ARMOR = 10;
+
+    public final static double HP_BASE = 100,
+            HP_MULT = 30,
+            REDUCT_CONST = 150,
+            ARMOR_MULT = 6,
+            REGEN_MULT = 1.5,
+            CRITCHC_BASE = 0.1,
+            CRITCHC_CONST = 200,
+            CRITDMG_BASE = 0.5,
+            CRITDMG_FACT = 10,
+            MINDMG_MULT = 11,
+            MAXDMG_MULT = 21,
+            MINDMG_BASE = 20,
+            MAXDMG_BASE = 40;
+
     public final static int NUM_PLAYER_STATE = 5;
     public final static byte PLAYER_STATE_STAND = 0x00,
             PLAYER_STATE_WALK = 0x01,
@@ -79,14 +106,14 @@ public class Globals {
 
             CHAR_SPRITE[PLAYER_STATE_JUMP] = new BufferedImage[1];
             CHAR_SPRITE[PLAYER_STATE_JUMP][0] = ImageIO.read(Globals.class.getResource("sprites/character/jump/0.png"));
-            
+
             PARTICLE_SPRITE[PARTICLE_KNOCK] = new BufferedImage[5];
             PARTICLE_SPRITE[PARTICLE_KNOCK][0] = ImageIO.read(Globals.class.getResource("sprites/particle/knock/0.png"));
             PARTICLE_SPRITE[PARTICLE_KNOCK][1] = ImageIO.read(Globals.class.getResource("sprites/particle/knock/1.png"));
             PARTICLE_SPRITE[PARTICLE_KNOCK][2] = ImageIO.read(Globals.class.getResource("sprites/particle/knock/2.png"));
             PARTICLE_SPRITE[PARTICLE_KNOCK][3] = ImageIO.read(Globals.class.getResource("sprites/particle/knock/3.png"));
             PARTICLE_SPRITE[PARTICLE_KNOCK][4] = ImageIO.read(Globals.class.getResource("sprites/particle/knock/4.png"));
-            
+
         } catch (IOException ex) {
             Logger.getLogger(Globals.class.getName()).log(Level.SEVERE, null, ex);
         }
