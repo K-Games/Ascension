@@ -83,7 +83,7 @@ public class Globals {
 
         LOG_THREADS.execute(logging);
     }
-    
+
     public final static int SERVER_PORT = 25565;
     public final static byte MAX_PLAYERS = 10;
 
@@ -104,9 +104,36 @@ public class Globals {
             PLAYER_STATE_STUN = 0x03,
             PLAYER_STATE_KNOCKBACK = 0x04;
 
-    public final static int NUM_PARTICLE_EFFECTS = 1;
+    public final static byte NUM_PARTICLE_EFFECTS = 1;
     public final static byte PARTICLE_TEMP = 0x00;
 
+    public final static int NUM_STATS = 11;
+    public final static int STAT_POWER = 0,
+            STAT_DEFENSE = 1,
+            STAT_SPIRIT = 2,
+            STAT_MINHP = 3,
+            STAT_MAXHP = 4,
+            STAT_MINDMG = 5,
+            STAT_MAXDMG = 6,
+            STAT_CRITCHANCE = 7,
+            STAT_CRITDMG = 8,
+            STAT_REGEN = 9,
+            STAT_ARMOR = 10;
+    
+    public final static double HP_BASE = 100,
+            HP_MULT = 30,
+            REDUCT_CONST = 150,
+            ARMOR_MULT = 6,
+            REGEN_MULT = 1.5,
+            CRITCHC_BASE = 0.1,
+            CRITCHC_CONST = 200,
+            CRITDMG_BASE = 0.5,
+            CRITDMG_FACT = 10,
+            MINDMG_MULT = 11,
+            MAXDMG_MULT = 21,
+            MINDMG_BASE = 20,
+            MAXDMG_BASE = 40;
+    
     //Packet globals
     public final static int PACKET_MAX_SIZE = 128;
     public final static int PACKET_BYTE = 1;
