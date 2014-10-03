@@ -32,6 +32,46 @@ public class Player extends Thread {
     private final int port;
     private final Broadcaster broadcaster;
     private final Map map;
+    private double[] stats = new double[Globals.NUM_STATS];
+
+    /**
+     * Create a new player entity in the server.
+     *
+     * @param index The index of this player in the player array in logic module
+     * @param address IP address of player
+     * @param port Connected port
+     * @param x Spawning x location in double
+     * @param y Spawning y location in double
+     * @param bc Reference to Server Broadcaster
+     * @param map Reference to server's loaded map
+     * @param l Reference to Logic module
+     */
+    public Player(Broadcaster bc, LogicModule l, byte index, InetAddress address, int port, Map map, double x, double y) {
+        stats[Globals.STAT_POWER] = 0;
+        stats[Globals.STAT_DEFENSE] = 0;
+        stats[Globals.STAT_SPIRIT] = 0;
+        stats[Globals.STAT_ARMOR] = stats[Globals.STAT_DEFENSE] * Globals.ARMOR_MULT;
+        stats[Globals.STAT_REGEN] = stats[Globals.STAT_SPIRIT] * Globals.REGEN_MULT;
+        stats[Globals.STAT_MAXHP] = stats[Globals.STAT_DEFENSE] * Globals.HP_MULT + Globals.HP_BASE;
+        stats[Globals.STAT_MINHP] = stats[Globals.STAT_MAXHP];
+        stats[Globals.STAT_MINDMG] = stats[Globals.STAT_POWER] * Globals.MINDMG_MULT + Globals.MINDMG_BASE;
+        stats[Globals.STAT_MAXDMG] = stats[Globals.STAT_POWER] * Globals.MAXDMG_MULT + Globals.MAXDMG_BASE;
+        stats[Globals.STAT_CRITCHANCE] = stats[Globals.STAT_SPIRIT] / (stats[Globals.STAT_SPIRIT] + Globals.CRITCHC_CONST) + Globals.CRITCHC_BASE;
+        stats[Globals.STAT_CRITDMG] = stats[Globals.STAT_POWER] / Globals.CRITDMG_FACT * 0.01 + Globals.CRITDMG_BASE;
+
+        broadcaster = bc;
+        logic = l;
+        this.index = index;
+        this.address = address;
+        this.port = port;
+        this.x = x;
+        this.y = y;
+        hitbox = new Rectangle2D.Double(x - 48, y - 96, 96, 96);
+        this.map = map;
+        facing = Globals.RIGHT;
+        playerState = Globals.PLAYER_STATE_STAND;
+        frame = 0;
+    }
 
     /**
      * Return this player's current X position.
@@ -161,33 +201,6 @@ public class Player extends Thread {
      */
     public void setXSpeed(double speed) {
         xSpeed = speed;
-    }
-
-    /**
-     * Create a new player entity in the server.
-     *
-     * @param index The index of this player in the player array in logic module
-     * @param address IP address of player
-     * @param port Connected port
-     * @param x Spawning x location in double
-     * @param y Spawning y location in double
-     * @param bc Reference to Server Broadcaster
-     * @param map Reference to server's loaded map
-     * @param l Reference to Logic module
-     */
-    public Player(Broadcaster bc, LogicModule l, byte index, InetAddress address, int port, Map map, double x, double y) {
-        broadcaster = bc;
-        logic = l;
-        this.index = index;
-        this.address = address;
-        this.port = port;
-        this.x = x;
-        this.y = y;
-        hitbox = new Rectangle2D.Double(x - 48, y - 96, 96, 96);
-        this.map = map;
-        facing = Globals.RIGHT;
-        playerState = Globals.PLAYER_STATE_STAND;
-        frame = 0;
     }
 
     @Override
