@@ -38,7 +38,7 @@ public class LogicModule extends Thread {
     private ConcurrentLinkedQueue<byte[]> particlesRemoveQueue = new ConcurrentLinkedQueue<>();
 
     private Player[] players = null;
-    private ConcurrentHashMap<Integer, Particle> particles = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<Integer, Particle> particles = new ConcurrentHashMap<>(150);
     private byte myIndex = -1;
 
     private PacketSender sender = null;
@@ -229,8 +229,8 @@ public class LogicModule extends Thread {
 
         while (!particlesRemoveQueue.isEmpty()) {
             byte[] data = particlesRemoveQueue.remove();
-            int index = Globals.bytesToInt(Arrays.copyOfRange(data, 1, 5));
-            particles.remove(index);
+            int key = Globals.bytesToInt(Arrays.copyOfRange(data, 1, 5));
+            particles.remove(key);
         }
     }
 
