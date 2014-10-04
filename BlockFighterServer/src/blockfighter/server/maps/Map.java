@@ -65,8 +65,7 @@ public abstract class Map {
     /**
      * Return the nearest valid Y
      * <p>
-     * A new Rectangle2D.Double is created based on x,y with a width of 30 and
-     * height of 1 to look for the nearest intersection with a platform.
+     * A new Rectangle2D.Double is created based on x,y with a width of 30 and height of 1 to look for the nearest intersection with a platform.
      * </p>
      *
      * @param x X in double

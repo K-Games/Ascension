@@ -3,8 +3,7 @@ package blockfighter.server.entities;
 /**
  * This is the interface of projectiles and attacks.
  * <p>
- * All projectiles/attacks must implement this interface so that the server will
- * update these on each logic cycle.
+ * All projectiles/attacks must implement this interface so that the server will update these on each logic cycle.
  * </p>
  *
  * @author Ken

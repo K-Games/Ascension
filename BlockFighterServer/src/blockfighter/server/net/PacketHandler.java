@@ -53,7 +53,7 @@ public class PacketHandler extends Thread {
             case Globals.DATA_PLAYER_KNOCK:
                 receivePlayerKnock(data);
                 break;
-            default: 
+            default:
                 Globals.log("DATA_UNKNOWN", address.toString(), Globals.LOG_TYPE_DATA, true);
                 break;
         }

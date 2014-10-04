@@ -51,7 +51,7 @@ public class Player extends Thread {
         stats[Globals.STAT_DEFENSE] = 0;
         stats[Globals.STAT_SPIRIT] = 0;
         updateStats();
-        
+
         broadcaster = bc;
         logic = l;
         this.index = index;

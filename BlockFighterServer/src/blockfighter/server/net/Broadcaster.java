@@ -41,8 +41,7 @@ public class Broadcaster {
     /**
      * Create a broadcaster to send bytes to connected players.
      * <p>
-     * Server should only have one broadcaster. The broadcaster should always be
-     * referenced after construction and never initialized again.
+     * Server should only have one broadcaster. The broadcaster should always be referenced after construction and never initialized again.
      * </p>
      *
      * @param logic

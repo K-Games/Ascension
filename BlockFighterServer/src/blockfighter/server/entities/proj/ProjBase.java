@@ -104,7 +104,7 @@ public abstract class ProjBase extends Thread implements Projectile {
 
     @Override
     public void update() {
-        duration -= Globals.LOGIC_UPDATE/1000000;
+        duration -= Globals.LOGIC_UPDATE / 1000000;
     }
 
     @Override
