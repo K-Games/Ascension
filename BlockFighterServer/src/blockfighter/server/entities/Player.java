@@ -50,14 +50,14 @@ public class Player extends Thread {
         stats[Globals.STAT_POWER] = 0;
         stats[Globals.STAT_DEFENSE] = 0;
         stats[Globals.STAT_SPIRIT] = 0;
-        stats[Globals.STAT_ARMOR] = stats[Globals.STAT_DEFENSE] * Globals.ARMOR_MULT;
-        stats[Globals.STAT_REGEN] = stats[Globals.STAT_SPIRIT] * Globals.REGEN_MULT;
-        stats[Globals.STAT_MAXHP] = stats[Globals.STAT_DEFENSE] * Globals.HP_MULT + Globals.HP_BASE;
+        stats[Globals.STAT_ARMOR] = Globals.calcArmor(stats[Globals.STAT_DEFENSE]);
+        stats[Globals.STAT_REGEN] = Globals.calcRegen(stats[Globals.STAT_SPIRIT]);
+        stats[Globals.STAT_MAXHP] = Globals.calcMaxHP(stats[Globals.STAT_DEFENSE]);
         stats[Globals.STAT_MINHP] = stats[Globals.STAT_MAXHP];
-        stats[Globals.STAT_MINDMG] = stats[Globals.STAT_POWER] * Globals.MINDMG_MULT + Globals.MINDMG_BASE;
-        stats[Globals.STAT_MAXDMG] = stats[Globals.STAT_POWER] * Globals.MAXDMG_MULT + Globals.MAXDMG_BASE;
-        stats[Globals.STAT_CRITCHANCE] = stats[Globals.STAT_SPIRIT] / (stats[Globals.STAT_SPIRIT] + Globals.CRITCHC_CONST) + Globals.CRITCHC_BASE;
-        stats[Globals.STAT_CRITDMG] = stats[Globals.STAT_POWER] / Globals.CRITDMG_FACT * 0.01 + Globals.CRITDMG_BASE;
+        stats[Globals.STAT_MINDMG] = Globals.calcMinDmg(stats[Globals.STAT_POWER]);
+        stats[Globals.STAT_MAXDMG] = Globals.calcMaxDmg(stats[Globals.STAT_POWER]);
+        stats[Globals.STAT_CRITCHANCE] = Globals.calcCritChance(stats[Globals.STAT_SPIRIT]);
+        stats[Globals.STAT_CRITDMG] = Globals.calcCritDmg(stats[Globals.STAT_POWER]);
 
         broadcaster = bc;
         logic = l;
@@ -66,7 +66,7 @@ public class Player extends Thread {
         this.port = port;
         this.x = x;
         this.y = y;
-        hitbox = new Rectangle2D.Double(x - 48, y - 96, 96, 96);
+        hitbox = new Rectangle2D.Double(x - 30, y - 96, 60, 96);
         this.map = map;
         facing = Globals.RIGHT;
         playerState = Globals.PLAYER_STATE_STAND;
@@ -219,7 +219,7 @@ public class Player extends Thread {
         updateKnockback();
 
         updateFall();
-        hitbox.x = x - 48;
+        hitbox.x = x - 30;
         hitbox.y = y - 96;
 
         boolean movedX = updateX(xSpeed);
@@ -316,7 +316,7 @@ public class Player extends Thread {
     }
 
     private void updateJump() {
-        if (isMove[Globals.UP] && !isFalling && !isJumping) {
+        if (isMove[Globals.UP]) {
             isJumping = true;
             setYSpeed(-12.5);
         }
@@ -392,11 +392,7 @@ public class Player extends Thread {
      */
     public void attackKnockback(byte[] data) {
         if (!isStunned() && !isKnockback()) {
-            int newKey = 0x00000000;
-            while (logic.getProj().containsKey(newKey)) {
-                newKey++;
-            }
-            logic.queueAddProj(new ProjTest(broadcaster, logic, newKey, this, x, y, 100));
+            logic.queueAddProj(new ProjTest(broadcaster, logic, logic.getNextProjKey(), this, x, y, 100));
         }
     }
 

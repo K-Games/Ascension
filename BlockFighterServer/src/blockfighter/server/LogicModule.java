@@ -188,7 +188,9 @@ public class LogicModule extends Thread {
      * @return
      */
     public byte getNextIndex() {
-        if (numPlayers >= Globals.MAX_PLAYERS) return -1;
+        if (numPlayers >= Globals.MAX_PLAYERS) {
+            return -1;
+        }
         return numPlayers++;
     }
 
@@ -211,8 +213,7 @@ public class LogicModule extends Thread {
      * Data to be processed in the queue later.
      * </p>
      *
-     * @param data Bytes to be processed - 1:Index, 2:direction, 3:1 = true, 0 =
-     * false
+     * @param data Bytes to be processed - 1:Index, 2:direction, 3:1 = true, 0 = false
      */
     public void queuePlayerMove(byte[] data) {
         pMoveQueue.add(data);
@@ -297,6 +298,14 @@ public class LogicModule extends Thread {
                 Globals.log(ex.getLocalizedMessage(), ex, true);
             }
         }
+    }
+
+    public int getNextProjKey() {
+        int newKey = 0x00000000;
+        while (projectiles.containsKey(newKey)) {
+            newKey++;
+        }
+        return newKey;
     }
 
     /**
