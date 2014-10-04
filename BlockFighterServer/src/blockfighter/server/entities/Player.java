@@ -50,15 +50,8 @@ public class Player extends Thread {
         stats[Globals.STAT_POWER] = 0;
         stats[Globals.STAT_DEFENSE] = 0;
         stats[Globals.STAT_SPIRIT] = 0;
-        stats[Globals.STAT_ARMOR] = Globals.calcArmor(stats[Globals.STAT_DEFENSE]);
-        stats[Globals.STAT_REGEN] = Globals.calcRegen(stats[Globals.STAT_SPIRIT]);
-        stats[Globals.STAT_MAXHP] = Globals.calcMaxHP(stats[Globals.STAT_DEFENSE]);
-        stats[Globals.STAT_MINHP] = stats[Globals.STAT_MAXHP];
-        stats[Globals.STAT_MINDMG] = Globals.calcMinDmg(stats[Globals.STAT_POWER]);
-        stats[Globals.STAT_MAXDMG] = Globals.calcMaxDmg(stats[Globals.STAT_POWER]);
-        stats[Globals.STAT_CRITCHANCE] = Globals.calcCritChance(stats[Globals.STAT_SPIRIT]);
-        stats[Globals.STAT_CRITDMG] = Globals.calcCritDmg(stats[Globals.STAT_POWER]);
-
+        updateStats();
+        
         broadcaster = bc;
         logic = l;
         this.index = index;
@@ -243,6 +236,17 @@ public class Player extends Thread {
             sendState();
         }
 
+    }
+
+    private void updateStats() {
+        stats[Globals.STAT_ARMOR] = Globals.calcArmor(stats[Globals.STAT_DEFENSE]);
+        stats[Globals.STAT_REGEN] = Globals.calcRegen(stats[Globals.STAT_SPIRIT]);
+        stats[Globals.STAT_MAXHP] = Globals.calcMaxHP(stats[Globals.STAT_DEFENSE]);
+        stats[Globals.STAT_MINHP] = stats[Globals.STAT_MAXHP];
+        stats[Globals.STAT_MINDMG] = Globals.calcMinDmg(stats[Globals.STAT_POWER]);
+        stats[Globals.STAT_MAXDMG] = Globals.calcMaxDmg(stats[Globals.STAT_POWER]);
+        stats[Globals.STAT_CRITCHANCE] = Globals.calcCritChance(stats[Globals.STAT_SPIRIT]);
+        stats[Globals.STAT_CRITDMG] = Globals.calcCritDmg(stats[Globals.STAT_POWER]);
     }
 
     /**
