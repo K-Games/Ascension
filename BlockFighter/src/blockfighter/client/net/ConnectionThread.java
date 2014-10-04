@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package blockfighter.client.net;
 
 import blockfighter.client.Globals;
@@ -19,15 +18,16 @@ import java.util.concurrent.Executors;
  *
  * @author Ken
  */
-public class ConnectionThread extends Thread{
+public class ConnectionThread extends Thread {
+
     private final LogicModule logic;
     private DatagramSocket socket = null;
-    
-    public ConnectionThread(LogicModule logic, DatagramSocket s){
+
+    public ConnectionThread(LogicModule logic, DatagramSocket s) {
         this.logic = logic;
         socket = s;
     }
-    
+
     @Override
     public void run() {
         ExecutorService tpes = Executors.newCachedThreadPool();

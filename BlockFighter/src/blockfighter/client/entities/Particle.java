@@ -16,7 +16,7 @@ public abstract class Particle extends Thread {
     protected long frameDuration;
     protected int frame = 0;
     protected byte facing = Globals.RIGHT;
-    
+
     protected final int key;
     /**
      * Reference to Logic Module.
@@ -29,7 +29,7 @@ public abstract class Particle extends Thread {
     protected long duration;
 
     public void update() {
-        duration -= Globals.LOGIC_UPDATE/1000000;
+        duration -= Globals.LOGIC_UPDATE / 1000000;
     }
 
     public double getX() {
@@ -61,11 +61,11 @@ public abstract class Particle extends Thread {
         g.setColor(Color.blue);
         g.fillRect((int) (x - size / 2), (int) (y - size / 2), (int) size, (int) size);
     }
-    
+
     public void setFacing(byte f) {
         facing = f;
     }
-    
+
     public void setExpire() {
         duration = 0;
     }

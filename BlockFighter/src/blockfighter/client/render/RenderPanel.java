@@ -55,10 +55,10 @@ public class RenderPanel extends JPanel {
         g.drawRect(0, 620, 5000, 30);
         g.drawRect(200, 400, 300, 30);
         g.drawRect(600, 180, 300, 30);
-        
+
         ((Graphics2D) g).setTransform(resetForm);
-        
-        g.drawRect(0,600, 1280,120);
+
+        g.drawRect(0, 600, 1280, 120);
         g.drawString("FPS: " + FPSCount, 1200, 20);
         g.drawString("Ping: " + ping, 1200, 40);
     }
