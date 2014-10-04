@@ -66,6 +66,34 @@ public class Globals {
             MINDMG_BASE = 20,
             MAXDMG_BASE = 40;
 
+    public static final double calcArmor(double defense) {
+        return defense * ARMOR_MULT;
+    }
+
+    public static final double calcRegen(double spirit) {
+        return spirit * REGEN_MULT;
+    }
+
+    public static final double calcMaxHP(double defense) {
+        return defense * HP_MULT + HP_BASE;
+    }
+
+    public static final double calcMinDmg(double power) {
+        return power * MINDMG_MULT + MINDMG_BASE;
+    }
+
+    public static final double calcMaxDmg(double power) {
+        return power * MAXDMG_MULT + MAXDMG_BASE;
+    }
+
+    public static final double calcCritChance(double spirit) {
+        return spirit / (spirit + CRITCHC_CONST) + CRITCHC_BASE;
+    }
+
+    public static final double calcCritDmg(double power) {
+        return power / CRITDMG_FACT * 0.01 + CRITDMG_BASE;
+    }
+
     public final static int NUM_PLAYER_STATE = 5;
     public final static byte PLAYER_STATE_STAND = 0x00,
             PLAYER_STATE_WALK = 0x01,
