@@ -129,6 +129,7 @@ public class Globals {
             CRITCHC_CONST = 200,
             CRITDMG_BASE = 0.5,
             CRITDMG_FACT = 10,
+            CRITDMG_MULT = 0.01,
             MINDMG_MULT = 11,
             MAXDMG_MULT = 21,
             MINDMG_BASE = 20,
@@ -159,7 +160,7 @@ public class Globals {
     }
 
     public static final double calcCritDmg(double power) {
-        return power / CRITDMG_FACT * 0.01 + CRITDMG_BASE;
+        return power / CRITDMG_FACT * CRITDMG_MULT + CRITDMG_BASE;
     }
 
     //Packet globals
