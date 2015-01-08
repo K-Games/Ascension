@@ -37,7 +37,7 @@ public class Main {
             DatagramSocket socket = new DatagramSocket();
             socket.connect(InetAddress.getByName(Globals.SERVER_ADDRESS), Globals.SERVER_PORT);
             Globals.loadCharSprites();
-            JFrame frame = new JFrame("Block Fighter");
+            JFrame frame = new JFrame("Tower Conquest");
             RenderPanel render = new RenderPanel();
             LogicModule logicCore = new LogicModule(socket);
             ConnectionThread responseThread = new ConnectionThread(logicCore, socket);

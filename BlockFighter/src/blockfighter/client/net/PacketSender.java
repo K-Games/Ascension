@@ -52,7 +52,7 @@ public class PacketSender {
 
     public void sendKnockTest(byte index) {
         byte[] bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_BYTE];
-        bytes[0] = Globals.DATA_PLAYER_KNOCK;
+        bytes[0] = Globals.DATA_PLAYER_ACTION;
         bytes[1] = index;
         DatagramPacket requestPacket = createPacket(bytes);
         sendPacket(requestPacket);
