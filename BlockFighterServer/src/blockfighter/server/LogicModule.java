@@ -330,10 +330,10 @@ public class LogicModule extends Thread {
 
     public int getNextProjKey() {
         if (projKeys.isEmpty()) {
-            for (int i = projMaxKeys; i < projMaxKeys + 1000; i++){
+            for (int i = projMaxKeys; i < projMaxKeys + 500; i++){
                 projKeys.add(i);
             }
-            projMaxKeys += 1000;
+            projMaxKeys += 500;
         }
         return projKeys.remove();
     }
