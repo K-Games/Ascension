@@ -394,7 +394,7 @@ public class Player extends Thread {
      *
      * @param data Received data bytes from client
      */
-    public void attackKnockback(byte[] data) {
+    public void processAction(byte[] data) {
         if (!isStunned() && !isKnockback()) {
             logic.queueAddProj(new ProjTest(broadcaster, logic, logic.getNextProjKey(), this, x, y, 100));
         }

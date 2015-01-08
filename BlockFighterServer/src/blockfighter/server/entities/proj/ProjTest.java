@@ -52,7 +52,7 @@ public class ProjTest extends ProjBase {
 
     @Override
     public void update() {
-        duration -= Globals.LOGIC_UPDATE / 1000000;
+        duration -= Globals.nsToMs(Globals.LOGIC_UPDATE);
         for (Player p : logic.getPlayers()) {
             if (p != owner && p != null && !pHit.contains(p) && p.intersectHitbox(hitbox[0])) {
 
@@ -82,13 +82,16 @@ public class ProjTest extends ProjBase {
                 broadcaster.sendAll(bytes);
                 queue.add(p);
                 pHit.add(p);
-                logic.queueKnockPlayer(this);
+                if (!isQueued()) {
+                    logic.queueProjEffect(this);
+                    queuedEffect = true;
+                }
             }
         }
     }
 
     /**
-     * Process any knockbacks to be applied to players hit by this projectile.
+     * Process any effects to be applied to players hit by this projectile.
      */
     @Override
     public void processQueue() {
@@ -96,10 +99,7 @@ public class ProjTest extends ProjBase {
             Player p = queue.pop();
             p.setKnockback(500, xSpeed, ySpeed);
         }
+        queuedEffect = false;
     }
-
-    @Override
-    public int getKey() {
-        return key;
-    }
+    
 }

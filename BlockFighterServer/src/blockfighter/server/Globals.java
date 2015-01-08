@@ -126,9 +126,10 @@ public class Globals {
             ARMOR_MULT = 6,
             REGEN_MULT = 1.5,
             CRITCHC_BASE = 0.1,
-            CRITCHC_CONST = 200,
+            CRITCHC_MULT = 0.01,
+            CRITCHC_CONST = 750/0.85 - 750,
             CRITDMG_BASE = 0.5,
-            CRITDMG_FACT = 10,
+            CRITDMG_FACT = 5.5,
             CRITDMG_MULT = 0.01,
             MINDMG_MULT = 11,
             MAXDMG_MULT = 21,
@@ -156,11 +157,13 @@ public class Globals {
     }
 
     public static final double calcCritChance(double spirit) {
-        return spirit / (spirit + CRITCHC_CONST) + CRITCHC_BASE;
+        double chc = spirit * CRITCHC_MULT + CRITCHC_BASE;
+        if (chc > 0.85) chc = spirit/(spirit + CRITCHC_CONST);
+        return chc;
     }
 
-    public static final double calcCritDmg(double power) {
-        return power / CRITDMG_FACT * CRITDMG_MULT + CRITDMG_BASE;
+    public static final double calcCritDmg(double spirit) {
+        return spirit / CRITDMG_FACT * CRITDMG_MULT + CRITDMG_BASE;
     }
 
     //Packet globals
@@ -179,7 +182,7 @@ public class Globals {
     }
 
     public static final int bytesToInt(byte[] input) {
-        return (int) (input[0] & 0xff | input[1] << 8 | input[2] << 16 | input[3] << 24);
+        return (input[0] & 0xff | input[1] << 8 | input[2] << 16 | input[3] << 24);
     }
 
     //Datatypes
@@ -190,7 +193,14 @@ public class Globals {
             DATA_GET_PLAYER_POS = 0x04,
             DATA_SET_PLAYER_FACING = 0x05,
             DATA_SET_PLAYER_STATE = 0x06,
-            DATA_PLAYER_KNOCK = 0x07,
+            DATA_PLAYER_ACTION = 0x07,
             DATA_PARTICLE_EFFECT = 0x08,
             DATA_PARTICLE_REMOVE = 0x09;
+    
+    public final static byte NUM_PLAYER_ACTION = 1,
+            PLAYER_ACTION_KNOCK = 0x00;
+    
+    public final static long nsToMs(double time) {
+        return (long) (time / 1000000);
+    }
 }

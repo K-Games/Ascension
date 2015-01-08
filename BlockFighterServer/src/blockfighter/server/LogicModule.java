@@ -25,8 +25,13 @@ public class LogicModule extends Thread {
 
     private Broadcaster broadcaster;
     private final Map map;
+    
+    private int projMaxKeys = 1000;
+    
     private final ConcurrentLinkedQueue<Player> pAddQueue = new ConcurrentLinkedQueue<>();
     private final ConcurrentLinkedQueue<byte[]> pMoveQueue = new ConcurrentLinkedQueue<>();
+    private final ConcurrentLinkedQueue<byte[]> pActionQueue = new ConcurrentLinkedQueue<>();
+    private final ConcurrentLinkedQueue<Integer> projKeys = new ConcurrentLinkedQueue<>();
     private final ConcurrentLinkedQueue<ProjBase> projEffectQueue = new ConcurrentLinkedQueue<>();
     private final ConcurrentLinkedQueue<ProjBase> projAddQueue = new ConcurrentLinkedQueue<>();
     private byte numPlayers = 0;
@@ -41,6 +46,9 @@ public class LogicModule extends Thread {
     public LogicModule() {
         isRunning = true;
         map = new TestMap();
+        for (int i = 0; i < 1000; i++) {
+            projKeys.add(i);
+        }
     }
 
     @Override
@@ -56,6 +64,7 @@ public class LogicModule extends Thread {
             if (now - lastUpdateTime >= Globals.LOGIC_UPDATE) {
                 updatePlayers(threadPool);
                 updateProjectiles(threadPool);
+                
                 lastUpdateTime = now;
             }
 
@@ -133,7 +142,9 @@ public class LogicModule extends Thread {
          }
          }*/
         while (!remove.isEmpty()) {
+            int key = remove.peek();
             projectiles.remove(remove.pop());
+            returnProjKey(key);
         }
     }
 
@@ -219,6 +230,10 @@ public class LogicModule extends Thread {
         pMoveQueue.add(data);
     }
 
+    public void queuePlayerAction(byte[] data) {
+        pActionQueue.add(data);
+    }
+
     /**
      * Queue projectile entity to be added to the game.
      * <p>
@@ -232,16 +247,16 @@ public class LogicModule extends Thread {
     }
 
     /**
-     * Queue knockback to be applied to player.
+     * Queue project effects to be applied to player.
      *
-     * @param p Projectile which will knockback the player
+     * @param p Projectile which will affect the player
      */
-    public void queueKnockPlayer(ProjBase p) {
+    public void queueProjEffect(ProjBase p) {
         projEffectQueue.add(p);
     }
 
     private void processQueues(ExecutorService threadPool) {
-        Thread[] queues = new Thread[4];
+        Thread[] queues = new Thread[5];
 
         queues[0] = new Thread() {
             @Override
@@ -270,6 +285,19 @@ public class LogicModule extends Thread {
         queues[2] = new Thread() {
             @Override
             public void run() {
+                while (!pActionQueue.isEmpty()) {
+                    byte[] data = pActionQueue.remove();
+                    if (players[data[1]] == null) {
+                        continue;
+                    }
+                    players[data[1]].processAction(data);
+                }
+            }
+        };
+
+        queues[3] = new Thread() {
+            @Override
+            public void run() {
                 while (!projEffectQueue.isEmpty()) {
                     ProjBase proj = projEffectQueue.remove();
                     proj.processQueue();
@@ -277,7 +305,7 @@ public class LogicModule extends Thread {
             }
         };
 
-        queues[3] = new Thread() {
+        queues[4] = new Thread() {
             @Override
             public void run() {
                 while (!projAddQueue.isEmpty()) {
@@ -301,13 +329,17 @@ public class LogicModule extends Thread {
     }
 
     public int getNextProjKey() {
-        int newKey = 0x00000000;
-        while (projectiles.containsKey(newKey)) {
-            newKey++;
+        if (projKeys.isEmpty()) {
+            for (int i = projMaxKeys; i < projMaxKeys + 1000; i++){
+                projKeys.add(i);
+            }
+            projMaxKeys += 1000;
         }
-        return newKey;
+        return projKeys.remove();
     }
-
+    public void returnProjKey(int key) {
+        projKeys.add(key);
+    }
     /**
      * Kill server logic.
      */

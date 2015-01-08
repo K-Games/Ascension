@@ -66,6 +66,8 @@ public abstract class ProjBase extends Thread implements Projectile {
      */
     protected Broadcaster broadcaster;
 
+    protected boolean queuedEffect = false;
+
     /**
      * Constructor called by subclasses to reference broadcaster and logic.
      *
@@ -137,4 +139,13 @@ public abstract class ProjBase extends Thread implements Projectile {
         return duration <= 0;
     }
 
+    @Override
+    public boolean isQueued() {
+        return queuedEffect;
+    }
+
+    @Override
+    public int getKey() {
+        return key;
+    }
 }

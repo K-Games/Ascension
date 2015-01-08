@@ -61,4 +61,6 @@ public interface Projectile {
      * Process any effects to be applied to players hit by this projectile.
      */
     public abstract void processQueue();
+
+    public abstract boolean isQueued();
 }

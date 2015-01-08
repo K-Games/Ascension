@@ -50,8 +50,8 @@ public class PacketHandler extends Thread {
             case Globals.DATA_PING:
                 receiveGetPing(address, port, data);
                 break;
-            case Globals.DATA_PLAYER_KNOCK:
-                receivePlayerKnock(data);
+            case Globals.DATA_PLAYER_ACTION:
+                receivePlayerAction(data);
                 break;
             default:
                 Globals.log("DATA_UNKNOWN", address.toString(), Globals.LOG_TYPE_DATA, true);
@@ -67,9 +67,9 @@ public class PacketHandler extends Thread {
         broadcaster.sendPlayer(bytes, address, port);
     }
 
-    private void receivePlayerKnock(byte[] data) {
-        Globals.log("DATA_PLAYER_KNOCK", "Index: " + data[1], Globals.LOG_TYPE_DATA, false);
-        logic.getPlayers()[data[1]].attackKnockback(data);
+    private void receivePlayerAction(byte[] data) {
+        Globals.log("DATA_PLAYER_ACTION", "Index: " + data[1], Globals.LOG_TYPE_DATA, false);
+        logic.queuePlayerAction(data);
     }
 
     private void receiveLogin(InetAddress address, int port) {
