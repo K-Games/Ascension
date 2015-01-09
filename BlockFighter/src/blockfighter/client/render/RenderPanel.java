@@ -1,7 +1,7 @@
 package blockfighter.client.render;
 
 import blockfighter.client.Globals;
-import blockfighter.client.entities.Particle;
+import blockfighter.client.entities.particles.Particle;
 import blockfighter.client.entities.Player;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -59,9 +59,9 @@ public class RenderPanel extends JPanel {
         g.drawRect(600, 180, 300, 30);
 
         ((Graphics2D) g).setTransform(resetForm);
-        
+
         BufferedImage hud = Globals.HUD[0];
-        g.drawImage(hud, Globals.WINDOW_WIDTH/2 - hud.getWidth()/2, Globals.WINDOW_HEIGHT - hud.getHeight(), null);
+        g.drawImage(hud, Globals.WINDOW_WIDTH / 2 - hud.getWidth() / 2, Globals.WINDOW_HEIGHT - hud.getHeight(), null);
         g.drawString("FPS: " + FPSCount, 1200, 20);
         g.drawString("Ping: " + ping, 1200, 40);
     }

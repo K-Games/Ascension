@@ -1,4 +1,4 @@
-package blockfighter.client.entities;
+package blockfighter.client.entities.particles;
 
 import blockfighter.client.Globals;
 import blockfighter.client.LogicModule;

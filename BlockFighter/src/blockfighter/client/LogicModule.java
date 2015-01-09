@@ -1,6 +1,6 @@
 package blockfighter.client;
 
-import blockfighter.client.entities.Particle;
+import blockfighter.client.entities.particles.Particle;
 import blockfighter.client.entities.Player;
 import blockfighter.client.entities.particles.ParticleKnock;
 import blockfighter.client.net.PacketSender;

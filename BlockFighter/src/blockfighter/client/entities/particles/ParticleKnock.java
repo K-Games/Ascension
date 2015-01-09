@@ -7,7 +7,6 @@ package blockfighter.client.entities.particles;
 
 import blockfighter.client.Globals;
 import blockfighter.client.LogicModule;
-import blockfighter.client.entities.Particle;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 

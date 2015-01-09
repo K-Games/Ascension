@@ -26,7 +26,7 @@ public class PacketHandler extends Thread {
             case Globals.DATA_LOGIN:
                 receiveLogin(data);
                 break;
-            case Globals.DATA_GET_PLAYER_POS:
+            case Globals.DATA_SET_PLAYER_POS:
                 receiveGetPlayerPos(data);
                 break;
             case Globals.DATA_PING:
