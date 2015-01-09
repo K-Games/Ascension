@@ -45,9 +45,5 @@ public interface Buff {
      */
     public abstract boolean isExpired();
 
-    /**
-     * Process any effects to be applied to players hit by this buff/debuff.
-     */
-    public abstract void processQueue();
 
 }

@@ -5,9 +5,13 @@ import blockfighter.server.maps.Map;
 import blockfighter.server.net.Broadcaster;
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
+import blockfighter.server.entities.buff.Buff;
+import blockfighter.server.entities.buff.BuffKnockback;
+import blockfighter.server.entities.buff.BuffStun;
 
 import java.awt.geom.Rectangle2D;
 import java.net.InetAddress;
+import java.util.ArrayList;
 
 /**
  * Player entities on the server.
@@ -26,7 +30,8 @@ public class Player extends Thread {
     private double nextFrameTime = 0;
     private Rectangle2D.Double hitbox;
 
-    private long stunDuration = 0, kbDuration = 0;
+    private ArrayList<Buff> buffs = new ArrayList<>();
+    private boolean isStun = false, isKnockback = false;
 
     private final InetAddress address;
     private final int port;
@@ -204,14 +209,13 @@ public class Player extends Thread {
     /**
      * Updates all logic of this player.
      * <p>
-     * Should be called every tick. Specific logic updates are separated into other methods. Specific logic updates should be private.
+     * Must be called every tick. Specific logic updates are separated into other methods. Specific logic updates must be private.
      * </p>
      */
     public void update() {
-        updateStun();
-        updateKnockback();
-
+        updateBuffs();
         updateFall();
+
         hitbox.x = x - 30;
         hitbox.y = y - 96;
 
@@ -238,6 +242,27 @@ public class Player extends Thread {
 
     }
 
+    private void updateBuffs() {
+        isStun = false;
+        isKnockback = false;
+        ArrayList<Buff> remove = new ArrayList<>();
+        for (Buff b : buffs) {
+            b.update();
+            if (b instanceof BuffStun) {
+                isStun = true;
+            } else if (b instanceof BuffKnockback) {
+                isKnockback = true;
+            }
+            if (b.isExpired()) {
+                remove.add(b);
+            }
+        }
+
+        for (Buff b : remove) {
+            buffs.remove(b);
+        }
+    }
+
     private void updateStats() {
         stats[Globals.STAT_ARMOR] = Globals.calcArmor(stats[Globals.STAT_DEFENSE]);
         stats[Globals.STAT_REGEN] = Globals.calcRegen(stats[Globals.STAT_SPIRIT]);
@@ -262,61 +287,28 @@ public class Player extends Thread {
     /**
      * Return if player is stunned
      *
-     * @return True if stun duration is > 0
+     * @return isStun
      */
     public synchronized boolean isStunned() {
-        return stunDuration > 0;
+        return isStun;
     }
 
     /**
      * Return if player is being knocked back.
      *
-     * @return true if knockback duration is > 0
+     * @return isKnockback
      */
     public synchronized boolean isKnockback() {
-        return kbDuration > 0;
-    }
-
-    private boolean updateStun() {
-        if (kbDuration > 0) {
-            stunDuration -= Globals.LOGIC_UPDATE / 1000000;
-        }
-        return isStunned();
-    }
-
-    private boolean updateKnockback() {
-        if (kbDuration > 0) {
-            kbDuration -= Globals.LOGIC_UPDATE / 1000000;
-        }
-        return isKnockback();
+        return isKnockback;
     }
 
     /**
-     * Set a stun duration for this player
-     * <p>
-     * Stun duration is in nanoseconds 100000ns = 1ms;
-     * </p>
+     * Add a buff/debuff to this player
      *
-     * @param duration Duration in ns
+     * @param b New Buff
      */
-    public void setStun(long duration) {
-        stunDuration = duration;
-    }
-
-    /**
-     * Set a knockback duration for this player
-     * <p>
-     * Duration is in nanoseconds 100000ns = 1ms;
-     * </p>
-     *
-     * @param duration Duration in long
-     * @param xS Change in x per tick over the duration
-     * @param yS Change in y per tick over the duration
-     */
-    public void setKnockback(long duration, double xS, double yS) {
-        kbDuration = duration;
-        setXSpeed(xS);
-        setYSpeed(yS);
+    public void addBuff(Buff b) {
+        buffs.add(b);
     }
 
     private void updateJump() {

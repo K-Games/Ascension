@@ -51,9 +51,4 @@ public class BuffBase implements Buff {
         return duration <= 0;
     }
 
-    @Override
-    public void processQueue() {
-
-    }
-
 }
