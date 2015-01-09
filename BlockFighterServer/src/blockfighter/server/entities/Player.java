@@ -5,9 +5,14 @@ import blockfighter.server.maps.Map;
 import blockfighter.server.net.Broadcaster;
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
+import blockfighter.server.entities.buff.Buff;
+import blockfighter.server.entities.buff.BuffKnockback;
+import blockfighter.server.entities.buff.BuffStun;
 
 import java.awt.geom.Rectangle2D;
 import java.net.InetAddress;
+import java.util.ArrayList;
+import java.util.LinkedList;
 
 /**
  * Player entities on the server.
@@ -26,7 +31,9 @@ public class Player extends Thread {
     private double nextFrameTime = 0;
     private Rectangle2D.Double hitbox;
 
-    private long stunDuration = 0, kbDuration = 0;
+    private boolean isStun = false, isKnockback = false;
+
+    private ArrayList<Buff> buffs = new ArrayList<>();
 
     private final InetAddress address;
     private final int port;
@@ -208,8 +215,26 @@ public class Player extends Thread {
      * </p>
      */
     public void update() {
-        updateStun();
-        updateKnockback();
+        isStun = false;
+        isKnockback = false;
+        
+        ArrayList<Buff> remove = new ArrayList<>();
+        for (Buff b : buffs) {
+            b.update();
+            if (b instanceof BuffStun) {
+                isStun = true;
+            } else if (b instanceof BuffKnockback) {
+                isKnockback = true;
+            }
+
+            if (b.isExpired()) {
+                remove.add(b);
+            }
+        }
+
+        for (Buff b : remove) {
+            buffs.remove(b);
+        }
 
         updateFall();
         hitbox.x = x - 30;
@@ -262,61 +287,19 @@ public class Player extends Thread {
     /**
      * Return if player is stunned
      *
-     * @return True if stun duration is > 0
+     * @return isStunned
      */
     public synchronized boolean isStunned() {
-        return stunDuration > 0;
+        return isStun;
     }
 
     /**
      * Return if player is being knocked back.
      *
-     * @return true if knockback duration is > 0
+     * @return isKnockback
      */
     public synchronized boolean isKnockback() {
-        return kbDuration > 0;
-    }
-
-    private boolean updateStun() {
-        if (kbDuration > 0) {
-            stunDuration -= Globals.LOGIC_UPDATE / 1000000;
-        }
-        return isStunned();
-    }
-
-    private boolean updateKnockback() {
-        if (kbDuration > 0) {
-            kbDuration -= Globals.LOGIC_UPDATE / 1000000;
-        }
-        return isKnockback();
-    }
-
-    /**
-     * Set a stun duration for this player
-     * <p>
-     * Stun duration is in nanoseconds 100000ns = 1ms;
-     * </p>
-     *
-     * @param duration Duration in ns
-     */
-    public void setStun(long duration) {
-        stunDuration = duration;
-    }
-
-    /**
-     * Set a knockback duration for this player
-     * <p>
-     * Duration is in nanoseconds 100000ns = 1ms;
-     * </p>
-     *
-     * @param duration Duration in long
-     * @param xS Change in x per tick over the duration
-     * @param yS Change in y per tick over the duration
-     */
-    public void setKnockback(long duration, double xS, double yS) {
-        kbDuration = duration;
-        setXSpeed(xS);
-        setYSpeed(yS);
+        return isKnockback;
     }
 
     private void updateJump() {
@@ -478,6 +461,10 @@ public class Player extends Thread {
                 }
                 break;
         }
+    }
+
+    public void addBuff(Buff b) {
+        buffs.add(b);
     }
 
     /**

@@ -3,7 +3,6 @@ package blockfighter.server.entities.proj;
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.Player;
-import blockfighter.server.entities.Projectile;
 import blockfighter.server.net.Broadcaster;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
@@ -66,6 +65,9 @@ public abstract class ProjBase extends Thread implements Projectile {
      */
     protected Broadcaster broadcaster;
 
+    /**
+     * Checks if this proj has already been queued to have effects to be applied
+     */
     protected boolean queuedEffect = false;
 
     /**
@@ -147,5 +149,9 @@ public abstract class ProjBase extends Thread implements Projectile {
     @Override
     public int getKey() {
         return key;
+    }
+
+    @Override
+    public void processQueue() {
     }
 }

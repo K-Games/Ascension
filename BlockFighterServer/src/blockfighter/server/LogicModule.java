@@ -25,9 +25,9 @@ public class LogicModule extends Thread {
 
     private Broadcaster broadcaster;
     private final Map map;
-    
+
     private int projMaxKeys = 1000;
-    
+
     private final ConcurrentLinkedQueue<Player> pAddQueue = new ConcurrentLinkedQueue<>();
     private final ConcurrentLinkedQueue<byte[]> pMoveQueue = new ConcurrentLinkedQueue<>();
     private final ConcurrentLinkedQueue<byte[]> pActionQueue = new ConcurrentLinkedQueue<>();
@@ -64,7 +64,7 @@ public class LogicModule extends Thread {
             if (now - lastUpdateTime >= Globals.LOGIC_UPDATE) {
                 updatePlayers(threadPool);
                 updateProjectiles(threadPool);
-                
+
                 lastUpdateTime = now;
             }
 
@@ -135,12 +135,6 @@ public class LogicModule extends Thread {
             }
         }
 
-        /*
-         for (ProjBase p : projectiles) {
-         if (p != null && p.isExpired()) {
-         remove.add(p);
-         }
-         }*/
         while (!remove.isEmpty()) {
             int key = remove.peek();
             projectiles.remove(remove.pop());
@@ -230,6 +224,11 @@ public class LogicModule extends Thread {
         pMoveQueue.add(data);
     }
 
+    /**
+     * Queue a player action to be performed
+     *
+     * @param data 1:index, 2:action type
+     */
     public void queuePlayerAction(byte[] data) {
         pActionQueue.add(data);
     }
@@ -328,18 +327,30 @@ public class LogicModule extends Thread {
         }
     }
 
+    /**
+     * Get the next avaliable projectile key
+     *
+     * @return Next free projectile key
+     */
     public int getNextProjKey() {
         if (projKeys.isEmpty()) {
-            for (int i = projMaxKeys; i < projMaxKeys + 500; i++){
+            for (int i = projMaxKeys; i < projMaxKeys + 500; i++) {
                 projKeys.add(i);
             }
             projMaxKeys += 500;
         }
         return projKeys.remove();
     }
+
+    /**
+     * Insert a freed projectile key back into the queue
+     *
+     * @param key Key to be inserted
+     */
     public void returnProjKey(int key) {
         projKeys.add(key);
     }
+
     /**
      * Kill server logic.
      */

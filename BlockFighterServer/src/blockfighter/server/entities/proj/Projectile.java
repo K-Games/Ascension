@@ -1,9 +1,11 @@
-package blockfighter.server.entities;
+package blockfighter.server.entities.proj;
+
+import blockfighter.server.entities.Player;
 
 /**
  * This is the interface of projectiles and attacks.
  * <p>
- * All projectiles/attacks must implement this interface so that the server will update these on each logic cycle.
+ * An abstract projectiles/attacks class implements this interface so that the server will update these on each logic cycle. All projectiles must be an extension of the abstract class.
  * </p>
  *
  * @author Ken
@@ -62,5 +64,10 @@ public interface Projectile {
      */
     public abstract void processQueue();
 
+    /**
+     * Check if proj is already queued to apply effects
+     *
+     * @return queuedEffect
+     */
     public abstract boolean isQueued();
 }

@@ -3,6 +3,7 @@ package blockfighter.server.entities.proj;
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.Player;
+import blockfighter.server.entities.buff.BuffKnockback;
 import blockfighter.server.net.Broadcaster;
 import java.awt.geom.Rectangle2D;
 import java.util.LinkedList;
@@ -90,16 +91,13 @@ public class ProjTest extends ProjBase {
         }
     }
 
-    /**
-     * Process any effects to be applied to players hit by this projectile.
-     */
     @Override
     public void processQueue() {
         while (!queue.isEmpty()) {
             Player p = queue.pop();
-            p.setKnockback(500, xSpeed, ySpeed);
+            p.addBuff(new BuffKnockback(500, xSpeed, ySpeed, p));
         }
         queuedEffect = false;
     }
-    
+
 }

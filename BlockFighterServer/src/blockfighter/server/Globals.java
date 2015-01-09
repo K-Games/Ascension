@@ -14,6 +14,8 @@ import java.util.concurrent.Executors;
  */
 public class Globals {
 
+    public final static boolean LOGGING = false;
+
     public final static String ERRLOG_FILE = "ErrorLog.log",
             DATALOG_FILE = "DataLog.log";
 
@@ -25,6 +27,9 @@ public class Globals {
     private final static ExecutorService LOG_THREADS = Executors.newCachedThreadPool();
 
     public final static void log(final String ex, final String s, final byte logType, final boolean console) {
+        if (!LOGGING) {
+            return;
+        }
         Runnable logging = new Runnable() {
             @Override
             public void run() {
@@ -62,6 +67,9 @@ public class Globals {
     }
 
     public final static void log(final String ex, final Exception e, final boolean console) {
+        if (!LOGGING) {
+            return;
+        }
         Runnable logging = new Runnable() {
             @Override
             public void run() {
@@ -127,7 +135,7 @@ public class Globals {
             REGEN_MULT = 1.5,
             CRITCHC_BASE = 0.1,
             CRITCHC_MULT = 0.01,
-            CRITCHC_CONST = 750/0.85 - 750,
+            CRITCHC_CONST = 750 / 0.85 - 750,
             CRITDMG_BASE = 0.5,
             CRITDMG_FACT = 5.5,
             CRITDMG_MULT = 0.01,
@@ -158,7 +166,9 @@ public class Globals {
 
     public static final double calcCritChance(double spirit) {
         double chc = spirit * CRITCHC_MULT + CRITCHC_BASE;
-        if (chc > 0.85) chc = spirit/(spirit + CRITCHC_CONST);
+        if (chc > 0.85) {
+            chc = spirit / (spirit + CRITCHC_CONST);
+        }
         return chc;
     }
 
@@ -196,10 +206,10 @@ public class Globals {
             DATA_PLAYER_ACTION = 0x07,
             DATA_PARTICLE_EFFECT = 0x08,
             DATA_PARTICLE_REMOVE = 0x09;
-    
+
     public final static byte NUM_PLAYER_ACTION = 1,
             PLAYER_ACTION_KNOCK = 0x00;
-    
+
     public final static long nsToMs(double time) {
         return (long) (time / 1000000);
     }
