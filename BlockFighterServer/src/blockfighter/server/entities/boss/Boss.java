@@ -4,7 +4,7 @@
  */
 package blockfighter.server.entities.boss;
 
-import blockfighter.server.Globals;
+import blockfighter.server.entities.buff.Buff;
 import java.awt.geom.Rectangle2D;
 
 /**
@@ -91,7 +91,7 @@ public interface Boss {
      * Check if a rectangle intersects with this boss's hitbox
      *
      * @param box Box to be checked
-     * @return True of the boxes intersect
+     * @return True if the boxes intersect
      */
     public abstract boolean intersectHitbox(Rectangle2D.Double box);
 
@@ -119,10 +119,20 @@ public interface Boss {
      */
     public abstract void setFacing(byte f);
 
+    /**
+     * Set state the boss.
+     * @param newState State in byte
+     */
     public abstract void setBossState(byte newState);
 
     /**
-     * Send the player's current position to every connected player
+     * Add buff/debuff to this boss
+     * @param b New buff
+     */
+    public abstract void addBuff(Buff b);
+    
+    /**
+     * Send the boss's current position to every connected player
      * <p>
      * X and y are casted and sent as int.
      * <br/>
@@ -131,9 +141,15 @@ public interface Boss {
      * </p>
      */
     public abstract void sendPos();
-
+    
     /**
-     * Send the player's current facing direction to every connected player
+     * Get the index of this boss
+     * @return Byte
+     */
+    public abstract byte getIndex();
+    
+    /**
+     * Send the boss's current facing direction to every connected player
      * <p>
      * Facing uses direction constants in Globals.<br/>
      * Uses Server Broadcaster to send to all
@@ -143,7 +159,7 @@ public interface Boss {
     public void sendFacing();
 
     /**
-     * Send the player's current state(for animation) and current frame of animation to every connected player
+     * Send the boss's current state(for animation) and current frame of animation to every connected player
      * <p>
      * State constants are in Globals.<br/>
      * Uses Server Broadcaster to send to all<br/>

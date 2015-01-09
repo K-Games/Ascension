@@ -2,7 +2,7 @@ package blockfighter.server.entities.proj;
 
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
-import blockfighter.server.entities.Player;
+import blockfighter.server.entities.player.Player;
 import blockfighter.server.net.Broadcaster;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;

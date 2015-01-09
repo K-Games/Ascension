@@ -6,7 +6,7 @@
 package blockfighter.server.entities.buff;
 
 import blockfighter.server.Globals;
-import blockfighter.server.entities.Player;
+import blockfighter.server.entities.player.Player;
 
 /**
  * Abstract class for all buffs/debuffs
@@ -15,7 +15,14 @@ import blockfighter.server.entities.Player;
  */
 public class BuffBase implements Buff {
 
+    /**
+     *  Owning player of buff
+     */
     protected Player owner;
+
+    /**
+     * Duration of buff/debuff in ms
+     */
     protected long duration;
 
     /**

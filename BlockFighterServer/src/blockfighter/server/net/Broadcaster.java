@@ -2,7 +2,7 @@ package blockfighter.server.net;
 
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
-import blockfighter.server.entities.Player;
+import blockfighter.server.entities.player.Player;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;

@@ -1,4 +1,4 @@
-package blockfighter.server.entities;
+package blockfighter.server.entities.player;
 
 import blockfighter.server.entities.proj.ProjTest;
 import blockfighter.server.maps.Map;
@@ -278,7 +278,7 @@ public class Player extends Thread {
      * Check if a rectangle intersects with this player's hitbox
      *
      * @param box Box to be checked
-     * @return True of the boxes intersect
+     * @return True if the boxes intersect
      */
     public boolean intersectHitbox(Rectangle2D.Double box) {
         return hitbox.intersects(box);

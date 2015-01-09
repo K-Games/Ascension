@@ -4,7 +4,7 @@
  */
 package blockfighter.server.entities.buff;
 
-import blockfighter.server.entities.Player;
+import blockfighter.server.entities.player.Player;
 
 /**
  *

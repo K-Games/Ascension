@@ -1,6 +1,6 @@
 package blockfighter.server;
 
-import blockfighter.server.entities.Player;
+import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.proj.ProjBase;
 import blockfighter.server.maps.Map;
 import blockfighter.server.maps.TestMap;
@@ -231,7 +231,8 @@ public class LogicModule extends Thread {
     }
 
     /**
-     *  Queue a player action to be performed
+     * Queue a player action to be performed
+     *
      * @param data 1:index, 2:action type
      */
     public void queuePlayerAction(byte[] data) {
@@ -260,20 +261,15 @@ public class LogicModule extends Thread {
     }
 
     private void processQueues(ExecutorService threadPool) {
-        Thread[] queues = new Thread[5];
+        Thread[] queues = new Thread[4];
+
+        while (!pAddQueue.isEmpty()) {
+            Player newPlayer = pAddQueue.remove();
+            byte index = newPlayer.getIndex();
+            players[index] = newPlayer;
+        }
 
         queues[0] = new Thread() {
-            @Override
-            public void run() {
-                while (!pAddQueue.isEmpty()) {
-                    Player newPlayer = pAddQueue.remove();
-                    byte index = newPlayer.getIndex();
-                    players[index] = newPlayer;
-                }
-            }
-        };
-
-        queues[1] = new Thread() {
             @Override
             public void run() {
                 while (!pMoveQueue.isEmpty()) {
@@ -286,7 +282,7 @@ public class LogicModule extends Thread {
             }
         };
 
-        queues[2] = new Thread() {
+        queues[1] = new Thread() {
             @Override
             public void run() {
                 while (!pActionQueue.isEmpty()) {
@@ -299,7 +295,7 @@ public class LogicModule extends Thread {
             }
         };
 
-        queues[3] = new Thread() {
+        queues[2] = new Thread() {
             @Override
             public void run() {
                 while (!projEffectQueue.isEmpty()) {
@@ -309,7 +305,7 @@ public class LogicModule extends Thread {
             }
         };
 
-        queues[4] = new Thread() {
+        queues[3] = new Thread() {
             @Override
             public void run() {
                 while (!projAddQueue.isEmpty()) {
@@ -333,8 +329,8 @@ public class LogicModule extends Thread {
     }
 
     /**
-     *
-     * @return
+     * Get next available projectile key
+     * @return key as integer
      */
     public int getNextProjKey() {
         if (projKeys.isEmpty()) {
@@ -347,8 +343,8 @@ public class LogicModule extends Thread {
     }
 
     /**
-     *
-     * @param key
+     * Insert freed proj key into queue
+     * @param key Integer
      */
     public void returnProjKey(int key) {
         projKeys.add(key);

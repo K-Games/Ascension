@@ -1,6 +1,6 @@
 package blockfighter.server.entities.proj;
 
-import blockfighter.server.entities.Player;
+import blockfighter.server.entities.player.Player;
 
 /**
  * This is the interface of projectiles and attacks.
@@ -64,5 +64,9 @@ public interface Projectile {
      */
     public abstract void processQueue();
 
+    /**
+     * Check if proj is queued to apply effects
+     * @return
+     */
     public abstract boolean isQueued();
 }
