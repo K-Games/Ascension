@@ -13,10 +13,10 @@ import blockfighter.server.entities.player.Player;
  *
  * @author Ken
  */
-public class BuffBase implements Buff {
+public abstract class BuffBase implements Buff {
 
     /**
-     *  Owning player of buff
+     * Owning player of buff
      */
     protected Player owner;
 
@@ -27,12 +27,13 @@ public class BuffBase implements Buff {
 
     /**
      * Constructor for buffs
+     *
      * @param d duration in ms
      */
     public BuffBase(long d) {
         duration = d;
     }
-    
+
     @Override
     public void setOwner(Player owner) {
         this.owner = owner;

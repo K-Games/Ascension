@@ -1,6 +1,5 @@
 package blockfighter.server.entities.boss;
 
-import blockfighter.server.entities.proj.ProjTest;
 import blockfighter.server.maps.Map;
 import blockfighter.server.net.Broadcaster;
 import blockfighter.server.Globals;
@@ -10,7 +9,6 @@ import blockfighter.server.entities.buff.BuffKnockback;
 import blockfighter.server.entities.buff.BuffStun;
 
 import java.awt.geom.Rectangle2D;
-import java.net.InetAddress;
 import java.util.ArrayList;
 
 /**
@@ -18,7 +16,7 @@ import java.util.ArrayList;
  *
  * @author Ken
  */
-public class BossBase extends Thread implements Boss {
+public abstract class BossBase extends Thread implements Boss {
 
     private final byte index;
     private final LogicModule logic;
@@ -67,7 +65,6 @@ public class BossBase extends Thread implements Boss {
     public double getY() {
         return y;
     }
-
 
     @Override
     public byte getIndex() {

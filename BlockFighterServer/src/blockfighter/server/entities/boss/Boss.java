@@ -121,16 +121,18 @@ public interface Boss {
 
     /**
      * Set state the boss.
+     *
      * @param newState State in byte
      */
     public abstract void setBossState(byte newState);
 
     /**
      * Add buff/debuff to this boss
+     *
      * @param b New buff
      */
     public abstract void addBuff(Buff b);
-    
+
     /**
      * Send the boss's current position to every connected player
      * <p>
@@ -141,13 +143,14 @@ public interface Boss {
      * </p>
      */
     public abstract void sendPos();
-    
+
     /**
      * Get the index of this boss
+     *
      * @return Byte
      */
     public abstract byte getIndex();
-    
+
     /**
      * Send the boss's current facing direction to every connected player
      * <p>

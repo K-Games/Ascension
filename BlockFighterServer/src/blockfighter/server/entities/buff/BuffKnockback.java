@@ -18,6 +18,7 @@ public class BuffKnockback extends BuffBase {
 
     /**
      * Constructor for knockback debuff
+     *
      * @param d duration in ms
      * @param x x speed
      * @param y y speed

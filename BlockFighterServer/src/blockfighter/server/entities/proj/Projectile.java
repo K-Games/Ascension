@@ -66,6 +66,7 @@ public interface Projectile {
 
     /**
      * Check if proj is queued to apply effects
+     *
      * @return
      */
     public abstract boolean isQueued();

@@ -45,5 +45,4 @@ public interface Buff {
      */
     public abstract boolean isExpired();
 
-
 }

@@ -330,6 +330,7 @@ public class LogicModule extends Thread {
 
     /**
      * Get next available projectile key
+     *
      * @return key as integer
      */
     public int getNextProjKey() {
@@ -344,6 +345,7 @@ public class LogicModule extends Thread {
 
     /**
      * Insert freed proj key into queue
+     *
      * @param key Integer
      */
     public void returnProjKey(int key) {
