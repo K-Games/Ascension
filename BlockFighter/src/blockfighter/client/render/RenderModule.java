@@ -33,6 +33,7 @@ public class RenderModule extends Thread {
                 panel.setPing(logic.getPing());
                 panel.setMyIndex(logic.getMyIndex());
                 panel.setParticles(logic.getParticles());
+                panel.setScreen(logic.getScreen());
                 panel.repaint();
                 FPSCount++;
                 lastUpdateTime = now;

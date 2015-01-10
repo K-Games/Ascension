@@ -77,7 +77,41 @@ public class Globals {
             MINDMG_BASE = 20,
             MAXDMG_BASE = 40;
 
-    public static final double calcArmor(double defense) {
+    public final static int NUM_PLAYER_STATE = 5;
+    public final static byte PLAYER_STATE_STAND = 0x00,
+            PLAYER_STATE_WALK = 0x01,
+            PLAYER_STATE_JUMP = 0x02,
+            PLAYER_STATE_STUN = 0x03,
+            PLAYER_STATE_KNOCKBACK = 0x04;
+
+    public final static BufferedImage[][] CHAR_SPRITE = new BufferedImage[NUM_PLAYER_STATE][];
+    public final static BufferedImage[][] PARTICLE_SPRITE = new BufferedImage[NUM_PARTICLE_EFFECTS][];
+    public final static BufferedImage[] HUD = new BufferedImage[1];
+    public final static BufferedImage[] MENU_BG = new BufferedImage[1];
+    public final static BufferedImage[] MENU_BUTTON = new BufferedImage[1];
+
+    //Packet globals
+    public final static int PACKET_MAX_SIZE = 128;
+    public final static int PACKET_BYTE = 1;
+    public final static int PACKET_INT = 4;
+    public final static int PACKET_CHAR = 1;
+
+    //Datatypes
+    public final static byte DATA_PING = 0x00,
+            DATA_LOGIN = 0x01,
+            DATA_GET_ALL_PLAYER = 0x02,
+            DATA_SET_PLAYER_MOVE = 0x03,
+            DATA_SET_PLAYER_POS = 0x04,
+            DATA_SET_PLAYER_FACING = 0x05,
+            DATA_SET_PLAYER_STATE = 0x06,
+            DATA_PLAYER_ACTION = 0x07,
+            DATA_PARTICLE_EFFECT = 0x08,
+            DATA_PARTICLE_REMOVE = 0x09;
+
+    public final static byte NUM_PLAYER_ACTION = 1,
+            PLAYER_ACTION_KNOCK = 0x00;
+
+    public final static double calcArmor(double defense) {
         return defense * ARMOR_MULT;
     }
 
@@ -108,25 +142,6 @@ public class Globals {
     public static final double calcCritDmg(double spirit) {
         return spirit / CRITDMG_FACT * CRITDMG_MULT + CRITDMG_BASE;
     }
-
-    public final static int NUM_PLAYER_STATE = 5;
-    public final static byte PLAYER_STATE_STAND = 0x00,
-            PLAYER_STATE_WALK = 0x01,
-            PLAYER_STATE_JUMP = 0x02,
-            PLAYER_STATE_STUN = 0x03,
-            PLAYER_STATE_KNOCKBACK = 0x04;
-
-    public final static BufferedImage[][] CHAR_SPRITE = new BufferedImage[NUM_PLAYER_STATE][];
-    public final static BufferedImage[][] PARTICLE_SPRITE = new BufferedImage[NUM_PARTICLE_EFFECTS][];
-    public final static BufferedImage[] HUD = new BufferedImage[1];
-    public final static BufferedImage[] MENU_BG = new BufferedImage[1];
-    public final static BufferedImage[] MENU_BUTTON = new BufferedImage[1];
-
-    //Packet globals
-    public final static int PACKET_MAX_SIZE = 128;
-    public final static int PACKET_BYTE = 1;
-    public final static int PACKET_INT = 4;
-    public final static int PACKET_CHAR = 1;
 
     public static final byte[] intToByte(int input) {
         byte[] bytes = new byte[4];
@@ -168,22 +183,7 @@ public class Globals {
         }
     }
 
-    //Datatypes
-    public final static byte DATA_PING = 0x00,
-            DATA_LOGIN = 0x01,
-            DATA_GET_ALL_PLAYER = 0x02,
-            DATA_SET_PLAYER_MOVE = 0x03,
-            DATA_SET_PLAYER_POS = 0x04,
-            DATA_SET_PLAYER_FACING = 0x05,
-            DATA_SET_PLAYER_STATE = 0x06,
-            DATA_PLAYER_ACTION = 0x07,
-            DATA_PARTICLE_EFFECT = 0x08,
-            DATA_PARTICLE_REMOVE = 0x09;
-
-    public final static byte NUM_PLAYER_ACTION = 1,
-            PLAYER_ACTION_KNOCK = 0x00;
-
-    public final static long nsToMs(double time) {
+    public static final long nsToMs(double time) {
         return (long) (time / 1000000);
     }
 }

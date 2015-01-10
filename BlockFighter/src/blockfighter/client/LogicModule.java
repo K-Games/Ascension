@@ -61,17 +61,6 @@ public class LogicModule extends Thread {
 
     @Override
     public void run() {
-        try {
-            DatagramSocket socket = new DatagramSocket();
-            socket.connect(InetAddress.getByName(Globals.SERVER_ADDRESS), Globals.SERVER_PORT);
-            sender = new PacketSender(socket);
-            ConnectionThread responseThread = new ConnectionThread(this, socket);
-            responseThread.start();
-        } catch (SocketException | UnknownHostException | HeadlessException e) {
-            e.printStackTrace();
-            isRunning = false;
-            return;
-        }
 
         while (isRunning) {
             switch (screen) {
@@ -316,6 +305,15 @@ public class LogicModule extends Thread {
     }
 
     public void sendLogin() {
+        try {
+            DatagramSocket socket = new DatagramSocket();
+            socket.connect(InetAddress.getByName(Globals.SERVER_ADDRESS), Globals.SERVER_PORT);
+            sender = new PacketSender(socket);
+            ConnectionThread responseThread = new ConnectionThread(this, socket);
+            responseThread.start();
+        } catch (SocketException | UnknownHostException | HeadlessException e) {
+            e.printStackTrace();
+        }
         sender.sendLogin();
     }
 
