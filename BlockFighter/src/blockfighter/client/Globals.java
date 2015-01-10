@@ -18,6 +18,15 @@ public class Globals {
     public final static int WINDOW_WIDTH = 1280;
     public final static int WINDOW_HEIGHT = 720;
 
+    public final static byte SCREEN_CHAR_SELECT = 0x00,
+            SCREEN_CHAR_STATS = 0x01,
+            SCREEN_CHAR_EQUIPS = 0x02,
+            SCREEN_CHAR_UPGRADE = 0x03,
+            SCREEN_CHAR_SKILLS = 0x04,
+            SCREEN_CHAR_OPTIONS = 0x05,
+            SCREEN_CHAR_SERVERS = 0x06,
+            SCREEN_INGAME = 0x07;
+
     //Render globals
     public final static double RENDER_FPS = 60.0;
     public final static double RENDER_UPDATE = 1000000000 / RENDER_FPS;
@@ -110,6 +119,9 @@ public class Globals {
     public final static BufferedImage[][] CHAR_SPRITE = new BufferedImage[NUM_PLAYER_STATE][];
     public final static BufferedImage[][] PARTICLE_SPRITE = new BufferedImage[NUM_PARTICLE_EFFECTS][];
     public final static BufferedImage[] HUD = new BufferedImage[1];
+    public final static BufferedImage[] MENU_BG = new BufferedImage[1];
+    public final static BufferedImage[] MENU_BUTTON = new BufferedImage[1];
+
     //Packet globals
     public final static int PACKET_MAX_SIZE = 128;
     public final static int PACKET_BYTE = 1;
@@ -129,7 +141,7 @@ public class Globals {
         return (input[0] & 0xff | input[1] << 8 | input[2] << 16 | input[3] << 24);
     }
 
-    public static void loadCharSprites() {
+    public static void loadGFX() {
         try {
             CHAR_SPRITE[PLAYER_STATE_STAND] = new BufferedImage[1];
             CHAR_SPRITE[PLAYER_STATE_STAND][0] = ImageIO.read(Globals.class.getResource("sprites/character/stand/0.png"));
@@ -148,7 +160,9 @@ public class Globals {
             PARTICLE_SPRITE[PARTICLE_KNOCK][3] = ImageIO.read(Globals.class.getResource("sprites/particle/knock/3.png"));
             PARTICLE_SPRITE[PARTICLE_KNOCK][4] = ImageIO.read(Globals.class.getResource("sprites/particle/knock/4.png"));
 
-            HUD[0] = ImageIO.read(Globals.class.getResource("sprites/ui/ui.png"));
+            HUD[0] = ImageIO.read(Globals.class.getResource("sprites/ui/ingame/ui.png"));
+            MENU_BG[0] = ImageIO.read(Globals.class.getResource("sprites/ui/menu/bg.png"));
+            MENU_BUTTON[0] = ImageIO.read(Globals.class.getResource("sprites/ui/menu/button.png"));
         } catch (IOException ex) {
             Logger.getLogger(Globals.class.getName()).log(Level.SEVERE, null, ex);
         }

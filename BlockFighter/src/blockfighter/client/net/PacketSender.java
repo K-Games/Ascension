@@ -4,7 +4,6 @@ import blockfighter.client.Globals;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
 
 /**
  *
@@ -17,10 +16,7 @@ public class PacketSender {
 
     public PacketSender(DatagramSocket socket) {
         this.socket = socket;
-        try {
-            this.address = InetAddress.getByName(Globals.SERVER_ADDRESS);
-        } catch (UnknownHostException ex) {
-        }
+        address = socket.getInetAddress();
     }
 
     public void sendLogin() {
@@ -50,7 +46,7 @@ public class PacketSender {
         sendPacket(requestPacket);
     }
 
-    public void sendKnockTest(byte index) {
+    public void sendAction(byte index) {
         byte[] bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_BYTE];
         bytes[0] = Globals.DATA_PLAYER_ACTION;
         bytes[1] = index;

@@ -59,7 +59,7 @@ public class PacketHandler extends Thread {
         byte index = data[1];
         byte size = data[2];
         logic.setPlayersSize(size);
-        logic.setMyIndex(index);
+        logic.receiveLogin(index);
         logic.queueAddPlayer(index);
     }
 

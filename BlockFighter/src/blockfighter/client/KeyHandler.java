@@ -1,6 +1,5 @@
 package blockfighter.client;
 
-import blockfighter.client.net.PacketSender;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.net.DatagramSocket;
@@ -11,14 +10,11 @@ import java.net.DatagramSocket;
  */
 public class KeyHandler implements KeyListener {
 
-    private PacketSender sender = null;
     DatagramSocket socket = null;
     LogicModule logic = null;
 
-    public KeyHandler(LogicModule logic, DatagramSocket socket) {
+    public KeyHandler(LogicModule logic) {
         this.logic = logic;
-        this.socket = socket;
-        sender = new PacketSender(socket);
     }
 
     @Override
@@ -62,7 +58,7 @@ public class KeyHandler implements KeyListener {
                 break;
             case KeyEvent.VK_A:
                 if (logic.canAttack()) {
-                    sender.sendKnockTest(logic.getMyIndex());
+                    logic.sendAction();
                     logic.attack();
                 }
                 break;

@@ -3,8 +3,13 @@ package blockfighter.client;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.client.entities.Player;
 import blockfighter.client.entities.particles.ParticleKnock;
+import blockfighter.client.net.ConnectionThread;
 import blockfighter.client.net.PacketSender;
+import java.awt.HeadlessException;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -12,21 +17,12 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
  * @author ckwa290
  */
 public class LogicModule extends Thread {
-
-    final Lock lock = new ReentrantLock();
-    final Condition gotLogin = lock.newCondition();
 
     private boolean isRunning = false;
     //Concurrent Queuing
@@ -45,110 +41,115 @@ public class LogicModule extends Thread {
     private long pingTime = 0;
     private int ping = -1;
     private byte pID = 0;
+
     private long lastAttackTime;
+    private double lastUpdateTime = System.nanoTime();
+    private double lastRequestTime = lastUpdateTime;
+    private double lastQueueTime = lastUpdateTime;
+    private double lastPingTime = lastUpdateTime;
+    private long last100 = System.currentTimeMillis();
+
+    ExecutorService threadPool = Executors.newCachedThreadPool();
+
+    private byte screen = Globals.SCREEN_CHAR_SELECT;
 
     boolean[] keyDownMove = {false, false, false, false};
 
-    public LogicModule(DatagramSocket socket) {
-        sender = new PacketSender(socket);
+    public LogicModule() {
         isRunning = true;
     }
 
     @Override
     public void run() {
-        double lastUpdateTime = System.nanoTime(); //Last time we updated
-        double lastRequestTime = lastUpdateTime;
-        double lastQueueTime = lastUpdateTime;
-        double lastPingTime = lastUpdateTime;
-        long last100 = System.currentTimeMillis();
-        lastAttackTime = 0;
-
-        ExecutorService threadPool = Executors.newCachedThreadPool();
-
-        int attempt = 0;
-
-        while (attempt < 1 && myIndex == -1) {
-            lock.lock();
-            try {
-                attempt++;
-                sender.sendLogin();
-                System.out.println("Login Attempt #" + attempt);
-                gotLogin.await(5000, TimeUnit.MILLISECONDS);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(LogicModule.class.getName()).log(Level.SEVERE, null, ex);
-            } finally {
-                lock.unlock();
-            }
-        }
-
-        if (myIndex == -1) {
-            System.out.println("Cannot connect");
+        try {
+            DatagramSocket socket = new DatagramSocket();
+            socket.connect(InetAddress.getByName(Globals.SERVER_ADDRESS), Globals.SERVER_PORT);
+            sender = new PacketSender(socket);
+            ConnectionThread responseThread = new ConnectionThread(this, socket);
+            responseThread.start();
+        } catch (SocketException | UnknownHostException | HeadlessException e) {
+            e.printStackTrace();
+            isRunning = false;
             return;
         }
-        sender.sendGetAll();
 
         while (isRunning) {
-            double now = System.nanoTime(); //Get time now
-            long nowMs = System.currentTimeMillis();
-            if (now - lastQueueTime >= Globals.QUEUES_UPDATE) {
-                processQueues();
-                lastQueueTime = now;
+            switch (screen) {
+                case Globals.SCREEN_CHAR_SELECT:
+                    runSelectMenu();
+                    break;
+                case Globals.SCREEN_INGAME:
+                    runIngame();
+                    break;
+            }
+        }
+    }
+
+    private void runSelectMenu() {
+
+    }
+
+    private void runIngame() {
+        double now = System.nanoTime(); //Get time now
+        long nowMs = System.currentTimeMillis();
+        if (now - lastQueueTime >= Globals.QUEUES_UPDATE) {
+            processQueues();
+            lastQueueTime = now;
+        }
+
+        if (lastAttackTime > 0 && nowMs - last100 >= 100) {
+            lastAttackTime -= 100;
+            last100 = nowMs;
+        }
+
+        if (now - lastUpdateTime >= Globals.LOGIC_UPDATE) {
+            sender.sendMove(myIndex, Globals.UP, keyDownMove[Globals.UP]);
+            sender.sendMove(myIndex, Globals.DOWN, keyDownMove[Globals.DOWN]);
+            sender.sendMove(myIndex, Globals.LEFT, keyDownMove[Globals.LEFT]);
+            sender.sendMove(myIndex, Globals.RIGHT, keyDownMove[Globals.RIGHT]);
+
+            Iterator<Integer> partItr = particles.keySet().iterator();
+            while (partItr.hasNext()) {
+                Integer key = partItr.next();
+                if (particles.get(key) != null) {
+                    threadPool.execute(particles.get(key));
+                }
             }
 
-            if (lastAttackTime > 0 && nowMs - last100 >= 100) {
-                lastAttackTime -= 100;
-                last100 = nowMs;
-            }
-
-            if (now - lastUpdateTime >= Globals.LOGIC_UPDATE) {
-                sender.sendMove(myIndex, Globals.UP, keyDownMove[Globals.UP]);
-                sender.sendMove(myIndex, Globals.DOWN, keyDownMove[Globals.DOWN]);
-                sender.sendMove(myIndex, Globals.LEFT, keyDownMove[Globals.LEFT]);
-                sender.sendMove(myIndex, Globals.RIGHT, keyDownMove[Globals.RIGHT]);
-
-                Iterator<Integer> partItr = particles.keySet().iterator();
-                while (partItr.hasNext()) {
-                    Integer key = partItr.next();
-                    if (particles.get(key) != null) {
-                        threadPool.execute(particles.get(key));
+            partItr = particles.keySet().iterator();
+            while (partItr.hasNext()) {
+                Integer key = partItr.next();
+                if (particles.get(key) != null) {
+                    try {
+                        particles.get(key).join();
+                    } catch (InterruptedException ex) {
                     }
                 }
-
-                partItr = particles.keySet().iterator();
-                while (partItr.hasNext()) {
-                    Integer key = partItr.next();
-                    if (particles.get(key) != null) {
-                        try {
-                            particles.get(key).join();
-                        } catch (InterruptedException ex) {
-                        }
-                    }
-                }
-                removeParticles();
-
-                lastUpdateTime = now;
             }
+            removeParticles();
 
-            if (now - lastRequestTime >= Globals.REQUESTALL_UPDATE) {
-                sender.sendGetAll();
-                lastRequestTime = now;
-            }
+            lastUpdateTime = now;
+        }
 
-            if (now - lastPingTime >= Globals.PING_UPDATE) {
-                pID = (byte) (Math.random() * 256);
-                pingTime = System.currentTimeMillis();
-                sender.sendGetPing(pID);
-                lastPingTime = now;
-            }
+        if (now - lastRequestTime >= Globals.REQUESTALL_UPDATE) {
+            sender.sendGetAll();
+            lastRequestTime = now;
+        }
 
-            //Yield until something is happening
-            while (now - lastQueueTime < Globals.QUEUES_UPDATE
-                    && now - lastPingTime < Globals.PING_UPDATE
-                    && now - lastRequestTime < Globals.REQUESTALL_UPDATE
-                    && now - lastUpdateTime < Globals.LOGIC_UPDATE) {
-                Thread.yield();
-                now = System.nanoTime();
-            }
+        if (now - lastPingTime >= Globals.PING_UPDATE) {
+            pID = (byte) (Math.random() * 256);
+            pingTime = System.currentTimeMillis();
+            sender.sendGetPing(pID);
+            lastPingTime = now;
+        }
+
+        //Yield until something is happening
+        while (now - lastQueueTime < Globals.QUEUES_UPDATE
+                && now - lastPingTime < Globals.PING_UPDATE
+                && now - lastRequestTime < Globals.REQUESTALL_UPDATE
+                && now - lastUpdateTime < Globals.LOGIC_UPDATE) {
+            Thread.yield();
+            now = System.nanoTime();
         }
     }
 
@@ -242,14 +243,10 @@ public class LogicModule extends Thread {
         keyDownMove[direction] = move;
     }
 
-    public void setMyIndex(byte index) {
+    public void receiveLogin(byte index) {
         myIndex = index;
-        lock.lock();
-        try {
-            gotLogin.signal();
-        } finally {
-            lock.unlock();
-        }
+        sender.sendGetAll();
+        screen = Globals.SCREEN_INGAME;
     }
 
     public void attack() {
@@ -312,5 +309,17 @@ public class LogicModule extends Thread {
         if (ping >= 1000) {
             ping = 9999;
         }
+    }
+
+    public void sendAction() {
+        sender.sendAction(myIndex);
+    }
+
+    public void sendLogin() {
+        sender.sendLogin();
+    }
+
+    public byte getScreen() {
+        return screen;
     }
 }
