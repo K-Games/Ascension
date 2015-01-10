@@ -196,7 +196,7 @@ public class LogicModule extends Thread {
     /**
      * Return the next index open for connection
      *
-     * @return
+     * @return returns next open index
      */
     public byte getNextIndex() {
         if (numPlayers >= Globals.MAX_PLAYERS) {

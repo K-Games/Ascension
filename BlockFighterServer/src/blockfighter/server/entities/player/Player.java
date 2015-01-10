@@ -483,7 +483,7 @@ public class Player extends Thread {
      */
     public void sendPos() {
         byte[] bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_BYTE + Globals.PACKET_INT + Globals.PACKET_INT];
-        bytes[0] = Globals.DATA_GET_PLAYER_POS;
+        bytes[0] = Globals.DATA_SET_PLAYER_POS;
         bytes[1] = index;
         byte[] posXInt = Globals.intToByte((int) x);
         bytes[2] = posXInt[0];

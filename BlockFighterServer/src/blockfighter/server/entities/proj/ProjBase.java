@@ -141,10 +141,6 @@ public abstract class ProjBase extends Thread implements Projectile {
         return duration <= 0;
     }
 
-    /**
-     *
-     * @return
-     */
     @Override
     public boolean isQueued() {
         return queuedEffect;

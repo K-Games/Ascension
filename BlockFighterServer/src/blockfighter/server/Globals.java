@@ -27,9 +27,7 @@ public class Globals {
     private final static ExecutorService LOG_THREADS = Executors.newCachedThreadPool();
 
     public final static void log(final String ex, final String s, final byte logType, final boolean console) {
-        if (!LOGGING) {
-            return;
-        }
+
         Runnable logging = new Runnable() {
             @Override
             public void run() {
@@ -43,22 +41,26 @@ public class Globals {
                         break;
                 }
 
-                try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(logFile, true)))) {
-                    String logT = "?:";
-                    switch (logType) {
-                        case LOG_TYPE_ERR:
-                            logT = "ERROR:";
-                            break;
-                        case LOG_TYPE_DATA:
-                            logT = "DATA:";
-                            break;
+                String logT = "?:";
+                switch (logType) {
+                    case LOG_TYPE_ERR:
+                        logT = "ERROR:";
+                        break;
+                    case LOG_TYPE_DATA:
+                        logT = "DATA:";
+                        break;
+                }
+
+                if (console) {
+                    System.out.println(logT + ex + "@" + s);
+                }
+
+                if (LOGGING) {
+                    try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(logFile, true)))) {
+                        out.println("[" + SERVER_ID + "]" + ex + "@" + s);
+                    } catch (IOException e) {
+                        System.err.println(e);
                     }
-                    out.println("[" + SERVER_ID + "]" + ex + "@" + s);
-                    if (console) {
-                        System.out.println(logT + ex + "@" + s);
-                    }
-                } catch (IOException e) {
-                    System.err.println(e);
                 }
             }
         };
@@ -75,16 +77,19 @@ public class Globals {
             public void run() {
                 String logFile = ERRLOG_FILE;
 
-                try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(logFile, true)))) {
-                    out.println("[" + SERVER_ID + "]" + ex + "@");
-                    for (StackTraceElement s : e.getStackTrace()) {
-                        out.println("[" + SERVER_ID + "]" + s.toString());
+                if (console) {
+                    System.out.println("ERROR:" + ex + "@" + e.getStackTrace()[1]);
+                }
+
+                if (LOGGING) {
+                    try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(logFile, true)))) {
+                        out.println("[" + SERVER_ID + "]" + ex + "@");
+                        for (StackTraceElement s : e.getStackTrace()) {
+                            out.println("[" + SERVER_ID + "]" + s.toString());
+                        }
+                    } catch (IOException e) {
+                        System.err.println(e);
                     }
-                    if (console) {
-                        System.out.println("ERROR:" + ex + "@" + e.getStackTrace()[1]);
-                    }
-                } catch (IOException e) {
-                    System.err.println(e);
                 }
             }
         };
@@ -200,7 +205,7 @@ public class Globals {
             DATA_LOGIN = 0x01,
             DATA_GET_ALL_PLAYER = 0x02,
             DATA_SET_PLAYER_MOVE = 0x03,
-            DATA_GET_PLAYER_POS = 0x04,
+            DATA_SET_PLAYER_POS = 0x04,
             DATA_SET_PLAYER_FACING = 0x05,
             DATA_SET_PLAYER_STATE = 0x06,
             DATA_PLAYER_ACTION = 0x07,

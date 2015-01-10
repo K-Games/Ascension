@@ -89,7 +89,7 @@ public class PacketHandler extends Thread {
         broadcaster.sendPlayer(bytes, address, port);
 
         bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_BYTE + Globals.PACKET_INT + Globals.PACKET_INT];
-        bytes[0] = Globals.DATA_GET_PLAYER_POS;
+        bytes[0] = Globals.DATA_SET_PLAYER_POS;
         bytes[1] = newPlayer.getIndex();
 
         byte[] posXInt = Globals.intToByte((int) newPlayer.getX());
@@ -120,7 +120,7 @@ public class PacketHandler extends Thread {
             }
 
             byte[] bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_INT + Globals.PACKET_INT + Globals.PACKET_INT];
-            bytes[0] = Globals.DATA_GET_PLAYER_POS;
+            bytes[0] = Globals.DATA_SET_PLAYER_POS;
             bytes[1] = player.getIndex();
 
             byte[] posXInt = Globals.intToByte((int) player.getX());
