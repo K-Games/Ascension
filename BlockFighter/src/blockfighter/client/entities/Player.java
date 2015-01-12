@@ -47,7 +47,11 @@ public class Player {
     }
 
     public void draw(Graphics g) {
-        BufferedImage sprite = Globals.CHAR_SPRITE[state][frame];
+        byte s = state, f = frame;
+        if (f >= Globals.CHAR_SPRITE[s].length) {
+            f = 0;
+        }
+        BufferedImage sprite = Globals.CHAR_SPRITE[s][f];
         int drawSrcX = x - ((facing == Globals.RIGHT) ? 1 : -1) * sprite.getWidth() / 2;
         int drawSrcY = y - sprite.getHeight();
         int drawDscX = x + ((facing == Globals.RIGHT) ? 1 : -1) * sprite.getWidth() / 2;

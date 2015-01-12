@@ -21,7 +21,7 @@ public class RenderPanel extends JPanel {
     private Player[] players;
     private byte myIndex = -1;
     private byte screen = Globals.SCREEN_CHAR_SELECT;
-
+    
     private ConcurrentHashMap<Integer, Particle> particles;
 
     public RenderPanel() {
@@ -60,10 +60,7 @@ public class RenderPanel extends JPanel {
         if (players != null) {
             for (Player player : players) {
                 if (player != null) {
-                    try {
-                        player.draw(g);
-                    } catch (Exception e) {
-                    }
+                    player.draw(g);
                 }
             }
         }
