@@ -56,7 +56,7 @@ public class LogicModule extends Thread {
         double lastUpdateTime = System.nanoTime();
         long lastRefreshAll = System.currentTimeMillis();
         ExecutorService threadPool = Executors.newCachedThreadPool();
-
+        
         while (isRunning) {
             processQueues(threadPool);
             double now = System.nanoTime();
@@ -80,6 +80,8 @@ public class LogicModule extends Thread {
                 now = System.nanoTime();
             }
         }
+        threadPool.shutdownNow();
+        Globals.LOG_THREADS.shutdown();
     }
 
     private void updatePlayers(ExecutorService threadPool) {

@@ -36,9 +36,8 @@ public class ConnectionThread extends Thread {
     @Override
     public void run() {
         ExecutorService tpes = Executors.newCachedThreadPool();
-        DatagramSocket socket = null;
         try {
-            socket = new DatagramSocket(Globals.SERVER_PORT);
+            DatagramSocket socket = new DatagramSocket(Globals.SERVER_PORT);
             System.out.println("Server listening on port " + Globals.SERVER_PORT);
             broadcaster.setSocket(socket);
             while (true) {
@@ -54,6 +53,8 @@ public class ConnectionThread extends Thread {
         } catch (SocketException ex) {
             logic.shutdown();
             Globals.log(ex.getLocalizedMessage(), ex, true);
+        } finally {
+            tpes.shutdownNow();
         }
     }
 }

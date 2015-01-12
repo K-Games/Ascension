@@ -449,8 +449,14 @@ public class Player extends Thread {
     private void updateFrame() {
         switch (playerState) {
             case Globals.PLAYER_STATE_STAND:
-                if (frame != 0) {
-                    frame = 0;
+                nextFrameTime -= Globals.LOGIC_UPDATE;
+                if (nextFrameTime <= 0) {
+                    if (frame >= 8) {
+                        frame = 0;
+                    } else {
+                        frame++;
+                    }
+                    nextFrameTime = 150000000;
                     updateState = true;
                 }
                 break;
@@ -458,8 +464,12 @@ public class Player extends Thread {
             case Globals.PLAYER_STATE_WALK:
                 nextFrameTime -= Globals.LOGIC_UPDATE;
                 if (nextFrameTime <= 0) {
-                    frame = (byte) ((frame == 0) ? 1 : 0);
-                    nextFrameTime = 250000000;
+                    if (frame == 18) {
+                        frame = 0;
+                    } else {
+                        frame++;
+                    }
+                    nextFrameTime = 33000000 * .75;
                     updateState = true;
                 }
                 break;

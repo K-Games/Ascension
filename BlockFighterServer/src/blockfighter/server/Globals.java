@@ -24,7 +24,7 @@ public class Globals {
 
     private final static int SERVER_ID = (int) (Math.random() * 50000);
 
-    private final static ExecutorService LOG_THREADS = Executors.newCachedThreadPool();
+    public final static ExecutorService LOG_THREADS = Executors.newCachedThreadPool();
 
     public final static void log(final String ex, final String s, final byte logType, final boolean console) {
 
@@ -56,10 +56,16 @@ public class Globals {
                 }
 
                 if (LOGGING) {
-                    try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(logFile, true)))) {
+                    PrintWriter out = null;
+                    try {
+                        out = new PrintWriter(new BufferedWriter(new FileWriter(logFile, true)));
                         out.println("[" + SERVER_ID + "]" + ex + "@" + s);
                     } catch (IOException e) {
                         System.err.println(e);
+                    } finally {
+                        if (out != null) {
+                            out.close();
+                        }
                     }
                 }
             }
@@ -69,9 +75,6 @@ public class Globals {
     }
 
     public final static void log(final String ex, final Exception e, final boolean console) {
-        if (!LOGGING) {
-            return;
-        }
         Runnable logging = new Runnable() {
             @Override
             public void run() {
@@ -82,13 +85,19 @@ public class Globals {
                 }
 
                 if (LOGGING) {
-                    try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(logFile, true)))) {
+                    PrintWriter out = null;
+                    try {
+                        out = new PrintWriter(new BufferedWriter(new FileWriter(logFile, true)));
                         out.println("[" + SERVER_ID + "]" + ex + "@");
                         for (StackTraceElement s : e.getStackTrace()) {
                             out.println("[" + SERVER_ID + "]" + s.toString());
                         }
                     } catch (IOException e) {
                         System.err.println(e);
+                    } finally {
+                        if (out != null) {
+                            out.close();
+                        }
                     }
                 }
             }
