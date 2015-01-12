@@ -48,9 +48,9 @@ public class Player {
 
     public void draw(Graphics g) {
         BufferedImage sprite = Globals.CHAR_SPRITE[state][frame];
-        int drawSrcX = x - ((facing == Globals.RIGHT) ? 1 : -1) * 2 * sprite.getWidth() / 2;
-        int drawSrcY = y - 2 * sprite.getHeight();
-        int drawDscX = x + ((facing == Globals.RIGHT) ? 1 : -1) * 2 * sprite.getWidth() / 2;
+        int drawSrcX = x - ((facing == Globals.RIGHT) ? 1 : -1) * sprite.getWidth() / 2;
+        int drawSrcY = y - sprite.getHeight();
+        int drawDscX = x + ((facing == Globals.RIGHT) ? 1 : -1) * sprite.getWidth() / 2;
         g.drawImage(sprite, drawSrcX, drawSrcY, drawDscX, y, 0, 0, sprite.getWidth(), sprite.getHeight(), null);
     }
 

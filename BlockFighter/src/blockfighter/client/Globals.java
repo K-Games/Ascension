@@ -158,12 +158,15 @@ public class Globals {
 
     public static void loadGFX() {
         try {
-            CHAR_SPRITE[PLAYER_STATE_STAND] = new BufferedImage[1];
-            CHAR_SPRITE[PLAYER_STATE_STAND][0] = ImageIO.read(Globals.class.getResource("sprites/character/stand/0.png"));
-
-            CHAR_SPRITE[PLAYER_STATE_WALK] = new BufferedImage[2];
-            CHAR_SPRITE[PLAYER_STATE_WALK][0] = ImageIO.read(Globals.class.getResource("sprites/character/walk/0.png"));
-            CHAR_SPRITE[PLAYER_STATE_WALK][1] = ImageIO.read(Globals.class.getResource("sprites/character/walk/1.png"));
+            CHAR_SPRITE[PLAYER_STATE_STAND] = new BufferedImage[9];
+            for (int i = 0; i < 9; i++) {
+                CHAR_SPRITE[PLAYER_STATE_STAND][i] = ImageIO.read(Globals.class.getResource("sprites/character/stand/" + i + ".png"));
+            }
+            
+            CHAR_SPRITE[PLAYER_STATE_WALK] = new BufferedImage[19];
+            for (int i = 0; i < 19; i++) {
+                CHAR_SPRITE[PLAYER_STATE_WALK][i] = ImageIO.read(Globals.class.getResource("sprites/character/walk/" + i + ".png"));
+            }
 
             CHAR_SPRITE[PLAYER_STATE_JUMP] = new BufferedImage[1];
             CHAR_SPRITE[PLAYER_STATE_JUMP][0] = ImageIO.read(Globals.class.getResource("sprites/character/jump/0.png"));
