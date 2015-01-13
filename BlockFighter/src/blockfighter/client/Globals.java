@@ -48,7 +48,7 @@ public class Globals {
     public final static int NUM_PARTICLE_EFFECTS = 1;
     public final static byte PARTICLE_KNOCK = 0x00;
 
-    public final static int NUM_STATS = 11;
+    public final static int NUM_STATS = 13;
     public final static int STAT_POWER = 0,
             STAT_DEFENSE = 1,
             STAT_SPIRIT = 2,
@@ -59,7 +59,9 @@ public class Globals {
             STAT_CRITCHANCE = 7,
             STAT_CRITDMG = 8,
             STAT_REGEN = 9,
-            STAT_ARMOR = 10;
+            STAT_ARMOR = 10,
+            STAT_LEVEL = 11,
+            STAT_POINTS = 12;
 
     public final static double HP_BASE = 100,
             HP_MULT = 30,
@@ -184,7 +186,7 @@ public class Globals {
             PARTICLE_SPRITE[PARTICLE_KNOCK][4] = ImageIO.read(Globals.class.getResource("sprites/particle/knock/4.png"));
 
             HUD[0] = ImageIO.read(Globals.class.getResource("sprites/ui/ingame/ui.png"));
-            MENU_BG[0] = ImageIO.read(Globals.class.getResource("sprites/ui/menu/bg.png"));
+            MENU_BG[0] = ImageIO.read(Globals.class.getResource("sprites/ui/menu/bg1.png"));
 
             MENU_BUTTON[BUTTON_OKAY] = ImageIO.read(Globals.class.getResource("sprites/ui/menu/button1.png"));
             MENU_BUTTON[BUTTON_SELECTCHAR] = ImageIO.read(Globals.class.getResource("sprites/ui/menu/button2.png"));

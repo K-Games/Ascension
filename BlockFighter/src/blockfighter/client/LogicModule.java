@@ -56,7 +56,7 @@ public class LogicModule extends Thread {
     
     //Menu Data
     private ConcurrentHashMap<Integer, Particle> menuParticles = new ConcurrentHashMap<>(20);
-    private SaveData[] charsData = new SaveData[3];
+    private SaveData[] charactersData = new SaveData[3];
     
     //Shared Data
     ExecutorService threadPool = Executors.newCachedThreadPool();
@@ -98,6 +98,10 @@ public class LogicModule extends Thread {
         //Create menu smoke particle
         menuParticles.put(0, new ParticleMenuSmoke(this, 0, 0, 0, 0));
         menuParticles.put(1, new ParticleMenuSmoke(this, 1, 1280, 0, 0));
+        
+        for (byte i = 0; i < charactersData.length; i++){
+            charactersData[i] = SaveData.readData(i);
+        }
         
         while (isRunning) {
             switch (screen) {
