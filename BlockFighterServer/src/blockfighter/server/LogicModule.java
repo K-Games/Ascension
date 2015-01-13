@@ -26,7 +26,7 @@ public class LogicModule extends Thread {
     private Broadcaster broadcaster;
     private final Map map;
 
-    private int projMaxKeys = 1000;
+    private int projMaxKeys = 500;
 
     private final ConcurrentLinkedQueue<Player> pAddQueue = new ConcurrentLinkedQueue<>();
     private final ConcurrentLinkedQueue<byte[]> pMoveQueue = new ConcurrentLinkedQueue<>();
@@ -56,7 +56,7 @@ public class LogicModule extends Thread {
         double lastUpdateTime = System.nanoTime();
         long lastRefreshAll = System.currentTimeMillis();
         ExecutorService threadPool = Executors.newCachedThreadPool();
-        
+
         while (isRunning) {
             processQueues(threadPool);
             double now = System.nanoTime();
@@ -68,8 +68,8 @@ public class LogicModule extends Thread {
                 lastUpdateTime = now;
             }
 
-            if (nowMs - lastRefreshAll >= 1000) {
-                //broadcaster.broadcastAllPlayersUpdate();
+            if (nowMs - lastRefreshAll >= 10000) {
+                broadcaster.broadcastAllPlayersUpdate();
                 //System.out.println(broadcaster.getBytes());
                 //broadcaster.resetByte();
                 lastRefreshAll = nowMs;

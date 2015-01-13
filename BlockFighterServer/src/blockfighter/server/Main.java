@@ -1,6 +1,6 @@
 package blockfighter.server;
 
-import blockfighter.server.net.ConnectionThread;
+import blockfighter.server.net.PacketReceiver;
 import blockfighter.server.net.Broadcaster;
 import java.util.GregorianCalendar;
 
@@ -18,7 +18,7 @@ public class Main {
         try {
             LogicModule logic = new LogicModule();
             Broadcaster broadcaster = new Broadcaster(logic);
-            ConnectionThread server = new ConnectionThread(logic, broadcaster);
+            PacketReceiver server = new PacketReceiver(logic, broadcaster);
 
             logic.setBroadcaster(broadcaster);
             GregorianCalendar date = new GregorianCalendar();

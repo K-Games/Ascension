@@ -70,7 +70,7 @@ public class Broadcaster {
      * @param port Connected port of player
      */
     public void sendPlayer(byte[] bytes, InetAddress address, int port) {
-        DatagramPacket packet = new DatagramPacket(bytes, bytes.length, address, port);
+        DatagramPacket packet = createPacket(bytes, address, port);
         bytesSent += packet.getLength();
         try {
             socket.send(packet);
@@ -88,7 +88,7 @@ public class Broadcaster {
         //tell everyone
         for (Player p : logic.getPlayers()) {
             if (p != null) {
-                DatagramPacket packet = new DatagramPacket(bytes, bytes.length, p.getAddress(), p.getPort());
+                DatagramPacket packet = createPacket(bytes, p);
                 bytesSent += packet.getLength();
                 try {
                     socket.send(packet);
@@ -113,4 +113,13 @@ public class Broadcaster {
             player.sendFacing();
         }
     }
+
+    private DatagramPacket createPacket(byte[] bytes, InetAddress address, int port) {
+        return new DatagramPacket(bytes, bytes.length, address, port);
+    }
+
+    private DatagramPacket createPacket(byte[] bytes, Player p) {
+        return createPacket(bytes, p.getAddress(), p.getPort());
+    }
+
 }

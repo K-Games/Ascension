@@ -198,15 +198,15 @@ public class Globals {
 
     public static final byte[] intToByte(int input) {
         byte[] bytes = new byte[4];
-        bytes[0] = (byte) (input);
-        bytes[1] = (byte) (input >>> 8);
-        bytes[2] = (byte) (input >>> 16);
-        bytes[3] = (byte) (input >>> 24);
+        bytes[0] = (byte) (input & 0xff);
+        bytes[1] = (byte) ((input >> 8) & 0xff);
+        bytes[2] = (byte) ((input >>> 16) & 0xff);
+        bytes[3] = (byte) ((input >>> 24) & 0xff);
         return bytes;
     }
 
     public static final int bytesToInt(byte[] input) {
-        return (input[0] & 0xff | input[1] << 8 | input[2] << 16 | input[3] << 24);
+        return (input[0] & 0xff | (input[1] & 0xff) << 8 | (input[2] & 0xff) << 16 | (input[3] & 0xff) << 24);
     }
 
     //Datatypes
