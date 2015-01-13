@@ -2,7 +2,7 @@ package blockfighter.server.entities.player;
 
 import blockfighter.server.entities.proj.ProjTest;
 import blockfighter.server.maps.Map;
-import blockfighter.server.net.Broadcaster;
+import blockfighter.server.net.PacketSender;
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.buff.Buff;
@@ -35,7 +35,7 @@ public class Player extends Thread {
 
     private final InetAddress address;
     private final int port;
-    private final Broadcaster broadcaster;
+    private final PacketSender packetSender;
     private final Map map;
     private double[] stats = new double[Globals.NUM_STATS];
 
@@ -47,17 +47,17 @@ public class Player extends Thread {
      * @param port Connected port
      * @param x Spawning x location in double
      * @param y Spawning y location in double
-     * @param bc Reference to Server Broadcaster
+     * @param bc Reference to Server PacketSender
      * @param map Reference to server's loaded map
      * @param l Reference to Logic module
      */
-    public Player(Broadcaster bc, LogicModule l, byte index, InetAddress address, int port, Map map, double x, double y) {
+    public Player(PacketSender bc, LogicModule l, byte index, InetAddress address, int port, Map map, double x, double y) {
         stats[Globals.STAT_POWER] = 0;
         stats[Globals.STAT_DEFENSE] = 0;
         stats[Globals.STAT_SPIRIT] = 0;
         updateStats();
 
-        broadcaster = bc;
+        packetSender = bc;
         logic = l;
         this.index = index;
         this.address = address;
@@ -388,7 +388,7 @@ public class Player extends Thread {
      */
     public void processAction(byte[] data) {
         if (!isStunned() && !isKnockback()) {
-            logic.queueAddProj(new ProjTest(broadcaster, logic, logic.getNextProjKey(), this, x, y, 100));
+            logic.queueAddProj(new ProjTest(packetSender, logic, logic.getNextProjKey(), this, x, y, 100));
         }
     }
 
@@ -487,7 +487,7 @@ public class Player extends Thread {
      * <p>
      * X and y are casted and sent as int.
      * <br/>
-     * Uses Server Broadcaster to send to all<br/>
+ Uses Server PacketSender to send to all<br/>
      * Byte sent: 0 - Data type 1 - Index 2,3,4,5 - x 6,7,8,9 - y
      * </p>
      */
@@ -505,7 +505,7 @@ public class Player extends Thread {
         bytes[7] = posYInt[1];
         bytes[8] = posYInt[2];
         bytes[9] = posYInt[3];
-        broadcaster.sendAll(bytes);
+        packetSender.sendAll(bytes);
         updatePos = false;
     }
 
@@ -513,8 +513,8 @@ public class Player extends Thread {
      * Send the player's current facing direction to every connected player
      * <p>
      * Facing uses direction constants in Globals.<br/>
-     * Uses Server Broadcaster to send to all
-     * <br/>Byte sent: 0 - Data type 1 - Index 2 - Facing direction
+ Uses Server PacketSender to send to all
+ <br/>Byte sent: 0 - Data type 1 - Index 2 - Facing direction
      * </p>
      */
     public void sendFacing() {
@@ -522,7 +522,7 @@ public class Player extends Thread {
         bytes[0] = Globals.DATA_SET_PLAYER_FACING;
         bytes[1] = index;
         bytes[2] = facing;
-        broadcaster.sendAll(bytes);
+        packetSender.sendAll(bytes);
         updateFacing = false;
     }
 
@@ -530,7 +530,7 @@ public class Player extends Thread {
      * Send the player's current state(for animation) and current frame of animation to every connected player
      * <p>
      * State constants are in Globals.<br/>
-     * Uses Server Broadcaster to send to all<br/>
+ Uses Server PacketSender to send to all<br/>
      * Byte sent: 0 - Data type 1 - Index 2 - Player state 3 - Current frame
      * </p>
      */
@@ -540,7 +540,7 @@ public class Player extends Thread {
         bytes[1] = index;
         bytes[2] = playerState;
         bytes[3] = frame;
-        broadcaster.sendAll(bytes);
+        packetSender.sendAll(bytes);
         updateState = false;
     }
 

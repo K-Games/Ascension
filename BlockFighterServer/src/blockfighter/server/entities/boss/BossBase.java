@@ -1,7 +1,7 @@
 package blockfighter.server.entities.boss;
 
 import blockfighter.server.maps.Map;
-import blockfighter.server.net.Broadcaster;
+import blockfighter.server.net.PacketSender;
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.buff.Buff;
@@ -30,7 +30,7 @@ public abstract class BossBase extends Thread implements Boss {
     private ArrayList<Buff> buffs = new ArrayList<>();
     private boolean isStun = false, isKnockback = false;
 
-    private final Broadcaster broadcaster;
+    private final PacketSender packetSender;
     private final Map map;
 
     /**
@@ -39,12 +39,12 @@ public abstract class BossBase extends Thread implements Boss {
      * @param index The index of this player in the player array in logic module
      * @param x Spawning x location in double
      * @param y Spawning y location in double
-     * @param bc Reference to Server Broadcaster
+     * @param bc Reference to Server PacketSender
      * @param map Reference to server's loaded map
      * @param l Reference to Logic module
      */
-    public BossBase(Broadcaster bc, LogicModule l, byte index, Map map, double x, double y) {
-        broadcaster = bc;
+    public BossBase(PacketSender bc, LogicModule l, byte index, Map map, double x, double y) {
+        packetSender = bc;
         logic = l;
         this.index = index;
         this.x = x;
@@ -225,7 +225,7 @@ public abstract class BossBase extends Thread implements Boss {
         bytes[7] = posYInt[1];
         bytes[8] = posYInt[2];
         bytes[9] = posYInt[3];
-        broadcaster.sendAll(bytes);
+        packetSender.sendAll(bytes);
         updatePos = false;
     }
 
@@ -235,7 +235,7 @@ public abstract class BossBase extends Thread implements Boss {
         bytes[0] = Globals.DATA_SET_PLAYER_FACING;
         bytes[1] = index;
         bytes[2] = facing;
-        broadcaster.sendAll(bytes);
+        packetSender.sendAll(bytes);
         updateFacing = false;
     }
 
@@ -246,7 +246,7 @@ public abstract class BossBase extends Thread implements Boss {
         bytes[1] = index;
         bytes[2] = bossState;
         bytes[3] = frame;
-        broadcaster.sendAll(bytes);
+        packetSender.sendAll(bytes);
         updateState = false;
     }
 

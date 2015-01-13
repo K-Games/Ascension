@@ -3,7 +3,7 @@ package blockfighter.server.entities.proj;
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.player.Player;
-import blockfighter.server.net.Broadcaster;
+import blockfighter.server.net.PacketSender;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
@@ -61,9 +61,9 @@ public abstract class ProjBase extends Thread implements Projectile {
     protected Rectangle2D.Double[] hitbox;
 
     /**
-     * Reference to Server Broadcaster
+     * Reference to Server PacketSender
      */
-    protected Broadcaster broadcaster;
+    protected PacketSender packetSender;
 
     /**
      * Checks if this proj has already been queued to have effects to be applied
@@ -71,14 +71,14 @@ public abstract class ProjBase extends Thread implements Projectile {
     protected boolean queuedEffect = false;
 
     /**
-     * Constructor called by subclasses to reference broadcaster and logic.
+     * Constructor called by subclasses to reference packetSender and logic.
      *
-     * @param b Reference to server broadcaster
+     * @param b Reference to server packetSender
      * @param l Reference to Logic module
      * @param k Hash map key
      */
-    public ProjBase(Broadcaster b, LogicModule l, int k) {
-        broadcaster = b;
+    public ProjBase(PacketSender b, LogicModule l, int k) {
+        packetSender = b;
         logic = l;
         key = k;
     }
@@ -86,7 +86,7 @@ public abstract class ProjBase extends Thread implements Projectile {
     /**
      * Constructor for a empty projectile.
      *
-     * @param b Reference to server broadcaster
+     * @param b Reference to server packetSender
      * @param l Reference to Logic module
      * @param k Hash map key
      * @param o Owning player
@@ -94,7 +94,7 @@ public abstract class ProjBase extends Thread implements Projectile {
      * @param y Spawning y
      * @param duration
      */
-    public ProjBase(Broadcaster b, LogicModule l, int k, Player o, double x, double y, long duration) {
+    public ProjBase(PacketSender b, LogicModule l, int k, Player o, double x, double y, long duration) {
         this(b, l, k);
         owner = o;
         xSpeed = 0;

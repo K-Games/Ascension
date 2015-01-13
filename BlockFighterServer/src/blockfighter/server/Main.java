@@ -1,7 +1,7 @@
 package blockfighter.server;
 
 import blockfighter.server.net.PacketReceiver;
-import blockfighter.server.net.Broadcaster;
+import blockfighter.server.net.PacketSender;
 import java.util.GregorianCalendar;
 
 /**
@@ -17,10 +17,10 @@ public class Main {
     public static void main(String[] args) {
         try {
             LogicModule logic = new LogicModule();
-            Broadcaster broadcaster = new Broadcaster(logic);
-            PacketReceiver server = new PacketReceiver(logic, broadcaster);
+            PacketSender packetSender = new PacketSender(logic);
+            PacketReceiver server = new PacketReceiver(logic, packetSender);
 
-            logic.setBroadcaster(broadcaster);
+            logic.setPacketSender(packetSender);
             GregorianCalendar date = new GregorianCalendar();
             Globals.log("Server started", String.format("%1$td/%1$tm/%1$tY %1$tT", date), Globals.LOG_TYPE_ERR, false);
             Globals.log("Server started", String.format("%1$td/%1$tm/%1$tY %1$tT", date), Globals.LOG_TYPE_DATA, true);

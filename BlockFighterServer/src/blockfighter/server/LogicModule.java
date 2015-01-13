@@ -4,7 +4,7 @@ import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.proj.ProjBase;
 import blockfighter.server.maps.Map;
 import blockfighter.server.maps.TestMap;
-import blockfighter.server.net.Broadcaster;
+import blockfighter.server.net.PacketSender;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.concurrent.ConcurrentHashMap;
@@ -23,7 +23,7 @@ public class LogicModule extends Thread {
     private final Player[] players = new Player[Globals.MAX_PLAYERS];
     private final ConcurrentHashMap<Integer, ProjBase> projectiles = new ConcurrentHashMap<>();
 
-    private Broadcaster broadcaster;
+    private PacketSender packetSender;
     private final Map map;
 
     private int projMaxKeys = 500;
@@ -39,14 +39,14 @@ public class LogicModule extends Thread {
     /**
      * Create a server logic module
      * <p>
-     * Server should only have 1 logic module.<br/>
+     * Servers can have multiple logic modules for multiple instances of levels.
      * When logic is required, it should be referenced and not created
      * </p>
      */
     public LogicModule() {
         isRunning = true;
         map = new TestMap();
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 500; i++) {
             projKeys.add(i);
         }
     }
@@ -69,9 +69,9 @@ public class LogicModule extends Thread {
             }
 
             if (nowMs - lastRefreshAll >= 10000) {
-                broadcaster.broadcastAllPlayersUpdate();
-                //System.out.println(broadcaster.getBytes());
-                //broadcaster.resetByte();
+                packetSender.broadcastAllPlayersUpdate();
+                //System.out.println(packetSender.getBytes());
+                //packetSender.resetByte();
                 lastRefreshAll = nowMs;
             }
 
@@ -151,12 +151,12 @@ public class LogicModule extends Thread {
     }
 
     /**
-     * Set a reference to the Server Broadcaster.
+     * Set a reference to the Server PacketSender.
      *
-     * @param bc Server Broadcaster
+     * @param bc Server PacketSender
      */
-    public void setBroadcaster(Broadcaster bc) {
-        broadcaster = bc;
+    public void setPacketSender(PacketSender bc) {
+        packetSender = bc;
     }
 
     /**

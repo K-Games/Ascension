@@ -16,18 +16,18 @@ public class PacketHandler extends Thread {
 
     private DatagramPacket requestPacket = null;
     private final LogicModule logic;
-    private final Broadcaster broadcaster;
+    private final PacketSender packetSender;
 
     /**
      * Initialize request handler when a request is received by the socket.
      *
-     * @param bc Reference to Server Broadcaster
+     * @param bc Reference to Server PacketSender
      * @param request Packet that is received
      * @param logic Reference to Logic module
      */
-    public PacketHandler(Broadcaster bc, DatagramPacket request, LogicModule logic) {
+    public PacketHandler(PacketSender bc, DatagramPacket request, LogicModule logic) {
         requestPacket = request;
-        this.broadcaster = bc;
+        this.packetSender = bc;
         this.logic = logic;
     }
 
@@ -64,7 +64,7 @@ public class PacketHandler extends Thread {
         byte[] bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_BYTE];
         bytes[0] = Globals.DATA_PING;
         bytes[1] = data[1];
-        broadcaster.sendPlayer(bytes, address, port);
+        packetSender.sendPlayer(bytes, address, port);
     }
 
     private void receivePlayerAction(byte[] data) {
@@ -80,36 +80,17 @@ public class PacketHandler extends Thread {
         if (freeIndex == -1) {
             return;
         }
-        Player newPlayer = new Player(broadcaster, logic, freeIndex, address, port, logic.getMap(), Math.random() * 1180.0 + 100, 0);
+        Player newPlayer = new Player(packetSender, logic, freeIndex, address, port, logic.getMap(), Math.random() * 1180.0 + 100, 0);
         logic.queueAddPlayer(newPlayer);
         byte[] bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_BYTE + Globals.PACKET_BYTE];
         bytes[0] = Globals.DATA_LOGIN;
         bytes[1] = freeIndex;
         bytes[2] = Globals.MAX_PLAYERS;
-        broadcaster.sendPlayer(bytes, address, port);
-
-        bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_BYTE + Globals.PACKET_INT + Globals.PACKET_INT];
-        bytes[0] = Globals.DATA_SET_PLAYER_POS;
-        bytes[1] = newPlayer.getIndex();
-
-        byte[] posXInt = Globals.intToByte((int) newPlayer.getX());
-        bytes[2] = posXInt[0];
-        bytes[3] = posXInt[1];
-        bytes[4] = posXInt[2];
-        bytes[5] = posXInt[3];
-
-        byte[] posYInt = Globals.intToByte((int) newPlayer.getY());
-        bytes[6] = posYInt[0];
-        bytes[7] = posYInt[1];
-        bytes[8] = posYInt[2];
-        bytes[9] = posYInt[3];
-        broadcaster.sendAll(bytes);
-
-        bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_BYTE + Globals.PACKET_BYTE];
-        bytes[0] = Globals.DATA_SET_PLAYER_FACING;
-        bytes[1] = newPlayer.getIndex();
-        bytes[2] = newPlayer.getFacing();
-        broadcaster.sendAll(bytes);
+        packetSender.sendPlayer(bytes, address, port);
+        
+        newPlayer.sendPos();
+        newPlayer.sendFacing();
+        newPlayer.sendState();
     }
 
     private void receiveGetAllPlayer(InetAddress address, int port) {
@@ -133,20 +114,20 @@ public class PacketHandler extends Thread {
             bytes[7] = posYInt[1];
             bytes[8] = posYInt[2];
             bytes[9] = posYInt[3];
-            broadcaster.sendPlayer(bytes, address, port);
+            packetSender.sendPlayer(bytes, address, port);
 
             bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_BYTE + Globals.PACKET_BYTE];
             bytes[0] = Globals.DATA_SET_PLAYER_FACING;
             bytes[1] = player.getIndex();
             bytes[2] = player.getFacing();
-            broadcaster.sendPlayer(bytes, address, port);
+            packetSender.sendPlayer(bytes, address, port);
 
             bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_BYTE + Globals.PACKET_BYTE + Globals.PACKET_BYTE];
             bytes[0] = Globals.DATA_SET_PLAYER_STATE;
             bytes[1] = player.getIndex();
             bytes[2] = player.getPlayerState();
             bytes[3] = player.getFrame();
-            broadcaster.sendPlayer(bytes, address, port);
+            packetSender.sendPlayer(bytes, address, port);
         }
     }
 

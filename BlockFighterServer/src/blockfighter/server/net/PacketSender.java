@@ -9,14 +9,14 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 
 /**
- * The server broadcaster.
+ * The server packetSender.
  * <p>
  * Sends data to players. Only one is created on the server.
  * </p>
  *
  * @author Ken
  */
-public class Broadcaster {
+public class PacketSender {
 
     private final LogicModule logic;
     private DatagramSocket socket = null;
@@ -39,14 +39,14 @@ public class Broadcaster {
     }
 
     /**
-     * Create a broadcaster to send bytes to connected players.
+     * Create a packetSender to send bytes to connected players.
      * <p>
-     * Server should only have one broadcaster. The broadcaster should always be referenced after construction and never initialized again.
+     * Server should only have one packetSender. The packetSender should always be referenced after construction and never initialized again.
      * </p>
      *
      * @param logic
      */
-    public Broadcaster(LogicModule logic) {
+    public PacketSender(LogicModule logic) {
         this.logic = logic;
     }
 

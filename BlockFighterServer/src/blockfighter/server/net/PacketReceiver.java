@@ -17,20 +17,20 @@ import java.util.concurrent.Executors;
 public class PacketReceiver extends Thread {
 
     private final LogicModule logic;
-    private final Broadcaster broadcaster;
+    private final PacketSender packetSender;
 
     /**
      * A new thread for accepting connections.
      * <p>
-     * Logic module and broadcaster must have been initialized
+     * Logic module and packetSender must have been initialized
      * </p>
      *
      * @param logic Logic module
-     * @param broadcaster Server broadcaster
+     * @param packetSender Server packetSender
      */
-    public PacketReceiver(LogicModule logic, Broadcaster broadcaster) {
+    public PacketReceiver(LogicModule logic, PacketSender packetSender) {
         this.logic = logic;
-        this.broadcaster = broadcaster;
+        this.packetSender = packetSender;
     }
 
     @Override
@@ -39,12 +39,12 @@ public class PacketReceiver extends Thread {
         try {
             DatagramSocket socket = new DatagramSocket(Globals.SERVER_PORT);
             System.out.println("Server listening on port " + Globals.SERVER_PORT);
-            broadcaster.setSocket(socket);
+            packetSender.setSocket(socket);
             while (true) {
                 byte[] request = new byte[Globals.PACKET_MAX_SIZE];
                 DatagramPacket packet = new DatagramPacket(request, request.length);
                 socket.receive(packet);
-                tpes.execute(new PacketHandler(broadcaster, packet, logic));
+                tpes.execute(new PacketHandler(packetSender, packet, logic));
             }
         } catch (SocketException ex) {
             Globals.log(ex.getLocalizedMessage(), ex, true);

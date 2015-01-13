@@ -4,7 +4,7 @@ import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.buff.BuffKnockback;
-import blockfighter.server.net.Broadcaster;
+import blockfighter.server.net.PacketSender;
 import java.awt.geom.Rectangle2D;
 import java.util.LinkedList;
 
@@ -23,7 +23,7 @@ public class ProjTest extends ProjBase {
      * Knock back any players hit
      * </p>
      *
-     * @param b Reference to server broadcaster
+     * @param b Reference to server packetSender
      * @param l Reference to Logic module
      * @param k Hash map key
      * @param o Owning player
@@ -31,7 +31,7 @@ public class ProjTest extends ProjBase {
      * @param y Spawning y
      * @param duration
      */
-    public ProjTest(Broadcaster b, LogicModule l, int k, Player o, double x, double y, long duration) {
+    public ProjTest(PacketSender b, LogicModule l, int k, Player o, double x, double y, long duration) {
         super(b, l, k);
         owner = o;
         if (owner.getFacing() == Globals.LEFT) {
@@ -80,7 +80,7 @@ public class ProjTest extends ProjBase {
                 bytes[12] = int2byte[2];
                 bytes[13] = int2byte[3];
 
-                broadcaster.sendAll(bytes);
+                packetSender.sendAll(bytes);
                 queue.add(p);
                 pHit.add(p);
                 if (!isQueued()) {

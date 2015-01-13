@@ -138,7 +138,7 @@ public interface Boss {
      * <p>
      * X and y are casted and sent as int.
      * <br/>
-     * Uses Server Broadcaster to send to all<br/>
+     * Uses Server PacketSender to send to all<br/>
      * Byte sent: 0 - Data type 1 - Index 2,3,4,5 - x 6,7,8,9 - y
      * </p>
      */
@@ -155,7 +155,7 @@ public interface Boss {
      * Send the boss's current facing direction to every connected player
      * <p>
      * Facing uses direction constants in Globals.<br/>
-     * Uses Server Broadcaster to send to all
+     * Uses Server PacketSender to send to all
      * <br/>Byte sent: 0 - Data type 1 - Index 2 - Facing direction
      * </p>
      */
@@ -165,7 +165,7 @@ public interface Boss {
      * Send the boss's current state(for animation) and current frame of animation to every connected player
      * <p>
      * State constants are in Globals.<br/>
-     * Uses Server Broadcaster to send to all<br/>
+     * Uses Server PacketSender to send to all<br/>
      * Byte sent: 0 - Data type 1 - Index 2 - Player state 3 - Current frame
      * </p>
      */
