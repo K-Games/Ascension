@@ -29,11 +29,15 @@ public class RenderModule extends Thread {
         while (isRunning) {
             double now = System.nanoTime(); //Get time now
             if (now - lastUpdateTime >= Globals.RENDER_UPDATE) {
-                panel.setPlayers(logic.getPlayers());
-                panel.setPing(logic.getPing());
-                panel.setMyIndex(logic.getMyIndex());
-                panel.setParticles(logic.getParticles());
                 panel.setScreen(logic.getScreen());
+                switch (logic.getScreen()) {
+                    case Globals.SCREEN_CHAR_SELECT:
+                        setRenderMenuSelect();
+                        break;
+                    case Globals.SCREEN_INGAME:
+                        setRenderIngame();
+                        break;
+                }
                 panel.repaint();
                 FPSCount++;
                 lastUpdateTime = now;
@@ -54,8 +58,14 @@ public class RenderModule extends Thread {
         }
     }
 
-    public int getFPS() {
-        return FPSCount;
+    private void setRenderIngame() {
+        panel.setPlayers(logic.getPlayers());
+        panel.setPing(logic.getPing());
+        panel.setMyIndex(logic.getMyIndex());
+        panel.setParticles(logic.getParticles());
     }
 
+    private void setRenderMenuSelect() {
+        panel.setParticles(logic.getParticles());
+    }
 }

@@ -87,8 +87,13 @@ public class Globals {
     public final static BufferedImage[][] CHAR_SPRITE = new BufferedImage[NUM_PLAYER_STATE][];
     public final static BufferedImage[][] PARTICLE_SPRITE = new BufferedImage[NUM_PARTICLE_EFFECTS][];
     public final static BufferedImage[] HUD = new BufferedImage[1];
+    
     public final static BufferedImage[] MENU_BG = new BufferedImage[1];
-    public final static BufferedImage[] MENU_BUTTON = new BufferedImage[1];
+    public final static BufferedImage[] MENU_SMOKE = new BufferedImage[1];
+    public final static BufferedImage[] MENU_BUTTON = new BufferedImage[2];
+    
+    public final static byte BUTTON_OKAY = 0,
+            BUTTON_SELECTCHAR = 1;
 
     //Packet globals
     public final static int PACKET_MAX_SIZE = 128;
@@ -111,7 +116,7 @@ public class Globals {
     public final static byte NUM_PLAYER_ACTION = 1,
             PLAYER_ACTION_KNOCK = 0x00;
 
-    public final static double calcArmor(double defense) {
+    public static final double calcArmor(double defense) {
         return defense * ARMOR_MULT;
     }
 
@@ -145,26 +150,26 @@ public class Globals {
 
     public static final byte[] intToByte(int input) {
         byte[] bytes = new byte[4];
-        bytes[0] = (byte) (input);
-        bytes[1] = (byte) (input >>> 8);
-        bytes[2] = (byte) (input >>> 16);
-        bytes[3] = (byte) (input >>> 24);
+        bytes[0] = (byte) (input & 0xff);
+        bytes[1] = (byte) ((input >> 8) & 0xff);
+        bytes[2] = (byte) ((input >>> 16) & 0xff);
+        bytes[3] = (byte) ((input >>> 24) & 0xff);
         return bytes;
     }
 
     public static final int bytesToInt(byte[] input) {
-        return (input[0] & 0xff | input[1] << 8 | input[2] << 16 | input[3] << 24);
+        return (input[0] & 0xff | (input[1]& 0xff) << 8 | (input[2]& 0xff) << 16 | (input[3]& 0xff) << 24);
     }
 
     public static void loadGFX() {
         try {
             CHAR_SPRITE[PLAYER_STATE_STAND] = new BufferedImage[9];
-            for (int i = 0; i < 9; i++) {
+            for (int i = 0; i < CHAR_SPRITE[PLAYER_STATE_STAND].length; i++) {
                 CHAR_SPRITE[PLAYER_STATE_STAND][i] = ImageIO.read(Globals.class.getResource("sprites/character/stand/" + i + ".png"));
             }
-            
+
             CHAR_SPRITE[PLAYER_STATE_WALK] = new BufferedImage[19];
-            for (int i = 0; i < 19; i++) {
+            for (int i = 0; i < CHAR_SPRITE[PLAYER_STATE_WALK].length; i++) {
                 CHAR_SPRITE[PLAYER_STATE_WALK][i] = ImageIO.read(Globals.class.getResource("sprites/character/walk/" + i + ".png"));
             }
 
@@ -180,7 +185,11 @@ public class Globals {
 
             HUD[0] = ImageIO.read(Globals.class.getResource("sprites/ui/ingame/ui.png"));
             MENU_BG[0] = ImageIO.read(Globals.class.getResource("sprites/ui/menu/bg.png"));
-            MENU_BUTTON[0] = ImageIO.read(Globals.class.getResource("sprites/ui/menu/button.png"));
+
+            MENU_BUTTON[BUTTON_OKAY] = ImageIO.read(Globals.class.getResource("sprites/ui/menu/button1.png"));
+            MENU_BUTTON[BUTTON_SELECTCHAR] = ImageIO.read(Globals.class.getResource("sprites/ui/menu/button2.png"));
+
+            MENU_SMOKE[0] = ImageIO.read(Globals.class.getResource("sprites/ui/menu/smoke.png"));
         } catch (IOException ex) {
             Logger.getLogger(Globals.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -188,5 +197,9 @@ public class Globals {
 
     public static final long nsToMs(double time) {
         return (long) (time / 1000000);
+    }
+
+    public static final void savePlayer() {
+
     }
 }

@@ -2,7 +2,6 @@ package blockfighter.client;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.net.DatagramSocket;
 
 /**
  *
@@ -10,7 +9,6 @@ import java.net.DatagramSocket;
  */
 public class KeyHandler implements KeyListener {
 
-    DatagramSocket socket = null;
     LogicModule logic = null;
 
     public KeyHandler(LogicModule logic) {
@@ -24,6 +22,14 @@ public class KeyHandler implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
+        switch (logic.getScreen()) {
+            case Globals.SCREEN_INGAME:
+                ingame_keyPressed(e);
+                break;
+        }
+    }
+
+    private void ingame_keyPressed(KeyEvent e) {
         switch (e.getKeyCode()) {
             case KeyEvent.VK_UP:
                 logic.setKeyDown(Globals.UP, true);
@@ -38,11 +44,18 @@ public class KeyHandler implements KeyListener {
                 logic.setKeyDown(Globals.RIGHT, true);
                 break;
         }
-
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
+        switch (logic.getScreen()) {
+            case Globals.SCREEN_INGAME:
+                ingame_keyReleased(e);
+                break;
+        }
+    }
+    
+    public void ingame_keyReleased(KeyEvent e) {
         switch (e.getKeyCode()) {
             case KeyEvent.VK_UP:
                 logic.setKeyDown(Globals.UP, false);

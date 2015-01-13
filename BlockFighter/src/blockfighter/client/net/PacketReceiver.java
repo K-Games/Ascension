@@ -10,7 +10,6 @@ import blockfighter.client.LogicModule;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.SocketTimeoutException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -18,12 +17,12 @@ import java.util.concurrent.Executors;
  *
  * @author Ken
  */
-public class ConnectionThread extends Thread {
+public class PacketReceiver extends Thread {
 
     private final LogicModule logic;
     private DatagramSocket socket = null;
 
-    public ConnectionThread(LogicModule logic, DatagramSocket s) {
+    public PacketReceiver(LogicModule logic, DatagramSocket s) {
         this.logic = logic;
         socket = s;
     }
@@ -31,17 +30,17 @@ public class ConnectionThread extends Thread {
     @Override
     public void run() {
         ExecutorService tpes = Executors.newCachedThreadPool();
-        while (true) {
-            byte[] request = new byte[Globals.PACKET_MAX_SIZE];
-            DatagramPacket p = new DatagramPacket(request, request.length);
-            try {
+        try {
+            while (true) {
+                byte[] request = new byte[Globals.PACKET_MAX_SIZE];
+                DatagramPacket p = new DatagramPacket(request, request.length);
                 socket.receive(p);
                 tpes.execute(new PacketHandler(p, logic));
-            } catch (SocketTimeoutException e) {
-                System.out.println("Timed out");
-                break;
-            } catch (IOException e) {
             }
+        } catch (IOException e) {
+            System.out.println("Server Offline");
+        } finally {
+            tpes.shutdownNow();
         }
     }
 }

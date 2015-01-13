@@ -12,7 +12,9 @@ public class Player {
 
     private int x, y;
     private byte facing, state, frame;
-
+    private double[] stats = new double[Globals.NUM_STATS];
+    private String name;
+    
     public int getX() {
         return x;
     }
@@ -57,5 +59,32 @@ public class Player {
         int drawDscX = x + ((facing == Globals.RIGHT) ? 1 : -1) * sprite.getWidth() / 2;
         g.drawImage(sprite, drawSrcX, drawSrcY, drawDscX, y, 0, 0, sprite.getWidth(), sprite.getHeight(), null);
     }
-
+    
+    public void setStats(byte statType, double stat){
+        stats[statType] = stat;
+        updateStats();
+    }
+    
+    public double getStat(byte statType){
+        return stats[statType];
+    }
+    
+    private void updateStats() {
+        stats[Globals.STAT_ARMOR] = Globals.calcArmor(stats[Globals.STAT_DEFENSE]);
+        stats[Globals.STAT_REGEN] = Globals.calcRegen(stats[Globals.STAT_SPIRIT]);
+        stats[Globals.STAT_MAXHP] = Globals.calcMaxHP(stats[Globals.STAT_DEFENSE]);
+        stats[Globals.STAT_MINHP] = stats[Globals.STAT_MAXHP];
+        stats[Globals.STAT_MINDMG] = Globals.calcMinDmg(stats[Globals.STAT_POWER]);
+        stats[Globals.STAT_MAXDMG] = Globals.calcMaxDmg(stats[Globals.STAT_POWER]);
+        stats[Globals.STAT_CRITCHANCE] = Globals.calcCritChance(stats[Globals.STAT_SPIRIT]);
+        stats[Globals.STAT_CRITDMG] = Globals.calcCritDmg(stats[Globals.STAT_POWER]);
+    }
+    
+    public void setName(String n){
+        name = n;
+    }
+    
+    public String getName(){
+        return name;
+    }
 }

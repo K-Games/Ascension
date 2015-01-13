@@ -66,7 +66,6 @@ public class PacketSender {
         try {
             socket.send(packet);
         } catch (Exception ex) {
-            ex.printStackTrace();
         }
     }
 

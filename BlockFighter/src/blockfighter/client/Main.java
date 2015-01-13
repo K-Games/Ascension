@@ -46,9 +46,9 @@ public class Main {
         frame.getContentPane().add(panel, BorderLayout.CENTER);
         frame.setVisible(true);
 
-        frame.addKeyListener(keyHandler);
-        frame.addMouseMotionListener(mouseHandler);
-        frame.addMouseListener(mouseHandler);
+        panel.addKeyListener(keyHandler);
+        panel.addMouseMotionListener(mouseHandler);
+        panel.addMouseListener(mouseHandler);
 
         logic.start();
         render.start();

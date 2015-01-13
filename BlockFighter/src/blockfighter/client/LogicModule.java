@@ -3,7 +3,8 @@ package blockfighter.client;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.client.entities.Player;
 import blockfighter.client.entities.particles.ParticleKnock;
-import blockfighter.client.net.ConnectionThread;
+import blockfighter.client.entities.particles.ParticleMenuSmoke;
+import blockfighter.client.net.PacketReceiver;
 import blockfighter.client.net.PacketSender;
 import java.awt.HeadlessException;
 import java.net.DatagramSocket;
@@ -25,7 +26,8 @@ import java.util.concurrent.Executors;
 public class LogicModule extends Thread {
 
     private boolean isRunning = false;
-    //Concurrent Queuing
+    
+    //Ingame Data
     private ConcurrentLinkedQueue<Byte> playersAddQueue = new ConcurrentLinkedQueue<>();
     private ConcurrentLinkedQueue<byte[]> playersMoveQueue = new ConcurrentLinkedQueue<>();
     private ConcurrentLinkedQueue<byte[]> playersFacingQueue = new ConcurrentLinkedQueue<>();
@@ -34,12 +36,13 @@ public class LogicModule extends Thread {
     private ConcurrentLinkedQueue<byte[]> particlesRemoveQueue = new ConcurrentLinkedQueue<>();
 
     private Player[] players = null;
-    private ConcurrentHashMap<Integer, Particle> particles = new ConcurrentHashMap<>(150);
+    private ConcurrentHashMap<Integer, Particle> ingameParticles = new ConcurrentHashMap<>(500);
     private byte myIndex = -1;
 
     private PacketSender sender = null;
+    
     private long pingTime = 0;
-    private int ping = -1;
+    private int ping = 0;
     private byte pID = 0;
 
     private long lastAttackTime;
@@ -47,21 +50,55 @@ public class LogicModule extends Thread {
     private double lastRequestTime = lastUpdateTime;
     private double lastQueueTime = lastUpdateTime;
     private double lastPingTime = lastUpdateTime;
+    
     private long last100 = System.currentTimeMillis();
-
-    ExecutorService threadPool = Executors.newCachedThreadPool();
-
-    private byte screen = Globals.SCREEN_CHAR_SELECT;
-
     boolean[] keyDownMove = {false, false, false, false};
-
+    
+    //Menu Data
+    private ConcurrentHashMap<Integer, Particle> menuParticles = new ConcurrentHashMap<>(20);
+    private SaveData[] charsData = new SaveData[3];
+    
+    //Shared Data
+    ExecutorService threadPool = Executors.newCachedThreadPool();
+    private byte screen = Globals.SCREEN_CHAR_SELECT;
+    
     public LogicModule() {
         isRunning = true;
     }
 
+    private void resetIngameData() {
+        playersAddQueue = new ConcurrentLinkedQueue<>();
+        playersMoveQueue = new ConcurrentLinkedQueue<>();
+        playersFacingQueue = new ConcurrentLinkedQueue<>();
+        playersStateQueue = new ConcurrentLinkedQueue<>();
+        particlesQueue = new ConcurrentLinkedQueue<>();
+        particlesRemoveQueue = new ConcurrentLinkedQueue<>();
+
+        players = null;
+        ingameParticles = new ConcurrentHashMap<>(500);
+        myIndex = -1;
+
+        pingTime = 0;
+        ping = 0;
+        pID = 0;
+        lastAttackTime = 0;
+        lastUpdateTime = System.nanoTime();
+        lastRequestTime = lastUpdateTime;
+        lastQueueTime = lastUpdateTime;
+        lastPingTime = lastUpdateTime;
+        last100 = System.currentTimeMillis();
+        keyDownMove[0] = false;
+        keyDownMove[1] = false;
+        keyDownMove[2] = false;
+        keyDownMove[3] = false;
+    }
+
     @Override
     public void run() {
-
+        //Create menu smoke particle
+        menuParticles.put(0, new ParticleMenuSmoke(this, 0, 0, 0, 0));
+        menuParticles.put(1, new ParticleMenuSmoke(this, 1, 1280, 0, 0));
+        
         while (isRunning) {
             switch (screen) {
                 case Globals.SCREEN_CHAR_SELECT:
@@ -75,6 +112,12 @@ public class LogicModule extends Thread {
     }
 
     private void runSelectMenu() {
+        double now = System.nanoTime(); //Get time now
+        if (now - lastUpdateTime >= Globals.LOGIC_UPDATE) {
+            updateParticles(menuParticles);
+            removeParticles(menuParticles);
+            lastUpdateTime = now;
+        }
 
     }
 
@@ -97,25 +140,8 @@ public class LogicModule extends Thread {
             sender.sendMove(myIndex, Globals.LEFT, keyDownMove[Globals.LEFT]);
             sender.sendMove(myIndex, Globals.RIGHT, keyDownMove[Globals.RIGHT]);
 
-            Iterator<Integer> partItr = particles.keySet().iterator();
-            while (partItr.hasNext()) {
-                Integer key = partItr.next();
-                if (particles.get(key) != null) {
-                    threadPool.execute(particles.get(key));
-                }
-            }
-
-            partItr = particles.keySet().iterator();
-            while (partItr.hasNext()) {
-                Integer key = partItr.next();
-                if (particles.get(key) != null) {
-                    try {
-                        particles.get(key).join();
-                    } catch (InterruptedException ex) {
-                    }
-                }
-            }
-            removeParticles();
+            updateParticles(ingameParticles);
+            removeParticles(ingameParticles);
 
             lastUpdateTime = now;
         }
@@ -141,8 +167,28 @@ public class LogicModule extends Thread {
             now = System.nanoTime();
         }
     }
+    private void updateParticles(ConcurrentHashMap<Integer, Particle> particles) {
+        Iterator<Integer> partItr = particles.keySet().iterator();
+            while (partItr.hasNext()) {
+                Integer key = partItr.next();
+                if (particles.get(key) != null) {
+                    threadPool.execute(particles.get(key));
+                }
+            }
 
-    private void removeParticles() {
+            partItr = particles.keySet().iterator();
+            while (partItr.hasNext()) {
+                Integer key = partItr.next();
+                if (particles.get(key) != null) {
+                    try {
+                        particles.get(key).join();
+                    } catch (InterruptedException ex) {
+                    }
+                }
+            }
+    }
+    
+    private void removeParticles(ConcurrentHashMap<Integer, Particle> particles) {
         LinkedList<Integer> remove = new LinkedList<>();
         Iterator<Integer> partItr = particles.keySet().iterator();
 
@@ -160,17 +206,11 @@ public class LogicModule extends Thread {
     }
 
     private void processQueues() {
-        while (!playersAddQueue.isEmpty()) {
-            if (players == null) {
-                break;
-            }
+        while (players != null && !playersAddQueue.isEmpty()) {
             players[playersAddQueue.remove()] = new Player(0, 0);
         }
 
-        while (!playersMoveQueue.isEmpty()) {
-            if (players == null) {
-                break;
-            }
+        while (players != null && !playersMoveQueue.isEmpty()) {
             byte[] data = playersMoveQueue.remove();
             byte index = data[1];
             int x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
@@ -182,10 +222,7 @@ public class LogicModule extends Thread {
             }
         }
 
-        while (!playersFacingQueue.isEmpty()) {
-            if (players == null) {
-                break;
-            }
+        while (players != null && !playersFacingQueue.isEmpty()) {
             byte[] data = playersFacingQueue.remove();
             byte index = data[1];
             byte facing = data[2];
@@ -194,10 +231,7 @@ public class LogicModule extends Thread {
             }
         }
 
-        while (!playersStateQueue.isEmpty()) {
-            if (players == null) {
-                break;
-            }
+        while (players != null && !playersStateQueue.isEmpty()) {
             byte[] data = playersStateQueue.remove();
             byte index = data[1];
             if (players[index] != null) {
@@ -214,13 +248,13 @@ public class LogicModule extends Thread {
             byte particleID = data[5];
             int x = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
             int y = Globals.bytesToInt(Arrays.copyOfRange(data, 10, 14));
-            particles.put(index, new ParticleKnock(this, index, x, y, 500));
+            ingameParticles.put(index, new ParticleKnock(this, index, x, y, 500));
         }
 
         while (!particlesRemoveQueue.isEmpty()) {
             byte[] data = particlesRemoveQueue.remove();
             int key = Globals.bytesToInt(Arrays.copyOfRange(data, 1, 5));
-            particles.remove(key);
+            ingameParticles.remove(key);
         }
     }
 
@@ -232,8 +266,11 @@ public class LogicModule extends Thread {
         keyDownMove[direction] = move;
     }
 
-    public void receiveLogin(byte index) {
+    public void receiveLogin(byte index, byte size) {
+        resetIngameData();
         myIndex = index;
+        setPlayersSize(size);
+        queueAddPlayer(index);
         sender.sendGetAll();
         screen = Globals.SCREEN_INGAME;
     }
@@ -254,7 +291,7 @@ public class LogicModule extends Thread {
         return ping;
     }
 
-    public void setPlayersSize(byte size) {
+    private void setPlayersSize(byte size) {
         players = new Player[size];
     }
 
@@ -263,7 +300,13 @@ public class LogicModule extends Thread {
     }
 
     public ConcurrentHashMap<Integer, Particle> getParticles() {
-        return particles;
+        switch (screen) {
+            case Globals.SCREEN_CHAR_SELECT:
+                return menuParticles;
+            case Globals.SCREEN_INGAME:
+                return ingameParticles;
+        }
+        return null;
     }
 
     public void queueAddPlayer(byte index) {
@@ -308,8 +351,9 @@ public class LogicModule extends Thread {
         try {
             DatagramSocket socket = new DatagramSocket();
             socket.connect(InetAddress.getByName(Globals.SERVER_ADDRESS), Globals.SERVER_PORT);
+            socket.setSoTimeout(5000);
             sender = new PacketSender(socket);
-            ConnectionThread responseThread = new ConnectionThread(this, socket);
+            PacketReceiver responseThread = new PacketReceiver(this, socket);
             responseThread.start();
         } catch (SocketException | UnknownHostException | HeadlessException e) {
             e.printStackTrace();
