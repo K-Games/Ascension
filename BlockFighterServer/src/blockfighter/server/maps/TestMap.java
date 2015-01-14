@@ -8,7 +8,7 @@ import java.awt.geom.Rectangle2D;
  *
  * @author Ken
  */
-public class TestMap extends Map {
+public class TestMap extends GameMap {
 
     /**
      * Load server map

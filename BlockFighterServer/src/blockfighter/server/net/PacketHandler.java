@@ -6,6 +6,7 @@ import blockfighter.server.entities.player.Player;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.util.Arrays;
+import java.util.Map;
 
 /**
  * Threads to handle incoming requests.
@@ -68,23 +69,23 @@ public class PacketHandler extends Thread {
     }
 
     private void receivePlayerAction(byte[] data) {
-        Globals.log("DATA_PLAYER_ACTION", "Index: " + data[1], Globals.LOG_TYPE_DATA, false);
+        Globals.log("DATA_PLAYER_ACTION", "Key: " + data[1], Globals.LOG_TYPE_DATA, false);
         logic.queuePlayerAction(data);
     }
 
     private void receiveLogin(InetAddress address, int port) {
         Globals.log("DATA_LOGIN", address + ":" + port, Globals.LOG_TYPE_DATA, true);
 
-        byte freeIndex = logic.getNextIndex();
+        byte freeKey = logic.getNextPlayerKey();
 
-        if (freeIndex == -1) {
+        if (freeKey == -1) {
             return;
         }
-        Player newPlayer = new Player(packetSender, logic, freeIndex, address, port, logic.getMap(), Math.random() * 1180.0 + 100, 0);
+        Player newPlayer = new Player(packetSender, logic, freeKey, address, port, logic.getMap(), Math.random() * 1180.0 + 100, 0);
         logic.queueAddPlayer(newPlayer);
         byte[] bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_BYTE + Globals.PACKET_BYTE];
         bytes[0] = Globals.DATA_LOGIN;
-        bytes[1] = freeIndex;
+        bytes[1] = freeKey;
         bytes[2] = Globals.MAX_PLAYERS;
         packetSender.sendPlayer(bytes, address, port);
         
@@ -94,15 +95,12 @@ public class PacketHandler extends Thread {
     }
 
     private void receiveGetAllPlayer(InetAddress address, int port) {
-        Player[] players = Arrays.copyOf(logic.getPlayers(), logic.getPlayers().length);
-        for (Player player : players) {
-            if (player == null) {
-                continue;
-            }
-
+        for (Map.Entry<Byte, Player> pEntry : logic.getPlayers().entrySet()) {
+            Player player = pEntry.getValue();
+            
             byte[] bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_INT + Globals.PACKET_INT + Globals.PACKET_INT];
             bytes[0] = Globals.DATA_SET_PLAYER_POS;
-            bytes[1] = player.getIndex();
+            bytes[1] = player.getKey();
 
             byte[] posXInt = Globals.intToByte((int) player.getX());
             bytes[2] = posXInt[0];
@@ -118,13 +116,13 @@ public class PacketHandler extends Thread {
 
             bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_BYTE + Globals.PACKET_BYTE];
             bytes[0] = Globals.DATA_SET_PLAYER_FACING;
-            bytes[1] = player.getIndex();
+            bytes[1] = player.getKey();
             bytes[2] = player.getFacing();
             packetSender.sendPlayer(bytes, address, port);
 
             bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_BYTE + Globals.PACKET_BYTE + Globals.PACKET_BYTE];
             bytes[0] = Globals.DATA_SET_PLAYER_STATE;
-            bytes[1] = player.getIndex();
+            bytes[1] = player.getKey();
             bytes[2] = player.getPlayerState();
             bytes[3] = player.getFrame();
             packetSender.sendPlayer(bytes, address, port);

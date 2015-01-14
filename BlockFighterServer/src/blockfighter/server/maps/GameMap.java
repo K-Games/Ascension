@@ -8,7 +8,7 @@ import java.awt.geom.Rectangle2D;
  *
  * @author Ken
  */
-public abstract class Map {
+public abstract class GameMap {
 
     Rectangle2D.Double[] platforms = new Rectangle2D.Double[3];
     double[] boundary = new double[2];
@@ -16,7 +16,7 @@ public abstract class Map {
     /**
      * Load server map
      */
-    public Map() {
+    public GameMap() {
         platforms[0] = new Rectangle2D.Double(0, 620, 5000, 30);
         platforms[1] = new Rectangle2D.Double(200, 400, 300, 30);
         platforms[2] = new Rectangle2D.Double(600, 180, 300, 30);

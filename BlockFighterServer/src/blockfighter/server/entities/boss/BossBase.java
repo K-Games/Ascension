@@ -1,6 +1,6 @@
 package blockfighter.server.entities.boss;
 
-import blockfighter.server.maps.Map;
+import blockfighter.server.maps.GameMap;
 import blockfighter.server.net.PacketSender;
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
@@ -18,7 +18,7 @@ import java.util.ArrayList;
  */
 public abstract class BossBase extends Thread implements Boss {
 
-    private final byte index;
+    private final byte key;
     private final LogicModule logic;
     private double x, y, ySpeed, xSpeed;
 
@@ -31,22 +31,22 @@ public abstract class BossBase extends Thread implements Boss {
     private boolean isStun = false, isKnockback = false;
 
     private final PacketSender packetSender;
-    private final Map map;
+    private final GameMap map;
 
     /**
      * Create a new player entity in the server.
      *
-     * @param index The index of this player in the player array in logic module
+     * @param key The key of this player in the player array in logic module
      * @param x Spawning x location in double
      * @param y Spawning y location in double
      * @param bc Reference to Server PacketSender
      * @param map Reference to server's loaded map
      * @param l Reference to Logic module
      */
-    public BossBase(PacketSender bc, LogicModule l, byte index, Map map, double x, double y) {
+    public BossBase(PacketSender bc, LogicModule l, byte key, GameMap map, double x, double y) {
         packetSender = bc;
         logic = l;
-        this.index = index;
+        this.key = key;
         this.x = x;
         this.y = y;
         hitbox = new Rectangle2D.Double(x - 30, y - 96, 60, 96);
@@ -67,8 +67,8 @@ public abstract class BossBase extends Thread implements Boss {
     }
 
     @Override
-    public byte getIndex() {
-        return index;
+    public byte getKey() {
+        return key;
     }
 
     @Override
@@ -214,7 +214,7 @@ public abstract class BossBase extends Thread implements Boss {
     public void sendPos() {
         byte[] bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_BYTE + Globals.PACKET_INT + Globals.PACKET_INT];
         bytes[0] = Globals.DATA_SET_PLAYER_POS;
-        bytes[1] = index;
+        bytes[1] = key;
         byte[] posXInt = Globals.intToByte((int) x);
         bytes[2] = posXInt[0];
         bytes[3] = posXInt[1];
@@ -233,7 +233,7 @@ public abstract class BossBase extends Thread implements Boss {
     public void sendFacing() {
         byte[] bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_BYTE + Globals.PACKET_BYTE];
         bytes[0] = Globals.DATA_SET_PLAYER_FACING;
-        bytes[1] = index;
+        bytes[1] = key;
         bytes[2] = facing;
         packetSender.sendAll(bytes);
         updateFacing = false;
@@ -243,7 +243,7 @@ public abstract class BossBase extends Thread implements Boss {
     public void sendState() {
         byte[] bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_BYTE + Globals.PACKET_BYTE + Globals.PACKET_BYTE];
         bytes[0] = Globals.DATA_SET_PLAYER_STATE;
-        bytes[1] = index;
+        bytes[1] = key;
         bytes[2] = bossState;
         bytes[3] = frame;
         packetSender.sendAll(bytes);

@@ -1,7 +1,7 @@
 package blockfighter.server.entities.player;
 
 import blockfighter.server.entities.proj.ProjTest;
-import blockfighter.server.maps.Map;
+import blockfighter.server.maps.GameMap;
 import blockfighter.server.net.PacketSender;
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
@@ -11,7 +11,9 @@ import blockfighter.server.entities.buff.BuffStun;
 
 import java.awt.geom.Rectangle2D;
 import java.net.InetAddress;
-import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Player entities on the server.
@@ -20,7 +22,7 @@ import java.util.ArrayList;
  */
 public class Player extends Thread {
 
-    private final byte index;
+    private final byte key;
     private final LogicModule logic;
     private double x, y, ySpeed, xSpeed;
     private boolean[] isMove = new boolean[4];
@@ -30,19 +32,19 @@ public class Player extends Thread {
     private double nextFrameTime = 0;
     private Rectangle2D.Double hitbox;
 
-    private ArrayList<Buff> buffs = new ArrayList<>();
+    private ConcurrentHashMap<Byte, Buff> buffs = new ConcurrentHashMap<>(10);
     private boolean isStun = false, isKnockback = false;
 
     private final InetAddress address;
     private final int port;
     private final PacketSender packetSender;
-    private final Map map;
+    private final GameMap map;
     private double[] stats = new double[Globals.NUM_STATS];
 
     /**
      * Create a new player entity in the server.
      *
-     * @param index The index of this player in the player array in logic module
+     * @param key The key of this player in the player array in logic module
      * @param address IP address of player
      * @param port Connected port
      * @param x Spawning x location in double
@@ -51,7 +53,7 @@ public class Player extends Thread {
      * @param map Reference to server's loaded map
      * @param l Reference to Logic module
      */
-    public Player(PacketSender bc, LogicModule l, byte index, InetAddress address, int port, Map map, double x, double y) {
+    public Player(PacketSender bc, LogicModule l, byte key, InetAddress address, int port, GameMap map, double x, double y) {
         stats[Globals.STAT_POWER] = 0;
         stats[Globals.STAT_DEFENSE] = 0;
         stats[Globals.STAT_SPIRIT] = 0;
@@ -59,7 +61,7 @@ public class Player extends Thread {
 
         packetSender = bc;
         logic = l;
-        this.index = index;
+        this.key = key;
         this.address = address;
         this.port = port;
         this.x = x;
@@ -90,15 +92,15 @@ public class Player extends Thread {
     }
 
     /**
-     * Return this player's array index.
+     * Return this player's key.
      * <p>
-     * This index is the same index in the player array in the logic module.
+     * This key is the same key in the player array in the logic module.
      * </p>
      *
-     * @return The index of this player in byte
+     * @return The key of this player in byte
      */
-    public byte getIndex() {
-        return index;
+    public byte getKey() {
+        return key;
     }
 
     /**
@@ -245,8 +247,9 @@ public class Player extends Thread {
     private void updateBuffs() {
         isStun = false;
         isKnockback = false;
-        ArrayList<Buff> remove = new ArrayList<>();
-        for (Buff b : buffs) {
+        LinkedList<Byte> remove = new LinkedList<>();
+        for (Map.Entry<Byte, Buff> bEntry : buffs.entrySet()) {
+            Buff b = bEntry.getValue();
             b.update();
             if (b instanceof BuffStun) {
                 isStun = true;
@@ -254,12 +257,11 @@ public class Player extends Thread {
                 isKnockback = true;
             }
             if (b.isExpired()) {
-                remove.add(b);
+                remove.add(bEntry.getKey());
             }
         }
-
-        for (Buff b : remove) {
-            buffs.remove(b);
+        for (byte key : remove) {
+            buffs.remove(key);
         }
     }
 
@@ -308,7 +310,7 @@ public class Player extends Thread {
      * @param b New Buff
      */
     public void addBuff(Buff b) {
-        buffs.add(b);
+        buffs.put((byte)buffs.size(), b);
     }
 
     private void updateJump() {
@@ -487,14 +489,14 @@ public class Player extends Thread {
      * <p>
      * X and y are casted and sent as int.
      * <br/>
- Uses Server PacketSender to send to all<br/>
-     * Byte sent: 0 - Data type 1 - Index 2,3,4,5 - x 6,7,8,9 - y
+     * Uses Server PacketSender to send to all<br/>
+     * Byte sent: 0 - Data type 1 - Key 2,3,4,5 - x 6,7,8,9 - y
      * </p>
      */
     public void sendPos() {
         byte[] bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_BYTE + Globals.PACKET_INT + Globals.PACKET_INT];
         bytes[0] = Globals.DATA_SET_PLAYER_POS;
-        bytes[1] = index;
+        bytes[1] = key;
         byte[] posXInt = Globals.intToByte((int) x);
         bytes[2] = posXInt[0];
         bytes[3] = posXInt[1];
@@ -513,14 +515,14 @@ public class Player extends Thread {
      * Send the player's current facing direction to every connected player
      * <p>
      * Facing uses direction constants in Globals.<br/>
- Uses Server PacketSender to send to all
- <br/>Byte sent: 0 - Data type 1 - Index 2 - Facing direction
+     * Uses Server PacketSender to send to all
+     * <br/>Byte sent: 0 - Data type 1 - Key 2 - Facing direction
      * </p>
      */
     public void sendFacing() {
         byte[] bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_BYTE + Globals.PACKET_BYTE];
         bytes[0] = Globals.DATA_SET_PLAYER_FACING;
-        bytes[1] = index;
+        bytes[1] = key;
         bytes[2] = facing;
         packetSender.sendAll(bytes);
         updateFacing = false;
@@ -530,14 +532,14 @@ public class Player extends Thread {
      * Send the player's current state(for animation) and current frame of animation to every connected player
      * <p>
      * State constants are in Globals.<br/>
- Uses Server PacketSender to send to all<br/>
-     * Byte sent: 0 - Data type 1 - Index 2 - Player state 3 - Current frame
+     * Uses Server PacketSender to send to all<br/>
+     * Byte sent: 0 - Data type 1 - Key 2 - Player state 3 - Current frame
      * </p>
      */
     public void sendState() {
         byte[] bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_BYTE + Globals.PACKET_BYTE + Globals.PACKET_BYTE];
         bytes[0] = Globals.DATA_SET_PLAYER_STATE;
-        bytes[1] = index;
+        bytes[1] = key;
         bytes[2] = playerState;
         bytes[3] = frame;
         packetSender.sendAll(bytes);

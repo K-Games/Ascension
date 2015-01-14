@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.util.Map;
 
 /**
  * The server packetSender.
@@ -86,15 +87,13 @@ public class PacketSender {
      */
     public void sendAll(byte[] bytes) {
         //tell everyone
-        for (Player p : logic.getPlayers()) {
-            if (p != null) {
-                DatagramPacket packet = createPacket(bytes, p);
-                bytesSent += packet.getLength();
-                try {
-                    socket.send(packet);
-                } catch (IOException ex) {
-                    Globals.log(ex.getLocalizedMessage(), ex, true);
-                }
+        for (Map.Entry<Byte, Player> pEntry : logic.getPlayers().entrySet()) {
+            DatagramPacket packet = createPacket(bytes, pEntry.getValue());
+            bytesSent += packet.getLength();
+            try {
+                socket.send(packet);
+            } catch (IOException ex) {
+                Globals.log(ex.getLocalizedMessage(), ex, true);
             }
         }
     }
@@ -103,11 +102,8 @@ public class PacketSender {
      * Broadcast an update to all players about all players.
      */
     public void broadcastAllPlayersUpdate() {
-        Player[] players = logic.getPlayers();
-        for (Player player : players) {
-            if (player == null) {
-                continue;
-            }
+        for (Map.Entry<Byte, Player> pEntry : logic.getPlayers().entrySet()) {
+            Player player = pEntry.getValue();
             player.sendPos();
             player.sendState();
             player.sendFacing();

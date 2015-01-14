@@ -2,11 +2,11 @@ package blockfighter.server;
 
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.proj.ProjBase;
-import blockfighter.server.maps.Map;
+import blockfighter.server.maps.GameMap;
 import blockfighter.server.maps.TestMap;
 import blockfighter.server.net.PacketSender;
-import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
@@ -20,11 +20,11 @@ import java.util.concurrent.Executors;
 public class LogicModule extends Thread {
 
     private boolean isRunning = false;
-    private final Player[] players = new Player[Globals.MAX_PLAYERS];
+    private final ConcurrentHashMap<Byte, Player> players = new ConcurrentHashMap<>(Globals.MAX_PLAYERS);
     private final ConcurrentHashMap<Integer, ProjBase> projectiles = new ConcurrentHashMap<>();
 
     private PacketSender packetSender;
-    private final Map map;
+    private final GameMap map;
 
     private int projMaxKeys = 500;
 
@@ -39,8 +39,7 @@ public class LogicModule extends Thread {
     /**
      * Create a server logic module
      * <p>
-     * Servers can have multiple logic modules for multiple instances of levels.
-     * When logic is required, it should be referenced and not created
+     * Servers can have multiple logic modules for multiple instances of levels. When logic is required, it should be referenced and not created
      * </p>
      */
     public LogicModule() {
@@ -85,17 +84,13 @@ public class LogicModule extends Thread {
     }
 
     private void updatePlayers(ExecutorService threadPool) {
-        for (Player player : players) {
-            if (player != null) {
-                threadPool.execute(player);
-            }
+        for (Map.Entry<Byte, Player> player : players.entrySet()) {
+            threadPool.execute(player.getValue());
         }
 
-        for (Player player : players) {
+        for (Map.Entry<Byte, Player> player : players.entrySet()) {
             try {
-                if (player != null) {
-                    player.join();
-                }
+                player.getValue().join();
             } catch (InterruptedException ex) {
                 Globals.log(ex.getLocalizedMessage(), ex, true);
             }
@@ -103,46 +98,25 @@ public class LogicModule extends Thread {
     }
 
     private void updateProjectiles(ExecutorService threadPool) {
-        Iterator<Integer> projItr = projectiles.keySet().iterator();
-        while (projItr.hasNext()) {
-            Integer key = projItr.next();
-            if (projectiles.get(key) != null) {
-                threadPool.execute(projectiles.get(key));
-            }
+        LinkedList<Integer> remove = new LinkedList<>();
+        for (Map.Entry<Integer, ProjBase> p : projectiles.entrySet()) {
+            threadPool.execute(p.getValue());
         }
 
-        projItr = projectiles.keySet().iterator();
-        while (projItr.hasNext()) {
-            Integer key = projItr.next();
-            if (projectiles.get(key) != null) {
-                try {
-                    projectiles.get(key).join();
-                } catch (InterruptedException ex) {
-                    Globals.log(ex.getLocalizedMessage(), ex, true);
+        for (Map.Entry<Integer, ProjBase> p : projectiles.entrySet()) {
+            try {
+                p.getValue().join();
+                if (p.getValue().isExpired()) {
+                    remove.add(p.getValue().getKey());
                 }
+            } catch (InterruptedException ex) {
+                Globals.log(ex.getLocalizedMessage(), ex, true);
             }
         }
-        removeProjectiles();
+        removeProjectiles(remove);
     }
 
-    private void removeProjectiles() {
-        LinkedList<Integer> remove = new LinkedList<>();
-        Iterator<Integer> projItr = projectiles.keySet().iterator();
-
-        while (projItr.hasNext()) {
-            Integer key = projItr.next();
-            ProjBase p = projectiles.get(key);
-            if (p.isExpired()) {
-                remove.add(key);
-            }
-        }
-
-        /*
-         for (ProjBase p : projectiles) {
-         if (p != null && p.isExpired()) {
-         remove.add(p);
-         }
-         }*/
+    private void removeProjectiles(LinkedList<Integer> remove) {
         while (!remove.isEmpty()) {
             int key = remove.peek();
             projectiles.remove(remove.pop());
@@ -162,9 +136,9 @@ public class LogicModule extends Thread {
     /**
      * Return the array of players.
      *
-     * @return Array of connected players
+     * @return Hash map of connected players
      */
-    public Player[] getPlayers() {
+    public ConcurrentHashMap<Byte, Player> getPlayers() {
         return players;
     }
 
@@ -180,9 +154,9 @@ public class LogicModule extends Thread {
     /**
      * Return the loaded server map
      *
-     * @return Server Map
+     * @return Server GameMap
      */
-    public Map getMap() {
+    public GameMap getMap() {
         return map;
     }
 
@@ -196,11 +170,11 @@ public class LogicModule extends Thread {
     }
 
     /**
-     * Return the next index open for connection
+     * Return the next key open for connection
      *
-     * @return returns next open index
+     * @return returns next open key
      */
-    public byte getNextIndex() {
+    public byte getNextPlayerKey() {
         if (numPlayers >= Globals.MAX_PLAYERS) {
             return -1;
         }
@@ -226,7 +200,7 @@ public class LogicModule extends Thread {
      * Data to be processed in the queue later.
      * </p>
      *
-     * @param data Bytes to be processed - 1:Index, 2:direction, 3:1 = true, 0 = false
+     * @param data Bytes to be processed - 1:Key, 2:direction, 3:1 = true, 0 = false
      */
     public void queuePlayerMove(byte[] data) {
         pMoveQueue.add(data);
@@ -235,7 +209,7 @@ public class LogicModule extends Thread {
     /**
      * Queue a player action to be performed
      *
-     * @param data 1:index, 2:action type
+     * @param data 1:key, 2:action type
      */
     public void queuePlayerAction(byte[] data) {
         pActionQueue.add(data);
@@ -266,20 +240,21 @@ public class LogicModule extends Thread {
         Thread[] queues = new Thread[4];
 
         while (!pAddQueue.isEmpty()) {
-            Player newPlayer = pAddQueue.remove();
-            byte index = newPlayer.getIndex();
-            players[index] = newPlayer;
+            Player newPlayer = pAddQueue.poll();
+            if (newPlayer != null) {
+                byte key = newPlayer.getKey();
+                players.put(key, newPlayer);
+            }
         }
 
         queues[0] = new Thread() {
             @Override
             public void run() {
                 while (!pMoveQueue.isEmpty()) {
-                    byte[] data = pMoveQueue.remove();
-                    if (players[data[1]] == null) {
-                        continue;
+                    byte[] data = pMoveQueue.poll();
+                    if (data != null && players.containsKey(data[1])) {
+                        players.get(data[1]).setMove(data[2], data[3] == 1);
                     }
-                    players[data[1]].setMove(data[2], data[3] == 1);
                 }
             }
         };
@@ -288,11 +263,10 @@ public class LogicModule extends Thread {
             @Override
             public void run() {
                 while (!pActionQueue.isEmpty()) {
-                    byte[] data = pActionQueue.remove();
-                    if (players[data[1]] == null) {
-                        continue;
+                    byte[] data = pActionQueue.poll();
+                    if (data != null && players.containsKey(data[1])) {
+                        players.get(data[1]).processAction(data);
                     }
-                    players[data[1]].processAction(data);
                 }
             }
         };
@@ -301,8 +275,10 @@ public class LogicModule extends Thread {
             @Override
             public void run() {
                 while (!projEffectQueue.isEmpty()) {
-                    ProjBase proj = projEffectQueue.remove();
-                    proj.processQueue();
+                    ProjBase proj = projEffectQueue.poll();
+                    if (proj != null) {
+                        proj.processQueue();
+                    }
                 }
             }
         };
@@ -311,8 +287,10 @@ public class LogicModule extends Thread {
             @Override
             public void run() {
                 while (!projAddQueue.isEmpty()) {
-                    ProjBase p = projAddQueue.remove();
-                    projectiles.put(p.getKey(), p);
+                    ProjBase p = projAddQueue.poll();
+                    if (p != null) {
+                        projectiles.put(p.getKey(), p);
+                    }
                 }
             }
         };

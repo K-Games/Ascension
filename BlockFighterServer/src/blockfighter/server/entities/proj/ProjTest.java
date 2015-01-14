@@ -7,6 +7,7 @@ import blockfighter.server.entities.buff.BuffKnockback;
 import blockfighter.server.net.PacketSender;
 import java.awt.geom.Rectangle2D;
 import java.util.LinkedList;
+import java.util.Map;
 
 /**
  * This is the base projectile class. Create projectile classes off this.
@@ -54,7 +55,8 @@ public class ProjTest extends ProjBase {
     @Override
     public void update() {
         duration -= Globals.nsToMs(Globals.LOGIC_UPDATE);
-        for (Player p : logic.getPlayers()) {
+        for (Map.Entry<Byte, Player> pEntry : logic.getPlayers().entrySet()) {
+            Player p = pEntry.getValue();
             if (p != owner && p != null && !pHit.contains(p) && p.intersectHitbox(hitbox[0])) {
 
                 byte[] bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_INT + Globals.PACKET_BYTE + Globals.PACKET_INT + Globals.PACKET_INT];

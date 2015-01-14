@@ -139,24 +139,24 @@ public interface Boss {
      * X and y are casted and sent as int.
      * <br/>
      * Uses Server PacketSender to send to all<br/>
-     * Byte sent: 0 - Data type 1 - Index 2,3,4,5 - x 6,7,8,9 - y
+     * Byte sent: 0 - Data type 1 - Key 2,3,4,5 - x 6,7,8,9 - y
      * </p>
      */
     public abstract void sendPos();
 
     /**
-     * Get the index of this boss
+     * Get the key of this boss
      *
      * @return Byte
      */
-    public abstract byte getIndex();
+    public abstract byte getKey();
 
     /**
      * Send the boss's current facing direction to every connected player
      * <p>
      * Facing uses direction constants in Globals.<br/>
      * Uses Server PacketSender to send to all
-     * <br/>Byte sent: 0 - Data type 1 - Index 2 - Facing direction
+     * <br/>Byte sent: 0 - Data type 1 - Key 2 - Facing direction
      * </p>
      */
     public void sendFacing();
@@ -166,7 +166,7 @@ public interface Boss {
      * <p>
      * State constants are in Globals.<br/>
      * Uses Server PacketSender to send to all<br/>
-     * Byte sent: 0 - Data type 1 - Index 2 - Player state 3 - Current frame
+     * Byte sent: 0 - Data type 1 - Key 2 - Player state 3 - Current frame
      * </p>
      */
     public void sendState();
