@@ -2,6 +2,8 @@ package blockfighter.client.render;
 
 import blockfighter.client.LogicModule;
 import blockfighter.client.Globals;
+import javax.swing.JFrame;
+import javax.swing.JTextField;
 
 /**
  *
@@ -13,11 +15,13 @@ public class RenderModule extends Thread {
     private final LogicModule logic;
     private boolean isRunning = false;
     private int FPSCount = 0;
+    private JFrame mainFrame;
 
-    public RenderModule(RenderPanel p, LogicModule l) {
+    public RenderModule(RenderPanel p, LogicModule l, JFrame f) {
         panel = p;
         logic = l;
         isRunning = true;
+        mainFrame = f;
     }
 
     @Override
@@ -25,19 +29,12 @@ public class RenderModule extends Thread {
 
         double lastUpdateTime = System.nanoTime(); //Last time we rendered
         double lastFPSTime = lastUpdateTime; //Last time FPS count reset
+        panel.setLayout(null);
 
         while (isRunning) {
             double now = System.nanoTime(); //Get time now
             if (now - lastUpdateTime >= Globals.RENDER_UPDATE) {
                 panel.setScreen(logic.getScreen());
-                switch (logic.getScreen()) {
-                    case Globals.SCREEN_CHAR_SELECT:
-                        setRenderMenuSelect();
-                        break;
-                    case Globals.SCREEN_INGAME:
-                        setRenderIngame();
-                        break;
-                }
                 panel.repaint();
                 FPSCount++;
                 lastUpdateTime = now;
@@ -56,16 +53,5 @@ public class RenderModule extends Thread {
             }
 
         }
-    }
-
-    private void setRenderIngame() {
-        panel.setPlayers(logic.getPlayers());
-        panel.setPing(logic.getPing());
-        panel.setMyIndex(logic.getMyIndex());
-        panel.setParticles(logic.getParticles());
-    }
-
-    private void setRenderMenuSelect() {
-        panel.setParticles(logic.getParticles());
     }
 }

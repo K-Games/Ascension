@@ -36,20 +36,20 @@ public class PacketSender {
         sendPacket(requestPacket);
     }
 
-    public void sendMove(byte index, byte direction, boolean move) {
+    public void sendMove(byte key, byte direction, boolean move) {
         byte[] bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_BYTE + Globals.PACKET_BYTE + Globals.PACKET_BYTE];
         bytes[0] = Globals.DATA_SET_PLAYER_MOVE;
-        bytes[1] = index;
+        bytes[1] = key;
         bytes[2] = direction;
         bytes[3] = (byte) (move ? 1 : 0);
         DatagramPacket requestPacket = createPacket(bytes);
         sendPacket(requestPacket);
     }
 
-    public void sendAction(byte index) {
+    public void sendAction(byte key) {
         byte[] bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_BYTE];
         bytes[0] = Globals.DATA_PLAYER_ACTION;
-        bytes[1] = index;
+        bytes[1] = key;
         DatagramPacket requestPacket = createPacket(bytes);
         sendPacket(requestPacket);
     }

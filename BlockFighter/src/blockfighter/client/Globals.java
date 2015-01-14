@@ -1,5 +1,6 @@
 package blockfighter.client;
 
+import java.awt.Font;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -18,16 +19,10 @@ public class Globals {
     public final static int WINDOW_WIDTH = 1280;
     public final static int WINDOW_HEIGHT = 720;
 
-    public final static byte SCREEN_CHAR_SELECT = 0x00,
-            SCREEN_CHAR_STATS = 0x01,
-            SCREEN_CHAR_EQUIPS = 0x02,
-            SCREEN_CHAR_UPGRADE = 0x03,
-            SCREEN_CHAR_SKILLS = 0x04,
-            SCREEN_CHAR_OPTIONS = 0x05,
-            SCREEN_CHAR_SERVERS = 0x06,
-            SCREEN_INGAME = 0x07;
-
     //Render globals
+    public final static Font ARIAL_30PT = new Font("Arial", Font.PLAIN, 30);
+    public final static Font ARIAL_12PT = new Font("Arial", Font.PLAIN, 12);
+    
     public final static double RENDER_FPS = 60.0;
     public final static double RENDER_UPDATE = 1000000000 / RENDER_FPS;
 

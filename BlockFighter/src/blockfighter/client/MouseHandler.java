@@ -19,41 +19,37 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        switch (logic.getScreen()) {
-            case Globals.SCREEN_CHAR_SELECT:
-                charsSelect_mouseClick(e);
-                break;
-        }
-    }
-
-    private void charsSelect_mouseClick(MouseEvent e) {
-        if (new Rectangle(550,550,214,112).contains(e.getPoint())){
-            logic.sendLogin();
-        }
+        logic.getScreen().mouseClicked(e);
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
+        logic.getScreen().mouseClicked(e);
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
+        logic.getScreen().mouseReleased(e);
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
+        logic.getScreen().mouseEntered(e);
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
+        logic.getScreen().mouseExited(e);
     }
 
     @Override
     public void mouseDragged(MouseEvent e) {
+        logic.getScreen().mouseDragged(e);
     }
 
     @Override
     public void mouseMoved(MouseEvent e) {
+        logic.getScreen().mouseMoved(e);
     }
 
 }

@@ -34,7 +34,7 @@ public class Main {
         RenderPanel panel = new RenderPanel();
 
         LogicModule logic = new LogicModule();
-        RenderModule render = new RenderModule(panel, logic);
+        RenderModule render = new RenderModule(panel, logic, frame);
 
         KeyHandler keyHandler = new KeyHandler(logic);
         MouseHandler mouseHandler = new MouseHandler(logic);
@@ -46,9 +46,12 @@ public class Main {
         frame.getContentPane().add(panel, BorderLayout.CENTER);
         frame.setVisible(true);
 
+        panel.setFocusable(true);
+
         panel.addKeyListener(keyHandler);
         panel.addMouseMotionListener(mouseHandler);
         panel.addMouseListener(mouseHandler);
+        panel.requestFocus();
 
         logic.start();
         render.start();
