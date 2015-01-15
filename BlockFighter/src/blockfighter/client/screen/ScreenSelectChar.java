@@ -4,7 +4,6 @@ import blockfighter.client.Globals;
 import blockfighter.client.LogicModule;
 import blockfighter.client.SaveData;
 import blockfighter.client.entities.particles.Particle;
-import blockfighter.client.entities.particles.ParticleMenuSmoke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -14,7 +13,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import javax.swing.BorderFactory;
 import javax.swing.JTextField;
 
@@ -22,10 +20,8 @@ import javax.swing.JTextField;
  *
  * @author Ken
  */
-public class ScreenSelectChar extends Screen {
+public class ScreenSelectChar extends ScreenMenu {
 
-    private double lastUpdateTime = System.nanoTime();
-    private ConcurrentHashMap<Integer, Particle> particles = new ConcurrentHashMap<>(20);
     private SaveData[] charsData = new SaveData[3];
     private LogicModule logic;
 
@@ -34,7 +30,6 @@ public class ScreenSelectChar extends Screen {
     private String CREATE_ERR = "";
 
     private final Rectangle[] promptBox = new Rectangle[2];
-
     private final Rectangle[] selectBox = new Rectangle[3];
 
     private byte selectNum = -1;
@@ -47,9 +42,6 @@ public class ScreenSelectChar extends Screen {
         CREATE_NAMEFIELD.setBorder(BorderFactory.createEmptyBorder());
 
         logic = l;
-        particles.put(0, new ParticleMenuSmoke(l, 0, 0, 0, 0));
-        particles.put(1, new ParticleMenuSmoke(l, 1, 1280, 0, 0));
-
         loadSaveData();
         for (byte i = 0; i < charsData.length; i++) {
             selectBox[i] = new Rectangle(20 + 420 * i, 60, 400, 500);
@@ -66,19 +58,6 @@ public class ScreenSelectChar extends Screen {
         }
     }
 
-    @Override
-    public void update() {
-        double now = System.nanoTime(); //Get time now
-        if (now - lastUpdateTime >= Globals.LOGIC_UPDATE) {
-            updateParticles(particles);
-
-            lastUpdateTime = now;
-        }
-        while (now - lastUpdateTime < Globals.LOGIC_UPDATE) {
-            Thread.yield();
-            now = System.nanoTime();
-        }
-    }
 
     @Override
     public void draw(Graphics g) {
@@ -121,16 +100,18 @@ public class ScreenSelectChar extends Screen {
                 g.drawString(charsData[j].getPlayerName(), 120 + 420 * j, 380);
 
                 g.setFont(Globals.ARIAL_24PT);
-                drawStringOutline(g, "Level: " + charsData[j].getStats()[Globals.STAT_LEVEL], 120 + 420 * j, 415, 2);
-                drawStringOutline(g, "Power: " + charsData[j].getStats()[Globals.STAT_POWER], 120 + 420 * j, 445, 2);
-                drawStringOutline(g, "Defense: " + charsData[j].getStats()[Globals.STAT_DEFENSE], 120 + 420 * j, 475, 2);
-                drawStringOutline(g, "Spirit: " + charsData[j].getStats()[Globals.STAT_SPIRIT], 120 + 420 * j, 505, 2);
+
+                drawStringOutline(g, "Level: " + (int) charsData[j].getStats()[Globals.STAT_LEVEL], 120 + 420 * j, 415, 2);
+                drawStringOutline(g, "Power: " + (int) charsData[j].getStats()[Globals.STAT_POWER], 120 + 420 * j, 445, 2);
+                drawStringOutline(g, "Defense: " + (int) charsData[j].getStats()[Globals.STAT_DEFENSE], 120 + 420 * j, 475, 2);
+                drawStringOutline(g, "Spirit: " + (int) charsData[j].getStats()[Globals.STAT_SPIRIT], 120 + 420 * j, 505, 2);
 
                 g.setColor(Color.WHITE);
-                g.drawString("Level: " + charsData[j].getStats()[Globals.STAT_LEVEL], 120 + 420 * j, 415);
-                g.drawString("Power: " + charsData[j].getStats()[Globals.STAT_POWER], 120 + 420 * j, 445);
-                g.drawString("Defense: " + charsData[j].getStats()[Globals.STAT_DEFENSE], 120 + 420 * j, 475);
-                g.drawString("Spirit: " + charsData[j].getStats()[Globals.STAT_SPIRIT], 120 + 420 * j, 505);
+                g.drawString("Level: " + (int) charsData[j].getStats()[Globals.STAT_LEVEL], 120 + 420 * j, 415);
+                g.drawString("Power: " + (int) charsData[j].getStats()[Globals.STAT_POWER], 120 + 420 * j, 445);
+                g.drawString("Defense: " + (int) charsData[j].getStats()[Globals.STAT_DEFENSE], 120 + 420 * j, 475);
+                g.drawString("Spirit: " + (int) charsData[j].getStats()[Globals.STAT_SPIRIT], 120 + 420 * j, 505);
+                g.drawString("ID: " + charsData[j].getUniqueID(), 120 + 420 * j, 535);
             }
         }
 
@@ -164,11 +145,6 @@ public class ScreenSelectChar extends Screen {
     }
 
     @Override
-    public ConcurrentHashMap<Integer, Particle> getParticles() {
-        return particles;
-    }
-
-    @Override
     public void keyTyped(KeyEvent e) {
 
     }
@@ -181,6 +157,35 @@ public class ScreenSelectChar extends Screen {
     @Override
     public void keyReleased(KeyEvent e) {
 
+    }
+
+    private void mouseClicked_Create(MouseEvent e) {
+        for (byte i = 0; i < promptBox.length; i++) {
+            if (promptBox[i].contains(e.getPoint())) {
+                if (i == 0) {
+                    CREATE_NAMEFIELD.setText(CREATE_NAMEFIELD.getText().trim());
+                    if (CREATE_NAMEFIELD.getText().length() <= 15 && CREATE_NAMEFIELD.getText().length() > 0) {
+                        SaveData.saveData(selectNum, new SaveData(CREATE_NAMEFIELD.getText().trim()));
+                        loadSaveData();
+                    } else {
+                        if (CREATE_NAMEFIELD.getText().length() <= 0) {
+                            CREATE_ERR = "Name must have at least 1 character!";
+                        } else if (CREATE_NAMEFIELD.getText().length() > 15) {
+                            CREATE_ERR = "Name must be less than 15 characters!";
+                        }
+                        break;
+                    }
+                }
+                createPrompt = false;
+                selectNum = -1;
+                CREATE_ERR = "";
+                CREATE_NAMEFIELD.setText("");
+                if (panel != null) {
+                    panel.remove(CREATE_NAMEFIELD);
+                }
+                break;
+            }
+        }
     }
 
     @Override
@@ -204,37 +209,8 @@ public class ScreenSelectChar extends Screen {
                 }
             }
         } else {
-            for (byte i = 0; i < promptBox.length; i++) {
-                if (promptBox[i].contains(e.getPoint())) {
-                    if (i == 0) {
-                        CREATE_NAMEFIELD.setText(CREATE_NAMEFIELD.getText().trim());
-                        if (CREATE_NAMEFIELD.getText().length() <= 20 && CREATE_NAMEFIELD.getText().length() > 0) {
-                            SaveData.saveData(selectNum, new SaveData(CREATE_NAMEFIELD.getText().trim()));
-                            loadSaveData();
-                        } else {
-                            if (CREATE_NAMEFIELD.getText().length() <= 0) {
-                                CREATE_ERR = "Name must have at least 1 character!";
-                            } else if (CREATE_NAMEFIELD.getText().length() > 20) {
-                                CREATE_ERR = "Name must be less than 20 characters!";
-                            }
-                            break;
-                        }
-                    }
-
-                    createPrompt = false;
-                    selectNum = -1;
-                    CREATE_ERR = "";
-                    CREATE_NAMEFIELD.setText("");
-
-                    if (panel != null) {
-                        panel.remove(CREATE_NAMEFIELD);
-                    }
-
-                    break;
-                }
-            }
+            mouseClicked_Create(e);
         }
-
         if (new Rectangle(550, 550, 214, 112).contains(e.getPoint())) {
             logic.sendLogin();
         }

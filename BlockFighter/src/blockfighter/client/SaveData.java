@@ -14,36 +14,47 @@ import org.apache.commons.io.FileUtils;
  */
 public class SaveData {
 
-    private int[] stats = new int[Globals.NUM_STATS];
+    private double[] stats = new double[Globals.NUM_STATS];
     private int uniqueID;
     private String name;
 
     public SaveData(String n) {
         name = n;
-        uniqueID = new Random().nextInt(Integer.MAX_VALUE);
-        stats[Globals.STAT_LEVEL] = 1;
-        stats[Globals.STAT_POWER] = 0;
-        stats[Globals.STAT_DEFENSE] = 0;
-        stats[Globals.STAT_SPIRIT] = 0;
+        Random rng = new Random();
+        uniqueID = rng.nextInt(Integer.MAX_VALUE);
+        stats[Globals.STAT_LEVEL] = rng.nextInt(100);
+        stats[Globals.STAT_POWER] = rng.nextInt(700);
+        stats[Globals.STAT_DEFENSE] = rng.nextInt(700);
+        stats[Globals.STAT_SPIRIT] = rng.nextInt(700);
     }
 
     public static void saveData(byte saveNum, SaveData character) {
-        byte[] data = new byte[15 + 4 * 3 + 4];
-
+        byte[] data = new byte[Globals.MAX_NAME_LENGTH + Globals.PACKET_INT * 5];
         byte[] temp = character.name.getBytes(StandardCharsets.UTF_8);
-        System.arraycopy(temp, 0, data, 0, temp.length);
+
+        int pos = 0;
+        System.arraycopy(temp, 0, data, pos, temp.length);
+        pos += Globals.MAX_NAME_LENGTH;
 
         temp = Globals.intToByte(character.uniqueID);
-        System.arraycopy(temp, 0, data, 15, 4);
+        System.arraycopy(temp, 0, data, pos, 4);
+        pos += temp.length;
 
-        temp = Globals.intToByte(character.stats[Globals.STAT_POWER]);
-        System.arraycopy(temp, 0, data, 19, 4);
+        temp = Globals.intToByte((int) character.stats[Globals.STAT_LEVEL]);
+        System.arraycopy(temp, 0, data, pos, 4);
+        pos += temp.length;
 
-        temp = Globals.intToByte(character.stats[Globals.STAT_DEFENSE]);
-        System.arraycopy(temp, 0, data, 23, 4);
+        temp = Globals.intToByte((int) character.stats[Globals.STAT_POWER]);
+        System.arraycopy(temp, 0, data, pos, 4);
+        pos += temp.length;
 
-        temp = Globals.intToByte(character.stats[Globals.STAT_SPIRIT]);
-        System.arraycopy(temp, 0, data, 27, 4);
+        temp = Globals.intToByte((int) character.stats[Globals.STAT_DEFENSE]);
+        System.arraycopy(temp, 0, data, pos, 4);
+        pos += temp.length;
+
+        temp = Globals.intToByte((int) character.stats[Globals.STAT_SPIRIT]);
+        System.arraycopy(temp, 0, data, pos, 4);
+        pos += temp.length;
 
         try {
             FileUtils.writeByteArrayToFile(new File(saveNum + ".tcdat"), data);
@@ -53,10 +64,8 @@ public class SaveData {
     }
 
     public static SaveData readData(byte saveNum) {
-
         SaveData character = new SaveData("");
-
-        byte[] data, temp = new byte[15];
+        byte[] data, temp = new byte[Globals.MAX_NAME_LENGTH];
 
         try {
             data = FileUtils.readFileToByteArray(new File(saveNum + ".tcdat"));
@@ -64,30 +73,45 @@ public class SaveData {
             return null;
         }
 
-        System.arraycopy(data, 0, temp, 0, 15);
+        int pos = 0;
+        System.arraycopy(data, pos, temp, 0, temp.length);
         character.name = new String(temp, StandardCharsets.UTF_8).trim();
+        pos += Globals.MAX_NAME_LENGTH;
 
         temp = new byte[4];
-        System.arraycopy(data, 15, temp, 0, 4);
+        System.arraycopy(data, pos, temp, 0, temp.length);
         character.uniqueID = Globals.bytesToInt(temp);
+        pos += temp.length;
 
-        System.arraycopy(data, 19, temp, 0, 4);
+        System.arraycopy(data, pos, temp, 0, temp.length);
+        character.stats[Globals.STAT_LEVEL] = Globals.bytesToInt(temp);
+        pos += temp.length;
+
+        System.arraycopy(data, pos, temp, 0, temp.length);
         character.stats[Globals.STAT_POWER] = Globals.bytesToInt(temp);
+        pos += temp.length;
 
-        System.arraycopy(data, 23, temp, 0, 4);
+        System.arraycopy(data, pos, temp, 0, temp.length);
         character.stats[Globals.STAT_DEFENSE] = Globals.bytesToInt(temp);
+        pos += temp.length;
 
-        System.arraycopy(data, 27, temp, 0, 4);
+        System.arraycopy(data, pos, temp, 0, temp.length);
         character.stats[Globals.STAT_SPIRIT] = Globals.bytesToInt(temp);
+        pos += temp.length;
 
         return character;
     }
-    
-    public String getPlayerName(){
+
+    public String getPlayerName() {
         return name;
     }
-    
-    public int[] getStats(){
+
+    public double[] getStats() {
         return stats;
     }
+
+    public int getUniqueID() {
+        return uniqueID;
+    }
+
 }

@@ -23,7 +23,9 @@ public class Globals {
     public final static Font ARIAL_30PT = new Font("Arial", Font.PLAIN, 30);
     public final static Font ARIAL_12PT = new Font("Arial", Font.PLAIN, 12);
     public final static Font ARIAL_24PT = new Font("Arial", Font.PLAIN, 24);
-            
+    
+    public final static byte MAX_NAME_LENGTH = 15;
+    
     public final static double RENDER_FPS = 60.0;
     public final static double RENDER_UPDATE = 1000000000 / RENDER_FPS;
 
@@ -85,15 +87,15 @@ public class Globals {
     public final static BufferedImage[][] CHAR_SPRITE = new BufferedImage[NUM_PLAYER_STATE][];
     public final static BufferedImage[][] PARTICLE_SPRITE = new BufferedImage[NUM_PARTICLE_EFFECTS][];
     public final static BufferedImage[] HUD = new BufferedImage[1];
-    
+
     public final static BufferedImage[] MENU_BG = new BufferedImage[3];
     public final static BufferedImage[] MENU_SMOKE = new BufferedImage[1];
     public final static BufferedImage[] MENU_BUTTON = new BufferedImage[2];
     public final static BufferedImage[] MENU_WINDOW = new BufferedImage[1];
-    
+
     public final static byte BUTTON_OKAY = 0,
             BUTTON_SELECTCHAR = 1;
-    
+
     public final static byte WINDOW_CREATECHAR = 0;
 
     //Packet globals
@@ -159,7 +161,7 @@ public class Globals {
     }
 
     public static final int bytesToInt(byte[] input) {
-        return (input[0] & 0xff | (input[1]& 0xff) << 8 | (input[2]& 0xff) << 16 | (input[3]& 0xff) << 24);
+        return (input[0] & 0xff | (input[1] & 0xff) << 8 | (input[2] & 0xff) << 16 | (input[3] & 0xff) << 24);
     }
 
     public static void loadGFX() {
@@ -189,7 +191,7 @@ public class Globals {
 
             MENU_BUTTON[BUTTON_OKAY] = ImageIO.read(Globals.class.getResource("sprites/ui/menu/button1.png"));
             MENU_BUTTON[BUTTON_SELECTCHAR] = ImageIO.read(Globals.class.getResource("sprites/ui/menu/button2.png"));
-            
+
             MENU_WINDOW[WINDOW_CREATECHAR] = ImageIO.read(Globals.class.getResource("sprites/ui/menu/window1.png"));
             MENU_SMOKE[0] = ImageIO.read(Globals.class.getResource("sprites/ui/menu/smoke.png"));
         } catch (IOException ex) {
