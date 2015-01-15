@@ -8,6 +8,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
 
 /**
  * The server packetSender.
@@ -22,6 +23,12 @@ public class PacketSender {
     private final LogicModule logic;
     private DatagramSocket socket = null;
     private int bytesSent = 0;
+
+    private ExecutorService threadPool;
+
+    public void setThreadPool(ExecutorService tp) {
+        threadPool = tp;
+    }
 
     /**
      * Reset sent byte count.
@@ -70,14 +77,18 @@ public class PacketSender {
      * @param address IP address of player
      * @param port Connected port of player
      */
-    public void sendPlayer(byte[] bytes, InetAddress address, int port) {
-        DatagramPacket packet = createPacket(bytes, address, port);
-        bytesSent += packet.getLength();
-        try {
-            socket.send(packet);
-        } catch (IOException ex) {
-            Globals.log(ex.getLocalizedMessage(), ex, true);
-        }
+    public void sendPlayer(final byte[] bytes, final InetAddress address, final int port) {
+        threadPool.execute(new Runnable() {
+            @Override
+            public void run() {
+                DatagramPacket packet = createPacket(bytes, address, port);
+                try {
+                    socket.send(packet);
+                } catch (IOException ex) {
+                    Globals.log(ex.getLocalizedMessage(), ex, true);
+                }
+            }
+        });
     }
 
     /**
@@ -85,17 +96,20 @@ public class PacketSender {
      *
      * @param bytes Data to be sent in bytes
      */
-    public void sendAll(byte[] bytes) {
-        //tell everyone
-        for (Map.Entry<Byte, Player> pEntry : logic.getPlayers().entrySet()) {
-            DatagramPacket packet = createPacket(bytes, pEntry.getValue());
-            bytesSent += packet.getLength();
-            try {
-                socket.send(packet);
-            } catch (IOException ex) {
-                Globals.log(ex.getLocalizedMessage(), ex, true);
+    public void sendAll(final byte[] bytes) {
+        threadPool.execute(new Runnable() {
+            @Override
+            public void run() {
+                for (Map.Entry<Byte, Player> pEntry : logic.getPlayers().entrySet()) {
+                    try {
+                        DatagramPacket packet = createPacket(bytes, pEntry.getValue());
+                        socket.send(packet);
+                    } catch (IOException ex) {
+                        Globals.log(ex.getLocalizedMessage(), ex, true);
+                    }
+                }
             }
-        }
+        });
     }
 
     /**

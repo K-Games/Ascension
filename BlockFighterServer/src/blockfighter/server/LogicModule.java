@@ -20,10 +20,10 @@ import java.util.concurrent.Executors;
 public class LogicModule extends Thread {
 
     private boolean isRunning = false;
-    private final ConcurrentHashMap<Byte, Player> players = new ConcurrentHashMap<>(Globals.MAX_PLAYERS);
-    private final ConcurrentHashMap<Integer, ProjBase> projectiles = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Byte, Player> players = new ConcurrentHashMap<>(Globals.MAX_PLAYERS, 0.9f, Globals.MAX_PLAYERS / 10);
+    private final ConcurrentHashMap<Integer, ProjBase> projectiles = new ConcurrentHashMap<>(500, 0.75f, 10);
 
-    private PacketSender packetSender;
+    private PacketSender sender;
     private final GameMap map;
 
     private int projMaxKeys = 500;
@@ -54,7 +54,8 @@ public class LogicModule extends Thread {
     public void run() {
         double lastUpdateTime = System.nanoTime();
         long lastRefreshAll = System.currentTimeMillis();
-        ExecutorService threadPool = Executors.newCachedThreadPool();
+        ExecutorService threadPool = Executors.newFixedThreadPool(10);
+        sender.setThreadPool(threadPool);
 
         while (isRunning) {
             processQueues(threadPool);
@@ -68,8 +69,8 @@ public class LogicModule extends Thread {
             }
 
             if (nowMs - lastRefreshAll >= 10000) {
-                packetSender.broadcastAllPlayersUpdate();
-                //System.out.println(packetSender.getBytes());
+                sender.broadcastAllPlayersUpdate();
+                //System.out.println(sender.getBytes());
                 //packetSender.resetByte();
                 lastRefreshAll = nowMs;
             }
@@ -130,7 +131,7 @@ public class LogicModule extends Thread {
      * @param bc Server PacketSender
      */
     public void setPacketSender(PacketSender bc) {
-        packetSender = bc;
+        sender = bc;
     }
 
     /**

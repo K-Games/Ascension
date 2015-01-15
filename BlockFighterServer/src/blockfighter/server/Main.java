@@ -19,7 +19,6 @@ public class Main {
             LogicModule logic = new LogicModule();
             PacketSender packetSender = new PacketSender(logic);
             PacketReceiver server = new PacketReceiver(logic, packetSender);
-
             logic.setPacketSender(packetSender);
             GregorianCalendar date = new GregorianCalendar();
             Globals.log("Server started", String.format("%1$td/%1$tm/%1$tY %1$tT", date), Globals.LOG_TYPE_ERR, false);

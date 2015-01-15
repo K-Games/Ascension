@@ -57,35 +57,35 @@ public class ProjTest extends ProjBase {
         duration -= Globals.nsToMs(Globals.LOGIC_UPDATE);
         for (Map.Entry<Byte, Player> pEntry : logic.getPlayers().entrySet()) {
             Player p = pEntry.getValue();
-            if (p != owner && p != null && !pHit.contains(p) && p.intersectHitbox(hitbox[0])) {
+            if (p != owner && !pHit.contains(p) && p.intersectHitbox(hitbox[0])) {
+byte[] bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_INT + Globals.PACKET_BYTE + Globals.PACKET_INT + Globals.PACKET_INT];
+                    bytes[0] = Globals.DATA_PARTICLE_EFFECT;
 
-                byte[] bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_INT + Globals.PACKET_BYTE + Globals.PACKET_INT + Globals.PACKET_INT];
-                bytes[0] = Globals.DATA_PARTICLE_EFFECT;
+                    byte[] int2byte = Globals.intToByte((int) (key));
+                    bytes[1] = int2byte[0];
+                    bytes[2] = int2byte[1];
+                    bytes[3] = int2byte[2];
+                    bytes[4] = int2byte[3];
 
-                byte[] int2byte = Globals.intToByte((int) (key));
-                bytes[1] = int2byte[0];
-                bytes[2] = int2byte[1];
-                bytes[3] = int2byte[2];
-                bytes[4] = int2byte[3];
+                    bytes[5] = 0;
 
-                bytes[5] = 0;
+                    int2byte = Globals.intToByte((int) (p.getX()));
+                    bytes[6] = int2byte[0];
+                    bytes[7] = int2byte[1];
+                    bytes[8] = int2byte[2];
+                    bytes[9] = int2byte[3];
 
-                int2byte = Globals.intToByte((int) (p.getX()));
-                bytes[6] = int2byte[0];
-                bytes[7] = int2byte[1];
-                bytes[8] = int2byte[2];
-                bytes[9] = int2byte[3];
+                    int2byte = Globals.intToByte((int) (p.getY()));
+                    bytes[10] = int2byte[0];
+                    bytes[11] = int2byte[1];
+                    bytes[12] = int2byte[2];
+                    bytes[13] = int2byte[3];
 
-                int2byte = Globals.intToByte((int) (p.getY()));
-                bytes[10] = int2byte[0];
-                bytes[11] = int2byte[1];
-                bytes[12] = int2byte[2];
-                bytes[13] = int2byte[3];
-
-                packetSender.sendAll(bytes);
+                    packetSender.sendAll(bytes);
                 queue.add(p);
                 pHit.add(p);
                 if (!isQueued()) {
+                    
                     logic.queueProjEffect(this);
                     queuedEffect = true;
                 }
@@ -96,8 +96,10 @@ public class ProjTest extends ProjBase {
     @Override
     public void processQueue() {
         while (!queue.isEmpty()) {
-            Player p = queue.pop();
-            p.addBuff(new BuffKnockback(500, xSpeed, ySpeed, p));
+            Player p = queue.poll();
+            if (p != null) {
+                p.addBuff(new BuffKnockback(500, xSpeed, ySpeed, p));
+            }
         }
         queuedEffect = false;
     }

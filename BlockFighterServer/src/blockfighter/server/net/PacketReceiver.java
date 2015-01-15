@@ -35,7 +35,7 @@ public class PacketReceiver extends Thread {
 
     @Override
     public void run() {
-        ExecutorService tpes = Executors.newCachedThreadPool();
+        ExecutorService tpes = Executors.newFixedThreadPool(20);
         try {
             DatagramSocket socket = new DatagramSocket(Globals.SERVER_PORT);
             System.out.println("Server listening on port " + Globals.SERVER_PORT);

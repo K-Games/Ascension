@@ -310,7 +310,7 @@ public class Player extends Thread {
      * @param b New Buff
      */
     public void addBuff(Buff b) {
-        buffs.put((byte)buffs.size(), b);
+        buffs.put((byte) buffs.size(), b);
     }
 
     private void updateJump() {

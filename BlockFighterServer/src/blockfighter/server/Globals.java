@@ -24,11 +24,12 @@ public class Globals {
 
     private final static int SERVER_ID = (int) (Math.random() * 50000);
 
-    public final static ExecutorService LOG_THREADS = Executors.newCachedThreadPool();
+    public final static ExecutorService LOG_THREADS = Executors.newFixedThreadPool(2);
 
+    public final static String SERVER_ADDRESS = "127.0.0.1";
     public final static int SERVER_PORT = 25565;
-    public final static byte MAX_PLAYERS = 10;
-
+    public final static byte MAX_PLAYERS = 30;
+    
     public final static double LOGIC_TICKS_PER_SEC = 100.0;
     public final static double LOGIC_UPDATE = 1000000000 / LOGIC_TICKS_PER_SEC;
 
