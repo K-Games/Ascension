@@ -88,9 +88,12 @@ public class Globals {
     public final static BufferedImage[] MENU_BG = new BufferedImage[1];
     public final static BufferedImage[] MENU_SMOKE = new BufferedImage[1];
     public final static BufferedImage[] MENU_BUTTON = new BufferedImage[2];
+    public final static BufferedImage[] MENU_WINDOW = new BufferedImage[1];
     
     public final static byte BUTTON_OKAY = 0,
             BUTTON_SELECTCHAR = 1;
+    
+    public final static byte WINDOW_CREATECHAR = 0;
 
     //Packet globals
     public final static int PACKET_MAX_SIZE = 128;
@@ -185,7 +188,8 @@ public class Globals {
 
             MENU_BUTTON[BUTTON_OKAY] = ImageIO.read(Globals.class.getResource("sprites/ui/menu/button1.png"));
             MENU_BUTTON[BUTTON_SELECTCHAR] = ImageIO.read(Globals.class.getResource("sprites/ui/menu/button2.png"));
-
+            
+            MENU_WINDOW[WINDOW_CREATECHAR] = ImageIO.read(Globals.class.getResource("sprites/ui/menu/window1.png"));
             MENU_SMOKE[0] = ImageIO.read(Globals.class.getResource("sprites/ui/menu/smoke.png"));
         } catch (IOException ex) {
             Logger.getLogger(Globals.class.getName()).log(Level.SEVERE, null, ex);

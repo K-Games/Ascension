@@ -1,6 +1,7 @@
 package blockfighter.client.screen;
 
 import blockfighter.client.entities.particles.Particle;
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
@@ -15,7 +16,7 @@ import java.util.concurrent.Executors;
  *
  * @author Ken
  */
-public abstract class Screen implements KeyListener, MouseListener, MouseMotionListener{
+public abstract class Screen implements KeyListener, MouseListener, MouseMotionListener {
 
     public abstract void update();
 
@@ -23,7 +24,15 @@ public abstract class Screen implements KeyListener, MouseListener, MouseMotionL
 
     public abstract ConcurrentHashMap<Integer, Particle> getParticles();
 
-    private ExecutorService threadPool = Executors.newCachedThreadPool();
+    protected static ExecutorService threadPool = Executors.newFixedThreadPool(10);
+
+    public void drawStringOutline(Graphics g, String s, int x, int y, int width) {
+        for (int i = 0; i < 2; i++) {
+            g.setColor(Color.BLACK);
+            g.drawString(s, x - width + i * 2 * width, y);
+            g.drawString(s, x, y - width + i * 2 * width);
+        }
+    }
 
     public void updateParticles(ConcurrentHashMap<Integer, Particle> particles) {
         for (Map.Entry<Integer, Particle> pEntry : particles.entrySet()) {

@@ -8,13 +8,13 @@ import java.awt.image.BufferedImage;
  *
  * @author Ken
  */
-public class Player {
+public class Player extends Thread {
 
-    private int x, y;
+    private int x, y, dstX, dstY;
     private byte facing, state, frame;
     private double[] stats = new double[Globals.NUM_STATS];
     private String name;
-    
+
     public int getX() {
         return x;
     }
@@ -26,6 +26,8 @@ public class Player {
     public void setPos(int x, int y) {
         this.x = x;
         this.y = y;
+        //dstX = x;
+        //dstY = y;
     }
 
     public void setFacing(byte dir) {
@@ -59,16 +61,16 @@ public class Player {
         int drawDscX = x + ((facing == Globals.RIGHT) ? 1 : -1) * sprite.getWidth() / 2;
         g.drawImage(sprite, drawSrcX, drawSrcY, drawDscX, y, 0, 0, sprite.getWidth(), sprite.getHeight(), null);
     }
-    
-    public void setStats(byte statType, double stat){
+
+    public void setStats(byte statType, double stat) {
         stats[statType] = stat;
         updateStats();
     }
-    
-    public double getStat(byte statType){
+
+    public double getStat(byte statType) {
         return stats[statType];
     }
-    
+
     private void updateStats() {
         stats[Globals.STAT_ARMOR] = Globals.calcArmor(stats[Globals.STAT_DEFENSE]);
         stats[Globals.STAT_REGEN] = Globals.calcRegen(stats[Globals.STAT_SPIRIT]);
@@ -79,12 +81,22 @@ public class Player {
         stats[Globals.STAT_CRITCHANCE] = Globals.calcCritChance(stats[Globals.STAT_SPIRIT]);
         stats[Globals.STAT_CRITDMG] = Globals.calcCritDmg(stats[Globals.STAT_POWER]);
     }
-    
-    public void setName(String n){
+
+    public void setPlayerName(String n) {
         name = n;
     }
-    
-    public String getName(){
+
+    public String getPlayerName() {
         return name;
+    }
+
+    @Override
+    public void run() {
+        if (x != dstX) {
+            x += (dstX - x) / (100000000F / Globals.LOGIC_UPDATE);
+        }
+        if (y != dstY) {
+            y += (dstY - y) / (100000000F / Globals.LOGIC_UPDATE);
+        }
     }
 }

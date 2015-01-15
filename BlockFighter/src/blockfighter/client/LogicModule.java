@@ -23,6 +23,8 @@ public class LogicModule extends Thread {
 
     //Shared Data
     private PacketSender sender = null;
+    private PacketReceiver receiver = new PacketReceiver(this, null);
+
     private SaveData selectedChar;
     private Screen screen = new ScreenSelectChar(this);
 
@@ -32,6 +34,7 @@ public class LogicModule extends Thread {
 
     @Override
     public void run() {
+        receiver.start();
         while (isRunning) {
             screen.update();
         }
@@ -43,7 +46,7 @@ public class LogicModule extends Thread {
 
     public void receiveLogin(byte key, byte size) {
         screen = new ScreenIngame(this, key, size, sender);
-        ((ScreenIngame)screen).queueAddPlayer(key);
+        ((ScreenIngame) screen).queueAddPlayer(key);
         sender.sendGetAll();
     }
 
@@ -61,8 +64,7 @@ public class LogicModule extends Thread {
             socket.connect(InetAddress.getByName(Globals.SERVER_ADDRESS), Globals.SERVER_PORT);
             socket.setSoTimeout(5000);
             sender = new PacketSender(socket);
-            PacketReceiver responseThread = new PacketReceiver(this, socket);
-            responseThread.start();
+            receiver.setSocket(socket);
         } catch (SocketException | UnknownHostException | HeadlessException e) {
         }
         sender.sendLogin();

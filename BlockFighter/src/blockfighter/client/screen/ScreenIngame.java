@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ExecutorService;
 
 /**
  *
@@ -79,7 +80,7 @@ public class ScreenIngame extends Screen {
             sender.sendMove(myKey, Globals.RIGHT, keyDownMove[Globals.RIGHT]);
 
             updateParticles(particles);
-
+            //updatePlayers();
             lastUpdateTime = now;
         }
 
@@ -105,6 +106,18 @@ public class ScreenIngame extends Screen {
         }
     }
 
+    private void updatePlayers() {
+        for (Map.Entry<Byte, Player> pEntry : players.entrySet()) {
+            threadPool.execute(pEntry.getValue());
+        }
+        for (Map.Entry<Integer, Particle> pEntry : particles.entrySet()) {
+            try {
+                pEntry.getValue().join();
+            } catch (InterruptedException ex) {
+            }
+        }
+    }
+
     @Override
     public void draw(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
@@ -120,10 +133,8 @@ public class ScreenIngame extends Screen {
             }
         }
 
-        if (particles != null) {
-            for (Map.Entry<Integer, Particle> pEntry : particles.entrySet()) {
-                pEntry.getValue().draw(g);
-            }
+        for (Map.Entry<Integer, Particle> pEntry : particles.entrySet()) {
+            pEntry.getValue().draw(g);
         }
 
         g.drawRect(0, 620, 5000, 30);
@@ -243,7 +254,7 @@ public class ScreenIngame extends Screen {
 
     @Override
     public void keyTyped(KeyEvent e) {
-        
+
     }
 
     @Override
@@ -290,37 +301,37 @@ public class ScreenIngame extends Screen {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        
+
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
-        
+
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        
+
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        
+
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-        
+
     }
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        
+
     }
 
     @Override
     public void mouseMoved(MouseEvent e) {
-        
+
     }
 
 }

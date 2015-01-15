@@ -17,10 +17,8 @@ public class SaveData {
     private int[] stats = new int[3];
     private int uniqueID;
     private String name;
-    private boolean isNew;
 
     public SaveData() {
-        isNew = true;
         name = "";
         uniqueID = new Random().nextInt(Integer.MAX_VALUE);
         stats[Globals.STAT_POWER] = 0;
@@ -57,8 +55,7 @@ public class SaveData {
 
         SaveData character = new SaveData();
 
-        byte[] data = new byte[15 + 4 + 4 * 3];
-        byte[] temp = new byte[15];
+        byte[] data, temp = new byte[15];
 
         try {
             data = FileUtils.readFileToByteArray(new File(saveNum + ".tcdat"));

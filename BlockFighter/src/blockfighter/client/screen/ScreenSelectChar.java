@@ -27,6 +27,9 @@ public class ScreenSelectChar extends Screen {
     private SaveData[] charsData = new SaveData[3];
     private LogicModule logic;
 
+    private boolean createPrompt = false;
+    private Rectangle[] selectBox = new Rectangle[3];
+
     public ScreenSelectChar(LogicModule l) {
         logic = l;
         particles.put(0, new ParticleMenuSmoke(l, 0, 0, 0, 0));
@@ -34,6 +37,7 @@ public class ScreenSelectChar extends Screen {
 
         for (byte i = 0; i < charsData.length; i++) {
             charsData[i] = SaveData.readData(i);
+            selectBox[i] = new Rectangle(20 + 420 * i, 60, 400, 500);
         }
     }
 
@@ -55,10 +59,8 @@ public class ScreenSelectChar extends Screen {
         BufferedImage bg = Globals.MENU_BG[0];
         g.drawImage(bg, 0, 0, null);
 
-        if (particles != null) {
-            for (Map.Entry<Integer, Particle> pEntry : particles.entrySet()) {
-                pEntry.getValue().draw(g);
-            }
+        for (Map.Entry<Integer, Particle> pEntry : particles.entrySet()) {
+            pEntry.getValue().draw(g);
         }
 
         BufferedImage button = Globals.MENU_BUTTON[Globals.BUTTON_OKAY];
@@ -76,24 +78,27 @@ public class ScreenSelectChar extends Screen {
         g.setFont(Globals.ARIAL_30PT);
 
         for (int j = 0; j < 3; j++) {
-            for (int i = 0; i < 2; i++) {
-                g.setColor(Color.BLACK);
-                g.drawString("Create", 168 + 420 * j + i * 4, 260);
-                g.drawString("New", 183 + 420 * j + i * 4, 310);
-                g.drawString("Character", 148 + 420 * j + i * 4, 360);
-                g.drawString("Create", 170 + 420 * j, 258 + i * 4);
-                g.drawString("New", 185 + 420 * j, 308 + i * 4);
-                g.drawString("Character", 150 + 420 * j, 358 + i * 4);
+            if (charsData[j] == null) {
+
+                drawStringOutline(g, "Create", 170 + 420 * j, 260, 2);
+                drawStringOutline(g, "New", 185 + 420 * j, 310, 2);
+                drawStringOutline(g, "Character", 150 + 420 * j, 360, 2);
+
+                g.setColor(Color.WHITE);
+                g.drawString("Create", 170 + 420 * j, 260);
+                g.drawString("New", 185 + 420 * j, 310);
+                g.drawString("Character", 150 + 420 * j, 360);
             }
-            g.setColor(Color.WHITE);
-            g.drawString("Create", 170 + 420 * j, 260);
-            g.drawString("New", 185 + 420 * j, 310);
-            g.drawString("Character", 150 + 420 * j, 360);
         }
-        g.setColor(Color.BLACK);
-        g.drawString("Connect", 572, 602);
+
+        drawStringOutline(g, "Select a Character", 520, 640, 2);
         g.setColor(Color.WHITE);
-        g.drawString("Connect", 570, 600);
+        g.drawString("Select a Character", 520, 640);
+
+        if (createPrompt) {
+            BufferedImage window = Globals.MENU_WINDOW[Globals.WINDOW_CREATECHAR];
+            g.drawImage(window, 265, 135, null);
+        }
     }
 
     @Override
@@ -118,8 +123,19 @@ public class ScreenSelectChar extends Screen {
 
     @Override
     public void mouseClicked(MouseEvent e) {
+        for (byte i = 0; i < selectBox.length; i++) {
+            if (selectBox[i].contains(e.getPoint())) {
+                if (charsData[i] == null) {
+                    createPrompt = true;
+                }
+            }
+        }
+
         if (new Rectangle(550, 550, 214, 112).contains(e.getPoint())) {
-            logic.sendLogin();
+            
+            for (byte i = 0; i < 30; i++) {
+                logic.sendLogin();
+            }
         }
     }
 

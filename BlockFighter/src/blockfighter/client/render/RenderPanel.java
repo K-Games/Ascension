@@ -18,9 +18,6 @@ public class RenderPanel extends JPanel {
     private int FPSCount = 0;
     private Screen screen = null;
 
-    private ConcurrentHashMap<Integer, Particle> particles;
-    private SaveData[] charsData;
-
     public RenderPanel() {
         super();
         setBackground(Color.WHITE);
@@ -34,13 +31,18 @@ public class RenderPanel extends JPanel {
         }
 
         g.setFont(Globals.ARIAL_12PT);
+        drawStringOutline(g, "FPS: " + FPSCount, 1220, 20, 1);
+
+        g.setColor(Color.WHITE);
+        g.drawString("FPS: " + FPSCount, 1220, 20);
+    }
+
+    private void drawStringOutline(Graphics g, String s, int x, int y, int width) {
         for (int i = 0; i < 2; i++) {
             g.setColor(Color.BLACK);
-            g.drawString("FPS: " + FPSCount, 1199 + i * 2, 20);
-            g.drawString("FPS: " + FPSCount, 1200, 19 + i * 2);
+            g.drawString(s, x - width + i * 2 * width, y);
+            g.drawString(s, x, y - width + i * 2 * width);
         }
-        g.setColor(Color.WHITE);
-        g.drawString("FPS: " + FPSCount, 1200, 20);
     }
 
     public void setFPSCount(int f) {

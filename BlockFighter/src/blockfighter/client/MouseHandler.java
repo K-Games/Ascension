@@ -24,7 +24,7 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
 
     @Override
     public void mousePressed(MouseEvent e) {
-        logic.getScreen().mouseClicked(e);
+        logic.getScreen().mousePressed(e);
     }
 
     @Override
