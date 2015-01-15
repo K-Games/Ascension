@@ -16,15 +16,21 @@ public class Main {
      */
     public static void main(String[] args) {
         try {
-            LogicModule logic = new LogicModule();
-            PacketSender packetSender = new PacketSender(logic);
-            PacketReceiver server = new PacketReceiver(logic, packetSender);
-            logic.setPacketSender(packetSender);
+            LogicModule[] server_rooms = new LogicModule[Globals.SERVER_ROOMS];
+            PacketSender sender = new PacketSender(server_rooms);
+            PacketReceiver server_BossThread = new PacketReceiver(server_rooms, sender);
+
             GregorianCalendar date = new GregorianCalendar();
             Globals.log("Server started", String.format("%1$td/%1$tm/%1$tY %1$tT", date), Globals.LOG_TYPE_ERR, false);
             Globals.log("Server started", String.format("%1$td/%1$tm/%1$tY %1$tT", date), Globals.LOG_TYPE_DATA, true);
-            logic.start();
-            server.start();
+            
+            for (byte i = 0; i < server_rooms.length;i++) {
+                server_rooms[i] = new LogicModule(i);
+                server_rooms[i].setPacketSender(sender);
+                server_rooms[i].start();
+            }
+            server_BossThread.start();
+            
         } catch (Exception ex) {
             Globals.log(ex.getLocalizedMessage(), ex, true);
         }

@@ -16,7 +16,7 @@ import java.util.concurrent.Executors;
  */
 public class PacketReceiver extends Thread {
 
-    private final LogicModule logic;
+    private final LogicModule[] logic;
     private final PacketSender packetSender;
 
     /**
@@ -28,14 +28,14 @@ public class PacketReceiver extends Thread {
      * @param logic Logic module
      * @param packetSender Server packetSender
      */
-    public PacketReceiver(LogicModule logic, PacketSender packetSender) {
+    public PacketReceiver(LogicModule[] logic, PacketSender packetSender) {
         this.logic = logic;
         this.packetSender = packetSender;
     }
 
     @Override
     public void run() {
-        ExecutorService tpes = Executors.newFixedThreadPool(20);
+        ExecutorService tpes = Executors.newFixedThreadPool(10);
         try {
             DatagramSocket socket = new DatagramSocket(Globals.SERVER_PORT);
             System.out.println("Server listening on port " + Globals.SERVER_PORT);
@@ -51,7 +51,9 @@ public class PacketReceiver extends Thread {
         } catch (IOException ex) {
             Globals.log(ex.getLocalizedMessage(), ex, true);
         } finally {
-            logic.shutdown();
+            for (LogicModule l : logic) {
+                l.shutdown();
+            }
             tpes.shutdownNow();
         }
     }

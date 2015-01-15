@@ -28,8 +28,9 @@ public class Globals {
 
     public final static String SERVER_ADDRESS = "127.0.0.1";
     public final static int SERVER_PORT = 25565;
-    public final static byte MAX_PLAYERS = 30;
-    
+    public final static byte SERVER_MAX_PLAYERS = 30;
+    public final static byte SERVER_ROOMS = 1;
+
     public final static double LOGIC_TICKS_PER_SEC = 100.0;
     public final static double LOGIC_UPDATE = 1000000000 / LOGIC_TICKS_PER_SEC;
 
@@ -82,7 +83,7 @@ public class Globals {
             MAXDMG_BASE = 40;
 
     //Packet globals
-    public final static int PACKET_MAX_SIZE = 128;
+    public final static int PACKET_MAX_SIZE = 256;
     public final static int PACKET_BYTE = 1;
     public final static int PACKET_INT = 4;
     public final static int PACKET_CHAR = 1;
@@ -103,7 +104,7 @@ public class Globals {
             PLAYER_ACTION_KNOCK = 0x00;
 
     public final static void log(final String ex, final String s, final byte logType, final boolean console) {
-        
+
         Runnable logging = new Runnable() {
             @Override
             public void run() {
@@ -132,16 +133,10 @@ public class Globals {
                 }
 
                 if (LOGGING) {
-                    PrintWriter out = null;
-                    try {
-                        out = new PrintWriter(new BufferedWriter(new FileWriter(logFile, true)));
+                    try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(logFile, true)))) {
                         out.println("[" + SERVER_ID + "]" + ex + "@" + s);
                     } catch (IOException e) {
                         System.err.println(e);
-                    } finally {
-                        if (out != null) {
-                            out.close();
-                        }
                     }
                 }
             }
@@ -161,19 +156,13 @@ public class Globals {
                 }
 
                 if (LOGGING) {
-                    PrintWriter out = null;
-                    try {
-                        out = new PrintWriter(new BufferedWriter(new FileWriter(logFile, true)));
+                    try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(logFile, true)))) {
                         out.println("[" + SERVER_ID + "]" + ex + "@");
                         for (StackTraceElement s : e.getStackTrace()) {
                             out.println("[" + SERVER_ID + "]" + s.toString());
                         }
                     } catch (IOException e) {
                         System.err.println(e);
-                    } finally {
-                        if (out != null) {
-                            out.close();
-                        }
                     }
                 }
             }

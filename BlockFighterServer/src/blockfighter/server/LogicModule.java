@@ -20,7 +20,7 @@ import java.util.concurrent.Executors;
 public class LogicModule extends Thread {
 
     private boolean isRunning = false;
-    private final ConcurrentHashMap<Byte, Player> players = new ConcurrentHashMap<>(Globals.MAX_PLAYERS, 0.9f, Globals.MAX_PLAYERS / 10);
+    private final ConcurrentHashMap<Byte, Player> players = new ConcurrentHashMap<>(Globals.SERVER_MAX_PLAYERS, 0.9f, Globals.SERVER_MAX_PLAYERS / 10);
     private final ConcurrentHashMap<Integer, ProjBase> projectiles = new ConcurrentHashMap<>(500, 0.75f, 10);
 
     private PacketSender sender;
@@ -35,14 +35,18 @@ public class LogicModule extends Thread {
     private final ConcurrentLinkedQueue<ProjBase> projEffectQueue = new ConcurrentLinkedQueue<>();
     private final ConcurrentLinkedQueue<ProjBase> projAddQueue = new ConcurrentLinkedQueue<>();
     private byte numPlayers = 0;
+    private byte room = -1;
 
     /**
      * Create a server logic module
      * <p>
      * Servers can have multiple logic modules for multiple instances of levels. When logic is required, it should be referenced and not created
      * </p>
+     *
+     * @param r Room number
      */
-    public LogicModule() {
+    public LogicModule(byte r) {
+        room = r;
         isRunning = true;
         map = new TestMap();
         for (int i = 0; i < 500; i++) {
@@ -69,7 +73,7 @@ public class LogicModule extends Thread {
             }
 
             if (nowMs - lastRefreshAll >= 10000) {
-                sender.broadcastAllPlayersUpdate();
+                sender.broadcastAllPlayersUpdate(room);
                 //System.out.println(sender.getBytes());
                 //packetSender.resetByte();
                 lastRefreshAll = nowMs;
@@ -161,6 +165,10 @@ public class LogicModule extends Thread {
         return map;
     }
 
+    public byte getRoom() {
+        return room;
+    }
+
     /**
      * Return the number of connected players.
      *
@@ -176,7 +184,7 @@ public class LogicModule extends Thread {
      * @return returns next open key
      */
     public byte getNextPlayerKey() {
-        if (numPlayers >= Globals.MAX_PLAYERS) {
+        if (numPlayers >= Globals.SERVER_MAX_PLAYERS) {
             return -1;
         }
         return numPlayers++;
@@ -253,8 +261,9 @@ public class LogicModule extends Thread {
             public void run() {
                 while (!pMoveQueue.isEmpty()) {
                     byte[] data = pMoveQueue.poll();
-                    if (data != null && players.containsKey(data[1])) {
-                        players.get(data[1]).setMove(data[2], data[3] == 1);
+                    byte key = data[2], dir = data[3], value = data[4];
+                    if (data != null && players.containsKey(key)) {
+                        players.get(key).setMove(dir, value == 1);
                     }
                 }
             }
@@ -265,8 +274,9 @@ public class LogicModule extends Thread {
             public void run() {
                 while (!pActionQueue.isEmpty()) {
                     byte[] data = pActionQueue.poll();
-                    if (data != null && players.containsKey(data[1])) {
-                        players.get(data[1]).processAction(data);
+                    byte key = data[2];
+                    if (data != null && players.containsKey(key)) {
+                        players.get(key).processAction(data);
                     }
                 }
             }

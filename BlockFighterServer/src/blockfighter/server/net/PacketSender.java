@@ -20,7 +20,7 @@ import java.util.concurrent.ExecutorService;
  */
 public class PacketSender {
 
-    private final LogicModule logic;
+    private final LogicModule[] logic;
     private DatagramSocket socket = null;
     private int bytesSent = 0;
 
@@ -54,7 +54,7 @@ public class PacketSender {
      *
      * @param logic
      */
-    public PacketSender(LogicModule logic) {
+    public PacketSender(LogicModule[] logic) {
         this.logic = logic;
     }
 
@@ -81,8 +81,8 @@ public class PacketSender {
         threadPool.execute(new Runnable() {
             @Override
             public void run() {
-                DatagramPacket packet = createPacket(bytes, address, port);
                 try {
+                    DatagramPacket packet = createPacket(bytes, address, port);
                     socket.send(packet);
                 } catch (IOException ex) {
                     Globals.log(ex.getLocalizedMessage(), ex, true);
@@ -95,12 +95,13 @@ public class PacketSender {
      * Send data to every connected player
      *
      * @param bytes Data to be sent in bytes
+     * @param room room to send to
      */
-    public void sendAll(final byte[] bytes) {
+    public void sendAll(final byte[] bytes, final byte room) {
         threadPool.execute(new Runnable() {
             @Override
             public void run() {
-                for (Map.Entry<Byte, Player> pEntry : logic.getPlayers().entrySet()) {
+                for (Map.Entry<Byte, Player> pEntry : logic[room].getPlayers().entrySet()) {
                     try {
                         DatagramPacket packet = createPacket(bytes, pEntry.getValue());
                         socket.send(packet);
@@ -115,8 +116,8 @@ public class PacketSender {
     /**
      * Broadcast an update to all players about all players.
      */
-    public void broadcastAllPlayersUpdate() {
-        for (Map.Entry<Byte, Player> pEntry : logic.getPlayers().entrySet()) {
+    public void broadcastAllPlayersUpdate(byte room) {
+        for (Map.Entry<Byte, Player> pEntry : logic[room].getPlayers().entrySet()) {
             Player player = pEntry.getValue();
             player.sendPos();
             player.sendState();

@@ -40,6 +40,8 @@ public class Player extends Thread {
     private final PacketSender packetSender;
     private final GameMap map;
     private double[] stats = new double[Globals.NUM_STATS];
+    
+    private Rectangle2D.Double platBox = new Rectangle2D.Double(x - 47.5, y, 95D, 5D);
 
     /**
      * Create a new player entity in the server.
@@ -220,7 +222,8 @@ public class Player extends Thread {
 
         hitbox.x = x - 30;
         hitbox.y = y - 96;
-
+        platBox.x = x - 47.5;
+        platBox.y = y;
         boolean movedX = updateX(xSpeed);
         if (!isStunned() && !isKnockback()) {
             updateFacing();
@@ -260,8 +263,8 @@ public class Player extends Thread {
                 remove.add(bEntry.getKey());
             }
         }
-        for (byte key : remove) {
-            buffs.remove(key);
+        for (byte bKey : remove) {
+            buffs.remove(bKey);
         }
     }
 
@@ -331,9 +334,9 @@ public class Player extends Thread {
             setYSpeed(Globals.MAX_FALLSPEED);
         }
 
-        isFalling = map.isFalling(x, y, ySpeed);
+        isFalling = map.isFalling(platBox, ySpeed);
         if (!isFalling && ySpeed > 0) {
-            y = map.getValidY(x, y, ySpeed);
+            y = map.getValidY(platBox, ySpeed);
             setYSpeed(0);
             isJumping = false;
             setPlayerState(Globals.PLAYER_STATE_STAND);
@@ -494,7 +497,7 @@ public class Player extends Thread {
      * </p>
      */
     public void sendPos() {
-        byte[] bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_BYTE + Globals.PACKET_INT + Globals.PACKET_INT];
+        byte[] bytes = new byte[Globals.PACKET_BYTE * 2 + Globals.PACKET_INT * 2];
         bytes[0] = Globals.DATA_SET_PLAYER_POS;
         bytes[1] = key;
         byte[] posXInt = Globals.intToByte((int) x);
@@ -507,7 +510,7 @@ public class Player extends Thread {
         bytes[7] = posYInt[1];
         bytes[8] = posYInt[2];
         bytes[9] = posYInt[3];
-        packetSender.sendAll(bytes);
+        packetSender.sendAll(bytes, logic.getRoom());
         updatePos = false;
     }
 
@@ -520,11 +523,11 @@ public class Player extends Thread {
      * </p>
      */
     public void sendFacing() {
-        byte[] bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_BYTE + Globals.PACKET_BYTE];
+        byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
         bytes[0] = Globals.DATA_SET_PLAYER_FACING;
         bytes[1] = key;
         bytes[2] = facing;
-        packetSender.sendAll(bytes);
+        packetSender.sendAll(bytes, logic.getRoom());
         updateFacing = false;
     }
 
@@ -537,13 +540,12 @@ public class Player extends Thread {
      * </p>
      */
     public void sendState() {
-        byte[] bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_BYTE + Globals.PACKET_BYTE + Globals.PACKET_BYTE];
+        byte[] bytes = new byte[Globals.PACKET_BYTE *4];
         bytes[0] = Globals.DATA_SET_PLAYER_STATE;
         bytes[1] = key;
         bytes[2] = playerState;
         bytes[3] = frame;
-        packetSender.sendAll(bytes);
+        packetSender.sendAll(bytes, logic.getRoom());
         updateState = false;
     }
-
 }

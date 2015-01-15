@@ -225,7 +225,7 @@ public abstract class BossBase extends Thread implements Boss {
         bytes[7] = posYInt[1];
         bytes[8] = posYInt[2];
         bytes[9] = posYInt[3];
-        packetSender.sendAll(bytes);
+        packetSender.sendAll(bytes, logic.getRoom());
         updatePos = false;
     }
 
@@ -235,7 +235,7 @@ public abstract class BossBase extends Thread implements Boss {
         bytes[0] = Globals.DATA_SET_PLAYER_FACING;
         bytes[1] = key;
         bytes[2] = facing;
-        packetSender.sendAll(bytes);
+        packetSender.sendAll(bytes, logic.getRoom());
         updateFacing = false;
     }
 
@@ -246,7 +246,7 @@ public abstract class BossBase extends Thread implements Boss {
         bytes[1] = key;
         bytes[2] = bossState;
         bytes[3] = frame;
-        packetSender.sendAll(bytes);
+        packetSender.sendAll(bytes, logic.getRoom());
         updateState = false;
     }
 
