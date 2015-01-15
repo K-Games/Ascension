@@ -22,14 +22,15 @@ public class Globals {
     //Render globals
     public final static Font ARIAL_30PT = new Font("Arial", Font.PLAIN, 30);
     public final static Font ARIAL_12PT = new Font("Arial", Font.PLAIN, 12);
-    
+    public final static Font ARIAL_24PT = new Font("Arial", Font.PLAIN, 24);
+            
     public final static double RENDER_FPS = 60.0;
     public final static double RENDER_UPDATE = 1000000000 / RENDER_FPS;
 
     public final static double LOGIC_TICKS_PER_SEC = 40.0;
     public final static double LOGIC_UPDATE = 1000000000 / LOGIC_TICKS_PER_SEC;
 
-    public final static double REQUESTALL_TICKS_PER_SEC = 2;
+    public final static double REQUESTALL_TICKS_PER_SEC = 1;
     public final static double REQUESTALL_UPDATE = 1000000000 / REQUESTALL_TICKS_PER_SEC;
 
     public final static double PINGS_PER_SEC = 1;
@@ -85,7 +86,7 @@ public class Globals {
     public final static BufferedImage[][] PARTICLE_SPRITE = new BufferedImage[NUM_PARTICLE_EFFECTS][];
     public final static BufferedImage[] HUD = new BufferedImage[1];
     
-    public final static BufferedImage[] MENU_BG = new BufferedImage[1];
+    public final static BufferedImage[] MENU_BG = new BufferedImage[3];
     public final static BufferedImage[] MENU_SMOKE = new BufferedImage[1];
     public final static BufferedImage[] MENU_BUTTON = new BufferedImage[2];
     public final static BufferedImage[] MENU_WINDOW = new BufferedImage[1];
@@ -96,7 +97,7 @@ public class Globals {
     public final static byte WINDOW_CREATECHAR = 0;
 
     //Packet globals
-    public final static int PACKET_MAX_SIZE = 128;
+    public final static int PACKET_MAX_SIZE = 256;
     public final static int PACKET_BYTE = 1;
     public final static int PACKET_INT = 4;
     public final static int PACKET_CHAR = 1;

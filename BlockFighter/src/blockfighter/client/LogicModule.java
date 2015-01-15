@@ -6,7 +6,6 @@ import blockfighter.client.net.PacketSender;
 import blockfighter.client.screen.Screen;
 import blockfighter.client.screen.ScreenIngame;
 import blockfighter.client.screen.ScreenSelectChar;
-import java.awt.HeadlessException;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
@@ -23,9 +22,10 @@ public class LogicModule extends Thread {
 
     //Shared Data
     private PacketSender sender = null;
-    private PacketReceiver receiver = new PacketReceiver(this, null);
+    private PacketReceiver receiver = null;
 
     private SaveData selectedChar;
+    private byte selectedRoom = 0;
     private Screen screen = new ScreenSelectChar(this);
 
     public LogicModule() {
@@ -34,7 +34,6 @@ public class LogicModule extends Thread {
 
     @Override
     public void run() {
-        receiver.start();
         while (isRunning) {
             screen.update();
         }
@@ -47,7 +46,7 @@ public class LogicModule extends Thread {
     public void receiveLogin(byte key, byte size) {
         screen = new ScreenIngame(this, key, size, sender);
         ((ScreenIngame) screen).queueAddPlayer(key);
-        sender.sendGetAll();
+        sender.sendGetAll(selectedRoom);
     }
 
     public ConcurrentHashMap<Integer, Particle> getParticles() {
@@ -55,7 +54,7 @@ public class LogicModule extends Thread {
     }
 
     public void sendAction(byte k) {
-        sender.sendAction(k);
+        sender.sendAction(selectedRoom,k);
     }
 
     public void sendLogin() {
@@ -64,10 +63,11 @@ public class LogicModule extends Thread {
             socket.connect(InetAddress.getByName(Globals.SERVER_ADDRESS), Globals.SERVER_PORT);
             socket.setSoTimeout(5000);
             sender = new PacketSender(socket);
-            receiver.setSocket(socket);
-        } catch (SocketException | UnknownHostException | HeadlessException e) {
+            receiver = new PacketReceiver(this, socket);
+            receiver.start();
+        } catch (SocketException | UnknownHostException e) {
         }
-        sender.sendLogin();
+        sender.sendLogin(selectedRoom);
     }
 
     public Screen getScreen() {
@@ -112,5 +112,21 @@ public class LogicModule extends Thread {
         if (screen instanceof ScreenIngame) {
             ((ScreenIngame) screen).queueParticleEffect(data);
         }
+    }
+
+    public void setSelectedChar(SaveData s) {
+        selectedChar = s;
+    }
+
+    public SaveData getSelectedChar() {
+        return selectedChar;
+    }
+
+    public void setSelectedRoom(byte r) {
+        selectedRoom = r;
+    }
+
+    public byte getSelectedRoom() {
+        return selectedRoom;
     }
 }

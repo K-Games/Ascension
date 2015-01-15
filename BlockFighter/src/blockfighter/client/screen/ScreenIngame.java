@@ -15,7 +15,6 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.ExecutorService;
 
 /**
  *
@@ -74,10 +73,10 @@ public class ScreenIngame extends Screen {
         }
 
         if (now - lastUpdateTime >= Globals.LOGIC_UPDATE) {
-            sender.sendMove(myKey, Globals.UP, keyDownMove[Globals.UP]);
-            sender.sendMove(myKey, Globals.DOWN, keyDownMove[Globals.DOWN]);
-            sender.sendMove(myKey, Globals.LEFT, keyDownMove[Globals.LEFT]);
-            sender.sendMove(myKey, Globals.RIGHT, keyDownMove[Globals.RIGHT]);
+            sender.sendMove(logic.getSelectedRoom(), myKey, Globals.UP, keyDownMove[Globals.UP]);
+            sender.sendMove(logic.getSelectedRoom(),myKey, Globals.DOWN, keyDownMove[Globals.DOWN]);
+            sender.sendMove(logic.getSelectedRoom(),myKey, Globals.LEFT, keyDownMove[Globals.LEFT]);
+            sender.sendMove(logic.getSelectedRoom(),myKey, Globals.RIGHT, keyDownMove[Globals.RIGHT]);
 
             updateParticles(particles);
             //updatePlayers();
@@ -85,7 +84,7 @@ public class ScreenIngame extends Screen {
         }
 
         if (now - lastRequestTime >= Globals.REQUESTALL_UPDATE) {
-            sender.sendGetAll();
+            sender.sendGetAll(logic.getSelectedRoom());
             lastRequestTime = now;
         }
 

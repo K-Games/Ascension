@@ -1,6 +1,7 @@
 package blockfighter.client.screen;
 
 import blockfighter.client.entities.particles.Particle;
+import blockfighter.client.render.RenderPanel;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.KeyListener;
@@ -25,7 +26,8 @@ public abstract class Screen implements KeyListener, MouseListener, MouseMotionL
     public abstract ConcurrentHashMap<Integer, Particle> getParticles();
 
     protected static ExecutorService threadPool = Executors.newFixedThreadPool(10);
-
+    protected RenderPanel panel;
+    
     public void drawStringOutline(Graphics g, String s, int x, int y, int width) {
         for (int i = 0; i < 2; i++) {
             g.setColor(Color.BLACK);
@@ -58,5 +60,9 @@ public abstract class Screen implements KeyListener, MouseListener, MouseMotionL
         while (!remove.isEmpty()) {
             particles.remove(remove.pop());
         }
+    }
+    
+    public void setRenderPanel(RenderPanel r) {
+        panel = r;
     }
 }

@@ -3,7 +3,6 @@ package blockfighter.client.render;
 import blockfighter.client.LogicModule;
 import blockfighter.client.Globals;
 import javax.swing.JFrame;
-import javax.swing.JTextField;
 
 /**
  *
@@ -35,6 +34,7 @@ public class RenderModule extends Thread {
             double now = System.nanoTime(); //Get time now
             if (now - lastUpdateTime >= Globals.RENDER_UPDATE) {
                 panel.setScreen(logic.getScreen());
+                logic.getScreen().setRenderPanel(panel);
                 panel.repaint();
                 FPSCount++;
                 lastUpdateTime = now;

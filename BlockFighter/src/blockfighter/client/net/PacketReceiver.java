@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -35,24 +36,13 @@ public class PacketReceiver extends Thread {
             while (true) {
                 byte[] request = new byte[Globals.PACKET_MAX_SIZE];
                 DatagramPacket p = new DatagramPacket(request, request.length);
-                try {
-                    if (socket != null) {
-                        socket.receive(p);
-                    }
-                } catch (SocketException e) {
-                }
+                socket.receive(p);
                 tpes.execute(new PacketHandler(p, logic));
             }
+        } catch (SocketTimeoutException | SocketException e) {
         } catch (IOException ex) {
-        } finally {
-            tpes.shutdownNow();
         }
+        System.out.println("Receiver End");
     }
 
-    public void setSocket(DatagramSocket s) {
-        if (socket != null) {
-            socket.close();
-        }
-        socket = s;
-    }
 }

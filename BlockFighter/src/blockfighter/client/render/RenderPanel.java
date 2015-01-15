@@ -1,12 +1,9 @@
 package blockfighter.client.render;
 
 import blockfighter.client.Globals;
-import blockfighter.client.SaveData;
-import blockfighter.client.entities.particles.Particle;
 import blockfighter.client.screen.Screen;
 import java.awt.Color;
 import java.awt.Graphics;
-import java.util.concurrent.ConcurrentHashMap;
 import javax.swing.JPanel;
 
 /**

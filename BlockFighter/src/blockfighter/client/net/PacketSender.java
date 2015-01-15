@@ -19,43 +19,45 @@ public class PacketSender {
         address = socket.getInetAddress();
     }
 
-    public void sendLogin() {
+    public void sendLogin(byte room) {
         System.out.println("Connecting to " + Globals.SERVER_ADDRESS);
-        byte[] bytes = new byte[Globals.PACKET_BYTE];
+        byte[] bytes = new byte[Globals.PACKET_BYTE * 2];
         bytes[0] = Globals.DATA_LOGIN;
-
+        bytes[1] = room;
         DatagramPacket requestPacket = createPacket(bytes);
         sendPacket(requestPacket);
     }
 
-    public void sendGetAll() {
-        byte[] bytes = new byte[Globals.PACKET_BYTE];
+    public void sendGetAll(byte room) {
+        byte[] bytes = new byte[Globals.PACKET_BYTE * 2];
         bytes[0] = Globals.DATA_GET_ALL_PLAYER;
-
+        bytes[1] = room;
         DatagramPacket requestPacket = createPacket(bytes);
         sendPacket(requestPacket);
     }
 
-    public void sendMove(byte key, byte direction, boolean move) {
-        byte[] bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_BYTE + Globals.PACKET_BYTE + Globals.PACKET_BYTE];
+    public void sendMove(byte room, byte key, byte direction, boolean move) {
+        byte[] bytes = new byte[Globals.PACKET_BYTE * 5];
         bytes[0] = Globals.DATA_SET_PLAYER_MOVE;
-        bytes[1] = key;
-        bytes[2] = direction;
-        bytes[3] = (byte) (move ? 1 : 0);
+        bytes[1] = room;
+        bytes[2] = key;
+        bytes[3] = direction;
+        bytes[4] = (byte) (move ? 1 : 0);
         DatagramPacket requestPacket = createPacket(bytes);
         sendPacket(requestPacket);
     }
 
-    public void sendAction(byte key) {
-        byte[] bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_BYTE];
+    public void sendAction(byte room, byte key) {
+        byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
         bytes[0] = Globals.DATA_PLAYER_ACTION;
-        bytes[1] = key;
+        bytes[1] = room;
+        bytes[2] = key;
         DatagramPacket requestPacket = createPacket(bytes);
         sendPacket(requestPacket);
     }
 
     public void sendGetPing(byte pID) {
-        byte[] bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_BYTE];
+        byte[] bytes = new byte[Globals.PACKET_BYTE * 2];
         bytes[0] = Globals.DATA_PING;
         bytes[1] = pID;
         DatagramPacket requestPacket = createPacket(bytes);

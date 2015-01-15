@@ -14,13 +14,14 @@ import org.apache.commons.io.FileUtils;
  */
 public class SaveData {
 
-    private int[] stats = new int[3];
+    private int[] stats = new int[Globals.NUM_STATS];
     private int uniqueID;
     private String name;
 
-    public SaveData() {
-        name = "";
+    public SaveData(String n) {
+        name = n;
         uniqueID = new Random().nextInt(Integer.MAX_VALUE);
+        stats[Globals.STAT_LEVEL] = 1;
         stats[Globals.STAT_POWER] = 0;
         stats[Globals.STAT_DEFENSE] = 0;
         stats[Globals.STAT_SPIRIT] = 0;
@@ -53,7 +54,7 @@ public class SaveData {
 
     public static SaveData readData(byte saveNum) {
 
-        SaveData character = new SaveData();
+        SaveData character = new SaveData("");
 
         byte[] data, temp = new byte[15];
 
@@ -80,5 +81,13 @@ public class SaveData {
         character.stats[Globals.STAT_SPIRIT] = Globals.bytesToInt(temp);
 
         return character;
+    }
+    
+    public String getPlayerName(){
+        return name;
+    }
+    
+    public int[] getStats(){
+        return stats;
     }
 }
