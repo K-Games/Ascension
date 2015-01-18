@@ -22,10 +22,12 @@ public class Globals {
     //Render globals
     public final static Font ARIAL_30PT = new Font("Arial", Font.PLAIN, 30);
     public final static Font ARIAL_12PT = new Font("Arial", Font.PLAIN, 12);
+    public final static Font ARIAL_15PT = new Font("Arial", Font.BOLD, 15);
     public final static Font ARIAL_24PT = new Font("Arial", Font.PLAIN, 24);
-    
+    public final static Font ARIAL_18PT = new Font("Arial", Font.PLAIN, 18);
+
     public final static byte MAX_NAME_LENGTH = 15;
-    
+
     public final static double RENDER_FPS = 60.0;
     public final static double RENDER_UPDATE = 1000000000 / RENDER_FPS;
 
@@ -46,8 +48,23 @@ public class Globals {
     public final static int NUM_PARTICLE_EFFECTS = 1;
     public final static byte PARTICLE_KNOCK = 0x00;
 
-    public final static int NUM_STATS = 13;
-    public final static int STAT_POWER = 0,
+    public final static byte NUM_ITEM_TYPES = 10,
+            ITEM_WEAPON = 0,
+            ITEM_HEAD = 1,
+            ITEM_CHEST = 2,
+            ITEM_PANTS = 3,
+            ITEM_SHOULDER = 4,
+            ITEM_GLOVE = 5,
+            ITEM_SHOE = 6,
+            ITEM_BELT = 7,
+            ITEM_RING = 8,
+            ITEM_AMULET = 9,
+            ITEM_OFFHAND = 10; //Only used for equipment slot index. Its the same as weapons.
+    
+    public final static byte NUM_EQUIP_SLOTS = 11;
+    
+    public final static byte NUM_STATS = 14,
+            STAT_POWER = 0,
             STAT_DEFENSE = 1,
             STAT_SPIRIT = 2,
             STAT_MINHP = 3,
@@ -59,7 +76,8 @@ public class Globals {
             STAT_REGEN = 9,
             STAT_ARMOR = 10,
             STAT_LEVEL = 11,
-            STAT_POINTS = 12;
+            STAT_POINTS = 12,
+            STAT_EXP = 13;
 
     public final static double HP_BASE = 100,
             HP_MULT = 30,
@@ -84,20 +102,6 @@ public class Globals {
             PLAYER_STATE_STUN = 0x03,
             PLAYER_STATE_KNOCKBACK = 0x04;
 
-    public final static BufferedImage[][] CHAR_SPRITE = new BufferedImage[NUM_PLAYER_STATE][];
-    public final static BufferedImage[][] PARTICLE_SPRITE = new BufferedImage[NUM_PARTICLE_EFFECTS][];
-    public final static BufferedImage[] HUD = new BufferedImage[1];
-
-    public final static BufferedImage[] MENU_BG = new BufferedImage[3];
-    public final static BufferedImage[] MENU_SMOKE = new BufferedImage[1];
-    public final static BufferedImage[] MENU_BUTTON = new BufferedImage[2];
-    public final static BufferedImage[] MENU_WINDOW = new BufferedImage[1];
-
-    public final static byte BUTTON_OKAY = 0,
-            BUTTON_SELECTCHAR = 1;
-
-    public final static byte WINDOW_CREATECHAR = 0;
-
     //Packet globals
     public final static int PACKET_MAX_SIZE = 256;
     public final static int PACKET_BYTE = 1;
@@ -118,6 +122,25 @@ public class Globals {
 
     public final static byte NUM_PLAYER_ACTION = 1,
             PLAYER_ACTION_KNOCK = 0x00;
+
+    public final static BufferedImage[][] CHAR_SPRITE = new BufferedImage[NUM_PLAYER_STATE][];
+    public final static BufferedImage[][] PARTICLE_SPRITE = new BufferedImage[NUM_PARTICLE_EFFECTS][];
+    public final static BufferedImage[] HUD = new BufferedImage[1];
+
+    public final static BufferedImage[] MENU_BG = new BufferedImage[3];
+    public final static BufferedImage[] MENU_SMOKE = new BufferedImage[1];
+    public final static BufferedImage[] MENU_BUTTON = new BufferedImage[7];
+    public final static BufferedImage[] MENU_WINDOW = new BufferedImage[1];
+
+    public final static byte BUTTON_OKAY = 0,
+            BUTTON_SELECTCHAR = 1,
+            BUTTON_ADDSTAT = 2,
+            BUTTON_ITEMSLOT = 3,
+            BUTTON_MENUS = 4,
+            BUTTON_WEAPONTAB = 5,
+            BUTTON_HEADTAB = 6;
+
+    public final static byte WINDOW_CREATECHAR = 0;
 
     public static final double calcArmor(double defense) {
         return defense * ARMOR_MULT;
@@ -149,6 +172,10 @@ public class Globals {
 
     public static final double calcCritDmg(double spirit) {
         return spirit / CRITDMG_FACT * CRITDMG_MULT + CRITDMG_BASE;
+    }
+
+    public static final double calcReduction(double armor) {
+        return armor / (armor + REDUCT_CONST);
     }
 
     public static final byte[] intToByte(int input) {
@@ -187,10 +214,14 @@ public class Globals {
             PARTICLE_SPRITE[PARTICLE_KNOCK][4] = ImageIO.read(Globals.class.getResource("sprites/particle/knock/4.png"));
 
             HUD[0] = ImageIO.read(Globals.class.getResource("sprites/ui/ingame/ui.png"));
-            MENU_BG[0] = ImageIO.read(Globals.class.getResource("sprites/ui/menu/bg1.png"));
 
-            MENU_BUTTON[BUTTON_OKAY] = ImageIO.read(Globals.class.getResource("sprites/ui/menu/button1.png"));
-            MENU_BUTTON[BUTTON_SELECTCHAR] = ImageIO.read(Globals.class.getResource("sprites/ui/menu/button2.png"));
+            for (byte i = 0; i < MENU_BG.length; i++) {
+                MENU_BG[i] = ImageIO.read(Globals.class.getResource("sprites/ui/menu/bg" + (i + 1) + ".png"));
+            }
+
+            for (byte i = 0; i < MENU_BUTTON.length; i++) {
+                MENU_BUTTON[i] = ImageIO.read(Globals.class.getResource("sprites/ui/menu/button" + (i + 1) + ".png"));
+            }
 
             MENU_WINDOW[WINDOW_CREATECHAR] = ImageIO.read(Globals.class.getResource("sprites/ui/menu/window1.png"));
             MENU_SMOKE[0] = ImageIO.read(Globals.class.getResource("sprites/ui/menu/smoke.png"));
@@ -203,7 +234,4 @@ public class Globals {
         return (long) (time / 1000000);
     }
 
-    public static final void savePlayer() {
-
-    }
 }

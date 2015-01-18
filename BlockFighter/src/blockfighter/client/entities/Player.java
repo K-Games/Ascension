@@ -1,6 +1,7 @@
 package blockfighter.client.entities;
 
 import blockfighter.client.Globals;
+import blockfighter.client.entities.items.ItemEquip;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
@@ -14,6 +15,7 @@ public class Player extends Thread {
     private byte facing, state, frame;
     private double[] stats = new double[Globals.NUM_STATS];
     private String name;
+    private ItemEquip[] equipment = new ItemEquip[Globals.NUM_EQUIP_SLOTS];
 
     public int getX() {
         return x;

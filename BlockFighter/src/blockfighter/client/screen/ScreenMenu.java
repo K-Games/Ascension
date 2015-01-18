@@ -1,8 +1,17 @@
 package blockfighter.client.screen;
 
 import blockfighter.client.Globals;
+import blockfighter.client.LogicModule;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.client.entities.particles.ParticleMenuSmoke;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.event.MouseEvent;
+import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -12,13 +21,21 @@ import java.util.concurrent.ConcurrentHashMap;
 public abstract class ScreenMenu extends Screen {
 
     protected double lastUpdateTime = System.nanoTime();
-    protected ConcurrentHashMap<Integer, Particle> particles = new ConcurrentHashMap<>(20);
-    
-    public ScreenMenu(){
-        particles.put(0, new ParticleMenuSmoke(null, 0, 0, 0, 0));
-        particles.put(1, new ParticleMenuSmoke(null, 1, 1280, 0, 0));
+    protected static ConcurrentHashMap<Integer, Particle> particles = new ConcurrentHashMap<>(20);
+    private Rectangle2D.Double[] menuBox = new Rectangle2D.Double[4];
+    protected LogicModule logic;
+
+    public ScreenMenu(LogicModule l) {
+        logic = l;
+        if (!particles.containsKey(0)) {
+            particles.put(0, new ParticleMenuSmoke(l, 0, 0, 0, 0));
+            particles.put(1, new ParticleMenuSmoke(l, 1, 1280, 0, 0));
+        }
+        for (int i = 0; i < 4; i++) {
+            menuBox[i] = new Rectangle2D.Double(20, 27 + 50 * i, 180, 50);
+        }
     }
-    
+
     @Override
     public ConcurrentHashMap<Integer, Particle> getParticles() {
         return particles;
@@ -35,5 +52,52 @@ public abstract class ScreenMenu extends Screen {
             Thread.yield();
             now = System.nanoTime();
         }
+    }
+
+    @Override
+    public void draw(Graphics g) {
+        for (Map.Entry<Integer, Particle> pEntry : particles.entrySet()) {
+            pEntry.getValue().draw(g);
+        }
+
+    }
+
+    public void drawMenuButton(Graphics g) {
+        Graphics2D g2d = (Graphics2D) g;
+        g2d.setRenderingHint(
+                RenderingHints.KEY_TEXT_ANTIALIASING,
+                RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
+
+        BufferedImage button = Globals.MENU_BUTTON[Globals.BUTTON_MENUS];
+        for (int i = 0; i < 4; i++) {
+            g.drawImage(button, 20, 27 + 50 * i, null);
+        }
+        g.setFont(Globals.ARIAL_24PT);
+        drawStringOutline(g, "Stats", 40, 62, 2);
+        drawStringOutline(g, "Inventory", 40, 112, 2);
+        drawStringOutline(g, "Upgrades", 40, 162, 2);
+        drawStringOutline(g, "Server List", 40, 212, 2);
+
+        g.setColor(Color.WHITE);
+        g.drawString("Stats", 40, 62);
+        g.drawString("Inventory", 40, 112);
+        g.drawString("Upgrades", 40, 162);
+        g.drawString("Server List", 40, 212);
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        for (int i = 0; i < menuBox.length; i++) {
+            if (menuBox[i].contains(e.getPoint())) {
+                if (i == 0) {
+                    logic.setScreen(new ScreenStats(logic));
+                    break;
+                } else if (i == 1) {
+                    logic.setScreen(new ScreenInventory(logic));
+                    break;
+                }
+            }
+        }
+
     }
 }

@@ -1,11 +1,14 @@
 package blockfighter.client;
 
+import blockfighter.client.entities.items.ItemEquip;
+import blockfighter.client.entities.items.ItemUpgrade;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.client.net.PacketReceiver;
 import blockfighter.client.net.PacketSender;
 import blockfighter.client.screen.Screen;
 import blockfighter.client.screen.ScreenIngame;
 import blockfighter.client.screen.ScreenSelectChar;
+import java.awt.Graphics;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
@@ -44,7 +47,7 @@ public class LogicModule extends Thread {
     }
 
     public void receiveLogin(byte key, byte size) {
-        screen = new ScreenIngame(this, key, size, sender);
+        setScreen(new ScreenIngame(this, key, size, sender));
         ((ScreenIngame) screen).queueAddPlayer(key);
         sender.sendGetAll(selectedRoom);
     }
@@ -54,7 +57,7 @@ public class LogicModule extends Thread {
     }
 
     public void sendAction(byte k) {
-        sender.sendAction(selectedRoom,k);
+        sender.sendAction(selectedRoom, k);
     }
 
     public void sendLogin() {
@@ -72,10 +75,6 @@ public class LogicModule extends Thread {
 
     public Screen getScreen() {
         return screen;
-    }
-
-    public SaveData getSaveData() {
-        return selectedChar;
     }
 
     public void setPing(byte data) {
@@ -128,5 +127,9 @@ public class LogicModule extends Thread {
 
     public byte getSelectedRoom() {
         return selectedRoom;
+    }
+
+    public void setScreen(Screen s) {
+        screen = s;
     }
 }

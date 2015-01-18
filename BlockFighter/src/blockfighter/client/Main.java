@@ -1,5 +1,6 @@
 package blockfighter.client;
 
+import blockfighter.client.entities.items.ItemEquip;
 import blockfighter.client.render.RenderModule;
 import blockfighter.client.render.RenderPanel;
 import java.awt.*;
@@ -30,6 +31,8 @@ public class Main {
     private static void createAndShowGUI() {
 
         Globals.loadGFX();
+        ItemEquip.loadItemNames();
+        
         JFrame frame = new JFrame("Tower Conquest");
         RenderPanel panel = new RenderPanel();
 
@@ -38,7 +41,7 @@ public class Main {
 
         KeyHandler keyHandler = new KeyHandler(logic);
         MouseHandler mouseHandler = new MouseHandler(logic);
-
+        //frame.setUndecorated(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().setPreferredSize(new Dimension(Globals.WINDOW_WIDTH, Globals.WINDOW_HEIGHT));
         frame.pack();
