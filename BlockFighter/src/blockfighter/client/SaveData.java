@@ -23,7 +23,8 @@ public class SaveData {
 
     private int uniqueID;
     private String name;
-
+    private byte saveNum;
+    
     private ItemEquip[][] inventory = new ItemEquip[Globals.NUM_ITEM_TYPES][];
 
     private ItemUpgrade[] upgrades = new ItemUpgrade[100];
@@ -35,24 +36,11 @@ public class SaveData {
         Random rng = new Random();
         uniqueID = rng.nextInt(Integer.MAX_VALUE);
         baseStats[Globals.STAT_LEVEL] = 100;
-        baseStats[Globals.STAT_POWER] = 2000;
-        baseStats[Globals.STAT_DEFENSE] = 2000;
-        baseStats[Globals.STAT_SPIRIT] = 2000;
-
+        baseStats[Globals.STAT_POWER] = 0;
+        baseStats[Globals.STAT_DEFENSE] = 0;
+        baseStats[Globals.STAT_SPIRIT] = 0;
         for (int i = 0; i < inventory.length; i++) {
             inventory[i] = new ItemEquip[100];
-            for (int j = 0; i < 4 && j < 100; j++) {
-                double[] stats = new double[Globals.NUM_STATS];
-                stats[Globals.STAT_LEVEL] = 100;
-                stats[Globals.STAT_POWER] = 112;
-                stats[Globals.STAT_DEFENSE] = 112;
-                stats[Globals.STAT_SPIRIT] = 112;
-                stats[Globals.STAT_REGEN] = 300;
-                stats[Globals.STAT_CRITDMG] = 0.90;
-                stats[Globals.STAT_CRITCHANCE] = 0.20;
-                inventory[i][j] = new ItemEquip(stats, j, 0, 100001);
-                upgrades[j] = new ItemUpgrade(1, i + 1);
-            }
         }
 
         for (int i = 0; i < 11; i++) {
@@ -64,7 +52,7 @@ public class SaveData {
             stats[Globals.STAT_REGEN] = 300;
             stats[Globals.STAT_CRITDMG] = 0.90;
             stats[Globals.STAT_CRITCHANCE] = 0.20;
-            equipment[i] = new ItemEquip(stats, i, i * 0.01, 100001);
+            equipment[i] = new ItemEquip(stats, 20, 1, 100001);
         }
     }
 
@@ -171,6 +159,7 @@ public class SaveData {
 
     public static SaveData readData(byte saveNum) {
         SaveData c = new SaveData("");
+        c.saveNum = saveNum;
         byte[] data, temp = new byte[Globals.MAX_NAME_LENGTH];
 
         try {
@@ -315,14 +304,19 @@ public class SaveData {
     }
 
     private void calcStats() {
-
         for (int i = 0; i < bonusStats.length; i++) {
+            bonusStats[i] = 0;
             for (ItemEquip e : equipment) {
                 if (i != Globals.STAT_LEVEL && e != null) {
                     bonusStats[i] += e.getStats()[i];
                 }
             }
         }
+
+        baseStats[Globals.STAT_POINTS] = baseStats[Globals.STAT_LEVEL] * Globals.STAT_PER_LEVEL
+                - (baseStats[Globals.STAT_POWER]
+                + baseStats[Globals.STAT_DEFENSE]
+                + baseStats[Globals.STAT_SPIRIT]);
 
         System.arraycopy(baseStats, 0, totalStats, 0, baseStats.length);
 
@@ -356,5 +350,16 @@ public class SaveData {
 
     public double[] getBonusStats() {
         return bonusStats;
+    }
+
+    public void addStat(byte stat, int amount) {
+        if (baseStats[Globals.STAT_POINTS] < amount) {
+            return;
+        }
+        baseStats[Globals.STAT_POINTS] -= amount;
+        baseStats[stat] += amount;
+
+        calcStats();
+        saveData(saveNum, this);
     }
 }

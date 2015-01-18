@@ -62,10 +62,7 @@ public class ScreenSelectChar extends ScreenMenu {
 
         super.draw(g);
 
-        BufferedImage button = Globals.MENU_BUTTON[Globals.BUTTON_OKAY];
-        g.drawImage(button, 550, 550, null);
-
-        button = Globals.MENU_BUTTON[Globals.BUTTON_SELECTCHAR];
+        BufferedImage button = Globals.MENU_BUTTON[Globals.BUTTON_SELECTCHAR];
         g.drawImage(button, 20, 60, null);
         g.drawImage(button, 440, 60, null);
         g.drawImage(button, 860, 60, null);
@@ -218,9 +215,6 @@ public class ScreenSelectChar extends ScreenMenu {
             }
         } else {
             mouseReleased_Create(e);
-        }
-        if (new Rectangle(550, 550, 214, 112).contains(e.getPoint())) {
-            logic.sendLogin();
         }
     }
 

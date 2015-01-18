@@ -1,14 +1,11 @@
 package blockfighter.client;
 
-import blockfighter.client.entities.items.ItemEquip;
-import blockfighter.client.entities.items.ItemUpgrade;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.client.net.PacketReceiver;
 import blockfighter.client.net.PacketSender;
 import blockfighter.client.screen.Screen;
 import blockfighter.client.screen.ScreenIngame;
 import blockfighter.client.screen.ScreenSelectChar;
-import java.awt.Graphics;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;

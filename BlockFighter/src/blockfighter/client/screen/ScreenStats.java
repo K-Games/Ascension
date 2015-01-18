@@ -9,6 +9,7 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.text.DecimalFormat;
 
@@ -18,15 +19,23 @@ import java.text.DecimalFormat;
  */
 public class ScreenStats extends ScreenMenu {
 
-    private SaveData sd;
+    private SaveData c;
     private double[] stats, bs;
     DecimalFormat df = new DecimalFormat("0.00");
+    Rectangle2D.Double[] addBox = new Rectangle2D.Double[6];
 
     public ScreenStats(LogicModule l) {
         super(l);
-        sd = l.getSelectedChar();
-        stats = sd.getStats();
-        bs = sd.getBaseStats();
+        addBox[0] = new Rectangle2D.Double(418, 148, 30, 23);
+        addBox[1] = new Rectangle2D.Double(418, 173, 30, 23);
+        addBox[2] = new Rectangle2D.Double(418, 198, 30, 23);
+        addBox[3] = new Rectangle2D.Double(453, 148, 30, 23);
+        addBox[4] = new Rectangle2D.Double(453, 173, 30, 23);
+        addBox[5] = new Rectangle2D.Double(453, 198, 30, 23);
+
+        c = l.getSelectedChar();
+        stats = c.getStats();
+        bs = c.getBaseStats();
     }
 
     @Override
@@ -36,40 +45,54 @@ public class ScreenStats extends ScreenMenu {
 
         super.draw(g);
         drawMenuButton(g);
-        
+
         Graphics2D g2d = (Graphics2D) g;
         g2d.setRenderingHint(
                 RenderingHints.KEY_TEXT_ANTIALIASING,
                 RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
 
         g.setFont(Globals.ARIAL_30PT);
-        drawStringOutline(g, sd.getPlayerName(), 255, 76, 2);
+        drawStringOutline(g, c.getPlayerName(), 255, 76, 2);
         g.setColor(Color.WHITE);
-        g.drawString(sd.getPlayerName(), 255, 76);
+        g.drawString(c.getPlayerName(), 255, 76);
 
         int mainStat = 165, secStat = 295;;
         BufferedImage button = Globals.MENU_BUTTON[Globals.BUTTON_ADDSTAT];
-        g.drawImage(button, 418, mainStat - 17, null);
-        g.drawImage(button, 418, mainStat + 25 - 17, null);
-        g.drawImage(button, 418, mainStat + 50 - 17, null);
-        g.drawImage(button, 453, mainStat - 17, null);
-        g.drawImage(button, 453, mainStat + 25 - 17, null);
-        g.drawImage(button, 453, mainStat + 50 - 17, null);
+        if (bs[Globals.STAT_POINTS] >= 1) {
+            g.drawImage(button, 418, mainStat - 17, null);
+            g.drawImage(button, 418, mainStat + 25 - 17, null);
+            g.drawImage(button, 418, mainStat + 50 - 17, null);
+        }
+
+        if (bs[Globals.STAT_POINTS] >= 5) {
+            g.drawImage(button, 453, mainStat - 17, null);
+            g.drawImage(button, 453, mainStat + 25 - 17, null);
+            g.drawImage(button, 453, mainStat + 50 - 17, null);
+        }
 
         g.setFont(Globals.ARIAL_15PT);
-        drawStringOutline(g, "+1", 425, mainStat, 2);
-        drawStringOutline(g, "+1", 425, mainStat + 25, 2);
-        drawStringOutline(g, "+1", 425, mainStat + 50, 2);
-        drawStringOutline(g, "+5", 460, mainStat, 2);
-        drawStringOutline(g, "+5", 460, mainStat + 25, 2);
-        drawStringOutline(g, "+5", 460, mainStat + 50, 2);
+        if (bs[Globals.STAT_POINTS] >= 1) {
+            drawStringOutline(g, "+1", 425, mainStat, 2);
+            drawStringOutline(g, "+1", 425, mainStat + 25, 2);
+            drawStringOutline(g, "+1", 425, mainStat + 50, 2);
+        }
+        if (bs[Globals.STAT_POINTS] >= 5) {
+            drawStringOutline(g, "+5", 460, mainStat, 2);
+            drawStringOutline(g, "+5", 460, mainStat + 25, 2);
+            drawStringOutline(g, "+5", 460, mainStat + 50, 2);
+        }
+
         g.setColor(Color.WHITE);
-        g.drawString("+1", 425, mainStat);
-        g.drawString("+1", 425, mainStat + 25);
-        g.drawString("+1", 425, mainStat + 50);
-        g.drawString("+5", 460, mainStat);
-        g.drawString("+5", 460, mainStat + 25);
-        g.drawString("+5", 460, mainStat + 50);
+        if (bs[Globals.STAT_POINTS] >= 1) {
+            g.drawString("+1", 425, mainStat);
+            g.drawString("+1", 425, mainStat + 25);
+            g.drawString("+1", 425, mainStat + 50);
+        }
+        if (bs[Globals.STAT_POINTS] >= 5) {
+            g.drawString("+5", 460, mainStat);
+            g.drawString("+5", 460, mainStat + 25);
+            g.drawString("+5", 460, mainStat + 50);
+        }
 
         g.setFont(Globals.ARIAL_18PT);
         drawStringOutline(g, "Level: " + (int) stats[Globals.STAT_LEVEL], 255, 130, 2);
@@ -128,6 +151,40 @@ public class ScreenStats extends ScreenMenu {
     @Override
     public void mouseReleased(MouseEvent e) {
         super.mouseReleased(e);
+        if (bs[Globals.STAT_POINTS] >= 1) {
+            for (int i = 0; i < 3; i++) {
+                if (addBox[i].contains(e.getPoint())) {
+                    switch (i) {
+                        case 0:
+                            c.addStat(Globals.STAT_POWER, 1);
+                            break;
+                        case 1:
+                            c.addStat(Globals.STAT_DEFENSE, 1);
+                            break;
+                        case 2:
+                            c.addStat(Globals.STAT_SPIRIT, 1);
+                            break;
+                    }
+                }
+            }
+        }
+        if (bs[Globals.STAT_POINTS] >= 5) {
+            for (int i = 3; i < 6; i++) {
+                if (addBox[i].contains(e.getPoint())) {
+                    switch (i) {
+                        case 3:
+                            c.addStat(Globals.STAT_POWER, 5);
+                            break;
+                        case 4:
+                            c.addStat(Globals.STAT_DEFENSE, 5);
+                            break;
+                        case 5:
+                            c.addStat(Globals.STAT_SPIRIT, 5);
+                            break;
+                    }
+                }
+            }
+        }
     }
 
     @Override

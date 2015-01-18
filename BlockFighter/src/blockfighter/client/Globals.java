@@ -60,9 +60,9 @@ public class Globals {
             ITEM_RING = 8,
             ITEM_AMULET = 9,
             ITEM_OFFHAND = 10; //Only used for equipment slot index. Its the same as weapons.
-    
+
     public final static byte NUM_EQUIP_SLOTS = 11;
-    
+
     public final static byte NUM_STATS = 14,
             STAT_POWER = 0,
             STAT_DEFENSE = 1,
@@ -93,7 +93,8 @@ public class Globals {
             MINDMG_MULT = 11,
             MAXDMG_MULT = 21,
             MINDMG_BASE = 20,
-            MAXDMG_BASE = 40;
+            MAXDMG_BASE = 40,
+            STAT_PER_LEVEL = 7;
 
     public final static int NUM_PLAYER_STATE = 5;
     public final static byte PLAYER_STATE_STAND = 0x00,
@@ -129,8 +130,9 @@ public class Globals {
 
     public final static BufferedImage[] MENU_BG = new BufferedImage[3];
     public final static BufferedImage[] MENU_SMOKE = new BufferedImage[1];
-    public final static BufferedImage[] MENU_BUTTON = new BufferedImage[7];
+    public final static BufferedImage[] MENU_BUTTON = new BufferedImage[15];
     public final static BufferedImage[] MENU_WINDOW = new BufferedImage[1];
+    public final static BufferedImage[] MENU_TABPOINTER = new BufferedImage[1];
 
     public final static byte BUTTON_OKAY = 0,
             BUTTON_SELECTCHAR = 1,
@@ -138,7 +140,15 @@ public class Globals {
             BUTTON_ITEMSLOT = 3,
             BUTTON_MENUS = 4,
             BUTTON_WEAPONTAB = 5,
-            BUTTON_HEADTAB = 6;
+            BUTTON_HEADTAB = 6,
+            BUTTON_CHESTTAB = 7,
+            BUTTON_PANTSTAB = 8,
+            BUTTON_SHOULDERTAB = 9,
+            BUTTON_GLOVETAB = 10,
+            BUTTON_SHOETAB = 11,
+            BUTTON_BELTTAB = 12,
+            BUTTON_RINGTAB = 13,
+            BUTTON_AMULETTAB = 14;
 
     public final static byte WINDOW_CREATECHAR = 0;
 
@@ -224,6 +234,7 @@ public class Globals {
             }
 
             MENU_WINDOW[WINDOW_CREATECHAR] = ImageIO.read(Globals.class.getResource("sprites/ui/menu/window1.png"));
+            MENU_TABPOINTER[0] = ImageIO.read(Globals.class.getResource("sprites/ui/menu/pointer.png"));
             MENU_SMOKE[0] = ImageIO.read(Globals.class.getResource("sprites/ui/menu/smoke.png"));
         } catch (IOException ex) {
             Logger.getLogger(Globals.class.getName()).log(Level.SEVERE, null, ex);

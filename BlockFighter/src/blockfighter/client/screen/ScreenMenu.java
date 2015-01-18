@@ -22,7 +22,7 @@ public abstract class ScreenMenu extends Screen {
 
     protected double lastUpdateTime = System.nanoTime();
     protected static ConcurrentHashMap<Integer, Particle> particles = new ConcurrentHashMap<>(20);
-    private Rectangle2D.Double[] menuBox = new Rectangle2D.Double[4];
+    private Rectangle2D.Double[] menuBox = new Rectangle2D.Double[5];
     protected LogicModule logic;
 
     public ScreenMenu(LogicModule l) {
@@ -31,7 +31,7 @@ public abstract class ScreenMenu extends Screen {
             particles.put(0, new ParticleMenuSmoke(l, 0, 0, 0, 0));
             particles.put(1, new ParticleMenuSmoke(l, 1, 1280, 0, 0));
         }
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < menuBox.length; i++) {
             menuBox[i] = new Rectangle2D.Double(20, 27 + 50 * i, 180, 50);
         }
     }
@@ -69,32 +69,38 @@ public abstract class ScreenMenu extends Screen {
                 RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
 
         BufferedImage button = Globals.MENU_BUTTON[Globals.BUTTON_MENUS];
-        for (int i = 0; i < 4; i++) {
-            g.drawImage(button, 20, 27 + 50 * i, null);
+        for (int i = 0; i < menuBox.length; i++) {
+            g.drawImage(button, (int) menuBox[i].x, (int) menuBox[i].y, null);
         }
         g.setFont(Globals.ARIAL_24PT);
         drawStringOutline(g, "Stats", 40, 62, 2);
         drawStringOutline(g, "Inventory", 40, 112, 2);
         drawStringOutline(g, "Upgrades", 40, 162, 2);
-        drawStringOutline(g, "Server List", 40, 212, 2);
+        drawStringOutline(g, "Skills", 40, 212, 2);
+        drawStringOutline(g, "Server List", 40, 262, 2);
 
         g.setColor(Color.WHITE);
         g.drawString("Stats", 40, 62);
         g.drawString("Inventory", 40, 112);
         g.drawString("Upgrades", 40, 162);
-        g.drawString("Server List", 40, 212);
+        g.drawString("Skills", 40, 212);
+        g.drawString("Server List", 40, 262);
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
         for (int i = 0; i < menuBox.length; i++) {
             if (menuBox[i].contains(e.getPoint())) {
-                if (i == 0) {
-                    logic.setScreen(new ScreenStats(logic));
-                    break;
-                } else if (i == 1) {
-                    logic.setScreen(new ScreenInventory(logic));
-                    break;
+                switch (i) {
+                    case 0:
+                        logic.setScreen(new ScreenStats(logic));
+                        break;
+                    case 1:
+                        logic.setScreen(new ScreenInventory(logic));
+                        break;
+                    case 4:
+                        logic.sendLogin();
+                        break;
                 }
             }
         }

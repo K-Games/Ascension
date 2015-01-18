@@ -81,14 +81,16 @@ public class ScreenInventory extends ScreenMenu {
         g2d.setRenderingHint(
                 RenderingHints.KEY_TEXT_ANTIALIASING,
                 RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
+        
         drawStats(g);
         drawSlots(g);
-
-        for (int i = 0; i < 2; i++) {
+        
+        for (int i = 0; i < tabs.length; i++) {
             BufferedImage button = Globals.MENU_BUTTON[i + 5];
             g.drawImage(button, (int) tabs[i].x, (int) tabs[i].y, null);//Weapon
         }
-
+        g.drawImage(Globals.MENU_TABPOINTER[0], 260,(int)tabs[selectedTab].y,null);
+        
         if (drawItem > -1) {
             drawItemInfo(g, inventSlots[drawItem], c.getInventory(selectedTab)[drawItem]);
         }
