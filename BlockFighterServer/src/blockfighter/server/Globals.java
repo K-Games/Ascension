@@ -48,11 +48,26 @@ public class Globals {
             PLAYER_STATE_STUN = 0x03,
             PLAYER_STATE_KNOCKBACK = 0x04;
 
-    public final static byte NUM_PARTICLE_EFFECTS = 1;
+    public final static int NUM_PARTICLE_EFFECTS = 1;
     public final static byte PARTICLE_TEMP = 0x00;
 
-    public final static int NUM_STATS = 13;
-    public final static int STAT_POWER = 0,
+    public final static byte NUM_ITEM_TYPES = 10,
+            ITEM_WEAPON = 0,
+            ITEM_HEAD = 1,
+            ITEM_CHEST = 2,
+            ITEM_PANTS = 3,
+            ITEM_SHOULDER = 4,
+            ITEM_GLOVE = 5,
+            ITEM_SHOE = 6,
+            ITEM_BELT = 7,
+            ITEM_RING = 8,
+            ITEM_AMULET = 9,
+            ITEM_OFFHAND = 10; //Only used for equipment slot index. Its the same as weapons.
+    
+    public final static byte NUM_EQUIP_SLOTS = 11;
+    
+    public final static byte NUM_STATS = 14,
+            STAT_POWER = 0,
             STAT_DEFENSE = 1,
             STAT_SPIRIT = 2,
             STAT_MINHP = 3,
@@ -64,7 +79,8 @@ public class Globals {
             STAT_REGEN = 9,
             STAT_ARMOR = 10,
             STAT_LEVEL = 11,
-            STAT_POINTS = 12;
+            STAT_POINTS = 12,
+            STAT_EXP = 13;
 
     public final static double HP_BASE = 100,
             HP_MULT = 30,
@@ -201,6 +217,10 @@ public class Globals {
 
     public static final double calcCritDmg(double spirit) {
         return spirit / CRITDMG_FACT * CRITDMG_MULT + CRITDMG_BASE;
+    }
+
+    public static final double calcReduction(double armor) {
+        return armor / (armor + REDUCT_CONST);
     }
 
     public static final byte[] intToByte(int input) {

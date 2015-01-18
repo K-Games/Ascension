@@ -276,7 +276,7 @@ public class Player extends Thread {
         stats[Globals.STAT_MINDMG] = Globals.calcMinDmg(stats[Globals.STAT_POWER]);
         stats[Globals.STAT_MAXDMG] = Globals.calcMaxDmg(stats[Globals.STAT_POWER]);
         stats[Globals.STAT_CRITCHANCE] = Globals.calcCritChance(stats[Globals.STAT_SPIRIT]);
-        stats[Globals.STAT_CRITDMG] = Globals.calcCritDmg(stats[Globals.STAT_POWER]);
+        stats[Globals.STAT_CRITDMG] = Globals.calcCritDmg(stats[Globals.STAT_SPIRIT]);
     }
 
     /**
