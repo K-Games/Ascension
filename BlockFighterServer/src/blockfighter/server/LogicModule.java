@@ -261,9 +261,11 @@ public class LogicModule extends Thread {
             public void run() {
                 while (!pMoveQueue.isEmpty()) {
                     byte[] data = pMoveQueue.poll();
-                    byte key = data[2], dir = data[3], value = data[4];
-                    if (data != null && players.containsKey(key)) {
-                        players.get(key).setMove(dir, value == 1);
+                    if (data != null) {
+                        byte key = data[2], dir = data[3], value = data[4];
+                        if (players.containsKey(key)) {
+                            players.get(key).setMove(dir, value == 1);
+                        }
                     }
                 }
             }
@@ -274,9 +276,11 @@ public class LogicModule extends Thread {
             public void run() {
                 while (!pActionQueue.isEmpty()) {
                     byte[] data = pActionQueue.poll();
-                    byte key = data[2];
-                    if (data != null && players.containsKey(key)) {
-                        players.get(key).processAction(data);
+                    if (data != null) {
+                        byte key = data[2];
+                        if (players.containsKey(key)) {
+                            players.get(key).processAction(data);
+                        }
                     }
                 }
             }
@@ -348,5 +352,14 @@ public class LogicModule extends Thread {
      */
     public void shutdown() {
         isRunning = false;
+    }
+
+    public boolean containsPlayerID(int id) {
+        for (Map.Entry<Byte, Player> player : players.entrySet()) {
+            if (player.getValue().getUniqueID() == id) {
+                return true;
+            }
+        }
+        return false;
     }
 }

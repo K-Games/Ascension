@@ -24,6 +24,8 @@ public class Player extends Thread {
 
     private final byte key;
     private final LogicModule logic;
+    private int uniqueID = -1;
+    private String name = "";
     private double x, y, ySpeed, xSpeed;
     private boolean[] isMove = new boolean[4];
     private boolean isFalling = false, isJumping = false;
@@ -39,8 +41,8 @@ public class Player extends Thread {
     private final int port;
     private final PacketSender packetSender;
     private final GameMap map;
-    private double[] stats = new double[Globals.NUM_STATS];
-    
+    private double[] stats = new double[Globals.NUM_STATS], bonusStats = new double[Globals.NUM_STATS];
+
     private Rectangle2D.Double platBox = new Rectangle2D.Double(x - 47.5, y, 95D, 5D);
 
     /**
@@ -56,11 +58,6 @@ public class Player extends Thread {
      * @param l Reference to Logic module
      */
     public Player(PacketSender bc, LogicModule l, byte key, InetAddress address, int port, GameMap map, double x, double y) {
-        stats[Globals.STAT_POWER] = 0;
-        stats[Globals.STAT_DEFENSE] = 0;
-        stats[Globals.STAT_SPIRIT] = 0;
-        updateStats();
-
         packetSender = bc;
         logic = l;
         this.key = key;
@@ -269,14 +266,14 @@ public class Player extends Thread {
     }
 
     private void updateStats() {
-        stats[Globals.STAT_ARMOR] = Globals.calcArmor(stats[Globals.STAT_DEFENSE]);
-        stats[Globals.STAT_REGEN] = Globals.calcRegen(stats[Globals.STAT_SPIRIT]);
-        stats[Globals.STAT_MAXHP] = Globals.calcMaxHP(stats[Globals.STAT_DEFENSE]);
+        stats[Globals.STAT_ARMOR] = Globals.calcArmor((int) (stats[Globals.STAT_DEFENSE] + bonusStats[Globals.STAT_DEFENSE]));
+        stats[Globals.STAT_REGEN] = Globals.calcRegen((int) (stats[Globals.STAT_SPIRIT] + bonusStats[Globals.STAT_SPIRIT]));
+        stats[Globals.STAT_MAXHP] = Globals.calcMaxHP((int) (stats[Globals.STAT_DEFENSE] + bonusStats[Globals.STAT_DEFENSE]));
         stats[Globals.STAT_MINHP] = stats[Globals.STAT_MAXHP];
-        stats[Globals.STAT_MINDMG] = Globals.calcMinDmg(stats[Globals.STAT_POWER]);
-        stats[Globals.STAT_MAXDMG] = Globals.calcMaxDmg(stats[Globals.STAT_POWER]);
-        stats[Globals.STAT_CRITCHANCE] = Globals.calcCritChance(stats[Globals.STAT_SPIRIT]);
-        stats[Globals.STAT_CRITDMG] = Globals.calcCritDmg(stats[Globals.STAT_SPIRIT]);
+        stats[Globals.STAT_MINDMG] = Globals.calcMinDmg((int) (stats[Globals.STAT_POWER] + bonusStats[Globals.STAT_POWER]));
+        stats[Globals.STAT_MAXDMG] = Globals.calcMaxDmg((int) (stats[Globals.STAT_POWER] + bonusStats[Globals.STAT_POWER]));
+        stats[Globals.STAT_CRITCHANCE] = Globals.calcCritChance((int) (stats[Globals.STAT_SPIRIT] + bonusStats[Globals.STAT_SPIRIT]));
+        stats[Globals.STAT_CRITDMG] = Globals.calcCritDmg((int) (stats[Globals.STAT_SPIRIT] + bonusStats[Globals.STAT_SPIRIT]));
     }
 
     /**
@@ -540,12 +537,45 @@ public class Player extends Thread {
      * </p>
      */
     public void sendState() {
-        byte[] bytes = new byte[Globals.PACKET_BYTE *4];
+        byte[] bytes = new byte[Globals.PACKET_BYTE * 4];
         bytes[0] = Globals.DATA_SET_PLAYER_STATE;
         bytes[1] = key;
         bytes[2] = playerState;
         bytes[3] = frame;
         packetSender.sendAll(bytes, logic.getRoom());
         updateState = false;
+    }
+
+    public void setUniqueID(int id) {
+        uniqueID = id;
+    }
+
+    public int getUniqueID() {
+        return uniqueID;
+    }
+
+    public void setPlayerName(String s) {
+        name = s;
+    }
+
+    public String getPlayerName() {
+        return name;
+    }
+
+    public void setStat(byte stat, double amount) {
+        stats[stat] = amount;
+        updateStats();
+    }
+
+    public double[] getStats() {
+        return stats;
+    }
+
+    public void setBonusStat(byte stat, double amount) {
+        bonusStats[stat] = amount;
+    }
+
+    public double[] getBonusStats() {
+        return bonusStats;
     }
 }

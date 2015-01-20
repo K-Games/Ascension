@@ -30,7 +30,8 @@ public class Globals {
     public final static int SERVER_PORT = 25565;
     public final static byte SERVER_MAX_PLAYERS = 30;
     public final static byte SERVER_ROOMS = 1;
-
+    public final static byte MAX_NAME_LENGTH = 15;
+    
     public final static double LOGIC_TICKS_PER_SEC = 100.0;
     public final static double LOGIC_UPDATE = 1000000000 / LOGIC_TICKS_PER_SEC;
 

@@ -5,6 +5,7 @@ import blockfighter.server.LogicModule;
 import blockfighter.server.entities.player.Player;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 /**
@@ -78,13 +79,61 @@ public class PacketHandler extends Thread {
 
     private void receiveLogin(byte[] data, byte room, InetAddress address, int port) {
         Globals.log("DATA_LOGIN", address + ":" + port + " Room: " + room, Globals.LOG_TYPE_DATA, true);
+        byte[] temp = new byte[4];
+        System.arraycopy(data, 17, temp, 0, temp.length);
+        int id = Globals.bytesToInt(temp);
+
+        if (logic[room].containsPlayerID(id)) {
+            return;
+        }
+
         byte freeKey = logic[room].getNextPlayerKey();
 
         if (freeKey == -1) {
             return;
         }
         Player newPlayer = new Player(packetSender, logic[room], freeKey, address, port, logic[room].getMap(), Math.random() * 1180.0 + 100, 0);
+
+        temp = new byte[Globals.MAX_NAME_LENGTH];
+        System.arraycopy(data, 2, temp, 0, temp.length);
+        newPlayer.setPlayerName(new String(temp, StandardCharsets.UTF_8).trim());
+
+        temp = new byte[4];
+        System.arraycopy(data, 17, temp, 0, temp.length);
+        newPlayer.setUniqueID(Globals.bytesToInt(temp));
+
+        System.arraycopy(data, 21, temp, 0, temp.length);
+        newPlayer.setStat(Globals.STAT_LEVEL, Globals.bytesToInt(temp));
+        System.arraycopy(data, 25, temp, 0, temp.length);
+        newPlayer.setStat(Globals.STAT_POWER, Globals.bytesToInt(temp));
+        System.arraycopy(data, 29, temp, 0, temp.length);
+        newPlayer.setStat(Globals.STAT_DEFENSE, Globals.bytesToInt(temp));
+        System.arraycopy(data, 33, temp, 0, temp.length);
+        newPlayer.setStat(Globals.STAT_SPIRIT, Globals.bytesToInt(temp));
+
+        System.arraycopy(data, 37, temp, 0, temp.length);
+        newPlayer.setBonusStat(Globals.STAT_ARMOR, Globals.bytesToInt(temp));
+        System.arraycopy(data, 41, temp, 0, temp.length);
+        newPlayer.setBonusStat(Globals.STAT_REGEN, Globals.bytesToInt(temp) / 10D);
+        System.arraycopy(data, 45, temp, 0, temp.length);
+        newPlayer.setBonusStat(Globals.STAT_CRITDMG, Globals.bytesToInt(temp) / 10000D);
+        System.arraycopy(data, 49, temp, 0, temp.length);
+        newPlayer.setBonusStat(Globals.STAT_CRITCHANCE, Globals.bytesToInt(temp) / 10000D);
+        
+        System.out.println(newPlayer.getPlayerName());
+        System.out.println(newPlayer.getUniqueID());
+        double[] stats = newPlayer.getStats();
+        System.out.println(stats[Globals.STAT_LEVEL]);
+        System.out.println(stats[Globals.STAT_POWER]);
+        System.out.println(stats[Globals.STAT_DEFENSE]);
+        System.out.println(stats[Globals.STAT_SPIRIT]);
+        stats = newPlayer.getBonusStats();
+        System.out.println(stats[Globals.STAT_ARMOR]);
+        System.out.println(stats[Globals.STAT_REGEN]);
+        System.out.println(stats[Globals.STAT_CRITDMG]);
+        System.out.println(stats[Globals.STAT_CRITCHANCE]);
         logic[room].queueAddPlayer(newPlayer);
+
         byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
         bytes[0] = Globals.DATA_LOGIN;
         bytes[1] = freeKey;
