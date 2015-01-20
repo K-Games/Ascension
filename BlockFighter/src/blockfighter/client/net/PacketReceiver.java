@@ -43,6 +43,7 @@ public class PacketReceiver extends Thread {
         } catch (IOException ex) {
         }
         System.out.println("Receiver End");
+        logic.returnMenu();
     }
 
 }

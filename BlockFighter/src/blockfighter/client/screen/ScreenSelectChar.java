@@ -60,8 +60,6 @@ public class ScreenSelectChar extends ScreenMenu {
         BufferedImage bg = Globals.MENU_BG[0];
         g.drawImage(bg, 0, 0, null);
 
-        super.draw(g);
-
         BufferedImage button = Globals.MENU_BUTTON[Globals.BUTTON_SELECTCHAR];
         g.drawImage(button, 20, 60, null);
         g.drawImage(button, 440, 60, null);
@@ -85,7 +83,7 @@ public class ScreenSelectChar extends ScreenMenu {
                 g.drawString("Character", 150 + 420 * j, 360);
 
             } else {
-                double[] stats = charsData[j].getBaseStats();
+                double[] stats = charsData[j].getBaseStats(), bonus = charsData[j].getBonusStats();
                 g.setFont(Globals.ARIAL_30PT);
                 drawStringOutline(g, charsData[j].getPlayerName(), 120 + 420 * j, 380, 2);
                 g.setColor(Color.WHITE);
@@ -93,15 +91,15 @@ public class ScreenSelectChar extends ScreenMenu {
 
                 g.setFont(Globals.ARIAL_24PT);
                 drawStringOutline(g, "Level: " + (int) stats[Globals.STAT_LEVEL], 120 + 420 * j, 415, 2);
-                drawStringOutline(g, "Power: " + (int) stats[Globals.STAT_POWER], 120 + 420 * j, 445, 2);
-                drawStringOutline(g, "Defense: " + (int) stats[Globals.STAT_DEFENSE], 120 + 420 * j, 475, 2);
-                drawStringOutline(g, "Spirit: " + (int) stats[Globals.STAT_SPIRIT], 120 + 420 * j, 505, 2);
+                drawStringOutline(g, "Power: " + (int) stats[Globals.STAT_POWER] + " + " + (int) bonus[Globals.STAT_POWER], 120 + 420 * j, 445, 2);
+                drawStringOutline(g, "Defense: " + (int) stats[Globals.STAT_DEFENSE] + " + " + (int) bonus[Globals.STAT_DEFENSE], 120 + 420 * j, 475, 2);
+                drawStringOutline(g, "Spirit: " + (int) stats[Globals.STAT_SPIRIT] + " + " + (int) bonus[Globals.STAT_SPIRIT], 120 + 420 * j, 505, 2);
 
                 g.setColor(Color.WHITE);
                 g.drawString("Level: " + (int) stats[Globals.STAT_LEVEL], 120 + 420 * j, 415);
-                g.drawString("Power: " + (int) stats[Globals.STAT_POWER], 120 + 420 * j, 445);
-                g.drawString("Defense: " + (int) stats[Globals.STAT_DEFENSE], 120 + 420 * j, 475);
-                g.drawString("Spirit: " + (int) stats[Globals.STAT_SPIRIT], 120 + 420 * j, 505);
+                g.drawString("Power: " + (int) stats[Globals.STAT_POWER] + " + " + (int) bonus[Globals.STAT_POWER], 120 + 420 * j, 445);
+                g.drawString("Defense: " + (int) stats[Globals.STAT_DEFENSE] + " + " + (int) bonus[Globals.STAT_DEFENSE], 120 + 420 * j, 475);
+                g.drawString("Spirit: " + (int) stats[Globals.STAT_SPIRIT] + " + " + (int) bonus[Globals.STAT_SPIRIT], 120 + 420 * j, 505);
                 g.drawString("ID: " + charsData[j].getUniqueID(), 120 + 420 * j, 535);
             }
         }
@@ -117,7 +115,7 @@ public class ScreenSelectChar extends ScreenMenu {
             g.setColor(Color.WHITE);
             g.drawString("Enter New Character Name", 460, 250);
 
-            button = Globals.MENU_BUTTON[Globals.BUTTON_OKAY];
+            button = Globals.MENU_BUTTON[Globals.BUTTON_BIGRECT];
             g.drawImage(button, 401, 400, null);
             drawStringOutline(g, "Create", 460, 465, 2);
             g.setColor(Color.WHITE);
@@ -133,6 +131,7 @@ public class ScreenSelectChar extends ScreenMenu {
             g.setColor(Color.WHITE);
             g.drawString(CREATE_ERR, 450, 550);
         }
+        super.draw(g);
     }
 
     @Override
@@ -192,7 +191,11 @@ public class ScreenSelectChar extends ScreenMenu {
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        if (!createPrompt) {
+        if (e.getButton() == MouseEvent.BUTTON1) {
+            if (createPrompt) {
+                mouseReleased_Create(e);
+                return;
+            }
             for (byte i = 0; i < selectBox.length; i++) {
                 if (selectBox[i].contains(e.getPoint())) {
                     if (charsData[i] == null) {
@@ -213,8 +216,6 @@ public class ScreenSelectChar extends ScreenMenu {
                     }
                 }
             }
-        } else {
-            mouseReleased_Create(e);
         }
     }
 

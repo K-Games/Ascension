@@ -24,7 +24,7 @@ public class SaveData {
     private int uniqueID;
     private String name;
     private byte saveNum;
-    
+
     private ItemEquip[][] inventory = new ItemEquip[Globals.NUM_ITEM_TYPES][];
 
     private ItemUpgrade[] upgrades = new ItemUpgrade[100];
@@ -35,24 +35,35 @@ public class SaveData {
         name = n;
         Random rng = new Random();
         uniqueID = rng.nextInt(Integer.MAX_VALUE);
-        baseStats[Globals.STAT_LEVEL] = 100;
+        baseStats[Globals.STAT_LEVEL] = 99;
         baseStats[Globals.STAT_POWER] = 0;
         baseStats[Globals.STAT_DEFENSE] = 0;
         baseStats[Globals.STAT_SPIRIT] = 0;
+        baseStats[Globals.STAT_EXP] = 1546730;
         for (int i = 0; i < inventory.length; i++) {
             inventory[i] = new ItemEquip[100];
         }
 
-        for (int i = 0; i < 11; i++) {
-            double[] stats = new double[Globals.NUM_STATS];
-            stats[Globals.STAT_LEVEL] = 100;
-            stats[Globals.STAT_POWER] = 112;
-            stats[Globals.STAT_DEFENSE] = 112;
-            stats[Globals.STAT_SPIRIT] = 112;
-            stats[Globals.STAT_REGEN] = 300;
-            stats[Globals.STAT_CRITDMG] = 0.90;
-            stats[Globals.STAT_CRITCHANCE] = 0.20;
-            equipment[i] = new ItemEquip(stats, 20, 1, 100001);
+        for (int i = 0; i < upgrades.length; i++) {
+            upgrades[i] = new ItemUpgrade(1, 100);
+        }
+
+        for (int i = 0; i < equipment.length; i++) {
+            double[] bs = new double[Globals.NUM_STATS];
+            bs[Globals.STAT_LEVEL] = 100;
+            bs[Globals.STAT_POWER] = 100D * .9 + new Random().nextInt(45) - 25;
+            bs[Globals.STAT_DEFENSE] = 100D * .9 + new Random().nextInt(45) - 25;
+            bs[Globals.STAT_SPIRIT] = 100D * .9 + new Random().nextInt(45) - 25;
+            bs[Globals.STAT_ARMOR] = new Random().nextInt((int) (100 * ItemEquip.UPGRADE_ARMOR));
+            bs[Globals.STAT_CRITCHANCE] = new Random().nextInt(500) / 10000D;
+            bs[Globals.STAT_CRITDMG] = new Random().nextInt(100) / 100D;
+            bs[Globals.STAT_REGEN] = new Random().nextInt(1000) / 100D;
+
+            if (i == 10) {
+                equipment[i] = new ItemEquip(bs, i * 2, i * .1, 100001);
+            } else {
+                equipment[i] = new ItemEquip(bs, i * 2, i * .1, (i + 1) * 100000);
+            }
         }
     }
 
@@ -103,6 +114,7 @@ public class SaveData {
                 continue;
             }
             byte[] temp;
+
             temp = Globals.intToByte(item.getItemCode());
             System.arraycopy(temp, 0, data, pos, temp.length);
             pos += temp.length;
@@ -217,7 +229,7 @@ public class SaveData {
             level = Globals.bytesToInt(temp);
             pos += temp.length;
 
-            if (!ItemEquip.isValidItem(itemCode)) {
+            if (!ItemUpgrade.isValidItem(itemCode)) {
                 e[i] = null;
             } else {
                 e[i] = new ItemUpgrade(itemCode, level);
@@ -320,19 +332,20 @@ public class SaveData {
 
         System.arraycopy(baseStats, 0, totalStats, 0, baseStats.length);
 
-        totalStats[Globals.STAT_POWER] = baseStats[Globals.STAT_POWER] + bonusStats[Globals.STAT_POWER];
-        totalStats[Globals.STAT_DEFENSE] = baseStats[Globals.STAT_DEFENSE] + bonusStats[Globals.STAT_DEFENSE];
-        totalStats[Globals.STAT_SPIRIT] = baseStats[Globals.STAT_SPIRIT] + bonusStats[Globals.STAT_SPIRIT];
+        totalStats[Globals.STAT_POWER] = (int) (baseStats[Globals.STAT_POWER] + bonusStats[Globals.STAT_POWER]);
+        totalStats[Globals.STAT_DEFENSE] = (int) (baseStats[Globals.STAT_DEFENSE] + bonusStats[Globals.STAT_DEFENSE]);
+        totalStats[Globals.STAT_SPIRIT] = (int) (baseStats[Globals.STAT_SPIRIT] + bonusStats[Globals.STAT_SPIRIT]);
 
-        totalStats[Globals.STAT_MAXHP] = Globals.calcMaxHP(baseStats[Globals.STAT_DEFENSE] + bonusStats[Globals.STAT_DEFENSE]);
+        totalStats[Globals.STAT_MAXHP] = Globals.calcMaxHP(totalStats[Globals.STAT_DEFENSE]);
         totalStats[Globals.STAT_MINHP] = baseStats[Globals.STAT_MAXHP];
-        totalStats[Globals.STAT_MINDMG] = Globals.calcMinDmg(baseStats[Globals.STAT_POWER] + bonusStats[Globals.STAT_POWER]);
-        totalStats[Globals.STAT_MAXDMG] = Globals.calcMaxDmg(baseStats[Globals.STAT_POWER] + bonusStats[Globals.STAT_POWER]);
 
-        baseStats[Globals.STAT_ARMOR] = Globals.calcArmor(baseStats[Globals.STAT_DEFENSE] + bonusStats[Globals.STAT_DEFENSE]);
-        baseStats[Globals.STAT_REGEN] = Globals.calcRegen(baseStats[Globals.STAT_SPIRIT] + bonusStats[Globals.STAT_SPIRIT]);
-        baseStats[Globals.STAT_CRITCHANCE] = Globals.calcCritChance(baseStats[Globals.STAT_SPIRIT] + bonusStats[Globals.STAT_SPIRIT]);
-        baseStats[Globals.STAT_CRITDMG] = Globals.calcCritDmg(baseStats[Globals.STAT_SPIRIT] + bonusStats[Globals.STAT_SPIRIT]);
+        totalStats[Globals.STAT_MINDMG] = Globals.calcMinDmg(totalStats[Globals.STAT_POWER]);
+        totalStats[Globals.STAT_MAXDMG] = Globals.calcMaxDmg(totalStats[Globals.STAT_POWER]);
+
+        baseStats[Globals.STAT_ARMOR] = Globals.calcArmor(totalStats[Globals.STAT_DEFENSE]);
+        baseStats[Globals.STAT_REGEN] = Globals.calcRegen(totalStats[Globals.STAT_SPIRIT]);
+        baseStats[Globals.STAT_CRITCHANCE] = Globals.calcCritChance(totalStats[Globals.STAT_SPIRIT]);
+        baseStats[Globals.STAT_CRITDMG] = Globals.calcCritDmg(totalStats[Globals.STAT_SPIRIT]);
 
         totalStats[Globals.STAT_ARMOR] = baseStats[Globals.STAT_ARMOR] + bonusStats[Globals.STAT_ARMOR];
         totalStats[Globals.STAT_REGEN] = baseStats[Globals.STAT_REGEN] + bonusStats[Globals.STAT_REGEN];
@@ -348,6 +361,10 @@ public class SaveData {
         return equipment;
     }
 
+    public ItemUpgrade[] getUpgrades() {
+        return upgrades;
+    }
+
     public double[] getBonusStats() {
         return bonusStats;
     }
@@ -361,5 +378,76 @@ public class SaveData {
 
         calcStats();
         saveData(saveNum, this);
+    }
+
+    public void unequipItem(int type) {
+        boolean offhand = false;
+        if (type == Globals.ITEM_OFFHAND) {
+            type = Globals.ITEM_WEAPON;
+            offhand = true;
+        }
+
+        for (int i = 0; i < inventory[type].length; i++) {
+            if (inventory[type][i] == null) {
+                inventory[type][i] = equipment[(offhand) ? Globals.ITEM_OFFHAND : type];
+                equipment[(offhand) ? Globals.ITEM_OFFHAND : type] = null;
+                break;
+            }
+        }
+        calcStats();
+    }
+
+    public void equipItem(int slot, int inventorySlot) {
+        int itemType = slot;
+        if (slot == Globals.ITEM_OFFHAND) {
+            itemType = Globals.ITEM_WEAPON;
+        }
+
+        ItemEquip temp = inventory[itemType][inventorySlot];
+        if (equipment[slot] == null) {
+            inventory[itemType][inventorySlot] = null;
+        } else {
+            inventory[itemType][inventorySlot] = equipment[slot];
+        }
+        equipment[slot] = temp;
+        calcStats();
+    }
+
+    public void destroyItem(int type, int slot) {
+        inventory[type][slot] = null;
+    }
+
+    public void destroyItem(int slot) {
+        upgrades[slot] = null;
+    }
+
+    public void destroyAll(int type) {
+        for (int i = 0; i < inventory[type].length; i++) {
+            inventory[type][i] = null;
+        }
+    }
+    
+    public void destroyAllUpgrade() {
+        for (int i = 0; i < upgrades.length; i++) {
+            upgrades[i] = null;
+        }
+    }
+    
+    public void addItem(int type, ItemEquip e) {
+        for (int i = 0; i < inventory[type].length; i++) {
+            if (inventory[type][i] == null) {
+                inventory[type][i] = e;
+                break;
+            }
+        }
+    }
+
+    public void addItem(int type, ItemUpgrade e) {
+        for (int i = 0; i < upgrades.length; i++) {
+            if (upgrades[i] == null) {
+                upgrades[i] = e;
+                break;
+            }
+        }
     }
 }

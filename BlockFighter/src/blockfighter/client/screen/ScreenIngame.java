@@ -74,9 +74,9 @@ public class ScreenIngame extends Screen {
 
         if (now - lastUpdateTime >= Globals.LOGIC_UPDATE) {
             sender.sendMove(logic.getSelectedRoom(), myKey, Globals.UP, keyDownMove[Globals.UP]);
-            sender.sendMove(logic.getSelectedRoom(),myKey, Globals.DOWN, keyDownMove[Globals.DOWN]);
-            sender.sendMove(logic.getSelectedRoom(),myKey, Globals.LEFT, keyDownMove[Globals.LEFT]);
-            sender.sendMove(logic.getSelectedRoom(),myKey, Globals.RIGHT, keyDownMove[Globals.RIGHT]);
+            sender.sendMove(logic.getSelectedRoom(), myKey, Globals.DOWN, keyDownMove[Globals.DOWN]);
+            sender.sendMove(logic.getSelectedRoom(), myKey, Globals.LEFT, keyDownMove[Globals.LEFT]);
+            sender.sendMove(logic.getSelectedRoom(), myKey, Globals.RIGHT, keyDownMove[Globals.RIGHT]);
 
             updateParticles(particles);
             //updatePlayers();
@@ -109,7 +109,7 @@ public class ScreenIngame extends Screen {
         for (Map.Entry<Byte, Player> pEntry : players.entrySet()) {
             threadPool.execute(pEntry.getValue());
         }
-        for (Map.Entry<Integer, Particle> pEntry : particles.entrySet()) {
+        for (Map.Entry<Byte, Player> pEntry : players.entrySet()) {
             try {
                 pEntry.getValue().join();
             } catch (InterruptedException ex) {

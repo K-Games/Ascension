@@ -7,12 +7,13 @@ import blockfighter.client.entities.items.ItemEquip;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-import java.text.DecimalFormat;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -22,12 +23,16 @@ public class ScreenInventory extends ScreenMenu {
 
     private SaveData c;
     private byte selectedTab = Globals.ITEM_WEAPON;
-    private Rectangle2D.Double[] inventSlots = new Rectangle2D.Double[100];
-    private Rectangle2D.Double[] equipSlots = new Rectangle2D.Double[Globals.NUM_EQUIP_SLOTS];
-    private Rectangle2D.Double[] tabs = new Rectangle2D.Double[Globals.NUM_ITEM_TYPES];
+    private boolean destroy = false, destroyConfirm = false;
+    private Rectangle2D.Double[] inventSlots = new Rectangle2D.Double[100],
+            equipSlots = new Rectangle2D.Double[Globals.NUM_EQUIP_SLOTS],
+            tabs = new Rectangle2D.Double[Globals.NUM_ITEM_TYPES],
+            destroyBox = new Rectangle2D.Double[2],
+            promptBox = new Rectangle2D.Double[2];
+
+    private Point mousePos;
 
     private int drawItem = -1, drawEquip = -1;
-    DecimalFormat df = new DecimalFormat("0.00");
     private int charFrame = 0;
     private double nextFrameTime = 0;
 
@@ -35,11 +40,11 @@ public class ScreenInventory extends ScreenMenu {
         super(l);
         c = l.getSelectedChar();
         for (int i = 0; i < inventSlots.length; i++) {
-            inventSlots[i] = new Rectangle2D.Double(270 + (i * 62) - (i / 10 * 620), 50 + i / 10 * 62, 60, 60);
+            inventSlots[i] = new Rectangle2D.Double(270 + (i * 62) - (i / 10 * 620), 30 + i / 10 * 62, 60, 60);
         }
 
         for (int i = 0; i < tabs.length; i++) {
-            tabs[i] = new Rectangle2D.Double(230, 50 + i * 61, 30, 60);
+            tabs[i] = new Rectangle2D.Double(230, 30 + i * 61, 30, 60);
         }
 
         equipSlots[Globals.ITEM_AMULET] = new Rectangle2D.Double(1140, 40, 60, 60);
@@ -53,20 +58,35 @@ public class ScreenInventory extends ScreenMenu {
         equipSlots[Globals.ITEM_WEAPON] = new Rectangle2D.Double(980, 180, 60, 60);
         equipSlots[Globals.ITEM_PANTS] = new Rectangle2D.Double(1025, 320, 60, 60);
         equipSlots[Globals.ITEM_SHOE] = new Rectangle2D.Double(1095, 320, 60, 60);
+
+        for (int i = 0; i < destroyBox.length; i++) {
+            destroyBox[i] = new Rectangle2D.Double(520 + i * 185, 655, 180, 30);
+        }
+        promptBox[0] = new Rectangle2D.Double(401, 400, 214, 112);
+        promptBox[1] = new Rectangle2D.Double(665, 400, 214, 112);
     }
 
     @Override
     public void update() {
-        super.update();
-        nextFrameTime -= Globals.LOGIC_UPDATE;
-        if (nextFrameTime <= 0) {
-            if (charFrame >= 8) {
-                charFrame = 0;
-            } else {
-                charFrame++;
+        double now = System.nanoTime(); //Get time now
+        if (now - lastUpdateTime >= Globals.LOGIC_UPDATE) {
+            updateParticles(particles);
+            nextFrameTime -= Globals.LOGIC_UPDATE;
+            if (nextFrameTime <= 0) {
+                if (charFrame >= 8) {
+                    charFrame = 0;
+                } else {
+                    charFrame++;
+                }
+                nextFrameTime = 150000000;
             }
-            nextFrameTime = 150000000;
+            lastUpdateTime = now;
         }
+        while (now - lastUpdateTime < Globals.LOGIC_UPDATE) {
+            Thread.yield();
+            now = System.nanoTime();
+        }
+
     }
 
     @Override
@@ -74,59 +94,106 @@ public class ScreenInventory extends ScreenMenu {
         BufferedImage bg = Globals.MENU_BG[2];
         g.drawImage(bg, 0, 0, null);
 
-        super.draw(g);
-        drawMenuButton(g);
-
         Graphics2D g2d = (Graphics2D) g;
         g2d.setRenderingHint(
                 RenderingHints.KEY_TEXT_ANTIALIASING,
                 RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
-        
+
+        BufferedImage button = Globals.MENU_BUTTON[Globals.BUTTON_SMALLRECT];
+        g.drawImage(button, (int) destroyBox[0].x, (int) destroyBox[0].y, null);
+        g.drawImage(button, (int) destroyBox[1].x, (int) destroyBox[1].y, null);
+        g.setFont(Globals.ARIAL_18PT);
+        drawStringOutline(g, "Destroy Item", 560, 682, 1);
+        drawStringOutline(g, "Destroy All", 750, 682, 1);
+        g.setColor(Color.WHITE);
+        g.drawString("Destroy Item", 560, 682);
+        g.drawString("Destroy All", 750, 682);
+
         drawStats(g);
         drawSlots(g);
-        
+        drawItemTabs(g);
+        drawItemInfo(g);
+        drawDestroyConfirm(g);
+        if (destroy) {
+            button = Globals.MENU_ITEMDELETE[0];
+            g.drawImage(button, mousePos.x + 10, mousePos.y + 15, null);
+        }
+        drawMenuButton(g);
+        super.draw(g);
+    }
+
+    private void drawDestroyConfirm(Graphics g) {
+        if (destroyConfirm) {
+            BufferedImage window = Globals.MENU_WINDOW[Globals.WINDOW_DESTROYCONFIRM];
+            g.drawImage(window, 265, 135, null);
+
+            g.setFont(Globals.ARIAL_30PT);
+            drawStringOutline(g, "Are you sure?", 540, 300, 2);
+            g.setColor(Color.WHITE);
+            g.drawString("Are you sure?", 540, 300);
+
+            BufferedImage button = Globals.MENU_BUTTON[Globals.BUTTON_BIGRECT];
+            g.drawImage(button, 401, 400, null);
+            drawStringOutline(g, "Confirm", 455, 465, 2);
+            g.setColor(Color.WHITE);
+            g.drawString("Confirm", 455, 465);
+
+            g.drawImage(button, 665, 400, null);
+            drawStringOutline(g, "Cancel", 725, 465, 2);
+            g.setColor(Color.WHITE);
+            g.drawString("Cancel", 725, 465);
+        }
+    }
+
+    private void drawItemTabs(Graphics g) {
         for (int i = 0; i < tabs.length; i++) {
             BufferedImage button = Globals.MENU_BUTTON[i + 5];
-            g.drawImage(button, (int) tabs[i].x, (int) tabs[i].y, null);//Weapon
+            g.drawImage(button, (int) tabs[i].x, (int) tabs[i].y, null);
         }
-        g.drawImage(Globals.MENU_TABPOINTER[0], 260,(int)tabs[selectedTab].y,null);
-        
+        //Tab pointer
+        g.drawImage(Globals.MENU_TABPOINTER[0], 260, (int) tabs[selectedTab].y, null);
+
+    }
+
+    private void drawItemInfo(Graphics g) {
+        if (destroyConfirm) {
+            return;
+        }
         if (drawItem > -1) {
             drawItemInfo(g, inventSlots[drawItem], c.getInventory(selectedTab)[drawItem]);
-        }
-        if (drawEquip > -1) {
+        } else if (drawEquip > -1) {
             drawItemInfo(g, equipSlots[drawEquip], c.getEquip()[drawEquip]);
         }
     }
 
     private void drawStats(Graphics g) {
         g.setFont(Globals.ARIAL_15PT);
-        int statX = 440, statY = 935;
+        int statY = 440, statX = 935;
         double[] bs = c.getBaseStats(), bonus = c.getBonusStats(), total = c.getStats();
-        drawStringOutline(g, "Level: " + (int) bs[Globals.STAT_LEVEL], statY, statX, 1);
-        drawStringOutline(g, "Power: " + (int) bs[Globals.STAT_POWER] + " + " + (int) bonus[Globals.STAT_POWER], statY, statX + 25, 1);
-        drawStringOutline(g, "Defense: " + (int) bs[Globals.STAT_DEFENSE] + " + " + (int) bonus[Globals.STAT_DEFENSE], statY, statX + 50, 1);
-        drawStringOutline(g, "Spirit: " + (int) bs[Globals.STAT_SPIRIT] + " + " + (int) bonus[Globals.STAT_SPIRIT], statY, statX + 75, 1);
+        drawStringOutline(g, "Level: " + (int) bs[Globals.STAT_LEVEL], statX, statY, 1);
+        drawStringOutline(g, "Power: " + (int) bs[Globals.STAT_POWER] + " + " + (int) bonus[Globals.STAT_POWER], statX, statY + 25, 1);
+        drawStringOutline(g, "Defense: " + (int) bs[Globals.STAT_DEFENSE] + " + " + (int) bonus[Globals.STAT_DEFENSE], statX, statY + 50, 1);
+        drawStringOutline(g, "Spirit: " + (int) bs[Globals.STAT_SPIRIT] + " + " + (int) bonus[Globals.STAT_SPIRIT], statX, statY + 75, 1);
 
-        drawStringOutline(g, "HP: " + (int) total[Globals.STAT_MAXHP], statY, statX + 105, 1);
-        drawStringOutline(g, "Damage: " + (int) total[Globals.STAT_MINDMG] + " - " + (int) total[Globals.STAT_MAXDMG], statY, statX + 130, 1);
-        drawStringOutline(g, "Armor: " + (int) bs[Globals.STAT_ARMOR] + " + " + (int) bonus[Globals.STAT_ARMOR], statY, statX + 155, 1);
-        drawStringOutline(g, "Regen: " + df.format(bs[Globals.STAT_REGEN]) + " + " + df.format((int) bonus[Globals.STAT_REGEN]) + " HP/Sec", statY, statX + 180, 1);
-        drawStringOutline(g, "Critical Hit Chance: " + df.format(bs[Globals.STAT_CRITCHANCE] * 100) + " + " + df.format(bonus[Globals.STAT_CRITCHANCE] * 100) + "%", statY, statX + 205, 1);
-        drawStringOutline(g, "Critical Hit Damage: " + df.format(bs[Globals.STAT_CRITDMG] * 100) + " + " + df.format(bonus[Globals.STAT_CRITDMG] * 100) + "%", statY, statX + 230, 1);
+        drawStringOutline(g, "HP: " + (int) total[Globals.STAT_MAXHP], statX, statY + 105, 1);
+        drawStringOutline(g, "Damage: " + (int) total[Globals.STAT_MINDMG] + " - " + (int) total[Globals.STAT_MAXDMG], statX, statY + 130, 1);
+        drawStringOutline(g, "Armor: " + (int) bs[Globals.STAT_ARMOR] + " + " + (int) bonus[Globals.STAT_ARMOR], statX, statY + 155, 1);
+        drawStringOutline(g, "Regen: " + df.format(bs[Globals.STAT_REGEN]) + " + " + df.format(bonus[Globals.STAT_REGEN]) + " HP/Sec", statX, statY + 180, 1);
+        drawStringOutline(g, "Critical Hit Chance: " + df.format(bs[Globals.STAT_CRITCHANCE] * 100) + " + " + df.format(bonus[Globals.STAT_CRITCHANCE] * 100) + "%", statX, statY + 205, 1);
+        drawStringOutline(g, "Critical Hit Damage: " + df.format(bs[Globals.STAT_CRITDMG] * 100) + " + " + df.format(bonus[Globals.STAT_CRITDMG] * 100) + "%", statX, statY + 230, 1);
 
         g.setColor(Color.WHITE);
-        g.drawString("Level: " + (int) bs[Globals.STAT_LEVEL], statY, statX);
-        g.drawString("Power: " + (int) bs[Globals.STAT_POWER] + " + " + (int) bonus[Globals.STAT_POWER], statY, statX + 25);
-        g.drawString("Defense: " + (int) bs[Globals.STAT_DEFENSE] + " + " + (int) bonus[Globals.STAT_DEFENSE], statY, statX + 50);
-        g.drawString("Spirit: " + (int) bs[Globals.STAT_SPIRIT] + " + " + (int) bonus[Globals.STAT_SPIRIT], statY, statX + 75);
+        g.drawString("Level: " + (int) bs[Globals.STAT_LEVEL], statX, statY);
+        g.drawString("Power: " + (int) bs[Globals.STAT_POWER] + " + " + (int) bonus[Globals.STAT_POWER], statX, statY + 25);
+        g.drawString("Defense: " + (int) bs[Globals.STAT_DEFENSE] + " + " + (int) bonus[Globals.STAT_DEFENSE], statX, statY + 50);
+        g.drawString("Spirit: " + (int) bs[Globals.STAT_SPIRIT] + " + " + (int) bonus[Globals.STAT_SPIRIT], statX, statY + 75);
 
-        g.drawString("HP: " + (int) total[Globals.STAT_MAXHP], statY, statX + 105);
-        g.drawString("Damage: " + (int) total[Globals.STAT_MINDMG] + " - " + (int) total[Globals.STAT_MAXDMG], statY, statX + 130);
-        g.drawString("Armor: " + (int) bs[Globals.STAT_ARMOR] + " + " + (int) bonus[Globals.STAT_ARMOR], statY, statX + 155);
-        g.drawString("Regen: " + df.format(bs[Globals.STAT_REGEN]) + " + " + df.format((int) bonus[Globals.STAT_REGEN]) + " HP/Sec", statY, statX + 180);
-        g.drawString("Critical Hit Chance: " + df.format(bs[Globals.STAT_CRITCHANCE] * 100) + " + " + df.format(bonus[Globals.STAT_CRITCHANCE] * 100) + "%", statY, statX + 205);
-        g.drawString("Critical Hit Damage: " + df.format(bs[Globals.STAT_CRITDMG] * 100) + " + " + df.format(bonus[Globals.STAT_CRITDMG] * 100) + "%", statY, statX + 230);
+        g.drawString("HP: " + (int) total[Globals.STAT_MAXHP], statX, statY + 105);
+        g.drawString("Damage: " + (int) total[Globals.STAT_MINDMG] + " - " + (int) total[Globals.STAT_MAXDMG], statX, statY + 130);
+        g.drawString("Armor: " + (int) bs[Globals.STAT_ARMOR] + " + " + (int) bonus[Globals.STAT_ARMOR], statX, statY + 155);
+        g.drawString("Regen: " + df.format(bs[Globals.STAT_REGEN]) + " + " + df.format(bonus[Globals.STAT_REGEN]) + " HP/Sec", statX, statY + 180);
+        g.drawString("Critical Hit Chance: " + df.format(bs[Globals.STAT_CRITCHANCE] * 100) + " + " + df.format(bonus[Globals.STAT_CRITCHANCE] * 100) + "%", statX, statY + 205);
+        g.drawString("Critical Hit Damage: " + df.format(bs[Globals.STAT_CRITDMG] * 100) + " + " + df.format(bonus[Globals.STAT_CRITDMG] * 100) + "%", statX, statY + 230);
 
     }
 
@@ -140,12 +207,20 @@ public class ScreenInventory extends ScreenMenu {
             if (c.getInventory(selectedTab)[i] != null) {
                 c.getInventory(selectedTab)[i].draw(g, (int) inventSlots[i].x, (int) inventSlots[i].y);
             }
+            if (selectedTab == Globals.ITEM_WEAPON) {
+                g.setFont(Globals.ARIAL_15PT);
+                drawStringOutline(g, "Right Click to equip as Offhand", 280, 682, 1);
+                g.setColor(Color.WHITE);
+                g.drawString("Right Click to equip as Offhand", 280, 682);
+            }
         }
 
         //Equipment
         for (int i = 0; i < equipSlots.length; i++) {
             g.drawImage(button, (int) equipSlots[i].x, (int) equipSlots[i].y, null);
-            c.getEquip()[i].draw(g, (int) equipSlots[i].x, (int) equipSlots[i].y);
+            if (c.getEquip()[i] != null) {
+                c.getEquip()[i].draw(g, (int) equipSlots[i].x, (int) equipSlots[i].y);
+            }
             String s = "";
             switch (i) {
                 case Globals.ITEM_AMULET:
@@ -202,6 +277,9 @@ public class ScreenInventory extends ScreenMenu {
     }
 
     private void drawItemInfo(Graphics g, Rectangle2D.Double box, ItemEquip e) {
+        if (e == null) {
+            return;
+        }
         g.setColor(new Color(30, 30, 30, 185));
         int y = (int) box.y;
         int x = (int) box.x;
@@ -232,27 +310,45 @@ public class ScreenInventory extends ScreenMenu {
         g.drawRect(x + 31, y + 1, 198, boxHeight - 2);
 
         g.setFont(Globals.ARIAL_15PT);
-        g.setColor(Color.WHITE);
+
+        String tier = "";
         switch (e.getTier()) {
             case ItemEquip.TIER_COMMON:
-                g.drawString("Common " + e.getItemName(), x + 40, y + 20);
+                g.setColor(Color.WHITE);
+                tier = "Common ";
                 break;
             case ItemEquip.TIER_UNCOMMON:
-                g.drawString("Uncommon " + e.getItemName(), x + 40, y + 20);
+                g.setColor(new Color(180, 0, 255));
+                tier = "Uncommon ";
                 break;
             case ItemEquip.TIER_RARE:
-                g.drawString("Rare " + e.getItemName(), x + 40, y + 20);
+                g.setColor(new Color(255, 225, 0));
+                tier = "Rare ";
                 break;
             case ItemEquip.TIER_RUNIC:
-                g.drawString("Runic " + e.getItemName(), x + 40, y + 20);
+                g.setColor(new Color(255, 130, 0));
+                tier = "Runic ";
                 break;
             case ItemEquip.TIER_LEGENDARY:
-                g.drawString("Legendary " + e.getItemName(), x + 40, y + 20);
+                g.setColor(new Color(205, 15, 0));
+                tier = "Legendary ";
                 break;
             case ItemEquip.TIER_ARCHAIC:
-                g.drawString("Archaic " + e.getItemName(), x + 40, y + 20);
+                g.setColor(new Color(0, 220, 0));
+                tier = "Archaic ";
+                break;
+            case ItemEquip.TIER_DIVINE:
+                g.setColor(new Color(0, 255, 160));
+                tier = "Divine ";
                 break;
         }
+
+        if (e.getUpgrades() > 0) {
+            g.drawString(tier + e.getItemName() + " +" + e.getUpgrades(), x + 40, y + 20);
+        } else {
+            g.drawString(tier + e.getItemName(), x + 40, y + 20);
+        }
+        g.setColor(Color.WHITE);
         g.drawString("Level: " + (int) e.getStats()[Globals.STAT_LEVEL], x + 40, y + 40);
         g.drawString("Power: " + (int) e.getStats()[Globals.STAT_POWER], x + 40, y + 60);
         g.drawString("Defense: " + (int) e.getStats()[Globals.STAT_DEFENSE], x + 40, y + 80);
@@ -288,7 +384,10 @@ public class ScreenInventory extends ScreenMenu {
 
     @Override
     public void keyReleased(KeyEvent e) {
-
+        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+            destroy = false;
+            destroyConfirm = false;
+        }
     }
 
     @Override
@@ -303,11 +402,76 @@ public class ScreenInventory extends ScreenMenu {
 
     @Override
     public void mouseReleased(MouseEvent e) {
+        if (destroyConfirm) {
+            mouseReleased_destroyConfirm(e);
+            return;
+        }
+
         super.mouseReleased(e);
-        for (byte i = 0; i < tabs.length; i++) {
-            if (tabs[i].contains(e.getPoint())) {
-                selectedTab = i;
-                break;
+        if (SwingUtilities.isLeftMouseButton(e)) {
+            for (byte i = 0; i < tabs.length; i++) {
+                if (tabs[i].contains(e.getPoint())) {
+                    selectedTab = i;
+                    destroy = false;
+                    return;
+                }
+            }
+
+            for (int i = 0; i < inventSlots.length; i++) {
+                if (inventSlots[i].contains(e.getPoint()) && c.getInventory(selectedTab)[i] != null) {
+                    if (!destroy) {
+                        c.equipItem(selectedTab, i);
+                    } else {
+                        c.destroyItem(selectedTab, i);
+                    }
+                    return;
+                }
+            }
+
+            for (int i = 0; !destroy && i < equipSlots.length; i++) {
+                if (equipSlots[i].contains(e.getPoint()) && c.getEquip()[i] != null) {
+                    c.unequipItem(i);
+                    return;
+                }
+            }
+
+            for (int i = 0; i < destroyBox.length; i++) {
+                if (destroyBox[i].contains(e.getPoint())) {
+                    switch (i) {
+                        case 0:
+                            destroy = !destroy;
+                            break;
+                        case 1:
+                            destroy = false;
+                            destroyConfirm = true;
+                            break;
+                    }
+                    return;
+                }
+            }
+        }
+
+        if (SwingUtilities.isRightMouseButton(e)) {
+            if (selectedTab == Globals.ITEM_WEAPON) {
+                for (int i = 0; i < inventSlots.length; i++) {
+                    if (inventSlots[i].contains(e.getPoint()) && c.getInventory(selectedTab)[i] != null) {
+                        if (!destroy) {
+                            c.equipItem(Globals.ITEM_OFFHAND, i);
+                        }
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
+    private void mouseReleased_destroyConfirm(MouseEvent e) {
+        for (byte i = 0; i < promptBox.length; i++) {
+            if (promptBox[i].contains(e.getPoint())) {
+                if (i == 0) {
+                    c.destroyAll(selectedTab);
+                }
+                destroyConfirm = false;
             }
         }
     }
@@ -329,6 +493,7 @@ public class ScreenInventory extends ScreenMenu {
 
     @Override
     public void mouseMoved(MouseEvent e) {
+        mousePos = e.getPoint();
         drawItem = -1;
         drawEquip = -1;
         for (int i = 0; i < inventSlots.length; i++) {

@@ -27,6 +27,7 @@ public class LogicModule extends Thread {
     private SaveData selectedChar;
     private byte selectedRoom = 0;
     private Screen screen = new ScreenSelectChar(this);
+    private Screen lastMenu;
 
     public LogicModule() {
         isRunning = true;
@@ -67,7 +68,7 @@ public class LogicModule extends Thread {
             receiver.start();
         } catch (SocketException | UnknownHostException e) {
         }
-        sender.sendLogin(selectedRoom);
+        sender.sendLogin(selectedRoom, selectedChar);
     }
 
     public Screen getScreen() {
@@ -128,5 +129,12 @@ public class LogicModule extends Thread {
 
     public void setScreen(Screen s) {
         screen = s;
+        if (!(s instanceof ScreenIngame)) {
+            lastMenu = screen;
+        }
+    }
+
+    public void returnMenu() {
+        screen = lastMenu;
     }
 }

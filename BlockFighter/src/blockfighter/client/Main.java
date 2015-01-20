@@ -1,6 +1,7 @@
 package blockfighter.client;
 
 import blockfighter.client.entities.items.ItemEquip;
+import blockfighter.client.entities.items.ItemUpgrade;
 import blockfighter.client.render.RenderModule;
 import blockfighter.client.render.RenderPanel;
 import java.awt.*;
@@ -32,7 +33,7 @@ public class Main {
 
         Globals.loadGFX();
         ItemEquip.loadItemNames();
-        
+        ItemUpgrade.loadUpgradeItems();
         JFrame frame = new JFrame("Tower Conquest");
         RenderPanel panel = new RenderPanel();
 

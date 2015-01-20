@@ -22,19 +22,19 @@ public class ParticleMenuSmoke extends Particle {
             x = 1280;
         }
     }
-    
+
     @Override
-    public void draw(Graphics g){
+    public void draw(Graphics g) {
         BufferedImage sprite = Globals.MENU_SMOKE[0];
-        if (key == 0){
-            g.drawImage(sprite, x, y, 1280, 720,null);
+        if (key == 0) {
+            g.drawImage(sprite, x, y, 1280, 720, null);
         } else {
-            g.drawImage(sprite, x+1280, y, -1280, 720,null);
+            g.drawImage(sprite, x + 1280, y, -1280, 720, null);
         }
     }
-    
+
     @Override
-    public boolean isExpired(){
+    public boolean isExpired() {
         return false;
     }
 }

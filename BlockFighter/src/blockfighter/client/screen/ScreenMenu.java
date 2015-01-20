@@ -11,6 +11,7 @@ import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.text.DecimalFormat;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -24,6 +25,7 @@ public abstract class ScreenMenu extends Screen {
     protected static ConcurrentHashMap<Integer, Particle> particles = new ConcurrentHashMap<>(20);
     private Rectangle2D.Double[] menuBox = new Rectangle2D.Double[5];
     protected LogicModule logic;
+    protected DecimalFormat df = new DecimalFormat("###,###,##0.##");
 
     public ScreenMenu(LogicModule l) {
         logic = l;
@@ -59,7 +61,6 @@ public abstract class ScreenMenu extends Screen {
         for (Map.Entry<Integer, Particle> pEntry : particles.entrySet()) {
             pEntry.getValue().draw(g);
         }
-
     }
 
     public void drawMenuButton(Graphics g) {
@@ -89,21 +90,25 @@ public abstract class ScreenMenu extends Screen {
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        for (int i = 0; i < menuBox.length; i++) {
-            if (menuBox[i].contains(e.getPoint())) {
-                switch (i) {
-                    case 0:
-                        logic.setScreen(new ScreenStats(logic));
-                        break;
-                    case 1:
-                        logic.setScreen(new ScreenInventory(logic));
-                        break;
-                    case 4:
-                        logic.sendLogin();
-                        break;
+        if (e.getButton() == MouseEvent.BUTTON1) {
+            for (int i = 0; i < menuBox.length; i++) {
+                if (menuBox[i].contains(e.getPoint())) {
+                    switch (i) {
+                        case 0:
+                            logic.setScreen(new ScreenStats(logic));
+                            break;
+                        case 1:
+                            logic.setScreen(new ScreenInventory(logic));
+                            break;
+                        case 2:
+                            logic.setScreen(new ScreenUpgrade(logic));
+                            break;
+                        case 4:
+                            logic.sendLogin();
+                            break;
+                    }
                 }
             }
         }
-
     }
 }

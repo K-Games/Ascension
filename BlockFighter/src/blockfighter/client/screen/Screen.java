@@ -27,7 +27,7 @@ public abstract class Screen implements KeyListener, MouseListener, MouseMotionL
 
     protected static ExecutorService threadPool = Executors.newFixedThreadPool(10);
     protected RenderPanel panel;
-    
+
     public void drawStringOutline(Graphics g, String s, int x, int y, int width) {
         for (int i = 0; i < 2; i++) {
             g.setColor(Color.BLACK);
@@ -61,7 +61,7 @@ public abstract class Screen implements KeyListener, MouseListener, MouseMotionL
             particles.remove(remove.pop());
         }
     }
-    
+
     public void setRenderPanel(RenderPanel r) {
         panel = r;
     }

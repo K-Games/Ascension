@@ -11,7 +11,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-import java.text.DecimalFormat;
 
 /**
  *
@@ -21,7 +20,6 @@ public class ScreenStats extends ScreenMenu {
 
     private SaveData c;
     private double[] stats, bs;
-    DecimalFormat df = new DecimalFormat("0.00");
     Rectangle2D.Double[] addBox = new Rectangle2D.Double[6];
 
     public ScreenStats(LogicModule l) {
@@ -42,9 +40,6 @@ public class ScreenStats extends ScreenMenu {
     public void draw(Graphics g) {
         BufferedImage bg = Globals.MENU_BG[1];
         g.drawImage(bg, 0, 0, null);
-
-        super.draw(g);
-        drawMenuButton(g);
 
         Graphics2D g2d = (Graphics2D) g;
         g2d.setRenderingHint(
@@ -107,6 +102,11 @@ public class ScreenStats extends ScreenMenu {
         drawStringOutline(g, "Regen: " + df.format(stats[Globals.STAT_REGEN]) + " HP/Sec", 255, secStat + 75, 2);
         drawStringOutline(g, "Critical Hit Chance: " + df.format(stats[Globals.STAT_CRITCHANCE] * 100) + "%", 255, secStat + 100, 2);
         drawStringOutline(g, "Critical Hit Damage: " + df.format(stats[Globals.STAT_CRITDMG] * 100) + "%", 255, secStat + 125, 2);
+        drawStringOutline(g, "Effective HP: " + df.format((int) Globals.calcEHP(
+                Globals.calcReduction(stats[Globals.STAT_ARMOR]),
+                stats[Globals.STAT_MAXHP])), 255, secStat + 180, 2);
+        drawStringOutline(g, "Exp: " + df.format((int) (bs[Globals.STAT_EXP])) + "/" + df.format((int) Globals.calcEXP(bs[Globals.STAT_LEVEL]))
+                + "(" + df.format((bs[Globals.STAT_EXP] / Globals.calcEXP(bs[Globals.STAT_LEVEL])) * 100) + "%)", 255, secStat + 205, 2);
 
         g.setColor(Color.WHITE);
         g.drawString("Level: " + (int) stats[Globals.STAT_LEVEL], 255, 130);
@@ -121,6 +121,25 @@ public class ScreenStats extends ScreenMenu {
         g.drawString("Regen: " + df.format(stats[Globals.STAT_REGEN]) + " HP/Sec", 255, secStat + 75);
         g.drawString("Critical Hit Chance: " + df.format(stats[Globals.STAT_CRITCHANCE] * 100) + "%", 255, secStat + 100);
         g.drawString("Critical Hit Damage: " + df.format(stats[Globals.STAT_CRITDMG] * 100) + "%", 255, secStat + 125);
+
+        g.drawString("Effective HP: " + df.format((int) Globals.calcEHP(
+                Globals.calcReduction(stats[Globals.STAT_ARMOR]),
+                stats[Globals.STAT_MAXHP])), 255, secStat + 180);
+
+        g.drawString("Exp: " + df.format((int) (bs[Globals.STAT_EXP])) + "/" + df.format((int) Globals.calcEXP(bs[Globals.STAT_LEVEL]))
+                + "(" + df.format((bs[Globals.STAT_EXP] / Globals.calcEXP(bs[Globals.STAT_LEVEL])) * 100) + "%)", 255, secStat + 205);
+
+        g.setColor(Color.BLACK);
+        g.fillRect(255, secStat + 215, 450, 40);
+        g.setColor(Color.WHITE);
+        g.fillRect(256, secStat + 216, 448, 38);
+        g.setColor(Color.BLACK);
+        g.fillRect(257, secStat + 217, 446, 36);
+        g.setColor(new Color(255, 175, 0));
+        g.fillRect(258, secStat + 218, (int) (bs[Globals.STAT_EXP] / Globals.calcEXP(bs[Globals.STAT_LEVEL]) * 444), 34);
+        
+        drawMenuButton(g);
+        super.draw(g);
     }
 
     @Override

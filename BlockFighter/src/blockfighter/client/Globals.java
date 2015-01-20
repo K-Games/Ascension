@@ -130,11 +130,13 @@ public class Globals {
 
     public final static BufferedImage[] MENU_BG = new BufferedImage[3];
     public final static BufferedImage[] MENU_SMOKE = new BufferedImage[1];
-    public final static BufferedImage[] MENU_BUTTON = new BufferedImage[15];
-    public final static BufferedImage[] MENU_WINDOW = new BufferedImage[1];
+    public final static BufferedImage[] MENU_UPGRADEPARTICLE = new BufferedImage[4];
+    public final static BufferedImage[] MENU_BUTTON = new BufferedImage[16];
+    public final static BufferedImage[] MENU_WINDOW = new BufferedImage[2];
     public final static BufferedImage[] MENU_TABPOINTER = new BufferedImage[1];
+    public final static BufferedImage[] MENU_ITEMDELETE = new BufferedImage[1];
 
-    public final static byte BUTTON_OKAY = 0,
+    public final static byte BUTTON_BIGRECT = 0,
             BUTTON_SELECTCHAR = 1,
             BUTTON_ADDSTAT = 2,
             BUTTON_ITEMSLOT = 3,
@@ -148,9 +150,11 @@ public class Globals {
             BUTTON_SHOETAB = 11,
             BUTTON_BELTTAB = 12,
             BUTTON_RINGTAB = 13,
-            BUTTON_AMULETTAB = 14;
+            BUTTON_AMULETTAB = 14,
+            BUTTON_SMALLRECT = 15;
 
-    public final static byte WINDOW_CREATECHAR = 0;
+    public final static byte WINDOW_CREATECHAR = 0,
+            WINDOW_DESTROYCONFIRM = 1;
 
     public static final double calcArmor(double defense) {
         return defense * ARMOR_MULT;
@@ -186,6 +190,14 @@ public class Globals {
 
     public static final double calcReduction(double armor) {
         return armor / (armor + REDUCT_CONST);
+    }
+
+    public static final double calcEHP(double reduct, double maxHP) {
+        return maxHP / (1D - reduct);
+    }
+
+    public static final double calcEXP(double level) {
+        return Math.pow(level, 3.75) + 100;
     }
 
     public static final byte[] intToByte(int input) {
@@ -233,8 +245,16 @@ public class Globals {
                 MENU_BUTTON[i] = ImageIO.read(Globals.class.getResource("sprites/ui/menu/button" + (i + 1) + ".png"));
             }
 
-            MENU_WINDOW[WINDOW_CREATECHAR] = ImageIO.read(Globals.class.getResource("sprites/ui/menu/window1.png"));
+            for (byte i = 0; i < MENU_WINDOW.length; i++) {
+                MENU_WINDOW[i] = ImageIO.read(Globals.class.getResource("sprites/ui/menu/window" + (i + 1) + ".png"));
+            }
+            
+            for (byte i = 0; i < MENU_UPGRADEPARTICLE.length; i++) {
+                MENU_UPGRADEPARTICLE[i] = ImageIO.read(Globals.class.getResource("sprites/ui/menu/particle" + (i + 1) + ".png"));
+            }
+            
             MENU_TABPOINTER[0] = ImageIO.read(Globals.class.getResource("sprites/ui/menu/pointer.png"));
+            MENU_ITEMDELETE[0] = ImageIO.read(Globals.class.getResource("sprites/ui/menu/delete.png"));
             MENU_SMOKE[0] = ImageIO.read(Globals.class.getResource("sprites/ui/menu/smoke.png"));
         } catch (IOException ex) {
             Logger.getLogger(Globals.class.getName()).log(Level.SEVERE, null, ex);
