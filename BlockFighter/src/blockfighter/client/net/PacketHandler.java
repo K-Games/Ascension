@@ -27,32 +27,30 @@ public class PacketHandler extends Thread {
                 receiveLogin(data);
                 break;
             case Globals.DATA_SET_PLAYER_POS:
-                receiveGetPlayerPos(data);
+                receiveData(data);
                 break;
             case Globals.DATA_PING:
                 receiveGetPing(data);
                 break;
             case Globals.DATA_SET_PLAYER_FACING:
-                receiveSetPlayerFacing(data);
+                receiveData(data);
                 break;
             case Globals.DATA_SET_PLAYER_STATE:
-                receiveSetPlayerState(data);
+                receiveData(data);
                 break;
             case Globals.DATA_PARTICLE_EFFECT:
-                receiveParticleEffect(data);
+                receiveData(data);
                 break;
             case Globals.DATA_PARTICLE_REMOVE:
-                receiveParticleRemove(data);
+                receiveData(data);
+                break;
+            case Globals.DATA_PLAYER_DISCONNECT:
+                receiveData(data);
+                break;
+            case Globals.DATA_PLAYER_GET_NAME:
+                receiveData(data);
                 break;
         }
-    }
-
-    private void receiveParticleEffect(byte[] data) {
-        logic.queueParticleEffect(data);
-    }
-
-    private void receiveGetPlayerPos(byte[] data) {
-        logic.queueSetPlayerPos(data);
     }
 
     private void receiveLogin(byte[] data) {
@@ -65,16 +63,8 @@ public class PacketHandler extends Thread {
         logic.setPing(data[1]);
     }
 
-    private void receiveSetPlayerFacing(byte[] data) {
-        logic.queueSetPlayerFacing(data);
-    }
-
-    private void receiveSetPlayerState(byte[] data) {
-        logic.queueSetPlayerState(data);
-    }
-
-    private void receiveParticleRemove(byte[] data) {
-        logic.queueParticleRemove(data);
+    private void receiveData(byte[] data) {
+        logic.queueData(data);
     }
 
 }

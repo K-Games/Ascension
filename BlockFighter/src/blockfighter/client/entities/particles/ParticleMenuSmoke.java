@@ -2,7 +2,7 @@ package blockfighter.client.entities.particles;
 
 import blockfighter.client.Globals;
 import blockfighter.client.LogicModule;
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 /**
@@ -24,7 +24,7 @@ public class ParticleMenuSmoke extends Particle {
     }
 
     @Override
-    public void draw(Graphics g) {
+    public void draw(Graphics2D g) {
         BufferedImage sprite = Globals.MENU_SMOKE[0];
         if (key == 0) {
             g.drawImage(sprite, x, y, 1280, 720, null);

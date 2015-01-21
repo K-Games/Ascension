@@ -1,7 +1,7 @@
 package blockfighter.client.screen;
 
 import blockfighter.client.LogicModule;
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
@@ -16,7 +16,7 @@ public class ScreenServerList extends ScreenMenu {
     }
 
     @Override
-    public void draw(Graphics g) {
+    public void draw(Graphics2D g) {
 
     }
 

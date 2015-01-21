@@ -4,7 +4,6 @@ import blockfighter.client.Globals;
 import blockfighter.client.LogicModule;
 import blockfighter.client.SaveData;
 import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
@@ -37,12 +36,11 @@ public class ScreenStats extends ScreenMenu {
     }
 
     @Override
-    public void draw(Graphics g) {
+    public void draw(Graphics2D g) {
         BufferedImage bg = Globals.MENU_BG[1];
         g.drawImage(bg, 0, 0, null);
 
-        Graphics2D g2d = (Graphics2D) g;
-        g2d.setRenderingHint(
+        g.setRenderingHint(
                 RenderingHints.KEY_TEXT_ANTIALIASING,
                 RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
 
@@ -67,14 +65,14 @@ public class ScreenStats extends ScreenMenu {
 
         g.setFont(Globals.ARIAL_15PT);
         if (bs[Globals.STAT_POINTS] >= 1) {
-            drawStringOutline(g, "+1", 425, mainStat, 2);
-            drawStringOutline(g, "+1", 425, mainStat + 25, 2);
-            drawStringOutline(g, "+1", 425, mainStat + 50, 2);
+            drawStringOutline(g, "+1", 425, mainStat, 1);
+            drawStringOutline(g, "+1", 425, mainStat + 25, 1);
+            drawStringOutline(g, "+1", 425, mainStat + 50, 1);
         }
         if (bs[Globals.STAT_POINTS] >= 5) {
             drawStringOutline(g, "+5", 460, mainStat, 2);
-            drawStringOutline(g, "+5", 460, mainStat + 25, 2);
-            drawStringOutline(g, "+5", 460, mainStat + 50, 2);
+            drawStringOutline(g, "+5", 460, mainStat + 25, 1);
+            drawStringOutline(g, "+5", 460, mainStat + 50, 1);
         }
 
         g.setColor(Color.WHITE);
@@ -90,23 +88,23 @@ public class ScreenStats extends ScreenMenu {
         }
 
         g.setFont(Globals.ARIAL_18PT);
-        drawStringOutline(g, "Level: " + (int) stats[Globals.STAT_LEVEL], 255, 130, 2);
-        drawStringOutline(g, "Power: " + (int) stats[Globals.STAT_POWER], 255, mainStat, 2);
-        drawStringOutline(g, "Defense: " + (int) stats[Globals.STAT_DEFENSE], 255, mainStat + 25, 2);
-        drawStringOutline(g, "Spirit: " + (int) stats[Globals.STAT_SPIRIT], 255, mainStat + 50, 2);
-        drawStringOutline(g, "Points: " + (int) stats[Globals.STAT_POINTS], 255, mainStat + 85, 2);
+        drawStringOutline(g, "Level: " + (int) stats[Globals.STAT_LEVEL], 255, 130, 1);
+        drawStringOutline(g, "Power: " + (int) stats[Globals.STAT_POWER], 255, mainStat, 1);
+        drawStringOutline(g, "Defense: " + (int) stats[Globals.STAT_DEFENSE], 255, mainStat + 25, 1);
+        drawStringOutline(g, "Spirit: " + (int) stats[Globals.STAT_SPIRIT], 255, mainStat + 50, 1);
+        drawStringOutline(g, "Points: " + (int) stats[Globals.STAT_POINTS], 255, mainStat + 85, 1);
 
-        drawStringOutline(g, "HP: " + (int) stats[Globals.STAT_MAXHP], 255, secStat, 2);
-        drawStringOutline(g, "Damage: " + (int) stats[Globals.STAT_MINDMG] + " - " + (int) stats[Globals.STAT_MAXDMG], 255, secStat + 25, 2);
-        drawStringOutline(g, "Armor: " + (int) stats[Globals.STAT_ARMOR], 255, secStat + 50, 2);
-        drawStringOutline(g, "Regen: " + df.format(stats[Globals.STAT_REGEN]) + " HP/Sec", 255, secStat + 75, 2);
-        drawStringOutline(g, "Critical Hit Chance: " + df.format(stats[Globals.STAT_CRITCHANCE] * 100) + "%", 255, secStat + 100, 2);
-        drawStringOutline(g, "Critical Hit Damage: " + df.format(stats[Globals.STAT_CRITDMG] * 100) + "%", 255, secStat + 125, 2);
+        drawStringOutline(g, "HP: " + (int) stats[Globals.STAT_MAXHP], 255, secStat, 1);
+        drawStringOutline(g, "Damage: " + (int) stats[Globals.STAT_MINDMG] + " - " + (int) stats[Globals.STAT_MAXDMG], 255, secStat + 25, 1);
+        drawStringOutline(g, "Armor: " + (int) stats[Globals.STAT_ARMOR], 255, secStat + 50, 1);
+        drawStringOutline(g, "Regen: " + df.format(stats[Globals.STAT_REGEN]) + " HP/Sec", 255, secStat + 75, 1);
+        drawStringOutline(g, "Critical Hit Chance: " + df.format(stats[Globals.STAT_CRITCHANCE] * 100) + "%", 255, secStat + 100, 1);
+        drawStringOutline(g, "Critical Hit Damage: " + df.format(stats[Globals.STAT_CRITDMG] * 100) + "%", 255, secStat + 125, 1);
         drawStringOutline(g, "Effective HP: " + df.format((int) Globals.calcEHP(
                 Globals.calcReduction(stats[Globals.STAT_ARMOR]),
-                stats[Globals.STAT_MAXHP])), 255, secStat + 180, 2);
+                stats[Globals.STAT_MAXHP])), 255, secStat + 180, 1);
         drawStringOutline(g, "Exp: " + df.format((int) (bs[Globals.STAT_EXP])) + "/" + df.format((int) Globals.calcEXP(bs[Globals.STAT_LEVEL]))
-                + "(" + df.format((bs[Globals.STAT_EXP] / Globals.calcEXP(bs[Globals.STAT_LEVEL])) * 100) + "%)", 255, secStat + 205, 2);
+                + "(" + df.format((bs[Globals.STAT_EXP] / Globals.calcEXP(bs[Globals.STAT_LEVEL])) * 100) + "%)", 255, secStat + 205, 1);
 
         g.setColor(Color.WHITE);
         g.drawString("Level: " + (int) stats[Globals.STAT_LEVEL], 255, 130);
@@ -137,7 +135,7 @@ public class ScreenStats extends ScreenMenu {
         g.fillRect(257, secStat + 217, 446, 36);
         g.setColor(new Color(255, 175, 0));
         g.fillRect(258, secStat + 218, (int) (bs[Globals.STAT_EXP] / Globals.calcEXP(bs[Globals.STAT_LEVEL]) * 444), 34);
-        
+
         drawMenuButton(g);
         super.draw(g);
     }

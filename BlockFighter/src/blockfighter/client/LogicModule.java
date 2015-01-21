@@ -1,6 +1,5 @@
 package blockfighter.client;
 
-import blockfighter.client.entities.particles.Particle;
 import blockfighter.client.net.PacketReceiver;
 import blockfighter.client.net.PacketSender;
 import blockfighter.client.screen.Screen;
@@ -10,7 +9,6 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  *
@@ -46,12 +44,15 @@ public class LogicModule extends Thread {
 
     public void receiveLogin(byte key, byte size) {
         setScreen(new ScreenIngame(this, key, size, sender));
-        ((ScreenIngame) screen).queueAddPlayer(key);
-        sender.sendGetAll(selectedRoom);
+        sender.sendGetAll(selectedRoom, key);
     }
 
-    public ConcurrentHashMap<Integer, Particle> getParticles() {
-        return screen.getParticles();
+    public void sendGetName(byte k) {
+        sender.sendGetName(selectedRoom, k);
+    }
+
+    public void sendDisconnect(byte k) {
+        sender.sendDisconnect(selectedRoom, k);
     }
 
     public void sendAction(byte k) {
@@ -59,11 +60,15 @@ public class LogicModule extends Thread {
     }
 
     public void sendLogin() {
+        if (receiver != null && receiver.isConnected()) {
+            return;
+        }
         try {
             DatagramSocket socket = new DatagramSocket();
             socket.connect(InetAddress.getByName(Globals.SERVER_ADDRESS), Globals.SERVER_PORT);
             socket.setSoTimeout(5000);
             sender = new PacketSender(socket);
+
             receiver = new PacketReceiver(this, socket);
             receiver.start();
         } catch (SocketException | UnknownHostException e) {
@@ -81,33 +86,15 @@ public class LogicModule extends Thread {
         }
     }
 
-    public void queueSetPlayerPos(byte[] data) {
+    public void queueData(byte[] data) {
         if (screen instanceof ScreenIngame) {
-            ((ScreenIngame) screen).queueSetPlayerPos(data);
+            ((ScreenIngame) screen).queueData(data);
         }
     }
 
-    public void queueSetPlayerFacing(byte[] data) {
+    public void disconnect() {
         if (screen instanceof ScreenIngame) {
-            ((ScreenIngame) screen).queueSetPlayerFacing(data);
-        }
-    }
-
-    public void queueSetPlayerState(byte[] data) {
-        if (screen instanceof ScreenIngame) {
-            ((ScreenIngame) screen).queueSetPlayerState(data);
-        }
-    }
-
-    public void queueParticleEffect(byte[] data) {
-        if (screen instanceof ScreenIngame) {
-            ((ScreenIngame) screen).queueParticleEffect(data);
-        }
-    }
-
-    public void queueParticleRemove(byte[] data) {
-        if (screen instanceof ScreenIngame) {
-            ((ScreenIngame) screen).queueParticleEffect(data);
+            ((ScreenIngame) screen).disconnect();
         }
     }
 

@@ -24,6 +24,7 @@ public class PacketReceiver extends Thread {
     private final LogicModule logic;
     private DatagramSocket socket = null;
     private static ExecutorService tpes = Executors.newFixedThreadPool(4);
+    private boolean isConnected = true;
 
     public PacketReceiver(LogicModule logic, DatagramSocket s) {
         this.logic = logic;
@@ -44,6 +45,14 @@ public class PacketReceiver extends Thread {
         }
         System.out.println("Receiver End");
         logic.returnMenu();
+        isConnected = false;
     }
 
+    public void shutdown() {
+        socket.close();
+    }
+
+    public boolean isConnected() {
+        return isConnected;
+    }
 }

@@ -1,6 +1,6 @@
 package blockfighter.client.entities.items;
 
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 
 /**
  *
@@ -8,7 +8,7 @@ import java.awt.Graphics;
  */
 public interface PlayerItem {
 
-    public void draw(Graphics g, int x, int y);
+    public void draw(Graphics2D g, int x, int y);
 
     public int getItemCode();
 

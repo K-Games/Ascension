@@ -1,7 +1,7 @@
 package blockfighter.client.entities.items;
 
 import blockfighter.client.Globals;
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.util.HashMap;
 
 /**
@@ -87,17 +87,17 @@ public class ItemEquip implements PlayerItem {
     }
 
     @Override
-    public void draw(Graphics g, int x, int y) {
+    public void draw(Graphics2D g, int x, int y) {
         drawMenu(g, x, y);
     }
 
-    private void drawMenu(Graphics g, int x, int y) {
+    private void drawMenu(Graphics2D g, int x, int y) {
         //Draw Icon at location x, y
         g.setFont(Globals.ARIAL_15PT);
         g.drawString("PH", x + 20, y + 30);
     }
 
-    public void drawIngame(Graphics g, int x, int y) {
+    public void drawIngame(Graphics2D g, int x, int y) {
 
     }
 
@@ -171,8 +171,8 @@ public class ItemEquip implements PlayerItem {
     public String getItemName() {
         return ITEM_NAMES.get(itemCode);
     }
-    
-    public void addUpgrade(int amount){
+
+    public void addUpgrade(int amount) {
         upgrades += amount;
         update();
     }

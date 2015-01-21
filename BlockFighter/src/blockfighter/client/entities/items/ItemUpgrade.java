@@ -1,7 +1,7 @@
 package blockfighter.client.entities.items;
 
 import blockfighter.client.Globals;
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -60,7 +60,7 @@ public class ItemUpgrade implements PlayerItem {
     }
 
     @Override
-    public void draw(Graphics g, int x, int y) {
+    public void draw(Graphics2D g, int x, int y) {
         g.setFont(Globals.ARIAL_15PT);
         g.drawString("PH", x + 20, y + 30);
     }

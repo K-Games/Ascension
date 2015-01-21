@@ -119,7 +119,9 @@ public class Globals {
             DATA_SET_PLAYER_STATE = 0x06,
             DATA_PLAYER_ACTION = 0x07,
             DATA_PARTICLE_EFFECT = 0x08,
-            DATA_PARTICLE_REMOVE = 0x09;
+            DATA_PARTICLE_REMOVE = 0x09,
+            DATA_PLAYER_DISCONNECT = 0x0A,
+            DATA_PLAYER_GET_NAME = 0x0B;
 
     public final static byte NUM_PLAYER_ACTION = 1,
             PLAYER_ACTION_KNOCK = 0x00;
@@ -248,11 +250,11 @@ public class Globals {
             for (byte i = 0; i < MENU_WINDOW.length; i++) {
                 MENU_WINDOW[i] = ImageIO.read(Globals.class.getResource("sprites/ui/menu/window" + (i + 1) + ".png"));
             }
-            
+
             for (byte i = 0; i < MENU_UPGRADEPARTICLE.length; i++) {
                 MENU_UPGRADEPARTICLE[i] = ImageIO.read(Globals.class.getResource("sprites/ui/menu/particle" + (i + 1) + ".png"));
             }
-            
+
             MENU_TABPOINTER[0] = ImageIO.read(Globals.class.getResource("sprites/ui/menu/pointer.png"));
             MENU_ITEMDELETE[0] = ImageIO.read(Globals.class.getResource("sprites/ui/menu/delete.png"));
             MENU_SMOKE[0] = ImageIO.read(Globals.class.getResource("sprites/ui/menu/smoke.png"));

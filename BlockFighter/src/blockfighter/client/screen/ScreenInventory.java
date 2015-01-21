@@ -5,7 +5,6 @@ import blockfighter.client.LogicModule;
 import blockfighter.client.SaveData;
 import blockfighter.client.entities.items.ItemEquip;
 import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
@@ -34,6 +33,8 @@ public class ScreenInventory extends ScreenMenu {
 
     private int drawItem = -1, drawEquip = -1;
     private int charFrame = 0;
+
+    private int dragItem = -1, dragEquip = -1;
     private double nextFrameTime = 0;
 
     public ScreenInventory(LogicModule l) {
@@ -90,12 +91,11 @@ public class ScreenInventory extends ScreenMenu {
     }
 
     @Override
-    public void draw(Graphics g) {
+    public void draw(Graphics2D g) {
         BufferedImage bg = Globals.MENU_BG[2];
         g.drawImage(bg, 0, 0, null);
 
-        Graphics2D g2d = (Graphics2D) g;
-        g2d.setRenderingHint(
+        g.setRenderingHint(
                 RenderingHints.KEY_TEXT_ANTIALIASING,
                 RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
 
@@ -112,17 +112,23 @@ public class ScreenInventory extends ScreenMenu {
         drawStats(g);
         drawSlots(g);
         drawItemTabs(g);
-        drawItemInfo(g);
         drawDestroyConfirm(g);
+        drawMenuButton(g);
         if (destroy) {
             button = Globals.MENU_ITEMDELETE[0];
             g.drawImage(button, mousePos.x + 10, mousePos.y + 15, null);
         }
-        drawMenuButton(g);
+        if (dragItem != -1) {
+            c.getInventory(selectedTab)[dragItem].draw(g, mousePos.x + 5, mousePos.y + 5);
+        }
+        if (dragEquip != -1) {
+            c.getEquip()[dragEquip].draw(g, mousePos.x + 5, mousePos.y + 5);
+        }
         super.draw(g);
+        drawItemInfo(g);
     }
 
-    private void drawDestroyConfirm(Graphics g) {
+    private void drawDestroyConfirm(Graphics2D g) {
         if (destroyConfirm) {
             BufferedImage window = Globals.MENU_WINDOW[Globals.WINDOW_DESTROYCONFIRM];
             g.drawImage(window, 265, 135, null);
@@ -145,7 +151,7 @@ public class ScreenInventory extends ScreenMenu {
         }
     }
 
-    private void drawItemTabs(Graphics g) {
+    private void drawItemTabs(Graphics2D g) {
         for (int i = 0; i < tabs.length; i++) {
             BufferedImage button = Globals.MENU_BUTTON[i + 5];
             g.drawImage(button, (int) tabs[i].x, (int) tabs[i].y, null);
@@ -155,18 +161,18 @@ public class ScreenInventory extends ScreenMenu {
 
     }
 
-    private void drawItemInfo(Graphics g) {
+    private void drawItemInfo(Graphics2D g) {
         if (destroyConfirm) {
             return;
         }
-        if (drawItem > -1) {
+        if (drawItem != -1) {
             drawItemInfo(g, inventSlots[drawItem], c.getInventory(selectedTab)[drawItem]);
-        } else if (drawEquip > -1) {
+        } else if (drawEquip != -1) {
             drawItemInfo(g, equipSlots[drawEquip], c.getEquip()[drawEquip]);
         }
     }
 
-    private void drawStats(Graphics g) {
+    private void drawStats(Graphics2D g) {
         g.setFont(Globals.ARIAL_15PT);
         int statY = 440, statX = 935;
         double[] bs = c.getBaseStats(), bonus = c.getBonusStats(), total = c.getStats();
@@ -197,7 +203,7 @@ public class ScreenInventory extends ScreenMenu {
 
     }
 
-    private void drawSlots(Graphics g) {
+    private void drawSlots(Graphics2D g) {
         BufferedImage button = Globals.MENU_BUTTON[Globals.BUTTON_ITEMSLOT];
         BufferedImage character = Globals.CHAR_SPRITE[Globals.PLAYER_STATE_STAND][charFrame];
 
@@ -276,7 +282,7 @@ public class ScreenInventory extends ScreenMenu {
         g.drawImage(character, 1050, 100, null);
     }
 
-    private void drawItemInfo(Graphics g, Rectangle2D.Double box, ItemEquip e) {
+    private void drawItemInfo(Graphics2D g, Rectangle2D.Double box, ItemEquip e) {
         if (e == null) {
             return;
         }
@@ -402,6 +408,9 @@ public class ScreenInventory extends ScreenMenu {
 
     @Override
     public void mouseReleased(MouseEvent e) {
+        int drItem = dragItem, drEq = dragEquip;
+        dragItem = -1;
+        dragEquip = -1;
         if (destroyConfirm) {
             mouseReleased_destroyConfirm(e);
             return;
@@ -418,9 +427,22 @@ public class ScreenInventory extends ScreenMenu {
             }
 
             for (int i = 0; i < inventSlots.length; i++) {
-                if (inventSlots[i].contains(e.getPoint()) && c.getInventory(selectedTab)[i] != null) {
+                if (inventSlots[i].contains(e.getPoint())) {
                     if (!destroy) {
-                        c.equipItem(selectedTab, i);
+                        if (drItem != -1) {
+                            ItemEquip temp = c.getInventory(selectedTab)[i];
+                            c.getInventory(selectedTab)[i] = c.getInventory(selectedTab)[drItem];
+                            c.getInventory(selectedTab)[drItem] = temp;
+                            return;
+                        }
+                        if (drEq != -1) {
+                            c.equipItem(drEq, i);
+                            return;
+                        }
+                        if (c.getInventory(selectedTab)[i] != null) {
+                            c.equipItem(selectedTab, i);
+                            return;
+                        }
                     } else {
                         c.destroyItem(selectedTab, i);
                     }
@@ -429,9 +451,17 @@ public class ScreenInventory extends ScreenMenu {
             }
 
             for (int i = 0; !destroy && i < equipSlots.length; i++) {
-                if (equipSlots[i].contains(e.getPoint()) && c.getEquip()[i] != null) {
-                    c.unequipItem(i);
-                    return;
+                if (equipSlots[i].contains(e.getPoint())) {
+                    if (drItem != -1) {
+                        if (selectedTab == i || (selectedTab == Globals.ITEM_WEAPON && i == Globals.ITEM_OFFHAND)) {
+                            c.equipItem(i, drItem);
+                            return;
+                        }
+                    }
+                    if (drEq == -1 && c.getEquip()[i] != null) {
+                        c.unequipItem(i);
+                        return;
+                    }
                 }
             }
 
@@ -488,7 +518,32 @@ public class ScreenInventory extends ScreenMenu {
 
     @Override
     public void mouseDragged(MouseEvent e) {
+        mouseMoved(e);
+        if (destroyConfirm || destroy) {
+            return;
+        }
+        if (SwingUtilities.isLeftMouseButton(e)) {
+            if (dragItem == -1 && dragEquip == -1) {
+                for (int i = 0; i < inventSlots.length; i++) {
+                    if (inventSlots[i].contains(e.getPoint()) && c.getInventory(selectedTab)[i] != null) {
+                        dragItem = i;
+                        return;
+                    }
+                }
 
+                for (byte i = 0; i < equipSlots.length; i++) {
+                    if (equipSlots[i].contains(e.getPoint()) && c.getEquip()[i] != null) {
+                        dragEquip = i;
+                        if (i == Globals.ITEM_OFFHAND) {
+                            selectedTab = Globals.ITEM_WEAPON;
+                        } else {
+                            selectedTab = i;
+                        }
+                        return;
+                    }
+                }
+            }
+        }
     }
 
     @Override
@@ -499,12 +554,14 @@ public class ScreenInventory extends ScreenMenu {
         for (int i = 0; i < inventSlots.length; i++) {
             if (inventSlots[i].contains(e.getPoint()) && c.getInventory(selectedTab)[i] != null) {
                 drawItem = i;
+                return;
             }
         }
 
-        for (int i = 0; drawItem < 0 && i < equipSlots.length; i++) {
+        for (byte i = 0; i < equipSlots.length; i++) {
             if (equipSlots[i].contains(e.getPoint()) && c.getEquip()[i] != null) {
                 drawEquip = i;
+                return;
             }
         }
     }

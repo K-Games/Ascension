@@ -5,6 +5,8 @@ import blockfighter.client.entities.items.ItemUpgrade;
 import blockfighter.client.render.RenderModule;
 import blockfighter.client.render.RenderPanel;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import javax.swing.*;
 
 /**
@@ -21,6 +23,7 @@ public class Main {
         if (args.length >= 1) {
             Globals.SERVER_ADDRESS = args[0];
         }
+
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -37,7 +40,7 @@ public class Main {
         JFrame frame = new JFrame("Tower Conquest");
         RenderPanel panel = new RenderPanel();
 
-        LogicModule logic = new LogicModule();
+        final LogicModule logic = new LogicModule();
         RenderModule render = new RenderModule(panel, logic, frame);
 
         KeyHandler keyHandler = new KeyHandler(logic);
@@ -48,6 +51,12 @@ public class Main {
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.getContentPane().add(panel, BorderLayout.CENTER);
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                logic.disconnect();
+            }
+        });
         frame.setVisible(true);
 
         panel.setFocusable(true);

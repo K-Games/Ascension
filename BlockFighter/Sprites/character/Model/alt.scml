@@ -73,9 +73,9 @@
                     <bone_ref id="10" parent="9" timeline="23" key="0"/>
                     <bone_ref id="11" parent="0" timeline="27" key="1"/>
                     <bone_ref id="12" parent="11" timeline="28" key="0"/>
-                    <object_ref id="0" parent="4" timeline="12" key="0" z_index="0"/>
-                    <object_ref id="1" parent="4" timeline="11" key="0" z_index="1"/>
-                    <object_ref id="2" parent="3" timeline="13" key="0" z_index="2"/>
+                    <object_ref id="0" parent="4" timeline="11" key="0" z_index="0"/>
+                    <object_ref id="1" parent="3" timeline="13" key="0" z_index="1"/>
+                    <object_ref id="2" parent="4" timeline="12" key="0" z_index="2"/>
                     <object_ref id="3" parent="5" timeline="1" key="0" z_index="3"/>
                     <object_ref id="4" parent="6" timeline="6" key="0" z_index="4"/>
                     <object_ref id="5" parent="7" timeline="7" key="0" z_index="5"/>
@@ -86,9 +86,9 @@
                     <object_ref id="10" parent="0" timeline="0" key="1" z_index="10"/>
                     <object_ref id="11" parent="11" timeline="26" key="0" z_index="11"/>
                     <object_ref id="12" parent="12" timeline="25" key="0" z_index="12"/>
-                    <object_ref id="13" parent="2" timeline="3" key="0" z_index="13"/>
-                    <object_ref id="14" parent="1" timeline="5" key="0" z_index="14"/>
-                    <object_ref id="15" parent="2" timeline="4" key="0" z_index="15"/>
+                    <object_ref id="13" parent="1" timeline="5" key="0" z_index="13"/>
+                    <object_ref id="14" parent="2" timeline="4" key="0" z_index="14"/>
+                    <object_ref id="15" parent="2" timeline="3" key="0" z_index="15"/>
                 </key>
                 <key id="2" time="578">
                     <bone_ref id="0" timeline="14" key="0"/>
@@ -1477,10 +1477,10 @@
             </timeline>
             <timeline id="18" name="L_Foot">
                 <key id="0" spin="0">
-                    <object folder="0" file="7" x="-14.440578" y="82" scale_x="0.627851"/>
+                    <object folder="0" file="7" x="-14.440578" y="82" angle="0" scale_x="0.627851"/>
                 </key>
                 <key id="1" time="200" spin="0">
-                    <object folder="0" file="7" x="-14.51754" y="81.666038" scale_x="0.627851"/>
+                    <object folder="0" file="7" x="-14.51754" y="81.666038" angle="0" scale_x="0.627851"/>
                 </key>
             </timeline>
             <timeline id="19" name="R_Thigh">
@@ -1501,10 +1501,10 @@
             </timeline>
             <timeline id="21" name="R_Foot">
                 <key id="0" spin="0">
-                    <object folder="0" file="7" x="-15.522334" y="81.74022" scale_x="0.627851"/>
+                    <object folder="0" file="7" x="-15.522334" y="81.74022" angle="0" scale_x="0.627851"/>
                 </key>
                 <key id="1" time="200" spin="0">
-                    <object folder="0" file="7" x="-15.680985" y="81.745913" scale_x="0.627851"/>
+                    <object folder="0" file="7" x="-15.680985" y="81.745913" angle="0" scale_x="0.627851"/>
                 </key>
             </timeline>
             <timeline id="22" name="hip">
@@ -2151,10 +2151,10 @@
             </timeline>
             <timeline id="7" name="L_Foot">
                 <key id="0" spin="0">
-                    <object folder="0" file="7" x="-15.030611" y="81.836954" scale_x="0.627851"/>
+                    <object folder="0" file="7" x="-15.030611" y="81.836954" angle="0" scale_x="0.627851"/>
                 </key>
                 <key id="1" time="100" spin="0">
-                    <object folder="0" file="7" x="-15.134881" y="81.793205" scale_x="0.627851"/>
+                    <object folder="0" file="7" x="-15.134881" y="81.793205" angle="0" scale_x="0.627851"/>
                 </key>
             </timeline>
             <timeline id="8" name="R_Thigh">
@@ -2347,13 +2347,13 @@
             </timeline>
             <timeline id="27" obj="11" name="bone_011" object_type="bone">
                 <key id="0" spin="0">
-                    <bone x="164.497061" y="7"/>
+                    <bone x="164.497061" y="7" angle="0"/>
                 </key>
                 <key id="1" time="100" spin="0">
-                    <bone x="164.497061" y="7"/>
+                    <bone x="164.497061" y="7" angle="0"/>
                 </key>
                 <key id="2" time="200" spin="0">
-                    <bone x="164.497061" y="7"/>
+                    <bone x="164.497061" y="7" angle="0"/>
                 </key>
             </timeline>
             <timeline id="28" obj="12" name="bone_012" object_type="bone">

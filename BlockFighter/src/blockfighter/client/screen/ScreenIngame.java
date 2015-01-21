@@ -6,12 +6,15 @@ import blockfighter.client.entities.Player;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.client.entities.particles.ParticleKnock;
 import blockfighter.client.net.PacketSender;
-import java.awt.Graphics;
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -23,12 +26,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class ScreenIngame extends Screen {
 
     //Ingame Data
-    private ConcurrentLinkedQueue<Byte> playersAddQueue = new ConcurrentLinkedQueue<>();
-    private ConcurrentLinkedQueue<byte[]> playersMoveQueue = new ConcurrentLinkedQueue<>();
-    private ConcurrentLinkedQueue<byte[]> playersFacingQueue = new ConcurrentLinkedQueue<>();
-    private ConcurrentLinkedQueue<byte[]> playersStateQueue = new ConcurrentLinkedQueue<>();
-    private ConcurrentLinkedQueue<byte[]> particlesQueue = new ConcurrentLinkedQueue<>();
-    private ConcurrentLinkedQueue<byte[]> particlesRemoveQueue = new ConcurrentLinkedQueue<>();
+    private ConcurrentLinkedQueue<byte[]> dataQueue = new ConcurrentLinkedQueue<>();
 
     private ConcurrentHashMap<Byte, Player> players;
     private ConcurrentHashMap<Integer, Particle> particles = new ConcurrentHashMap<>(500);
@@ -40,12 +38,12 @@ public class ScreenIngame extends Screen {
     private PacketSender sender = null;
 
     private long lastAttackTime;
-    private double lastUpdateTime = System.nanoTime();
-    private double lastRequestTime = lastUpdateTime;
-    private double lastQueueTime = lastUpdateTime;
-    private double lastPingTime = lastUpdateTime;
+    private double lastUpdateTime = 0;
+    private double lastRequestTime = 50;
+    private double lastQueueTime = 0;
+    private double lastPingTime = 0;
 
-    private long last100 = System.currentTimeMillis();
+    private long last100 = 0;
     private boolean[] keyDownMove = {false, false, false, false};
 
     private LogicModule logic;
@@ -79,19 +77,19 @@ public class ScreenIngame extends Screen {
             sender.sendMove(logic.getSelectedRoom(), myKey, Globals.RIGHT, keyDownMove[Globals.RIGHT]);
 
             updateParticles(particles);
-            //updatePlayers();
+            updatePlayers();
             lastUpdateTime = now;
         }
 
         if (now - lastRequestTime >= Globals.REQUESTALL_UPDATE) {
-            sender.sendGetAll(logic.getSelectedRoom());
+            sender.sendGetAll(logic.getSelectedRoom(), myKey);
             lastRequestTime = now;
         }
 
         if (now - lastPingTime >= Globals.PING_UPDATE) {
             pID = (byte) (Math.random() * 256);
             pingTime = System.currentTimeMillis();
-            sender.sendGetPing(pID);
+            sender.sendGetPing(pID, logic.getSelectedRoom(), myKey);
             lastPingTime = now;
         }
 
@@ -109,21 +107,27 @@ public class ScreenIngame extends Screen {
         for (Map.Entry<Byte, Player> pEntry : players.entrySet()) {
             threadPool.execute(pEntry.getValue());
         }
+        LinkedList<Byte> remove = new LinkedList<>();
         for (Map.Entry<Byte, Player> pEntry : players.entrySet()) {
             try {
                 pEntry.getValue().join();
+                if (pEntry.getValue().isDisconnected()) {
+                    remove.add(pEntry.getKey());
+                }
             } catch (InterruptedException ex) {
             }
+        }
+        while (!remove.isEmpty()) {
+            players.remove(remove.poll());
         }
     }
 
     @Override
-    public void draw(Graphics g) {
-        Graphics2D g2d = (Graphics2D) g;
-        AffineTransform resetForm = g2d.getTransform();
+    public void draw(Graphics2D g) {
+        AffineTransform resetForm = g.getTransform();
 
         if (players != null && myKey != -1 && players.get(myKey) != null) {
-            ((Graphics2D) g).translate(640.0 - players.get(myKey).getX(), 550.0 - players.get(myKey).getY());
+            g.translate(640.0 - players.get(myKey).getX(), 500.0 - players.get(myKey).getY());
         }
 
         if (players != null) {
@@ -135,15 +139,16 @@ public class ScreenIngame extends Screen {
         for (Map.Entry<Integer, Particle> pEntry : particles.entrySet()) {
             pEntry.getValue().draw(g);
         }
-
+        g.setColor(Color.BLACK);
         g.drawRect(0, 620, 5000, 30);
         g.drawRect(200, 400, 300, 30);
         g.drawRect(600, 180, 300, 30);
 
-        ((Graphics2D) g).setTransform(resetForm);
+        g.setTransform(resetForm);
 
-        //BufferedImage hud = Globals.HUD[0];
-        //g.drawImage(hud, Globals.WINDOW_WIDTH / 2 - hud.getWidth() / 2, Globals.WINDOW_HEIGHT - hud.getHeight(), null);
+        BufferedImage hud = Globals.HUD[0];
+        g.drawImage(hud, Globals.WINDOW_WIDTH / 2 - hud.getWidth() / 2, Globals.WINDOW_HEIGHT - hud.getHeight(), null);
+        g.setFont(Globals.ARIAL_12PT);
         g.drawString("Ping: " + ping, 1200, 40);
     }
 
@@ -153,80 +158,97 @@ public class ScreenIngame extends Screen {
     }
 
     private void processQueues() {
-        while (players != null && !playersAddQueue.isEmpty()) {
-            players.put(playersAddQueue.remove(), new Player(0, 0));
-        }
-
-        while (players != null && !playersMoveQueue.isEmpty()) {
-            byte[] data = playersMoveQueue.remove();
-            byte key = data[1];
-            int x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
-            int y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
-            if (players.containsKey(key)) {
-                players.get(key).setPos(x, y);
-            } else {
-                players.put(key, new Player(x, y));
+        while (players != null && !dataQueue.isEmpty()) {
+            byte[] data = dataQueue.remove();
+            byte dataType = data[0];
+            switch (dataType) {
+                case Globals.DATA_SET_PLAYER_POS:
+                    dataSetPlayerPos(data);
+                    break;
+                case Globals.DATA_SET_PLAYER_FACING:
+                    dataSetPlayerFacing(data);
+                    break;
+                case Globals.DATA_SET_PLAYER_STATE:
+                    dataSetPlayerState(data);
+                    break;
+                case Globals.DATA_PARTICLE_EFFECT:
+                    dataParticleEffect(data);
+                    break;
+                case Globals.DATA_PARTICLE_REMOVE:
+                    dataParticleRemove(data);
+                    break;
+                case Globals.DATA_PLAYER_DISCONNECT:
+                    dataPlayerDisconnect(data);
+                    break;
+                case Globals.DATA_PLAYER_GET_NAME:
+                    dataPlayerGetName(data);
+                    break;
             }
         }
+    }
 
-        while (players != null && !playersFacingQueue.isEmpty()) {
-            byte[] data = playersFacingQueue.remove();
-            byte key = data[1];
-            byte facing = data[2];
-            if (players.containsKey(key)) {
-                players.get(key).setFacing(facing);
-            }
-        }
-
-        while (players != null && !playersStateQueue.isEmpty()) {
-            byte[] data = playersStateQueue.remove();
-            byte key = data[1];
-            if (players.containsKey(key)) {
-                byte state = data[2];
-                byte frame = data[3];
-                players.get(key).setState(state);
-                players.get(key).setFrame(frame);
-            }
-        }
-
-        while (!particlesQueue.isEmpty()) {
-            byte[] data = particlesQueue.remove();
-            int key = Globals.bytesToInt(Arrays.copyOfRange(data, 1, 5));
-            byte particleID = data[5];
-            int x = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
-            int y = Globals.bytesToInt(Arrays.copyOfRange(data, 10, 14));
-            particles.put(key, new ParticleKnock(logic, key, x, y, 500));
-        }
-
-        while (!particlesRemoveQueue.isEmpty()) {
-            byte[] data = particlesRemoveQueue.remove();
-            int key = Globals.bytesToInt(Arrays.copyOfRange(data, 1, 5));
-            particles.remove(key);
+    private void dataSetPlayerPos(byte[] data) {
+        byte key = data[1];
+        int x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
+        int y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
+        if (players.containsKey(key)) {
+            players.get(key).setPos(x, y);
+        } else {
+            players.put(key, new Player(x, y, logic, key));
         }
     }
 
-    public void queueAddPlayer(byte key) {
-        playersAddQueue.add(key);
+    private void dataSetPlayerFacing(byte[] data) {
+        byte key = data[1];
+        byte facing = data[2];
+        if (players.containsKey(key)) {
+            players.get(key).setFacing(facing);
+        }
     }
 
-    public void queueSetPlayerPos(byte[] data) {
-        playersMoveQueue.add(data);
+    private void dataSetPlayerState(byte[] data) {
+        byte key = data[1];
+        if (players.containsKey(key)) {
+            byte state = data[2];
+            byte frame = data[3];
+            players.get(key).setState(state);
+            players.get(key).setFrame(frame);
+        }
     }
 
-    public void queueSetPlayerFacing(byte[] data) {
-        playersFacingQueue.add(data);
+    private void dataPlayerDisconnect(byte[] data) {
+        byte key = data[1];
+        if (players.containsKey(key)) {
+            players.remove(key);
+        }
     }
 
-    public void queueSetPlayerState(byte[] data) {
-        playersStateQueue.add(data);
+    private void dataParticleEffect(byte[] data) {
+        int key = Globals.bytesToInt(Arrays.copyOfRange(data, 1, 5));
+        byte particleID = data[5];
+        int x = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
+        int y = Globals.bytesToInt(Arrays.copyOfRange(data, 10, 14));
+        particles.put(key, new ParticleKnock(logic, key, x, y, 500));
     }
 
-    public void queueParticleEffect(byte[] data) {
-        particlesQueue.add(data);
+    private void dataParticleRemove(byte[] data) {
+        int key = Globals.bytesToInt(Arrays.copyOfRange(data, 1, 5));
+        particles.remove(key);
     }
 
-    public void queueParticleRemove(byte[] data) {
-        particlesRemoveQueue.add(data);
+    private void dataPlayerGetName(byte[] data) {
+        byte key = data[1];
+        byte[] temp = new byte[Globals.MAX_NAME_LENGTH];
+        System.arraycopy(data, 2, temp, 0, temp.length);
+        players.get(key).setPlayerName(new String(temp, StandardCharsets.UTF_8).trim());
+    }
+
+    public void queueData(byte[] data) {
+        dataQueue.add(data);
+    }
+
+    public void disconnect() {
+        logic.sendDisconnect(myKey);
     }
 
     public void setPing(byte rID) {
@@ -294,6 +316,9 @@ public class ScreenIngame extends Screen {
                     logic.sendAction(myKey);
                     attack();
                 }
+                break;
+            case KeyEvent.VK_ESCAPE:
+                logic.sendDisconnect(myKey);
                 break;
         }
     }

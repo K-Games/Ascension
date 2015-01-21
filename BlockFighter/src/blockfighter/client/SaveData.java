@@ -35,11 +35,11 @@ public class SaveData {
         name = n;
         Random rng = new Random();
         uniqueID = rng.nextInt(Integer.MAX_VALUE);
-        baseStats[Globals.STAT_LEVEL] = 99;
+        baseStats[Globals.STAT_LEVEL] = 1;
         baseStats[Globals.STAT_POWER] = 0;
         baseStats[Globals.STAT_DEFENSE] = 0;
         baseStats[Globals.STAT_SPIRIT] = 0;
-        baseStats[Globals.STAT_EXP] = 1546730;
+        baseStats[Globals.STAT_EXP] = 0;
         for (int i = 0; i < inventory.length; i++) {
             inventory[i] = new ItemEquip[100];
         }
@@ -404,11 +404,7 @@ public class SaveData {
         }
 
         ItemEquip temp = inventory[itemType][inventorySlot];
-        if (equipment[slot] == null) {
-            inventory[itemType][inventorySlot] = null;
-        } else {
-            inventory[itemType][inventorySlot] = equipment[slot];
-        }
+        inventory[itemType][inventorySlot] = equipment[slot];
         equipment[slot] = temp;
         calcStats();
     }
@@ -426,13 +422,13 @@ public class SaveData {
             inventory[type][i] = null;
         }
     }
-    
+
     public void destroyAllUpgrade() {
         for (int i = 0; i < upgrades.length; i++) {
             upgrades[i] = null;
         }
     }
-    
+
     public void addItem(int type, ItemEquip e) {
         for (int i = 0; i < inventory[type].length; i++) {
             if (inventory[type][i] == null) {

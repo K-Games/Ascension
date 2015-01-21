@@ -26,16 +26,16 @@ public class PacketSender {
         byte[] bytes = new byte[Globals.PACKET_BYTE * 2 + 15 + Globals.PACKET_INT * 9];
         bytes[0] = Globals.DATA_LOGIN;
         bytes[1] = room;
-        
+
         byte[] temp = c.getPlayerName().getBytes(StandardCharsets.UTF_8);
         System.arraycopy(temp, 0, bytes, 2, temp.length);
-        
+
         temp = Globals.intToByte(c.getUniqueID());
         bytes[17] = temp[0];
         bytes[18] = temp[1];
         bytes[19] = temp[2];
         bytes[20] = temp[3];
-        
+
         double[] stats = c.getStats();
         temp = Globals.intToByte((int) stats[Globals.STAT_LEVEL]);
         bytes[21] = temp[0];
@@ -57,7 +57,7 @@ public class PacketSender {
         bytes[34] = temp[1];
         bytes[35] = temp[2];
         bytes[36] = temp[3];
-        
+
         stats = c.getBonusStats();
         temp = Globals.intToByte((int) stats[Globals.STAT_ARMOR]);
         bytes[37] = temp[0];
@@ -84,10 +84,11 @@ public class PacketSender {
         sendPacket(requestPacket);
     }
 
-    public void sendGetAll(byte room) {
-        byte[] bytes = new byte[Globals.PACKET_BYTE * 2];
+    public void sendGetAll(byte room, byte myKey) {
+        byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
         bytes[0] = Globals.DATA_GET_ALL_PLAYER;
         bytes[1] = room;
+        bytes[2] = myKey;
         DatagramPacket requestPacket = createPacket(bytes);
         sendPacket(requestPacket);
     }
@@ -112,10 +113,30 @@ public class PacketSender {
         sendPacket(requestPacket);
     }
 
-    public void sendGetPing(byte pID) {
-        byte[] bytes = new byte[Globals.PACKET_BYTE * 2];
+    public void sendGetPing(byte pID, byte room, byte myKey) {
+        byte[] bytes = new byte[Globals.PACKET_BYTE * 4];
         bytes[0] = Globals.DATA_PING;
-        bytes[1] = pID;
+        bytes[1] = room;
+        bytes[2] = myKey;
+        bytes[3] = pID;
+        DatagramPacket requestPacket = createPacket(bytes);
+        sendPacket(requestPacket);
+    }
+
+    public void sendDisconnect(byte room, byte myKey) {
+        byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
+        bytes[0] = Globals.DATA_PLAYER_DISCONNECT;
+        bytes[1] = room;
+        bytes[2] = myKey;
+        DatagramPacket requestPacket = createPacket(bytes);
+        sendPacket(requestPacket);
+    }
+
+    public void sendGetName(byte room, byte key) {
+        byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
+        bytes[0] = Globals.DATA_PLAYER_GET_NAME;
+        bytes[1] = room;
+        bytes[2] = key;
         DatagramPacket requestPacket = createPacket(bytes);
         sendPacket(requestPacket);
     }

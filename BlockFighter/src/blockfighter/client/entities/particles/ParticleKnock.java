@@ -7,7 +7,7 @@ package blockfighter.client.entities.particles;
 
 import blockfighter.client.Globals;
 import blockfighter.client.LogicModule;
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 public class ParticleKnock extends Particle {
@@ -30,7 +30,7 @@ public class ParticleKnock extends Particle {
     }
 
     @Override
-    public void draw(Graphics g) {
+    public void draw(Graphics2D g) {
         if (frame >= Globals.PARTICLE_SPRITE[Globals.PARTICLE_KNOCK].length) {
             return;
         }

@@ -6,8 +6,8 @@ import blockfighter.client.SaveData;
 import blockfighter.client.entities.items.ItemEquip;
 import blockfighter.client.entities.items.ItemUpgrade;
 import blockfighter.client.entities.particles.ParticleUpgrade;
+import blockfighter.client.entities.particles.ParticleUpgradeEnd;
 import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
@@ -29,6 +29,7 @@ public class ScreenUpgrade extends ScreenMenu {
 
     private int selectEquip = -1;
     private int selectUpgrade = -1;
+    private int dragItem = -1;
 
     private Rectangle2D.Double[] inventSlots = new Rectangle2D.Double[100],
             equipSlots = new Rectangle2D.Double[Globals.NUM_EQUIP_SLOTS],
@@ -96,16 +97,25 @@ public class ScreenUpgrade extends ScreenMenu {
                 upgradeTime -= Globals.LOGIC_UPDATE / 1000000;
                 if (upgradeTime > 1000) {
                     Random rng = new Random();
-                    int random = rng.nextInt(360);
-                    int y = (int) (upgradeBox[0].y + 30D - 7 - Math.sin(Math.toRadians(random * 1D)) * (rng.nextInt(400)/10D));
-                    int x = (int) (upgradeBox[0].x + 30D - 7 + Math.cos(Math.toRadians(random * 1D)) * (rng.nextInt(400)/10D));
-                    particles.put(upPart + 2, new ParticleUpgrade(logic, upPart + 2, (int) upgradeBox[0].x + 30, (int) upgradeBox[0].y + 30, 1000, upPart % 4, x, y));
-                    upPart++;
+                    for (int i = 0; i < 5; i++) {
+                        particles.put(upPart + 2, new ParticleUpgrade(logic, upPart + 2, (int) upgradeBox[0].x + 30, (int) upgradeBox[0].y + 30, 1000, upPart % 4, rng.nextInt(5) - 16, rng.nextInt(10) - 5));
+                        upPart++;
+                    }
                 }
             }
             if (upgrading && upgradeTime <= 0) {
+                Random rng = new Random();
                 if (ItemUpgrade.rollUpgrade(c.getUpgrades()[selectUpgrade], c.getEquip()[selectEquip])) {
                     c.getEquip()[selectEquip].addUpgrade(1);
+                    for (int i = 0; i < 20; i++) {
+                        particles.put(upPart + 2, new ParticleUpgradeEnd(logic, upPart + 2, (int) upgradeBox[1].x + 30, (int) upgradeBox[1].y + 30, 1000, 3, rng.nextInt(10) - 5, -5 - rng.nextInt(3)));
+                        upPart++;
+                    }
+                } else {
+                    for (int i = 0; i < 20; i++) {
+                        particles.put(upPart + 2, new ParticleUpgradeEnd(logic, upPart + 2, (int) upgradeBox[1].x + 30, (int) upgradeBox[1].y + 30, 1000, 2, rng.nextInt(10) - 5, -5 - rng.nextInt(3)));
+                        upPart++;
+                    }
                 }
                 c.destroyItem(selectUpgrade);
                 selectUpgrade = -1;
@@ -122,7 +132,7 @@ public class ScreenUpgrade extends ScreenMenu {
     }
 
     @Override
-    public void draw(Graphics g) {
+    public void draw(Graphics2D g) {
         BufferedImage bg = Globals.MENU_BG[2];
         g.drawImage(bg, 0, 0, null);
 
@@ -151,17 +161,20 @@ public class ScreenUpgrade extends ScreenMenu {
             g.drawString("Chance of Success: " + df.format(ItemUpgrade.upgradeChance(c.getUpgrades()[selectUpgrade], c.getEquip()[selectEquip]) * 100) + "%", 1000, 550);
         }
         drawSlots(g);
-        drawItemInfo(g);
         drawDestroyConfirm(g);
         if (destroy) {
             button = Globals.MENU_ITEMDELETE[0];
             g.drawImage(button, mousePos.x + 10, mousePos.y + 15, null);
         }
         drawMenuButton(g);
+        if (dragItem != -1) {
+            c.getUpgrades()[dragItem].draw(g, mousePos.x + 5, mousePos.y + 5);
+        }
         super.draw(g);
+        drawItemInfo(g);
     }
 
-    private void drawDestroyConfirm(Graphics g) {
+    private void drawDestroyConfirm(Graphics2D g) {
         if (destroyConfirm) {
             BufferedImage window = Globals.MENU_WINDOW[Globals.WINDOW_DESTROYCONFIRM];
             g.drawImage(window, 265, 135, null);
@@ -184,7 +197,7 @@ public class ScreenUpgrade extends ScreenMenu {
         }
     }
 
-    private void drawSlots(Graphics g) {
+    private void drawSlots(Graphics2D g) {
         BufferedImage button = Globals.MENU_BUTTON[Globals.BUTTON_ITEMSLOT];
         BufferedImage character = Globals.CHAR_SPRITE[Globals.PLAYER_STATE_STAND][charFrame];
 
@@ -268,7 +281,7 @@ public class ScreenUpgrade extends ScreenMenu {
         }
     }
 
-    private void drawItemInfo(Graphics g) {
+    private void drawItemInfo(Graphics2D g) {
         if (destroyConfirm) {
             return;
         }
@@ -283,7 +296,7 @@ public class ScreenUpgrade extends ScreenMenu {
         }
     }
 
-    private void drawItemInfo(Graphics g, Rectangle2D.Double box, ItemUpgrade e) {
+    private void drawItemInfo(Graphics2D g, Rectangle2D.Double box, ItemUpgrade e) {
         if (e == null) {
             return;
         }
@@ -311,7 +324,7 @@ public class ScreenUpgrade extends ScreenMenu {
 
     }
 
-    private void drawItemInfo(Graphics g, Rectangle2D.Double box, ItemEquip e) {
+    private void drawItemInfo(Graphics2D g, Rectangle2D.Double box, ItemEquip e) {
         if (e == null) {
             return;
         }
@@ -437,6 +450,8 @@ public class ScreenUpgrade extends ScreenMenu {
 
     @Override
     public void mouseReleased(MouseEvent e) {
+        int drItem = dragItem;
+        dragItem = -1;
         if (destroyConfirm) {
             mouseReleased_destroyConfirm(e);
             return;
@@ -447,19 +462,28 @@ public class ScreenUpgrade extends ScreenMenu {
         }
         if (SwingUtilities.isLeftMouseButton(e)) {
             for (int i = 0; i < inventSlots.length; i++) {
-                if (inventSlots[i].contains(e.getPoint()) && c.getUpgrades()[i] != null) {
+                if (inventSlots[i].contains(e.getPoint())) {
                     if (!destroy) {
+                        if (drItem != -1) {
+                            ItemUpgrade temp = c.getUpgrades()[i];
+                            c.getUpgrades()[i] = c.getUpgrades()[drItem];
+                            c.getUpgrades()[drItem] = temp;
+                            return;
+                        }
                         //set upgrade item
-                        selectUpgrade = i;
+                        if (c.getUpgrades()[i] != null) {
+                            selectUpgrade = i;
+                            return;
+                        }
                     } else {
                         //Destroy upgrade item
                         if (selectUpgrade == i) {
                             selectUpgrade = -1;
-                            drawSelect = -1;
+                            //drawSelect = -1;
                         }
                         c.destroyItem(i);
+                        return;
                     }
-                    return;
                 }
             }
 
@@ -520,7 +544,20 @@ public class ScreenUpgrade extends ScreenMenu {
 
     @Override
     public void mouseDragged(MouseEvent e) {
-
+        mouseMoved(e);
+        if (destroyConfirm || destroy || upgrading ) {
+            return;
+        }
+        if (SwingUtilities.isLeftMouseButton(e)) {
+            if (dragItem == -1) {
+                for (int i = 0; i < inventSlots.length; i++) {
+                    if (inventSlots[i].contains(e.getPoint()) && c.getUpgrades()[i] != null) {
+                        dragItem = i;
+                        return;
+                    }
+                }
+            }
+        }
     }
 
     @Override

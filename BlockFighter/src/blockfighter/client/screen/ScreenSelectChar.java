@@ -4,7 +4,6 @@ import blockfighter.client.Globals;
 import blockfighter.client.LogicModule;
 import blockfighter.client.SaveData;
 import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
@@ -56,7 +55,7 @@ public class ScreenSelectChar extends ScreenMenu {
     }
 
     @Override
-    public void draw(Graphics g) {
+    public void draw(Graphics2D g) {
         BufferedImage bg = Globals.MENU_BG[0];
         g.drawImage(bg, 0, 0, null);
 
@@ -65,14 +64,12 @@ public class ScreenSelectChar extends ScreenMenu {
         g.drawImage(button, 440, 60, null);
         g.drawImage(button, 860, 60, null);
 
-        Graphics2D g2d = (Graphics2D) g;
-        g2d.setRenderingHint(
+        g.setRenderingHint(
                 RenderingHints.KEY_TEXT_ANTIALIASING,
                 RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
 
         for (int j = 0; j < 3; j++) {
             if (charsData[j] == null) {
-
                 g.setFont(Globals.ARIAL_30PT);
                 drawStringOutline(g, "Create", 170 + 420 * j, 260, 2);
                 drawStringOutline(g, "New", 185 + 420 * j, 310, 2);
@@ -81,7 +78,6 @@ public class ScreenSelectChar extends ScreenMenu {
                 g.drawString("Create", 170 + 420 * j, 260);
                 g.drawString("New", 185 + 420 * j, 310);
                 g.drawString("Character", 150 + 420 * j, 360);
-
             } else {
                 double[] stats = charsData[j].getBaseStats(), bonus = charsData[j].getBonusStats();
                 g.setFont(Globals.ARIAL_30PT);
