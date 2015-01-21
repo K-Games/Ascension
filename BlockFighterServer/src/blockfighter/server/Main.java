@@ -23,14 +23,16 @@ public class Main {
             GregorianCalendar date = new GregorianCalendar();
             Globals.log("Server started", String.format("%1$td/%1$tm/%1$tY %1$tT", date), Globals.LOG_TYPE_ERR, false);
             Globals.log("Server started", String.format("%1$td/%1$tm/%1$tY %1$tT", date), Globals.LOG_TYPE_DATA, true);
-            
-            for (byte i = 0; i < server_rooms.length;i++) {
+
+            for (byte i = 0; i < server_rooms.length; i++) {
                 server_rooms[i] = new LogicModule(i);
                 server_rooms[i].setPacketSender(sender);
                 server_rooms[i].start();
+                Globals.log("Initialization", "Room " + i, Globals.LOG_TYPE_ERR, false);
+                Globals.log("Initialization", "Room " + i, Globals.LOG_TYPE_DATA, true);
             }
             server_BossThread.start();
-            
+
         } catch (Exception ex) {
             Globals.log(ex.getLocalizedMessage(), ex, true);
         }

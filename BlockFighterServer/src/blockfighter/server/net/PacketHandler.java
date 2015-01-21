@@ -47,16 +47,22 @@ public class PacketHandler extends Thread {
                 receiveLogin(data, room, address, port);
                 break;
             case Globals.DATA_GET_ALL_PLAYER:
-                receiveGetAllPlayer(room, address, port);
+                receiveGetAllPlayer(data, room, address, port);
                 break;
             case Globals.DATA_SET_PLAYER_MOVE:
                 receiveSetPlayerMove(data, room);
                 break;
             case Globals.DATA_PING:
-                receiveGetPing(address, port, data);
+                receivePing(data, room, address, port);
                 break;
             case Globals.DATA_PLAYER_ACTION:
                 receivePlayerAction(data, room);
+                break;
+            case Globals.DATA_PLAYER_DISCONNECT:
+                receivePlayerDisconnect(data, room);
+                break;
+            case Globals.DATA_PLAYER_GET_NAME:
+                receivePlayerGetName(data, room, address, port);
                 break;
             default:
                 Globals.log("DATA_UNKNOWN", address.toString(), Globals.LOG_TYPE_DATA, true);
@@ -64,8 +70,31 @@ public class PacketHandler extends Thread {
         }
     }
 
-    private void receiveGetPing(InetAddress address, int port, byte[] data) {
+    private void receivePlayerGetName(byte[] data, byte room, InetAddress address, int port) {
+        if (logic[room].getPlayers().get(data[2]) == null) {
+            return;
+        }
+        byte[] name = logic[room].getPlayers().get(data[2]).getPlayerName().getBytes(StandardCharsets.UTF_8);
+        byte[] bytes = new byte[Globals.PACKET_BYTE * 2 + name.length];
+        bytes[0] = Globals.DATA_PLAYER_GET_NAME;
+        bytes[1] = data[2];
+        System.arraycopy(name, 0, bytes, 2, name.length);
+        packetSender.sendPlayer(bytes, address, port);
+    }
+
+    private void receivePlayerDisconnect(byte[] data, byte room) {
+        if (logic[room].getPlayers().get(data[2]) == null) {
+            return;
+        }
+        logic[room].getPlayers().get(data[2]).disconnect();
+        Globals.log("DATA_DISCONNECT", logic[room].getPlayers().get(data[2]).getAddress() + ":" + logic[room].getPlayers().get(data[2]).getPort() + " Disconnected Key: " + data[2], Globals.LOG_TYPE_DATA, true);
+    }
+
+    private void receivePing(byte[] data, byte room, InetAddress address, int port) {
         //Globals.log("DATA_PING", address.toString(), Globals.LOG_TYPE_DATA, true);
+        if (!logic[room].getPlayers().containsKey(data[2])) {
+            return;
+        }
         byte[] bytes = new byte[Globals.PACKET_BYTE * 2];
         bytes[0] = Globals.DATA_PING;
         bytes[1] = data[1];
@@ -78,20 +107,23 @@ public class PacketHandler extends Thread {
     }
 
     private void receiveLogin(byte[] data, byte room, InetAddress address, int port) {
-        Globals.log("DATA_LOGIN", address + ":" + port + " Room: " + room, Globals.LOG_TYPE_DATA, true);
+        Globals.log("DATA_LOGIN", address + ":" + port + " Attempt Room: " + room, Globals.LOG_TYPE_DATA, true);
         byte[] temp = new byte[4];
         System.arraycopy(data, 17, temp, 0, temp.length);
         int id = Globals.bytesToInt(temp);
 
         if (logic[room].containsPlayerID(id)) {
+            Globals.log("DATA_LOGIN", address + ":" + port + " uID Already In Room :" + id, Globals.LOG_TYPE_DATA, true);
             return;
         }
 
         byte freeKey = logic[room].getNextPlayerKey();
-
         if (freeKey == -1) {
+            Globals.log("DATA_LOGIN", address + ":" + port + " Room " + room + " at max capacity", Globals.LOG_TYPE_DATA, true);
             return;
         }
+
+        Globals.log("DATA_LOGIN", address + ":" + port + " Logged in Room " + room + " Key: " + freeKey, Globals.LOG_TYPE_DATA, true);
         Player newPlayer = new Player(packetSender, logic[room], freeKey, address, port, logic[room].getMap(), Math.random() * 1180.0 + 100, 0);
 
         temp = new byte[Globals.MAX_NAME_LENGTH];
@@ -119,19 +151,20 @@ public class PacketHandler extends Thread {
         newPlayer.setBonusStat(Globals.STAT_CRITDMG, Globals.bytesToInt(temp) / 10000D);
         System.arraycopy(data, 49, temp, 0, temp.length);
         newPlayer.setBonusStat(Globals.STAT_CRITCHANCE, Globals.bytesToInt(temp) / 10000D);
-        
-        System.out.println(newPlayer.getPlayerName());
-        System.out.println(newPlayer.getUniqueID());
+
+        System.out.println("Name: " + newPlayer.getPlayerName());
+        System.out.println("uID: " + newPlayer.getUniqueID());
         double[] stats = newPlayer.getStats();
-        System.out.println(stats[Globals.STAT_LEVEL]);
-        System.out.println(stats[Globals.STAT_POWER]);
-        System.out.println(stats[Globals.STAT_DEFENSE]);
-        System.out.println(stats[Globals.STAT_SPIRIT]);
+        System.out.println("Lvl: " + stats[Globals.STAT_LEVEL]);
+        System.out.println("PWR: " + stats[Globals.STAT_POWER]);
+        System.out.println("DEF: " + stats[Globals.STAT_DEFENSE]);
+        System.out.println("SPT: " + stats[Globals.STAT_SPIRIT]);
         stats = newPlayer.getBonusStats();
-        System.out.println(stats[Globals.STAT_ARMOR]);
-        System.out.println(stats[Globals.STAT_REGEN]);
-        System.out.println(stats[Globals.STAT_CRITDMG]);
-        System.out.println(stats[Globals.STAT_CRITCHANCE]);
+        System.out.println("Item Bonus Stats");
+        System.out.println("AMR: " + stats[Globals.STAT_ARMOR]);
+        System.out.println("REG: " + stats[Globals.STAT_REGEN]);
+        System.out.println("CRITDMG: " + stats[Globals.STAT_CRITDMG]);
+        System.out.println("CRITCHC: " + stats[Globals.STAT_CRITCHANCE]);
         logic[room].queueAddPlayer(newPlayer);
 
         byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
@@ -143,10 +176,14 @@ public class PacketHandler extends Thread {
         newPlayer.sendPos();
         newPlayer.sendFacing();
         newPlayer.sendState();
+        newPlayer.sendName();
     }
 
-    private void receiveGetAllPlayer(byte room, InetAddress address, int port) {
+    private void receiveGetAllPlayer(byte[] data, byte room, InetAddress address, int port) {
         //Globals.log("DATA_GET_ALL_PLAYER", "Room: " + room, Globals.LOG_TYPE_DATA, true);
+        if (!logic[room].getPlayers().containsKey(data[2])) {
+            return;
+        }
         for (Map.Entry<Byte, Player> pEntry : logic[room].getPlayers().entrySet()) {
             Player player = pEntry.getValue();
 

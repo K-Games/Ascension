@@ -44,33 +44,34 @@ public abstract class GameMap {
      * and height of 1 to check for intersections with any of the platforms.
      * </p>
      *
-     * @param moveBox
+     * @param x x coordinate of location
+     * @param y y of location(player's bottom)
      * @param fallspeed The distance to be increased in Y in double
      * @return True if there is no intersection with any platform.
      */
-    public boolean isFalling(Rectangle2D.Double moveBox, double fallspeed) {
+    public boolean isFalling(double x, double y, double fallspeed) {
         if (fallspeed <= 0) {
             return false;
         }
         for (Rectangle2D.Double platform : platforms) {
-            if (platform.y >= moveBox.y - fallspeed && platform.intersects(new Rectangle2D.Double(moveBox.x, moveBox.y+fallspeed, moveBox.width, moveBox.height))) {
+            if (platform.intersects(x-45, y, 90, 1)) {
                 return false;
             }
         }
-
         return true;
     }
 
     /**
      * Return the nearest valid Y
      *
-     * @param moveBox box used to validate y
+     * @param x x coordinate of location
+     * @param y y of location(player's bottom)
      * @param fallspeed The distance to be increased in Y in double
      * @return A Y value of the nearest platform below the x,y. 0 if none found.
      */
-    public double getValidY(Rectangle2D.Double moveBox, double fallspeed) {
+    public double getValidY(double x, double y, double fallspeed) {
         for (Rectangle2D.Double platform : platforms) {
-            if (platform.y >= moveBox.y - fallspeed && platform.intersects(new Rectangle2D.Double(moveBox.x, moveBox.y+fallspeed, moveBox.width, moveBox.height))) {
+            if (platform.intersects(x-45, y, 90, 1)) {
                 return platform.y;
             }
         }

@@ -11,6 +11,7 @@ import blockfighter.server.entities.buff.BuffStun;
 
 import java.awt.geom.Rectangle2D;
 import java.net.InetAddress;
+import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -44,6 +45,8 @@ public class Player extends Thread {
     private double[] stats = new double[Globals.NUM_STATS], bonusStats = new double[Globals.NUM_STATS];
 
     private Rectangle2D.Double platBox = new Rectangle2D.Double(x - 47.5, y, 95D, 5D);
+    private int[] equip = new int[Globals.NUM_EQUIP_SLOTS];
+    private boolean connected = true;
 
     /**
      * Create a new player entity in the server.
@@ -331,9 +334,9 @@ public class Player extends Thread {
             setYSpeed(Globals.MAX_FALLSPEED);
         }
 
-        isFalling = map.isFalling(platBox, ySpeed);
+        isFalling = map.isFalling(x, y, ySpeed);
         if (!isFalling && ySpeed > 0) {
-            y = map.getValidY(platBox, ySpeed);
+            y = map.getValidY(x, y, ySpeed);
             setYSpeed(0);
             isJumping = false;
             setPlayerState(Globals.PLAYER_STATE_STAND);
@@ -546,6 +549,15 @@ public class Player extends Thread {
         updateState = false;
     }
 
+    public void sendName() {
+        byte[] data = name.getBytes(StandardCharsets.UTF_8);
+        byte[] bytes = new byte[Globals.PACKET_BYTE * 2 + data.length];
+        bytes[0] = Globals.DATA_PLAYER_GET_NAME;
+        bytes[1] = key;
+        System.arraycopy(data, 0, bytes, 2, data.length);
+        packetSender.sendAll(bytes, logic.getRoom());
+    }
+
     public void setUniqueID(int id) {
         uniqueID = id;
     }
@@ -577,5 +589,17 @@ public class Player extends Thread {
 
     public double[] getBonusStats() {
         return bonusStats;
+    }
+
+    public void setEquip(int slot, int itemCode) {
+        equip[slot] = itemCode;
+    }
+
+    public void disconnect() {
+        connected = false;
+    }
+
+    public boolean isConnected() {
+        return connected;
     }
 }

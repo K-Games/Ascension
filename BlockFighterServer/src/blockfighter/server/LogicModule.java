@@ -20,7 +20,7 @@ import java.util.concurrent.Executors;
 public class LogicModule extends Thread {
 
     private boolean isRunning = false;
-    private final ConcurrentHashMap<Byte, Player> players = new ConcurrentHashMap<>(Globals.SERVER_MAX_PLAYERS, 0.9f, Globals.SERVER_MAX_PLAYERS / 10);
+    private final ConcurrentHashMap<Byte, Player> players = new ConcurrentHashMap<>(Globals.SERVER_MAX_PLAYERS, 0.9f, Math.max(Globals.SERVER_MAX_PLAYERS / 10, 1));
     private final ConcurrentHashMap<Integer, ProjBase> projectiles = new ConcurrentHashMap<>(500, 0.75f, 10);
 
     private PacketSender sender;
@@ -92,22 +92,36 @@ public class LogicModule extends Thread {
         for (Map.Entry<Byte, Player> player : players.entrySet()) {
             threadPool.execute(player.getValue());
         }
-
+        LinkedList<Byte> remove = new LinkedList<>();
         for (Map.Entry<Byte, Player> player : players.entrySet()) {
             try {
                 player.getValue().join();
+                if (!(player.getValue().isConnected())) {
+                    remove.add(player.getValue().getKey());
+                    byte[] bytes = new byte[2];
+                    bytes[0] = Globals.DATA_PLAYER_DISCONNECT;
+                    bytes[1] = player.getValue().getKey();
+                    sender.sendAll(bytes, room);
+                }
             } catch (InterruptedException ex) {
                 Globals.log(ex.getLocalizedMessage(), ex, true);
             }
         }
+        removeDisconnectedPlayers(remove);
+    }
+
+    private void removeDisconnectedPlayers(LinkedList<Byte> remove) {
+        while (!remove.isEmpty()) {
+            players.remove(remove.pop());
+            numPlayers--;
+        }
     }
 
     private void updateProjectiles(ExecutorService threadPool) {
-        LinkedList<Integer> remove = new LinkedList<>();
         for (Map.Entry<Integer, ProjBase> p : projectiles.entrySet()) {
             threadPool.execute(p.getValue());
         }
-
+        LinkedList<Integer> remove = new LinkedList<>();
         for (Map.Entry<Integer, ProjBase> p : projectiles.entrySet()) {
             try {
                 p.getValue().join();
@@ -184,10 +198,12 @@ public class LogicModule extends Thread {
      * @return returns next open key
      */
     public byte getNextPlayerKey() {
-        if (numPlayers >= Globals.SERVER_MAX_PLAYERS) {
-            return -1;
+        for (byte i = 0; i < Globals.SERVER_MAX_PLAYERS; i++) {
+            if (!players.containsKey(i)) {
+                return i;
+            }
         }
-        return numPlayers++;
+        return -1;
     }
 
     /**

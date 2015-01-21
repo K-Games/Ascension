@@ -28,7 +28,7 @@ public class Globals {
 
     public final static String SERVER_ADDRESS = "127.0.0.1";
     public final static int SERVER_PORT = 25565;
-    public final static byte SERVER_MAX_PLAYERS = 30;
+    public final static byte SERVER_MAX_PLAYERS = 10;
     public final static byte SERVER_ROOMS = 1;
     public final static byte MAX_NAME_LENGTH = 15;
     
@@ -115,12 +115,14 @@ public class Globals {
             DATA_SET_PLAYER_STATE = 0x06,
             DATA_PLAYER_ACTION = 0x07,
             DATA_PARTICLE_EFFECT = 0x08,
-            DATA_PARTICLE_REMOVE = 0x09;
+            DATA_PARTICLE_REMOVE = 0x09,
+            DATA_PLAYER_DISCONNECT = 0x0A,
+            DATA_PLAYER_GET_NAME = 0x0B;
 
     public final static byte NUM_PLAYER_ACTION = 1,
             PLAYER_ACTION_KNOCK = 0x00;
 
-    public final static void log(final String ex, final String s, final byte logType, final boolean console) {
+    public final static void log(final String info, final String classname, final byte logType, final boolean console) {
 
         Runnable logging = new Runnable() {
             @Override
@@ -146,12 +148,12 @@ public class Globals {
                 }
 
                 if (console) {
-                    System.out.println(logT + ex + "@" + s);
+                    System.out.println(logT + info + "@" + classname);
                 }
 
                 if (LOGGING) {
                     try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(logFile, true)))) {
-                        out.println("[" + SERVER_ID + "]" + ex + "@" + s);
+                        out.println("[" + SERVER_ID + "]" + info + "@" + classname);
                     } catch (IOException e) {
                         System.err.println(e);
                     }
