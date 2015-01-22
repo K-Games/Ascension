@@ -33,7 +33,10 @@ public class Globals {
 
     public final static double LOGIC_TICKS_PER_SEC = 40.0;
     public final static double LOGIC_UPDATE = 1000000000 / LOGIC_TICKS_PER_SEC;
-
+    
+    public final static double SEND_KEYDOWN_PER_SEC = 15.0;
+    public final static double SEND_KEYDOWN_UPDATE = 1000000000 / SEND_KEYDOWN_PER_SEC;
+    
     public final static double REQUESTALL_TICKS_PER_SEC = 1;
     public final static double REQUESTALL_UPDATE = 1000000000 / REQUESTALL_TICKS_PER_SEC;
 
@@ -59,7 +62,8 @@ public class Globals {
             ITEM_BELT = 7,
             ITEM_RING = 8,
             ITEM_AMULET = 9,
-            ITEM_OFFHAND = 10; //Only used for equipment slot index. Its the same as weapons.
+            ITEM_OFFHAND = 10,
+            ITEM_BOW = 11; //Only used for equipment slot index. Its the same as weapons.
 
     public final static byte NUM_EQUIP_SLOTS = 11;
 
@@ -121,7 +125,9 @@ public class Globals {
             DATA_PARTICLE_EFFECT = 0x08,
             DATA_PARTICLE_REMOVE = 0x09,
             DATA_PLAYER_DISCONNECT = 0x0A,
-            DATA_PLAYER_GET_NAME = 0x0B;
+            DATA_PLAYER_GET_NAME = 0x0B,
+            DATA_PLAYER_GET_STAT = 0x0C,
+            DATA_PLAYER_GET_EQUIP = 0x0D;
 
     public final static byte NUM_PLAYER_ACTION = 1,
             PLAYER_ACTION_KNOCK = 0x00;

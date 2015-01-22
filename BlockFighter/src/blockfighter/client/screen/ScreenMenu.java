@@ -22,7 +22,7 @@ public abstract class ScreenMenu extends Screen {
 
     protected double lastUpdateTime = System.nanoTime();
     protected static ConcurrentHashMap<Integer, Particle> particles = new ConcurrentHashMap<>(20);
-    private Rectangle2D.Double[] menuBox = new Rectangle2D.Double[5];
+    private Rectangle2D.Double[] menuBox = new Rectangle2D.Double[7];
     protected LogicModule logic;
     protected DecimalFormat df = new DecimalFormat("###,###,##0.##");
 
@@ -77,6 +77,8 @@ public abstract class ScreenMenu extends Screen {
         drawStringOutline(g, "Upgrades", 40, 162, 2);
         drawStringOutline(g, "Skills", 40, 212, 2);
         drawStringOutline(g, "Server List", 40, 262, 2);
+        drawStringOutline(g, "Key Binding", 40, 312, 2);
+        drawStringOutline(g, "Characters", 40, 362, 2);
 
         g.setColor(Color.WHITE);
         g.drawString("Stats", 40, 62);
@@ -84,6 +86,8 @@ public abstract class ScreenMenu extends Screen {
         g.drawString("Upgrades", 40, 162);
         g.drawString("Skills", 40, 212);
         g.drawString("Server List", 40, 262);
+        g.drawString("Key Bindings", 40, 312);
+        g.drawString("Characters", 40, 362);
     }
 
     @Override
@@ -103,6 +107,9 @@ public abstract class ScreenMenu extends Screen {
                             break;
                         case 4:
                             logic.sendLogin();
+                            break;
+                        case 6:
+                            logic.setScreen(new ScreenSelectChar(logic));
                             break;
                     }
                 }

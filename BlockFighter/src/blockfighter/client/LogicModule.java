@@ -51,6 +51,14 @@ public class LogicModule extends Thread {
         sender.sendGetName(selectedRoom, k);
     }
 
+    public void sendGetStat(byte k, byte s) {
+        sender.sendGetStat(selectedRoom, k, s);
+    }
+
+    public void sendGetEquip(byte k) {
+        sender.sendGetEquip(selectedRoom, k);
+    }
+    
     public void sendDisconnect(byte k) {
         sender.sendDisconnect(selectedRoom, k);
     }
@@ -124,4 +132,5 @@ public class LogicModule extends Thread {
     public void returnMenu() {
         screen = lastMenu;
     }
+
 }

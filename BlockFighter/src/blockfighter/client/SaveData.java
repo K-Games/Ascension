@@ -60,7 +60,7 @@ public class SaveData {
             bs[Globals.STAT_REGEN] = new Random().nextInt(1000) / 100D;
 
             if (i == 10) {
-                equipment[i] = new ItemEquip(bs, i * 2, i * .1, 100001);
+                equipment[i] = new ItemEquip(bs, i * 2, i * .1, 110000);
             } else {
                 equipment[i] = new ItemEquip(bs, i * 2, i * .1, (i + 1) * 100000);
             }
@@ -404,6 +404,16 @@ public class SaveData {
         }
 
         ItemEquip temp = inventory[itemType][inventorySlot];
+        if (temp != null) {
+            switch (ItemEquip.getSlot(temp.getItemCode())) {
+                case Globals.ITEM_OFFHAND:
+                    slot = Globals.ITEM_OFFHAND;
+                    break;
+                case Globals.ITEM_BOW:
+                    slot = Globals.ITEM_WEAPON;
+                    break;
+            }
+        }
         inventory[itemType][inventorySlot] = equipment[slot];
         equipment[slot] = temp;
         calcStats();
@@ -438,7 +448,7 @@ public class SaveData {
         }
     }
 
-    public void addItem(int type, ItemUpgrade e) {
+    public void addItem(ItemUpgrade e) {
         for (int i = 0; i < upgrades.length; i++) {
             if (upgrades[i] == null) {
                 upgrades[i] = e;

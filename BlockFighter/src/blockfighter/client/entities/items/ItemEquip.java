@@ -2,6 +2,7 @@ package blockfighter.client.entities.items;
 
 import blockfighter.client.Globals;
 import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import java.util.HashMap;
 
 /**
@@ -10,8 +11,10 @@ import java.util.HashMap;
  */
 public class ItemEquip implements PlayerItem {
 
-    public final static int TEMP_WEAP = 100000,
-            TEMP_OFF = 100001;
+    public final static int TEMP_SWORD = 100000,
+            TEMP_BLADE = 100001,
+            TEMP_SHIELD = 110000,
+            TEMP_BOW = 120000;
     public final static int TEMP_HEAD = 200000;
     public final static int TEMP_CHEST = 300000;
     public final static int TEMP_PANTS = 400000;
@@ -27,7 +30,7 @@ public class ItemEquip implements PlayerItem {
             UPGRADE_REGEN = 3,
             UPGRADE_ARMOR = 6;
     private final static int[] ITEM_CODES = {
-        TEMP_WEAP,
+        TEMP_SWORD,
         TEMP_HEAD,
         TEMP_CHEST,
         TEMP_PANTS,
@@ -37,9 +40,11 @@ public class ItemEquip implements PlayerItem {
         TEMP_BELT,
         TEMP_RING,
         TEMP_AMULET,
-        TEMP_OFF};
+        TEMP_BLADE, TEMP_SHIELD};
 
     private final static HashMap<Integer, String> ITEM_NAMES = new HashMap<>(ITEM_CODES.length);
+    private final static HashMap<Integer, BufferedImage> ITEM_ICONS = new HashMap<>(ITEM_CODES.length);
+    private final static HashMap<Integer, BufferedImage[]> ITEM_SPRITES = new HashMap<>(ITEM_CODES.length);
 
     public final static byte TIER_COMMON = 0,
             TIER_UNCOMMON = 1,
@@ -57,7 +62,7 @@ public class ItemEquip implements PlayerItem {
     protected int itemCode;
 
     public static void loadItemNames() {
-        ITEM_NAMES.put(TEMP_WEAP, "Sword");
+        ITEM_NAMES.put(TEMP_SWORD, "Sword");
         ITEM_NAMES.put(TEMP_HEAD, "Head");
         ITEM_NAMES.put(TEMP_CHEST, "Chest");
         ITEM_NAMES.put(TEMP_PANTS, "Pants");
@@ -67,7 +72,8 @@ public class ItemEquip implements PlayerItem {
         ITEM_NAMES.put(TEMP_BELT, "Belt");
         ITEM_NAMES.put(TEMP_RING, "Ring");
         ITEM_NAMES.put(TEMP_AMULET, "Amulet");
-        ITEM_NAMES.put(TEMP_OFF, "Offhander");
+        ITEM_NAMES.put(TEMP_BLADE, "Blade");
+        ITEM_NAMES.put(TEMP_SHIELD, "Shield");
     }
 
     public double[] getStats() {
@@ -76,6 +82,10 @@ public class ItemEquip implements PlayerItem {
 
     public double[] getBaseStats() {
         return baseStats;
+    }
+
+    public ItemEquip(int ic) {
+        itemCode = ic;
     }
 
     public ItemEquip(double[] bs, int u, double mult, int ic) {
@@ -101,15 +111,19 @@ public class ItemEquip implements PlayerItem {
 
     }
 
+    public void drawIngame(Graphics2D g, int x, int y, boolean offhand) {
+
+    }
+
     public int getUpgrades() {
         return upgrades;
     }
 
     private void update() {
         System.arraycopy(baseStats, 0, totalStats, 0, baseStats.length);
-        totalStats[Globals.STAT_POWER] = Math.round(baseStats[Globals.STAT_POWER] * (1 + bonusMult + upgrades * 0.01));
-        totalStats[Globals.STAT_DEFENSE] = Math.round(baseStats[Globals.STAT_DEFENSE] * (1 + bonusMult + upgrades * 0.01));
-        totalStats[Globals.STAT_SPIRIT] = Math.round(baseStats[Globals.STAT_SPIRIT] * (1 + bonusMult + upgrades * 0.01));
+        totalStats[Globals.STAT_POWER] = Math.round(baseStats[Globals.STAT_POWER] * (1 + bonusMult + upgrades * 0.02));
+        totalStats[Globals.STAT_DEFENSE] = Math.round(baseStats[Globals.STAT_DEFENSE] * (1 + bonusMult + upgrades * 0.02));
+        totalStats[Globals.STAT_SPIRIT] = Math.round(baseStats[Globals.STAT_SPIRIT] * (1 + bonusMult + upgrades * 0.02));
 
         if (baseStats[Globals.STAT_CRITCHANCE] > 0) {
             totalStats[Globals.STAT_CRITCHANCE] = baseStats[Globals.STAT_CRITCHANCE] + upgrades * UPGRADE_CRITCHANCE;
@@ -175,5 +189,34 @@ public class ItemEquip implements PlayerItem {
     public void addUpgrade(int amount) {
         upgrades += amount;
         update();
+    }
+
+    public static byte getSlot(int i) {
+        if (i >= 100000 && i <= 109999) { //Swords
+            return Globals.ITEM_WEAPON;
+        } else if (i >= 110000 && i <= 119999) { //Shields
+            return Globals.ITEM_OFFHAND;
+        } else if (i >= 120000 && i <= 129999) { //Bows
+            return Globals.ITEM_BOW;
+        } else if (i >= 200000 && i <= 209999) {
+            return Globals.ITEM_HEAD;
+        } else if (i >= 300000 && i <= 309999) {
+            return Globals.ITEM_CHEST;
+        } else if (i >= 400000 && i <= 409999) {
+            return Globals.ITEM_PANTS;
+        } else if (i >= 500000 && i <= 509999) {
+            return Globals.ITEM_SHOULDER;
+        } else if (i >= 600000 && i <= 609999) {
+            return Globals.ITEM_GLOVE;
+        } else if (i >= 700000 && i <= 709999) {
+            return Globals.ITEM_SHOE;
+        } else if (i >= 800000 && i <= 809999) {
+            return Globals.ITEM_BELT;
+        } else if (i >= 900000 && i <= 909999) {
+            return Globals.ITEM_RING;
+        } else if (i >= 1000000 && i <= 1009999) {
+            return Globals.ITEM_AMULET;
+        }
+        return -1;
     }
 }

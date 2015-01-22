@@ -2,6 +2,7 @@ package blockfighter.client.net;
 
 import blockfighter.client.Globals;
 import blockfighter.client.SaveData;
+import blockfighter.client.entities.items.ItemEquip;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -23,7 +24,7 @@ public class PacketSender {
 
     public void sendLogin(byte room, SaveData c) {
         System.out.println("Connecting to " + Globals.SERVER_ADDRESS);
-        byte[] bytes = new byte[Globals.PACKET_BYTE * 2 + 15 + Globals.PACKET_INT * 9];
+        byte[] bytes = new byte[Globals.PACKET_BYTE * 2 + 15 + Globals.PACKET_INT * 20];
         bytes[0] = Globals.DATA_LOGIN;
         bytes[1] = room;
 
@@ -80,6 +81,17 @@ public class PacketSender {
         bytes[51] = temp[2];
         bytes[52] = temp[3];
 
+        ItemEquip[] equip = c.getEquip();
+        for (int i = 0; i < equip.length; i++) {
+            if (equip[i] == null) {
+                continue;
+            }
+            temp = Globals.intToByte(equip[i].getItemCode());
+            bytes[i * 4 + 53] = temp[0];
+            bytes[i * 4 + 54] = temp[1];
+            bytes[i * 4 + 55] = temp[2];
+            bytes[i * 4 + 56] = temp[3];
+        }
         DatagramPacket requestPacket = createPacket(bytes);
         sendPacket(requestPacket);
     }
@@ -141,6 +153,25 @@ public class PacketSender {
         sendPacket(requestPacket);
     }
 
+    public void sendGetStat(byte room, byte key, byte stat) {
+        byte[] bytes = new byte[Globals.PACKET_BYTE * 4];
+        bytes[0] = Globals.DATA_PLAYER_GET_STAT;
+        bytes[1] = room;
+        bytes[2] = key;
+        bytes[3] = stat;
+        DatagramPacket requestPacket = createPacket(bytes);
+        sendPacket(requestPacket);
+    }
+
+    public void sendGetEquip(byte room, byte key) {
+        byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
+        bytes[0] = Globals.DATA_PLAYER_GET_EQUIP;
+        bytes[1] = room;
+        bytes[2] = key;
+        DatagramPacket requestPacket = createPacket(bytes);
+        sendPacket(requestPacket);
+    }
+
     private void sendPacket(DatagramPacket packet) {
         try {
             socket.send(packet);
@@ -151,4 +182,5 @@ public class PacketSender {
     private DatagramPacket createPacket(byte[] bytes) {
         return new DatagramPacket(bytes, bytes.length);
     }
+
 }

@@ -42,7 +42,8 @@ public class ScreenIngame extends Screen {
     private double lastRequestTime = 50;
     private double lastQueueTime = 0;
     private double lastPingTime = 0;
-
+    private double lastSendKeyTime = 0;
+    
     private long last100 = 0;
     private boolean[] keyDownMove = {false, false, false, false};
 
@@ -69,13 +70,16 @@ public class ScreenIngame extends Screen {
             lastAttackTime -= 100;
             last100 = nowMs;
         }
-
-        if (now - lastUpdateTime >= Globals.LOGIC_UPDATE) {
+        if (now - lastSendKeyTime >= Globals.SEND_KEYDOWN_UPDATE) {
             sender.sendMove(logic.getSelectedRoom(), myKey, Globals.UP, keyDownMove[Globals.UP]);
             sender.sendMove(logic.getSelectedRoom(), myKey, Globals.DOWN, keyDownMove[Globals.DOWN]);
             sender.sendMove(logic.getSelectedRoom(), myKey, Globals.LEFT, keyDownMove[Globals.LEFT]);
             sender.sendMove(logic.getSelectedRoom(), myKey, Globals.RIGHT, keyDownMove[Globals.RIGHT]);
 
+            lastSendKeyTime = now;
+        }
+
+        if (now - lastUpdateTime >= Globals.LOGIC_UPDATE) {
             updateParticles(particles);
             updatePlayers();
             lastUpdateTime = now;
@@ -183,7 +187,34 @@ public class ScreenIngame extends Screen {
                 case Globals.DATA_PLAYER_GET_NAME:
                     dataPlayerGetName(data);
                     break;
+                case Globals.DATA_PLAYER_GET_STAT:
+                    dataGetLevel(data);
+                    break;
+                case Globals.DATA_PLAYER_GET_EQUIP:
+                    dataGetEquip(data);
+                    break;
             }
+        }
+    }
+
+    private void dataGetEquip(byte[] data) {
+        byte key = data[1];
+        if (players.containsKey(key)) {
+            for (byte i = 0; i < Globals.NUM_EQUIP_SLOTS; i++) {
+                byte[] temp = new byte[4];
+                System.arraycopy(data, i * 4 + 2, temp, 0, temp.length);
+                players.get(key).setEquip(i, Globals.bytesToInt(temp));
+            }
+        }
+    }
+
+    private void dataGetLevel(byte[] data) {
+        byte key = data[1];
+
+        if (players.containsKey(key)) {
+            byte stat = data[2];
+            int amount = Globals.bytesToInt(Arrays.copyOfRange(data, 3, 7));
+            players.get(key).setStat(stat, amount);
         }
     }
 
@@ -238,9 +269,12 @@ public class ScreenIngame extends Screen {
 
     private void dataPlayerGetName(byte[] data) {
         byte key = data[1];
-        byte[] temp = new byte[Globals.MAX_NAME_LENGTH];
-        System.arraycopy(data, 2, temp, 0, temp.length);
-        players.get(key).setPlayerName(new String(temp, StandardCharsets.UTF_8).trim());
+        if (players.containsKey(key)) {
+            byte[] temp = new byte[Globals.MAX_NAME_LENGTH];
+            System.arraycopy(data, 2, temp, 0, temp.length);
+
+            players.get(key).setPlayerName(new String(temp, StandardCharsets.UTF_8).trim());
+        }
     }
 
     public void queueData(byte[] data) {

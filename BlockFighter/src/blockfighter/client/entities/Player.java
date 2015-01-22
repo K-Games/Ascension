@@ -58,7 +58,11 @@ public class Player extends Thread {
         lastUpdateTime = 5000;
     }
 
-    public void setStats(byte statType, double stat) {
+    public void setEquip(byte slot, int itemCode) {
+        equipment[slot] = new ItemEquip(itemCode);
+    }
+
+    public void setStat(byte statType, double stat) {
         stats[statType] = stat;
         lastUpdateTime = 5000;
     }
@@ -90,13 +94,42 @@ public class Player extends Thread {
         int drawDscX = x + ((facing == Globals.RIGHT) ? 1 : -1) * sprite.getWidth() / 2;
         g.drawImage(sprite, drawSrcX, drawSrcY, drawDscX, y, 0, 0, sprite.getWidth(), sprite.getHeight(), null);
         g.setFont(Globals.ARIAL_18PT);
+
+        g.setColor(new Color(0, 0, 0, 180));
+        g.fillRect(x - 51, y - 221, 102, 12);
+        g.setColor(Color.red);
+        g.fillRect(x - 50, y - 220, (int) (stats[Globals.STAT_MINHP] / stats[Globals.STAT_MAXHP] * 100), 10);
+
+        int width = g.getFontMetrics().stringWidth(name);
         g.setColor(Color.BLACK);
-        g.drawString(name, x - 39, y + 20);
-        g.drawString(name, x - 41, y + 20);
-        g.drawString(name, x - 40, y + 19);
-        g.drawString(name, x - 40, y + 21);
+        g.drawString(name, x - width / 2 - 1, y + 20);
+        g.drawString(name, x - width / 2 + 1, y + 20);
+        g.drawString(name, x - width / 2, y + 19);
+        g.drawString(name, x - width / 2, y + 21);
         g.setColor(Color.WHITE);
-        g.drawString(name, x - 40, y + 20);
+        g.drawString(name, x - width / 2, y + 20);
+
+        if (equipment[Globals.ITEM_CHEST] != null) {
+            equipment[Globals.ITEM_CHEST].drawIngame(g, x, y);
+        }
+        if (equipment[Globals.ITEM_SHOULDER] != null) {
+            equipment[Globals.ITEM_SHOULDER].drawIngame(g, x, y);
+        }
+        if (equipment[Globals.ITEM_GLOVE] != null) {
+            equipment[Globals.ITEM_GLOVE].drawIngame(g, x, y);
+        }
+        if (equipment[Globals.ITEM_PANTS] != null) {
+            equipment[Globals.ITEM_PANTS].drawIngame(g, x, y);
+        }
+        if (equipment[Globals.ITEM_SHOE] != null) {
+            equipment[Globals.ITEM_SHOE].drawIngame(g, x, y);
+        }
+        if (equipment[Globals.ITEM_WEAPON] != null) {
+            equipment[Globals.ITEM_WEAPON].drawIngame(g, x, y);
+        }
+        if (equipment[Globals.ITEM_OFFHAND] != null) {
+            equipment[Globals.ITEM_OFFHAND].drawIngame(g, x, y, true);
+        }
     }
 
     @Override
@@ -104,6 +137,15 @@ public class Player extends Thread {
         lastUpdateTime -= Globals.LOGIC_UPDATE / 1000000;
         if (name.length() <= 0) {
             logic.sendGetName(key);
+        }
+        for (ItemEquip e : equipment) {
+            if (e == null) {
+                logic.sendGetEquip(key);
+                break;
+            }
+        }
+        if (stats[Globals.STAT_MAXHP] <= 0) {
+            logic.sendGetStat(key, Globals.STAT_MAXHP);
         }
     }
 

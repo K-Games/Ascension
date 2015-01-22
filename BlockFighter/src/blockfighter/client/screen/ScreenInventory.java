@@ -458,7 +458,7 @@ public class ScreenInventory extends ScreenMenu {
                             return;
                         }
                     }
-                    if (drEq == -1 && c.getEquip()[i] != null) {
+                    if (drItem == -1 && drEq == -1 && c.getEquip()[i] != null) {
                         c.unequipItem(i);
                         return;
                     }

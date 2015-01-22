@@ -50,6 +50,12 @@ public class PacketHandler extends Thread {
             case Globals.DATA_PLAYER_GET_NAME:
                 receiveData(data);
                 break;
+            case Globals.DATA_PLAYER_GET_STAT:
+                receiveData(data);
+                break;
+            case Globals.DATA_PLAYER_GET_EQUIP:
+                receiveData(data);
+                break;
         }
     }
 
