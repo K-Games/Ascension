@@ -37,11 +37,12 @@ public class PacketHandler extends Thread {
         byte[] data = requestPacket.getData();
         byte dataType = data[0];
         byte room = data[1];
-        if (room >= Globals.SERVER_ROOMS) {
-            return;
-        }
         InetAddress address = requestPacket.getAddress();
         int port = requestPacket.getPort();
+        if (room >= Globals.SERVER_ROOMS) {
+            Globals.log("DATA_INVALID_ROOM", address.toString() + " Room: " + room, Globals.LOG_TYPE_DATA, true);
+            return;
+        }
         switch (dataType) {
             case Globals.DATA_PLAYER_LOGIN:
                 receivePlayerLogin(data, room, address, port);
@@ -189,6 +190,13 @@ public class PacketHandler extends Thread {
             System.arraycopy(data, i * 4 + 53, temp, 0, temp.length);
             newPlayer.setEquip(i, Globals.bytesToInt(temp));
         }
+
+        for (int i = 0; i < 12; i++) {
+            if (data[i * 2 + 97] == -1) {
+                continue;
+            }
+            newPlayer.setSkill(data[i * 2 + 97], data[i * 2 + 98]);
+        }
         Globals.log("DATA_PLAYER_LOGIN", address + ":" + port + " Logged in Room " + room + " Key: " + freeKey + " Name: " + newPlayer.getPlayerName(), Globals.LOG_TYPE_DATA, true);
         logic[room].queueAddPlayer(newPlayer);
 
@@ -244,6 +252,6 @@ public class PacketHandler extends Thread {
     }
 
     private void receivePlayerSetMove(byte[] data, byte room) {
-        logic[room].queuePlayerMove(data);
+        logic[room].queuePlayerDirKeydown(data);
     }
 }

@@ -31,12 +31,11 @@ public class LogicModule extends Thread {
     private int projMaxKeys = 500;
 
     private final ConcurrentLinkedQueue<Player> pAddQueue = new ConcurrentLinkedQueue<>();
-    private final ConcurrentLinkedQueue<byte[]> pMoveQueue = new ConcurrentLinkedQueue<>();
+    private final ConcurrentLinkedQueue<byte[]> pDirKeydownQueue = new ConcurrentLinkedQueue<>();
     private final ConcurrentLinkedQueue<byte[]> pActionQueue = new ConcurrentLinkedQueue<>();
     private final ConcurrentLinkedQueue<Integer> projKeys = new ConcurrentLinkedQueue<>();
     private final ConcurrentLinkedQueue<ProjBase> projEffectQueue = new ConcurrentLinkedQueue<>();
     private final ConcurrentLinkedQueue<ProjBase> projAddQueue = new ConcurrentLinkedQueue<>();
-    private byte numPlayers = 0;
     private byte room = -1;
 
     /**
@@ -115,7 +114,6 @@ public class LogicModule extends Thread {
     private void removeDisconnectedPlayers(LinkedList<Byte> remove) {
         while (!remove.isEmpty()) {
             players.remove(remove.pop());
-            numPlayers--;
         }
     }
 
@@ -186,15 +184,6 @@ public class LogicModule extends Thread {
     }
 
     /**
-     * Return the number of connected players.
-     *
-     * @return Number of connected players
-     */
-    public byte getNumPlayers() {
-        return numPlayers;
-    }
-
-    /**
      * Return the next key open for connection
      *
      * @return returns next open key
@@ -229,8 +218,8 @@ public class LogicModule extends Thread {
      *
      * @param data Bytes to be processed - 1:Key, 2:direction, 3:1 = true, 0 = false
      */
-    public void queuePlayerMove(byte[] data) {
-        pMoveQueue.add(data);
+    public void queuePlayerDirKeydown(byte[] data) {
+        pDirKeydownQueue.add(data);
     }
 
     /**
@@ -277,12 +266,12 @@ public class LogicModule extends Thread {
         queues[0] = new Thread() {
             @Override
             public void run() {
-                while (!pMoveQueue.isEmpty()) {
-                    byte[] data = pMoveQueue.poll();
+                while (!pDirKeydownQueue.isEmpty()) {
+                    byte[] data = pDirKeydownQueue.poll();
                     if (data != null) {
                         byte key = data[2], dir = data[3], value = data[4];
                         if (players.containsKey(key)) {
-                            players.get(key).setMove(dir, value == 1);
+                            players.get(key).setDirKeydown(dir, value == 1);
                         }
                     }
                 }

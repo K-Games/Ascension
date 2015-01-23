@@ -8,6 +8,7 @@ import blockfighter.server.LogicModule;
 import blockfighter.server.entities.buff.Buff;
 import blockfighter.server.entities.buff.BuffKnockback;
 import blockfighter.server.entities.buff.BuffStun;
+import blockfighter.server.entities.player.skills.*;
 
 import java.awt.geom.Rectangle2D;
 import java.net.InetAddress;
@@ -47,10 +48,12 @@ public class Player extends Thread {
     private double[] stats = new double[Globals.NUM_STATS], bonusStats = new double[Globals.NUM_STATS];
 
     private int[] equip = new int[Globals.NUM_EQUIP_SLOTS];
+    private Skill[] skills = new Skill[Skill.NUM_SKILLS];
     private boolean connected = true;
     private Random rng = new Random();
 
     private ConcurrentLinkedQueue<Integer> damageQueue = new ConcurrentLinkedQueue<>();
+    private ConcurrentLinkedQueue<Integer> healQueue = new ConcurrentLinkedQueue<>();
 
     private long lastActionTime = Globals.SERVER_MAX_IDLE;
 
@@ -81,6 +84,40 @@ public class Player extends Thread {
         facing = Globals.RIGHT;
         playerState = Globals.PLAYER_STATE_STAND;
         frame = 0;
+
+        skills[Skill.SWORD_CINDER] = new SkillSwordCinder();
+        skills[Skill.SWORD_DRIVE] = new SkillSwordDrive();
+        skills[Skill.SWORD_MULTI] = new SkillSwordMulti();
+        skills[Skill.SWORD_SLASH] = new SkillSwordSlash();
+        skills[Skill.SWORD_TAUNT] = new SkillSwordTaunt();
+        skills[Skill.SWORD_VORPAL] = new SkillSwordVorpal();
+
+        skills[Skill.BOW_ARC] = new SkillBowArc();
+        skills[Skill.BOW_FROST] = new SkillBowFrost();
+        skills[Skill.BOW_POWER] = new SkillBowPower();
+        skills[Skill.BOW_RAPID] = new SkillBowRapid();
+        skills[Skill.BOW_STORM] = new SkillBowStorm();
+        skills[Skill.BOW_VOLLEY] = new SkillBowVolley();
+
+        skills[Skill.SHIELD_FORTIFY] = new SkillShieldFortify();
+        skills[Skill.SHIELD_IRONFORT] = new SkillShieldIron();
+        skills[Skill.SHIELD_3] = new SkillShield3();
+        skills[Skill.SHIELD_4] = new SkillShield4();
+        skills[Skill.SHIELD_5] = new SkillShield5();
+        skills[Skill.SHIELD_6] = new SkillShield6();
+
+        skills[Skill.PASSIVE_1] = new SkillPassive1();
+        skills[Skill.PASSIVE_2] = new SkillPassive2();
+        skills[Skill.PASSIVE_3] = new SkillPassive3();
+        skills[Skill.PASSIVE_4] = new SkillPassive4();
+        skills[Skill.PASSIVE_5] = new SkillPassive5();
+        skills[Skill.PASSIVE_6] = new SkillPassive6();
+        skills[Skill.PASSIVE_7] = new SkillPassive7();
+        skills[Skill.PASSIVE_8] = new SkillPassive8();
+        skills[Skill.PASSIVE_9] = new SkillPassive9();
+        skills[Skill.PASSIVE_10] = new SkillPassive10();
+        skills[Skill.PASSIVE_11] = new SkillPassive11();
+        skills[Skill.PASSIVE_12] = new SkillPassive12();
     }
 
     /**
@@ -180,7 +217,7 @@ public class Player extends Thread {
      * @param direction The direction to be set
      * @param move True when pressed, false when released
      */
-    public void setMove(int direction, boolean move) {
+    public void setDirKeydown(int direction, boolean move) {
         if (move) {
             lastActionTime = Globals.SERVER_MAX_IDLE;
         }
@@ -218,6 +255,10 @@ public class Player extends Thread {
      */
     public void setXSpeed(double speed) {
         xSpeed = speed;
+    }
+
+    public void setSkill(byte skillCode, byte level) {
+        skills[skillCode].setLevel(level);
     }
 
     @Override
@@ -276,12 +317,22 @@ public class Player extends Thread {
                 lastHPSend = 0;
             }
         }
+
+        while (!healQueue.isEmpty()) {
+            Integer heal = healQueue.poll();
+            if (heal != null) {
+                stats[Globals.STAT_MINHP] += heal;
+                lastHPSend = 0;
+            }
+        }
+
         stats[Globals.STAT_MINHP] += stats[Globals.STAT_REGEN] / 100D;
         if (stats[Globals.STAT_MINHP] > stats[Globals.STAT_MAXHP]) {
             stats[Globals.STAT_MINHP] = stats[Globals.STAT_MAXHP];
         } else if (stats[Globals.STAT_MINHP] < 0) {
             stats[Globals.STAT_MINHP] = 0;
         }
+
         if (lastHPSend <= 0) {
             byte[] stat = Globals.intToByte((int) stats[Globals.STAT_MINHP]);
             byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT];
@@ -290,7 +341,7 @@ public class Player extends Thread {
             bytes[2] = Globals.STAT_MINHP;
             System.arraycopy(stat, 0, bytes, 3, stat.length);
             packetSender.sendAll(bytes, logic.getRoom());
-            lastHPSend = 100;
+            lastHPSend = 200;
         }
     }
 
@@ -457,6 +508,10 @@ public class Player extends Thread {
 
     public void queueDamage(int damage) {
         damageQueue.add(damage);
+    }
+
+    public void queueHeal(int heal) {
+        healQueue.add(heal);
     }
 
     /**
