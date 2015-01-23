@@ -8,7 +8,7 @@ import blockfighter.server.entities.player.Player;
 
 /**
  *
- * @author Ken
+ * @author Ken Kwan
  */
 public interface Buff {
 

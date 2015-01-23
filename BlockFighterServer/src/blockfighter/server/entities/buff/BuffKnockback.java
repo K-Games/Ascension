@@ -4,7 +4,7 @@ import blockfighter.server.entities.player.Player;
 
 /**
  *
- * @author Ken
+ * @author Ken Kwan
  */
 public class BuffKnockback extends BuffBase {
 

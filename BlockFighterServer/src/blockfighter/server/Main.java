@@ -7,7 +7,7 @@ import java.util.GregorianCalendar;
 /**
  * Start module of server
  *
- * @author Ken
+ * @author Ken Kwan
  */
 public class Main {
 

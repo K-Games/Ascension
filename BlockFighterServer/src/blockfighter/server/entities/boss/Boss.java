@@ -9,7 +9,7 @@ import java.awt.geom.Rectangle2D;
 
 /**
  *
- * @author Ken
+ * @author Ken Kwan
  */
 public interface Boss {
 

@@ -6,7 +6,7 @@ import blockfighter.server.entities.player.Player;
 /**
  * Abstract class for all buffs/debuffs
  *
- * @author Ken
+ * @author Ken Kwan
  */
 public abstract class BuffBase implements Buff {
 

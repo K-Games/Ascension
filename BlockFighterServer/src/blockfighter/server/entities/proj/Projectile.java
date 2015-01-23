@@ -8,7 +8,7 @@ import blockfighter.server.entities.player.Player;
  * An abstract projectiles/attacks class implements this interface so that the server will update these on each logic cycle. All projectiles must be an extension of the abstract class.
  * </p>
  *
- * @author Ken
+ * @author Ken Kwan
  */
 public interface Projectile {
 

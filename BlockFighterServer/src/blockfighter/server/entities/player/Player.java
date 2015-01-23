@@ -14,12 +14,14 @@ import java.net.InetAddress;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * Player entities on the server.
  *
- * @author Ken
+ * @author Ken Kwan
  */
 public class Player extends Thread {
 
@@ -28,7 +30,7 @@ public class Player extends Thread {
     private int uniqueID = -1;
     private String name = "";
     private double x, y, ySpeed, xSpeed;
-    private boolean[] isMove = new boolean[4];
+    private boolean[] dirKeydown = new boolean[4];
     private boolean isFalling = false, isJumping = false;
     private boolean updatePos = false, updateFacing = false, updateState = false;
     private byte playerState, facing, frame;
@@ -44,9 +46,15 @@ public class Player extends Thread {
     private final GameMap map;
     private double[] stats = new double[Globals.NUM_STATS], bonusStats = new double[Globals.NUM_STATS];
 
-    private Rectangle2D.Double platBox = new Rectangle2D.Double(x - 47.5, y, 95D, 5D);
     private int[] equip = new int[Globals.NUM_EQUIP_SLOTS];
     private boolean connected = true;
+    private Random rng = new Random();
+
+    private ConcurrentLinkedQueue<Integer> damageQueue = new ConcurrentLinkedQueue<>();
+
+    private long lastActionTime = Globals.SERVER_MAX_IDLE;
+
+    private long lastHPSend = 0;
 
     /**
      * Create a new player entity in the server.
@@ -162,6 +170,10 @@ public class Player extends Thread {
         return frame;
     }
 
+    public int[] getEquip() {
+        return equip;
+    }
+
     /**
      * Set this player's movement when server receives packet that key is pressed.
      *
@@ -169,7 +181,10 @@ public class Player extends Thread {
      * @param move True when pressed, false when released
      */
     public void setMove(int direction, boolean move) {
-        isMove[direction] = move;
+        if (move) {
+            lastActionTime = Globals.SERVER_MAX_IDLE;
+        }
+        dirKeydown[direction] = move;
     }
 
     /**
@@ -217,13 +232,13 @@ public class Player extends Thread {
      * </p>
      */
     public void update() {
+        lastActionTime -= Globals.LOGIC_UPDATE / 1000000;
+        lastHPSend -= Globals.LOGIC_UPDATE / 1000000;
         updateBuffs();
         updateFall();
 
         hitbox.x = x - 30;
         hitbox.y = y - 96;
-        platBox.x = x - 47.5;
-        platBox.y = y;
         boolean movedX = updateX(xSpeed);
         if (!isStunned() && !isKnockback()) {
             updateFacing();
@@ -234,6 +249,7 @@ public class Player extends Thread {
         }
 
         updateFrame();
+        updateHP();
 
         if (updatePos) {
             sendPos();
@@ -245,6 +261,37 @@ public class Player extends Thread {
             sendState();
         }
 
+        if (lastActionTime <= 0) {
+            Globals.log("Player", address + ":" + port + " Idle disconnected Key: " + key, Globals.LOG_TYPE_DATA, true);
+            disconnect();
+        }
+
+    }
+
+    private void updateHP() {
+        while (!damageQueue.isEmpty()) {
+            Integer dmg = damageQueue.poll();
+            if (dmg != null) {
+                stats[Globals.STAT_MINHP] -= dmg;
+                lastHPSend = 0;
+            }
+        }
+        stats[Globals.STAT_MINHP] += stats[Globals.STAT_REGEN] / 100D;
+        if (stats[Globals.STAT_MINHP] > stats[Globals.STAT_MAXHP]) {
+            stats[Globals.STAT_MINHP] = stats[Globals.STAT_MAXHP];
+        } else if (stats[Globals.STAT_MINHP] < 0) {
+            stats[Globals.STAT_MINHP] = 0;
+        }
+        if (lastHPSend <= 0) {
+            byte[] stat = Globals.intToByte((int) stats[Globals.STAT_MINHP]);
+            byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT];
+            bytes[0] = Globals.DATA_PLAYER_GET_STAT;
+            bytes[1] = key;
+            bytes[2] = Globals.STAT_MINHP;
+            System.arraycopy(stat, 0, bytes, 3, stat.length);
+            packetSender.sendAll(bytes, logic.getRoom());
+            lastHPSend = 100;
+        }
     }
 
     private void updateBuffs() {
@@ -268,11 +315,19 @@ public class Player extends Thread {
         }
     }
 
+    public double rollDamage() {
+        double dmg = rng.nextInt((int) (stats[Globals.STAT_MAXDMG] - stats[Globals.STAT_MINDMG])) + stats[Globals.STAT_MINDMG];
+        if (rng.nextInt(10000) + 1 < (int) (stats[Globals.STAT_CRITCHANCE] * 10000)) {
+            dmg = dmg * (1 + stats[Globals.STAT_CRITDMG]);
+        }
+        return dmg;
+    }
+
     private void updateStats() {
         stats[Globals.STAT_ARMOR] = Globals.calcArmor((int) (stats[Globals.STAT_DEFENSE] + bonusStats[Globals.STAT_DEFENSE]));
         stats[Globals.STAT_REGEN] = Globals.calcRegen((int) (stats[Globals.STAT_SPIRIT] + bonusStats[Globals.STAT_SPIRIT]));
         stats[Globals.STAT_MAXHP] = Globals.calcMaxHP((int) (stats[Globals.STAT_DEFENSE] + bonusStats[Globals.STAT_DEFENSE]));
-        stats[Globals.STAT_MINHP] = stats[Globals.STAT_MAXHP];
+        stats[Globals.STAT_MINHP] = 0;
         stats[Globals.STAT_MINDMG] = Globals.calcMinDmg((int) (stats[Globals.STAT_POWER] + bonusStats[Globals.STAT_POWER]));
         stats[Globals.STAT_MAXDMG] = Globals.calcMaxDmg((int) (stats[Globals.STAT_POWER] + bonusStats[Globals.STAT_POWER]));
         stats[Globals.STAT_CRITCHANCE] = Globals.calcCritChance((int) (stats[Globals.STAT_SPIRIT] + bonusStats[Globals.STAT_SPIRIT]));
@@ -317,7 +372,7 @@ public class Player extends Thread {
     }
 
     private void updateJump() {
-        if (isMove[Globals.UP]) {
+        if (dirKeydown[Globals.UP]) {
             isJumping = true;
             setYSpeed(-12.5);
         }
@@ -339,12 +394,14 @@ public class Player extends Thread {
             y = map.getValidY(x, y, ySpeed);
             setYSpeed(0);
             isJumping = false;
-            setPlayerState(Globals.PLAYER_STATE_STAND);
+            if (xSpeed == 0) {
+                setPlayerState(Globals.PLAYER_STATE_STAND);
+            }
         }
     }
 
     private void updateWalk(boolean moved) {
-        if (isMove[Globals.RIGHT] && !isMove[Globals.LEFT]) {
+        if (dirKeydown[Globals.RIGHT] && !dirKeydown[Globals.LEFT]) {
             setXSpeed(4.5);
             if (moved) {
                 if (ySpeed == 0) {
@@ -355,7 +412,7 @@ public class Player extends Thread {
                     setPlayerState(Globals.PLAYER_STATE_STAND);
                 }
             }
-        } else if (isMove[Globals.LEFT] && !isMove[Globals.RIGHT]) {
+        } else if (dirKeydown[Globals.LEFT] && !dirKeydown[Globals.RIGHT]) {
             setXSpeed(-4.5);
             if (moved) {
                 if (ySpeed == 0) {
@@ -372,11 +429,11 @@ public class Player extends Thread {
     }
 
     private void updateFacing() {
-        if (isMove[Globals.RIGHT] && !isMove[Globals.LEFT]) {
+        if (dirKeydown[Globals.RIGHT] && !dirKeydown[Globals.LEFT]) {
             if (facing != Globals.RIGHT) {
                 setFacing(Globals.RIGHT);
             }
-        } else if (isMove[Globals.LEFT] && !isMove[Globals.RIGHT]) {
+        } else if (dirKeydown[Globals.LEFT] && !dirKeydown[Globals.RIGHT]) {
             if (facing != Globals.LEFT) {
                 setFacing(Globals.LEFT);
             }
@@ -392,9 +449,14 @@ public class Player extends Thread {
      * @param data Received data bytes from client
      */
     public void processAction(byte[] data) {
+        lastActionTime = Globals.SERVER_MAX_IDLE;
         if (!isStunned() && !isKnockback()) {
             logic.queueAddProj(new ProjTest(packetSender, logic, logic.getNextProjKey(), this, x, y, 100));
         }
+    }
+
+    public void queueDamage(int damage) {
+        damageQueue.add(damage);
     }
 
     /**
@@ -447,6 +509,7 @@ public class Player extends Thread {
     public void setPlayerState(byte newState) {
         if (playerState != newState) {
             playerState = newState;
+            frame = 0;
             updateState = true;
         }
     }
@@ -498,7 +561,7 @@ public class Player extends Thread {
      */
     public void sendPos() {
         byte[] bytes = new byte[Globals.PACKET_BYTE * 2 + Globals.PACKET_INT * 2];
-        bytes[0] = Globals.DATA_SET_PLAYER_POS;
+        bytes[0] = Globals.DATA_PLAYER_SET_POS;
         bytes[1] = key;
         byte[] posXInt = Globals.intToByte((int) x);
         bytes[2] = posXInt[0];
@@ -524,7 +587,7 @@ public class Player extends Thread {
      */
     public void sendFacing() {
         byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
-        bytes[0] = Globals.DATA_SET_PLAYER_FACING;
+        bytes[0] = Globals.DATA_PLAYER_SET_FACING;
         bytes[1] = key;
         bytes[2] = facing;
         packetSender.sendAll(bytes, logic.getRoom());
@@ -541,7 +604,7 @@ public class Player extends Thread {
      */
     public void sendState() {
         byte[] bytes = new byte[Globals.PACKET_BYTE * 4];
-        bytes[0] = Globals.DATA_SET_PLAYER_STATE;
+        bytes[0] = Globals.DATA_PLAYER_SET_STATE;
         bytes[1] = key;
         bytes[2] = playerState;
         bytes[3] = frame;
@@ -601,5 +664,34 @@ public class Player extends Thread {
 
     public boolean isConnected() {
         return connected;
+    }
+
+    public static byte getItemType(int i) {
+        if (i >= 100000 && i <= 109999) { //Swords
+            return Globals.ITEM_WEAPON;
+        } else if (i >= 110000 && i <= 119999) { //Shields
+            return Globals.ITEM_OFFHAND;
+        } else if (i >= 120000 && i <= 129999) { //Bows
+            return Globals.ITEM_BOW;
+        } else if (i >= 200000 && i <= 209999) {
+            return Globals.ITEM_HEAD;
+        } else if (i >= 300000 && i <= 309999) {
+            return Globals.ITEM_CHEST;
+        } else if (i >= 400000 && i <= 409999) {
+            return Globals.ITEM_PANTS;
+        } else if (i >= 500000 && i <= 509999) {
+            return Globals.ITEM_SHOULDER;
+        } else if (i >= 600000 && i <= 609999) {
+            return Globals.ITEM_GLOVE;
+        } else if (i >= 700000 && i <= 709999) {
+            return Globals.ITEM_SHOE;
+        } else if (i >= 800000 && i <= 809999) {
+            return Globals.ITEM_BELT;
+        } else if (i >= 900000 && i <= 909999) {
+            return Globals.ITEM_RING;
+        } else if (i >= 1000000 && i <= 1009999) {
+            return Globals.ITEM_AMULET;
+        }
+        return -1;
     }
 }

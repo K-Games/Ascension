@@ -2,7 +2,7 @@ package blockfighter.server.entities.buff;
 
 /**
  *
- * @author Ken
+ * @author Ken Kwan
  */
 public class BuffStun extends BuffBase {
 

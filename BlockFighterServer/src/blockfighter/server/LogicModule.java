@@ -11,11 +11,13 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Logic module of the server. Updates all objects and their interactions.
  *
- * @author Ken
+ * @author Ken Kwan
  */
 public class LogicModule extends Thread {
 
@@ -68,7 +70,6 @@ public class LogicModule extends Thread {
             if (now - lastUpdateTime >= Globals.LOGIC_UPDATE) {
                 updatePlayers(threadPool);
                 updateProjectiles(threadPool);
-
                 lastUpdateTime = now;
             }
 
@@ -79,9 +80,10 @@ public class LogicModule extends Thread {
                 lastRefreshAll = nowMs;
             }
 
-            while (now - lastUpdateTime < Globals.LOGIC_UPDATE) {
-                Thread.yield();
-                now = System.nanoTime();
+            try {
+                Thread.sleep(0, 1);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(LogicModule.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         threadPool.shutdownNow();

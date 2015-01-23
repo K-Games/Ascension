@@ -10,7 +10,7 @@ import java.util.ArrayList;
 /**
  * Abstract class for projectiles/attacks
  *
- * @author ckwa290
+ * @author Ken Kwan
  */
 public abstract class ProjBase extends Thread implements Projectile {
 

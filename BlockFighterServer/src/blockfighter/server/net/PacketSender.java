@@ -13,13 +13,11 @@ import java.util.concurrent.ExecutorService;
 /**
  * The server packetSender.
  * <p>
- * The packet sender does not create the datagram packet. 
- * It is just a thread to send data. Datagram packet is created outside this class.
- * Sends data to players. Only one is created on the server.
+ * The packet sender does not create the datagram packet. It is just a thread to send data. Datagram packet is created outside this class. Sends data to players. Only one is created on the server.
  * Client side packet sender DOES construct the datagram packet.
  * </p>
  *
- * @author Ken
+ * @author Ken Kwan
  */
 public class PacketSender {
 
@@ -118,6 +116,7 @@ public class PacketSender {
 
     /**
      * Broadcast an update to all players about all players.
+     *
      * @param room Room which is broadcasting all player update
      */
     public void broadcastAllPlayersUpdate(byte room) {

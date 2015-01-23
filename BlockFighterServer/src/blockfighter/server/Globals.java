@@ -10,7 +10,7 @@ import java.util.concurrent.Executors;
 /**
  * All the server globals constants and helper methods.
  *
- * @author Ken
+ * @author Ken Kwan
  */
 public class Globals {
 
@@ -30,8 +30,10 @@ public class Globals {
     public final static int SERVER_PORT = 25565;
     public final static byte SERVER_MAX_PLAYERS = 10;
     public final static byte SERVER_ROOMS = 1;
+    public final static long SERVER_MAX_IDLE = 300000;
+
     public final static byte MAX_NAME_LENGTH = 15;
-    
+
     public final static double LOGIC_TICKS_PER_SEC = 100.0;
     public final static double LOGIC_UPDATE = 1000000000 / LOGIC_TICKS_PER_SEC;
 
@@ -63,10 +65,11 @@ public class Globals {
             ITEM_BELT = 7,
             ITEM_RING = 8,
             ITEM_AMULET = 9,
-            ITEM_OFFHAND = 10; //Only used for equipment slot index. Its the same as weapons.
-    
+            ITEM_OFFHAND = 10,
+            ITEM_BOW = 11; //Only used for equipment slot index. Its the same as weapons.
+
     public final static byte NUM_EQUIP_SLOTS = 11;
-    
+
     public final static byte NUM_STATS = 14,
             STAT_POWER = 0,
             STAT_DEFENSE = 1,
@@ -100,24 +103,26 @@ public class Globals {
             MAXDMG_BASE = 40;
 
     //Packet globals
-    public final static int PACKET_MAX_SIZE = 256;
+    public final static int PACKET_MAX_SIZE = 512;
     public final static int PACKET_BYTE = 1;
     public final static int PACKET_INT = 4;
     public final static int PACKET_CHAR = 1;
 
     //Datatypes
     public final static byte DATA_PING = 0x00,
-            DATA_LOGIN = 0x01,
-            DATA_GET_ALL_PLAYER = 0x02,
-            DATA_SET_PLAYER_MOVE = 0x03,
-            DATA_SET_PLAYER_POS = 0x04,
-            DATA_SET_PLAYER_FACING = 0x05,
-            DATA_SET_PLAYER_STATE = 0x06,
+            DATA_PLAYER_LOGIN = 0x01,
+            DATA_PLAYER_GET_ALL = 0x02,
+            DATA_PLAYER_SET_MOVE = 0x03,
+            DATA_PLAYER_SET_POS = 0x04,
+            DATA_PLAYER_SET_FACING = 0x05,
+            DATA_PLAYER_SET_STATE = 0x06,
             DATA_PLAYER_ACTION = 0x07,
             DATA_PARTICLE_EFFECT = 0x08,
             DATA_PARTICLE_REMOVE = 0x09,
             DATA_PLAYER_DISCONNECT = 0x0A,
-            DATA_PLAYER_GET_NAME = 0x0B;
+            DATA_PLAYER_GET_NAME = 0x0B,
+            DATA_PLAYER_GET_STAT = 0x0C,
+            DATA_PLAYER_GET_EQUIP = 0x0D;
 
     public final static byte NUM_PLAYER_ACTION = 1,
             PLAYER_ACTION_KNOCK = 0x00;

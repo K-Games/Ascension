@@ -14,7 +14,7 @@ import java.util.ArrayList;
 /**
  * Player entities on the server.
  *
- * @author Ken
+ * @author Ken Kwan
  */
 public abstract class BossBase extends Thread implements Boss {
 
@@ -213,7 +213,7 @@ public abstract class BossBase extends Thread implements Boss {
     @Override
     public void sendPos() {
         byte[] bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_BYTE + Globals.PACKET_INT + Globals.PACKET_INT];
-        bytes[0] = Globals.DATA_SET_PLAYER_POS;
+        bytes[0] = Globals.DATA_PLAYER_SET_POS;
         bytes[1] = key;
         byte[] posXInt = Globals.intToByte((int) x);
         bytes[2] = posXInt[0];
@@ -232,7 +232,7 @@ public abstract class BossBase extends Thread implements Boss {
     @Override
     public void sendFacing() {
         byte[] bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_BYTE + Globals.PACKET_BYTE];
-        bytes[0] = Globals.DATA_SET_PLAYER_FACING;
+        bytes[0] = Globals.DATA_PLAYER_SET_FACING;
         bytes[1] = key;
         bytes[2] = facing;
         packetSender.sendAll(bytes, logic.getRoom());
@@ -242,7 +242,7 @@ public abstract class BossBase extends Thread implements Boss {
     @Override
     public void sendState() {
         byte[] bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_BYTE + Globals.PACKET_BYTE + Globals.PACKET_BYTE];
-        bytes[0] = Globals.DATA_SET_PLAYER_STATE;
+        bytes[0] = Globals.DATA_PLAYER_SET_STATE;
         bytes[1] = key;
         bytes[2] = bossState;
         bytes[3] = frame;

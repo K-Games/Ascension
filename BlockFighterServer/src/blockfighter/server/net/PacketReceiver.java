@@ -12,7 +12,7 @@ import java.util.concurrent.Executors;
 /**
  * Thread to accept incoming connections.
  *
- * @author Ken
+ * @author Ken Kwan
  */
 public class PacketReceiver extends Thread {
 

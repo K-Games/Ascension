@@ -6,7 +6,7 @@ import java.awt.geom.Rectangle2D;
 /**
  * Server map information and helper methods.
  *
- * @author Ken
+ * @author Ken Kwan
  */
 public class TestMap extends GameMap {
 

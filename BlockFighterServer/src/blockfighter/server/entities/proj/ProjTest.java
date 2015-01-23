@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * This is the base projectile class. Create projectile classes off this.
  *
- * @author Ken
+ * @author Ken Kwan
  */
 public class ProjTest extends ProjBase {
 
