@@ -147,7 +147,7 @@ public class Globals {
     public final static byte BUTTON_BIGRECT = 0,
             BUTTON_SELECTCHAR = 1,
             BUTTON_ADDSTAT = 2,
-            BUTTON_ITEMSLOT = 3,
+            BUTTON_SLOT = 3,
             BUTTON_MENUS = 4,
             BUTTON_WEAPONTAB = 5,
             BUTTON_HEADTAB = 6,

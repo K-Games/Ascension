@@ -1,0 +1,31 @@
+package blockfighter.client.entities.skills;
+
+import java.awt.Graphics2D;
+
+/**
+ *
+ * @author Ken Kwan
+ */
+public class SkillShieldIron extends Skill {
+
+    public SkillShieldIron() {
+        skillCode = SHIELD_IRONFORT;
+        maxCooldown = 20000;
+    }
+
+    @Override
+    public void draw(Graphics2D g, int x, int y) {
+    }
+
+    @Override
+    public void drawInfo(Graphics2D g, int x, int y) {
+    }
+
+    @Override
+    public String getSkillName() {
+        if (isMaxed()) {
+            return "Iron Fortress";
+        }
+        return "Borrowed Strength";
+    }
+}

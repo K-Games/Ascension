@@ -9,7 +9,7 @@ import java.util.HashMap;
  *
  * @author Ken Kwan
  */
-public class ItemEquip implements PlayerItem {
+public class ItemEquip implements Item {
 
     public final static int TEMP_SWORD = 100000,
             TEMP_BLADE = 100001,

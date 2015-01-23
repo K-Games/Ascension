@@ -2,15 +2,18 @@ package blockfighter.client.screen;
 
 import blockfighter.client.Globals;
 import blockfighter.client.LogicModule;
+import blockfighter.client.SaveData;
 import blockfighter.client.entities.Player;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.client.entities.particles.ParticleKnock;
+import blockfighter.client.entities.skills.Skill;
 import blockfighter.client.net.PacketSender;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
@@ -27,6 +30,7 @@ import java.util.logging.Logger;
  */
 public class ScreenIngame extends Screen {
 
+    private Rectangle2D.Double[] hotkeySlots = new Rectangle2D.Double[12];
     //Ingame Data
     private ConcurrentLinkedQueue<byte[]> dataQueue = new ConcurrentLinkedQueue<>();
 
@@ -50,12 +54,17 @@ public class ScreenIngame extends Screen {
     private boolean[] keyDownMove = {false, false, false, false};
 
     private LogicModule logic;
+    private SaveData c;
 
     public ScreenIngame(LogicModule l, byte i, byte numPlayer, PacketSender s) {
         logic = l;
         myKey = i;
+        c = logic.getSelectedChar();
         players = new ConcurrentHashMap<>(numPlayer);
         sender = s;
+        for (int j = 0; j < hotkeySlots.length; j++) {
+            hotkeySlots[j] = new Rectangle2D.Double(Globals.WINDOW_WIDTH / 2 - Globals.HUD[0].getWidth() / 2 + 10 + (j * 66), 656, 60, 60);
+        }
     }
 
     @Override
@@ -151,6 +160,16 @@ public class ScreenIngame extends Screen {
 
         BufferedImage hud = Globals.HUD[0];
         g.drawImage(hud, Globals.WINDOW_WIDTH / 2 - hud.getWidth() / 2, Globals.WINDOW_HEIGHT - hud.getHeight(), null);
+        Skill[] hotkey = c.getHotkeys();
+        for (int j = 0; j < hotkeySlots.length; j++) {
+            if (hotkey[j] != null) {
+                hotkey[j].draw(g, (int) hotkeySlots[j].x, (int) hotkeySlots[j].y);
+                g.setColor(new Color(100,100,100,45));
+                int cdHeight = (int) ((hotkey[j].getCooldown() / hotkey[j].getMaxCooldown())*hotkeySlots[j].height);
+                g.fillRect((int) hotkeySlots[j].x, (int) (hotkeySlots[j].y + hotkeySlots[j].height - cdHeight), (int) hotkeySlots[j].width, cdHeight);
+            }
+            g.setColor(Color.WHITE);
+        }
         g.setFont(Globals.ARIAL_12PT);
         g.drawString("Ping: " + ping, 1200, 40);
     }

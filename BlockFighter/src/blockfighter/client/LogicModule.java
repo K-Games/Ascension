@@ -101,6 +101,7 @@ public class LogicModule extends Thread {
     }
 
     public void disconnect() {
+        SaveData.saveData(selectedChar.getSaveNum(), selectedChar);
         if (screen instanceof ScreenIngame) {
             ((ScreenIngame) screen).disconnect();
         }

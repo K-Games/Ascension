@@ -33,7 +33,7 @@ public class ScreenInventory extends ScreenMenu {
 
     private Point mousePos;
 
-    private int drawItem = -1, drawEquip = -1;
+    private int drawInfoItem = -1, drawInfoEquip = -1;
     private int charFrame = 0;
 
     private int dragItem = -1, dragEquip = -1;
@@ -124,8 +124,7 @@ public class ScreenInventory extends ScreenMenu {
         }
         if (dragItem != -1) {
             c.getInventory(selectedTab)[dragItem].draw(g, mousePos.x + 5, mousePos.y + 5);
-        }
-        if (dragEquip != -1) {
+        } else if (dragEquip != -1) {
             c.getEquip()[dragEquip].draw(g, mousePos.x + 5, mousePos.y + 5);
         }
         super.draw(g);
@@ -169,10 +168,10 @@ public class ScreenInventory extends ScreenMenu {
         if (destroyConfirm) {
             return;
         }
-        if (drawItem != -1) {
-            drawItemInfo(g, inventSlots[drawItem], c.getInventory(selectedTab)[drawItem]);
-        } else if (drawEquip != -1) {
-            drawItemInfo(g, equipSlots[drawEquip], c.getEquip()[drawEquip]);
+        if (drawInfoItem != -1) {
+            drawItemInfo(g, inventSlots[drawInfoItem], c.getInventory(selectedTab)[drawInfoItem]);
+        } else if (drawInfoEquip != -1) {
+            drawItemInfo(g, equipSlots[drawInfoEquip], c.getEquip()[drawInfoEquip]);
         }
     }
 
@@ -208,7 +207,7 @@ public class ScreenInventory extends ScreenMenu {
     }
 
     private void drawSlots(Graphics2D g) {
-        BufferedImage button = Globals.MENU_BUTTON[Globals.BUTTON_ITEMSLOT];
+        BufferedImage button = Globals.MENU_BUTTON[Globals.BUTTON_SLOT];
         BufferedImage character = Globals.CHAR_SPRITE[Globals.PLAYER_STATE_STAND][charFrame];
 
         //Inventory
@@ -423,7 +422,7 @@ public class ScreenInventory extends ScreenMenu {
         super.mouseReleased(e);
         if (SwingUtilities.isLeftMouseButton(e)) {
             for (byte i = 0; i < tabs.length; i++) {
-                if (tabs[i].contains(e.getPoint())) {
+                if (drItem == -1 && drEq == -1 && tabs[i].contains(e.getPoint())) {
                     selectedTab = i;
                     destroy = false;
                     return;
@@ -553,18 +552,18 @@ public class ScreenInventory extends ScreenMenu {
     @Override
     public void mouseMoved(MouseEvent e) {
         mousePos = e.getPoint();
-        drawItem = -1;
-        drawEquip = -1;
+        drawInfoItem = -1;
+        drawInfoEquip = -1;
         for (int i = 0; i < inventSlots.length; i++) {
             if (inventSlots[i].contains(e.getPoint()) && c.getInventory(selectedTab)[i] != null) {
-                drawItem = i;
+                drawInfoItem = i;
                 return;
             }
         }
 
         for (byte i = 0; i < equipSlots.length; i++) {
             if (equipSlots[i].contains(e.getPoint()) && c.getEquip()[i] != null) {
-                drawEquip = i;
+                drawInfoEquip = i;
                 return;
             }
         }

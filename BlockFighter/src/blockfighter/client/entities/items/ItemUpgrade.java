@@ -9,7 +9,7 @@ import java.util.Random;
  *
  * @author Ken Kwan
  */
-public class ItemUpgrade implements PlayerItem {
+public class ItemUpgrade implements Item {
 
     protected final static int ITEM_TOME = 1;
     private final static int[] ITEM_UPGRADES_CODES = {ITEM_TOME};

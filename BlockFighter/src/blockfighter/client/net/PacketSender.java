@@ -3,6 +3,7 @@ package blockfighter.client.net;
 import blockfighter.client.Globals;
 import blockfighter.client.SaveData;
 import blockfighter.client.entities.items.ItemEquip;
+import blockfighter.client.entities.skills.Skill;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -24,7 +25,13 @@ public class PacketSender {
 
     public void sendLogin(byte room, SaveData c) {
         System.out.println("Connecting to " + Globals.SERVER_ADDRESS);
-        byte[] bytes = new byte[Globals.PACKET_BYTE * 2 + 15 + Globals.PACKET_INT * 20];
+        byte[] bytes = new byte[Globals.PACKET_BYTE * 2 //Data type + room
+                + 15 //Name length
+                + Globals.PACKET_INT //uID
+                + Globals.PACKET_INT * 8 //Stats
+                + Globals.PACKET_INT * 11 //equipments
+                + 12 * 2 * Globals.PACKET_BYTE //Hotkey'd skills + level
+                ];
         bytes[0] = Globals.DATA_LOGIN;
         bytes[1] = room;
 
@@ -91,6 +98,17 @@ public class PacketSender {
             bytes[i * 4 + 54] = temp[1];
             bytes[i * 4 + 55] = temp[2];
             bytes[i * 4 + 56] = temp[3];
+        }
+
+        Skill[] skills = c.getHotkeys();
+        for (int i = 0; i < skills.length; i++) {
+            if (skills[i] == null) {
+                bytes[i * 2 + 97] = -1;
+                bytes[i * 2 + 98] = 0;
+                continue;
+            }
+            bytes[i * 2 + 97] = skills[i].getSkillCode();
+            bytes[i * 2 + 98] = skills[i].getLevel();
         }
         DatagramPacket requestPacket = createPacket(bytes);
         sendPacket(requestPacket);

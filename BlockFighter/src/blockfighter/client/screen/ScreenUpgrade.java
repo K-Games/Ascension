@@ -120,6 +120,7 @@ public class ScreenUpgrade extends ScreenMenu {
                     }
                 }
                 c.destroyItem(selectUpgrade);
+                SaveData.saveData(c.getSaveNum(), c);
                 selectUpgrade = -1;
                 upgrading = false;
             }
@@ -203,7 +204,7 @@ public class ScreenUpgrade extends ScreenMenu {
     }
 
     private void drawSlots(Graphics2D g) {
-        BufferedImage button = Globals.MENU_BUTTON[Globals.BUTTON_ITEMSLOT];
+        BufferedImage button = Globals.MENU_BUTTON[Globals.BUTTON_SLOT];
         BufferedImage character = Globals.CHAR_SPRITE[Globals.PLAYER_STATE_STAND][charFrame];
 
         //Inventory
@@ -278,11 +279,16 @@ public class ScreenUpgrade extends ScreenMenu {
         for (Rectangle2D.Double box : upgradeBox) {
             g.drawImage(button, (int) box.x, (int) box.y, null);
         }
+
         if (selectUpgrade > -1) {
-            c.getUpgrades()[selectUpgrade].draw(g, (int) upgradeBox[0].x, (int) upgradeBox[0].y);
+            if (c.getUpgrades()[selectUpgrade] != null) {
+                c.getUpgrades()[selectUpgrade].draw(g, (int) upgradeBox[0].x, (int) upgradeBox[0].y);
+            }
         }
         if (selectEquip > -1) {
-            c.getEquip()[selectEquip].draw(g, (int) upgradeBox[1].x, (int) upgradeBox[1].y);
+            if (c.getEquip()[selectEquip] != null) {
+                c.getEquip()[selectEquip].draw(g, (int) upgradeBox[1].x, (int) upgradeBox[1].y);
+            }
         }
     }
 

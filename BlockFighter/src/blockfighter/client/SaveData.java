@@ -3,6 +3,8 @@ package blockfighter.client;
 import blockfighter.client.entities.items.ItemEquip;
 import blockfighter.client.entities.items.ItemUpgrade;
 
+import blockfighter.client.entities.skills.*;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -26,10 +28,11 @@ public class SaveData {
     private byte saveNum;
 
     private ItemEquip[][] inventory = new ItemEquip[Globals.NUM_ITEM_TYPES][];
-
     private ItemUpgrade[] upgrades = new ItemUpgrade[100];
-
     private ItemEquip[] equipment = new ItemEquip[Globals.NUM_EQUIP_SLOTS];
+
+    private Skill[] hotkeys = new Skill[12];
+    private Skill[] skills = new Skill[Skill.NUM_SKILLS];
 
     public SaveData(String n) {
         name = n;
@@ -65,10 +68,49 @@ public class SaveData {
                 equipment[i] = new ItemEquip(bs, i * 2, i * .1, (i + 1) * 100000);
             }
         }
+
+        //initalize skill list
+        skills[Skill.SWORD_CINDER] = new SkillSwordCinder();
+        skills[Skill.SWORD_DRIVE] = new SkillSwordDrive();
+        skills[Skill.SWORD_MULTI] = new SkillSwordMulti();
+        skills[Skill.SWORD_SLASH] = new SkillSwordSlash();
+        skills[Skill.SWORD_TAUNT] = new SkillSwordTaunt();
+        skills[Skill.SWORD_VORPAL] = new SkillSwordVorpal();
+
+        skills[Skill.BOW_ARC] = new SkillBowArc();
+        skills[Skill.BOW_FROST] = new SkillBowFrost();
+        skills[Skill.BOW_POWER] = new SkillBowPower();
+        skills[Skill.BOW_RAPID] = new SkillBowRapid();
+        skills[Skill.BOW_STORM] = new SkillBowStorm();
+        skills[Skill.BOW_VOLLEY] = new SkillBowVolley();
+
+        skills[Skill.SHIELD_FORTIFY] = new SkillShieldFortify();
+        skills[Skill.SHIELD_IRONFORT] = new SkillShieldIron();
+        skills[Skill.SHIELD_3] = new SkillShield3();
+        skills[Skill.SHIELD_4] = new SkillShield4();
+        skills[Skill.SHIELD_5] = new SkillShield5();
+        skills[Skill.SHIELD_6] = new SkillShield6();
+
+        skills[Skill.PASSIVE_1] = new SkillPassive1();
+        skills[Skill.PASSIVE_2] = new SkillPassive2();
+        skills[Skill.PASSIVE_3] = new SkillPassive3();
+        skills[Skill.PASSIVE_4] = new SkillPassive4();
+        skills[Skill.PASSIVE_5] = new SkillPassive5();
+        skills[Skill.PASSIVE_6] = new SkillPassive6();
+        skills[Skill.PASSIVE_7] = new SkillPassive7();
+        skills[Skill.PASSIVE_8] = new SkillPassive8();
+        skills[Skill.PASSIVE_9] = new SkillPassive9();
+        skills[Skill.PASSIVE_10] = new SkillPassive10();
+        skills[Skill.PASSIVE_11] = new SkillPassive11();
+        skills[Skill.PASSIVE_12] = new SkillPassive12();
+
+        for (int i = 4; i < hotkeys.length; i++) {
+            hotkeys[i] = skills[i];
+        }
     }
 
     public static void saveData(byte saveNum, SaveData c) {
-        byte[] data = new byte[45319];
+        byte[] data = new byte[45361];
         byte[] temp = c.name.getBytes(StandardCharsets.UTF_8);
 
         int pos = 0;
@@ -99,7 +141,9 @@ public class SaveData {
         for (ItemEquip[] e : c.inventory) {
             pos = saveItems(data, e, pos);
         }
-        saveItems(data, c.upgrades, pos);
+        pos = saveItems(data, c.upgrades, pos);
+        pos = saveSkills(data, c, pos);
+        saveHotkeys(data, c, pos);
         try {
             FileUtils.writeByteArrayToFile(new File(saveNum + ".tcdat"), data);
         } catch (IOException ex) {
@@ -121,6 +165,26 @@ public class SaveData {
             temp = Globals.intToByte((int) item.getLevel());
             System.arraycopy(temp, 0, data, pos, temp.length);
             pos += temp.length;
+        }
+        return pos;
+    }
+
+    private static int saveSkills(byte[] data, SaveData c, int pos) {
+        for (int i = 0; i < Skill.NUM_SKILLS; i++) {
+            data[pos] = c.getSkills()[i].getLevel();
+            pos += 1;
+        }
+        return pos;
+    }
+
+    private static int saveHotkeys(byte[] data, SaveData c, int pos) {
+        for (Skill hotkey : c.getHotkeys()) {
+            if (hotkey == null) {
+                data[pos] = -1;
+            } else {
+                data[pos] = hotkey.getSkillCode();
+            }
+            pos += 1;
         }
         return pos;
     }
@@ -210,9 +274,31 @@ public class SaveData {
         for (ItemEquip[] e : c.inventory) {
             pos = readItems(data, e, pos);
         }
-        readItems(data, c.upgrades, pos);
+        pos = readItems(data, c.upgrades, pos);
+        pos = readSkills(data, c, pos);
+        readHotkeys(data, c, pos);
         c.calcStats();
         return c;
+    }
+
+    private static int readSkills(byte[] data, SaveData c, int pos) {
+        for (int i = 0; i < Skill.NUM_SKILLS; i++) {
+            c.getSkills()[i].setLevel(data[pos]);
+            pos += 1;
+        }
+        return pos;
+    }
+
+    private static int readHotkeys(byte[] data, SaveData c, int pos) {
+        Skill[] e = c.getHotkeys();
+        for (int i = 0; i < e.length; i++) {
+            byte skillCode = data[pos];
+            if (skillCode != -1) {
+                e[i] = c.getSkills()[skillCode];
+            }
+            pos += 1;
+        }
+        return pos;
     }
 
     private static int readItems(byte[] data, ItemUpgrade[] e, int pos) {
@@ -299,6 +385,14 @@ public class SaveData {
         return pos;
     }
 
+    public Skill[] getHotkeys() {
+        return hotkeys;
+    }
+
+    public Skill[] getSkills() {
+        return skills;
+    }
+
     public String getPlayerName() {
         return name;
     }
@@ -369,6 +463,10 @@ public class SaveData {
         return bonusStats;
     }
 
+    public byte getSaveNum() {
+        return saveNum;
+    }
+
     public void addStat(byte stat, int amount) {
         if (baseStats[Globals.STAT_POINTS] < amount) {
             return;
@@ -395,6 +493,7 @@ public class SaveData {
             }
         }
         calcStats();
+        saveData(saveNum, this);
     }
 
     public void equipItem(int slot, int inventorySlot) {
@@ -417,26 +516,31 @@ public class SaveData {
         inventory[itemType][inventorySlot] = equipment[slot];
         equipment[slot] = temp;
         calcStats();
+        saveData(saveNum, this);
     }
 
     public void destroyItem(int type, int slot) {
         inventory[type][slot] = null;
+        saveData(saveNum, this);
     }
 
     public void destroyItem(int slot) {
         upgrades[slot] = null;
+        saveData(saveNum, this);
     }
 
     public void destroyAll(int type) {
         for (int i = 0; i < inventory[type].length; i++) {
             inventory[type][i] = null;
         }
+        saveData(saveNum, this);
     }
 
     public void destroyAllUpgrade() {
         for (int i = 0; i < upgrades.length; i++) {
             upgrades[i] = null;
         }
+        saveData(saveNum, this);
     }
 
     public void addItem(int type, ItemEquip e) {
@@ -446,6 +550,7 @@ public class SaveData {
                 break;
             }
         }
+        saveData(saveNum, this);
     }
 
     public void addItem(ItemUpgrade e) {
@@ -455,5 +560,6 @@ public class SaveData {
                 break;
             }
         }
+        saveData(saveNum, this);
     }
 }
