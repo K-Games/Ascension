@@ -15,7 +15,7 @@ import java.util.concurrent.Executors;
 
 /**
  *
- * @author Ken
+ * @author Ken Kwan
  */
 public abstract class Screen implements KeyListener, MouseListener, MouseMotionListener {
 

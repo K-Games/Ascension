@@ -15,7 +15,7 @@ import javax.swing.JTextField;
 
 /**
  *
- * @author Ken
+ * @author Ken Kwan
  */
 public class ScreenSelectChar extends ScreenMenu {
 

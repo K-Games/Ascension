@@ -16,11 +16,13 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 
 /**
  *
- * @author Ken
+ * @author Ken Kwan
  */
 public class ScreenUpgrade extends ScreenMenu {
 
@@ -124,9 +126,10 @@ public class ScreenUpgrade extends ScreenMenu {
             updateParticles(particles);
             lastUpdateTime = now;
         }
-        while (now - lastUpdateTime < Globals.LOGIC_UPDATE) {
-            Thread.yield();
-            now = System.nanoTime();
+        try {
+            Thread.sleep(0, 1);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(ScreenInventory.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
@@ -154,12 +157,14 @@ public class ScreenUpgrade extends ScreenMenu {
         g.drawString("Destroy All", 750, 682);
         g.drawString("Enhance", 1053, 607);
 
-        if (selectUpgrade >= 0 && selectEquip >= 0) {
+        int selTemp1 = selectUpgrade, selTemp2 = selectEquip;
+        if (selTemp1 >= 0 && selTemp2 >= 0) {
             g.setFont(Globals.ARIAL_15PT);
-            drawStringOutline(g, "Chance of Success: " + df.format(ItemUpgrade.upgradeChance(c.getUpgrades()[selectUpgrade], c.getEquip()[selectEquip]) * 100) + "%", 1000, 550, 1);
+            drawStringOutline(g, "Chance of Success: " + df.format(ItemUpgrade.upgradeChance(c.getUpgrades()[selTemp1], c.getEquip()[selTemp2]) * 100) + "%", 1000, 550, 1);
             g.setColor(Color.WHITE);
-            g.drawString("Chance of Success: " + df.format(ItemUpgrade.upgradeChance(c.getUpgrades()[selectUpgrade], c.getEquip()[selectEquip]) * 100) + "%", 1000, 550);
+            g.drawString("Chance of Success: " + df.format(ItemUpgrade.upgradeChance(c.getUpgrades()[selTemp1], c.getEquip()[selTemp2]) * 100) + "%", 1000, 550);
         }
+
         drawSlots(g);
         drawDestroyConfirm(g);
         if (destroy) {
@@ -545,7 +550,7 @@ public class ScreenUpgrade extends ScreenMenu {
     @Override
     public void mouseDragged(MouseEvent e) {
         mouseMoved(e);
-        if (destroyConfirm || destroy || upgrading ) {
+        if (destroyConfirm || destroy || upgrading) {
             return;
         }
         if (SwingUtilities.isLeftMouseButton(e)) {

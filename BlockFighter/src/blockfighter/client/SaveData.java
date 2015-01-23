@@ -13,7 +13,7 @@ import org.apache.commons.io.FileUtils;
 
 /**
  *
- * @author Ken
+ * @author Ken Kwan
  */
 public class SaveData {
 

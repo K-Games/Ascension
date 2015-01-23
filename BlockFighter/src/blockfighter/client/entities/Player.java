@@ -9,7 +9,7 @@ import java.awt.image.BufferedImage;
 
 /**
  *
- * @author Ken
+ * @author Ken Kwan
  */
 public class Player extends Thread {
 
@@ -94,12 +94,6 @@ public class Player extends Thread {
         int drawDscX = x + ((facing == Globals.RIGHT) ? 1 : -1) * sprite.getWidth() / 2;
         g.drawImage(sprite, drawSrcX, drawSrcY, drawDscX, y, 0, 0, sprite.getWidth(), sprite.getHeight(), null);
         g.setFont(Globals.ARIAL_18PT);
-
-        g.setColor(new Color(0, 0, 0, 180));
-        g.fillRect(x - 51, y - 221, 102, 12);
-        g.setColor(Color.red);
-        g.fillRect(x - 50, y - 220, (int) (stats[Globals.STAT_MINHP] / stats[Globals.STAT_MAXHP] * 100), 10);
-
         int width = g.getFontMetrics().stringWidth(name);
         g.setColor(Color.BLACK);
         g.drawString(name, x - width / 2 - 1, y + 20);

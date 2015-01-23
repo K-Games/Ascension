@@ -13,10 +13,12 @@ import java.awt.image.BufferedImage;
 import java.text.DecimalFormat;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
- * @author Ken
+ * @author Ken Kwan
  */
 public abstract class ScreenMenu extends Screen {
 
@@ -49,10 +51,12 @@ public abstract class ScreenMenu extends Screen {
             updateParticles(particles);
             lastUpdateTime = now;
         }
-        while (now - lastUpdateTime < Globals.LOGIC_UPDATE) {
-            Thread.yield();
-            now = System.nanoTime();
+        try {
+            Thread.sleep(0, 1);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(ScreenInventory.class.getName()).log(Level.SEVERE, null, ex);
         }
+
     }
 
     @Override

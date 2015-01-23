@@ -7,7 +7,7 @@ import java.awt.Graphics2D;
 
 /**
  *
- * @author ckwa290
+ * @author Ken Kwan
  */
 public abstract class Particle extends Thread {
 

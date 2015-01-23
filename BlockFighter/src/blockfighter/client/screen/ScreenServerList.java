@@ -7,7 +7,7 @@ import java.awt.event.MouseEvent;
 
 /**
  *
- * @author Ken
+ * @author Ken Kwan
  */
 public class ScreenServerList extends ScreenMenu {
 

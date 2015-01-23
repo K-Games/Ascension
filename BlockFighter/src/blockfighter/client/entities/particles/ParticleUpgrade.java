@@ -7,7 +7,7 @@ import java.awt.image.BufferedImage;
 
 /**
  *
- * @author Ken
+ * @author Ken Kwan
  */
 public class ParticleUpgrade extends Particle {
 

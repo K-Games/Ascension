@@ -2,11 +2,14 @@ package blockfighter.client.render;
 
 import blockfighter.client.LogicModule;
 import blockfighter.client.Globals;
+import blockfighter.client.screen.ScreenInventory;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 
 /**
  *
- * @author ckwa290
+ * @author Ken Kwan
  */
 public class RenderModule extends Thread {
 
@@ -46,10 +49,10 @@ public class RenderModule extends Thread {
                 lastFPSTime = now;
             }
 
-            //Yield until rendering again
-            while (now - lastUpdateTime < Globals.RENDER_UPDATE && now - lastFPSTime < 1000000000) {
-                Thread.yield();
-                now = System.nanoTime();
+            try {
+                Thread.sleep(0, 1);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(ScreenInventory.class.getName()).log(Level.SEVERE, null, ex);
             }
 
         }

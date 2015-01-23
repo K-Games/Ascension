@@ -7,7 +7,7 @@ import java.util.HashMap;
 
 /**
  *
- * @author Ken
+ * @author Ken Kwan
  */
 public class ItemEquip implements PlayerItem {
 

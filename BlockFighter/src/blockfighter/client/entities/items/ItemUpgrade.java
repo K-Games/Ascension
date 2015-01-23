@@ -7,7 +7,7 @@ import java.util.Random;
 
 /**
  *
- * @author Ken
+ * @author Ken Kwan
  */
 public class ItemUpgrade implements PlayerItem {
 
@@ -33,6 +33,9 @@ public class ItemUpgrade implements PlayerItem {
     }
 
     public static double upgradeChance(ItemUpgrade i, ItemEquip e) {
+        if (i == null || e == null) {
+            return 0;
+        }
         int power = (int) (e.getStats()[Globals.STAT_LEVEL] + e.getUpgrades() - i.level);
         if (power < 0) {
             power = 0;

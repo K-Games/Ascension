@@ -8,7 +8,7 @@ import java.util.Random;
 
 /**
  *
- * @author Ken
+ * @author Ken Kwan
  */
 public class ParticleUpgradeEnd extends Particle {
 

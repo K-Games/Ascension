@@ -10,7 +10,7 @@ import java.nio.charset.StandardCharsets;
 
 /**
  *
- * @author Ken
+ * @author Ken Kwan
  */
 public class PacketSender {
 
@@ -98,7 +98,7 @@ public class PacketSender {
 
     public void sendGetAll(byte room, byte myKey) {
         byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
-        bytes[0] = Globals.DATA_GET_ALL_PLAYER;
+        bytes[0] = Globals.DATA_PLAYER_GET_ALL;
         bytes[1] = room;
         bytes[2] = myKey;
         DatagramPacket requestPacket = createPacket(bytes);
@@ -107,7 +107,7 @@ public class PacketSender {
 
     public void sendMove(byte room, byte key, byte direction, boolean move) {
         byte[] bytes = new byte[Globals.PACKET_BYTE * 5];
-        bytes[0] = Globals.DATA_SET_PLAYER_MOVE;
+        bytes[0] = Globals.DATA_PLAYER_SET_MOVE;
         bytes[1] = room;
         bytes[2] = key;
         bytes[3] = direction;
@@ -182,5 +182,4 @@ public class PacketSender {
     private DatagramPacket createPacket(byte[] bytes) {
         return new DatagramPacket(bytes, bytes.length);
     }
-
 }

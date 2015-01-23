@@ -4,7 +4,7 @@ import java.awt.Graphics2D;
 
 /**
  *
- * @author Ken
+ * @author Ken Kwan
  */
 public interface PlayerItem {
 

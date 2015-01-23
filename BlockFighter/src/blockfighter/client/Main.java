@@ -11,7 +11,7 @@ import javax.swing.*;
 
 /**
  *
- * @author ckwa290
+ * @author Ken Kwan
  */
 public class Main {
 

@@ -18,10 +18,12 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
- * @author Ken
+ * @author Ken Kwan
  */
 public class ScreenIngame extends Screen {
 
@@ -37,13 +39,13 @@ public class ScreenIngame extends Screen {
     private byte pID = 0;
     private PacketSender sender = null;
 
-    private long lastAttackTime;
+    private long lastBytesTime;
     private double lastUpdateTime = 0;
     private double lastRequestTime = 50;
     private double lastQueueTime = 0;
     private double lastPingTime = 0;
     private double lastSendKeyTime = 0;
-    
+
     private long last100 = 0;
     private boolean[] keyDownMove = {false, false, false, false};
 
@@ -66,8 +68,8 @@ public class ScreenIngame extends Screen {
             lastQueueTime = now;
         }
 
-        if (lastAttackTime > 0 && nowMs - last100 >= 100) {
-            lastAttackTime -= 100;
+        if (lastBytesTime > 0 && nowMs - last100 >= 100) {
+            lastBytesTime -= 100;
             last100 = nowMs;
         }
         if (now - lastSendKeyTime >= Globals.SEND_KEYDOWN_UPDATE) {
@@ -75,7 +77,6 @@ public class ScreenIngame extends Screen {
             sender.sendMove(logic.getSelectedRoom(), myKey, Globals.DOWN, keyDownMove[Globals.DOWN]);
             sender.sendMove(logic.getSelectedRoom(), myKey, Globals.LEFT, keyDownMove[Globals.LEFT]);
             sender.sendMove(logic.getSelectedRoom(), myKey, Globals.RIGHT, keyDownMove[Globals.RIGHT]);
-
             lastSendKeyTime = now;
         }
 
@@ -97,14 +98,12 @@ public class ScreenIngame extends Screen {
             lastPingTime = now;
         }
 
-        //Yield until something is happening
-        while (now - lastQueueTime < Globals.QUEUES_UPDATE
-                && now - lastPingTime < Globals.PING_UPDATE
-                && now - lastRequestTime < Globals.REQUESTALL_UPDATE
-                && now - lastUpdateTime < Globals.LOGIC_UPDATE) {
-            Thread.yield();
-            now = System.nanoTime();
+        try {
+            Thread.sleep(0, 1);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(ScreenInventory.class.getName()).log(Level.SEVERE, null, ex);
         }
+
     }
 
     private void updatePlayers() {
@@ -166,14 +165,14 @@ public class ScreenIngame extends Screen {
             byte[] data = dataQueue.remove();
             byte dataType = data[0];
             switch (dataType) {
-                case Globals.DATA_SET_PLAYER_POS:
-                    dataSetPlayerPos(data);
+                case Globals.DATA_PLAYER_SET_POS:
+                    dataPlayerSetPos(data);
                     break;
-                case Globals.DATA_SET_PLAYER_FACING:
-                    dataSetPlayerFacing(data);
+                case Globals.DATA_PLAYER_SET_FACING:
+                    dataPlayerSetFacing(data);
                     break;
-                case Globals.DATA_SET_PLAYER_STATE:
-                    dataSetPlayerState(data);
+                case Globals.DATA_PLAYER_SET_STATE:
+                    dataPlayerSetState(data);
                     break;
                 case Globals.DATA_PARTICLE_EFFECT:
                     dataParticleEffect(data);
@@ -188,16 +187,16 @@ public class ScreenIngame extends Screen {
                     dataPlayerGetName(data);
                     break;
                 case Globals.DATA_PLAYER_GET_STAT:
-                    dataGetLevel(data);
+                    dataPlayerGetLevel(data);
                     break;
                 case Globals.DATA_PLAYER_GET_EQUIP:
-                    dataGetEquip(data);
+                    dataPlayerGetEquip(data);
                     break;
             }
         }
     }
 
-    private void dataGetEquip(byte[] data) {
+    private void dataPlayerGetEquip(byte[] data) {
         byte key = data[1];
         if (players.containsKey(key)) {
             for (byte i = 0; i < Globals.NUM_EQUIP_SLOTS; i++) {
@@ -208,7 +207,7 @@ public class ScreenIngame extends Screen {
         }
     }
 
-    private void dataGetLevel(byte[] data) {
+    private void dataPlayerGetLevel(byte[] data) {
         byte key = data[1];
 
         if (players.containsKey(key)) {
@@ -218,7 +217,7 @@ public class ScreenIngame extends Screen {
         }
     }
 
-    private void dataSetPlayerPos(byte[] data) {
+    private void dataPlayerSetPos(byte[] data) {
         byte key = data[1];
         int x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
         int y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
@@ -229,7 +228,7 @@ public class ScreenIngame extends Screen {
         }
     }
 
-    private void dataSetPlayerFacing(byte[] data) {
+    private void dataPlayerSetFacing(byte[] data) {
         byte key = data[1];
         byte facing = data[2];
         if (players.containsKey(key)) {
@@ -237,7 +236,7 @@ public class ScreenIngame extends Screen {
         }
     }
 
-    private void dataSetPlayerState(byte[] data) {
+    private void dataPlayerSetState(byte[] data) {
         byte key = data[1];
         if (players.containsKey(key)) {
             byte state = data[2];
@@ -259,12 +258,24 @@ public class ScreenIngame extends Screen {
         byte particleID = data[5];
         int x = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
         int y = Globals.bytesToInt(Arrays.copyOfRange(data, 10, 14));
+        if (particles.containsKey(key)) {
+            int i = 0;
+            while (particles.containsKey(i)) {
+                i++;
+            }
+            Particle temp = particles.remove(key);
+            if (temp != null) {
+                particles.put(i, temp);
+            }
+        }
         particles.put(key, new ParticleKnock(logic, key, x, y, 500));
     }
 
     private void dataParticleRemove(byte[] data) {
         int key = Globals.bytesToInt(Arrays.copyOfRange(data, 1, 5));
-        particles.remove(key);
+        if (particles.containsKey(key)) {
+            particles.remove(key);
+        }
     }
 
     private void dataPlayerGetName(byte[] data) {
@@ -296,11 +307,11 @@ public class ScreenIngame extends Screen {
     }
 
     public void attack() {
-        lastAttackTime = 500;
+        lastBytesTime = 10;
     }
 
     public boolean canAttack() {
-        return lastAttackTime <= 0;
+        return true;
     }
 
     public void setKeyDown(int direction, boolean move) {

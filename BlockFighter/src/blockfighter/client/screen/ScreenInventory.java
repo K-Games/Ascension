@@ -12,11 +12,13 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 
 /**
  *
- * @author Ken
+ * @author Ken Kwan
  */
 public class ScreenInventory extends ScreenMenu {
 
@@ -83,9 +85,11 @@ public class ScreenInventory extends ScreenMenu {
             }
             lastUpdateTime = now;
         }
-        while (now - lastUpdateTime < Globals.LOGIC_UPDATE) {
-            Thread.yield();
-            now = System.nanoTime();
+
+        try {
+            Thread.sleep(0, 1);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(ScreenInventory.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }

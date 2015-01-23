@@ -9,7 +9,7 @@ import javax.swing.JPanel;
 
 /**
  *
- * @author ckwa290
+ * @author Ken Kwan
  */
 public class RenderPanel extends JPanel {
 

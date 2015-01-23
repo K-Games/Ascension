@@ -17,7 +17,7 @@ import java.util.concurrent.Executors;
 
 /**
  *
- * @author Ken
+ * @author Ken Kwan
  */
 public class PacketReceiver extends Thread {
 

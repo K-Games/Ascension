@@ -12,7 +12,7 @@ import java.net.UnknownHostException;
 
 /**
  *
- * @author ckwa290
+ * @author Ken Kwan
  */
 public class LogicModule extends Thread {
 
@@ -58,7 +58,7 @@ public class LogicModule extends Thread {
     public void sendGetEquip(byte k) {
         sender.sendGetEquip(selectedRoom, k);
     }
-    
+
     public void sendDisconnect(byte k) {
         sender.sendDisconnect(selectedRoom, k);
     }

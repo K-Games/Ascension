@@ -9,7 +9,7 @@ import javax.imageio.ImageIO;
 
 /**
  *
- * @author ckwa290
+ * @author Ken Kwan
  */
 public class Globals {
 
@@ -28,15 +28,15 @@ public class Globals {
 
     public final static byte MAX_NAME_LENGTH = 15;
 
-    public final static double RENDER_FPS = 60.0;
+    public final static double RENDER_FPS = 63;
     public final static double RENDER_UPDATE = 1000000000 / RENDER_FPS;
 
     public final static double LOGIC_TICKS_PER_SEC = 40.0;
     public final static double LOGIC_UPDATE = 1000000000 / LOGIC_TICKS_PER_SEC;
-    
+
     public final static double SEND_KEYDOWN_PER_SEC = 15.0;
     public final static double SEND_KEYDOWN_UPDATE = 1000000000 / SEND_KEYDOWN_PER_SEC;
-    
+
     public final static double REQUESTALL_TICKS_PER_SEC = 1;
     public final static double REQUESTALL_UPDATE = 1000000000 / REQUESTALL_TICKS_PER_SEC;
 
@@ -108,7 +108,7 @@ public class Globals {
             PLAYER_STATE_KNOCKBACK = 0x04;
 
     //Packet globals
-    public final static int PACKET_MAX_SIZE = 256;
+    public final static int PACKET_MAX_SIZE = 512;
     public final static int PACKET_BYTE = 1;
     public final static int PACKET_INT = 4;
     public final static int PACKET_CHAR = 1;
@@ -116,11 +116,11 @@ public class Globals {
     //Datatypes
     public final static byte DATA_PING = 0x00,
             DATA_LOGIN = 0x01,
-            DATA_GET_ALL_PLAYER = 0x02,
-            DATA_SET_PLAYER_MOVE = 0x03,
-            DATA_SET_PLAYER_POS = 0x04,
-            DATA_SET_PLAYER_FACING = 0x05,
-            DATA_SET_PLAYER_STATE = 0x06,
+            DATA_PLAYER_GET_ALL = 0x02,
+            DATA_PLAYER_SET_MOVE = 0x03,
+            DATA_PLAYER_SET_POS = 0x04,
+            DATA_PLAYER_SET_FACING = 0x05,
+            DATA_PLAYER_SET_STATE = 0x06,
             DATA_PLAYER_ACTION = 0x07,
             DATA_PARTICLE_EFFECT = 0x08,
             DATA_PARTICLE_REMOVE = 0x09,

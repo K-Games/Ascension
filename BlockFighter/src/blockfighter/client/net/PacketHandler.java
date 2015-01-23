@@ -6,7 +6,7 @@ import java.net.DatagramPacket;
 
 /**
  *
- * @author Ken
+ * @author Ken Kwan
  */
 public class PacketHandler extends Thread {
 
@@ -26,16 +26,16 @@ public class PacketHandler extends Thread {
             case Globals.DATA_LOGIN:
                 receiveLogin(data);
                 break;
-            case Globals.DATA_SET_PLAYER_POS:
+            case Globals.DATA_PLAYER_SET_POS:
                 receiveData(data);
                 break;
             case Globals.DATA_PING:
                 receiveGetPing(data);
                 break;
-            case Globals.DATA_SET_PLAYER_FACING:
+            case Globals.DATA_PLAYER_SET_FACING:
                 receiveData(data);
                 break;
-            case Globals.DATA_SET_PLAYER_STATE:
+            case Globals.DATA_PLAYER_SET_STATE:
                 receiveData(data);
                 break;
             case Globals.DATA_PARTICLE_EFFECT:
