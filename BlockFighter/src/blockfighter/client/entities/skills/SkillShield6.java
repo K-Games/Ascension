@@ -1,6 +1,8 @@
 package blockfighter.client.entities.skills;
 
+import blockfighter.client.Globals;
 import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 
 /**
  *
@@ -10,10 +12,6 @@ public class SkillShield6 extends Skill {
 
     public SkillShield6() {
         skillCode = SHIELD_6;
-    }
-
-    @Override
-    public void draw(Graphics2D g, int x, int y) {
     }
 
     @Override

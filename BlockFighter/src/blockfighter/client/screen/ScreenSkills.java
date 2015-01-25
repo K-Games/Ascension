@@ -40,14 +40,50 @@ public class ScreenSkills extends ScreenMenu {
         hotkeyList = c.getHotkeys();
         skillList = c.getSkills();
         for (int i = 0; i < hotkeySlots.length; i++) {
-            hotkeySlots[i] = new Rectangle2D.Double(270 + (i * 62), 600, 60, 60);
+            hotkeySlots[i] = new Rectangle2D.Double(260 + (i * 82), 613, 60, 60);
         }
-        //init skill slots locations
+        for (int i = 0; i < skillSlots.length; i++) {
+            skillSlots[i] = new Rectangle2D.Double(241, 55, 60, 60);
+        }
+        skillSlots[Skill.SWORD_DRIVE] = new Rectangle2D.Double(241, 55, 60, 60);
+        skillSlots[Skill.SWORD_SLASH] = new Rectangle2D.Double(241, 145, 60, 60);
+        skillSlots[Skill.SWORD_MULTI] = new Rectangle2D.Double(241, 235, 60, 60);
+        skillSlots[Skill.SWORD_VORPAL] = new Rectangle2D.Double(241, 325, 60, 60);
+        skillSlots[Skill.SWORD_CINDER] = new Rectangle2D.Double(241, 415, 60, 60);
+        skillSlots[Skill.SWORD_TAUNT] = new Rectangle2D.Double(241, 505, 60, 60);
+
+        skillSlots[Skill.BOW_ARC] = new Rectangle2D.Double(506, 55, 60, 60);
+        skillSlots[Skill.BOW_RAPID] = new Rectangle2D.Double(506, 145, 60, 60);
+        skillSlots[Skill.BOW_POWER] = new Rectangle2D.Double(506, 235, 60, 60);
+        skillSlots[Skill.BOW_VOLLEY] = new Rectangle2D.Double(506, 325, 60, 60);
+        skillSlots[Skill.BOW_STORM] = new Rectangle2D.Double(506, 415, 60, 60);
+        skillSlots[Skill.BOW_FROST] = new Rectangle2D.Double(506, 505, 60, 60);
+
+        skillSlots[Skill.SHIELD_FORTIFY] = new Rectangle2D.Double(767, 55, 60, 60);
+        skillSlots[Skill.SHIELD_IRONFORT] = new Rectangle2D.Double(767, 145, 60, 60);
+        skillSlots[Skill.SHIELD_3] = new Rectangle2D.Double(767, 235, 60, 60);
+        skillSlots[Skill.SHIELD_4] = new Rectangle2D.Double(767, 325, 60, 60);
+        skillSlots[Skill.SHIELD_5] = new Rectangle2D.Double(767, 415, 60, 60);
+        skillSlots[Skill.SHIELD_6] = new Rectangle2D.Double(767, 505, 60, 60);
+
+        skillSlots[Skill.PASSIVE_1] = new Rectangle2D.Double(1050, 55, 60, 60);
+        skillSlots[Skill.PASSIVE_2] = new Rectangle2D.Double(1050, 140, 60, 60);
+        skillSlots[Skill.PASSIVE_3] = new Rectangle2D.Double(1050, 225, 60, 60);
+        skillSlots[Skill.PASSIVE_4] = new Rectangle2D.Double(1050, 310, 60, 60);
+        skillSlots[Skill.PASSIVE_5] = new Rectangle2D.Double(1050, 395, 60, 60);
+        skillSlots[Skill.PASSIVE_6] = new Rectangle2D.Double(1050, 480, 60, 60);
+
+        skillSlots[Skill.PASSIVE_7] = new Rectangle2D.Double(1160, 55, 60, 60);
+        skillSlots[Skill.PASSIVE_8] = new Rectangle2D.Double(1160, 140, 60, 60);
+        skillSlots[Skill.PASSIVE_9] = new Rectangle2D.Double(1160, 225, 60, 60);
+        skillSlots[Skill.PASSIVE_10] = new Rectangle2D.Double(1160, 310, 60, 60);
+        skillSlots[Skill.PASSIVE_11] = new Rectangle2D.Double(1160, 395, 60, 60);
+        skillSlots[Skill.PASSIVE_12] = new Rectangle2D.Double(1160, 480, 60, 60);
     }
 
     @Override
     public void draw(Graphics2D g) {
-        BufferedImage bg = Globals.MENU_BG[2];
+        BufferedImage bg = Globals.MENU_BG[3];
         g.drawImage(bg, 0, 0, null);
 
         g.setRenderingHint(
@@ -77,7 +113,22 @@ public class ScreenSkills extends ScreenMenu {
 
     private void drawSlots(Graphics2D g) {
         BufferedImage button = Globals.MENU_BUTTON[Globals.BUTTON_SLOT];
+        g.setFont(Globals.ARIAL_18PT);
+        drawStringOutline(g, "Sword", 325, 45, 1);
+        g.setColor(Color.WHITE);
+        g.drawString("Sword", 325, 45);
 
+        drawStringOutline(g, "Bow", 600, 45, 1);
+        g.setColor(Color.WHITE);
+        g.drawString("Bow", 600, 45);
+
+        drawStringOutline(g, "Shield", 850, 45, 1);
+        g.setColor(Color.WHITE);
+        g.drawString("Shield", 850, 45);
+        
+        drawStringOutline(g, "Passive", 1105, 45, 1);
+        g.setColor(Color.WHITE);
+        g.drawString("Passive", 1105, 45);
         for (int i = 0; i < hotkeySlots.length; i++) {
             g.drawImage(button, (int) hotkeySlots[i].x, (int) hotkeySlots[i].y, null);
             if (hotkeyList[i] != null) {
@@ -87,35 +138,12 @@ public class ScreenSkills extends ScreenMenu {
 
         for (int i = 0; i < skillList.length; i++) {
             g.drawImage(button, (int) skillSlots[i].x, (int) skillSlots[i].y, null);
-            if (skillList[i] != null) {
-                skillList[i].draw(g, (int) skillSlots[i].x, (int) skillSlots[i].y);
-            }
+            skillList[i].draw(g, (int) skillSlots[i].x, (int) skillSlots[i].y);
         }
     }
 
-    private void drawSkillInfo(Graphics2D g, Rectangle2D.Double box, Skill e) {
-        if (e == null) {
-            return;
-        }
-        g.setColor(new Color(30, 30, 30, 185));
-        int y = (int) box.y;
-        int x = (int) box.x;
-        int boxHeight = 20, boxWidth = 200;
-
-        if (y + boxHeight > 720) {
-            y = 700 - boxHeight;
-        }
-
-        if (x + 30 + boxWidth > 1280) {
-            x = 1040;
-        }
-        g.fillRect(x + 30, y, boxWidth, boxHeight);
-        g.setColor(Color.BLACK);
-        g.drawRect(x + 30, y, boxWidth, boxHeight);
-        g.drawRect(x + 31, y + 1, 198, boxHeight - 2);
-
-        g.setFont(Globals.ARIAL_15PT);
-        //draw Skill Info text
+    private void drawSkillInfo(Graphics2D g, Rectangle2D.Double box, Skill skill) {
+        skill.drawInfo(g, (int) box.x, (int) box.y);
     }
 
     @Override

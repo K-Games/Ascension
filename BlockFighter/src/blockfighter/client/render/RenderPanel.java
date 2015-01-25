@@ -30,18 +30,8 @@ public class RenderPanel extends JPanel {
         }
 
         g2d.setFont(Globals.ARIAL_12PT);
-        drawStringOutline(g2d, "FPS: " + FPSCount, 1220, 20, 1);
-
         g2d.setColor(Color.WHITE);
-        g2d.drawString("FPS: " + FPSCount, 1220, 20);
-    }
-
-    private void drawStringOutline(Graphics2D g, String s, int x, int y, int width) {
-        for (int i = 0; i < 2; i++) {
-            g.setColor(Color.BLACK);
-            g.drawString(s, x - width + i * 2 * width, y);
-            g.drawString(s, x, y - width + i * 2 * width);
-        }
+        g2d.drawString("FPS: " + FPSCount, 1220, 15);
     }
 
     public void setFPSCount(int f) {

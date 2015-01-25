@@ -1,5 +1,6 @@
 package blockfighter.client;
 
+import blockfighter.client.entities.skills.Skill;
 import java.awt.Font;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -89,6 +90,7 @@ public class Globals {
             ARMOR_MULT = 6,
             REGEN_MULT = 1.5,
             CRITCHC_BASE = 0.1,
+            CRITCHC_FACT = 10,
             CRITCHC_MULT = 0.01,
             CRITCHC_CONST = 750 / 0.85 - 750,
             CRITDMG_BASE = 0.5,
@@ -136,14 +138,16 @@ public class Globals {
     public final static BufferedImage[][] PARTICLE_SPRITE = new BufferedImage[NUM_PARTICLE_EFFECTS][];
     public final static BufferedImage[] HUD = new BufferedImage[1];
 
-    public final static BufferedImage[] MENU_BG = new BufferedImage[3];
+    public final static BufferedImage[] MENU_BG = new BufferedImage[4];
     public final static BufferedImage[] MENU_SMOKE = new BufferedImage[1];
     public final static BufferedImage[] MENU_UPGRADEPARTICLE = new BufferedImage[4];
     public final static BufferedImage[] MENU_BUTTON = new BufferedImage[16];
     public final static BufferedImage[] MENU_WINDOW = new BufferedImage[2];
     public final static BufferedImage[] MENU_TABPOINTER = new BufferedImage[1];
     public final static BufferedImage[] MENU_ITEMDELETE = new BufferedImage[1];
-
+    
+    public final static BufferedImage[] SKILL_ICON = new BufferedImage[Skill.NUM_SKILLS];
+    
     public final static byte BUTTON_BIGRECT = 0,
             BUTTON_SELECTCHAR = 1,
             BUTTON_ADDSTAT = 2,
@@ -185,7 +189,7 @@ public class Globals {
     }
 
     public static final double calcCritChance(double spirit) {
-        double chc = spirit * CRITCHC_MULT + CRITCHC_BASE;
+        double chc = spirit / CRITCHC_FACT * CRITCHC_MULT + CRITCHC_BASE;
         if (chc > 0.85) {
             chc = spirit / (spirit + CRITCHC_CONST);
         }
@@ -264,6 +268,10 @@ public class Globals {
             MENU_TABPOINTER[0] = ImageIO.read(Globals.class.getResource("sprites/ui/menu/pointer.png"));
             MENU_ITEMDELETE[0] = ImageIO.read(Globals.class.getResource("sprites/ui/menu/delete.png"));
             MENU_SMOKE[0] = ImageIO.read(Globals.class.getResource("sprites/ui/menu/smoke.png"));
+            for (byte i = 0; i < 3; i++){
+                SKILL_ICON[i] = ImageIO.read(Globals.class.getResource("sprites/skill/"+i+".png"));
+            }
+            
         } catch (IOException ex) {
             Logger.getLogger(Globals.class.getName()).log(Level.SEVERE, null, ex);
         }

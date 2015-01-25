@@ -10,12 +10,14 @@ import blockfighter.client.entities.skills.Skill;
 import blockfighter.client.net.PacketSender;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.nio.charset.StandardCharsets;
+import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Map;
@@ -33,7 +35,7 @@ public class ScreenIngame extends Screen {
     private Rectangle2D.Double[] hotkeySlots = new Rectangle2D.Double[12];
     //Ingame Data
     private ConcurrentLinkedQueue<byte[]> dataQueue = new ConcurrentLinkedQueue<>();
-
+    private DecimalFormat df = new DecimalFormat("0.0");
     private ConcurrentHashMap<Byte, Player> players;
     private ConcurrentHashMap<Integer, Particle> particles = new ConcurrentHashMap<>(500);
     private byte myKey = -1;
@@ -55,6 +57,9 @@ public class ScreenIngame extends Screen {
 
     private LogicModule logic;
     private SaveData c;
+    private Point mousePos;
+
+    private int drawInfoHotkey = -1;
 
     public ScreenIngame(LogicModule l, byte i, byte numPlayer, PacketSender s) {
         logic = l;
@@ -64,6 +69,9 @@ public class ScreenIngame extends Screen {
         sender = s;
         for (int j = 0; j < hotkeySlots.length; j++) {
             hotkeySlots[j] = new Rectangle2D.Double(Globals.WINDOW_WIDTH / 2 - Globals.HUD[0].getWidth() / 2 + 10 + (j * 66), 656, 60, 60);
+        }
+        for (Skill skill : c.getSkills()) {
+            skill.setCooldown();
         }
     }
 
@@ -90,6 +98,12 @@ public class ScreenIngame extends Screen {
         }
 
         if (now - lastUpdateTime >= Globals.LOGIC_UPDATE) {
+            Skill[] skills = c.getSkills();
+            for (Skill skill : skills) {
+                if (skill != null) {
+                    skill.reduceCooldown((long) (Globals.LOGIC_UPDATE / 1000000));
+                }
+            }
             updateParticles(particles);
             updatePlayers();
             lastUpdateTime = now;
@@ -164,14 +178,31 @@ public class ScreenIngame extends Screen {
         for (int j = 0; j < hotkeySlots.length; j++) {
             if (hotkey[j] != null) {
                 hotkey[j].draw(g, (int) hotkeySlots[j].x, (int) hotkeySlots[j].y);
-                g.setColor(new Color(100,100,100,45));
-                int cdHeight = (int) ((hotkey[j].getCooldown() / hotkey[j].getMaxCooldown())*hotkeySlots[j].height);
+                g.setColor(new Color(100, 100, 100, 125));
+                int cdHeight = (int) ((hotkey[j].getCooldown() / hotkey[j].getMaxCooldown()) * hotkeySlots[j].height);
                 g.fillRect((int) hotkeySlots[j].x, (int) (hotkeySlots[j].y + hotkeySlots[j].height - cdHeight), (int) hotkeySlots[j].width, cdHeight);
+                if (hotkey[j].getCooldown() > 0) {
+                    g.setFont(Globals.ARIAL_18PT);
+                    int width = g.getFontMetrics().stringWidth(df.format(hotkey[j].getCooldown() / 1000D));
+                    drawStringOutline(g, df.format(hotkey[j].getCooldown() / 1000D), (int) hotkeySlots[j].x + 28 - width / 2, (int) hotkeySlots[j].y + 33, 1);
+                    g.setColor(Color.white);
+                    g.drawString(df.format(hotkey[j].getCooldown() / 1000D), (int) hotkeySlots[j].x + 28 - width / 2, (int) hotkeySlots[j].y + 33);
+                }
             }
-            g.setColor(Color.WHITE);
+
         }
+        if (drawInfoHotkey != -1) {
+            drawSkillInfo(g, hotkeySlots[drawInfoHotkey], c.getHotkeys()[drawInfoHotkey]);
+        }
+        g.setColor(new Color(25, 25, 25, 150));
+        g.fillRect(1210, 5, 65, 45);
         g.setFont(Globals.ARIAL_12PT);
-        g.drawString("Ping: " + ping, 1200, 40);
+        g.setColor(Color.WHITE);
+        g.drawString("Ping: " + ping, 1220, 40);
+    }
+
+    private void drawSkillInfo(Graphics2D g, Rectangle2D.Double box, Skill skill) {
+        skill.drawInfo(g, (int) box.x, (int) box.y);
     }
 
     @Override
@@ -419,7 +450,14 @@ public class ScreenIngame extends Screen {
 
     @Override
     public void mouseMoved(MouseEvent e) {
-
+        mousePos = e.getPoint();
+        drawInfoHotkey = -1;
+        for (int i = 0; i < hotkeySlots.length; i++) {
+            if (hotkeySlots[i].contains(e.getPoint()) && c.getHotkeys()[i] != null) {
+                drawInfoHotkey = i;
+                return;
+            }
+        }
     }
 
 }

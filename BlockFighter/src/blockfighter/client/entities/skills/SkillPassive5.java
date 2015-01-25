@@ -13,10 +13,6 @@ public class SkillPassive5 extends Skill {
     }
 
     @Override
-    public void draw(Graphics2D g, int x, int y) {
-    }
-
-    @Override
     public void drawInfo(Graphics2D g, int x, int y) {
     }
 

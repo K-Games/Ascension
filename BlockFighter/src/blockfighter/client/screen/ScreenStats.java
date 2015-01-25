@@ -20,6 +20,7 @@ public class ScreenStats extends ScreenMenu {
     private SaveData c;
     private double[] stats, bs;
     Rectangle2D.Double[] addBox = new Rectangle2D.Double[6];
+    Rectangle2D.Double resetBox;
 
     public ScreenStats(LogicModule l) {
         super(l);
@@ -29,7 +30,7 @@ public class ScreenStats extends ScreenMenu {
         addBox[3] = new Rectangle2D.Double(453, 148, 30, 23);
         addBox[4] = new Rectangle2D.Double(453, 173, 30, 23);
         addBox[5] = new Rectangle2D.Double(453, 198, 30, 23);
-
+        resetBox = new Rectangle2D.Double(255, 570, 180, 30);
         c = l.getSelectedChar();
         stats = c.getStats();
         bs = c.getBaseStats();
@@ -49,7 +50,7 @@ public class ScreenStats extends ScreenMenu {
         g.setColor(Color.WHITE);
         g.drawString(c.getPlayerName(), 255, 76);
 
-        int mainStat = 165, secStat = 295;;
+        int mainStat = 165, secStat = 295;
         BufferedImage button = Globals.MENU_BUTTON[Globals.BUTTON_ADDSTAT];
         if (bs[Globals.STAT_POINTS] >= 1) {
             g.drawImage(button, 418, mainStat - 17, null);
@@ -136,6 +137,13 @@ public class ScreenStats extends ScreenMenu {
         g.setColor(new Color(255, 175, 0));
         g.fillRect(258, secStat + 218, (int) (bs[Globals.STAT_EXP] / Globals.calcEXP(bs[Globals.STAT_LEVEL]) * 444), 34);
 
+        button = Globals.MENU_BUTTON[Globals.BUTTON_SMALLRECT];
+        g.drawImage(button, (int) resetBox.x, (int) resetBox.y, null);
+        g.setFont(Globals.ARIAL_18PT);
+        drawStringOutline(g, "Reset Stats", (int) (resetBox.x + 45), (int)(resetBox.y + 25),1);
+        g.setColor(Color.WHITE);
+        g.drawString("Reset Stats", (int) (resetBox.x + 45), (int)(resetBox.y + 25));
+        
         drawMenuButton(g);
         super.draw(g);
     }
@@ -201,6 +209,9 @@ public class ScreenStats extends ScreenMenu {
                     }
                 }
             }
+        }
+        if (resetBox.contains(e.getPoint())){
+            c.resetStat();
         }
     }
 

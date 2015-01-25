@@ -292,7 +292,7 @@ public class ScreenInventory extends ScreenMenu {
         g.setColor(new Color(30, 30, 30, 185));
         int y = (int) box.y;
         int x = (int) box.x;
-        int boxHeight = 120;
+        int boxHeight = 120, boxWidth = 200;
 
         if (e.getStats()[Globals.STAT_REGEN] > 0) {
             boxHeight += 20;
@@ -310,13 +310,13 @@ public class ScreenInventory extends ScreenMenu {
             y = 700 - boxHeight;
         }
 
-        if (x + 30 + 200 > 1280) {
-            x = 1040;
+        if (x + 30 + boxWidth > 1280) {
+            x = 1240 - boxWidth;
         }
-        g.fillRect(x + 30, y, 200, boxHeight);
+        g.fillRect(x + 30, y, boxWidth, boxHeight);
         g.setColor(Color.BLACK);
-        g.drawRect(x + 30, y, 200, boxHeight);
-        g.drawRect(x + 31, y + 1, 198, boxHeight - 2);
+        g.drawRect(x + 30, y, boxWidth, boxHeight);
+        g.drawRect(x + 31, y + 1, boxWidth - 2, boxHeight - 2);
 
         g.setFont(Globals.ARIAL_15PT);
 

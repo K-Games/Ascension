@@ -2,6 +2,7 @@ package blockfighter.client.screen;
 
 import blockfighter.client.Globals;
 import blockfighter.client.LogicModule;
+import blockfighter.client.SaveData;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.client.entities.particles.ParticleMenuSmoke;
 import java.awt.Color;
@@ -72,8 +73,8 @@ public abstract class ScreenMenu extends Screen {
                 RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
 
         BufferedImage button = Globals.MENU_BUTTON[Globals.BUTTON_MENUS];
-        for (int i = 0; i < menuBox.length; i++) {
-            g.drawImage(button, (int) menuBox[i].x, (int) menuBox[i].y, null);
+        for (Rectangle2D.Double menuBox1 : menuBox) {
+            g.drawImage(button, (int) menuBox1.x, (int) menuBox1.y, null);
         }
         g.setFont(Globals.ARIAL_24PT);
         drawStringOutline(g, "Stats", 40, 62, 2);
@@ -99,6 +100,7 @@ public abstract class ScreenMenu extends Screen {
         if (e.getButton() == MouseEvent.BUTTON1) {
             for (int i = 0; i < menuBox.length; i++) {
                 if (menuBox[i].contains(e.getPoint())) {
+                    SaveData.saveData(logic.getSelectedChar().getSaveNum(), logic.getSelectedChar());
                     switch (i) {
                         case 0:
                             logic.setScreen(new ScreenStats(logic));
@@ -109,10 +111,14 @@ public abstract class ScreenMenu extends Screen {
                         case 2:
                             logic.setScreen(new ScreenUpgrade(logic));
                             break;
+                        case 3:
+                            logic.setScreen(new ScreenSkills(logic));
+                            break;
                         case 4:
                             logic.sendLogin();
                             break;
                         case 6:
+                            logic.setSelectedChar(null);
                             logic.setScreen(new ScreenSelectChar(logic));
                             break;
                     }

@@ -38,7 +38,7 @@ public class SaveData {
         name = n;
         Random rng = new Random();
         uniqueID = rng.nextInt(Integer.MAX_VALUE);
-        baseStats[Globals.STAT_LEVEL] = 1;
+        baseStats[Globals.STAT_LEVEL] = 100;
         baseStats[Globals.STAT_POWER] = 0;
         baseStats[Globals.STAT_DEFENSE] = 0;
         baseStats[Globals.STAT_SPIRIT] = 0;
@@ -104,8 +104,8 @@ public class SaveData {
         skills[Skill.PASSIVE_11] = new SkillPassive11();
         skills[Skill.PASSIVE_12] = new SkillPassive12();
 
-        for (int i = 4; i < hotkeys.length; i++) {
-            hotkeys[i] = skills[i];
+        for (int i = 0; i < skills.length; i++) {
+            skills[i].setLevel((byte)30);
         }
     }
 
@@ -465,6 +465,14 @@ public class SaveData {
 
     public byte getSaveNum() {
         return saveNum;
+    }
+
+    public void resetStat() {
+        baseStats[Globals.STAT_POWER] = 0;
+        baseStats[Globals.STAT_DEFENSE] = 0;
+        baseStats[Globals.STAT_SPIRIT] = 0;
+        calcStats();
+        saveData(saveNum, this);
     }
 
     public void addStat(byte stat, int amount) {

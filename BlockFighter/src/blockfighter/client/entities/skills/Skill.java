@@ -1,6 +1,8 @@
 package blockfighter.client.entities.skills;
 
+import blockfighter.client.Globals;
 import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 
 /**
  *
@@ -10,8 +12,9 @@ public abstract class Skill {
 
     protected byte skillCode;
     protected byte level;
-    protected long cooldown;
+    protected long cooldown=20000;
     protected long maxCooldown = 1;
+    protected BufferedImage icon = Globals.MENU_BUTTON[Globals.BUTTON_SLOT];
 
     public final static byte NUM_SKILLS = 30,
             SWORD_VORPAL = 0x00,
@@ -45,7 +48,9 @@ public abstract class Skill {
             PASSIVE_11 = 0x1C,
             PASSIVE_12 = 0x1D;
 
-    public abstract void draw(Graphics2D g, int x, int y);
+    public void draw(Graphics2D g, int x, int y) {
+        g.drawImage(icon, x, y, null);
+    }
 
     public abstract void drawInfo(Graphics2D g, int x, int y);
 
@@ -55,12 +60,19 @@ public abstract class Skill {
         return skillCode;
     }
 
-    public void reduceCooldown(long ms) {
-        cooldown -= ms;
+    public void resetCooldown() {
+        cooldown = 0;
     }
 
-    public void setCooldown(long cd) {
-        cooldown = cd;
+    public void reduceCooldown(long ms) {
+        cooldown -= ms;
+        if (cooldown < 0) {
+            cooldown = 0;
+        }
+    }
+
+    public void setCooldown() {
+        cooldown = maxCooldown;
     }
 
     public long getCooldown() {
