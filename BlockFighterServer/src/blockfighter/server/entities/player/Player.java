@@ -34,7 +34,7 @@ public class Player extends Thread {
     private boolean[] dirKeydown = new boolean[4];
     private boolean isFalling = false, isJumping = false;
     private boolean updatePos = false, updateFacing = false, updateState = false;
-    private byte playerState, facing, frame;
+    private byte playerState, animState, facing, frame;
     private double nextFrameTime = 0;
     private Rectangle2D.Double hitbox;
 
@@ -289,9 +289,8 @@ public class Player extends Thread {
             updateJump();
         }
 
-        updateFrame();
         updateHP();
-
+        updateState();
         if (updatePos) {
             sendPos();
         }
@@ -383,6 +382,11 @@ public class Player extends Thread {
         stats[Globals.STAT_MAXDMG] = Globals.calcMaxDmg((int) (stats[Globals.STAT_POWER] + bonusStats[Globals.STAT_POWER]));
         stats[Globals.STAT_CRITCHANCE] = Globals.calcCritChance((int) (stats[Globals.STAT_SPIRIT] + bonusStats[Globals.STAT_SPIRIT]));
         stats[Globals.STAT_CRITDMG] = Globals.calcCritDmg((int) (stats[Globals.STAT_SPIRIT] + bonusStats[Globals.STAT_SPIRIT]));
+
+        stats[Globals.STAT_CRITCHANCE] = stats[Globals.STAT_CRITCHANCE] + bonusStats[Globals.STAT_CRITCHANCE];
+        stats[Globals.STAT_CRITDMG] = stats[Globals.STAT_CRITDMG] + bonusStats[Globals.STAT_CRITDMG];
+        stats[Globals.STAT_REGEN] = stats[Globals.STAT_REGEN] + bonusStats[Globals.STAT_REGEN];
+        stats[Globals.STAT_ARMOR] = stats[Globals.STAT_ARMOR] + bonusStats[Globals.STAT_ARMOR];
     }
 
     /**
@@ -569,10 +573,11 @@ public class Player extends Thread {
         }
     }
 
-    private void updateFrame() {
+    private void updateState() {
         switch (playerState) {
             case Globals.PLAYER_STATE_STAND:
                 nextFrameTime -= Globals.LOGIC_UPDATE;
+                animState = Globals.PLAYER_STATE_STAND;
                 if (nextFrameTime <= 0) {
                     if (frame >= 8) {
                         frame = 0;
@@ -585,6 +590,7 @@ public class Player extends Thread {
                 break;
 
             case Globals.PLAYER_STATE_WALK:
+                animState = Globals.PLAYER_STATE_WALK;
                 nextFrameTime -= Globals.LOGIC_UPDATE;
                 if (nextFrameTime <= 0) {
                     if (frame == 18) {
@@ -597,6 +603,7 @@ public class Player extends Thread {
                 }
                 break;
             case Globals.PLAYER_STATE_JUMP:
+                animState = Globals.PLAYER_STATE_JUMP;
                 if (frame != 0) {
                     frame = 0;
                     updateState = true;
@@ -608,7 +615,7 @@ public class Player extends Thread {
     /**
      * Send the player's current position to every connected player
      * <p>
-     * X and y are casted and sent as int.
+     * X and y are casted and sent as integer.
      * <br/>
      * Uses Server PacketSender to send to all<br/>
      * Byte sent: 0 - Data type 1 - Key 2,3,4,5 - x 6,7,8,9 - y
@@ -661,7 +668,7 @@ public class Player extends Thread {
         byte[] bytes = new byte[Globals.PACKET_BYTE * 4];
         bytes[0] = Globals.DATA_PLAYER_SET_STATE;
         bytes[1] = key;
-        bytes[2] = playerState;
+        bytes[2] = animState;
         bytes[3] = frame;
         packetSender.sendAll(bytes, logic.getRoom());
         updateState = false;
@@ -703,6 +710,7 @@ public class Player extends Thread {
 
     public void setBonusStat(byte stat, double amount) {
         bonusStats[stat] = amount;
+        updateStats();
     }
 
     public double[] getBonusStats() {

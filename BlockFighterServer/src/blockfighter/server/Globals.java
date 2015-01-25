@@ -92,6 +92,7 @@ public class Globals {
             ARMOR_MULT = 6,
             REGEN_MULT = 1.5,
             CRITCHC_BASE = 0.1,
+            CRITCHC_FACT = 10,
             CRITCHC_MULT = 0.01,
             CRITCHC_CONST = 750 / 0.85 - 750,
             CRITDMG_BASE = 0.5,
@@ -216,7 +217,7 @@ public class Globals {
     }
 
     public static final double calcCritChance(double spirit) {
-        double chc = spirit * CRITCHC_MULT + CRITCHC_BASE;
+        double chc = spirit/ CRITCHC_FACT * CRITCHC_MULT + CRITCHC_BASE;
         if (chc > 0.85) {
             chc = spirit / (spirit + CRITCHC_CONST);
         }
