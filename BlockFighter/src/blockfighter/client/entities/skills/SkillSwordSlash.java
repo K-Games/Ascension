@@ -11,6 +11,7 @@ import java.awt.Graphics2D;
 public class SkillSwordSlash extends Skill {
 
     public SkillSwordSlash() {
+        icon = Globals.SKILL_ICON[SWORD_SLASH];
         skillCode = SWORD_SLASH;
         maxCooldown = 1000;
     }

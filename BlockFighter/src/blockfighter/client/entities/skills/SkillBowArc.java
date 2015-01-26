@@ -11,6 +11,7 @@ import java.awt.Graphics2D;
 public class SkillBowArc extends Skill {
 
     public SkillBowArc() {
+        icon = Globals.SKILL_ICON[BOW_ARC];
         skillCode = BOW_ARC;
         maxCooldown = 1000;
     }

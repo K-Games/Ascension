@@ -11,6 +11,7 @@ import java.awt.Graphics2D;
 public class SkillSwordDrive extends Skill {
 
     public SkillSwordDrive() {
+        icon = Globals.SKILL_ICON[SWORD_DRIVE];
         skillCode = SWORD_DRIVE;
         maxCooldown = 1000;
     }

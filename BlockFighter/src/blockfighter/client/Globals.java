@@ -68,7 +68,7 @@ public class Globals {
 
     public final static byte NUM_EQUIP_SLOTS = 11;
 
-    public final static byte NUM_STATS = 14,
+    public final static byte NUM_STATS = 15,
             STAT_POWER = 0,
             STAT_DEFENSE = 1,
             STAT_SPIRIT = 2,
@@ -82,7 +82,8 @@ public class Globals {
             STAT_ARMOR = 10,
             STAT_LEVEL = 11,
             STAT_POINTS = 12,
-            STAT_EXP = 13;
+            STAT_EXP = 13,
+            STAT_SKILLPOINTS = 14;
 
     public final static double HP_BASE = 100,
             HP_MULT = 30,
@@ -268,7 +269,7 @@ public class Globals {
             MENU_TABPOINTER[0] = ImageIO.read(Globals.class.getResource("sprites/ui/menu/pointer.png"));
             MENU_ITEMDELETE[0] = ImageIO.read(Globals.class.getResource("sprites/ui/menu/delete.png"));
             MENU_SMOKE[0] = ImageIO.read(Globals.class.getResource("sprites/ui/menu/smoke.png"));
-            for (byte i = 0; i < 3; i++){
+            for (byte i = 0; i < 12; i++){
                 SKILL_ICON[i] = ImageIO.read(Globals.class.getResource("sprites/skill/"+i+".png"));
             }
             

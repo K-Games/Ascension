@@ -68,7 +68,7 @@ public class SaveData {
                 equipment[i] = new ItemEquip(bs, i * 2, i * .1, (i + 1) * 100000);
             }
         }
-
+        baseStats[Globals.STAT_SKILLPOINTS] = 30;
         //initalize skill list
         skills[Skill.SWORD_CINDER] = new SkillSwordCinder();
         skills[Skill.SWORD_DRIVE] = new SkillSwordDrive();
@@ -105,12 +105,12 @@ public class SaveData {
         skills[Skill.PASSIVE_12] = new SkillPassive12();
 
         for (int i = 0; i < skills.length; i++) {
-            skills[i].setLevel((byte)30);
+            skills[i].setLevel((byte) 30);
         }
     }
 
     public static void saveData(byte saveNum, SaveData c) {
-        byte[] data = new byte[45361];
+        byte[] data = new byte[45365];
         byte[] temp = c.name.getBytes(StandardCharsets.UTF_8);
 
         int pos = 0;
@@ -134,6 +134,10 @@ public class SaveData {
         pos += temp.length;
 
         temp = Globals.intToByte((int) c.baseStats[Globals.STAT_SPIRIT]);
+        System.arraycopy(temp, 0, data, pos, temp.length);
+        pos += temp.length;
+
+        temp = Globals.intToByte((int) c.baseStats[Globals.STAT_SKILLPOINTS]);
         System.arraycopy(temp, 0, data, pos, temp.length);
         pos += temp.length;
 
@@ -268,6 +272,10 @@ public class SaveData {
 
         System.arraycopy(data, pos, temp, 0, temp.length);
         c.baseStats[Globals.STAT_SPIRIT] = Globals.bytesToInt(temp);
+        pos += temp.length;
+
+        System.arraycopy(data, pos, temp, 0, temp.length);
+        c.baseStats[Globals.STAT_SKILLPOINTS] = Globals.bytesToInt(temp);
         pos += temp.length;
 
         pos = readItems(data, c.equipment, pos);
@@ -472,6 +480,16 @@ public class SaveData {
         baseStats[Globals.STAT_DEFENSE] = 0;
         baseStats[Globals.STAT_SPIRIT] = 0;
         calcStats();
+        saveData(saveNum, this);
+    }
+
+    public void addSkill(byte skillCode) {
+        if (baseStats[Globals.STAT_SKILLPOINTS] <= 0 || skills[skillCode].getLevel() >= 30) {
+            return;
+        }
+        baseStats[Globals.STAT_SKILLPOINTS]--;
+        skills[skillCode].addLevel((byte) 1);
+
         saveData(saveNum, this);
     }
 

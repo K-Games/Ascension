@@ -11,6 +11,7 @@ import java.awt.Graphics2D;
 public class SkillBowPower extends Skill {
 
     public SkillBowPower() {
+        icon = Globals.SKILL_ICON[BOW_POWER];
         skillCode = BOW_POWER;
         maxCooldown = 6000;
     }
@@ -38,7 +39,7 @@ public class SkillBowPower extends Skill {
         g.setFont(Globals.ARIAL_15PT);
         g.drawString("Level: " + level, x + 80, y + 50);
         g.drawString("Cooldown: " + maxCooldown / 1000 + " Seconds", x + 80, y + 70);
-        
+
         g.drawString("Charges a shot for 0.8 seconds. Can be interrupted.", x + 10, y + 90);
         g.drawString("Deal 500 + " + 100 * level + "%(" + (500 + 100 * level) + "%) damage.", x + 10, y + 110);
         g.drawString("Max:", x + 10, y + 130);
@@ -49,8 +50,8 @@ public class SkillBowPower extends Skill {
     @Override
     public String getSkillName() {
         if (isMaxed()) {
-            return "Power Shot";
+            return "Obliteration";
         }
-        return "Obliteration";
+        return "Power Shot";
     }
 }

@@ -12,7 +12,7 @@ public abstract class Skill {
 
     protected byte skillCode;
     protected byte level;
-    protected long cooldown=20000;
+    protected long cooldown;
     protected long maxCooldown = 1;
     protected BufferedImage icon = Globals.MENU_BUTTON[Globals.BUTTON_SLOT];
 

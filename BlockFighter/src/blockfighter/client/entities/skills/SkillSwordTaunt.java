@@ -11,6 +11,7 @@ import java.awt.Graphics2D;
 public class SkillSwordTaunt extends Skill {
 
     public SkillSwordTaunt() {
+        icon = Globals.SKILL_ICON[SWORD_TAUNT];
         skillCode = SWORD_TAUNT;
         maxCooldown = 20000;
     }

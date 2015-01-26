@@ -11,6 +11,7 @@ import java.awt.Graphics2D;
 public class SkillBowFrost extends Skill {
 
     public SkillBowFrost() {
+        icon = Globals.SKILL_ICON[BOW_FROST];
         skillCode = BOW_FROST;
         maxCooldown = 20000;
     }

@@ -11,6 +11,7 @@ import java.awt.Graphics2D;
 public class SkillBowRapid extends Skill {
 
     public SkillBowRapid() {
+        icon = Globals.SKILL_ICON[BOW_RAPID];
         skillCode = BOW_RAPID;
         maxCooldown = 1000;
     }

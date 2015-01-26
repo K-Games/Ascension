@@ -40,7 +40,7 @@ public class ScreenSkills extends ScreenMenu {
         hotkeyList = c.getHotkeys();
         skillList = c.getSkills();
         for (int i = 0; i < hotkeySlots.length; i++) {
-            hotkeySlots[i] = new Rectangle2D.Double(260 + (i * 82), 613, 60, 60);
+            hotkeySlots[i] = new Rectangle2D.Double(240 + (i * 64), 613, 60, 60);
         }
         for (int i = 0; i < skillSlots.length; i++) {
             skillSlots[i] = new Rectangle2D.Double(241, 55, 60, 60);

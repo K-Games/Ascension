@@ -11,6 +11,7 @@ import java.awt.Graphics2D;
 public class SkillBowVolley extends Skill {
 
     public SkillBowVolley() {
+        icon = Globals.SKILL_ICON[BOW_VOLLEY];
         skillCode = BOW_VOLLEY;
         maxCooldown = 7000;
     }
