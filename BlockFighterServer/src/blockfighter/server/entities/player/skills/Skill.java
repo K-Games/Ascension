@@ -48,7 +48,11 @@ public abstract class Skill {
     }
 
     public void reduceCooldown(long ms) {
-        cooldown -= ms;
+        if (cooldown > 0) {
+            cooldown -= ms;
+        } else {
+            cooldown = 0;
+        }
     }
 
     public void setCooldown() {

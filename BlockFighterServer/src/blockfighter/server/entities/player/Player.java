@@ -39,7 +39,7 @@ public class Player extends Thread {
     private Rectangle2D.Double hitbox;
 
     private ConcurrentHashMap<Byte, Buff> buffs = new ConcurrentHashMap<>(10);
-    private boolean isStun = false, isKnockback = false;
+    private Buff isStun, isKnockback;
 
     private final InetAddress address;
     private final int port;
@@ -48,7 +48,7 @@ public class Player extends Thread {
     private double[] stats = new double[Globals.NUM_STATS], bonusStats = new double[Globals.NUM_STATS];
 
     private int[] equip = new int[Globals.NUM_EQUIP_SLOTS];
-    private Skill[] skills = new Skill[Skill.NUM_SKILLS];
+    private ConcurrentHashMap<Byte, Skill> skills = new ConcurrentHashMap<>(Skill.NUM_SKILLS);
     private boolean connected = true;
     private Random rng = new Random();
 
@@ -57,7 +57,7 @@ public class Player extends Thread {
 
     private long lastActionTime = Globals.SERVER_MAX_IDLE;
 
-    private long lastHPSend = 0;
+    private long nextHPSend = 0;
 
     /**
      * Create a new player entity in the server.
@@ -85,39 +85,39 @@ public class Player extends Thread {
         playerState = Globals.PLAYER_STATE_STAND;
         frame = 0;
 
-        skills[Skill.SWORD_CINDER] = new SkillSwordCinder();
-        skills[Skill.SWORD_DRIVE] = new SkillSwordDrive();
-        skills[Skill.SWORD_MULTI] = new SkillSwordMulti();
-        skills[Skill.SWORD_SLASH] = new SkillSwordSlash();
-        skills[Skill.SWORD_TAUNT] = new SkillSwordTaunt();
-        skills[Skill.SWORD_VORPAL] = new SkillSwordVorpal();
+        skills.put(Skill.SWORD_CINDER, new SkillSwordCinder());
+        skills.put(Skill.SWORD_DRIVE, new SkillSwordDrive());
+        skills.put(Skill.SWORD_MULTI, new SkillSwordMulti());
+        skills.put(Skill.SWORD_SLASH, new SkillSwordSlash());
+        skills.put(Skill.SWORD_TAUNT, new SkillSwordTaunt());
+        skills.put(Skill.SWORD_VORPAL, new SkillSwordVorpal());
 
-        skills[Skill.BOW_ARC] = new SkillBowArc();
-        skills[Skill.BOW_FROST] = new SkillBowFrost();
-        skills[Skill.BOW_POWER] = new SkillBowPower();
-        skills[Skill.BOW_RAPID] = new SkillBowRapid();
-        skills[Skill.BOW_STORM] = new SkillBowStorm();
-        skills[Skill.BOW_VOLLEY] = new SkillBowVolley();
+        skills.put(Skill.BOW_ARC, new SkillBowArc());
+        skills.put(Skill.BOW_FROST, new SkillBowFrost());
+        skills.put(Skill.BOW_POWER, new SkillBowPower());
+        skills.put(Skill.BOW_RAPID, new SkillBowRapid());
+        skills.put(Skill.BOW_STORM, new SkillBowStorm());
+        skills.put(Skill.BOW_VOLLEY, new SkillBowVolley());
 
-        skills[Skill.SHIELD_FORTIFY] = new SkillShieldFortify();
-        skills[Skill.SHIELD_IRONFORT] = new SkillShieldIron();
-        skills[Skill.SHIELD_3] = new SkillShield3();
-        skills[Skill.SHIELD_4] = new SkillShield4();
-        skills[Skill.SHIELD_5] = new SkillShield5();
-        skills[Skill.SHIELD_6] = new SkillShield6();
+        skills.put(Skill.SHIELD_FORTIFY, new SkillShieldFortify());
+        skills.put(Skill.SHIELD_IRONFORT, new SkillShieldIron());
+        skills.put(Skill.SHIELD_3, new SkillShield3());
+        skills.put(Skill.SHIELD_4, new SkillShield4());
+        skills.put(Skill.SHIELD_5, new SkillShield5());
+        skills.put(Skill.SHIELD_6, new SkillShield6());
 
-        skills[Skill.PASSIVE_1] = new SkillPassive1();
-        skills[Skill.PASSIVE_2] = new SkillPassive2();
-        skills[Skill.PASSIVE_3] = new SkillPassive3();
-        skills[Skill.PASSIVE_4] = new SkillPassive4();
-        skills[Skill.PASSIVE_5] = new SkillPassive5();
-        skills[Skill.PASSIVE_6] = new SkillPassive6();
-        skills[Skill.PASSIVE_7] = new SkillPassive7();
-        skills[Skill.PASSIVE_8] = new SkillPassive8();
-        skills[Skill.PASSIVE_9] = new SkillPassive9();
-        skills[Skill.PASSIVE_10] = new SkillPassive10();
-        skills[Skill.PASSIVE_11] = new SkillPassive11();
-        skills[Skill.PASSIVE_12] = new SkillPassive12();
+        skills.put(Skill.PASSIVE_1, new SkillPassive1());
+        skills.put(Skill.PASSIVE_2, new SkillPassive2());
+        skills.put(Skill.PASSIVE_3, new SkillPassive3());
+        skills.put(Skill.PASSIVE_4, new SkillPassive4());
+        skills.put(Skill.PASSIVE_5, new SkillPassive5());
+        skills.put(Skill.PASSIVE_6, new SkillPassive6());
+        skills.put(Skill.PASSIVE_7, new SkillPassive7());
+        skills.put(Skill.PASSIVE_8, new SkillPassive8());
+        skills.put(Skill.PASSIVE_9, new SkillPassive9());
+        skills.put(Skill.PASSIVE_10, new SkillPassive10());
+        skills.put(Skill.PASSIVE_11, new SkillPassive11());
+        skills.put(Skill.PASSIVE_12, new SkillPassive12());
     }
 
     /**
@@ -258,7 +258,7 @@ public class Player extends Thread {
     }
 
     public void setSkill(byte skillCode, byte level) {
-        skills[skillCode].setLevel(level);
+        skills.get(skillCode).setLevel(level);
     }
 
     @Override
@@ -274,7 +274,8 @@ public class Player extends Thread {
      */
     public void update() {
         lastActionTime -= Globals.LOGIC_UPDATE / 1000000;
-        lastHPSend -= Globals.LOGIC_UPDATE / 1000000;
+        nextHPSend -= Globals.LOGIC_UPDATE / 1000000;
+        updateSkillCd();
         updateBuffs();
         updateFall();
 
@@ -308,12 +309,18 @@ public class Player extends Thread {
 
     }
 
+    private void updateSkillCd() {
+        for (Map.Entry<Byte, Skill> s : skills.entrySet()) {
+            s.getValue().reduceCooldown((long) (Globals.LOGIC_UPDATE / 1000000));
+        }
+    }
+
     private void updateHP() {
         while (!damageQueue.isEmpty()) {
             Integer dmg = damageQueue.poll();
             if (dmg != null) {
                 stats[Globals.STAT_MINHP] -= dmg;
-                lastHPSend = 0;
+                nextHPSend = 0;
             }
         }
 
@@ -321,7 +328,7 @@ public class Player extends Thread {
             Integer heal = healQueue.poll();
             if (heal != null) {
                 stats[Globals.STAT_MINHP] += heal;
-                lastHPSend = 0;
+                nextHPSend = 0;
             }
         }
 
@@ -332,7 +339,7 @@ public class Player extends Thread {
             stats[Globals.STAT_MINHP] = 0;
         }
 
-        if (lastHPSend <= 0) {
+        if (nextHPSend <= 0) {
             byte[] stat = Globals.intToByte((int) stats[Globals.STAT_MINHP]);
             byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT];
             bytes[0] = Globals.DATA_PLAYER_GET_STAT;
@@ -340,21 +347,21 @@ public class Player extends Thread {
             bytes[2] = Globals.STAT_MINHP;
             System.arraycopy(stat, 0, bytes, 3, stat.length);
             packetSender.sendAll(bytes, logic.getRoom());
-            lastHPSend = 200;
+            nextHPSend = 200;
         }
     }
 
     private void updateBuffs() {
-        isStun = false;
-        isKnockback = false;
+        isStun = null;
+        isKnockback = null;
         LinkedList<Byte> remove = new LinkedList<>();
         for (Map.Entry<Byte, Buff> bEntry : buffs.entrySet()) {
             Buff b = bEntry.getValue();
             b.update();
             if (b instanceof BuffStun) {
-                isStun = true;
+                isStun = b;
             } else if (b instanceof BuffKnockback) {
-                isKnockback = true;
+                isKnockback = b;
             }
             if (b.isExpired()) {
                 remove.add(bEntry.getKey());
@@ -405,7 +412,7 @@ public class Player extends Thread {
      * @return isStun
      */
     public synchronized boolean isStunned() {
-        return isStun;
+        return isStun != null;
     }
 
     /**
@@ -414,7 +421,7 @@ public class Player extends Thread {
      * @return isKnockback
      */
     public synchronized boolean isKnockback() {
-        return isKnockback;
+        return isKnockback != null;
     }
 
     /**
@@ -503,10 +510,16 @@ public class Player extends Thread {
      *
      * @param data Received data bytes from client
      */
-    public void processAction(byte[] data) {
+    public void processUseSkill(byte[] data) {
         lastActionTime = Globals.SERVER_MAX_IDLE;
         if (!isStunned() && !isKnockback()) {
-            logic.queueAddProj(new ProjTest(packetSender, logic, logic.getNextProjKey(), this, x, y, 100));
+            if (skills.get(data[3]).getCooldown() <= 0) {
+                skills.get(data[3]).setCooldown();
+                byte[] bytes = new byte[Globals.PACKET_BYTE * 2];
+                bytes[0] = Globals.DATA_PLAYER_SET_COOLDOWN;
+                bytes[1] = data[3];
+                packetSender.sendPlayer(bytes, address, port);
+            }
         }
     }
 
@@ -602,6 +615,7 @@ public class Player extends Thread {
                     updateState = true;
                 }
                 break;
+
             case Globals.PLAYER_STATE_JUMP:
                 animState = Globals.PLAYER_STATE_JUMP;
                 if (frame != 0) {

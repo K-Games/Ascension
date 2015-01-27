@@ -30,9 +30,11 @@ public class LogicModule extends Thread {
 
     private int projMaxKeys = 500;
 
+    private final ConcurrentLinkedQueue<Byte> playerKeys = new ConcurrentLinkedQueue<>();
+
     private final ConcurrentLinkedQueue<Player> pAddQueue = new ConcurrentLinkedQueue<>();
     private final ConcurrentLinkedQueue<byte[]> pDirKeydownQueue = new ConcurrentLinkedQueue<>();
-    private final ConcurrentLinkedQueue<byte[]> pActionQueue = new ConcurrentLinkedQueue<>();
+    private final ConcurrentLinkedQueue<byte[]> pUseSkillQueue = new ConcurrentLinkedQueue<>();
     private final ConcurrentLinkedQueue<Integer> projKeys = new ConcurrentLinkedQueue<>();
     private final ConcurrentLinkedQueue<ProjBase> projEffectQueue = new ConcurrentLinkedQueue<>();
     private final ConcurrentLinkedQueue<ProjBase> projAddQueue = new ConcurrentLinkedQueue<>();
@@ -53,6 +55,9 @@ public class LogicModule extends Thread {
         for (int i = 0; i < 500; i++) {
             projKeys.add(i);
         }
+        for (byte i = 0; i < Globals.SERVER_MAX_PLAYERS; i++) {
+            playerKeys.add(i);
+        }
     }
 
     @Override
@@ -72,7 +77,7 @@ public class LogicModule extends Thread {
                 lastUpdateTime = now;
             }
 
-            if (nowMs - lastRefreshAll >= 10000) {
+            if (nowMs - lastRefreshAll >= 30000) {
                 sender.broadcastAllPlayersUpdate(room);
                 //System.out.println(sender.getBytes());
                 //packetSender.resetByte();
@@ -113,7 +118,9 @@ public class LogicModule extends Thread {
 
     private void removeDisconnectedPlayers(LinkedList<Byte> remove) {
         while (!remove.isEmpty()) {
-            players.remove(remove.pop());
+            byte key = remove.pop();
+            players.remove(key);
+            playerKeys.add(key);
         }
     }
 
@@ -189,12 +196,10 @@ public class LogicModule extends Thread {
      * @return returns next open key
      */
     public byte getNextPlayerKey() {
-        for (byte i = 0; i < Globals.SERVER_MAX_PLAYERS; i++) {
-            if (!players.containsKey(i)) {
-                return i;
-            }
+        if (playerKeys.peek() == null) {
+            return -1;
         }
-        return -1;
+        return playerKeys.poll();
     }
 
     /**
@@ -227,8 +232,8 @@ public class LogicModule extends Thread {
      *
      * @param data 1:key, 2:action type
      */
-    public void queuePlayerAction(byte[] data) {
-        pActionQueue.add(data);
+    public void queuePlayerUseSkill(byte[] data) {
+        pUseSkillQueue.add(data);
     }
 
     /**
@@ -281,12 +286,12 @@ public class LogicModule extends Thread {
         queues[1] = new Thread() {
             @Override
             public void run() {
-                while (!pActionQueue.isEmpty()) {
-                    byte[] data = pActionQueue.poll();
+                while (!pUseSkillQueue.isEmpty()) {
+                    byte[] data = pUseSkillQueue.poll();
                     if (data != null) {
                         byte key = data[2];
                         if (players.containsKey(key)) {
-                            players.get(key).processAction(data);
+                            players.get(key).processUseSkill(data);
                         }
                     }
                 }

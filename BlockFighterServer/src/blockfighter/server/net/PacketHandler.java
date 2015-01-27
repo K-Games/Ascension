@@ -56,8 +56,8 @@ public class PacketHandler extends Thread {
             case Globals.DATA_PING:
                 receivePing(data, room, address, port);
                 break;
-            case Globals.DATA_PLAYER_ACTION:
-                receivePlayerAction(data, room);
+            case Globals.DATA_PLAYER_USESKILL:
+                receivePlayerUseSkill(data, room);
                 break;
             case Globals.DATA_PLAYER_DISCONNECT:
                 receivePlayerDisconnect(data, room);
@@ -136,9 +136,9 @@ public class PacketHandler extends Thread {
         packetSender.sendPlayer(bytes, address, port);
     }
 
-    private void receivePlayerAction(byte[] data, byte room) {
-        //Globals.log("DATA_PLAYER_ACTION", "Key: " + data[2] + " Room: " + room, Globals.LOG_TYPE_DATA, true);
-        logic[room].queuePlayerAction(data);
+    private void receivePlayerUseSkill(byte[] data, byte room) {
+        //Globals.log("DATA_PLAYER_USESKILL", "Key: " + data[2] + " Room: " + room, Globals.LOG_TYPE_DATA, true);
+        logic[room].queuePlayerUseSkill(data);
     }
 
     private void receivePlayerLogin(byte[] data, byte room, InetAddress address, int port) {
