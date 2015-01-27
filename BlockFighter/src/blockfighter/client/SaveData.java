@@ -45,10 +45,10 @@ public class SaveData {
         baseStats[Globals.STAT_DEFENSE] = 0;
         baseStats[Globals.STAT_SPIRIT] = 0;
         baseStats[Globals.STAT_EXP] = 0;
+        baseStats[Globals.STAT_SKILLPOINTS] = 3 * baseStats[Globals.STAT_LEVEL];
         for (int i = 0; i < inventory.length; i++) {
             inventory[i] = new ItemEquip[100];
         }
-        baseStats[Globals.STAT_SKILLPOINTS] = 3 * baseStats[Globals.STAT_LEVEL];
         //initalize skill list
         skills[Skill.SWORD_CINDER] = new SkillSwordCinder();
         skills[Skill.SWORD_DRIVE] = new SkillSwordDrive();
@@ -83,10 +83,6 @@ public class SaveData {
         skills[Skill.PASSIVE_10] = new SkillPassive10();
         skills[Skill.PASSIVE_11] = new SkillPassive11();
         skills[Skill.PASSIVE_12] = new SkillPassive12();
-
-        for (int i = 0; i < skills.length; i++) {
-            skills[i].setLevel((byte) 30);
-        }
 
         keybinds[Globals.KEYBIND_SKILL1] = KeyEvent.VK_Q;
         keybinds[Globals.KEYBIND_SKILL2] = KeyEvent.VK_W;

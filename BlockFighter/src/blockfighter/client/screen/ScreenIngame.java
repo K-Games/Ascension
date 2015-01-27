@@ -440,7 +440,6 @@ public class ScreenIngame extends Screen {
         }
 
         switch (e.getKeyCode()) {
-
             case KeyEvent.VK_ESCAPE:
                 logic.sendDisconnect(myKey);
                 break;
