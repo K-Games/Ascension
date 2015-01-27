@@ -187,12 +187,12 @@ public class ScreenIngame extends Screen {
                     g.drawString(df.format(hotkey[j].getCooldown() / 1000D), (int) hotkeySlots[j].x + 28 - width / 2, (int) hotkeySlots[j].y + 33);
                 }
             }
+            g.setFont(Globals.ARIAL_15PT);
             String key = "?";
             if (c.getKeyBind()[j] != -1) {
                 key = KeyEvent.getKeyText(c.getKeyBind()[j]);
             }
             int width = g.getFontMetrics().stringWidth(key);
-            g.setFont(Globals.ARIAL_15PT);
             drawStringOutline(g, key, (int) hotkeySlots[j].x + 58 - width, (int) hotkeySlots[j].y + 58, 1);
             g.setColor(Color.WHITE);
             g.drawString(key, (int) hotkeySlots[j].x + 58 - width, (int) hotkeySlots[j].y + 58);
@@ -414,29 +414,53 @@ public class ScreenIngame extends Screen {
         } else if (key == c.getKeyBind()[Globals.KEYBIND_RIGHT]) {
             setKeyDown(Globals.RIGHT, false);
         } else if (key == c.getKeyBind()[Globals.KEYBIND_SKILL1]) {
-            logic.sendUseSkill(myKey, c.getHotkeys()[0].getSkillCode());
+            if (c.getHotkeys()[0] != null) {
+                logic.sendUseSkill(myKey, c.getHotkeys()[0].getSkillCode());
+            }
         } else if (key == c.getKeyBind()[Globals.KEYBIND_SKILL2]) {
-            logic.sendUseSkill(myKey, c.getHotkeys()[1].getSkillCode());
+            if (c.getHotkeys()[1] != null) {
+                logic.sendUseSkill(myKey, c.getHotkeys()[1].getSkillCode());
+            }
         } else if (key == c.getKeyBind()[Globals.KEYBIND_SKILL3]) {
-            logic.sendUseSkill(myKey, c.getHotkeys()[2].getSkillCode());
+            if (c.getHotkeys()[2] != null) {
+                logic.sendUseSkill(myKey, c.getHotkeys()[2].getSkillCode());
+            }
         } else if (key == c.getKeyBind()[Globals.KEYBIND_SKILL4]) {
-            logic.sendUseSkill(myKey, c.getHotkeys()[3].getSkillCode());
+            if (c.getHotkeys()[3] != null) {
+                logic.sendUseSkill(myKey, c.getHotkeys()[3].getSkillCode());
+            }
         } else if (key == c.getKeyBind()[Globals.KEYBIND_SKILL5]) {
-            logic.sendUseSkill(myKey, c.getHotkeys()[4].getSkillCode());
+            if (c.getHotkeys()[4] != null) {
+                logic.sendUseSkill(myKey, c.getHotkeys()[4].getSkillCode());
+            }
         } else if (key == c.getKeyBind()[Globals.KEYBIND_SKILL6]) {
-            logic.sendUseSkill(myKey, c.getHotkeys()[5].getSkillCode());
+            if (c.getHotkeys()[5] != null) {
+                logic.sendUseSkill(myKey, c.getHotkeys()[5].getSkillCode());
+            }
         } else if (key == c.getKeyBind()[Globals.KEYBIND_SKILL7]) {
-            logic.sendUseSkill(myKey, c.getHotkeys()[6].getSkillCode());
+            if (c.getHotkeys()[6] != null) {
+                logic.sendUseSkill(myKey, c.getHotkeys()[6].getSkillCode());
+            }
         } else if (key == c.getKeyBind()[Globals.KEYBIND_SKILL8]) {
-            logic.sendUseSkill(myKey, c.getHotkeys()[7].getSkillCode());
+            if (c.getHotkeys()[7] != null) {
+                logic.sendUseSkill(myKey, c.getHotkeys()[7].getSkillCode());
+            }
         } else if (key == c.getKeyBind()[Globals.KEYBIND_SKILL9]) {
-            logic.sendUseSkill(myKey, c.getHotkeys()[8].getSkillCode());
+            if (c.getHotkeys()[8] != null) {
+                logic.sendUseSkill(myKey, c.getHotkeys()[8].getSkillCode());
+            }
         } else if (key == c.getKeyBind()[Globals.KEYBIND_SKILL10]) {
-            logic.sendUseSkill(myKey, c.getHotkeys()[9].getSkillCode());
+            if (c.getHotkeys()[9] != null) {
+                logic.sendUseSkill(myKey, c.getHotkeys()[9].getSkillCode());
+            }
         } else if (key == c.getKeyBind()[Globals.KEYBIND_SKILL11]) {
-            logic.sendUseSkill(myKey, c.getHotkeys()[10].getSkillCode());
+            if (c.getHotkeys()[10] != null) {
+                logic.sendUseSkill(myKey, c.getHotkeys()[10].getSkillCode());
+            }
         } else if (key == c.getKeyBind()[Globals.KEYBIND_SKILL12]) {
-            logic.sendUseSkill(myKey, c.getHotkeys()[11].getSkillCode());
+            if (c.getHotkeys()[11] != null) {
+                logic.sendUseSkill(myKey, c.getHotkeys()[11].getSkillCode());
+            }
         }
 
         switch (e.getKeyCode()) {
