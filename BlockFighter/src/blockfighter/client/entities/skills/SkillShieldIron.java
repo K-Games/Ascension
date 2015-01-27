@@ -43,7 +43,7 @@ public class SkillShieldIron extends Skill {
         g.drawString("Max:", x + 10, y + 110);
         g.drawString("Take 90% of allies HP for 2 seconds.", x + 10, y + 130);
         g.drawString("Allies take 0% damage for 2 seconds.", x + 10, y + 150);
-        g.drawString("Evenly distribute taken HP after 2 seconds.", x + 10, y + 170);
+        g.drawString("Evenly distribute your remaining HP after 2 seconds.", x + 10, y + 170);
 
     }
 

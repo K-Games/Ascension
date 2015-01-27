@@ -63,8 +63,8 @@ public class LogicModule extends Thread {
         sender.sendDisconnect(selectedRoom, k);
     }
 
-    public void sendAction(byte k) {
-        sender.sendAction(selectedRoom, k);
+    public void sendUseSkill(byte k, byte sc) {
+        sender.sendUseSkill(selectedRoom, k, sc);
     }
 
     public void sendLogin() {
@@ -74,7 +74,7 @@ public class LogicModule extends Thread {
         try {
             DatagramSocket socket = new DatagramSocket();
             socket.connect(InetAddress.getByName(Globals.SERVER_ADDRESS), Globals.SERVER_PORT);
-            socket.setSoTimeout(5000);
+            socket.setSoTimeout(1000);
             sender = new PacketSender(socket);
 
             receiver = new PacketReceiver(this, socket);

@@ -134,11 +134,12 @@ public class PacketSender {
         sendPacket(requestPacket);
     }
 
-    public void sendAction(byte room, byte key) {
-        byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
-        bytes[0] = Globals.DATA_PLAYER_ACTION;
+    public void sendUseSkill(byte room, byte key, byte skillCode) {
+        byte[] bytes = new byte[Globals.PACKET_BYTE * 4];
+        bytes[0] = Globals.DATA_PLAYER_USESKILL;
         bytes[1] = room;
         bytes[2] = key;
+        bytes[3] = skillCode;
         DatagramPacket requestPacket = createPacket(bytes);
         sendPacket(requestPacket);
     }

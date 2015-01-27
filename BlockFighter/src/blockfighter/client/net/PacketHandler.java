@@ -26,34 +26,10 @@ public class PacketHandler extends Thread {
             case Globals.DATA_LOGIN:
                 receiveLogin(data);
                 break;
-            case Globals.DATA_PLAYER_SET_POS:
-                receiveData(data);
-                break;
             case Globals.DATA_PING:
                 receiveGetPing(data);
                 break;
-            case Globals.DATA_PLAYER_SET_FACING:
-                receiveData(data);
-                break;
-            case Globals.DATA_PLAYER_SET_STATE:
-                receiveData(data);
-                break;
-            case Globals.DATA_PARTICLE_EFFECT:
-                receiveData(data);
-                break;
-            case Globals.DATA_PARTICLE_REMOVE:
-                receiveData(data);
-                break;
-            case Globals.DATA_PLAYER_DISCONNECT:
-                receiveData(data);
-                break;
-            case Globals.DATA_PLAYER_GET_NAME:
-                receiveData(data);
-                break;
-            case Globals.DATA_PLAYER_GET_STAT:
-                receiveData(data);
-                break;
-            case Globals.DATA_PLAYER_GET_EQUIP:
+            default:
                 receiveData(data);
                 break;
         }

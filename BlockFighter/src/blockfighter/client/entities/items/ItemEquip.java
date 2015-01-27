@@ -45,7 +45,8 @@ public class ItemEquip implements Item {
     private final static HashMap<Integer, String> ITEM_NAMES = new HashMap<>(ITEM_CODES.length);
     private final static HashMap<Integer, BufferedImage> ITEM_ICONS = new HashMap<>(ITEM_CODES.length);
     private final static HashMap<Integer, BufferedImage[]> ITEM_SPRITES = new HashMap<>(ITEM_CODES.length);
-
+    private final static HashMap<Integer, BufferedImage[]> ITEM_SPRITES_OFF = new HashMap<>(ITEM_CODES.length);
+    
     public final static byte TIER_COMMON = 0,
             TIER_UNCOMMON = 1,
             TIER_RARE = 2, //.15(15%)-.5(50%) bonus

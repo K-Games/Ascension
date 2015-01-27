@@ -10,7 +10,6 @@ import blockfighter.client.entities.skills.Skill;
 import blockfighter.client.net.PacketSender;
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
@@ -57,7 +56,6 @@ public class ScreenIngame extends Screen {
 
     private LogicModule logic;
     private SaveData c;
-    private Point mousePos;
 
     private int drawInfoHotkey = -1;
 
@@ -81,7 +79,7 @@ public class ScreenIngame extends Screen {
         long nowMs = System.currentTimeMillis();
 
         if (now - lastQueueTime >= Globals.QUEUES_UPDATE) {
-            processQueues();
+            processDataQueue();
             lastQueueTime = now;
         }
 
@@ -189,6 +187,15 @@ public class ScreenIngame extends Screen {
                     g.drawString(df.format(hotkey[j].getCooldown() / 1000D), (int) hotkeySlots[j].x + 28 - width / 2, (int) hotkeySlots[j].y + 33);
                 }
             }
+            String key = "?";
+            if (c.getKeyBind()[j] != -1) {
+                key = KeyEvent.getKeyText(c.getKeyBind()[j]);
+            }
+            int width = g.getFontMetrics().stringWidth(key);
+            g.setFont(Globals.ARIAL_15PT);
+            drawStringOutline(g, key, (int) hotkeySlots[j].x + 58 - width, (int) hotkeySlots[j].y + 58, 1);
+            g.setColor(Color.WHITE);
+            g.drawString(key, (int) hotkeySlots[j].x + 58 - width, (int) hotkeySlots[j].y + 58);
 
         }
         if (drawInfoHotkey != -1) {
@@ -210,7 +217,7 @@ public class ScreenIngame extends Screen {
         return particles;
     }
 
-    private void processQueues() {
+    private void processDataQueue() {
         while (players != null && !dataQueue.isEmpty()) {
             byte[] data = dataQueue.remove();
             byte dataType = data[0];
@@ -242,8 +249,15 @@ public class ScreenIngame extends Screen {
                 case Globals.DATA_PLAYER_GET_EQUIP:
                     dataPlayerGetEquip(data);
                     break;
+                case Globals.DATA_PLAYER_SET_COOLDOWN:
+                    dataPlayerSetCooldown(data);
+                    break;
             }
         }
+    }
+
+    private void dataPlayerSetCooldown(byte[] data) {
+        c.getSkills()[data[1]].setCooldown();
     }
 
     private void dataPlayerGetEquip(byte[] data) {
@@ -357,11 +371,11 @@ public class ScreenIngame extends Screen {
     }
 
     public void attack() {
-        lastBytesTime = 10;
+        lastBytesTime = 100;
     }
 
     public boolean canAttack() {
-        return true;
+        return lastBytesTime <= 0;
     }
 
     public void setKeyDown(int direction, boolean move) {
@@ -375,43 +389,58 @@ public class ScreenIngame extends Screen {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        switch (e.getKeyCode()) {
-            case KeyEvent.VK_UP:
-                setKeyDown(Globals.UP, true);
-                break;
-            case KeyEvent.VK_DOWN:
-                setKeyDown(Globals.DOWN, true);
-                break;
-            case KeyEvent.VK_LEFT:
-                setKeyDown(Globals.LEFT, true);
-                break;
-            case KeyEvent.VK_RIGHT:
-                setKeyDown(Globals.RIGHT, true);
-                break;
+        int key = e.getKeyCode();
+        if (key == c.getKeyBind()[Globals.KEYBIND_JUMP]) {
+            setKeyDown(Globals.UP, true);
+        } else if (key == c.getKeyBind()[Globals.KEYBIND_DOWN]) {
+            setKeyDown(Globals.DOWN, true);
+        } else if (key == c.getKeyBind()[Globals.KEYBIND_LEFT]) {
+            setKeyDown(Globals.LEFT, true);
+        } else if (key == c.getKeyBind()[Globals.KEYBIND_RIGHT]) {
+            setKeyDown(Globals.RIGHT, true);
         }
+
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
+        int key = e.getKeyCode();
+        if (key == c.getKeyBind()[Globals.KEYBIND_JUMP]) {
+            setKeyDown(Globals.UP, false);
+        } else if (key == c.getKeyBind()[Globals.KEYBIND_DOWN]) {
+            setKeyDown(Globals.DOWN, false);
+        } else if (key == c.getKeyBind()[Globals.KEYBIND_LEFT]) {
+            setKeyDown(Globals.LEFT, false);
+        } else if (key == c.getKeyBind()[Globals.KEYBIND_RIGHT]) {
+            setKeyDown(Globals.RIGHT, false);
+        } else if (key == c.getKeyBind()[Globals.KEYBIND_SKILL1]) {
+            logic.sendUseSkill(myKey, c.getHotkeys()[0].getSkillCode());
+        } else if (key == c.getKeyBind()[Globals.KEYBIND_SKILL2]) {
+            logic.sendUseSkill(myKey, c.getHotkeys()[1].getSkillCode());
+        } else if (key == c.getKeyBind()[Globals.KEYBIND_SKILL3]) {
+            logic.sendUseSkill(myKey, c.getHotkeys()[2].getSkillCode());
+        } else if (key == c.getKeyBind()[Globals.KEYBIND_SKILL4]) {
+            logic.sendUseSkill(myKey, c.getHotkeys()[3].getSkillCode());
+        } else if (key == c.getKeyBind()[Globals.KEYBIND_SKILL5]) {
+            logic.sendUseSkill(myKey, c.getHotkeys()[4].getSkillCode());
+        } else if (key == c.getKeyBind()[Globals.KEYBIND_SKILL6]) {
+            logic.sendUseSkill(myKey, c.getHotkeys()[5].getSkillCode());
+        } else if (key == c.getKeyBind()[Globals.KEYBIND_SKILL7]) {
+            logic.sendUseSkill(myKey, c.getHotkeys()[6].getSkillCode());
+        } else if (key == c.getKeyBind()[Globals.KEYBIND_SKILL8]) {
+            logic.sendUseSkill(myKey, c.getHotkeys()[7].getSkillCode());
+        } else if (key == c.getKeyBind()[Globals.KEYBIND_SKILL9]) {
+            logic.sendUseSkill(myKey, c.getHotkeys()[8].getSkillCode());
+        } else if (key == c.getKeyBind()[Globals.KEYBIND_SKILL10]) {
+            logic.sendUseSkill(myKey, c.getHotkeys()[9].getSkillCode());
+        } else if (key == c.getKeyBind()[Globals.KEYBIND_SKILL11]) {
+            logic.sendUseSkill(myKey, c.getHotkeys()[10].getSkillCode());
+        } else if (key == c.getKeyBind()[Globals.KEYBIND_SKILL12]) {
+            logic.sendUseSkill(myKey, c.getHotkeys()[11].getSkillCode());
+        }
+
         switch (e.getKeyCode()) {
-            case KeyEvent.VK_UP:
-                setKeyDown(Globals.UP, false);
-                break;
-            case KeyEvent.VK_DOWN:
-                setKeyDown(Globals.DOWN, false);
-                break;
-            case KeyEvent.VK_LEFT:
-                setKeyDown(Globals.LEFT, false);
-                break;
-            case KeyEvent.VK_RIGHT:
-                setKeyDown(Globals.RIGHT, false);
-                break;
-            case KeyEvent.VK_A:
-                if (canAttack()) {
-                    logic.sendAction(myKey);
-                    attack();
-                }
-                break;
+
             case KeyEvent.VK_ESCAPE:
                 logic.sendDisconnect(myKey);
                 break;
@@ -450,7 +479,6 @@ public class ScreenIngame extends Screen {
 
     @Override
     public void mouseMoved(MouseEvent e) {
-        mousePos = e.getPoint();
         drawInfoHotkey = -1;
         for (int i = 0; i < hotkeySlots.length; i++) {
             if (hotkeySlots[i].contains(e.getPoint()) && c.getHotkeys()[i] != null) {

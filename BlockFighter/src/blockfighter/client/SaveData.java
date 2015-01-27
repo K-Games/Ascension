@@ -4,6 +4,7 @@ import blockfighter.client.entities.items.ItemEquip;
 import blockfighter.client.entities.items.ItemUpgrade;
 
 import blockfighter.client.entities.skills.*;
+import java.awt.event.KeyEvent;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,6 +34,7 @@ public class SaveData {
 
     private Skill[] hotkeys = new Skill[12];
     private Skill[] skills = new Skill[Skill.NUM_SKILLS];
+    private int[] keybinds = new int[Globals.NUM_KEYBINDS];
 
     public SaveData(String n) {
         name = n;
@@ -46,29 +48,7 @@ public class SaveData {
         for (int i = 0; i < inventory.length; i++) {
             inventory[i] = new ItemEquip[100];
         }
-
-        for (int i = 0; i < upgrades.length; i++) {
-            upgrades[i] = new ItemUpgrade(1, 100);
-        }
-
-        for (int i = 0; i < equipment.length; i++) {
-            double[] bs = new double[Globals.NUM_STATS];
-            bs[Globals.STAT_LEVEL] = 100;
-            bs[Globals.STAT_POWER] = 100D * .9 + new Random().nextInt(45) - 25;
-            bs[Globals.STAT_DEFENSE] = 100D * .9 + new Random().nextInt(45) - 25;
-            bs[Globals.STAT_SPIRIT] = 100D * .9 + new Random().nextInt(45) - 25;
-            bs[Globals.STAT_ARMOR] = new Random().nextInt((int) (100 * ItemEquip.UPGRADE_ARMOR));
-            bs[Globals.STAT_CRITCHANCE] = new Random().nextInt(500) / 10000D;
-            bs[Globals.STAT_CRITDMG] = new Random().nextInt(100) / 100D;
-            bs[Globals.STAT_REGEN] = new Random().nextInt(1000) / 100D;
-
-            if (i == 10) {
-                equipment[i] = new ItemEquip(bs, i * 2, i * .1, 110000);
-            } else {
-                equipment[i] = new ItemEquip(bs, i * 2, i * .1, (i + 1) * 100000);
-            }
-        }
-        baseStats[Globals.STAT_SKILLPOINTS] = 30;
+        baseStats[Globals.STAT_SKILLPOINTS] = 3 * baseStats[Globals.STAT_LEVEL];
         //initalize skill list
         skills[Skill.SWORD_CINDER] = new SkillSwordCinder();
         skills[Skill.SWORD_DRIVE] = new SkillSwordDrive();
@@ -107,10 +87,28 @@ public class SaveData {
         for (int i = 0; i < skills.length; i++) {
             skills[i].setLevel((byte) 30);
         }
+
+        keybinds[Globals.KEYBIND_SKILL1] = KeyEvent.VK_Q;
+        keybinds[Globals.KEYBIND_SKILL2] = KeyEvent.VK_W;
+        keybinds[Globals.KEYBIND_SKILL3] = KeyEvent.VK_E;
+        keybinds[Globals.KEYBIND_SKILL4] = KeyEvent.VK_R;
+        keybinds[Globals.KEYBIND_SKILL5] = KeyEvent.VK_T;
+        keybinds[Globals.KEYBIND_SKILL6] = KeyEvent.VK_Y;
+        keybinds[Globals.KEYBIND_SKILL7] = KeyEvent.VK_A;
+        keybinds[Globals.KEYBIND_SKILL8] = KeyEvent.VK_S;
+        keybinds[Globals.KEYBIND_SKILL9] = KeyEvent.VK_D;
+        keybinds[Globals.KEYBIND_SKILL10] = KeyEvent.VK_F;
+        keybinds[Globals.KEYBIND_SKILL11] = KeyEvent.VK_G;
+        keybinds[Globals.KEYBIND_SKILL12] = KeyEvent.VK_H;
+
+        keybinds[Globals.KEYBIND_LEFT] = KeyEvent.VK_LEFT;
+        keybinds[Globals.KEYBIND_RIGHT] = KeyEvent.VK_RIGHT;
+        keybinds[Globals.KEYBIND_JUMP] = KeyEvent.VK_UP;
+        keybinds[Globals.KEYBIND_DOWN] = KeyEvent.VK_DOWN;
     }
 
     public static void saveData(byte saveNum, SaveData c) {
-        byte[] data = new byte[45365];
+        byte[] data = new byte[46413];
         byte[] temp = c.name.getBytes(StandardCharsets.UTF_8);
 
         int pos = 0;
@@ -147,12 +145,24 @@ public class SaveData {
         }
         pos = saveItems(data, c.upgrades, pos);
         pos = saveSkills(data, c, pos);
-        saveHotkeys(data, c, pos);
+        pos = saveHotkeys(data, c, pos);
+        saveKeyBind(data, c.getKeyBind(), pos);
+
         try {
             FileUtils.writeByteArrayToFile(new File(saveNum + ".tcdat"), data);
         } catch (IOException ex) {
             Logger.getLogger(SaveData.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    private static int saveKeyBind(byte[] data, int[] keybind, int pos) {
+        for (int i = 0; i < keybind.length; i++) {
+            byte[] temp;
+            temp = Globals.intToByte(keybind[i]);
+            System.arraycopy(temp, 0, data, pos, temp.length);
+            pos += temp.length;
+        }
+        return pos;
     }
 
     private static int saveItems(byte[] data, ItemUpgrade[] e, int pos) {
@@ -284,9 +294,21 @@ public class SaveData {
         }
         pos = readItems(data, c.upgrades, pos);
         pos = readSkills(data, c, pos);
-        readHotkeys(data, c, pos);
+        pos = readHotkeys(data, c, pos);
+        readKeyBind(data, c.getKeyBind(), pos);
+
         c.calcStats();
         return c;
+    }
+
+    private static int readKeyBind(byte[] data, int[] keybind, int pos) {
+        for (int i = 0; i < keybind.length; i++) {
+            byte[] temp = new byte[4];
+            System.arraycopy(data, pos, temp, 0, temp.length);
+            keybind[i] = Globals.bytesToInt(temp);
+            pos += temp.length;
+        }
+        return pos;
     }
 
     private static int readSkills(byte[] data, SaveData c, int pos) {
@@ -467,6 +489,10 @@ public class SaveData {
         return upgrades;
     }
 
+    public int[] getKeyBind() {
+        return keybinds;
+    }
+
     public double[] getBonusStats() {
         return bonusStats;
     }
@@ -480,6 +506,14 @@ public class SaveData {
         baseStats[Globals.STAT_DEFENSE] = 0;
         baseStats[Globals.STAT_SPIRIT] = 0;
         calcStats();
+        saveData(saveNum, this);
+    }
+
+    public void resetSkill() {
+        for (Skill skill : skills) {
+            skill.setLevel((byte) 0);
+        }
+        baseStats[Globals.STAT_SKILLPOINTS] = 3 * baseStats[Globals.STAT_LEVEL];
         saveData(saveNum, this);
     }
 
@@ -587,5 +621,14 @@ public class SaveData {
             }
         }
         saveData(saveNum, this);
+    }
+
+    public void setKeyBind(int k, int keycode) {
+        keybinds[k] = keycode;
+        for (int i = 0; i< keybinds.length;i++){
+            if(i != k && keybinds[i] == keycode){
+                keybinds[i] = -1;
+            }
+        }
     }
 }

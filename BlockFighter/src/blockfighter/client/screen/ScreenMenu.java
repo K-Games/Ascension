@@ -82,7 +82,7 @@ public abstract class ScreenMenu extends Screen {
         drawStringOutline(g, "Upgrades", 40, 162, 2);
         drawStringOutline(g, "Skills", 40, 212, 2);
         drawStringOutline(g, "Server List", 40, 262, 2);
-        drawStringOutline(g, "Key Binding", 40, 312, 2);
+        drawStringOutline(g, "Key Bindings", 40, 312, 2);
         drawStringOutline(g, "Characters", 40, 362, 2);
 
         g.setColor(Color.WHITE);
@@ -116,6 +116,9 @@ public abstract class ScreenMenu extends Screen {
                             break;
                         case 4:
                             logic.sendLogin();
+                            break;
+                        case 5:
+                            logic.setScreen(new ScreenKeyBind(logic));
                             break;
                         case 6:
                             logic.setSelectedChar(null);

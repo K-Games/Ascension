@@ -18,7 +18,7 @@ public class SkillBowStorm extends Skill {
 
     @Override
     public void drawInfo(Graphics2D g, int x, int y) {
-        int boxHeight = 140, boxWidth = 380;
+        int boxHeight = 140, boxWidth = 430;
 
         if (y + boxHeight > 720) {
             y = 700 - boxHeight;
@@ -41,7 +41,7 @@ public class SkillBowStorm extends Skill {
         g.drawString("Cooldown: " + maxCooldown / 1000 + " Seconds", x + 80, y + 70);
 
         g.drawString("Launch a hail of arrows, damaging the area in front.", x + 10, y + 90);
-        g.drawString("Dealing 100 + " + 10 * level + "%(" + (100 + 10 * level) + "%) damage per second", x + 10, y + 110);
+        g.drawString("Dealing 100 + " + 10 * level + "%(" + (100 + 10 * level) + "%) damage per second for 5 seconds.", x + 10, y + 110);
         g.drawString("Max: Critical Hits do +500% Critical Hit Damage.", x + 10, y + 130);
     }
 

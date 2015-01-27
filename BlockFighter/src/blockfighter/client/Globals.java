@@ -15,7 +15,7 @@ import javax.imageio.ImageIO;
 public class Globals {
 
     public final static int SERVER_PORT = 25565;
-    public static String SERVER_ADDRESS = "127.0.0.1";
+    public static String SERVER_ADDRESS = "192.168.1.2";
 
     public final static int WINDOW_WIDTH = 1280;
     public final static int WINDOW_HEIGHT = 720;
@@ -51,7 +51,24 @@ public class Globals {
 
     public final static int NUM_PARTICLE_EFFECTS = 1;
     public final static byte PARTICLE_KNOCK = 0x00;
-
+    public final static int NUM_KEYBINDS = 16,
+            KEYBIND_SKILL1 = 0,
+            KEYBIND_SKILL2 = 1,
+            KEYBIND_SKILL3 = 2,
+            KEYBIND_SKILL4 = 3,
+            KEYBIND_SKILL5 = 4,
+            KEYBIND_SKILL6 = 5,
+            KEYBIND_SKILL7 = 6,
+            KEYBIND_SKILL8 = 7,
+            KEYBIND_SKILL9 = 8,
+            KEYBIND_SKILL10 =9,
+            KEYBIND_SKILL11 = 10,
+            KEYBIND_SKILL12 = 11,
+            KEYBIND_LEFT = 12,
+            KEYBIND_RIGHT = 13,
+            KEYBIND_JUMP = 14,
+            KEYBIND_DOWN = 15;
+    
     public final static byte NUM_ITEM_TYPES = 10,
             ITEM_WEAPON = 0,
             ITEM_HEAD = 1,
@@ -103,12 +120,10 @@ public class Globals {
             MAXDMG_BASE = 40,
             STAT_PER_LEVEL = 7;
 
-    public final static int NUM_PLAYER_STATE = 5;
+    public final static int NUM_PLAYER_STATE = 3;
     public final static byte PLAYER_STATE_STAND = 0x00,
             PLAYER_STATE_WALK = 0x01,
-            PLAYER_STATE_JUMP = 0x02,
-            PLAYER_STATE_STUN = 0x03,
-            PLAYER_STATE_KNOCKBACK = 0x04;
+            PLAYER_STATE_JUMP = 0x02;
 
     //Packet globals
     public final static int PACKET_MAX_SIZE = 512;
@@ -124,13 +139,14 @@ public class Globals {
             DATA_PLAYER_SET_POS = 0x04,
             DATA_PLAYER_SET_FACING = 0x05,
             DATA_PLAYER_SET_STATE = 0x06,
-            DATA_PLAYER_ACTION = 0x07,
+            DATA_PLAYER_USESKILL = 0x07,
             DATA_PARTICLE_EFFECT = 0x08,
             DATA_PARTICLE_REMOVE = 0x09,
             DATA_PLAYER_DISCONNECT = 0x0A,
             DATA_PLAYER_GET_NAME = 0x0B,
             DATA_PLAYER_GET_STAT = 0x0C,
-            DATA_PLAYER_GET_EQUIP = 0x0D;
+            DATA_PLAYER_GET_EQUIP = 0x0D,
+            DATA_PLAYER_SET_COOLDOWN = 0x0E;
 
     public final static byte NUM_PLAYER_ACTION = 1,
             PLAYER_ACTION_KNOCK = 0x00;
@@ -139,16 +155,16 @@ public class Globals {
     public final static BufferedImage[][] PARTICLE_SPRITE = new BufferedImage[NUM_PARTICLE_EFFECTS][];
     public final static BufferedImage[] HUD = new BufferedImage[1];
 
-    public final static BufferedImage[] MENU_BG = new BufferedImage[4];
+    public final static BufferedImage[] MENU_BG = new BufferedImage[5];
     public final static BufferedImage[] MENU_SMOKE = new BufferedImage[1];
     public final static BufferedImage[] MENU_UPGRADEPARTICLE = new BufferedImage[4];
     public final static BufferedImage[] MENU_BUTTON = new BufferedImage[16];
     public final static BufferedImage[] MENU_WINDOW = new BufferedImage[2];
     public final static BufferedImage[] MENU_TABPOINTER = new BufferedImage[1];
     public final static BufferedImage[] MENU_ITEMDELETE = new BufferedImage[1];
-    
+
     public final static BufferedImage[] SKILL_ICON = new BufferedImage[Skill.NUM_SKILLS];
-    
+
     public final static byte BUTTON_BIGRECT = 0,
             BUTTON_SELECTCHAR = 1,
             BUTTON_ADDSTAT = 2,
@@ -269,10 +285,10 @@ public class Globals {
             MENU_TABPOINTER[0] = ImageIO.read(Globals.class.getResource("sprites/ui/menu/pointer.png"));
             MENU_ITEMDELETE[0] = ImageIO.read(Globals.class.getResource("sprites/ui/menu/delete.png"));
             MENU_SMOKE[0] = ImageIO.read(Globals.class.getResource("sprites/ui/menu/smoke.png"));
-            for (byte i = 0; i < 12; i++){
-                SKILL_ICON[i] = ImageIO.read(Globals.class.getResource("sprites/skill/"+i+".png"));
+            for (byte i = 0; i < 12; i++) {
+                SKILL_ICON[i] = ImageIO.read(Globals.class.getResource("sprites/skill/" + i + ".png"));
             }
-            
+
         } catch (IOException ex) {
             Logger.getLogger(Globals.class.getName()).log(Level.SEVERE, null, ex);
         }
