@@ -1,5 +1,6 @@
 package blockfighter.client;
 
+import blockfighter.client.entities.items.ItemEquip;
 import blockfighter.client.entities.skills.Skill;
 import java.awt.Font;
 import java.awt.image.BufferedImage;
@@ -61,14 +62,14 @@ public class Globals {
             KEYBIND_SKILL7 = 6,
             KEYBIND_SKILL8 = 7,
             KEYBIND_SKILL9 = 8,
-            KEYBIND_SKILL10 =9,
+            KEYBIND_SKILL10 = 9,
             KEYBIND_SKILL11 = 10,
             KEYBIND_SKILL12 = 11,
             KEYBIND_LEFT = 12,
             KEYBIND_RIGHT = 13,
             KEYBIND_JUMP = 14,
             KEYBIND_DOWN = 15;
-    
+
     public final static byte NUM_ITEM_TYPES = 10,
             ITEM_WEAPON = 0,
             ITEM_HEAD = 1,
@@ -269,7 +270,7 @@ public class Globals {
             for (int i = 0; i < CHAR_SPRITE[PLAYER_STATE_ATTACKBOW].length; i++) {
                 CHAR_SPRITE[PLAYER_STATE_ATTACKBOW][i] = ImageIO.read(Globals.class.getResource("sprites/character/attack/bow/" + i + ".png"));
             }
-            
+
             CHAR_SPRITE[PLAYER_STATE_STAND] = new BufferedImage[9];
             for (int i = 0; i < CHAR_SPRITE[PLAYER_STATE_STAND].length; i++) {
                 CHAR_SPRITE[PLAYER_STATE_STAND][i] = ImageIO.read(Globals.class.getResource("sprites/character/stand/" + i + ".png"));
@@ -285,7 +286,7 @@ public class Globals {
 
             PARTICLE_SPRITE[PARTICLE_KNOCK] = new BufferedImage[5];
             for (int i = 0; i < PARTICLE_SPRITE[PARTICLE_KNOCK].length; i++) {
-                PARTICLE_SPRITE[PARTICLE_KNOCK][i] = ImageIO.read(Globals.class.getResource("sprites/particle/knock/"+i+".png"));
+                PARTICLE_SPRITE[PARTICLE_KNOCK][i] = ImageIO.read(Globals.class.getResource("sprites/particle/knock/" + i + ".png"));
             }
 
             HUD[0] = ImageIO.read(Globals.class.getResource("sprites/ui/ingame/ui.png"));

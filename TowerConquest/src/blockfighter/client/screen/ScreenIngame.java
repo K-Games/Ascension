@@ -7,9 +7,12 @@ import blockfighter.client.entities.Player;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.client.entities.particles.ParticleKnock;
 import blockfighter.client.entities.skills.Skill;
+import blockfighter.client.maps.GameMap;
+import blockfighter.client.maps.GameMapLvl1;
 import blockfighter.client.net.PacketSender;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
@@ -56,6 +59,7 @@ public class ScreenIngame extends Screen {
 
     private LogicModule logic;
     private SaveData c;
+    private GameMap map;
 
     private int drawInfoHotkey = -1;
 
@@ -71,6 +75,7 @@ public class ScreenIngame extends Screen {
         for (Skill skill : c.getSkills()) {
             skill.setCooldown();
         }
+        map = new GameMapLvl1();
     }
 
     @Override
@@ -78,6 +83,7 @@ public class ScreenIngame extends Screen {
         double now = System.nanoTime(); //Get time now
         long nowMs = System.currentTimeMillis();
 
+        map.update();
         if (now - lastQueueTime >= Globals.QUEUES_UPDATE) {
             processDataQueue();
             lastQueueTime = now;
@@ -107,11 +113,10 @@ public class ScreenIngame extends Screen {
             lastUpdateTime = now;
         }
 
-        if (now - lastRequestTime >= Globals.REQUESTALL_UPDATE) {
-            sender.sendGetAll(logic.getSelectedRoom(), myKey);
-            lastRequestTime = now;
-        }
-
+        /*if (now - lastRequestTime >= Globals.REQUESTALL_UPDATE) {
+         sender.sendGetAll(logic.getSelectedRoom(), myKey);
+         lastRequestTime = now;
+         }*/
         if (now - lastPingTime >= Globals.PING_UPDATE) {
             pID = (byte) (Math.random() * 256);
             pingTime = System.currentTimeMillis();
@@ -124,7 +129,6 @@ public class ScreenIngame extends Screen {
         } catch (InterruptedException ex) {
             Logger.getLogger(ScreenInventory.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }
 
     private void updatePlayers() {
@@ -153,23 +157,20 @@ public class ScreenIngame extends Screen {
         if (players != null && myKey != -1 && players.get(myKey) != null) {
             g.translate(640.0 - players.get(myKey).getX(), 500.0 - players.get(myKey).getY());
         }
-
+        map.draw(g);
         if (players != null) {
             for (Map.Entry<Byte, Player> pEntry : players.entrySet()) {
                 pEntry.getValue().draw(g);
             }
         }
-
         for (Map.Entry<Integer, Particle> pEntry : particles.entrySet()) {
             pEntry.getValue().draw(g);
         }
-        g.setColor(Color.BLACK);
-        g.drawRect(0, 620, 5000, 30);
-        g.drawRect(200, 400, 300, 30);
-        g.drawRect(600, 180, 300, 30);
 
         g.setTransform(resetForm);
-
+        g.setRenderingHint(
+                RenderingHints.KEY_TEXT_ANTIALIASING,
+                RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
         BufferedImage hud = Globals.HUD[0];
         g.drawImage(hud, Globals.WINDOW_WIDTH / 2 - hud.getWidth() / 2, Globals.WINDOW_HEIGHT - hud.getHeight(), null);
         Skill[] hotkey = c.getHotkeys();

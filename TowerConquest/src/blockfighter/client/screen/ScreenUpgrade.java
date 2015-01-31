@@ -44,7 +44,7 @@ public class ScreenUpgrade extends ScreenMenu {
 
     private int drawItem = -1, drawEquip = -1, drawSelect = -1;
 
-    private int charFrame = 0;
+    private byte charFrame = 0;
     private double nextFrameTime = 0, upgradeTime = 0;
     private boolean upgrading = false;
     private int upPart = 0;
@@ -207,6 +207,31 @@ public class ScreenUpgrade extends ScreenMenu {
         BufferedImage button = Globals.MENU_BUTTON[Globals.BUTTON_SLOT];
         BufferedImage character = Globals.CHAR_SPRITE[Globals.PLAYER_STATE_STAND][charFrame];
 
+        g.drawImage(character, 1050, 100, null);
+        int x = 1050 + character.getWidth() / 2, y = 100 + character.getHeight();
+        if (c.getEquip()[Globals.ITEM_OFFHAND] != null) {
+            c.getEquip()[Globals.ITEM_OFFHAND].drawIngame(g, x, y, Globals.PLAYER_STATE_STAND, charFrame, Globals.RIGHT, true);
+        }
+        if (c.getEquip()[Globals.ITEM_CHEST] != null) {
+            c.getEquip()[Globals.ITEM_CHEST].drawIngame(g, x, y, Globals.PLAYER_STATE_STAND, charFrame, Globals.RIGHT);
+        }
+        if (c.getEquip()[Globals.ITEM_SHOULDER] != null) {
+            c.getEquip()[Globals.ITEM_SHOULDER].drawIngame(g, x, y, Globals.PLAYER_STATE_STAND, charFrame, Globals.RIGHT);
+        }
+
+        if (c.getEquip()[Globals.ITEM_PANTS] != null) {
+            c.getEquip()[Globals.ITEM_PANTS].drawIngame(g, x, y, Globals.PLAYER_STATE_STAND, charFrame, Globals.RIGHT);
+        }
+        if (c.getEquip()[Globals.ITEM_SHOE] != null) {
+            c.getEquip()[Globals.ITEM_SHOE].drawIngame(g, x, y, Globals.PLAYER_STATE_STAND, charFrame, Globals.RIGHT);
+        }
+        if (c.getEquip()[Globals.ITEM_WEAPON] != null) {
+            c.getEquip()[Globals.ITEM_WEAPON].drawIngame(g, x, y, Globals.PLAYER_STATE_STAND, charFrame, Globals.RIGHT);
+        }
+        if (c.getEquip()[Globals.ITEM_GLOVE] != null) {
+            c.getEquip()[Globals.ITEM_GLOVE].drawIngame(g, x, y, Globals.PLAYER_STATE_STAND, charFrame, Globals.RIGHT);
+        }
+
         //Inventory
         for (int i = 0; i < c.getUpgrades().length; i++) {
             g.drawImage(button, (int) inventSlots[i].x, (int) inventSlots[i].y, null);
@@ -272,8 +297,6 @@ public class ScreenUpgrade extends ScreenMenu {
             g.setColor(Color.WHITE);
             g.drawString(s, (int) equipSlots[i].x + 2, (int) equipSlots[i].y + 58);
         }
-
-        g.drawImage(character, 1050, 100, null);
 
         //upgrades
         for (Rectangle2D.Double box : upgradeBox) {
@@ -344,16 +367,16 @@ public class ScreenUpgrade extends ScreenMenu {
         int x = (int) box.x;
         int boxHeight = 120, boxWidth = 200;
 
-        if (e.getStats()[Globals.STAT_REGEN] > 0) {
+        if (e.getTotalStats()[Globals.STAT_REGEN] > 0) {
             boxHeight += 20;
         }
-        if (e.getStats()[Globals.STAT_ARMOR] > 0) {
+        if (e.getTotalStats()[Globals.STAT_ARMOR] > 0) {
             boxHeight += 20;
         }
-        if (e.getStats()[Globals.STAT_CRITDMG] > 0) {
+        if (e.getTotalStats()[Globals.STAT_CRITDMG] > 0) {
             boxHeight += 20;
         }
-        if (e.getStats()[Globals.STAT_CRITCHANCE] > 0) {
+        if (e.getTotalStats()[Globals.STAT_CRITCHANCE] > 0) {
             boxHeight += 20;
         }
         if (y + boxHeight > 720) {
@@ -408,25 +431,25 @@ public class ScreenUpgrade extends ScreenMenu {
             g.drawString(tier + e.getItemName(), x + 40, y + 20);
         }
         g.setColor(Color.WHITE);
-        g.drawString("Level: " + (int) e.getStats()[Globals.STAT_LEVEL], x + 40, y + 40);
-        g.drawString("Power: " + (int) e.getStats()[Globals.STAT_POWER], x + 40, y + 60);
-        g.drawString("Defense: " + (int) e.getStats()[Globals.STAT_DEFENSE], x + 40, y + 80);
-        g.drawString("Spirit: " + (int) e.getStats()[Globals.STAT_SPIRIT], x + 40, y + 100);
+        g.drawString("Level: " + (int) e.getTotalStats()[Globals.STAT_LEVEL], x + 40, y + 40);
+        g.drawString("Power: " + (int) e.getTotalStats()[Globals.STAT_POWER], x + 40, y + 60);
+        g.drawString("Defense: " + (int) e.getTotalStats()[Globals.STAT_DEFENSE], x + 40, y + 80);
+        g.drawString("Spirit: " + (int) e.getTotalStats()[Globals.STAT_SPIRIT], x + 40, y + 100);
         int bonusY = 20;
-        if (e.getStats()[Globals.STAT_ARMOR] > 0) {
-            g.drawString("Armor: " + (int) e.getStats()[Globals.STAT_ARMOR], x + 40, y + 100 + bonusY);
+        if (e.getTotalStats()[Globals.STAT_ARMOR] > 0) {
+            g.drawString("Armor: " + (int) e.getTotalStats()[Globals.STAT_ARMOR], x + 40, y + 100 + bonusY);
             bonusY += 20;
         }
-        if (e.getStats()[Globals.STAT_REGEN] > 0) {
-            g.drawString("Regen: " + df.format(e.getStats()[Globals.STAT_REGEN]) + " HP/Sec", x + 40, y + 100 + bonusY);
+        if (e.getTotalStats()[Globals.STAT_REGEN] > 0) {
+            g.drawString("Regen: " + df.format(e.getTotalStats()[Globals.STAT_REGEN]) + " HP/Sec", x + 40, y + 100 + bonusY);
             bonusY += 20;
         }
-        if (e.getStats()[Globals.STAT_CRITDMG] > 0) {
-            g.drawString("Critical Damage: " + df.format(e.getStats()[Globals.STAT_CRITDMG] * 100) + "%", x + 40, y + 100 + bonusY);
+        if (e.getTotalStats()[Globals.STAT_CRITDMG] > 0) {
+            g.drawString("Critical Damage: " + df.format(e.getTotalStats()[Globals.STAT_CRITDMG] * 100) + "%", x + 40, y + 100 + bonusY);
             bonusY += 20;
         }
-        if (e.getStats()[Globals.STAT_CRITCHANCE] > 0) {
-            g.drawString("Critical Chance: " + df.format(e.getStats()[Globals.STAT_CRITCHANCE] * 100) + "%", x + 40, y + 100 + bonusY);
+        if (e.getTotalStats()[Globals.STAT_CRITCHANCE] > 0) {
+            g.drawString("Critical Chance: " + df.format(e.getTotalStats()[Globals.STAT_CRITCHANCE] * 100) + "%", x + 40, y + 100 + bonusY);
             bonusY += 20;
         }
     }

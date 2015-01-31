@@ -33,9 +33,9 @@ public class Main {
     }
 
     private static void createAndShowGUI() {
-
         Globals.loadGFX();
         ItemEquip.loadItemNames();
+        ItemEquip.loadItemDrawOrigin();
         ItemUpgrade.loadUpgradeItems();
         JFrame frame = new JFrame("Tower Conquest");
         RenderPanel panel = new RenderPanel();

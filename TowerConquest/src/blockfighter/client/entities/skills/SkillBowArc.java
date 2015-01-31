@@ -13,7 +13,7 @@ public class SkillBowArc extends Skill {
     public SkillBowArc() {
         icon = Globals.SKILL_ICON[BOW_ARC];
         skillCode = BOW_ARC;
-        maxCooldown = 1000;
+        maxCooldown = 500;
     }
 
     @Override
@@ -38,10 +38,10 @@ public class SkillBowArc extends Skill {
         g.drawString(getSkillName(), x + 80, y + 30);
         g.setFont(Globals.ARIAL_15PT);
         g.drawString("Level: " + level, x + 80, y + 50);
-        g.drawString("Cooldown: " + maxCooldown / 1000 + " Seconds", x + 80, y + 70);
+        g.drawString("Cooldown: 0.5 Second", x + 80, y + 70);
 
         g.drawString("Fire 3 shots in an arc.", x + 10, y + 90);
-        g.drawString("Deal 75 + " + 2 * level + "%(" + (75 + 2 * level) + "%) damage per hit", x + 10, y + 110);
+        g.drawString("Deal 37 + " + level + "%(" + (37 + level) + "%) damage per hit", x + 10, y + 110);
         g.drawString("Max: Restore 5% damage to HP. Maximum of 10% HP.", x + 10, y + 130);
     }
 

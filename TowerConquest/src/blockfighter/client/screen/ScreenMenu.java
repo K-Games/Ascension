@@ -57,7 +57,6 @@ public abstract class ScreenMenu extends Screen {
         } catch (InterruptedException ex) {
             Logger.getLogger(ScreenInventory.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }
 
     @Override

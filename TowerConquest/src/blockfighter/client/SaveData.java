@@ -49,6 +49,12 @@ public class SaveData {
         for (int i = 0; i < inventory.length; i++) {
             inventory[i] = new ItemEquip[100];
         }
+        double[] bs = new double[Globals.NUM_STATS];
+        bs[Globals.STAT_LEVEL] = 99999;
+        bs[Globals.STAT_POWER] = 10000;
+        
+        equipment[Globals.ITEM_WEAPON] = new ItemEquip(bs,0,3,ItemEquip.TEMP_SWORD);
+        
         //initalize skill list
         skills[Skill.SWORD_CINDER] = new SkillSwordCinder();
         skills[Skill.SWORD_DRIVE] = new SkillSwordDrive();
@@ -440,7 +446,7 @@ public class SaveData {
             bonusStats[i] = 0;
             for (ItemEquip e : equipment) {
                 if (i != Globals.STAT_LEVEL && e != null) {
-                    bonusStats[i] += e.getStats()[i];
+                    bonusStats[i] += e.getTotalStats()[i];
                 }
             }
         }

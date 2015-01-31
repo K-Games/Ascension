@@ -38,7 +38,7 @@ public class SkillBowRapid extends Skill {
         g.drawString(getSkillName(), x + 80, y + 30);
         g.setFont(Globals.ARIAL_15PT);
         g.drawString("Level: " + level, x + 80, y + 50);
-        g.drawString("Cooldown: " + maxCooldown / 1000 + " Seconds", x + 80, y + 70);
+        g.drawString("Cooldown: " + maxCooldown / 1000 + " Second", x + 80, y + 70);
 
         g.drawString("Fire 3 shots over 1 second.", x + 10, y + 90);
         g.drawString("Deal 75 + " + level + "%(" + (75 + level) + "%) damage per hit.", x + 10, y + 110);

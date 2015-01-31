@@ -36,7 +36,7 @@ public class ItemUpgrade implements Item {
         if (i == null || e == null) {
             return 0;
         }
-        int power = (int) (e.getStats()[Globals.STAT_LEVEL] + e.getUpgrades() - i.level);
+        int power = (int) (e.getTotalStats()[Globals.STAT_LEVEL] + e.getUpgrades() - i.level);
         if (power < 0) {
             power = 0;
         }

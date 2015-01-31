@@ -101,8 +101,39 @@ public class Player extends Thread {
                 drawSrcX += ((facing == Globals.RIGHT) ? 1 : -1) * 25;
                 drawDscX += ((facing == Globals.RIGHT) ? 1 : -1) * 25;
                 break;
+            case Globals.PLAYER_STATE_ATTACKOFF1:
+                drawSrcX += ((facing == Globals.RIGHT) ? 1 : -1) * 40;
+                drawDscX += ((facing == Globals.RIGHT) ? 1 : -1) * 40;
+                break;
+            case Globals.PLAYER_STATE_ATTACKOFF2:
+                drawSrcX += ((facing == Globals.RIGHT) ? 1 : -1) * 40;
+                drawDscX += ((facing == Globals.RIGHT) ? 1 : -1) * 40;
+                break;
         }
         g.drawImage(sprite, drawSrcX, drawSrcY, drawDscX, y, 0, 0, sprite.getWidth(), sprite.getHeight(), null);
+        if (equipment[Globals.ITEM_OFFHAND] != null) {
+            equipment[Globals.ITEM_OFFHAND].drawIngame(g, x, y, s, f, facing, true);
+        }
+        if (equipment[Globals.ITEM_CHEST] != null) {
+            equipment[Globals.ITEM_CHEST].drawIngame(g, x, y, s, f, facing);
+        }
+        if (equipment[Globals.ITEM_SHOULDER] != null) {
+            equipment[Globals.ITEM_SHOULDER].drawIngame(g, x, y, s, f, facing);
+        }
+
+        if (equipment[Globals.ITEM_PANTS] != null) {
+            equipment[Globals.ITEM_PANTS].drawIngame(g, x, y, s, f, facing);
+        }
+        if (equipment[Globals.ITEM_SHOE] != null) {
+            equipment[Globals.ITEM_SHOE].drawIngame(g, x, y, s, f, facing);
+        }
+        if (equipment[Globals.ITEM_WEAPON] != null) {
+            equipment[Globals.ITEM_WEAPON].drawIngame(g, x, y, s, f, facing);
+        }
+        if (equipment[Globals.ITEM_GLOVE] != null) {
+            equipment[Globals.ITEM_GLOVE].drawIngame(g, x, y, s, f, facing);
+        }
+
         g.setFont(Globals.ARIAL_18PT);
         int width = g.getFontMetrics().stringWidth(name);
         g.setColor(Color.BLACK);
@@ -112,28 +143,6 @@ public class Player extends Thread {
         g.drawString(name, x - width / 2, y + 21);
         g.setColor(Color.WHITE);
         g.drawString(name, x - width / 2, y + 20);
-
-        if (equipment[Globals.ITEM_CHEST] != null) {
-            equipment[Globals.ITEM_CHEST].drawIngame(g, x, y);
-        }
-        if (equipment[Globals.ITEM_SHOULDER] != null) {
-            equipment[Globals.ITEM_SHOULDER].drawIngame(g, x, y);
-        }
-        if (equipment[Globals.ITEM_GLOVE] != null) {
-            equipment[Globals.ITEM_GLOVE].drawIngame(g, x, y);
-        }
-        if (equipment[Globals.ITEM_PANTS] != null) {
-            equipment[Globals.ITEM_PANTS].drawIngame(g, x, y);
-        }
-        if (equipment[Globals.ITEM_SHOE] != null) {
-            equipment[Globals.ITEM_SHOE].drawIngame(g, x, y);
-        }
-        if (equipment[Globals.ITEM_WEAPON] != null) {
-            equipment[Globals.ITEM_WEAPON].drawIngame(g, x, y);
-        }
-        if (equipment[Globals.ITEM_OFFHAND] != null) {
-            equipment[Globals.ITEM_OFFHAND].drawIngame(g, x, y, true);
-        }
     }
 
     @Override

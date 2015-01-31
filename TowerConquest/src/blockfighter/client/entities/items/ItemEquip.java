@@ -1,9 +1,12 @@
 package blockfighter.client.entities.items;
 
 import blockfighter.client.Globals;
+import static blockfighter.client.Globals.*;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
+import javax.imageio.ImageIO;
 
 /**
  *
@@ -29,7 +32,7 @@ public class ItemEquip implements Item {
             UPGRADE_CRITDMG = 0.02,
             UPGRADE_REGEN = 3,
             UPGRADE_ARMOR = 6;
-    private final static int[] ITEM_CODES = {
+    public final static int[] ITEM_CODES = {
         TEMP_SWORD,
         TEMP_HEAD,
         TEMP_CHEST,
@@ -44,9 +47,9 @@ public class ItemEquip implements Item {
 
     private final static HashMap<Integer, String> ITEM_NAMES = new HashMap<>(ITEM_CODES.length);
     private final static HashMap<Integer, BufferedImage> ITEM_ICONS = new HashMap<>(ITEM_CODES.length);
-    private final static HashMap<Integer, BufferedImage[]> ITEM_SPRITES = new HashMap<>(ITEM_CODES.length);
-    private final static HashMap<Integer, BufferedImage[]> ITEM_SPRITES_OFF = new HashMap<>(ITEM_CODES.length);
-    
+    private final static HashMap<Integer, BufferedImage[][]> ITEM_SPRITES = new HashMap<>(ITEM_CODES.length);
+    private final static HashMap<String, Point> ITEM_ORIGINPOINT = new HashMap<>(ITEM_CODES.length * Globals.NUM_PLAYER_STATE);
+
     public final static byte TIER_COMMON = 0,
             TIER_UNCOMMON = 1,
             TIER_RARE = 2, //.15(15%)-.5(50%) bonus
@@ -61,6 +64,82 @@ public class ItemEquip implements Item {
     protected double bonusMult;
     protected byte tier = TIER_COMMON;
     protected int itemCode;
+
+    public static void unloadSprites() {
+        ITEM_SPRITES.clear();
+    }
+
+    public static void loadItemSprite(int code) {
+        BufferedImage[][] load = new BufferedImage[NUM_PLAYER_STATE][];
+
+        try {
+            ITEM_ICONS.put(code, ImageIO.read(Globals.class.getResource("sprites/character/equip/" + code + "/attack/mainhand1/icon.png")));
+        } catch (Exception ex) {
+        }
+
+        load[PLAYER_STATE_ATTACK1] = new BufferedImage[5];
+        for (int i = 0; i < load[PLAYER_STATE_ATTACK1].length; i++) {
+            try {
+                load[PLAYER_STATE_ATTACK1][i] = ImageIO.read(Globals.class.getResource("sprites/character/equip/" + code + "/attack/mainhand1/" + i + ".png"));
+            } catch (Exception ex) {
+            }
+        }
+
+        load[PLAYER_STATE_ATTACK2] = new BufferedImage[5];
+        for (int i = 0; i < load[PLAYER_STATE_ATTACK2].length; i++) {
+            try {
+                load[PLAYER_STATE_ATTACK2][i] = ImageIO.read(Globals.class.getResource("sprites/character/equip/" + code + "/attack/mainhand2/" + i + ".png"));
+            } catch (Exception ex) {
+            }
+        }
+
+        load[PLAYER_STATE_ATTACKOFF1] = new BufferedImage[5];
+        for (int i = 0; i < load[PLAYER_STATE_ATTACKOFF1].length; i++) {
+            try {
+                load[PLAYER_STATE_ATTACKOFF1][i] = ImageIO.read(Globals.class.getResource("sprites/character/equip/" + code + "/attack/offhand1/" + i + ".png"));
+            } catch (Exception ex) {
+            }
+        }
+
+        load[PLAYER_STATE_ATTACKOFF2] = new BufferedImage[5];
+        for (int i = 0; i < load[PLAYER_STATE_ATTACKOFF2].length; i++) {
+            try {
+                load[PLAYER_STATE_ATTACKOFF2][i] = ImageIO.read(Globals.class.getResource("sprites/character/equip/" + code + "/attack/offhand2/" + i + ".png"));
+            } catch (Exception ex) {
+            }
+        }
+
+        load[PLAYER_STATE_ATTACKBOW] = new BufferedImage[5];
+        for (int i = 0; i < load[PLAYER_STATE_ATTACKBOW].length; i++) {
+            try {
+                load[PLAYER_STATE_ATTACKBOW][i] = ImageIO.read(Globals.class.getResource("sprites/character/equip/" + code + "/attack/bow/" + i + ".png"));
+            } catch (Exception ex) {
+            }
+        }
+
+        load[PLAYER_STATE_STAND] = new BufferedImage[9];
+        for (int i = 0; i < load[PLAYER_STATE_STAND].length; i++) {
+            try {
+                load[PLAYER_STATE_STAND][i] = ImageIO.read(Globals.class.getResource("sprites/character/equip/" + code + "/stand/" + i + ".png"));
+            } catch (Exception ex) {
+            }
+        }
+
+        load[PLAYER_STATE_WALK] = new BufferedImage[19];
+        for (int i = 0; i < load[PLAYER_STATE_WALK].length; i++) {
+            try {
+                load[PLAYER_STATE_WALK][i] = ImageIO.read(Globals.class.getResource("sprites/character/equip/" + code + "/walk/" + i + ".png"));
+            } catch (Exception ex) {
+            }
+        }
+
+        load[PLAYER_STATE_JUMP] = new BufferedImage[1];
+        try {
+            load[PLAYER_STATE_JUMP][0] = ImageIO.read(Globals.class.getResource("sprites/character/equip/" + code + "/jump/0.png"));
+        } catch (Exception ex) {
+        }
+        ITEM_SPRITES.put(code, load);
+    }
 
     public static void loadItemNames() {
         ITEM_NAMES.put(TEMP_SWORD, "Sword");
@@ -77,7 +156,17 @@ public class ItemEquip implements Item {
         ITEM_NAMES.put(TEMP_SHIELD, "Shield");
     }
 
-    public double[] getStats() {
+    public static void loadItemDrawOrigin() {
+        ITEM_ORIGINPOINT.put(TEMP_SWORD + "_" + Globals.PLAYER_STATE_STAND, new Point(-35, -80));
+        ITEM_ORIGINPOINT.put(TEMP_SWORD + "_" + Globals.PLAYER_STATE_WALK, new Point(-33, -207));
+        ITEM_ORIGINPOINT.put(TEMP_SWORD + "_" + Globals.PLAYER_STATE_JUMP, new Point(-30, -180));
+        ITEM_ORIGINPOINT.put(TEMP_SWORD + "_" + Globals.PLAYER_STATE_ATTACK1, new Point(-105, -243));
+        ITEM_ORIGINPOINT.put(TEMP_SWORD + "_" + Globals.PLAYER_STATE_ATTACK2, new Point(17, -117));
+        ITEM_ORIGINPOINT.put(TEMP_SWORD + "_" + Globals.PLAYER_STATE_ATTACKOFF1, new Point(25, -105));
+        ITEM_ORIGINPOINT.put(TEMP_SWORD + "_" + Globals.PLAYER_STATE_ATTACKOFF2, new Point(10, -135));
+    }
+
+    public double[] getTotalStats() {
         return totalStats;
     }
 
@@ -104,16 +193,36 @@ public class ItemEquip implements Item {
 
     private void drawMenu(Graphics2D g, int x, int y) {
         //Draw Icon at location x, y
-        g.setFont(Globals.ARIAL_15PT);
-        g.drawString("PH", x + 20, y + 30);
+        if (ITEM_ICONS.containsKey(itemCode)) {
+            BufferedImage sprite = ITEM_ICONS.get(itemCode);
+            g.drawImage(sprite, x, y, null);
+        } else {
+            g.setFont(Globals.ARIAL_15PT);
+            g.drawString("PH", x + 20, y + 30);
+        }
+
     }
 
-    public void drawIngame(Graphics2D g, int x, int y) {
-
+    public void drawIngame(Graphics2D g, int x, int y, byte state, byte frame, byte facing) {
+        if (ITEM_SPRITES.containsKey(itemCode)) {
+            BufferedImage sprite = ITEM_SPRITES.get(itemCode)[state][frame];
+            if (sprite != null) {
+                int sX = x + ((facing == Globals.RIGHT) ? 1 : -1) * ITEM_ORIGINPOINT.get(itemCode + "_" + state).x;
+                int sY = y + ITEM_ORIGINPOINT.get(itemCode + "_" + state).y;
+                int dX = sX + ((facing == Globals.RIGHT) ? 1 : -1) * sprite.getWidth();
+                int dY = sY + sprite.getHeight();
+                g.drawImage(sprite, sX, sY, dX, dY, 0, 0, sprite.getWidth(), sprite.getHeight(), null);
+            }
+        } else {
+            ItemEquip.loadItemSprite(itemCode);
+        }
     }
 
-    public void drawIngame(Graphics2D g, int x, int y, boolean offhand) {
-
+    public void drawIngame(Graphics2D g, int x, int y, byte state, byte frame, byte facing, boolean offhand) {
+        if (getSlot(itemCode) != Globals.ITEM_OFFHAND) {
+            return;
+        }
+        drawIngame(g, x, y, state, frame, facing);
     }
 
     public int getUpgrades() {
@@ -195,7 +304,7 @@ public class ItemEquip implements Item {
     public static byte getSlot(int i) {
         if (i >= 100000 && i <= 109999) { //Swords
             return Globals.ITEM_WEAPON;
-        } else if (i >= 110000 && i <= 119999) { //Shields
+        } else if (i >= 110000 && i <= 119999) { //Shields/Quivers
             return Globals.ITEM_OFFHAND;
         } else if (i >= 120000 && i <= 129999) { //Bows
             return Globals.ITEM_BOW;
