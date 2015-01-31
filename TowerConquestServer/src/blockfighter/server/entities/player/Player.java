@@ -28,8 +28,18 @@ public class Player extends Thread {
     public final static byte PLAYER_STATE_STAND = 0x00,
             PLAYER_STATE_WALK = 0x01,
             PLAYER_STATE_JUMP = 0x02,
-            PLAYER_STATE_SLASH = 0x03,
-            PLAYER_STATE_ARC = 0x04;
+            PLAYER_STATE_SWORD_VORPAL = 0x03,
+            PLAYER_STATE_SWORD_MULTI = 0x04,
+            PLAYER_STATE_SWORD_CINDER = 0x05,
+            PLAYER_STATE_SWORD_DRIVE = 0x06,
+            PLAYER_STATE_SWORD_SLASH = 0x07,
+            PLAYER_STATE_SWORD_TAUNT = 0x08,
+            PLAYER_STATE_BOW_ARC = 0x09,
+            PLAYER_STATE_BOW_POWER = 0x0A,
+            PLAYER_STATE_BOW_RAPID = 0x0B,
+            PLAYER_STATE_BOW_FROST = 0x0C,
+            PLAYER_STATE_BOW_STORM = 0x0D,
+            PLAYER_STATE_BOW_VOLLEY = 0x0E;
 
     private final byte key;
     private final LogicModule logic;
@@ -38,7 +48,7 @@ public class Player extends Thread {
     private double x, y, ySpeed, xSpeed;
     private boolean[] dirKeydown = new boolean[4];
     private boolean isFalling = false, isJumping = false;
-    private boolean updatePos = false, updateFacing = false, updateState = false;
+    private boolean updatePos = false, updateFacing = false, updateAnimState = false;
     private byte playerState, animState, facing, frame;
     private double nextFrameTime = 0;
     private Rectangle2D.Double hitbox;
@@ -60,6 +70,7 @@ public class Player extends Thread {
     private ConcurrentLinkedQueue<Integer> damageQueue = new ConcurrentLinkedQueue<>();
     private ConcurrentLinkedQueue<Integer> healQueue = new ConcurrentLinkedQueue<>();
     private ConcurrentLinkedQueue<Byte> stateQueue = new ConcurrentLinkedQueue<>();
+    private ConcurrentLinkedQueue<byte[]> skillUseQueue = new ConcurrentLinkedQueue<>();
 
     private long lastActionTime = Globals.SERVER_MAX_IDLE;
     private long skillDuration = 0;
@@ -343,22 +354,28 @@ public class Player extends Thread {
     public void update() {
         lastActionTime -= Globals.LOGIC_UPDATE / 1000000;
         nextHPSend -= Globals.LOGIC_UPDATE / 1000000;
-        updatePlayerState();
+        if (isUsingSkill()) {
+            skillDuration += Globals.LOGIC_UPDATE / 1000000;
+        }
+
         updateSkillCd();
+        updateSkillCast();
+
+        updatePlayerState();
         updateBuffs();
         updateFall();
 
+        boolean movedX = updateX(xSpeed);
         hitbox.x = x - 50;
         hitbox.y = y - 180;
-        boolean movedX = updateX(xSpeed);
 
         if (isUsingSkill()) {
             updateSkillUse();
-        } else {
-            if (!isStunned() && !isKnockback()) {
-                updateFacing();
-            }
-            if (!isJumping && !isFalling && !isStunned() && !isKnockback()) {
+        }
+
+        if (!isUsingSkill() && !isStunned() && !isKnockback()) {
+            updateFacing();
+            if (!isJumping && !isFalling) {
                 updateWalk(movedX);
                 updateJump();
             }
@@ -372,7 +389,7 @@ public class Player extends Thread {
         if (updateFacing) {
             sendFacing();
         }
-        if (updateState) {
+        if (updateAnimState) {
             sendState();
         }
 
@@ -387,24 +404,85 @@ public class Player extends Thread {
         while (!stateQueue.isEmpty()) {
             Byte newState = stateQueue.poll();
             if (newState != null && !isUsingSkill() && playerState != newState) {
-                playerState = newState;
-                frame = 0;
-                updateState = true;
+                setPlayerState(newState);
+            }
+            if (isUsingSkill()) {
+                stateQueue.clear();
+            }
+        }
+    }
+
+    private void updateSkillCast() {
+        if (isUsingSkill()) {
+            skillUseQueue.clear();
+            return;
+        }
+        if (skillUseQueue.isEmpty()) {
+            return;
+        }
+
+        byte[] data = skillUseQueue.poll();
+        skillUseQueue.clear();
+        if (data != null && !isStunned() && !isKnockback()) {
+            if (skills.containsKey(data[3]) && skills.get(data[3]).getCooldown() <= 0) {
+                skillDuration = 0;
+                setXSpeed(0);
+                switch (data[3]) {
+                    case Skill.SWORD_SLASH:
+                        queuePlayerState(PLAYER_STATE_SWORD_SLASH);
+                        animState = Globals.PLAYER_STATE_ATTACK1;
+                        skills.get(data[3]).setCooldown();
+                        sendCooldown(data);
+                        nextFrameTime = 40000000;
+                        break;
+                    case Skill.BOW_ARC:
+                        queuePlayerState(PLAYER_STATE_BOW_ARC);
+                        skills.get(data[3]).setCooldown();
+                        sendCooldown(data);
+                        nextFrameTime = 20000000;
+                        break;
+                    case Skill.BOW_POWER:
+                        queuePlayerState(PLAYER_STATE_BOW_POWER);
+                        skills.get(data[3]).setCooldown();
+                        sendCooldown(data);
+                        nextFrameTime = 40000000;
+                        break;
+                    case Skill.SWORD_VORPAL:
+                        queuePlayerState(PLAYER_STATE_SWORD_VORPAL);
+                        skills.get(data[3]).setCooldown();
+                        sendCooldown(data);
+                        nextFrameTime = 40000000;
+                        break;
+                }
             }
         }
     }
 
     private void updateSkillUse() {
-        skillDuration += Globals.LOGIC_UPDATE / 1000000;
         switch (playerState) {
-            case PLAYER_STATE_SLASH:
-                if (skillDuration >= 750) {
-                    playerState = PLAYER_STATE_STAND;
+            case PLAYER_STATE_SWORD_SLASH:
+                if (skillDuration >= 900) {
+                    setPlayerState(PLAYER_STATE_STAND);
                 }
                 break;
-            case PLAYER_STATE_ARC:
+            case PLAYER_STATE_SWORD_VORPAL:
+                if (skillDuration >= 900) {
+                    setPlayerState(PLAYER_STATE_STAND);
+                }
+                break;
+            case PLAYER_STATE_BOW_ARC:
                 if (skillDuration >= 500) {
-                    playerState = PLAYER_STATE_STAND;
+                    setPlayerState(PLAYER_STATE_STAND);
+                }
+                break;
+            case PLAYER_STATE_BOW_POWER:
+                if (skillDuration >= 1000 || isStunned() || isKnockback()) {
+                    setPlayerState(PLAYER_STATE_STAND);
+                }
+                break;
+            case PLAYER_STATE_BOW_RAPID:
+                if (skillDuration >= 1000) {
+                    setPlayerState(PLAYER_STATE_STAND);
                 }
                 break;
         }
@@ -530,7 +608,10 @@ public class Player extends Thread {
     }
 
     public boolean isUsingSkill() {
-        return playerState == PLAYER_STATE_SLASH || playerState == PLAYER_STATE_ARC;
+        return playerState == PLAYER_STATE_SWORD_SLASH
+                || playerState == PLAYER_STATE_SWORD_VORPAL
+                || playerState == PLAYER_STATE_BOW_ARC
+                || playerState == PLAYER_STATE_BOW_POWER;
     }
 
     /**
@@ -552,7 +633,7 @@ public class Player extends Thread {
     private void updateFall() {
         if (ySpeed != 0) {
             updateY(ySpeed);
-            setPlayerState(PLAYER_STATE_JUMP);
+            queuePlayerState(PLAYER_STATE_JUMP);
         }
 
         setYSpeed(ySpeed + Globals.GRAVITY);
@@ -565,9 +646,7 @@ public class Player extends Thread {
             y = map.getValidY(x, y, ySpeed);
             setYSpeed(0);
             isJumping = false;
-            if (xSpeed == 0) {
-                setPlayerState(PLAYER_STATE_STAND);
-            }
+            queuePlayerState(PLAYER_STATE_STAND);
         }
     }
 
@@ -576,22 +655,22 @@ public class Player extends Thread {
             setXSpeed(4.5);
             if (moved) {
                 if (ySpeed == 0) {
-                    setPlayerState(PLAYER_STATE_WALK);
+                    queuePlayerState(PLAYER_STATE_WALK);
                 }
             } else {
                 if (ySpeed == 0) {
-                    setPlayerState(PLAYER_STATE_STAND);
+                    queuePlayerState(PLAYER_STATE_STAND);
                 }
             }
         } else if (dirKeydown[Globals.LEFT] && !dirKeydown[Globals.RIGHT]) {
             setXSpeed(-4.5);
             if (moved) {
                 if (ySpeed == 0) {
-                    setPlayerState(PLAYER_STATE_WALK);
+                    queuePlayerState(PLAYER_STATE_WALK);
                 }
             } else {
                 if (ySpeed == 0) {
-                    setPlayerState(PLAYER_STATE_STAND);
+                    queuePlayerState(PLAYER_STATE_STAND);
                 }
             }
         } else {
@@ -611,38 +690,9 @@ public class Player extends Thread {
         }
     }
 
-    /**
-     * Template attack.
-     * <p>
-     * Does nothing, only knocks back. Attacks and projectiles should always be queued from the player to allow condition checking. Projectiles must be created in the player entity
-     * </p>
-     *
-     * @param data Received data bytes from client
-     */
     public void processUseSkill(byte[] data) {
         lastActionTime = Globals.SERVER_MAX_IDLE;
-        if (!isStunned() && !isKnockback() && !isUsingSkill()) {
-            if (skills.containsKey(data[3]) && skills.get(data[3]).getCooldown() <= 0) {
-                switch (data[3]) {
-                    case Skill.SWORD_SLASH:
-                        setPlayerState(PLAYER_STATE_SLASH);
-                        skills.get(data[3]).setCooldown();
-                        sendCooldown(data);
-                        skillDuration = 0;
-                        setXSpeed(0);
-                        nextFrameTime = 40000000;
-                        break;
-                    case Skill.BOW_ARC:
-                        setPlayerState(PLAYER_STATE_ARC);
-                        skills.get(data[3]).setCooldown();
-                        sendCooldown(data);
-                        skillDuration = 0;
-                        setXSpeed(0);
-                        nextFrameTime = 60000000;
-                        break;
-                }
-            }
-        }
+        skillUseQueue.add(data);
     }
 
     public void queueDamage(int damage) {
@@ -693,21 +743,26 @@ public class Player extends Thread {
     }
 
     /**
-     * Set player state.
+     * Queue player state to be set.
      * <p>
      * States constants in Globals
      * </p>
      *
      * @param newState New state the player is in
-     * @param queueState
      */
-    public void setPlayerState(byte newState) {
-
+    public void queuePlayerState(byte newState) {
+        stateQueue.clear();
         stateQueue.add(newState);
+    }
 
+    public void setPlayerState(byte newState) {
+        playerState = newState;
+        frame = 0;
+        updateAnimState = true;
     }
 
     private void updateAnimState() {
+        byte prevAnimState = animState, prevFrame = frame;
         switch (playerState) {
             case PLAYER_STATE_STAND:
                 nextFrameTime -= Globals.LOGIC_UPDATE;
@@ -719,7 +774,6 @@ public class Player extends Thread {
                         frame++;
                     }
                     nextFrameTime = 150000000;
-                    updateState = true;
                 }
                 break;
             case PLAYER_STATE_WALK:
@@ -732,60 +786,94 @@ public class Player extends Thread {
                         frame++;
                     }
                     nextFrameTime = 33000000 * .75;
-                    updateState = true;
                 }
                 break;
             case PLAYER_STATE_JUMP:
                 animState = Globals.PLAYER_STATE_JUMP;
                 if (frame != 0) {
                     frame = 0;
-                    updateState = true;
                 }
                 break;
-            case PLAYER_STATE_SLASH:
+            case PLAYER_STATE_SWORD_SLASH:
                 nextFrameTime -= Globals.LOGIC_UPDATE;
                 if (nextFrameTime <= 0) {
                     if (skillDuration < 200) {
                         animState = Globals.PLAYER_STATE_ATTACK1;
                         if (frame < 4) {
                             frame++;
-                            updateState = true;
                         }
                     } else if (skillDuration < 400) {
                         animState = Globals.PLAYER_STATE_ATTACK1;
-                        if (skillDuration == 200) {
-                            frame = 4;
-                            updateState = true;
-                        }
                         if (frame > 0) {
                             frame--;
-                            updateState = true;
                         }
                     } else {
                         animState = Globals.PLAYER_STATE_ATTACK2;
-                        if (skillDuration == 400) {
-                            frame = 0;
-                            updateState = true;
-                        }
                         if (frame < 4) {
                             frame++;
-                            updateState = true;
                         }
                     }
                     nextFrameTime = 40000000;
                 }
+                if (skillDuration == 0 || skillDuration == 400) {
+                    frame = 0;
+                } else if (skillDuration == 200) {
+                    frame = 4;
+                }
                 break;
-            case PLAYER_STATE_ARC:
+            case PLAYER_STATE_BOW_ARC:
                 nextFrameTime -= Globals.LOGIC_UPDATE;
+                animState = Globals.PLAYER_STATE_ATTACKBOW;
                 if (nextFrameTime <= 0) {
-                    animState = Globals.PLAYER_STATE_ATTACKBOW;
                     if (frame < 4) {
                         frame++;
-                        nextFrameTime = 40000000;
-                        updateState = true;
-                        break;
+                        nextFrameTime = 20000000;
                     }
                 }
+                break;
+            case PLAYER_STATE_BOW_POWER:
+                nextFrameTime -= Globals.LOGIC_UPDATE;
+                animState = Globals.PLAYER_STATE_ATTACKBOW;
+                if (nextFrameTime <= 0) {
+                    if (skillDuration < 800) {
+                        if (frame != 2) {
+                            frame++;
+                        }
+                        nextFrameTime = 40000000;
+                    } else {
+                        if (frame != 4) {
+                            frame++;
+                        }
+                        nextFrameTime = 20000000;
+                    }
+                }
+                break;
+            case PLAYER_STATE_SWORD_VORPAL:
+                nextFrameTime -= Globals.LOGIC_UPDATE;
+                animState = Globals.PLAYER_STATE_ATTACK2;
+                if (nextFrameTime <= 0) {
+                    if (skillDuration < 200) {
+                        if (frame < 4) {
+                            frame++;
+                        }
+                    } else if (skillDuration < 400) {
+                        if (frame < 4) {
+                            frame++;
+                        }
+                    } else if (skillDuration < 900) {
+                        if (frame < 4) {
+                            frame++;
+                        }
+                    }
+                    nextFrameTime = 40000000;
+                }
+                if (skillDuration == 200 || skillDuration == 400) {
+                    frame = 0;
+                }
+                break;
+        }
+        if (animState != prevAnimState || frame != prevFrame) {
+            updateAnimState = true;
         }
     }
 
@@ -848,7 +936,7 @@ public class Player extends Thread {
         bytes[2] = animState;
         bytes[3] = frame;
         packetSender.sendAll(bytes, logic.getRoom());
-        updateState = false;
+        updateAnimState = false;
     }
 
     public void sendCooldown(byte[] data) {

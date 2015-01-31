@@ -8,7 +8,7 @@ public class SkillBowArc extends Skill {
 
     public SkillBowArc() {
         skillCode = BOW_ARC;
-        maxCooldown = 1000;
+        maxCooldown = 500;
     }
 
 }
