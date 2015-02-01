@@ -50,8 +50,11 @@ public class Globals {
 
     public final static byte RIGHT = 0, LEFT = 1, DOWN = 2, UP = 3;
 
-    public final static int NUM_PARTICLE_EFFECTS = 1;
-    public final static byte PARTICLE_KNOCK = 0x00;
+    public final static int NUM_PARTICLE_EFFECTS = 3;
+    public final static byte PARTICLE_SWORD_SLASH1 = 0x00,
+            PARTICLE_SWORD_SLASH2 = 0x01,
+            PARTICLE_SWORD_SLASH3 = 0x02;
+
     public final static int NUM_KEYBINDS = 16,
             KEYBIND_SKILL1 = 0,
             KEYBIND_SKILL2 = 1,
@@ -147,7 +150,6 @@ public class Globals {
             DATA_PLAYER_SET_STATE = 0x06,
             DATA_PLAYER_USESKILL = 0x07,
             DATA_PARTICLE_EFFECT = 0x08,
-            DATA_PARTICLE_REMOVE = 0x09,
             DATA_PLAYER_DISCONNECT = 0x0A,
             DATA_PLAYER_GET_NAME = 0x0B,
             DATA_PLAYER_GET_STAT = 0x0C,
@@ -158,7 +160,6 @@ public class Globals {
             PLAYER_ACTION_KNOCK = 0x00;
 
     public final static BufferedImage[][] CHAR_SPRITE = new BufferedImage[NUM_PLAYER_STATE][];
-    public final static BufferedImage[][] PARTICLE_SPRITE = new BufferedImage[NUM_PARTICLE_EFFECTS][];
     public final static BufferedImage[] HUD = new BufferedImage[1];
 
     public final static BufferedImage[] MENU_BG = new BufferedImage[5];
@@ -283,11 +284,6 @@ public class Globals {
 
             CHAR_SPRITE[PLAYER_STATE_JUMP] = new BufferedImage[1];
             CHAR_SPRITE[PLAYER_STATE_JUMP][0] = ImageIO.read(Globals.class.getResource("sprites/character/jump/0.png"));
-
-            PARTICLE_SPRITE[PARTICLE_KNOCK] = new BufferedImage[5];
-            for (int i = 0; i < PARTICLE_SPRITE[PARTICLE_KNOCK].length; i++) {
-                PARTICLE_SPRITE[PARTICLE_KNOCK][i] = ImageIO.read(Globals.class.getResource("sprites/particle/knock/" + i + ".png"));
-            }
 
             HUD[0] = ImageIO.read(Globals.class.getResource("sprites/ui/ingame/ui.png"));
             for (byte i = 0; i < MENU_BG.length; i++) {

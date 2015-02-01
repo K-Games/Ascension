@@ -40,12 +40,12 @@ public class SkillBowFrost extends Skill {
         g.drawString("Level: " + level, x + 80, y + 50);
         g.drawString("Cooldown: " + maxCooldown / 1000 + " Seconds", x + 80, y + 70);
 
-        g.drawString("Deal 100 + " +30*level + "%(" + (100+30*level) + "%) damage.", x + 10, y + 90);
+        g.drawString("Deal 100 + " + 30 * level + "%(" + (100 + 30 * level) + "%) damage.", x + 10, y + 90);
         g.drawString("Freeze target for 2 seconds", x + 10, y + 110);
         g.drawString("Max:", x + 10, y + 130);
         g.drawString("Freeze target for 4 seconds.", x + 10, y + 150);
         g.drawString("Addition 2 shots dealing 250% damage.", x + 10, y + 170);
-        
+
     }
 
     @Override

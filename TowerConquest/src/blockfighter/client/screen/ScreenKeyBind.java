@@ -159,4 +159,8 @@ public class ScreenKeyBind extends ScreenMenu {
     public void mouseMoved(MouseEvent e) {
     }
 
+    @Override
+    public void unload() {
+    }
+
 }

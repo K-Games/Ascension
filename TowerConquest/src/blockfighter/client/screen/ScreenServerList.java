@@ -70,4 +70,8 @@ public class ScreenServerList extends ScreenMenu {
 
     }
 
+    @Override
+    public void unload() {
+    }
+
 }

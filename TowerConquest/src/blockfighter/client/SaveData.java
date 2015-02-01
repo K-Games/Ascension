@@ -52,9 +52,9 @@ public class SaveData {
         double[] bs = new double[Globals.NUM_STATS];
         bs[Globals.STAT_LEVEL] = 99999;
         bs[Globals.STAT_POWER] = 10000;
-        
-        equipment[Globals.ITEM_WEAPON] = new ItemEquip(bs,0,3,ItemEquip.TEMP_SWORD);
-        
+
+        equipment[Globals.ITEM_WEAPON] = new ItemEquip(bs, 0, 3, ItemEquip.TEMP_SWORD);
+        upgrades[0] = new ItemUpgrade(1,100000);
         //initalize skill list
         skills[Skill.SWORD_CINDER] = new SkillSwordCinder();
         skills[Skill.SWORD_DRIVE] = new SkillSwordDrive();
@@ -441,7 +441,7 @@ public class SaveData {
         return uniqueID;
     }
 
-    private void calcStats() {
+    public void calcStats() {
         for (int i = 0; i < bonusStats.length; i++) {
             bonusStats[i] = 0;
             for (ItemEquip e : equipment) {
@@ -627,8 +627,8 @@ public class SaveData {
 
     public void setKeyBind(int k, int keycode) {
         keybinds[k] = keycode;
-        for (int i = 0; i< keybinds.length;i++){
-            if(i != k && keybinds[i] == keycode){
+        for (int i = 0; i < keybinds.length; i++) {
+            if (i != k && keybinds[i] == keycode) {
                 keybinds[i] = -1;
             }
         }

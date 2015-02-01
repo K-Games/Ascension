@@ -140,10 +140,10 @@ public class ScreenStats extends ScreenMenu {
         button = Globals.MENU_BUTTON[Globals.BUTTON_SMALLRECT];
         g.drawImage(button, (int) resetBox.x, (int) resetBox.y, null);
         g.setFont(Globals.ARIAL_18PT);
-        drawStringOutline(g, "Reset Stats", (int) (resetBox.x + 45), (int)(resetBox.y + 25),1);
+        drawStringOutline(g, "Reset Stats", (int) (resetBox.x + 45), (int) (resetBox.y + 25), 1);
         g.setColor(Color.WHITE);
-        g.drawString("Reset Stats", (int) (resetBox.x + 45), (int)(resetBox.y + 25));
-        
+        g.drawString("Reset Stats", (int) (resetBox.x + 45), (int) (resetBox.y + 25));
+
         drawMenuButton(g);
         super.draw(g);
     }
@@ -210,7 +210,7 @@ public class ScreenStats extends ScreenMenu {
                 }
             }
         }
-        if (resetBox.contains(e.getPoint())){
+        if (resetBox.contains(e.getPoint())) {
             c.resetStat();
         }
     }
@@ -233,6 +233,10 @@ public class ScreenStats extends ScreenMenu {
     @Override
     public void mouseMoved(MouseEvent e) {
 
+    }
+
+    @Override
+    public void unload() {
     }
 
 }

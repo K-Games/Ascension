@@ -4,8 +4,8 @@ import blockfighter.client.Globals;
 import blockfighter.client.LogicModule;
 import blockfighter.client.SaveData;
 import blockfighter.client.entities.Player;
-import blockfighter.client.entities.particles.Particle;
-import blockfighter.client.entities.particles.ParticleKnock;
+import blockfighter.client.entities.items.ItemEquip;
+import blockfighter.client.entities.particles.*;
 import blockfighter.client.entities.skills.Skill;
 import blockfighter.client.maps.GameMap;
 import blockfighter.client.maps.GameMapLvl1;
@@ -40,6 +40,9 @@ public class ScreenIngame extends Screen {
     private DecimalFormat df = new DecimalFormat("0.0");
     private ConcurrentHashMap<Byte, Player> players;
     private ConcurrentHashMap<Integer, Particle> particles = new ConcurrentHashMap<>(500);
+    private final ConcurrentLinkedQueue<Integer> particleKeys = new ConcurrentLinkedQueue<>();
+    private int numParticleKeys = 500;
+
     private byte myKey = -1;
 
     private long pingTime = 0;
@@ -72,10 +75,11 @@ public class ScreenIngame extends Screen {
         for (int j = 0; j < hotkeySlots.length; j++) {
             hotkeySlots[j] = new Rectangle2D.Double(Globals.WINDOW_WIDTH / 2 - Globals.HUD[0].getWidth() / 2 + 10 + (j * 66), 656, 60, 60);
         }
-        for (Skill skill : c.getSkills()) {
-            skill.setCooldown();
+        for (int key = 0; key < numParticleKeys; key++) {
+            particleKeys.add(key);
         }
         map = new GameMapLvl1();
+        Particle.loadParticles();
     }
 
     @Override
@@ -128,6 +132,32 @@ public class ScreenIngame extends Screen {
             Thread.sleep(0, 1);
         } catch (InterruptedException ex) {
             Logger.getLogger(ScreenInventory.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @Override
+    public void updateParticles(ConcurrentHashMap<Integer, Particle> particles) {
+        for (Map.Entry<Integer, Particle> pEntry : particles.entrySet()) {
+            threadPool.execute(pEntry.getValue());
+        }
+        LinkedList<Integer> remove = new LinkedList<>();
+        for (Map.Entry<Integer, Particle> pEntry : particles.entrySet()) {
+            try {
+                pEntry.getValue().join();
+                if (pEntry.getValue().isExpired()) {
+                    remove.add(pEntry.getKey());
+                }
+            } catch (InterruptedException ex) {
+            }
+        }
+        removeParticles(particles, remove);
+    }
+
+    private void removeParticles(ConcurrentHashMap<Integer, Particle> particles, LinkedList<Integer> remove) {
+        while (!remove.isEmpty()) {
+            int p = remove.pop();
+            particleKeys.add(p);
+            particles.remove(p);
         }
     }
 
@@ -218,6 +248,16 @@ public class ScreenIngame extends Screen {
         return particles;
     }
 
+    public int getNextParticleKey() {
+        if (particleKeys.isEmpty()) {
+            for (int i = numParticleKeys; i < numParticleKeys + 500; i++) {
+                particleKeys.add(i);
+            }
+            numParticleKeys += 500;
+        }
+        return particleKeys.remove();
+    }
+
     private void processDataQueue() {
         while (players != null && !dataQueue.isEmpty()) {
             byte[] data = dataQueue.remove();
@@ -234,9 +274,6 @@ public class ScreenIngame extends Screen {
                     break;
                 case Globals.DATA_PARTICLE_EFFECT:
                     dataParticleEffect(data);
-                    break;
-                case Globals.DATA_PARTICLE_REMOVE:
-                    dataParticleRemove(data);
                     break;
                 case Globals.DATA_PLAYER_DISCONNECT:
                     dataPlayerDisconnect(data);
@@ -318,27 +355,22 @@ public class ScreenIngame extends Screen {
     }
 
     private void dataParticleEffect(byte[] data) {
-        int key = Globals.bytesToInt(Arrays.copyOfRange(data, 1, 5));
-        byte particleID = data[5];
-        int x = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
-        int y = Globals.bytesToInt(Arrays.copyOfRange(data, 10, 14));
-        if (particles.containsKey(key)) {
-            int i = 0;
-            while (particles.containsKey(i)) {
-                i++;
-            }
-            Particle temp = particles.remove(key);
-            if (temp != null) {
-                particles.put(i, temp);
-            }
-        }
-        particles.put(key, new ParticleKnock(logic, key, x, y, 500));
-    }
+        byte particleID = data[1];
+        int x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
+        int y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
+        byte facing = data[10];
 
-    private void dataParticleRemove(byte[] data) {
-        int key = Globals.bytesToInt(Arrays.copyOfRange(data, 1, 5));
-        if (particles.containsKey(key)) {
-            particles.remove(key);
+        int key = getNextParticleKey();
+        switch (particleID) {
+            case Globals.PARTICLE_SWORD_SLASH1:
+                particles.put(key, new ParticleSwordSlash1(logic, key, x, y, facing));
+                break;
+            case Globals.PARTICLE_SWORD_SLASH2:
+                particles.put(key, new ParticleSwordSlash2(logic, key, x, y, facing));
+                break;
+            case Globals.PARTICLE_SWORD_SLASH3:
+                particles.put(key, new ParticleSwordSlash3(logic, key, x, y, facing));
+                break;
         }
     }
 
@@ -508,6 +540,13 @@ public class ScreenIngame extends Screen {
                 return;
             }
         }
+    }
+
+    @Override
+    public void unload() {
+        Particle.unloadParticles();
+        ItemEquip.unloadSprites();
+        logic.returnMenu();
     }
 
 }

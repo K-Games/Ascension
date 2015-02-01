@@ -62,7 +62,7 @@ public abstract class GameMap {
             particles.remove(remove.pop());
         }
     }
-    
+
     public void draw(Graphics2D g) {
         for (Map.Entry<Integer, Particle> pEntry : particles.entrySet()) {
             pEntry.getValue().draw(g);

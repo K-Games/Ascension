@@ -32,8 +32,8 @@ public abstract class ScreenMenu extends Screen {
     public ScreenMenu(LogicModule l) {
         logic = l;
         if (!particles.containsKey(0)) {
-            particles.put(0, new ParticleMenuSmoke(l, 0, 0, 0, 0));
-            particles.put(1, new ParticleMenuSmoke(l, 1, 1280, 0, 0));
+            particles.put(0, new ParticleMenuSmoke(l, 0, 0, 0));
+            particles.put(1, new ParticleMenuSmoke(l, 1, 1280, 0));
         }
         for (int i = 0; i < menuBox.length; i++) {
             menuBox[i] = new Rectangle2D.Double(20, 27 + 50 * i, 180, 50);

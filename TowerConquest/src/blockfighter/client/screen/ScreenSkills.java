@@ -322,4 +322,8 @@ public class ScreenSkills extends ScreenMenu {
         }
     }
 
+    @Override
+    public void unload() {
+    }
+
 }

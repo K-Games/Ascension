@@ -11,8 +11,8 @@ import java.awt.image.BufferedImage;
  */
 public class ParticleMenuSmoke extends Particle {
 
-    public ParticleMenuSmoke(LogicModule l, int k, int x, int y, long d) {
-        super(l, k, x, y, d);
+    public ParticleMenuSmoke(LogicModule l, int k, int x, int y) {
+        super(l, k, x, y);
     }
 
     @Override

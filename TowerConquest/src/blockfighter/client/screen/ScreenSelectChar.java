@@ -235,4 +235,8 @@ public class ScreenSelectChar extends ScreenMenu {
 
     }
 
+    @Override
+    public void unload() {
+    }
+
 }

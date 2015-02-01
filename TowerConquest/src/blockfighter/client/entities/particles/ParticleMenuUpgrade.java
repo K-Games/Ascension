@@ -9,13 +9,14 @@ import java.awt.image.BufferedImage;
  *
  * @author Ken Kwan
  */
-public class ParticleUpgrade extends Particle {
+public class ParticleMenuUpgrade extends Particle {
 
     private int color, deltaX, deltaY, oX, oY;
     private boolean set = false;
 
-    public ParticleUpgrade(LogicModule l, int k, int x, int y, long d, int c, int dX, int dY) {
-        super(l, k, x, y, d);
+    public ParticleMenuUpgrade(LogicModule l, int k, int x, int y, int c, int dX, int dY) {
+        super(l, k, x, y);
+        duration = 1000;
         color = c;
         deltaX = dX;
         deltaY = dY;

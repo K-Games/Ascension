@@ -10,12 +10,13 @@ import java.util.Random;
  *
  * @author Ken Kwan
  */
-public class ParticleUpgradeEnd extends Particle {
+public class ParticleMenuUpgradeEnd extends Particle {
 
     private int color, deltaX, deltaY;
 
-    public ParticleUpgradeEnd(LogicModule l, int k, int x, int y, long d, int c, int dX, int dY) {
-        super(l, k, x, y, d);
+    public ParticleMenuUpgradeEnd(LogicModule l, int k, int x, int y, int c, int dX, int dY) {
+        super(l, k, x, y);
+        duration = 1000;
         color = c;
         deltaX = dX;
         deltaY = dY;
