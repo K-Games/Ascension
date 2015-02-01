@@ -157,4 +157,9 @@ public abstract class ProjBase extends Thread implements Projectile {
     @Override
     public void processQueue() {
     }
+    
+    @Override
+    public Rectangle2D.Double[] getHitbox(){
+        return hitbox;
+    }
 }

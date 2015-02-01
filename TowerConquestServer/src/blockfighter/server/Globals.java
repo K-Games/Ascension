@@ -54,8 +54,10 @@ public class Globals {
             PLAYER_STATE_ATTACKOFF2 = 0x06,
             PLAYER_STATE_ATTACKBOW = 0x07;
 
-    public final static int NUM_PARTICLE_EFFECTS = 1;
-    public final static byte PARTICLE_TEMP = 0x00;
+    public final static int NUM_PARTICLE_EFFECTS = 3;
+    public final static byte PARTICLE_SWORD_SLASH1 = 0x00,
+            PARTICLE_SWORD_SLASH2 = 0x01,
+            PARTICLE_SWORD_SLASH3 = 0x02;
 
     public final static byte NUM_ITEM_TYPES = 10,
             ITEM_WEAPON = 0,
@@ -123,7 +125,6 @@ public class Globals {
             DATA_PLAYER_SET_STATE = 0x06,
             DATA_PLAYER_USESKILL = 0x07,
             DATA_PARTICLE_EFFECT = 0x08,
-            DATA_PARTICLE_REMOVE = 0x09,
             DATA_PLAYER_DISCONNECT = 0x0A,
             DATA_PLAYER_GET_NAME = 0x0B,
             DATA_PLAYER_GET_STAT = 0x0C,

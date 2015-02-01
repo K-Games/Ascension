@@ -1,6 +1,7 @@
 package blockfighter.server.entities.proj;
 
 import blockfighter.server.entities.player.Player;
+import java.awt.geom.Rectangle2D;
 
 /**
  * This is the interface of projectiles and attacks.
@@ -51,6 +52,8 @@ public interface Projectile {
      * @return current y location in double
      */
     public abstract double getY();
+
+    public abstract Rectangle2D.Double[] getHitbox();
 
     /**
      * Check if projectile expired(duration=0).

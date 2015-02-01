@@ -8,6 +8,7 @@ import blockfighter.server.entities.buff.Buff;
 import blockfighter.server.entities.buff.BuffKnockback;
 import blockfighter.server.entities.buff.BuffStun;
 import blockfighter.server.entities.player.skills.*;
+import blockfighter.server.entities.proj.ProjSwordSlash;
 
 import java.awt.geom.Rectangle2D;
 import java.net.InetAddress;
@@ -458,12 +459,69 @@ public class Player extends Thread {
         }
     }
 
+    private void updateSkillSwordSlash() {
+        if (skillDuration == 0) {
+            ProjSwordSlash proj = new ProjSwordSlash(packetSender, logic, logic.getNextProjKey(), this, x, y, 1);
+            byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT * 2];
+            bytes[0] = Globals.DATA_PARTICLE_EFFECT;
+            bytes[1] = Globals.PARTICLE_SWORD_SLASH1;
+            byte[] posXInt = Globals.intToByte((int) proj.getHitbox()[0].getX());
+            bytes[2] = posXInt[0];
+            bytes[3] = posXInt[1];
+            bytes[4] = posXInt[2];
+            bytes[5] = posXInt[3];
+            byte[] posYInt = Globals.intToByte((int) proj.getHitbox()[0].getY());
+            bytes[6] = posYInt[0];
+            bytes[7] = posYInt[1];
+            bytes[8] = posYInt[2];
+            bytes[9] = posYInt[3];
+            bytes[10] = facing;
+            packetSender.sendAll(bytes, logic.getRoom());
+        } else if (skillDuration == 200) {
+            ProjSwordSlash proj = new ProjSwordSlash(packetSender, logic, logic.getNextProjKey(), this, x, y, 2);
+            byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT * 2];
+            bytes[0] = Globals.DATA_PARTICLE_EFFECT;
+            bytes[1] = Globals.PARTICLE_SWORD_SLASH2;
+            byte[] posXInt = Globals.intToByte((int) proj.getHitbox()[0].getX());
+            bytes[2] = posXInt[0];
+            bytes[3] = posXInt[1];
+            bytes[4] = posXInt[2];
+            bytes[5] = posXInt[3];
+            byte[] posYInt = Globals.intToByte((int) proj.getHitbox()[0].getY());
+            bytes[6] = posYInt[0];
+            bytes[7] = posYInt[1];
+            bytes[8] = posYInt[2];
+            bytes[9] = posYInt[3];
+            bytes[10] = facing;
+            packetSender.sendAll(bytes, logic.getRoom());
+        } else if (skillDuration == 400) {
+            ProjSwordSlash proj = new ProjSwordSlash(packetSender, logic, logic.getNextProjKey(), this, x, y, 3);
+            byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT * 2];
+            bytes[0] = Globals.DATA_PARTICLE_EFFECT;
+            bytes[1] = Globals.PARTICLE_SWORD_SLASH3;
+            byte[] posXInt = Globals.intToByte((int) proj.getHitbox()[0].getX());
+            bytes[2] = posXInt[0];
+            bytes[3] = posXInt[1];
+            bytes[4] = posXInt[2];
+            bytes[5] = posXInt[3];
+            byte[] posYInt = Globals.intToByte((int) proj.getHitbox()[0].getY());
+            bytes[6] = posYInt[0];
+            bytes[7] = posYInt[1];
+            bytes[8] = posYInt[2];
+            bytes[9] = posYInt[3];
+            bytes[10] = facing;
+            packetSender.sendAll(bytes, logic.getRoom());
+        }
+
+        if (skillDuration >= 900) {
+            setPlayerState(PLAYER_STATE_STAND);
+        }
+    }
+
     private void updateSkillUse() {
         switch (playerState) {
             case PLAYER_STATE_SWORD_SLASH:
-                if (skillDuration >= 900) {
-                    setPlayerState(PLAYER_STATE_STAND);
-                }
+                updateSkillSwordSlash();
                 break;
             case PLAYER_STATE_SWORD_VORPAL:
                 if (skillDuration >= 900) {
