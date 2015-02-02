@@ -30,15 +30,7 @@ public abstract class ProjBase extends Thread implements Projectile {
             /**
              * Projectile y position.
              */
-            y,
-            /**
-             * Projectile knockback x distance per tick
-             */
-            xSpeed,
-            /**
-             * Projectile knockback y distance per tick
-             */
-            ySpeed;
+            y;
 
     /**
      * Projectile's owning player
@@ -97,8 +89,6 @@ public abstract class ProjBase extends Thread implements Projectile {
     public ProjBase(PacketSender b, LogicModule l, int k, Player o, double x, double y, long duration) {
         this(b, l, k);
         owner = o;
-        xSpeed = 0;
-        ySpeed = 0;
         this.x = x;
         this.y = y;
         hitbox = new Rectangle2D.Double[1];

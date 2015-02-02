@@ -14,40 +14,21 @@ import java.util.Map;
  *
  * @author Ken Kwan
  */
-public class ProjSwordSlash extends ProjBase {
+public class ProjSwordDrive extends ProjBase {
 
     private final LinkedList<Player> queue = new LinkedList<>();
 
-    public ProjSwordSlash(PacketSender b, LogicModule l, int k, Player o, double x, double y, int hit) {
+    public ProjSwordDrive(PacketSender b, LogicModule l, int k, Player o, double x, double y) {
         super(b, l, k);
         owner = o;
         this.x = x;
         this.y = y;
         hitbox = new Rectangle2D.Double[1];
         if (owner.getFacing() == Globals.RIGHT) {
-            switch (hit) {
-                case 1:
-                    hitbox[0] = new Rectangle2D.Double(x - 90, y - 290, 250, 300);
-                    break;
-                case 2:
-                    hitbox[0] = new Rectangle2D.Double(x - 40, y - 290, 250, 300);
-                    break;
-                case 3:
-                    hitbox[0] = new Rectangle2D.Double(x - 20, y - 110, 320, 60);
-                    break;
-            }
+            hitbox[0] = new Rectangle2D.Double(x - 310, y - 167, 560, 150);
         } else {
-            switch (hit) {
-                case 1:
-                    hitbox[0] = new Rectangle2D.Double(x - 250 + 90, y - 290, 250, 300);
-                    break;
-                case 2:
-                    hitbox[0] = new Rectangle2D.Double(x - 250 + 40, y - 290, 250, 300);
-                    break;
-                case 3:
-                    hitbox[0] = new Rectangle2D.Double(x - 320 + 20, y - 110, 320, 60);
-                    break;
-            }
+            hitbox[0] = new Rectangle2D.Double(x - 560 + 310, y - 167, 560, 150);
+
         }
         duration = 200;
     }

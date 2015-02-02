@@ -54,10 +54,11 @@ public class Globals {
             PLAYER_STATE_ATTACKOFF2 = 0x06,
             PLAYER_STATE_ATTACKBOW = 0x07;
 
-    public final static int NUM_PARTICLE_EFFECTS = 3;
+    public final static int NUM_PARTICLE_EFFECTS = 4;
     public final static byte PARTICLE_SWORD_SLASH1 = 0x00,
             PARTICLE_SWORD_SLASH2 = 0x01,
-            PARTICLE_SWORD_SLASH3 = 0x02;
+            PARTICLE_SWORD_SLASH3 = 0x02,
+            PARTICLE_SWORD_DRIVE = 0x03;
 
     public final static byte NUM_ITEM_TYPES = 10,
             ITEM_WEAPON = 0,
@@ -130,9 +131,6 @@ public class Globals {
             DATA_PLAYER_GET_STAT = 0x0C,
             DATA_PLAYER_GET_EQUIP = 0x0D,
             DATA_PLAYER_SET_COOLDOWN = 0x0E;
-
-    public final static byte NUM_PLAYER_ACTION = 1,
-            PLAYER_ACTION_KNOCK = 0x00;
 
     public final static void log(final String info, final String classname, final byte logType, final boolean console) {
 

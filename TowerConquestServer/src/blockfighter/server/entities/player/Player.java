@@ -8,6 +8,7 @@ import blockfighter.server.entities.buff.Buff;
 import blockfighter.server.entities.buff.BuffKnockback;
 import blockfighter.server.entities.buff.BuffStun;
 import blockfighter.server.entities.player.skills.*;
+import blockfighter.server.entities.proj.ProjSwordDrive;
 import blockfighter.server.entities.proj.ProjSwordSlash;
 
 import java.awt.geom.Rectangle2D;
@@ -73,6 +74,8 @@ public class Player extends Thread {
     private ConcurrentLinkedQueue<Byte> stateQueue = new ConcurrentLinkedQueue<>();
     private ConcurrentLinkedQueue<byte[]> skillUseQueue = new ConcurrentLinkedQueue<>();
 
+    private ConcurrentLinkedQueue<Byte> buffKeys = new ConcurrentLinkedQueue<>();
+
     private long lastActionTime = Globals.SERVER_MAX_IDLE;
     private long skillDuration = 0;
     private long nextHPSend = 0;
@@ -102,6 +105,20 @@ public class Player extends Thread {
         facing = Globals.RIGHT;
         playerState = PLAYER_STATE_STAND;
         frame = 0;
+        for (byte i = -128; i < 127; i++) {
+            buffKeys.add(i);
+        }
+    }
+
+    public void returnBuffKey(byte bKey) {
+        buffKeys.add(bKey);
+    }
+
+    public Byte getNextBuffKey() {
+        if (!buffKeys.isEmpty()) {
+            return buffKeys.poll();
+        }
+        return null;
     }
 
     /**
@@ -353,6 +370,9 @@ public class Player extends Thread {
      * </p>
      */
     public void update() {
+        if (!isConnected()) {
+            return;
+        }
         lastActionTime -= Globals.LOGIC_UPDATE / 1000000;
         nextHPSend -= Globals.LOGIC_UPDATE / 1000000;
         if (isUsingSkill()) {
@@ -454,6 +474,12 @@ public class Player extends Thread {
                         sendCooldown(data);
                         nextFrameTime = 40000000;
                         break;
+                    case Skill.SWORD_DRIVE:
+                        queuePlayerState(PLAYER_STATE_SWORD_DRIVE);
+                        skills.get(data[3]).setCooldown();
+                        sendCooldown(data);
+                        nextFrameTime = 40000000;
+                        break;
                 }
             }
         }
@@ -462,6 +488,7 @@ public class Player extends Thread {
     private void updateSkillSwordSlash() {
         if (skillDuration == 0) {
             ProjSwordSlash proj = new ProjSwordSlash(packetSender, logic, logic.getNextProjKey(), this, x, y, 1);
+            logic.queueAddProj(proj);
             byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT * 2];
             bytes[0] = Globals.DATA_PARTICLE_EFFECT;
             bytes[1] = Globals.PARTICLE_SWORD_SLASH1;
@@ -479,6 +506,7 @@ public class Player extends Thread {
             packetSender.sendAll(bytes, logic.getRoom());
         } else if (skillDuration == 200) {
             ProjSwordSlash proj = new ProjSwordSlash(packetSender, logic, logic.getNextProjKey(), this, x, y, 2);
+            logic.queueAddProj(proj);
             byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT * 2];
             bytes[0] = Globals.DATA_PARTICLE_EFFECT;
             bytes[1] = Globals.PARTICLE_SWORD_SLASH2;
@@ -496,6 +524,7 @@ public class Player extends Thread {
             packetSender.sendAll(bytes, logic.getRoom());
         } else if (skillDuration == 400) {
             ProjSwordSlash proj = new ProjSwordSlash(packetSender, logic, logic.getNextProjKey(), this, x, y, 3);
+            logic.queueAddProj(proj);
             byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT * 2];
             bytes[0] = Globals.DATA_PARTICLE_EFFECT;
             bytes[1] = Globals.PARTICLE_SWORD_SLASH3;
@@ -518,10 +547,31 @@ public class Player extends Thread {
         }
     }
 
+    private void updateSkillSwordDrive() {
+        if (skillDuration == 0 || skillDuration == 250 || skillDuration == 500 || skillDuration == 750) {
+            ProjSwordDrive proj = new ProjSwordDrive(packetSender, logic, logic.getNextProjKey(), this, x, y);
+            logic.queueAddProj(proj);
+            if (skillDuration == 0) {
+                byte[] bytes = new byte[Globals.PACKET_BYTE * 4 + Globals.PACKET_INT * 2];
+                bytes[0] = Globals.DATA_PARTICLE_EFFECT;
+                bytes[1] = Globals.PARTICLE_SWORD_DRIVE;
+                bytes[10] = facing;
+                bytes[11] = key;
+                packetSender.sendAll(bytes, logic.getRoom());
+            }
+        }
+        if (skillDuration >= 1000) {
+            setPlayerState(PLAYER_STATE_STAND);
+        }
+    }
+
     private void updateSkillUse() {
         switch (playerState) {
             case PLAYER_STATE_SWORD_SLASH:
                 updateSkillSwordSlash();
+                break;
+            case PLAYER_STATE_SWORD_DRIVE:
+                updateSkillSwordDrive();
                 break;
             case PLAYER_STATE_SWORD_VORPAL:
                 if (skillDuration >= 900) {
@@ -584,7 +634,7 @@ public class Player extends Thread {
             bytes[2] = Globals.STAT_MINHP;
             System.arraycopy(stat, 0, bytes, 3, stat.length);
             packetSender.sendAll(bytes, logic.getRoom());
-            nextHPSend = 200;
+            nextHPSend = 100;
         }
     }
 
@@ -596,9 +646,13 @@ public class Player extends Thread {
             Buff b = bEntry.getValue();
             b.update();
             if (b instanceof BuffStun) {
-                isStun = b;
+                if (isStun == null || (isStun != null && isStun.getDuration() < b.getDuration())) {
+                    isStun = b;
+                }
             } else if (b instanceof BuffKnockback) {
-                isKnockback = b;
+                if (isKnockback == null || (isKnockback != null && isKnockback.getDuration() < b.getDuration())) {
+                    isKnockback = b;
+                }
             }
             if (b.isExpired()) {
                 remove.add(bEntry.getKey());
@@ -606,6 +660,7 @@ public class Player extends Thread {
         }
         for (byte bKey : remove) {
             buffs.remove(bKey);
+            returnBuffKey(bKey);
         }
     }
 
@@ -668,6 +723,7 @@ public class Player extends Thread {
     public boolean isUsingSkill() {
         return playerState == PLAYER_STATE_SWORD_SLASH
                 || playerState == PLAYER_STATE_SWORD_VORPAL
+                || playerState == PLAYER_STATE_SWORD_DRIVE
                 || playerState == PLAYER_STATE_BOW_ARC
                 || playerState == PLAYER_STATE_BOW_POWER;
     }
@@ -678,7 +734,10 @@ public class Player extends Thread {
      * @param b New Buff
      */
     public void addBuff(Buff b) {
-        buffs.put((byte) buffs.size(), b);
+        Byte bKey = getNextBuffKey();
+        if (bKey != null) {
+            buffs.put(bKey, b);
+        }
     }
 
     private void updateJump() {
@@ -877,6 +936,16 @@ public class Player extends Thread {
                     frame = 0;
                 } else if (skillDuration == 200) {
                     frame = 4;
+                }
+                break;
+            case PLAYER_STATE_SWORD_DRIVE:
+                nextFrameTime -= Globals.LOGIC_UPDATE;
+                animState = Globals.PLAYER_STATE_ATTACK2;
+                if (nextFrameTime <= 0) {
+                    if (frame < 4) {
+                        frame++;
+                        nextFrameTime = 40000000;
+                    }
                 }
                 break;
             case PLAYER_STATE_BOW_ARC:
