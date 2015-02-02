@@ -12,6 +12,7 @@ import blockfighter.client.maps.GameMapLvl1;
 import blockfighter.client.net.PacketSender;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -117,10 +118,10 @@ public class ScreenIngame extends Screen {
             lastUpdateTime = now;
         }
 
-        /*if (now - lastRequestTime >= Globals.REQUESTALL_UPDATE) {
-         sender.sendGetAll(logic.getSelectedRoom(), myKey);
-         lastRequestTime = now;
-         }*/
+        if (now - lastRequestTime >= Globals.REQUESTALL_UPDATE) {
+            sender.sendGetAll(logic.getSelectedRoom(), myKey);
+            lastRequestTime = now;
+        }
         if (now - lastPingTime >= Globals.PING_UPDATE) {
             pID = (byte) (Math.random() * 256);
             pingTime = System.currentTimeMillis();
@@ -156,7 +157,7 @@ public class ScreenIngame extends Screen {
     private void removeParticles(ConcurrentHashMap<Integer, Particle> particles, LinkedList<Integer> remove) {
         while (!remove.isEmpty()) {
             int p = remove.pop();
-            particleKeys.add(p);
+            returnParticleKey(p);
             particles.remove(p);
         }
     }
@@ -184,7 +185,7 @@ public class ScreenIngame extends Screen {
     public void draw(Graphics2D g) {
         AffineTransform resetForm = g.getTransform();
 
-        if (players != null && myKey != -1 && players.get(myKey) != null) {
+        if (players != null && myKey != -1 && players.containsKey(myKey)) {
             g.translate(640.0 - players.get(myKey).getX(), 500.0 - players.get(myKey).getY());
         }
         map.draw(g);
@@ -203,6 +204,18 @@ public class ScreenIngame extends Screen {
                 RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
         BufferedImage hud = Globals.HUD[0];
         g.drawImage(hud, Globals.WINDOW_WIDTH / 2 - hud.getWidth() / 2, Globals.WINDOW_HEIGHT - hud.getHeight(), null);
+        if (players.containsKey(myKey)) {
+            BufferedImage hpbar = Globals.HUD[1];
+            g.drawImage(hpbar,
+                    Globals.WINDOW_WIDTH / 2 - hud.getWidth() / 2 + 2, Globals.WINDOW_HEIGHT - hud.getHeight() + 2,
+                    (int) (players.get(myKey).getStat(Globals.STAT_MINHP) / players.get(myKey).getStat(Globals.STAT_MAXHP) * 802D), 38,
+                    null);
+
+            int width = g.getFontMetrics().stringWidth((int) players.get(myKey).getStat(Globals.STAT_MINHP) + "/" + (int) players.get(myKey).getStat(Globals.STAT_MAXHP));
+            drawStringOutline(g, (int) players.get(myKey).getStat(Globals.STAT_MINHP) + "/" + (int) players.get(myKey).getStat(Globals.STAT_MAXHP), Globals.WINDOW_WIDTH / 2 - width / 2, Globals.WINDOW_HEIGHT - hud.getHeight() + 28, 2);
+            g.setColor(Color.WHITE);
+            g.drawString((int) players.get(myKey).getStat(Globals.STAT_MINHP) + "/" + (int) players.get(myKey).getStat(Globals.STAT_MAXHP), Globals.WINDOW_WIDTH / 2 - width / 2, Globals.WINDOW_HEIGHT - hud.getHeight() + 28);
+        }
         Skill[] hotkey = c.getHotkeys();
         for (int j = 0; j < hotkeySlots.length; j++) {
             if (hotkey[j] != null) {
@@ -246,6 +259,17 @@ public class ScreenIngame extends Screen {
     @Override
     public ConcurrentHashMap<Integer, Particle> getParticles() {
         return particles;
+    }
+
+    public Point getPlayerPos(byte key) {
+        if (!players.containsKey(key)) {
+            return null;
+        }
+        return new Point(players.get(key).getX(), players.get(key).getY());
+    }
+
+    public void returnParticleKey(int key) {
+        particleKeys.add(key);
     }
 
     public int getNextParticleKey() {
@@ -370,6 +394,10 @@ public class ScreenIngame extends Screen {
                 break;
             case Globals.PARTICLE_SWORD_SLASH3:
                 particles.put(key, new ParticleSwordSlash3(logic, key, x, y, facing));
+                break;
+            case Globals.PARTICLE_SWORD_DRIVE:
+                byte playerKey = data[11];
+                particles.put(key, new ParticleSwordDrive(logic, key, x, y, facing, playerKey));
                 break;
         }
     }
@@ -546,7 +574,6 @@ public class ScreenIngame extends Screen {
     public void unload() {
         Particle.unloadParticles();
         ItemEquip.unloadSprites();
-        logic.returnMenu();
     }
 
 }

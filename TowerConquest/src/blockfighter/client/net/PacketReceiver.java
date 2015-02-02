@@ -7,7 +7,7 @@ package blockfighter.client.net;
 
 import blockfighter.client.Globals;
 import blockfighter.client.LogicModule;
-import blockfighter.client.entities.particles.Particle;
+import blockfighter.client.screen.ScreenIngame;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -45,7 +45,9 @@ public class PacketReceiver extends Thread {
         } catch (IOException ex) {
         }
         System.out.println("Receiver End");
-        logic.getScreen().unload();
+        if (logic.getScreen() instanceof ScreenIngame) {
+            logic.returnMenu();
+        }
         isConnected = false;
     }
 

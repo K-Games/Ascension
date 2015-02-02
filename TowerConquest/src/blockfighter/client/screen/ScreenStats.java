@@ -32,7 +32,7 @@ public class ScreenStats extends ScreenMenu {
         addBox[5] = new Rectangle2D.Double(453, 198, 30, 23);
         resetBox = new Rectangle2D.Double(255, 570, 180, 30);
         c = l.getSelectedChar();
-        stats = c.getStats();
+        stats = c.getTotalStats();
         bs = c.getBaseStats();
     }
 

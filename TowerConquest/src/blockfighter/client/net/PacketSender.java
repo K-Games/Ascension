@@ -44,7 +44,7 @@ public class PacketSender {
         bytes[19] = temp[2];
         bytes[20] = temp[3];
 
-        double[] stats = c.getStats();
+        double[] stats = c.getTotalStats();
         temp = Globals.intToByte((int) stats[Globals.STAT_LEVEL]);
         bytes[21] = temp[0];
         bytes[22] = temp[1];

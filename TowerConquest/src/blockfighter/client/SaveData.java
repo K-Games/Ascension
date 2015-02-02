@@ -54,7 +54,7 @@ public class SaveData {
         bs[Globals.STAT_POWER] = 10000;
 
         equipment[Globals.ITEM_WEAPON] = new ItemEquip(bs, 0, 3, ItemEquip.TEMP_SWORD);
-        upgrades[0] = new ItemUpgrade(1,100000);
+        upgrades[0] = new ItemUpgrade(1, 100000);
         //initalize skill list
         skills[Skill.SWORD_CINDER] = new SkillSwordCinder();
         skills[Skill.SWORD_DRIVE] = new SkillSwordDrive();
@@ -433,7 +433,7 @@ public class SaveData {
         return baseStats;
     }
 
-    public double[] getStats() {
+    public double[] getTotalStats() {
         return totalStats;
     }
 

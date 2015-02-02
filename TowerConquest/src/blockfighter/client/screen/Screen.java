@@ -62,6 +62,6 @@ public abstract class Screen implements KeyListener, MouseListener, MouseMotionL
     public void setRenderPanel(RenderPanel r) {
         panel = r;
     }
-    
+
     public abstract void unload();
 }

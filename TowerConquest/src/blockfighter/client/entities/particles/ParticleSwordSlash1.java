@@ -10,7 +10,7 @@ public class ParticleSwordSlash1 extends Particle {
     public ParticleSwordSlash1(LogicModule l, int k, int x, int y, byte f) {
         super(l, k, x, y, f);
         frame = 0;
-        frameDuration = 20;
+        frameDuration = 25;
         duration = 200;
     }
 
@@ -19,7 +19,7 @@ public class ParticleSwordSlash1 extends Particle {
         super.update();
         frameDuration -= Globals.LOGIC_UPDATE / 1000000;
         if (frameDuration <= 0 && frame < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_SLASH1].length) {
-            frameDuration = 20;
+            frameDuration = 25;
             frame++;
         }
     }

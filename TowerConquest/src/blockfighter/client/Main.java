@@ -37,7 +37,7 @@ public class Main {
         ItemEquip.loadItemNames();
         ItemEquip.loadItemDrawOrigin();
         ItemUpgrade.loadUpgradeItems();
-        JFrame frame = new JFrame("Tower Conquest");
+        JFrame frame = new JFrame(Globals.WINDOW_TITLE);
         RenderPanel panel = new RenderPanel();
 
         final LogicModule logic = new LogicModule();

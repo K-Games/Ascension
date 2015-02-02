@@ -72,6 +72,14 @@ public abstract class Particle extends Thread {
                 Logger.getLogger(Particle.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        PARTICLE_SPRITE[Globals.PARTICLE_SWORD_DRIVE] = new BufferedImage[8];
+        for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_DRIVE].length; i++) {
+            try {
+                PARTICLE_SPRITE[Globals.PARTICLE_SWORD_DRIVE][i] = ImageIO.read(Globals.class.getResource("sprites/particle/drive/" + i + ".png"));
+            } catch (IOException ex) {
+                Logger.getLogger(Particle.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 
     public void update() {

@@ -74,7 +74,7 @@ public class LogicModule extends Thread {
         try {
             DatagramSocket socket = new DatagramSocket();
             socket.connect(InetAddress.getByName(Globals.SERVER_ADDRESS), Globals.SERVER_PORT);
-            socket.setSoTimeout(1000);
+            socket.setSoTimeout(5000);
             sender = new PacketSender(socket);
 
             receiver = new PacketReceiver(this, socket);
@@ -126,6 +126,7 @@ public class LogicModule extends Thread {
     }
 
     public void setScreen(Screen s) {
+        screen.unload();
         screen = s;
         if (!(s instanceof ScreenIngame)) {
             lastMenu = screen;

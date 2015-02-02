@@ -37,7 +37,6 @@ public abstract class GameMap {
         } catch (InterruptedException ex) {
             Logger.getLogger(ScreenInventory.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }
 
     public void updateParticles(ConcurrentHashMap<Integer, Particle> particles) {

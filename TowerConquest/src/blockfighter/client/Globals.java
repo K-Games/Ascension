@@ -1,6 +1,5 @@
 package blockfighter.client;
 
-import blockfighter.client.entities.items.ItemEquip;
 import blockfighter.client.entities.skills.Skill;
 import java.awt.Font;
 import java.awt.image.BufferedImage;
@@ -17,7 +16,8 @@ public class Globals {
 
     public final static int SERVER_PORT = 25565;
     public static String SERVER_ADDRESS = "192.168.1.2";
-
+    public final static String GAME_VERSION = "ALPHA 0";
+    public final static String WINDOW_TITLE = "Tower Conquest " + GAME_VERSION;
     public final static int WINDOW_WIDTH = 1280;
     public final static int WINDOW_HEIGHT = 720;
 
@@ -50,10 +50,11 @@ public class Globals {
 
     public final static byte RIGHT = 0, LEFT = 1, DOWN = 2, UP = 3;
 
-    public final static int NUM_PARTICLE_EFFECTS = 3;
+    public final static int NUM_PARTICLE_EFFECTS = 4;
     public final static byte PARTICLE_SWORD_SLASH1 = 0x00,
             PARTICLE_SWORD_SLASH2 = 0x01,
-            PARTICLE_SWORD_SLASH3 = 0x02;
+            PARTICLE_SWORD_SLASH3 = 0x02,
+            PARTICLE_SWORD_DRIVE = 0x03;
 
     public final static int NUM_KEYBINDS = 16,
             KEYBIND_SKILL1 = 0,
@@ -156,11 +157,8 @@ public class Globals {
             DATA_PLAYER_GET_EQUIP = 0x0D,
             DATA_PLAYER_SET_COOLDOWN = 0x0E;
 
-    public final static byte NUM_PLAYER_ACTION = 1,
-            PLAYER_ACTION_KNOCK = 0x00;
-
     public final static BufferedImage[][] CHAR_SPRITE = new BufferedImage[NUM_PLAYER_STATE][];
-    public final static BufferedImage[] HUD = new BufferedImage[1];
+    public final static BufferedImage[] HUD = new BufferedImage[2];
 
     public final static BufferedImage[] MENU_BG = new BufferedImage[5];
     public final static BufferedImage[] MENU_SMOKE = new BufferedImage[1];
@@ -286,6 +284,8 @@ public class Globals {
             CHAR_SPRITE[PLAYER_STATE_JUMP][0] = ImageIO.read(Globals.class.getResource("sprites/character/jump/0.png"));
 
             HUD[0] = ImageIO.read(Globals.class.getResource("sprites/ui/ingame/ui.png"));
+            HUD[1] = ImageIO.read(Globals.class.getResource("sprites/ui/ingame/hp.png"));
+
             for (byte i = 0; i < MENU_BG.length; i++) {
                 MENU_BG[i] = ImageIO.read(Globals.class.getResource("sprites/ui/menu/bg" + (i + 1) + ".png"));
             }

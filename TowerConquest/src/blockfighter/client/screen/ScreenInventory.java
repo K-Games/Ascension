@@ -178,7 +178,7 @@ public class ScreenInventory extends ScreenMenu {
     private void drawStats(Graphics2D g) {
         g.setFont(Globals.ARIAL_15PT);
         int statY = 440, statX = 935;
-        double[] bs = c.getBaseStats(), bonus = c.getBonusStats(), total = c.getStats();
+        double[] bs = c.getBaseStats(), bonus = c.getBonusStats(), total = c.getTotalStats();
         drawStringOutline(g, "Level: " + (int) bs[Globals.STAT_LEVEL], statX, statY, 1);
         drawStringOutline(g, "Power: " + (int) bs[Globals.STAT_POWER] + " + " + (int) bonus[Globals.STAT_POWER], statX, statY + 25, 1);
         drawStringOutline(g, "Defense: " + (int) bs[Globals.STAT_DEFENSE] + " + " + (int) bonus[Globals.STAT_DEFENSE], statX, statY + 50, 1);
