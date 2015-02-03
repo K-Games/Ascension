@@ -14,23 +14,22 @@ import java.util.Map;
  *
  * @author Ken Kwan
  */
-public class ProjSwordDrive extends ProjBase {
+public class ProjSwordVorpal extends ProjBase {
 
     private final LinkedList<Player> queue = new LinkedList<>();
 
-    public ProjSwordDrive(PacketSender b, LogicModule l, int k, Player o, double x, double y) {
+    public ProjSwordVorpal(PacketSender b, LogicModule l, int k, Player o, double x, double y) {
         super(b, l, k);
         owner = o;
         this.x = x;
         this.y = y;
         hitbox = new Rectangle2D.Double[1];
         if (owner.getFacing() == Globals.RIGHT) {
-            hitbox[0] = new Rectangle2D.Double(x - 310, y - 167, 560, 150);
+            hitbox[0] = new Rectangle2D.Double(x - 50, y - 150, 350, 113);
         } else {
-            hitbox[0] = new Rectangle2D.Double(x - 560 + 310, y - 167, 560, 150);
-
+            hitbox[0] = new Rectangle2D.Double(x - 350 + 50, y - 150, 350, 113);
         }
-        duration = 250;
+        duration = 200;
     }
 
     @Override
