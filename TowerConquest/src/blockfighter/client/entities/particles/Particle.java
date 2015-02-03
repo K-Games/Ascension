@@ -7,6 +7,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -26,6 +27,7 @@ public abstract class Particle extends Thread {
     protected final static BufferedImage[][] PARTICLE_SPRITE = new BufferedImage[NUM_PARTICLE_EFFECTS][];
     protected final int key;
     private static boolean LOADED = false;
+    protected final static Random rng = new Random();
     /**
      * Reference to Logic Module.
      */
@@ -76,6 +78,38 @@ public abstract class Particle extends Thread {
         for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_DRIVE].length; i++) {
             try {
                 PARTICLE_SPRITE[Globals.PARTICLE_SWORD_DRIVE][i] = ImageIO.read(Globals.class.getResource("sprites/particle/drive/" + i + ".png"));
+            } catch (IOException ex) {
+                Logger.getLogger(Particle.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        PARTICLE_SPRITE[Globals.PARTICLE_SWORD_VORPAL] = new BufferedImage[8];
+        for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_VORPAL].length; i++) {
+            try {
+                PARTICLE_SPRITE[Globals.PARTICLE_SWORD_VORPAL][i] = ImageIO.read(Globals.class.getResource("sprites/particle/vorpal/" + i + ".png"));
+            } catch (IOException ex) {
+                Logger.getLogger(Particle.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        PARTICLE_SPRITE[Globals.PARTICLE_SWORD_MULTI] = new BufferedImage[24];
+        for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_MULTI].length; i++) {
+            try {
+                PARTICLE_SPRITE[Globals.PARTICLE_SWORD_MULTI][i] = ImageIO.read(Globals.class.getResource("sprites/particle/multi/" + i + ".png"));
+            } catch (IOException ex) {
+                Logger.getLogger(Particle.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        PARTICLE_SPRITE[Globals.PARTICLE_SWORD_CINDER] = new BufferedImage[8];
+        for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_CINDER].length; i++) {
+            try {
+                PARTICLE_SPRITE[Globals.PARTICLE_SWORD_CINDER][i] = ImageIO.read(Globals.class.getResource("sprites/particle/cinder/" + i + ".png"));
+            } catch (IOException ex) {
+                Logger.getLogger(Particle.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        PARTICLE_SPRITE[Globals.PARTICLE_BURN] = new BufferedImage[20];
+        for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_BURN].length; i++) {
+            try {
+                PARTICLE_SPRITE[Globals.PARTICLE_BURN][i] = ImageIO.read(Globals.class.getResource("sprites/particle/burn/" + i + ".png"));
             } catch (IOException ex) {
                 Logger.getLogger(Particle.class.getName()).log(Level.SEVERE, null, ex);
             }

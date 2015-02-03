@@ -51,8 +51,9 @@ public class SaveData {
         }
         double[] bs = new double[Globals.NUM_STATS];
         bs[Globals.STAT_LEVEL] = 99999;
-        bs[Globals.STAT_POWER] = 10000;
-
+        bs[Globals.STAT_POWER] = 700;
+        bs[Globals.STAT_DEFENSE] = 700;
+        bs[Globals.STAT_SPIRIT] = 700;
         equipment[Globals.ITEM_WEAPON] = new ItemEquip(bs, 0, 3, ItemEquip.TEMP_SWORD);
         upgrades[0] = new ItemUpgrade(1, 100000);
         //initalize skill list

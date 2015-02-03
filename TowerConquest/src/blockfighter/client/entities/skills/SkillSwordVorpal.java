@@ -40,12 +40,12 @@ public class SkillSwordVorpal extends Skill {
         g.drawString("Level: " + level, x + 80, y + 50);
         g.drawString("Cooldown: " + maxCooldown / 1000 + " Seconds", x + 80, y + 70);
 
-        g.drawString("Stab rapidly 3 times over 1 second.", x + 10, y + 90);
+        g.drawString("Stab rapidly 3 times.", x + 10, y + 90);
         g.drawString("Deals 100 + " + 5 * level + "%(" + (5 * level + 100) + "%) damage per hit.", x + 10, y + 110);
         g.drawString("Critical hits deal additional 40 + " + 3 * level + "%(+" + (3 * level + 40) + "%) Critical Damage.", x + 10, y + 130);
         g.drawString("Max:", x + 10, y + 150);
         g.drawString("This attack has +40% Critical Hit Chance.", x + 10, y + 170);
-        g.drawString("Stab rapidly hit 5 times over 1 second.", x + 10, y + 190);
+        g.drawString("Stab rapidly hit 5 times.", x + 10, y + 190);
     }
 
     @Override

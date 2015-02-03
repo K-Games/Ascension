@@ -15,7 +15,8 @@ import javax.imageio.ImageIO;
 public class Globals {
 
     public final static int SERVER_PORT = 25565;
-    public static String SERVER_ADDRESS = "192.168.1.2";
+    private static boolean isPublic = false;
+    public static String SERVER_ADDRESS = (isPublic) ? "towerconquest.servegame.com" : "127.0.0.1";
     public final static String GAME_VERSION = "ALPHA 0";
     public final static String WINDOW_TITLE = "Tower Conquest " + GAME_VERSION;
     public final static int WINDOW_WIDTH = 1280;
@@ -50,11 +51,15 @@ public class Globals {
 
     public final static byte RIGHT = 0, LEFT = 1, DOWN = 2, UP = 3;
 
-    public final static int NUM_PARTICLE_EFFECTS = 4;
+    public final static int NUM_PARTICLE_EFFECTS = 8;
     public final static byte PARTICLE_SWORD_SLASH1 = 0x00,
             PARTICLE_SWORD_SLASH2 = 0x01,
             PARTICLE_SWORD_SLASH3 = 0x02,
-            PARTICLE_SWORD_DRIVE = 0x03;
+            PARTICLE_SWORD_DRIVE = 0x03,
+            PARTICLE_SWORD_VORPAL = 0x04,
+            PARTICLE_SWORD_MULTI = 0x05,
+            PARTICLE_SWORD_CINDER = 0x06,
+            PARTICLE_BURN = 0x07;
 
     public final static int NUM_KEYBINDS = 16,
             KEYBIND_SKILL1 = 0,

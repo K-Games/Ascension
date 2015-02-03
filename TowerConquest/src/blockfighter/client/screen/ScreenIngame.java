@@ -51,14 +51,12 @@ public class ScreenIngame extends Screen {
     private byte pID = 0;
     private PacketSender sender = null;
 
-    private long lastBytesTime;
     private double lastUpdateTime = 0;
     private double lastRequestTime = 50;
     private double lastQueueTime = 0;
     private double lastPingTime = 0;
     private double lastSendKeyTime = 0;
 
-    private long last100 = 0;
     private boolean[] keyDownMove = {false, false, false, false};
 
     private LogicModule logic;
@@ -86,7 +84,6 @@ public class ScreenIngame extends Screen {
     @Override
     public void update() {
         double now = System.nanoTime(); //Get time now
-        long nowMs = System.currentTimeMillis();
 
         map.update();
         if (now - lastQueueTime >= Globals.QUEUES_UPDATE) {
@@ -94,10 +91,6 @@ public class ScreenIngame extends Screen {
             lastQueueTime = now;
         }
 
-        if (lastBytesTime > 0 && nowMs - last100 >= 100) {
-            lastBytesTime -= 100;
-            last100 = nowMs;
-        }
         if (now - lastSendKeyTime >= Globals.SEND_KEYDOWN_UPDATE) {
             sender.sendMove(logic.getSelectedRoom(), myKey, Globals.UP, keyDownMove[Globals.UP]);
             sender.sendMove(logic.getSelectedRoom(), myKey, Globals.DOWN, keyDownMove[Globals.DOWN]);
@@ -212,7 +205,7 @@ public class ScreenIngame extends Screen {
                     null);
 
             int width = g.getFontMetrics().stringWidth((int) players.get(myKey).getStat(Globals.STAT_MINHP) + "/" + (int) players.get(myKey).getStat(Globals.STAT_MAXHP));
-            drawStringOutline(g, (int) players.get(myKey).getStat(Globals.STAT_MINHP) + "/" + (int) players.get(myKey).getStat(Globals.STAT_MAXHP), Globals.WINDOW_WIDTH / 2 - width / 2, Globals.WINDOW_HEIGHT - hud.getHeight() + 28, 2);
+            drawStringOutline(g, (int) players.get(myKey).getStat(Globals.STAT_MINHP) + "/" + (int) players.get(myKey).getStat(Globals.STAT_MAXHP), Globals.WINDOW_WIDTH / 2 - width / 2, Globals.WINDOW_HEIGHT - hud.getHeight() + 28, 1);
             g.setColor(Color.WHITE);
             g.drawString((int) players.get(myKey).getStat(Globals.STAT_MINHP) + "/" + (int) players.get(myKey).getStat(Globals.STAT_MAXHP), Globals.WINDOW_WIDTH / 2 - width / 2, Globals.WINDOW_HEIGHT - hud.getHeight() + 28);
         }
@@ -385,6 +378,7 @@ public class ScreenIngame extends Screen {
         byte facing = data[10];
 
         int key = getNextParticleKey();
+        byte playerKey;
         switch (particleID) {
             case Globals.PARTICLE_SWORD_SLASH1:
                 particles.put(key, new ParticleSwordSlash1(logic, key, x, y, facing));
@@ -396,8 +390,17 @@ public class ScreenIngame extends Screen {
                 particles.put(key, new ParticleSwordSlash3(logic, key, x, y, facing));
                 break;
             case Globals.PARTICLE_SWORD_DRIVE:
-                byte playerKey = data[11];
+                playerKey = data[11];
                 particles.put(key, new ParticleSwordDrive(logic, key, x, y, facing, playerKey));
+                break;
+            case Globals.PARTICLE_SWORD_VORPAL:
+                particles.put(key, new ParticleSwordVorpal(logic, key, x, y, facing));
+                break;
+            case Globals.PARTICLE_SWORD_MULTI:
+                particles.put(key, new ParticleSwordMulti(logic, key, x, y, facing));
+                break;
+            case Globals.PARTICLE_SWORD_CINDER:
+                particles.put(key, new ParticleSwordCinder(logic, key, x, y, facing));
                 break;
         }
     }
@@ -409,6 +412,10 @@ public class ScreenIngame extends Screen {
             System.arraycopy(data, 2, temp, 0, temp.length);
             players.get(key).setPlayerName(new String(temp, StandardCharsets.UTF_8).trim());
         }
+    }
+
+    public void addParticle(Particle newP) {
+        particles.put(newP.getKey(), newP);
     }
 
     public void queueData(byte[] data) {
@@ -427,14 +434,6 @@ public class ScreenIngame extends Screen {
         if (ping >= 1000) {
             ping = 9999;
         }
-    }
-
-    public void attack() {
-        lastBytesTime = 100;
-    }
-
-    public boolean canAttack() {
-        return lastBytesTime <= 0;
     }
 
     public void setKeyDown(int direction, boolean move) {

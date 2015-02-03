@@ -40,7 +40,7 @@ public class SkillSwordMulti extends Skill {
         g.drawString("Level: " + level, x + 80, y + 50);
         g.drawString("Cooldown: " + maxCooldown / 1000 + " Seconds", x + 80, y + 70);
 
-        g.drawString("Perform 6 + " + level + "(" + (6 + level) + ") strikes over 2 seconds.", x + 10, y + 90);
+        g.drawString("Perform 6 + " + level + "(" + (6 + level) + ") consecutive strikes.", x + 10, y + 90);
         g.drawString("Can be interrupted.", x + 10, y + 110);
         g.drawString("Deals 100% damage per hit.", x + 10, y + 130);
         g.drawString("Max: Invulnerable over the attack duration.", x + 10, y + 150);
@@ -51,7 +51,7 @@ public class SkillSwordMulti extends Skill {
         if (isMaxed()) {
             return "Relentless Barrage";
         }
-        return "Multi-Strike";
+        return "Whirlwind";
     }
 
 }
