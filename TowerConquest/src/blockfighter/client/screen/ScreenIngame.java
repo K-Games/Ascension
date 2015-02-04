@@ -402,6 +402,13 @@ public class ScreenIngame extends Screen {
             case Globals.PARTICLE_SWORD_CINDER:
                 particles.put(key, new ParticleSwordCinder(logic, key, x, y, facing));
                 break;
+            case Globals.PARTICLE_SWORD_TAUNT:
+                particles.put(key, new ParticleSwordTaunt(logic, key, x, y, facing));
+                break;
+            case Globals.PARTICLE_SWORD_TAUNTAURA1:
+                playerKey = data[11];
+                particles.put(key, new ParticleSwordTauntAura(logic, key, x, y, facing, playerKey));
+                break;
         }
     }
 

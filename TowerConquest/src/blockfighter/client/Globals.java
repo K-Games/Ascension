@@ -51,7 +51,7 @@ public class Globals {
 
     public final static byte RIGHT = 0, LEFT = 1, DOWN = 2, UP = 3;
 
-    public final static int NUM_PARTICLE_EFFECTS = 8;
+    public final static int NUM_PARTICLE_EFFECTS = 12;
     public final static byte PARTICLE_SWORD_SLASH1 = 0x00,
             PARTICLE_SWORD_SLASH2 = 0x01,
             PARTICLE_SWORD_SLASH3 = 0x02,
@@ -59,7 +59,10 @@ public class Globals {
             PARTICLE_SWORD_VORPAL = 0x04,
             PARTICLE_SWORD_MULTI = 0x05,
             PARTICLE_SWORD_CINDER = 0x06,
-            PARTICLE_BURN = 0x07;
+            PARTICLE_BURN = 0x07,
+            PARTICLE_SWORD_TAUNT = 0x08,
+            PARTICLE_SWORD_TAUNTAURA1 = 0x0A,
+            PARTICLE_SWORD_TAUNTAURA2 = 0x0B;
 
     public final static int NUM_KEYBINDS = 16,
             KEYBIND_SKILL1 = 0,

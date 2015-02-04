@@ -21,7 +21,9 @@ public class ParticleSwordMulti extends Particle {
         frameDuration -= Globals.LOGIC_UPDATE / 1000000;
         if (frameDuration <= 0) {
             frameDuration = 25;
-            frame++;
+            if (frame < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_MULTI].length) {
+                frame++;
+            }
         }
     }
 

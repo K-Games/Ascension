@@ -26,10 +26,11 @@ public class ParticleSwordCinder extends Particle {
                 ((ScreenIngame) logic.getScreen()).addParticle(b);
             }
         }
-        if (frameDuration <= 0 && frame < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_CINDER].length) {
+        if (frameDuration <= 0) {
             frameDuration = 50;
-            frame++;
-
+            if (frame < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_CINDER].length) {
+                frame++;
+            }
         }
     }
 

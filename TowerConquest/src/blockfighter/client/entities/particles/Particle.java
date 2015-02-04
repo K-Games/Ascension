@@ -40,6 +40,9 @@ public abstract class Particle extends Thread {
 
     public static void unloadParticles() {
         for (int i = 0; i < PARTICLE_SPRITE.length; i++) {
+            for (int j = 0; j<PARTICLE_SPRITE[i].length;j++){
+                PARTICLE_SPRITE[i][j] = null;
+            }
             PARTICLE_SPRITE[i] = null;
         }
         LOADED = false;
@@ -110,6 +113,30 @@ public abstract class Particle extends Thread {
         for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_BURN].length; i++) {
             try {
                 PARTICLE_SPRITE[Globals.PARTICLE_BURN][i] = ImageIO.read(Globals.class.getResource("sprites/particle/burn/" + i + ".png"));
+            } catch (IOException ex) {
+                Logger.getLogger(Particle.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        PARTICLE_SPRITE[Globals.PARTICLE_SWORD_TAUNT] = new BufferedImage[16];
+        for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_TAUNT].length; i++) {
+            try {
+                PARTICLE_SPRITE[Globals.PARTICLE_SWORD_TAUNT][i] = ImageIO.read(Globals.class.getResource("sprites/particle/taunt/" + i + ".png"));
+            } catch (IOException ex) {
+                Logger.getLogger(Particle.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        PARTICLE_SPRITE[Globals.PARTICLE_SWORD_TAUNTAURA1] = new BufferedImage[20];
+        for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_TAUNTAURA1].length; i++) {
+            try {
+                PARTICLE_SPRITE[Globals.PARTICLE_SWORD_TAUNTAURA1][i] = ImageIO.read(Globals.class.getResource("sprites/particle/tauntaura/" + i + ".png"));
+            } catch (IOException ex) {
+                Logger.getLogger(Particle.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        PARTICLE_SPRITE[Globals.PARTICLE_SWORD_TAUNTAURA2] = new BufferedImage[10];
+        for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_TAUNTAURA2].length; i++) {
+            try {
+                PARTICLE_SPRITE[Globals.PARTICLE_SWORD_TAUNTAURA2][i] = ImageIO.read(Globals.class.getResource("sprites/particle/tauntaura2/" + i + ".png"));
             } catch (IOException ex) {
                 Logger.getLogger(Particle.class.getName()).log(Level.SEVERE, null, ex);
             }

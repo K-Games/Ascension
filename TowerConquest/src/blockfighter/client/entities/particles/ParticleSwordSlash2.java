@@ -18,9 +18,11 @@ public class ParticleSwordSlash2 extends Particle {
     public void update() {
         super.update();
         frameDuration -= Globals.LOGIC_UPDATE / 1000000;
-        if (frameDuration <= 0 && frame < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_SLASH3].length) {
+        if (frameDuration <= 0) {
             frameDuration = 25;
-            frame++;
+            if (frame < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_SLASH2].length) {
+                frame++;
+            }
         }
     }
 
