@@ -14,11 +14,18 @@ import java.awt.geom.Rectangle2D;
 public interface Boss {
 
     /**
+     * Get the key of this boss
+     *
+     * @return Byte
+     */
+    public abstract byte getKey();
+
+    /**
      * Return boss's current X position.
      *
      * @return X in double
      */
-    public double getX();
+    public abstract double getX();
 
     /**
      * Return this boss's current Y position.
@@ -26,6 +33,8 @@ public interface Boss {
      * @return Y in double
      */
     public abstract double getY();
+
+    public abstract byte getAnimState();
 
     /**
      * Return this boss's current state.
@@ -63,21 +72,38 @@ public interface Boss {
      * @param x New x location in double
      * @param y New y location in double
      */
-    public void setPos(double x, double y);
+    public abstract void setPos(double x, double y);
 
     /**
      * Set change in Y on the next tick.
      *
      * @param speed Distance in double
      */
-    public void setYSpeed(double speed);
+    public abstract void setYSpeed(double speed);
 
     /**
      * Set change in X on the next tick.
      *
      * @param speed Distance in double
      */
-    public void setXSpeed(double speed);
+    public abstract void setXSpeed(double speed);
+
+    /**
+     * Set player facing direction.
+     * <p>
+     * Direction constants in Globals
+     * </p>
+     *
+     * @param f Direction in byte
+     */
+    public abstract void setFacing(byte f);
+
+    /**
+     * Set state the boss.
+     *
+     * @param newState State in byte
+     */
+    public abstract void setBossState(byte newState);
 
     /**
      * Updates all logic of this boss.
@@ -85,7 +111,25 @@ public interface Boss {
      * Must be called every tick. Specific logic updates are separated into other methods. Specific logic updates must be private.
      * </p>
      */
-    public void update();
+    public abstract void update();
+
+    public abstract void updateBossState();
+
+    public abstract void updateHP();
+
+    public abstract void updateBuffs();
+
+    public abstract void updateFall();
+
+    public abstract boolean updateX(double change);
+
+    public abstract boolean updateY(double change);
+
+    public abstract void queueDamage(int damage);
+
+    public abstract void queueHeal(int heal);
+
+    public abstract void queueBossState(byte newState);
 
     /**
      * Check if a rectangle intersects with this boss's hitbox
@@ -110,23 +154,6 @@ public interface Boss {
     public abstract boolean isKnockback();
 
     /**
-     * Set player facing direction.
-     * <p>
-     * Direction constants in Globals
-     * </p>
-     *
-     * @param f Direction in byte
-     */
-    public abstract void setFacing(byte f);
-
-    /**
-     * Set state the boss.
-     *
-     * @param newState State in byte
-     */
-    public abstract void setBossState(byte newState);
-
-    /**
      * Add buff/debuff to this boss
      *
      * @param b New buff
@@ -145,13 +172,6 @@ public interface Boss {
     public abstract void sendPos();
 
     /**
-     * Get the key of this boss
-     *
-     * @return Byte
-     */
-    public abstract byte getKey();
-
-    /**
      * Send the boss's current facing direction to every connected player
      * <p>
      * Facing uses direction constants in Globals.<br/>
@@ -159,7 +179,7 @@ public interface Boss {
      * <br/>Byte sent: 0 - Data type 1 - Key 2 - Facing direction
      * </p>
      */
-    public void sendFacing();
+    public abstract void sendFacing();
 
     /**
      * Send the boss's current state(for animation) and current frame of animation to every connected player
@@ -169,6 +189,6 @@ public interface Boss {
      * Byte sent: 0 - Data type 1 - Key 2 - Player state 3 - Current frame
      * </p>
      */
-    public void sendState();
+    public abstract void sendState();
 
 }

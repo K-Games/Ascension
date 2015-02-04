@@ -5,7 +5,7 @@ package blockfighter.server.entities.player.skills;
  * @author Ken Kwan
  */
 public abstract class Skill {
-
+    protected byte reqWeapon;
     protected byte skillCode;
     protected byte level;
     protected long cooldown;
@@ -77,5 +77,9 @@ public abstract class Skill {
 
     public boolean isMaxed() {
         return level == 30;
+    }
+    
+    public boolean canCast(byte weaponType){
+        return weaponType == reqWeapon;
     }
 }

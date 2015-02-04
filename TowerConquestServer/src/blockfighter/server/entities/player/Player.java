@@ -8,11 +8,7 @@ import blockfighter.server.entities.buff.Buff;
 import blockfighter.server.entities.buff.BuffKnockback;
 import blockfighter.server.entities.buff.BuffStun;
 import blockfighter.server.entities.player.skills.*;
-import blockfighter.server.entities.proj.ProjSwordCinder;
-import blockfighter.server.entities.proj.ProjSwordDrive;
-import blockfighter.server.entities.proj.ProjSwordMulti;
-import blockfighter.server.entities.proj.ProjSwordSlash;
-import blockfighter.server.entities.proj.ProjSwordVorpal;
+import blockfighter.server.entities.proj.*;
 
 import java.awt.geom.Rectangle2D;
 import java.net.InetAddress;
@@ -449,7 +445,7 @@ public class Player extends Thread {
         byte[] data = skillUseQueue.poll();
         skillUseQueue.clear();
         if (data != null && !isStunned() && !isKnockback()) {
-            if (skills.containsKey(data[3]) && skills.get(data[3]).getCooldown() <= 0) {
+            if (skills.containsKey(data[3]) && skills.get(data[3]).getCooldown() <= 0 && skills.get(data[3]).canCast(getItemType(equip[Globals.ITEM_WEAPON]))) {
                 skillDuration = 0;
                 skillCounter = 0;
                 setXSpeed(0);
@@ -481,6 +477,12 @@ public class Player extends Thread {
                         break;
                     case Skill.SWORD_CINDER:
                         queuePlayerState(PLAYER_STATE_SWORD_CINDER);
+                        skills.get(data[3]).setCooldown();
+                        sendCooldown(data);
+                        nextFrameTime = 40000000;
+                        break;
+                    case Skill.SWORD_TAUNT:
+                        queuePlayerState(PLAYER_STATE_SWORD_TAUNT);
                         skills.get(data[3]).setCooldown();
                         sendCooldown(data);
                         nextFrameTime = 40000000;
@@ -589,6 +591,38 @@ public class Player extends Thread {
         }
     }
 
+    private void updateSkillSwordTaunt() {
+        if (skillDuration == 0) {
+            byte[] bytes = new byte[Globals.PACKET_BYTE * 4 + Globals.PACKET_INT * 2];
+            bytes[0] = Globals.DATA_PARTICLE_EFFECT;
+            bytes[1] = Globals.PARTICLE_SWORD_TAUNTAURA1;
+            bytes[10] = facing;
+            bytes[11] = key;
+            packetSender.sendAll(bytes, logic.getRoom());
+        } else if (skillDuration == 50) {
+            ProjSwordTaunt proj = new ProjSwordTaunt(packetSender, logic, logic.getNextProjKey(), this, x, y);
+            logic.queueAddProj(proj);
+            byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT * 2];
+            bytes[0] = Globals.DATA_PARTICLE_EFFECT;
+            bytes[1] = Globals.PARTICLE_SWORD_TAUNT;
+            byte[] posXInt = Globals.intToByte((int) proj.getHitbox()[0].getX());
+            bytes[2] = posXInt[0];
+            bytes[3] = posXInt[1];
+            bytes[4] = posXInt[2];
+            bytes[5] = posXInt[3];
+            byte[] posYInt = Globals.intToByte((int) proj.getHitbox()[0].getY());
+            bytes[6] = posYInt[0];
+            bytes[7] = posYInt[1];
+            bytes[8] = posYInt[2];
+            bytes[9] = posYInt[3];
+            bytes[10] = facing;
+            packetSender.sendAll(bytes, logic.getRoom());
+        }
+        if (skillDuration >= 500) {
+            setPlayerState(PLAYER_STATE_STAND);
+        }
+    }
+
     private void updateSkillSwordMulti() {
         int numHits = skills.get(Skill.SWORD_MULTI).getLevel() + 6;
         if (skillCounter == numHits) {
@@ -663,6 +697,9 @@ public class Player extends Thread {
                 break;
             case PLAYER_STATE_SWORD_CINDER:
                 updateSkillSwordCinder();
+                break;
+            case PLAYER_STATE_SWORD_TAUNT:
+                updateSkillSwordTaunt();
                 break;
             case PLAYER_STATE_BOW_ARC:
                 if (skillDuration >= 500) {
@@ -1067,6 +1104,14 @@ public class Player extends Thread {
             case PLAYER_STATE_SWORD_CINDER:
                 nextFrameTime -= Globals.LOGIC_UPDATE;
                 animState = Globals.PLAYER_STATE_ATTACK1;
+                if (nextFrameTime <= 0 && frame < 4) {
+                    frame++;
+                    nextFrameTime = 40000000;
+                }
+                break;
+            case PLAYER_STATE_SWORD_TAUNT:
+                nextFrameTime -= Globals.LOGIC_UPDATE;
+                animState = Globals.PLAYER_STATE_ATTACK2;
                 if (nextFrameTime <= 0 && frame < 4) {
                     frame++;
                     nextFrameTime = 40000000;
