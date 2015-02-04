@@ -28,22 +28,16 @@ public class ItemEquip implements Item {
     public final static int TEMP_RING = 900000;
     public final static int TEMP_AMULET = 1000000;
 
-    public final static double UPGRADE_CRITCHANCE = 0.0005,
-            UPGRADE_CRITDMG = 0.02,
+    public final static double UPGRADE_CRITCHANCE = 0.0005,//0.05%
+            UPGRADE_CRITDMG = 0.02, //2%
             UPGRADE_REGEN = 3,
             UPGRADE_ARMOR = 6;
+
     public final static int[] ITEM_CODES = {
-        TEMP_SWORD,
-        TEMP_HEAD,
-        TEMP_CHEST,
-        TEMP_PANTS,
-        TEMP_SHOULDER,
-        TEMP_GLOVE,
-        TEMP_SHOE,
-        TEMP_BELT,
-        TEMP_RING,
-        TEMP_AMULET,
-        TEMP_BLADE, TEMP_SHIELD};
+        TEMP_SWORD, TEMP_HEAD, TEMP_CHEST,
+        TEMP_PANTS, TEMP_SHOULDER, TEMP_GLOVE,
+        TEMP_SHOE, TEMP_BELT, TEMP_RING,
+        TEMP_AMULET, TEMP_BLADE, TEMP_SHIELD, TEMP_BOW};
 
     private final static HashMap<Integer, String> ITEM_NAMES = new HashMap<>(ITEM_CODES.length);
     private final static HashMap<Integer, BufferedImage> ITEM_ICONS = new HashMap<>(ITEM_CODES.length);
@@ -52,11 +46,11 @@ public class ItemEquip implements Item {
 
     public final static byte TIER_COMMON = 0,
             TIER_UNCOMMON = 1,
-            TIER_RARE = 2, //.15(15%)-.5(50%) bonus
-            TIER_RUNIC = 3,//.51-.8
-            TIER_LEGENDARY = 4,//.81-.95
-            TIER_ARCHAIC = 5,//.96-1.1
-            TIER_DIVINE = 6;//1.1+
+            TIER_RARE = 2,      //.15(15%)-.5(50%) bonus
+            TIER_RUNIC = 3,     //.51-.8
+            TIER_LEGENDARY = 4, //.81-.95
+            TIER_ARCHAIC = 5,   //.96-1.1
+            TIER_DIVINE = 6;    //1.1+
 
     protected double[] baseStats = new double[Globals.NUM_STATS],
             totalStats = new double[Globals.NUM_STATS];
@@ -154,6 +148,7 @@ public class ItemEquip implements Item {
         ITEM_NAMES.put(TEMP_AMULET, "Amulet");
         ITEM_NAMES.put(TEMP_BLADE, "Blade");
         ITEM_NAMES.put(TEMP_SHIELD, "Shield");
+        ITEM_NAMES.put(TEMP_BOW, "Bow");
     }
 
     public static void loadItemDrawOrigin() {
@@ -164,6 +159,11 @@ public class ItemEquip implements Item {
         ITEM_ORIGINPOINT.put(TEMP_SWORD + "_" + Globals.PLAYER_STATE_ATTACK2, new Point(17, -117));
         ITEM_ORIGINPOINT.put(TEMP_SWORD + "_" + Globals.PLAYER_STATE_ATTACKOFF1, new Point(25, -105));
         ITEM_ORIGINPOINT.put(TEMP_SWORD + "_" + Globals.PLAYER_STATE_ATTACKOFF2, new Point(10, -135));
+        
+        ITEM_ORIGINPOINT.put(TEMP_BOW + "_" + Globals.PLAYER_STATE_STAND, new Point(-111, -122));
+        ITEM_ORIGINPOINT.put(TEMP_BOW + "_" + Globals.PLAYER_STATE_WALK, new Point(-115, -177));
+        ITEM_ORIGINPOINT.put(TEMP_BOW + "_" + Globals.PLAYER_STATE_JUMP, new Point(-65, -165));
+        ITEM_ORIGINPOINT.put(TEMP_BOW + "_" + Globals.PLAYER_STATE_ATTACKBOW, new Point(-25, -185));
     }
 
     public double[] getTotalStats() {
@@ -192,7 +192,6 @@ public class ItemEquip implements Item {
     }
 
     private void drawMenu(Graphics2D g, int x, int y) {
-        //Draw Icon at location x, y
         if (ITEM_ICONS.containsKey(itemCode)) {
             BufferedImage sprite = ITEM_ICONS.get(itemCode);
             g.drawImage(sprite, x, y, null);
@@ -200,7 +199,6 @@ public class ItemEquip implements Item {
             g.setFont(Globals.ARIAL_15PT);
             g.drawString("PH", x + 20, y + 30);
         }
-
     }
 
     public void drawIngame(Graphics2D g, int x, int y, byte state, byte frame, byte facing) {

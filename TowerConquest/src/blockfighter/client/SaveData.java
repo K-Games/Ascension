@@ -54,7 +54,8 @@ public class SaveData {
         bs[Globals.STAT_POWER] = 700;
         bs[Globals.STAT_DEFENSE] = 700;
         bs[Globals.STAT_SPIRIT] = 700;
-        equipment[Globals.ITEM_WEAPON] = new ItemEquip(bs, 0, 3, ItemEquip.TEMP_SWORD);
+        equipment[Globals.ITEM_WEAPON] = new ItemEquip(bs, 0, 3, ItemEquip.TEMP_BOW);
+        equipment[Globals.ITEM_OFFHAND] = new ItemEquip(bs, 0, 3, ItemEquip.TEMP_SWORD);
         upgrades[0] = new ItemUpgrade(1, 100000);
         //initalize skill list
         skills[Skill.SWORD_CINDER] = new SkillSwordCinder();

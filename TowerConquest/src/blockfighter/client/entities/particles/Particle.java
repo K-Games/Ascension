@@ -57,7 +57,7 @@ public abstract class Particle extends Thread {
         for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_SLASH1].length; i++) {
             try {
                 PARTICLE_SPRITE[Globals.PARTICLE_SWORD_SLASH1][i] = ImageIO.read(Globals.class.getResource("sprites/particle/slash1/" + i + ".png"));
-            } catch (IOException ex) {
+            } catch (Exception ex) {
                 Logger.getLogger(Particle.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -65,7 +65,7 @@ public abstract class Particle extends Thread {
         for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_SLASH2].length; i++) {
             try {
                 PARTICLE_SPRITE[Globals.PARTICLE_SWORD_SLASH2][i] = ImageIO.read(Globals.class.getResource("sprites/particle/slash2/" + i + ".png"));
-            } catch (IOException ex) {
+            } catch (Exception ex) {
                 Logger.getLogger(Particle.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -73,7 +73,7 @@ public abstract class Particle extends Thread {
         for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_SLASH3].length; i++) {
             try {
                 PARTICLE_SPRITE[Globals.PARTICLE_SWORD_SLASH3][i] = ImageIO.read(Globals.class.getResource("sprites/particle/slash3/" + i + ".png"));
-            } catch (IOException ex) {
+            } catch (Exception ex) {
                 Logger.getLogger(Particle.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -81,7 +81,7 @@ public abstract class Particle extends Thread {
         for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_DRIVE].length; i++) {
             try {
                 PARTICLE_SPRITE[Globals.PARTICLE_SWORD_DRIVE][i] = ImageIO.read(Globals.class.getResource("sprites/particle/drive/" + i + ".png"));
-            } catch (IOException ex) {
+            } catch (Exception ex) {
                 Logger.getLogger(Particle.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -89,7 +89,7 @@ public abstract class Particle extends Thread {
         for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_VORPAL].length; i++) {
             try {
                 PARTICLE_SPRITE[Globals.PARTICLE_SWORD_VORPAL][i] = ImageIO.read(Globals.class.getResource("sprites/particle/vorpal/" + i + ".png"));
-            } catch (IOException ex) {
+            } catch (Exception ex) {
                 Logger.getLogger(Particle.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -97,7 +97,7 @@ public abstract class Particle extends Thread {
         for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_MULTI].length; i++) {
             try {
                 PARTICLE_SPRITE[Globals.PARTICLE_SWORD_MULTI][i] = ImageIO.read(Globals.class.getResource("sprites/particle/multi/" + i + ".png"));
-            } catch (IOException ex) {
+            } catch (Exception ex) {
                 Logger.getLogger(Particle.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -105,7 +105,7 @@ public abstract class Particle extends Thread {
         for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_CINDER].length; i++) {
             try {
                 PARTICLE_SPRITE[Globals.PARTICLE_SWORD_CINDER][i] = ImageIO.read(Globals.class.getResource("sprites/particle/cinder/" + i + ".png"));
-            } catch (IOException ex) {
+            } catch (Exception ex) {
                 Logger.getLogger(Particle.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -113,7 +113,7 @@ public abstract class Particle extends Thread {
         for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_BURN].length; i++) {
             try {
                 PARTICLE_SPRITE[Globals.PARTICLE_BURN][i] = ImageIO.read(Globals.class.getResource("sprites/particle/burn/" + i + ".png"));
-            } catch (IOException ex) {
+            } catch (Exception ex) {
                 Logger.getLogger(Particle.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -121,7 +121,7 @@ public abstract class Particle extends Thread {
         for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_TAUNT].length; i++) {
             try {
                 PARTICLE_SPRITE[Globals.PARTICLE_SWORD_TAUNT][i] = ImageIO.read(Globals.class.getResource("sprites/particle/taunt/" + i + ".png"));
-            } catch (IOException ex) {
+            } catch (Exception ex) {
                 Logger.getLogger(Particle.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -129,7 +129,7 @@ public abstract class Particle extends Thread {
         for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_TAUNTAURA1].length; i++) {
             try {
                 PARTICLE_SPRITE[Globals.PARTICLE_SWORD_TAUNTAURA1][i] = ImageIO.read(Globals.class.getResource("sprites/particle/tauntaura/" + i + ".png"));
-            } catch (IOException ex) {
+            } catch (Exception ex) {
                 Logger.getLogger(Particle.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -137,7 +137,7 @@ public abstract class Particle extends Thread {
         for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_TAUNTAURA2].length; i++) {
             try {
                 PARTICLE_SPRITE[Globals.PARTICLE_SWORD_TAUNTAURA2][i] = ImageIO.read(Globals.class.getResource("sprites/particle/tauntaura2/" + i + ".png"));
-            } catch (IOException ex) {
+            } catch (Exception ex) {
                 Logger.getLogger(Particle.class.getName()).log(Level.SEVERE, null, ex);
             }
         }

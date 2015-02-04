@@ -49,11 +49,13 @@ public class ParticleSwordTauntAura extends Particle {
             return;
         }
         Point p = ((ScreenIngame) logic.getScreen()).getPlayerPos(player);
-        x = p.x;
-        y = p.y;
+        if (p != null) {
+            x = p.x;
+            y = p.y;
+        }
         BufferedImage sprite = PARTICLE_SPRITE[Globals.PARTICLE_SWORD_TAUNTAURA1][frame];
         int drawSrcX = x - sprite.getWidth() / 2;
-        int drawSrcY = y - sprite.getHeight()+20;
+        int drawSrcY = y - sprite.getHeight() + 20;
         int drawDscY = drawSrcY + sprite.getHeight();
         int drawDscX = x + sprite.getWidth() / 2;
         g.drawImage(sprite, drawSrcX, drawSrcY, drawDscX, drawDscY, 0, 0, sprite.getWidth(), sprite.getHeight(), null);

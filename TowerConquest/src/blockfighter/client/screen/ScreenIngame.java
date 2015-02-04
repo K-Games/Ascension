@@ -77,6 +77,12 @@ public class ScreenIngame extends Screen {
         for (int key = 0; key < numParticleKeys; key++) {
             particleKeys.add(key);
         }
+        Skill[] skills = c.getSkills();
+        for (Skill skill : skills) {
+            if (skill != null) {
+                skill.resetCooldown();
+            }
+        }
         map = new GameMapLvl1();
         Particle.loadParticles();
     }

@@ -42,10 +42,12 @@ public class ParticleSwordDrive extends Particle {
             return;
         }
         Point p = ((ScreenIngame) logic.getScreen()).getPlayerPos(player);
-        if (facing == Globals.RIGHT) {
-            x = p.x - 310;
-        } else {
-            x = p.x - 560 + 310;
+        if (p != null) {
+            if (facing == Globals.RIGHT) {
+                x = p.x - 310;
+            } else {
+                x = p.x - 560 + 310;
+            }
         }
         y = p.y - 167;
         BufferedImage sprite = PARTICLE_SPRITE[Globals.PARTICLE_SWORD_DRIVE][frame];
