@@ -80,6 +80,6 @@ public abstract class Skill {
     }
     
     public boolean canCast(byte weaponType){
-        return weaponType == reqWeapon;
+        return weaponType == reqWeapon && cooldown <= 0 ;
     }
 }

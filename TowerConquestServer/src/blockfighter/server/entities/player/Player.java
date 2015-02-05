@@ -212,6 +212,10 @@ public class Player extends Thread {
         return equip;
     }
 
+    public int getSkillLevel(byte skillCode) {
+        return skills.get(skillCode).getLevel();
+    }
+
     /**
      * Set this player's movement when server receives packet that key is pressed.
      *
@@ -445,10 +449,9 @@ public class Player extends Thread {
         byte[] data = skillUseQueue.poll();
         skillUseQueue.clear();
         if (data != null && !isStunned() && !isKnockback()) {
-            if (skills.containsKey(data[3]) && skills.get(data[3]).getCooldown() <= 0 && skills.get(data[3]).canCast(getItemType(equip[Globals.ITEM_WEAPON]))) {
+            if (skills.containsKey(data[3]) && skills.get(data[3]).canCast(getItemType(equip[Globals.ITEM_WEAPON]))) {
                 skillDuration = 0;
                 skillCounter = 0;
-                setXSpeed(0);
                 switch (data[3]) {
                     case Skill.SWORD_SLASH:
                         queuePlayerState(PLAYER_STATE_SWORD_SLASH);
@@ -499,7 +502,18 @@ public class Player extends Thread {
                         sendCooldown(data);
                         nextFrameTime = 40000000;
                         break;
-
+                    case Skill.BOW_RAPID:
+                        queuePlayerState(PLAYER_STATE_BOW_RAPID);
+                        skills.get(data[3]).setCooldown();
+                        sendCooldown(data);
+                        nextFrameTime = 20000000;
+                        break;
+                    case Skill.BOW_VOLLEY:
+                        queuePlayerState(PLAYER_STATE_BOW_VOLLEY);
+                        skills.get(data[3]).setCooldown();
+                        sendCooldown(data);
+                        nextFrameTime = 0;
+                        break;
                 }
             }
         }
@@ -533,7 +547,7 @@ public class Player extends Thread {
             packetSender.sendAll(bytes, logic.getRoom());
         }
 
-        if (skillDuration >= 900) {
+        if (skillDuration >= 700) {
             setPlayerState(PLAYER_STATE_STAND);
         }
     }
@@ -648,7 +662,7 @@ public class Player extends Thread {
             packetSender.sendAll(bytes, logic.getRoom());
             skillCounter++;
         }
-        if (skillDuration >= numHits * 50 + 700 || isStunned() || isKnockback()) {
+        if (skillDuration >= numHits * 50 + 600 || isStunned() || isKnockback()) {
             setPlayerState(PLAYER_STATE_STAND);
         }
     }
@@ -678,6 +692,146 @@ public class Player extends Thread {
         }
     }
 
+    private void updateSkillBowArc() {
+        if (skillDuration == 100) {
+            ProjBowArc proj = new ProjBowArc(packetSender, logic, logic.getNextProjKey(), this, x, y);
+            logic.queueAddProj(proj);
+            byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT * 2];
+            bytes[0] = Globals.DATA_PARTICLE_EFFECT;
+            bytes[1] = Globals.PARTICLE_BOW_ARC;
+            byte[] posXInt = Globals.intToByte((int) proj.getHitbox()[0].getX());
+            bytes[2] = posXInt[0];
+            bytes[3] = posXInt[1];
+            bytes[4] = posXInt[2];
+            bytes[5] = posXInt[3];
+            byte[] posYInt = Globals.intToByte((int) proj.getHitbox()[0].getY());
+            bytes[6] = posYInt[0];
+            bytes[7] = posYInt[1];
+            bytes[8] = posYInt[2];
+            bytes[9] = posYInt[3];
+            bytes[10] = facing;
+            packetSender.sendAll(bytes, logic.getRoom());
+        }
+        if (skillDuration >= 500) {
+            setPlayerState(PLAYER_STATE_STAND);
+        }
+    }
+
+    private void updateSkillBowRapid() {
+        if (skillDuration == 150 || skillDuration == 300 || skillDuration == 450) {
+            double projY = y;
+            if (skillDuration == 150) {
+                projY = y - 20;
+            } else if (skillDuration == 450) {
+                projY = y + 20;
+            }
+            ProjBowRapid proj = new ProjBowRapid(packetSender, logic, logic.getNextProjKey(), this, x, projY);
+            logic.queueAddProj(proj);
+            byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT * 2];
+            bytes[0] = Globals.DATA_PARTICLE_EFFECT;
+            bytes[1] = Globals.PARTICLE_BOW_RAPID;
+            byte[] posXInt = Globals.intToByte((int) proj.getHitbox()[0].getX());
+            bytes[2] = posXInt[0];
+            bytes[3] = posXInt[1];
+            bytes[4] = posXInt[2];
+            bytes[5] = posXInt[3];
+            byte[] posYInt = Globals.intToByte((int) proj.getHitbox()[0].getY());
+            bytes[6] = posYInt[0];
+            bytes[7] = posYInt[1];
+            bytes[8] = posYInt[2];
+            bytes[9] = posYInt[3];
+            bytes[10] = facing;
+            packetSender.sendAll(bytes, logic.getRoom());
+        }
+        if (skillDuration >= 800) {
+            setPlayerState(PLAYER_STATE_STAND);
+        }
+    }
+
+    private void updateSkillBowVolley() {
+        if (skillDuration % 100 == 0 && skillCounter < 20) {
+            ProjBowVolley proj = new ProjBowVolley(packetSender, logic, logic.getNextProjKey(), this, x, y -10+ rng.nextInt(40));
+            logic.queueAddProj(proj);
+            byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT * 2];
+            bytes[0] = Globals.DATA_PARTICLE_EFFECT;
+            bytes[1] = Globals.PARTICLE_BOW_VOLLEYARROW;
+            byte[] posXInt = Globals.intToByte((int) proj.getHitbox()[0].getX());
+            bytes[2] = posXInt[0];
+            bytes[3] = posXInt[1];
+            bytes[4] = posXInt[2];
+            bytes[5] = posXInt[3];
+            byte[] posYInt = Globals.intToByte((int) proj.getHitbox()[0].getY());
+            bytes[6] = posYInt[0];
+            bytes[7] = posYInt[1];
+            bytes[8] = posYInt[2];
+            bytes[9] = posYInt[3];
+            bytes[10] = facing;
+            packetSender.sendAll(bytes, logic.getRoom());
+
+            bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT * 2];
+            bytes[0] = Globals.DATA_PARTICLE_EFFECT;
+            bytes[1] = Globals.PARTICLE_BOW_VOLLEYBOW;
+            posXInt = Globals.intToByte((int) x);
+            bytes[2] = posXInt[0];
+            bytes[3] = posXInt[1];
+            bytes[4] = posXInt[2];
+            bytes[5] = posXInt[3];
+            posYInt = Globals.intToByte((int) y);
+            bytes[6] = posYInt[0];
+            bytes[7] = posYInt[1];
+            bytes[8] = posYInt[2];
+            bytes[9] = posYInt[3];
+            bytes[10] = facing;
+            packetSender.sendAll(bytes, logic.getRoom());
+            skillCounter++;
+        }
+        if (skillDuration >= 2100 || isStunned() || isKnockback()) {
+            setPlayerState(PLAYER_STATE_STAND);
+        }
+    }
+
+    private void updateSkillBowPower() {
+        if (skillDuration <= 400 && skillDuration % 50 == 0) {
+            //Charging particles
+            byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT * 2];
+            bytes[0] = Globals.DATA_PARTICLE_EFFECT;
+            bytes[1] = Globals.PARTICLE_BOW_POWERCHARGE;
+            byte[] posXInt = Globals.intToByte((int) x + ((facing == Globals.RIGHT) ? 75 : -75));
+            bytes[2] = posXInt[0];
+            bytes[3] = posXInt[1];
+            bytes[4] = posXInt[2];
+            bytes[5] = posXInt[3];
+            byte[] posYInt = Globals.intToByte((int) y - 250);
+            bytes[6] = posYInt[0];
+            bytes[7] = posYInt[1];
+            bytes[8] = posYInt[2];
+            bytes[9] = posYInt[3];
+            bytes[10] = facing;
+            packetSender.sendAll(bytes, logic.getRoom());
+        } else if (skillDuration == 800) {
+            ProjBowPower proj = new ProjBowPower(packetSender, logic, logic.getNextProjKey(), this, x, y);
+            logic.queueAddProj(proj);
+            byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT * 2];
+            bytes[0] = Globals.DATA_PARTICLE_EFFECT;
+            bytes[1] = Globals.PARTICLE_BOW_POWER;
+            byte[] posXInt = Globals.intToByte((int) proj.getHitbox()[0].getX());
+            bytes[2] = posXInt[0];
+            bytes[3] = posXInt[1];
+            bytes[4] = posXInt[2];
+            bytes[5] = posXInt[3];
+            byte[] posYInt = Globals.intToByte((int) proj.getHitbox()[0].getY());
+            bytes[6] = posYInt[0];
+            bytes[7] = posYInt[1];
+            bytes[8] = posYInt[2];
+            bytes[9] = posYInt[3];
+            bytes[10] = facing;
+            packetSender.sendAll(bytes, logic.getRoom());
+        }
+        if (skillDuration >= 1400 || (skillDuration < 800 && (isStunned() || isKnockback()))) {
+            setPlayerState(PLAYER_STATE_STAND);
+        }
+    }
+
     private void updateSkillUse() {
         if (!isKnockback()) {
             setXSpeed(0);
@@ -702,19 +856,16 @@ public class Player extends Thread {
                 updateSkillSwordTaunt();
                 break;
             case PLAYER_STATE_BOW_ARC:
-                if (skillDuration >= 500) {
-                    setPlayerState(PLAYER_STATE_STAND);
-                }
-                break;
-            case PLAYER_STATE_BOW_POWER:
-                if (skillDuration >= 1000 || isStunned() || isKnockback()) {
-                    setPlayerState(PLAYER_STATE_STAND);
-                }
+                updateSkillBowArc();
                 break;
             case PLAYER_STATE_BOW_RAPID:
-                if (skillDuration >= 1000) {
-                    setPlayerState(PLAYER_STATE_STAND);
-                }
+                updateSkillBowRapid();
+                break;
+            case PLAYER_STATE_BOW_POWER:
+                updateSkillBowPower();
+                break;
+            case PLAYER_STATE_BOW_VOLLEY:
+                updateSkillBowVolley();
                 break;
         }
     }
@@ -729,6 +880,7 @@ public class Player extends Thread {
         while (!damageQueue.isEmpty()) {
             Integer dmg = damageQueue.poll();
             if (dmg != null) {
+                dmg = (int) (dmg * stats[Globals.STAT_DAMAGEREDUCT]);
                 stats[Globals.STAT_MINHP] -= dmg;
                 nextHPSend = 0;
             }
@@ -789,9 +941,6 @@ public class Player extends Thread {
 
     public double rollDamage() {
         double dmg = rng.nextInt((int) (stats[Globals.STAT_MAXDMG] - stats[Globals.STAT_MINDMG])) + stats[Globals.STAT_MINDMG];
-        if (rollCrit()) {
-            dmg = dmg * (1 + stats[Globals.STAT_CRITDMG]);
-        }
         return dmg;
     }
 
@@ -813,6 +962,7 @@ public class Player extends Thread {
         stats[Globals.STAT_CRITDMG] = stats[Globals.STAT_CRITDMG] + bonusStats[Globals.STAT_CRITDMG];
         stats[Globals.STAT_REGEN] = stats[Globals.STAT_REGEN] + bonusStats[Globals.STAT_REGEN];
         stats[Globals.STAT_ARMOR] = stats[Globals.STAT_ARMOR] + bonusStats[Globals.STAT_ARMOR];
+        stats[Globals.STAT_DAMAGEREDUCT] = 1 - Globals.calcReduction(stats[Globals.STAT_ARMOR]);
     }
 
     /**
@@ -851,7 +1001,11 @@ public class Player extends Thread {
                 || playerState == PLAYER_STATE_SWORD_TAUNT
                 || playerState == PLAYER_STATE_SWORD_CINDER
                 || playerState == PLAYER_STATE_BOW_ARC
-                || playerState == PLAYER_STATE_BOW_POWER;
+                || playerState == PLAYER_STATE_BOW_POWER
+                || playerState == PLAYER_STATE_BOW_RAPID
+                || playerState == PLAYER_STATE_BOW_FROST
+                || playerState == PLAYER_STATE_BOW_STORM
+                || playerState == PLAYER_STATE_BOW_VOLLEY;
     }
 
     /**
@@ -1127,12 +1281,25 @@ public class Player extends Thread {
                     }
                 }
                 break;
+            case PLAYER_STATE_BOW_RAPID:
+                nextFrameTime -= Globals.LOGIC_UPDATE;
+                animState = Globals.PLAYER_STATE_ATTACKBOW;
+                if (nextFrameTime <= 0) {
+                    if (frame < 4) {
+                        frame++;
+                        nextFrameTime = 30000000;
+                    }
+                }
+                if (skillDuration == 150 || skillDuration == 300 || skillDuration == 450) {
+                    frame = 0;
+                }
+                break;
             case PLAYER_STATE_BOW_POWER:
                 nextFrameTime -= Globals.LOGIC_UPDATE;
                 animState = Globals.PLAYER_STATE_ATTACKBOW;
                 if (nextFrameTime <= 0) {
                     if (skillDuration < 800) {
-                        if (frame != 2) {
+                        if (frame != 3) {
                             frame++;
                         }
                         nextFrameTime = 40000000;
@@ -1140,11 +1307,17 @@ public class Player extends Thread {
                         if (frame != 4) {
                             frame++;
                         }
-                        nextFrameTime = 20000000;
+                        nextFrameTime = 40000000;
                     }
                 }
                 break;
-
+            case PLAYER_STATE_BOW_VOLLEY:
+                nextFrameTime -= Globals.LOGIC_UPDATE;
+                animState = Globals.PLAYER_STATE_ATTACKBOW;
+                if (frame != 4) {
+                    frame = 4;
+                }
+                break;
         }
         if (animState != prevAnimState || frame != prevFrame) {
             updateAnimState = true;
@@ -1283,6 +1456,8 @@ public class Player extends Thread {
             return Globals.ITEM_OFFHAND;
         } else if (i >= 120000 && i <= 129999) { //Bows
             return Globals.ITEM_BOW;
+        } else if (i >= 130000 && i <= 199999) { //Quivers
+            return Globals.ITEM_QUIVER;
         } else if (i >= 200000 && i <= 209999) {
             return Globals.ITEM_HEAD;
         } else if (i >= 300000 && i <= 309999) {

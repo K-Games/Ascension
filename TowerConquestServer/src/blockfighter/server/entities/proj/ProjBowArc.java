@@ -4,7 +4,6 @@ import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.buff.BuffKnockback;
-import blockfighter.server.entities.player.skills.Skill;
 import blockfighter.server.net.PacketSender;
 import java.awt.geom.Rectangle2D;
 import java.util.LinkedList;
@@ -15,23 +14,23 @@ import java.util.Map;
  *
  * @author Ken Kwan
  */
-public class ProjSwordMulti extends ProjBase {
+public class ProjBowArc extends ProjBase {
 
     private final LinkedList<Player> queue = new LinkedList<>();
 
-    public ProjSwordMulti(PacketSender b, LogicModule l, int k, Player o, double x, double y) {
+    public ProjBowArc(PacketSender b, LogicModule l, int k, Player o, double x, double y) {
         super(b, l, k);
         owner = o;
         this.x = x;
         this.y = y;
         hitbox = new Rectangle2D.Double[1];
         if (owner.getFacing() == Globals.RIGHT) {
-            hitbox[0] = new Rectangle2D.Double(x - 60, y - 220, 240, 240);
+            hitbox[0] = new Rectangle2D.Double(x +80, y - 284, 490, 350);
         } else {
-            hitbox[0] = new Rectangle2D.Double(x - 240 + 60, y - 220, 240, 240);
+            hitbox[0] = new Rectangle2D.Double(x - 490 - 80, y - 284, 490, 350);
 
         }
-        duration = 600;
+        duration = 400;
     }
 
     @Override
@@ -55,9 +54,7 @@ public class ProjSwordMulti extends ProjBase {
         while (!queue.isEmpty()) {
             Player p = queue.poll();
             if (p != null) {
-                int damage = (int) (owner.rollDamage());
-                p.queueDamage(damage);
-                p.addBuff(new BuffKnockback(300, (owner.getFacing() == Globals.RIGHT) ? 4 : -4, -2, p));
+                p.addBuff(new BuffKnockback(300, (owner.getFacing() == Globals.RIGHT) ? 4 : -4, -5, p));
             }
         }
         queuedEffect = false;

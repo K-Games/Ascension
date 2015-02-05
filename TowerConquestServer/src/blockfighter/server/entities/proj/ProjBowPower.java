@@ -15,20 +15,20 @@ import java.util.Map;
  *
  * @author Ken Kwan
  */
-public class ProjSwordMulti extends ProjBase {
+public class ProjBowPower extends ProjBase {
 
     private final LinkedList<Player> queue = new LinkedList<>();
 
-    public ProjSwordMulti(PacketSender b, LogicModule l, int k, Player o, double x, double y) {
+    public ProjBowPower(PacketSender b, LogicModule l, int k, Player o, double x, double y) {
         super(b, l, k);
         owner = o;
         this.x = x;
         this.y = y;
         hitbox = new Rectangle2D.Double[1];
         if (owner.getFacing() == Globals.RIGHT) {
-            hitbox[0] = new Rectangle2D.Double(x - 60, y - 220, 240, 240);
+            hitbox[0] = new Rectangle2D.Double(x + 80, y - 185, 700, 150);
         } else {
-            hitbox[0] = new Rectangle2D.Double(x - 240 + 60, y - 220, 240, 240);
+            hitbox[0] = new Rectangle2D.Double(x - 700 - 80, y - 185, 700, 150);
 
         }
         duration = 600;
@@ -55,9 +55,9 @@ public class ProjSwordMulti extends ProjBase {
         while (!queue.isEmpty()) {
             Player p = queue.poll();
             if (p != null) {
-                int damage = (int) (owner.rollDamage());
+                int damage = (int) (owner.rollDamage() * (5+owner.getSkillLevel(Skill.BOW_POWER))) ;
                 p.queueDamage(damage);
-                p.addBuff(new BuffKnockback(300, (owner.getFacing() == Globals.RIGHT) ? 4 : -4, -2, p));
+                p.addBuff(new BuffKnockback(500, (owner.getFacing() == Globals.RIGHT) ? 20 : -20, -25, p));
             }
         }
         queuedEffect = false;

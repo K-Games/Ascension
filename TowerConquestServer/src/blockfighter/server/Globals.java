@@ -54,7 +54,7 @@ public class Globals {
             PLAYER_STATE_ATTACKOFF2 = 0x06,
             PLAYER_STATE_ATTACKBOW = 0x07;
 
-    public final static int NUM_PARTICLE_EFFECTS = 12;
+    public final static int NUM_PARTICLE_EFFECTS = 19;
     public final static byte PARTICLE_SWORD_SLASH1 = 0x00,
             PARTICLE_SWORD_SLASH2 = 0x01,
             PARTICLE_SWORD_SLASH3 = 0x02,
@@ -65,7 +65,14 @@ public class Globals {
             PARTICLE_BURN = 0x07,
             PARTICLE_SWORD_TAUNT = 0x08,
             PARTICLE_SWORD_TAUNTAURA1 = 0x0A,
-            PARTICLE_SWORD_TAUNTAURA2 = 0x0B;
+            PARTICLE_SWORD_TAUNTAURA2 = 0x0B,
+            PARTICLE_BOW_ARC = 0x0C,
+            PARTICLE_BOW_RAPID = 0x0D,
+            PARTICLE_BOW_POWER = 0x0E,
+            PARTICLE_BOW_POWERCHARGE = 0x0F,
+            PARTICLE_BOW_POWERPARTICLE = 0x10,
+            PARTICLE_BOW_VOLLEYBOW = 0x11,
+            PARTICLE_BOW_VOLLEYARROW = 0x12;
 
     public final static byte NUM_ITEM_TYPES = 10,
             ITEM_WEAPON = 0,
@@ -79,11 +86,12 @@ public class Globals {
             ITEM_RING = 8,
             ITEM_AMULET = 9,
             ITEM_OFFHAND = 10,
-            ITEM_BOW = 11; //Only used for equipment slot index. Its the same as weapons.
+            ITEM_BOW = 11,
+            ITEM_QUIVER = 12; //Only used for equipment slot index. Its the same as weapons.
 
     public final static byte NUM_EQUIP_SLOTS = 11;
 
-    public final static byte NUM_STATS = 15,
+    public final static byte NUM_STATS = 16,
             STAT_POWER = 0,
             STAT_DEFENSE = 1,
             STAT_SPIRIT = 2,
@@ -98,7 +106,8 @@ public class Globals {
             STAT_LEVEL = 11,
             STAT_POINTS = 12,
             STAT_EXP = 13,
-            STAT_SKILLPOINTS = 14;
+            STAT_SKILLPOINTS = 14,
+            STAT_DAMAGEREDUCT = 15;
 
     public final static double HP_BASE = 100,
             HP_MULT = 30,
