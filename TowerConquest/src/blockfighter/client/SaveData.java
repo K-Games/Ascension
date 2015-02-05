@@ -28,7 +28,7 @@ public class SaveData {
     private String name;
     private byte saveNum;
 
-    private ItemEquip[][] inventory = new ItemEquip[Globals.NUM_ITEM_TYPES][];
+    private ItemEquip[][] inventory = new ItemEquip[Globals.NUM_ITEM_TYPES][100];
     private ItemUpgrade[] upgrades = new ItemUpgrade[100];
     private ItemEquip[] equipment = new ItemEquip[Globals.NUM_EQUIP_SLOTS];
 
@@ -36,27 +36,11 @@ public class SaveData {
     private Skill[] skills = new Skill[Skill.NUM_SKILLS];
     private int[] keybinds = new int[Globals.NUM_KEYBINDS];
 
-    public SaveData(String n) {
+    public SaveData(String n, byte sn) {
+        saveNum = sn;
         name = n;
         Random rng = new Random();
         uniqueID = rng.nextInt(Integer.MAX_VALUE);
-        baseStats[Globals.STAT_LEVEL] = 100;
-        baseStats[Globals.STAT_POWER] = 0;
-        baseStats[Globals.STAT_DEFENSE] = 0;
-        baseStats[Globals.STAT_SPIRIT] = 0;
-        baseStats[Globals.STAT_EXP] = 0;
-        baseStats[Globals.STAT_SKILLPOINTS] = 3 * baseStats[Globals.STAT_LEVEL];
-        for (int i = 0; i < inventory.length; i++) {
-            inventory[i] = new ItemEquip[100];
-        }
-        double[] bs = new double[Globals.NUM_STATS];
-        bs[Globals.STAT_LEVEL] = 99999;
-        bs[Globals.STAT_POWER] = 700;
-        bs[Globals.STAT_DEFENSE] = 700;
-        bs[Globals.STAT_SPIRIT] = 700;
-        equipment[Globals.ITEM_WEAPON] = new ItemEquip(bs, 0, 3, ItemEquip.TEMP_BOW);
-        equipment[Globals.ITEM_OFFHAND] = new ItemEquip(bs, 0, 3, ItemEquip.TEMP_SWORD);
-        upgrades[0] = new ItemUpgrade(1, 100000);
         //initalize skill list
         skills[Skill.SWORD_CINDER] = new SkillSwordCinder();
         skills[Skill.SWORD_DRIVE] = new SkillSwordDrive();
@@ -91,6 +75,49 @@ public class SaveData {
         skills[Skill.PASSIVE_10] = new SkillPassive10();
         skills[Skill.PASSIVE_11] = new SkillPassive11();
         skills[Skill.PASSIVE_12] = new SkillPassive12();
+    }
+
+    public void newCharacter() {
+        //Set level 1
+        baseStats[Globals.STAT_LEVEL] = 1;
+        baseStats[Globals.STAT_POWER] = 0;
+        baseStats[Globals.STAT_DEFENSE] = 0;
+        baseStats[Globals.STAT_SPIRIT] = 0;
+        baseStats[Globals.STAT_EXP] = 0;
+        baseStats[Globals.STAT_SKILLPOINTS] = 3 * baseStats[Globals.STAT_LEVEL];
+        //Empty inventory
+        for (int i = 0; i < inventory.length; i++) {
+            inventory[i] = new ItemEquip[100];
+        }
+        ItemEquip startEq = new ItemEquip(ItemEquip.TEMP_BOW, 1);
+        addItem(ItemEquip.getItemType(startEq.getItemCode()), startEq);
+        startEq = new ItemEquip(ItemEquip.TEMP_SWORD, 1);
+        addItem(ItemEquip.getItemType(startEq.getItemCode()), startEq);
+        startEq = new ItemEquip(ItemEquip.TEMP_QUIVER, 1);
+        addItem(ItemEquip.getItemType(startEq.getItemCode()), startEq);
+        startEq = new ItemEquip(ItemEquip.TEMP_BLADE, 1);
+        addItem(ItemEquip.getItemType(startEq.getItemCode()), startEq);
+        startEq = new ItemEquip(ItemEquip.TEMP_SHIELD, 1);
+        addItem(ItemEquip.getItemType(startEq.getItemCode()), startEq);
+        startEq = new ItemEquip(ItemEquip.TEMP_HEAD, 1);
+        addItem(ItemEquip.getItemType(startEq.getItemCode()), startEq);
+        startEq = new ItemEquip(ItemEquip.TEMP_SHOULDER, 1);
+        addItem(ItemEquip.getItemType(startEq.getItemCode()), startEq);
+        startEq = new ItemEquip(ItemEquip.TEMP_CHEST, 1);
+        addItem(ItemEquip.getItemType(startEq.getItemCode()), startEq);
+        startEq = new ItemEquip(ItemEquip.TEMP_PANTS, 1);
+        addItem(ItemEquip.getItemType(startEq.getItemCode()), startEq);
+        startEq = new ItemEquip(ItemEquip.TEMP_GLOVE, 1);
+        addItem(ItemEquip.getItemType(startEq.getItemCode()), startEq);
+        startEq = new ItemEquip(ItemEquip.TEMP_SHOE, 1);
+        addItem(ItemEquip.getItemType(startEq.getItemCode()), startEq);
+        startEq = new ItemEquip(ItemEquip.TEMP_BELT, 1);
+        addItem(ItemEquip.getItemType(startEq.getItemCode()), startEq);
+        startEq = new ItemEquip(ItemEquip.TEMP_RING, 1);
+        addItem(ItemEquip.getItemType(startEq.getItemCode()), startEq);
+        startEq = new ItemEquip(ItemEquip.TEMP_AMULET, 1);
+        addItem(ItemEquip.getItemType(startEq.getItemCode()), startEq);
+        upgrades[0] = new ItemUpgrade(1, 100000);
 
         keybinds[Globals.KEYBIND_SKILL1] = KeyEvent.VK_Q;
         keybinds[Globals.KEYBIND_SKILL2] = KeyEvent.VK_W;
@@ -107,7 +134,7 @@ public class SaveData {
 
         keybinds[Globals.KEYBIND_LEFT] = KeyEvent.VK_LEFT;
         keybinds[Globals.KEYBIND_RIGHT] = KeyEvent.VK_RIGHT;
-        keybinds[Globals.KEYBIND_JUMP] = KeyEvent.VK_UP;
+        keybinds[Globals.KEYBIND_JUMP] = KeyEvent.VK_SPACE;
         keybinds[Globals.KEYBIND_DOWN] = KeyEvent.VK_DOWN;
     }
 
@@ -252,8 +279,7 @@ public class SaveData {
     }
 
     public static SaveData readData(byte saveNum) {
-        SaveData c = new SaveData("");
-        c.saveNum = saveNum;
+        SaveData c = new SaveData("", saveNum);
         byte[] data, temp = new byte[Globals.MAX_NAME_LENGTH];
 
         try {
@@ -479,6 +505,7 @@ public class SaveData {
         totalStats[Globals.STAT_REGEN] = baseStats[Globals.STAT_REGEN] + bonusStats[Globals.STAT_REGEN];
         totalStats[Globals.STAT_CRITCHANCE] = baseStats[Globals.STAT_CRITCHANCE] + bonusStats[Globals.STAT_CRITCHANCE];
         totalStats[Globals.STAT_CRITDMG] = baseStats[Globals.STAT_CRITDMG] + bonusStats[Globals.STAT_CRITDMG];
+        totalStats[Globals.STAT_DAMAGEREDUCT] = 1 - Globals.calcReduction(totalStats[Globals.STAT_ARMOR]);
     }
 
     public ItemEquip[] getInventory(byte type) {
@@ -542,17 +569,17 @@ public class SaveData {
         saveData(saveNum, this);
     }
 
-    public void unequipItem(int type) {
+    public void unequipItem(int slot) {
         boolean offhand = false;
-        if (type == Globals.ITEM_OFFHAND) {
-            type = Globals.ITEM_WEAPON;
+        if (slot == Globals.ITEM_OFFHAND) {
+            slot = Globals.ITEM_WEAPON;
             offhand = true;
         }
 
-        for (int i = 0; i < inventory[type].length; i++) {
-            if (inventory[type][i] == null) {
-                inventory[type][i] = equipment[(offhand) ? Globals.ITEM_OFFHAND : type];
-                equipment[(offhand) ? Globals.ITEM_OFFHAND : type] = null;
+        for (int i = 0; i < inventory[slot].length; i++) {
+            if (inventory[slot][i] == null) {
+                inventory[slot][i] = equipment[(offhand) ? Globals.ITEM_OFFHAND : slot];
+                equipment[(offhand) ? Globals.ITEM_OFFHAND : slot] = null;
                 break;
             }
         }
@@ -568,12 +595,18 @@ public class SaveData {
 
         ItemEquip temp = inventory[itemType][inventorySlot];
         if (temp != null) {
-            switch (ItemEquip.getSlot(temp.getItemCode())) {
+            if (temp.getBaseStats()[Globals.STAT_LEVEL] > baseStats[Globals.STAT_LEVEL]) {
+                return;
+            }
+            switch (ItemEquip.getItemType(temp.getItemCode())) {
                 case Globals.ITEM_OFFHAND:
                     slot = Globals.ITEM_OFFHAND;
                     break;
                 case Globals.ITEM_BOW:
                     slot = Globals.ITEM_WEAPON;
+                    break;
+                case Globals.ITEM_QUIVER:
+                    slot = Globals.ITEM_OFFHAND;
                     break;
             }
         }
@@ -608,6 +641,9 @@ public class SaveData {
     }
 
     public void addItem(int type, ItemEquip e) {
+        if (type == Globals.ITEM_OFFHAND || type == Globals.ITEM_QUIVER || type == Globals.ITEM_BOW) {
+            type = Globals.ITEM_WEAPON;
+        }
         for (int i = 0; i < inventory[type].length; i++) {
             if (inventory[type][i] == null) {
                 inventory[type][i] = e;

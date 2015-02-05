@@ -20,7 +20,7 @@ public class ParticleSwordSlash3 extends Particle {
         frameDuration -= Globals.LOGIC_UPDATE / 1000000;
         if (frameDuration <= 0) {
             frameDuration = 25;
-            if (frame < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_SLASH3].length) {
+            if (frame < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_SLASH3].length-1) {
                 frame++;
             }
         }

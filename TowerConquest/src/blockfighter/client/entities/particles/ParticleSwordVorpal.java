@@ -20,7 +20,7 @@ public class ParticleSwordVorpal extends Particle {
         frameDuration -= Globals.LOGIC_UPDATE / 1000000;
         if (frameDuration <= 0) {
             frameDuration = 25;
-            if (frame < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_VORPAL].length) {
+            if (frame < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_VORPAL].length-1) {
                 frame++;
             }
         }

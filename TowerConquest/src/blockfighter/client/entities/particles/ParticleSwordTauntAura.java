@@ -34,7 +34,7 @@ public class ParticleSwordTauntAura extends Particle {
         }
         if (frameDuration <= 0) {
             frameDuration = 25;
-            if (frame < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_TAUNTAURA1].length) {
+            if (frame < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_TAUNTAURA1].length-1) {
                 frame++;
             }
         }

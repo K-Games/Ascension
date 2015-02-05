@@ -152,7 +152,9 @@ public class ScreenSelectChar extends ScreenMenu {
                 if (i == 0) {
                     CREATE_NAMEFIELD.setText(CREATE_NAMEFIELD.getText().trim());
                     if (CREATE_NAMEFIELD.getText().length() <= 15 && CREATE_NAMEFIELD.getText().length() > 0) {
-                        SaveData.saveData(selectNum, new SaveData(CREATE_NAMEFIELD.getText().trim()));
+                        SaveData newChar = new SaveData(CREATE_NAMEFIELD.getText().trim(), selectNum);
+                        newChar.newCharacter();
+                        SaveData.saveData(selectNum, newChar);
                         loadSaveData();
                     } else {
                         if (CREATE_NAMEFIELD.getText().length() <= 0) {

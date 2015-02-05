@@ -100,10 +100,6 @@ public abstract class Skill {
         return level == 30;
     }
 
-    public boolean canCast() {
-        return cooldown <= 0;
-    }
-
     public double getMaxCooldown() {
         return maxCooldown;
     }

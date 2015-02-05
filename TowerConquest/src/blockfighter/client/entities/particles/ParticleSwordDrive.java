@@ -27,7 +27,7 @@ public class ParticleSwordDrive extends Particle {
         if (frameDuration <= 0) {
             frameDuration = 25;
             frame++;
-            if (frame >= PARTICLE_SPRITE[Globals.PARTICLE_SWORD_DRIVE].length) {
+            if (frame >= PARTICLE_SPRITE[Globals.PARTICLE_SWORD_DRIVE].length-1) {
                 frame = 0;
             }
         }
@@ -56,7 +56,7 @@ public class ParticleSwordDrive extends Particle {
         int drawDscY = drawSrcY + sprite.getHeight();
         int drawDscX = x + ((facing == Globals.RIGHT) ? sprite.getWidth() : 0);
         g.drawImage(sprite, drawSrcX, drawSrcY, drawDscX, drawDscY, 0, 0, sprite.getWidth(), sprite.getHeight(), null);
-        /*        g.setColor(Color.BLACK);
+        /*        g.setColor(Color.WHITE);
          g.drawRect(x, y, 560, 150);*/
     }
 }

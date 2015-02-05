@@ -6,7 +6,6 @@ import blockfighter.client.LogicModule;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -137,6 +136,62 @@ public abstract class Particle extends Thread {
         for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_TAUNTAURA2].length; i++) {
             try {
                 PARTICLE_SPRITE[Globals.PARTICLE_SWORD_TAUNTAURA2][i] = ImageIO.read(Globals.class.getResource("sprites/particle/tauntaura2/" + i + ".png"));
+            } catch (Exception ex) {
+                Logger.getLogger(Particle.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        PARTICLE_SPRITE[Globals.PARTICLE_BOW_ARC] = new BufferedImage[8];
+        for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_BOW_ARC].length; i++) {
+            try {
+                PARTICLE_SPRITE[Globals.PARTICLE_BOW_ARC][i] = ImageIO.read(Globals.class.getResource("sprites/particle/arc/" + i + ".png"));
+            } catch (Exception ex) {
+                Logger.getLogger(Particle.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        PARTICLE_SPRITE[Globals.PARTICLE_BOW_RAPID] = new BufferedImage[6];
+        for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_BOW_RAPID].length; i++) {
+            try {
+                PARTICLE_SPRITE[Globals.PARTICLE_BOW_RAPID][i] = ImageIO.read(Globals.class.getResource("sprites/particle/rapid/" + i + ".png"));
+            } catch (Exception ex) {
+                Logger.getLogger(Particle.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        PARTICLE_SPRITE[Globals.PARTICLE_BOW_POWER] = new BufferedImage[24];
+        for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_BOW_POWER].length; i++) {
+            try {
+                PARTICLE_SPRITE[Globals.PARTICLE_BOW_POWER][i] = ImageIO.read(Globals.class.getResource("sprites/particle/power/" + i + ".png"));
+            } catch (Exception ex) {
+                Logger.getLogger(Particle.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        PARTICLE_SPRITE[Globals.PARTICLE_BOW_POWERPARTICLE] = new BufferedImage[10];
+        for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_BOW_POWERPARTICLE].length; i++) {
+            try {
+                PARTICLE_SPRITE[Globals.PARTICLE_BOW_POWERPARTICLE][i] = ImageIO.read(Globals.class.getResource("sprites/particle/power2/" + i + ".png"));
+            } catch (Exception ex) {
+                Logger.getLogger(Particle.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        PARTICLE_SPRITE[Globals.PARTICLE_BOW_POWERCHARGE] = new BufferedImage[24];
+        for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_BOW_POWERCHARGE].length; i++) {
+            try {
+                PARTICLE_SPRITE[Globals.PARTICLE_BOW_POWERCHARGE][i] = ImageIO.read(Globals.class.getResource("sprites/particle/powercharge/" + i + ".png"));
+            } catch (Exception ex) {
+                Logger.getLogger(Particle.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        PARTICLE_SPRITE[Globals.PARTICLE_BOW_VOLLEYBOW] = new BufferedImage[1];
+        for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_BOW_VOLLEYBOW].length; i++) {
+            try {
+                PARTICLE_SPRITE[Globals.PARTICLE_BOW_VOLLEYBOW][i] = ImageIO.read(Globals.class.getResource("sprites/particle/volleybow/" + i + ".png"));
+            } catch (Exception ex) {
+                Logger.getLogger(Particle.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        PARTICLE_SPRITE[Globals.PARTICLE_BOW_VOLLEYARROW] = new BufferedImage[6];
+        for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_BOW_VOLLEYARROW].length; i++) {
+            try {
+                PARTICLE_SPRITE[Globals.PARTICLE_BOW_VOLLEYARROW][i] = ImageIO.read(Globals.class.getResource("sprites/particle/volleyarrow/" + i + ".png"));
             } catch (Exception ex) {
                 Logger.getLogger(Particle.class.getName()).log(Level.SEVERE, null, ex);
             }

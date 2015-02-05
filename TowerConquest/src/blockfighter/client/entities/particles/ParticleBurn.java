@@ -24,7 +24,7 @@ public class ParticleBurn extends Particle {
         y-=3;
         if (frameDuration <= 0) {
             frameDuration = 25;
-            if (frame < PARTICLE_SPRITE[Globals.PARTICLE_BURN].length) {
+            if (frame < PARTICLE_SPRITE[Globals.PARTICLE_BURN].length-1) {
                 frame++;
             }
         }

@@ -183,7 +183,6 @@ public class ScreenIngame extends Screen {
     @Override
     public void draw(Graphics2D g) {
         AffineTransform resetForm = g.getTransform();
-
         if (players != null && myKey != -1 && players.containsKey(myKey)) {
             g.translate(640.0 - players.get(myKey).getX(), 500.0 - players.get(myKey).getY());
         }
@@ -414,6 +413,24 @@ public class ScreenIngame extends Screen {
             case Globals.PARTICLE_SWORD_TAUNTAURA1:
                 playerKey = data[11];
                 particles.put(key, new ParticleSwordTauntAura(logic, key, x, y, facing, playerKey));
+                break;
+            case Globals.PARTICLE_BOW_ARC:
+                particles.put(key, new ParticleBowArc(logic, key, x, y, facing));
+                break;
+            case Globals.PARTICLE_BOW_RAPID:
+                particles.put(key, new ParticleBowRapid(logic, key, x, y, facing));
+                break;
+            case Globals.PARTICLE_BOW_POWER:
+                particles.put(key, new ParticleBowPower(logic, key, x, y, facing));
+                break;
+            case Globals.PARTICLE_BOW_POWERCHARGE:
+                particles.put(key, new ParticleBowPowerCharge(logic, key, x, y, facing));
+                break;
+            case Globals.PARTICLE_BOW_VOLLEYBOW:
+                particles.put(key, new ParticleBowVolleyBow(logic, key, x, y, facing));
+                break;
+            case Globals.PARTICLE_BOW_VOLLEYARROW:
+                particles.put(key, new ParticleBowVolleyArrow(logic, key, x, y, facing));
                 break;
         }
     }

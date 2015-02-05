@@ -21,7 +21,7 @@ public class ParticleSwordTaunt extends Particle {
         frameDuration -= Globals.LOGIC_UPDATE / 1000000;
         if (frameDuration <= 0) {
             frameDuration = 25;
-            if (frame < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_TAUNT].length) {
+            if (frame < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_TAUNT].length-1) {
                 frame++;
             }
         }

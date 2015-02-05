@@ -28,7 +28,7 @@ public class ParticleSwordCinder extends Particle {
         }
         if (frameDuration <= 0) {
             frameDuration = 50;
-            if (frame < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_CINDER].length) {
+            if (frame < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_CINDER].length-1) {
                 frame++;
             }
         }
