@@ -36,9 +36,10 @@ public class PacketHandler extends Thread {
     }
 
     private void receiveLogin(byte[] data) {
-        byte key = data[1];
-        byte size = data[2];
-        logic.receiveLogin(key, size);
+        byte mapID = data[1],
+                key = data[2],
+                size = data[3];
+        logic.receiveLogin(mapID, key, size);
     }
 
     private void receiveGetPing(byte[] data) {

@@ -103,8 +103,7 @@ public class ScreenStats extends ScreenMenu {
         drawStringOutline(g, "Critical Hit Damage: " + df.format(stats[Globals.STAT_CRITDMG] * 100) + "%", 255, secStat + 125, 1);
         drawStringOutline(g, "Effective HP: " + df.format((int) Globals.calcEHP(
                 stats[Globals.STAT_DAMAGEREDUCT],
-                stats[Globals.STAT_MAXHP]))
-                + "(" + df.format(Globals.calcReduction(stats[Globals.STAT_ARMOR])* 100) + "% Damage Reduction)", 255, secStat + 180, 1);
+                stats[Globals.STAT_MAXHP])), 255, secStat + 180, 1);
         drawStringOutline(g, "Exp: " + df.format((int) (bs[Globals.STAT_EXP])) + "/" + df.format((int) Globals.calcEXP(bs[Globals.STAT_LEVEL]))
                 + "(" + df.format((bs[Globals.STAT_EXP] / Globals.calcEXP(bs[Globals.STAT_LEVEL])) * 100) + "%)", 255, secStat + 205, 1);
 
@@ -124,8 +123,7 @@ public class ScreenStats extends ScreenMenu {
 
         g.drawString("Effective HP: " + df.format((int) Globals.calcEHP(
                 stats[Globals.STAT_DAMAGEREDUCT],
-                stats[Globals.STAT_MAXHP]))
-                + "(" + df.format(Globals.calcReduction(stats[Globals.STAT_ARMOR])* 100) + "% Damage Reduction)", 255, secStat + 180);
+                stats[Globals.STAT_MAXHP])), 255, secStat + 180);
 
         g.drawString("Exp: " + df.format((int) (bs[Globals.STAT_EXP])) + "/" + df.format((int) Globals.calcEXP(bs[Globals.STAT_LEVEL]))
                 + "(" + df.format((bs[Globals.STAT_EXP] / Globals.calcEXP(bs[Globals.STAT_LEVEL])) * 100) + "%)", 255, secStat + 205);

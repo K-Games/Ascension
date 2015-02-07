@@ -4,6 +4,7 @@ import blockfighter.client.net.PacketReceiver;
 import blockfighter.client.net.PacketSender;
 import blockfighter.client.screen.Screen;
 import blockfighter.client.screen.ScreenIngame;
+import blockfighter.client.screen.ScreenLoading;
 import blockfighter.client.screen.ScreenSelectChar;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -26,13 +27,16 @@ public class LogicModule extends Thread {
     private byte selectedRoom = 0;
     private Screen screen = new ScreenSelectChar(this);
     private Screen lastMenu;
+    private SoundModule soundModule;
 
-    public LogicModule() {
+    public LogicModule(SoundModule s) {
         isRunning = true;
+        soundModule = s;
     }
 
     @Override
     public void run() {
+        soundModule.playBGM("theme.ogg");
         while (isRunning) {
             screen.update();
         }
@@ -42,9 +46,18 @@ public class LogicModule extends Thread {
         return isRunning;
     }
 
-    public void receiveLogin(byte key, byte size) {
-        setScreen(new ScreenIngame(this, key, size, sender));
-        sender.sendGetAll(selectedRoom, key);
+    public void receiveLogin(byte mapID, byte key, byte size) {
+        ScreenLoading loading = new ScreenLoading(this);
+        setScreen(loading);
+        loading.load(mapID);
+        if (loading.getLoadedMap() == null) {
+            disconnect();
+            sender.sendDisconnect(selectedRoom, key);
+            receiver.shutdown();
+        } else {
+            setScreen(new ScreenIngame(this, key, size, sender, loading.getLoadedMap()));
+            sender.sendGetAll(selectedRoom, key);
+        }
     }
 
     public void sendGetName(byte k) {
@@ -128,13 +141,22 @@ public class LogicModule extends Thread {
     public void setScreen(Screen s) {
         screen.unload();
         screen = s;
-        if (!(s instanceof ScreenIngame)) {
+        if (!(s instanceof ScreenIngame) && !(s instanceof ScreenLoading)) {
             lastMenu = screen;
         }
     }
 
     public void returnMenu() {
         screen = lastMenu;
+        soundModule.playBGM("theme.ogg");
+    }
+
+    public void playSound(String soundFile) {
+        soundModule.playSound(soundFile);
+    }
+
+    public void playBGM(String bgmFile) {
+        soundModule.playBGM(bgmFile);
     }
 
 }

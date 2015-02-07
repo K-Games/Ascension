@@ -8,7 +8,6 @@ import blockfighter.client.entities.items.ItemEquip;
 import blockfighter.client.entities.particles.*;
 import blockfighter.client.entities.skills.Skill;
 import blockfighter.client.maps.GameMap;
-import blockfighter.client.maps.GameMapLvl1;
 import blockfighter.client.net.PacketSender;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -65,7 +64,7 @@ public class ScreenIngame extends Screen {
 
     private int drawInfoHotkey = -1;
 
-    public ScreenIngame(LogicModule l, byte i, byte numPlayer, PacketSender s) {
+    public ScreenIngame(LogicModule l, byte i, byte numPlayer, PacketSender s, GameMap m) {
         logic = l;
         myKey = i;
         c = logic.getSelectedChar();
@@ -83,8 +82,7 @@ public class ScreenIngame extends Screen {
                 skill.resetCooldown();
             }
         }
-        map = new GameMapLvl1();
-        Particle.loadParticles();
+        map = m;
     }
 
     @Override

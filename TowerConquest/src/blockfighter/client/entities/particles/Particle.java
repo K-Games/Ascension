@@ -23,7 +23,7 @@ public abstract class Particle extends Thread {
     protected int frame = 0;
     protected byte facing = Globals.RIGHT;
 
-    protected final static BufferedImage[][] PARTICLE_SPRITE = new BufferedImage[NUM_PARTICLE_EFFECTS][];
+    protected static BufferedImage[][] PARTICLE_SPRITE;
     protected final int key;
     private static boolean LOADED = false;
     protected final static Random rng = new Random();
@@ -38,12 +38,13 @@ public abstract class Particle extends Thread {
     protected long duration;
 
     public static void unloadParticles() {
-        for (int i = 0; i < PARTICLE_SPRITE.length; i++) {
-            for (int j = 0; j<PARTICLE_SPRITE[i].length;j++){
+        for (int i = 0; PARTICLE_SPRITE != null && i < PARTICLE_SPRITE.length; i++) {
+            for (int j = 0; PARTICLE_SPRITE[i] != null && j < PARTICLE_SPRITE[i].length; j++) {
                 PARTICLE_SPRITE[i][j] = null;
             }
             PARTICLE_SPRITE[i] = null;
         }
+        PARTICLE_SPRITE = null;
         LOADED = false;
     }
 
@@ -52,6 +53,8 @@ public abstract class Particle extends Thread {
             return;
         }
         LOADED = true;
+        unloadParticles();
+        PARTICLE_SPRITE = new BufferedImage[NUM_PARTICLE_EFFECTS][];
         PARTICLE_SPRITE[Globals.PARTICLE_SWORD_SLASH1] = new BufferedImage[8];
         for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_SLASH1].length; i++) {
             try {
