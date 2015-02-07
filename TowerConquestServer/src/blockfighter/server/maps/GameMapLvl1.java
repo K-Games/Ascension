@@ -8,12 +8,13 @@ import java.awt.geom.Rectangle2D;
  *
  * @author Ken Kwan
  */
-public class TestMap extends GameMap {
+public class GameMapLvl1 extends GameMap {
 
     /**
      * Load server map
      */
-    public TestMap() {
+    public GameMapLvl1() {
+        mapID = 0;
         platforms[0] = new Rectangle2D.Double(0, 620, 5000, 30);
         platforms[1] = new Rectangle2D.Double(200, 400, 300, 30);
         platforms[2] = new Rectangle2D.Double(600, 180, 300, 30);

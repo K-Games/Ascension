@@ -199,10 +199,11 @@ public class PacketHandler extends Thread {
         Globals.log("DATA_PLAYER_LOGIN", address + ":" + port + " Logged in Room " + room + " Key: " + freeKey + " Name: " + newPlayer.getPlayerName(), Globals.LOG_TYPE_DATA, true);
         logic[room].queueAddPlayer(newPlayer);
 
-        byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
+        byte[] bytes = new byte[Globals.PACKET_BYTE * 4];
         bytes[0] = Globals.DATA_PLAYER_LOGIN;
-        bytes[1] = freeKey;
-        bytes[2] = Globals.SERVER_MAX_PLAYERS;
+        bytes[1] = logic[room].getMap().getMapID();
+        bytes[2] = freeKey;
+        bytes[3] = Globals.SERVER_MAX_PLAYERS;
         packetSender.sendPlayer(bytes, address, port);
 
         newPlayer.sendPos();

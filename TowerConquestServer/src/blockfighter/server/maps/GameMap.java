@@ -12,7 +12,7 @@ public abstract class GameMap {
 
     Rectangle2D.Double[] platforms = new Rectangle2D.Double[3];
     double[] boundary = new double[2];
-
+    byte mapID = -1;
     /**
      * Load server map
      */
@@ -76,5 +76,9 @@ public abstract class GameMap {
             }
         }
         return 0;
+    }
+    
+    public byte getMapID(){
+        return mapID;
     }
 }
