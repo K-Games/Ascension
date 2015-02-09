@@ -499,6 +499,12 @@ public class SaveData {
         return uniqueID;
     }
 
+    public void levelUp(){
+        baseStats[Globals.STAT_LEVEL] += 1;
+        baseStats[Globals.STAT_SKILLPOINTS] += 3;
+        calcStats();
+    }
+    
     public void calcStats() {
         for (int i = 0; i < bonusStats.length; i++) {
             bonusStats[i] = 0;

@@ -17,7 +17,7 @@ public class SkillShieldIron extends Skill {
 
     @Override
     public void drawInfo(Graphics2D g, int x, int y) {
-        int boxHeight = 180, boxWidth = 405;
+        int boxHeight = 220, boxWidth = 390;
 
         if (y + boxHeight > 720) {
             y = 700 - boxHeight;
@@ -39,18 +39,20 @@ public class SkillShieldIron extends Skill {
         g.drawString("Level: " + level, x + 80, y + 50);
         g.drawString("Cooldown: " + maxCooldown / 1000 + " Seconds", x + 80, y + 70);
 
-        g.drawString("Reduce damage taken by 55 + " + level + "%(" + (level + 55) + "%) for 2 seconds.", x + 10, y + 90);
-        g.drawString("Max:", x + 10, y + 110);
-        g.drawString("Take 90% of allies HP for 2 seconds.", x + 10, y + 130);
-        g.drawString("Allies take 0% damage for 2 seconds.", x + 10, y + 150);
-        g.drawString("Evenly distribute your remaining HP after 2 seconds.", x + 10, y + 170);
+        g.drawString("Become immobile and reduce damage taken", x + 10, y + 90);
+        g.drawString("by 55 + " + level + "%(" + (level + 55) + "%) for 2 seconds.", x + 10, y + 110);
+        g.drawString("Max:", x + 10, y + 130);
+        g.drawString("Take 90% of allies HP for 2 seconds.", x + 10, y + 150);
+        g.drawString("HP received can exceed your maximum HP.", x + 10, y + 170);
+        g.drawString("Allies take 0% damage for 2 seconds.", x + 10, y + 190);
+        g.drawString("Evenly distribute your remaining HP after 2 seconds.", x + 10, y + 210);
 
     }
 
     @Override
     public String getSkillName() {
         if (isMaxed()) {
-            return "Borrowed Strength";
+            return "Allied Strength";
         }
         return "Iron Fortress";
     }
