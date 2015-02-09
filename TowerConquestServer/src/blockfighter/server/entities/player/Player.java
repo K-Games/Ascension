@@ -1104,7 +1104,7 @@ public class Player extends Thread {
     }
 
     /**
-     * Add a buff/debuff to this player
+     * Queue a buff/debuff to this player
      *
      * @param b New Buff
      */

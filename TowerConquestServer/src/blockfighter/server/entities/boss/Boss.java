@@ -154,11 +154,11 @@ public interface Boss {
     public abstract boolean isKnockback();
 
     /**
-     * Add buff/debuff to this boss
+     * Queue buff/debuff to this boss
      *
      * @param b New buff
      */
-    public abstract void addBuff(Buff b);
+    public abstract void queueBuff(Buff b);
 
     /**
      * Send the boss's current position to every connected player

@@ -60,7 +60,7 @@ public class ProjBowFrost extends ProjBase {
         while (!queue.isEmpty()) {
             Player p = queue.poll();
             if (p != null) {
-                int damage = (int) (owner.rollDamage() * 0.1 + (.01 * owner.getSkillLevel(Skill.BOW_STORM)));
+                int damage = (int) (owner.rollDamage() + (.3 * owner.getSkillLevel(Skill.BOW_STORM)));
                 p.queueDamage(damage);
                 p.queueBuff(new BuffKnockback(200, (owner.getFacing() == Globals.RIGHT) ? 10 : -10, -10, p));
                 p.queueBuff(new BuffStun(2000));

@@ -19,11 +19,12 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * @author Ken Kwan
  */
 public abstract class BossBase extends Thread implements Boss {
+
     public final static int NUM_STATS = 3,
             STAT_LEVEL = 0,
             STAT_MAXHP = 1,
             STAT_MINHP = 2;
-    
+
     public final static byte STATE_STAND = 0x00,
             STATE_WALK = 0x01,
             STATE_JUMP = 0x02;
@@ -47,7 +48,7 @@ public abstract class BossBase extends Thread implements Boss {
     private ConcurrentLinkedQueue<Integer> damageQueue = new ConcurrentLinkedQueue<>();
     private ConcurrentLinkedQueue<Integer> healQueue = new ConcurrentLinkedQueue<>();
     private ConcurrentLinkedQueue<Byte> stateQueue = new ConcurrentLinkedQueue<>();
-
+    private ConcurrentLinkedQueue<Buff> buffQueue = new ConcurrentLinkedQueue<>();
     private ConcurrentLinkedQueue<Byte> buffKeys = new ConcurrentLinkedQueue<>();
 
     private long nextHPSend = 0;
@@ -241,6 +242,14 @@ public abstract class BossBase extends Thread implements Boss {
             buffs.remove(bKey);
             returnBuffKey(bKey);
         }
+        //Empty and add buffs from queue
+        while (!buffQueue.isEmpty()) {
+            Buff b = buffQueue.poll();
+            Byte bKey = getNextBuffKey();
+            if (bKey != null && b != null) {
+                buffs.put(bKey, b);
+            }
+        }
     }
 
     @Override
@@ -259,11 +268,8 @@ public abstract class BossBase extends Thread implements Boss {
     }
 
     @Override
-    public void addBuff(Buff b) {
-        Byte bKey = getNextBuffKey();
-        if (bKey != null) {
-            buffs.put(bKey, b);
-        }
+    public void queueBuff(Buff b) {
+        buffQueue.add(b);
     }
 
     @Override
