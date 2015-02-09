@@ -73,7 +73,7 @@ public class ProjSwordSlash extends ProjBase {
         while (!queue.isEmpty()) {
             Player p = queue.poll();
             if (p != null) {
-                p.addBuff(new BuffKnockback(300, (owner.getFacing() == Globals.RIGHT) ? 4 : -4, -5, p));
+                p.queueBuff(new BuffKnockback(300, (owner.getFacing() == Globals.RIGHT) ? 4 : -4, -5, p));
             }
         }
         queuedEffect = false;

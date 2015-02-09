@@ -57,7 +57,7 @@ public class ProjBowPower extends ProjBase {
             if (p != null) {
                 int damage = (int) (owner.rollDamage() * (5+owner.getSkillLevel(Skill.BOW_POWER))) ;
                 p.queueDamage(damage);
-                p.addBuff(new BuffKnockback(500, (owner.getFacing() == Globals.RIGHT) ? 20 : -20, -25, p));
+                p.queueBuff(new BuffKnockback(500, (owner.getFacing() == Globals.RIGHT) ? 20 : -20, -25, p));
             }
         }
         queuedEffect = false;

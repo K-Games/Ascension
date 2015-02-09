@@ -4,6 +4,7 @@ import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.buff.BuffKnockback;
+import blockfighter.server.entities.buff.BuffStun;
 import blockfighter.server.entities.player.skills.Skill;
 import blockfighter.server.net.PacketSender;
 import java.awt.geom.Rectangle2D;
@@ -15,28 +16,32 @@ import java.util.Map;
  *
  * @author Ken Kwan
  */
-public class ProjSwordMulti extends ProjBase {
+public class ProjBowFrost extends ProjBase {
 
     private final LinkedList<Player> queue = new LinkedList<>();
+    private double speedX = 0;
 
-    public ProjSwordMulti(PacketSender b, LogicModule l, int k, Player o, double x, double y) {
+    public ProjBowFrost(PacketSender b, LogicModule l, int k, Player o, double x, double y) {
         super(b, l, k);
         owner = o;
         this.x = x;
         this.y = y;
         hitbox = new Rectangle2D.Double[1];
         if (owner.getFacing() == Globals.RIGHT) {
-            hitbox[0] = new Rectangle2D.Double(x - 60, y - 220, 240, 240);
+            hitbox[0] = new Rectangle2D.Double(x + 80, y - 190, 300, 148);
+            speedX = 20;
         } else {
-            hitbox[0] = new Rectangle2D.Double(x - 240 + 60, y - 220, 240, 240);
-
+            hitbox[0] = new Rectangle2D.Double(x - 300 - 80, y - 190, 300, 148);
+            speedX = -20;
         }
-        duration = 600;
+        duration = 500;
     }
 
     @Override
     public void update() {
         duration -= Globals.nsToMs(Globals.LOGIC_UPDATE);
+        x += speedX;
+        hitbox[0].x += speedX;
         for (Map.Entry<Byte, Player> pEntry : logic.getPlayers().entrySet()) {
             Player p = pEntry.getValue();
             if (p != owner && !pHit.contains(p) && p.intersectHitbox(hitbox[0])) {
@@ -55,9 +60,10 @@ public class ProjSwordMulti extends ProjBase {
         while (!queue.isEmpty()) {
             Player p = queue.poll();
             if (p != null) {
-                int damage = (int) (owner.rollDamage());
+                int damage = (int) (owner.rollDamage() * 0.1 + (.01 * owner.getSkillLevel(Skill.BOW_STORM)));
                 p.queueDamage(damage);
-                p.queueBuff(new BuffKnockback(300, (owner.getFacing() == Globals.RIGHT) ? 4 : -4, -2, p));
+                p.queueBuff(new BuffKnockback(200, (owner.getFacing() == Globals.RIGHT) ? 10 : -10, -10, p));
+                p.queueBuff(new BuffStun(2000));
             }
         }
         queuedEffect = false;

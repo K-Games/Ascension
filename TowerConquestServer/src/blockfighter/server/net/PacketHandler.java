@@ -205,7 +205,7 @@ public class PacketHandler extends Thread {
         bytes[2] = freeKey;
         bytes[3] = Globals.SERVER_MAX_PLAYERS;
         packetSender.sendPlayer(bytes, address, port);
-
+        //newPlayer.getStats()[Globals.STAT_MINHP] = newPlayer.getStats()[Globals.STAT_MAXHP];
         newPlayer.sendPos();
         newPlayer.sendFacing();
         newPlayer.sendState();

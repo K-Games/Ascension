@@ -13,6 +13,7 @@ import blockfighter.server.entities.proj.*;
 import java.awt.geom.Rectangle2D;
 import java.net.InetAddress;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Random;
@@ -54,7 +55,7 @@ public class Player extends Thread {
     private double nextFrameTime = 0;
     private Rectangle2D.Double hitbox;
 
-    private ConcurrentHashMap<Byte, Buff> buffs = new ConcurrentHashMap<>(10, 0.9f, 1);
+    private HashMap<Byte, Buff> buffs = new HashMap<>(128, 0.9f);
     private Buff isStun, isKnockback;
 
     private final InetAddress address;
@@ -72,6 +73,7 @@ public class Player extends Thread {
     private ConcurrentLinkedQueue<Integer> healQueue = new ConcurrentLinkedQueue<>();
     private ConcurrentLinkedQueue<Byte> stateQueue = new ConcurrentLinkedQueue<>();
     private ConcurrentLinkedQueue<byte[]> skillUseQueue = new ConcurrentLinkedQueue<>();
+    private ConcurrentLinkedQueue<Buff> buffQueue = new ConcurrentLinkedQueue<>();
 
     private ConcurrentLinkedQueue<Byte> buffKeys = new ConcurrentLinkedQueue<>();
 
@@ -389,7 +391,11 @@ public class Player extends Thread {
         updatePlayerState();
         updateBuffs();
         updateFall();
-
+        
+        if (isStunned() && !isKnockback()){
+            setXSpeed(0);
+        }
+    
         boolean movedX = updateX(xSpeed);
         hitbox.x = x - 50;
         hitbox.y = y - 180;
@@ -455,7 +461,6 @@ public class Player extends Thread {
                 switch (data[3]) {
                     case Skill.SWORD_SLASH:
                         queuePlayerState(PLAYER_STATE_SWORD_SLASH);
-                        animState = Globals.PLAYER_STATE_ATTACK1;
                         skills.get(data[3]).setCooldown();
                         sendCooldown(data);
                         nextFrameTime = 40000000;
@@ -513,6 +518,18 @@ public class Player extends Thread {
                         skills.get(data[3]).setCooldown();
                         sendCooldown(data);
                         nextFrameTime = 0;
+                        break;
+                    case Skill.BOW_STORM:
+                        queuePlayerState(PLAYER_STATE_BOW_STORM);
+                        skills.get(data[3]).setCooldown();
+                        sendCooldown(data);
+                        nextFrameTime = 20000000;
+                        break;
+                    case Skill.BOW_FROST:
+                        queuePlayerState(PLAYER_STATE_BOW_FROST);
+                        skills.get(data[3]).setCooldown();
+                        sendCooldown(data);
+                        nextFrameTime = 40000000;
                         break;
                 }
             }
@@ -717,6 +734,56 @@ public class Player extends Thread {
         }
     }
 
+    private void updateSkillBowFrost() {
+        if (skillDuration == 160) {
+            ProjBowFrost proj = new ProjBowFrost(packetSender, logic, logic.getNextProjKey(), this, x, y);
+            logic.queueAddProj(proj);
+            byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT * 2];
+            bytes[0] = Globals.DATA_PARTICLE_EFFECT;
+            bytes[1] = Globals.PARTICLE_BOW_FROSTARROW;
+            byte[] posXInt = Globals.intToByte((int) proj.getHitbox()[0].getX());
+            bytes[2] = posXInt[0];
+            bytes[3] = posXInt[1];
+            bytes[4] = posXInt[2];
+            bytes[5] = posXInt[3];
+            byte[] posYInt = Globals.intToByte((int) proj.getHitbox()[0].getY());
+            bytes[6] = posYInt[0];
+            bytes[7] = posYInt[1];
+            bytes[8] = posYInt[2];
+            bytes[9] = posYInt[3];
+            bytes[10] = facing;
+            packetSender.sendAll(bytes, logic.getRoom());
+        }
+        if (skillDuration >= 500) {
+            setPlayerState(PLAYER_STATE_STAND);
+        }
+    }
+
+    private void updateSkillBowStorm() {
+        if (skillDuration == 100) {
+            ProjBowStorm proj = new ProjBowStorm(packetSender, logic, logic.getNextProjKey(), this, x, y);
+            logic.queueAddProj(proj);
+            byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT * 2];
+            bytes[0] = Globals.DATA_PARTICLE_EFFECT;
+            bytes[1] = Globals.PARTICLE_BOW_STORM;
+            byte[] posXInt = Globals.intToByte((int) proj.getHitbox()[0].getX());
+            bytes[2] = posXInt[0];
+            bytes[3] = posXInt[1];
+            bytes[4] = posXInt[2];
+            bytes[5] = posXInt[3];
+            byte[] posYInt = Globals.intToByte((int) proj.getHitbox()[0].getY());
+            bytes[6] = posYInt[0];
+            bytes[7] = posYInt[1];
+            bytes[8] = posYInt[2];
+            bytes[9] = posYInt[3];
+            bytes[10] = facing;
+            packetSender.sendAll(bytes, logic.getRoom());
+        }
+        if (skillDuration >= 500) {
+            setPlayerState(PLAYER_STATE_STAND);
+        }
+    }
+
     private void updateSkillBowRapid() {
         if (skillDuration == 150 || skillDuration == 300 || skillDuration == 450) {
             double projY = y;
@@ -750,7 +817,7 @@ public class Player extends Thread {
 
     private void updateSkillBowVolley() {
         if (skillDuration % 100 == 0 && skillCounter < 20) {
-            ProjBowVolley proj = new ProjBowVolley(packetSender, logic, logic.getNextProjKey(), this, x, y -10+ rng.nextInt(40));
+            ProjBowVolley proj = new ProjBowVolley(packetSender, logic, logic.getNextProjKey(), this, x, y - 10 + rng.nextInt(40));
             logic.queueAddProj(proj);
             byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT * 2];
             bytes[0] = Globals.DATA_PARTICLE_EFFECT;
@@ -867,6 +934,13 @@ public class Player extends Thread {
             case PLAYER_STATE_BOW_VOLLEY:
                 updateSkillBowVolley();
                 break;
+            case PLAYER_STATE_BOW_STORM:
+                updateSkillBowStorm();
+                break;
+            case PLAYER_STATE_BOW_FROST:
+                updateSkillBowFrost();
+                break;
+
         }
     }
 
@@ -877,6 +951,7 @@ public class Player extends Thread {
     }
 
     private void updateHP() {
+        //Empty damage queued
         while (!damageQueue.isEmpty()) {
             Integer dmg = damageQueue.poll();
             if (dmg != null) {
@@ -885,7 +960,7 @@ public class Player extends Thread {
                 nextHPSend = 0;
             }
         }
-
+        //Empty healing queued
         while (!healQueue.isEmpty()) {
             Integer heal = healQueue.poll();
             if (heal != null) {
@@ -893,14 +968,16 @@ public class Player extends Thread {
                 nextHPSend = 0;
             }
         }
-
+        //Add regenerated HP(1% of REGEN per 10ms tick)
         stats[Globals.STAT_MINHP] += stats[Globals.STAT_REGEN] / 100D;
+
         if (stats[Globals.STAT_MINHP] > stats[Globals.STAT_MAXHP]) {
             stats[Globals.STAT_MINHP] = stats[Globals.STAT_MAXHP];
         } else if (stats[Globals.STAT_MINHP] < 0) {
             stats[Globals.STAT_MINHP] = 0;
         }
 
+        //Update client hp every 150ms or if damaged/healed(excluding regen).
         if (nextHPSend <= 0) {
             byte[] stat = Globals.intToByte((int) stats[Globals.STAT_MINHP]);
             byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT];
@@ -914,6 +991,7 @@ public class Player extends Thread {
     }
 
     private void updateBuffs() {
+        //Update exisiting buffs
         isStun = null;
         isKnockback = null;
         LinkedList<Byte> remove = new LinkedList<>();
@@ -937,6 +1015,15 @@ public class Player extends Thread {
             buffs.remove(bKey);
             returnBuffKey(bKey);
         }
+
+        //Empty and add buffs from queue
+        while (!buffQueue.isEmpty()) {
+            Buff b = buffQueue.poll();
+            Byte bKey = getNextBuffKey();
+            if (bKey != null && b != null) {
+                buffs.put(bKey, b);
+            }
+        }
     }
 
     public double rollDamage() {
@@ -948,11 +1035,19 @@ public class Player extends Thread {
         return rng.nextInt(10000) + 1 < (int) (stats[Globals.STAT_CRITCHANCE] * 10000);
     }
 
+    public boolean rollCrit(double bonusCritChance) {
+        return rng.nextInt(10000) + 1 < (int) (stats[Globals.STAT_CRITCHANCE] * 10000) + bonusCritChance;
+    }
+
     private void updateStats() {
         stats[Globals.STAT_ARMOR] = Globals.calcArmor((int) (stats[Globals.STAT_DEFENSE] + bonusStats[Globals.STAT_DEFENSE]));
         stats[Globals.STAT_REGEN] = Globals.calcRegen((int) (stats[Globals.STAT_SPIRIT] + bonusStats[Globals.STAT_SPIRIT]));
+        double hpPercent = 1;
+        if (stats[Globals.STAT_MAXHP] > 0) {
+            hpPercent = stats[Globals.STAT_MINHP] / stats[Globals.STAT_MAXHP];
+        }
         stats[Globals.STAT_MAXHP] = Globals.calcMaxHP((int) (stats[Globals.STAT_DEFENSE] + bonusStats[Globals.STAT_DEFENSE]));
-        stats[Globals.STAT_MINHP] = 0;
+        stats[Globals.STAT_MINHP] = hpPercent * stats[Globals.STAT_MAXHP];
         stats[Globals.STAT_MINDMG] = Globals.calcMinDmg((int) (stats[Globals.STAT_POWER] + bonusStats[Globals.STAT_POWER]));
         stats[Globals.STAT_MAXDMG] = Globals.calcMaxDmg((int) (stats[Globals.STAT_POWER] + bonusStats[Globals.STAT_POWER]));
         stats[Globals.STAT_CRITCHANCE] = Globals.calcCritChance((int) (stats[Globals.STAT_SPIRIT] + bonusStats[Globals.STAT_SPIRIT]));
@@ -1013,11 +1108,8 @@ public class Player extends Thread {
      *
      * @param b New Buff
      */
-    public void addBuff(Buff b) {
-        Byte bKey = getNextBuffKey();
-        if (bKey != null) {
-            buffs.put(bKey, b);
-        }
+    public void queueBuff(Buff b) {
+        buffQueue.add(b);
     }
 
     private void updateJump() {
@@ -1087,7 +1179,7 @@ public class Player extends Thread {
         }
     }
 
-    public void processUseSkill(byte[] data) {
+    public void queueSkillUse(byte[] data) {
         lastActionTime = Globals.SERVER_MAX_IDLE;
         skillUseQueue.add(data);
     }
@@ -1316,6 +1408,26 @@ public class Player extends Thread {
                 animState = Globals.PLAYER_STATE_ATTACKBOW;
                 if (frame != 4) {
                     frame = 4;
+                }
+                break;
+            case PLAYER_STATE_BOW_STORM:
+                nextFrameTime -= Globals.LOGIC_UPDATE;
+                animState = Globals.PLAYER_STATE_ATTACKBOW;
+                if (nextFrameTime <= 0) {
+                    if (frame < 4) {
+                        frame++;
+                        nextFrameTime = 20000000;
+                    }
+                }
+                break;
+            case PLAYER_STATE_BOW_FROST:
+                nextFrameTime -= Globals.LOGIC_UPDATE;
+                animState = Globals.PLAYER_STATE_ATTACKBOW;
+                if (nextFrameTime <= 0) {
+                    if (frame < 4) {
+                        frame++;
+                        nextFrameTime = 40000000;
+                    }
                 }
                 break;
         }

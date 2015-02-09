@@ -290,7 +290,7 @@ public class LogicModule extends Thread {
                     if (data != null) {
                         byte key = data[2];
                         if (players.containsKey(key)) {
-                            players.get(key).processUseSkill(data);
+                            players.get(key).queueSkillUse(data);
                         }
                     }
                 }

@@ -56,7 +56,7 @@ public class ProjBowVolley extends ProjBase {
             if (p != null) {
                 int damage = (int) (owner.rollDamage() * (.25 + owner.getSkillLevel(Skill.BOW_VOLLEY) * .02));
                 p.queueDamage(damage);
-                p.addBuff(new BuffKnockback(300, (owner.getFacing() == Globals.RIGHT) ? 4 : -4, -5, p));
+                p.queueBuff(new BuffKnockback(300, (owner.getFacing() == Globals.RIGHT) ? 4 : -4, -5, p));
             }
         }
         queuedEffect = false;

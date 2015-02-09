@@ -15,28 +15,31 @@ import java.util.Map;
  *
  * @author Ken Kwan
  */
-public class ProjSwordMulti extends ProjBase {
+public class ProjBowStorm extends ProjBase {
 
     private final LinkedList<Player> queue = new LinkedList<>();
 
-    public ProjSwordMulti(PacketSender b, LogicModule l, int k, Player o, double x, double y) {
+    public ProjBowStorm(PacketSender b, LogicModule l, int k, Player o, double x, double y) {
         super(b, l, k);
         owner = o;
         this.x = x;
         this.y = y;
         hitbox = new Rectangle2D.Double[1];
         if (owner.getFacing() == Globals.RIGHT) {
-            hitbox[0] = new Rectangle2D.Double(x - 60, y - 220, 240, 240);
+            hitbox[0] = new Rectangle2D.Double(x + 80, y - 450, 700, 450);
         } else {
-            hitbox[0] = new Rectangle2D.Double(x - 240 + 60, y - 220, 240, 240);
+            hitbox[0] = new Rectangle2D.Double(x - 700 - 80, y - 450, 700, 450);
 
         }
-        duration = 600;
+        duration = 5000;
     }
 
     @Override
     public void update() {
         duration -= Globals.nsToMs(Globals.LOGIC_UPDATE);
+        if (duration % 100 == 0 && duration < 5000) {
+            pHit.clear();
+        }
         for (Map.Entry<Byte, Player> pEntry : logic.getPlayers().entrySet()) {
             Player p = pEntry.getValue();
             if (p != owner && !pHit.contains(p) && p.intersectHitbox(hitbox[0])) {
@@ -55,9 +58,9 @@ public class ProjSwordMulti extends ProjBase {
         while (!queue.isEmpty()) {
             Player p = queue.poll();
             if (p != null) {
-                int damage = (int) (owner.rollDamage());
+                int damage = (int) (owner.rollDamage() * 0.1 + (.01 * owner.getSkillLevel(Skill.BOW_STORM)));
                 p.queueDamage(damage);
-                p.queueBuff(new BuffKnockback(300, (owner.getFacing() == Globals.RIGHT) ? 4 : -4, -2, p));
+                p.queueBuff(new BuffKnockback(200, (owner.getFacing() == Globals.RIGHT) ? 2 : -2, -2, p));
             }
         }
         queuedEffect = false;

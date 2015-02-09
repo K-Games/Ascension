@@ -56,7 +56,7 @@ public class ProjBowRapid extends ProjBase {
             if (p != null) {
                 int damage = (int) (owner.rollDamage() * (.75 + owner.getSkillLevel(Skill.BOW_RAPID) * .01));
                 p.queueDamage(damage);
-                p.addBuff(new BuffKnockback(300, (owner.getFacing() == Globals.RIGHT) ? 4 : -4, -5, p));
+                p.queueBuff(new BuffKnockback(300, (owner.getFacing() == Globals.RIGHT) ? 4 : -4, -5, p));
             }
         }
         queuedEffect = false;
