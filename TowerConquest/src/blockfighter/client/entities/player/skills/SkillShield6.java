@@ -1,8 +1,6 @@
 package blockfighter.client.entities.player.skills;
 
-import blockfighter.client.Globals;
 import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
 
 /**
  *

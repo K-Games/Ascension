@@ -1,7 +1,6 @@
 package blockfighter.client.entities.particles;
 
 import blockfighter.client.Globals;
-import blockfighter.client.LogicModule;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
@@ -14,8 +13,8 @@ public class ParticleMenuUpgrade extends Particle {
     private int color, deltaX, deltaY, oX, oY;
     private boolean set = false;
 
-    public ParticleMenuUpgrade( int k, int x, int y, int c, int dX, int dY) {
-        super( k, x, y);
+    public ParticleMenuUpgrade(int k, int x, int y, int c, int dX, int dY) {
+        super(k, x, y);
         duration = 1000;
         color = c;
         deltaX = dX;

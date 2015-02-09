@@ -56,8 +56,8 @@ public class ScreenSkills extends ScreenMenu {
 
         skillSlots[Skill.SHIELD_FORTIFY] = new Rectangle2D.Double(767, 55, 60, 60);
         skillSlots[Skill.SHIELD_IRONFORT] = new Rectangle2D.Double(767, 145, 60, 60);
-        skillSlots[Skill.SHIELD_3] = new Rectangle2D.Double(767, 235, 60, 60);
-        skillSlots[Skill.SHIELD_4] = new Rectangle2D.Double(767, 325, 60, 60);
+        skillSlots[Skill.SHIELD_CHARGE] = new Rectangle2D.Double(767, 235, 60, 60);
+        skillSlots[Skill.SHIELD_REFLECT] = new Rectangle2D.Double(767, 325, 60, 60);
         skillSlots[Skill.SHIELD_5] = new Rectangle2D.Double(767, 415, 60, 60);
         skillSlots[Skill.SHIELD_6] = new Rectangle2D.Double(767, 505, 60, 60);
 

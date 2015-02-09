@@ -94,6 +94,7 @@ public class Player extends Thread {
         BufferedImage sprite = Globals.CHAR_SPRITE[s][f];
         int drawSrcX = x - ((facing == Globals.RIGHT) ? 1 : -1) * sprite.getWidth() / 2;
         int drawSrcY = y - sprite.getHeight();
+        int drawDscY = drawSrcY + sprite.getHeight();
         int drawDscX = x + ((facing == Globals.RIGHT) ? 1 : -1) * sprite.getWidth() / 2;
         switch (s) {
             case Globals.PLAYER_STATE_ATTACK1:
@@ -113,7 +114,7 @@ public class Player extends Thread {
                 drawDscX += ((facing == Globals.RIGHT) ? 1 : -1) * 40;
                 break;
         }
-        g.drawImage(sprite, drawSrcX, drawSrcY, drawDscX, y, 0, 0, sprite.getWidth(), sprite.getHeight(), null);
+        g.drawImage(sprite, drawSrcX, drawSrcY, drawDscX, drawDscY, 0, 0, sprite.getWidth(), sprite.getHeight(), null);
         if (equipment[Globals.ITEM_OFFHAND] != null) {
             equipment[Globals.ITEM_OFFHAND].drawIngame(g, x, y, s, f, facing, true);
         }

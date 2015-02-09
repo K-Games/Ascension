@@ -1,41 +1,39 @@
 package blockfighter.client;
 
-import blockfighter.client.entities.player.skills.SkillPassive11;
-import blockfighter.client.entities.player.skills.SkillShield6;
-import blockfighter.client.entities.player.skills.SkillPassive7;
-import blockfighter.client.entities.player.skills.SkillPassive8;
-import blockfighter.client.entities.player.skills.SkillSwordVorpal;
-import blockfighter.client.entities.player.skills.SkillPassive2;
-import blockfighter.client.entities.player.skills.SkillBowVolley;
-import blockfighter.client.entities.player.skills.SkillBowArc;
-import blockfighter.client.entities.player.skills.SkillSwordSlash;
-import blockfighter.client.entities.player.skills.SkillPassive9;
-import blockfighter.client.entities.player.skills.SkillShieldIron;
-import blockfighter.client.entities.player.skills.SkillShieldFortify;
-import blockfighter.client.entities.player.skills.SkillPassive12;
-import blockfighter.client.entities.player.skills.SkillBowStorm;
-import blockfighter.client.entities.player.skills.SkillPassive6;
-import blockfighter.client.entities.player.skills.SkillSwordMulti;
-import blockfighter.client.entities.player.skills.SkillPassive4;
-import blockfighter.client.entities.player.skills.SkillShield5;
-import blockfighter.client.entities.player.skills.SkillBowPower;
-import blockfighter.client.entities.player.skills.SkillPassive1;
-import blockfighter.client.entities.player.skills.SkillShield4;
-import blockfighter.client.entities.player.skills.SkillSwordCinder;
-import blockfighter.client.entities.player.skills.SkillPassive10;
-import blockfighter.client.entities.player.skills.SkillShield3;
-import blockfighter.client.entities.player.skills.SkillBowFrost;
-import blockfighter.client.entities.player.skills.SkillPassive5;
-import blockfighter.client.entities.player.skills.SkillPassive3;
-import blockfighter.client.entities.player.skills.SkillSwordTaunt;
-import blockfighter.client.entities.player.skills.SkillSwordDrive;
-import blockfighter.client.entities.player.skills.Skill;
-import blockfighter.client.entities.player.skills.SkillBowRapid;
 import blockfighter.client.entities.items.ItemEquip;
 import blockfighter.client.entities.items.ItemUpgrade;
-
+import blockfighter.client.entities.player.skills.Skill;
+import blockfighter.client.entities.player.skills.SkillBowArc;
+import blockfighter.client.entities.player.skills.SkillBowFrost;
+import blockfighter.client.entities.player.skills.SkillBowPower;
+import blockfighter.client.entities.player.skills.SkillBowRapid;
+import blockfighter.client.entities.player.skills.SkillBowStorm;
+import blockfighter.client.entities.player.skills.SkillBowVolley;
+import blockfighter.client.entities.player.skills.SkillPassive1;
+import blockfighter.client.entities.player.skills.SkillPassive10;
+import blockfighter.client.entities.player.skills.SkillPassive11;
+import blockfighter.client.entities.player.skills.SkillPassive12;
+import blockfighter.client.entities.player.skills.SkillPassive2;
+import blockfighter.client.entities.player.skills.SkillPassive3;
+import blockfighter.client.entities.player.skills.SkillPassive4;
+import blockfighter.client.entities.player.skills.SkillPassive5;
+import blockfighter.client.entities.player.skills.SkillPassive6;
+import blockfighter.client.entities.player.skills.SkillPassive7;
+import blockfighter.client.entities.player.skills.SkillPassive8;
+import blockfighter.client.entities.player.skills.SkillPassive9;
+import blockfighter.client.entities.player.skills.SkillShield5;
+import blockfighter.client.entities.player.skills.SkillShield6;
+import blockfighter.client.entities.player.skills.SkillShieldCharge;
+import blockfighter.client.entities.player.skills.SkillShieldFortify;
+import blockfighter.client.entities.player.skills.SkillShieldIron;
+import blockfighter.client.entities.player.skills.SkillShieldReflect;
+import blockfighter.client.entities.player.skills.SkillSwordCinder;
+import blockfighter.client.entities.player.skills.SkillSwordDrive;
+import blockfighter.client.entities.player.skills.SkillSwordMulti;
+import blockfighter.client.entities.player.skills.SkillSwordSlash;
+import blockfighter.client.entities.player.skills.SkillSwordTaunt;
+import blockfighter.client.entities.player.skills.SkillSwordVorpal;
 import java.awt.event.KeyEvent;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -88,8 +86,8 @@ public class SaveData {
 
         skills[Skill.SHIELD_FORTIFY] = new SkillShieldFortify();
         skills[Skill.SHIELD_IRONFORT] = new SkillShieldIron();
-        skills[Skill.SHIELD_3] = new SkillShield3();
-        skills[Skill.SHIELD_4] = new SkillShield4();
+        skills[Skill.SHIELD_CHARGE] = new SkillShieldCharge();
+        skills[Skill.SHIELD_REFLECT] = new SkillShieldReflect();
         skills[Skill.SHIELD_5] = new SkillShield5();
         skills[Skill.SHIELD_6] = new SkillShield6();
 
@@ -499,12 +497,12 @@ public class SaveData {
         return uniqueID;
     }
 
-    public void levelUp(){
+    public void levelUp() {
         baseStats[Globals.STAT_LEVEL] += 1;
         baseStats[Globals.STAT_SKILLPOINTS] += 3;
         calcStats();
     }
-    
+
     public void calcStats() {
         for (int i = 0; i < bonusStats.length; i++) {
             bonusStats[i] = 0;

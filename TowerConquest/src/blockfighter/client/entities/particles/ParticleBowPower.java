@@ -7,8 +7,8 @@ import java.awt.image.BufferedImage;
 
 public class ParticleBowPower extends Particle {
 
-    public ParticleBowPower( int k, int x, int y, byte f) {
-        super( k, x, y, f);
+    public ParticleBowPower(int k, int x, int y, byte f) {
+        super(k, x, y, f);
         frame = 0;
         frameDuration = 25;
         duration = 600;
@@ -26,7 +26,7 @@ public class ParticleBowPower extends Particle {
         }
         if (frameDuration <= 0) {
             frameDuration = 25;
-            if (frame < PARTICLE_SPRITE[Globals.PARTICLE_BOW_POWER].length-1) {
+            if (frame < PARTICLE_SPRITE[Globals.PARTICLE_BOW_POWER].length - 1) {
                 frame++;
             }
         }

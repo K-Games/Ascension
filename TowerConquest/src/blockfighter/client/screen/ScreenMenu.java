@@ -25,12 +25,12 @@ public abstract class ScreenMenu extends Screen {
     protected double lastUpdateTime = System.nanoTime();
     protected static ConcurrentHashMap<Integer, Particle> particles = new ConcurrentHashMap<>(20);
     private Rectangle2D.Double[] menuBox = new Rectangle2D.Double[7];
-    
+
     protected DecimalFormat df = new DecimalFormat("###,###,##0.##");
 
     public ScreenMenu() {
         if (!particles.containsKey(0)) {
-            particles.put(0, new ParticleMenuSmoke( 0, 0, 0));
+            particles.put(0, new ParticleMenuSmoke(0, 0, 0));
             particles.put(1, new ParticleMenuSmoke(1, 1280, 0));
         }
         for (int i = 0; i < menuBox.length; i++) {

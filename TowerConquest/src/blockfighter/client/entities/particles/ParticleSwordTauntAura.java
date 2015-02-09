@@ -10,8 +10,8 @@ public class ParticleSwordTauntAura extends Particle {
 
     private byte player;
 
-    public ParticleSwordTauntAura( int k, int x, int y, byte f, byte p) {
-        super( k, x, y, f);
+    public ParticleSwordTauntAura(int k, int x, int y, byte f, byte p) {
+        super(k, x, y, f);
         frame = 0;
         frameDuration = 25;
         duration = 500;
@@ -33,7 +33,7 @@ public class ParticleSwordTauntAura extends Particle {
         }
         if (frameDuration <= 0) {
             frameDuration = 25;
-            if (frame < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_TAUNTAURA1].length-1) {
+            if (frame < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_TAUNTAURA1].length - 1) {
                 frame++;
             }
         }

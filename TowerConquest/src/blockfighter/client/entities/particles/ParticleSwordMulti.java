@@ -6,8 +6,8 @@ import java.awt.image.BufferedImage;
 
 public class ParticleSwordMulti extends Particle {
 
-    public ParticleSwordMulti( int k, int x, int y, byte f) {
-        super( k, x, y, f);
+    public ParticleSwordMulti(int k, int x, int y, byte f) {
+        super(k, x, y, f);
         frame = 0;
         frameDuration = 25;
         duration = 600;

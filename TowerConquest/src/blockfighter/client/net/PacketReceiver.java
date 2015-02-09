@@ -31,7 +31,7 @@ public class PacketReceiver extends Thread {
     public static void setLogic(LogicModule l) {
         logic = l;
     }
-    
+
     public PacketReceiver(DatagramSocket s) {
         socket = s;
     }

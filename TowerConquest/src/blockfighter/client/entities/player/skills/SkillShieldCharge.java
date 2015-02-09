@@ -8,16 +8,16 @@ import java.awt.Graphics2D;
  *
  * @author Ken Kwan
  */
-public class SkillShieldFortify extends Skill {
+public class SkillShieldCharge extends Skill {
 
-    public SkillShieldFortify() {
-        skillCode = SHIELD_FORTIFY;
-        maxCooldown = 15000;
+    public SkillShieldCharge() {
+        skillCode = SHIELD_CHARGE;
+        maxCooldown = 8000;
     }
 
     @Override
     public void drawInfo(Graphics2D g, int x, int y) {
-        int boxHeight = 120, boxWidth = 350;
+        int boxHeight = 160, boxWidth = 335;
 
         if (y + boxHeight > 720) {
             y = 700 - boxHeight;
@@ -39,16 +39,17 @@ public class SkillShieldFortify extends Skill {
         g.drawString("Level: " + level, x + 80, y + 50);
         g.drawString("Cooldown: " + maxCooldown / 1000 + " Seconds", x + 80, y + 70);
 
-        g.drawString("Increase Armor by 20 + " + level + "%(" + (level + 20) + "%) for 5 seconds.", x + 10, y + 90);
-        g.drawString("Max: Restore 20% HP over 5 seconds.", x + 10, y + 110);
+        g.drawString("Charge forward with your shield.", x + 10, y + 90);
+        g.drawString("Stop the first enemy you hit and deal", x + 10, y + 110);
+        g.drawString("300% + " + level * 20 + "%(" + (300 + level * 20) + "%) damage.", x + 10, y + 130);
+        g.drawString("Max: Stun the target hit for 2 seconds.", x + 10, y + 150);
     }
 
     @Override
     public String getSkillName() {
         if (isMaxed()) {
-            return "Rekindling Soul";
+            return "Overwhelm";
         }
-        return "Fortify";
+        return "Charge";
     }
-
 }

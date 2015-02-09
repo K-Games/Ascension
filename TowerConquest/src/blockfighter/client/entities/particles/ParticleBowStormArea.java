@@ -6,8 +6,8 @@ import java.awt.Graphics2D;
 
 public class ParticleBowStormArea extends Particle {
 
-    public ParticleBowStormArea( int k, int x, int y, byte f) {
-        super( k, x, y, f);
+    public ParticleBowStormArea(int k, int x, int y, byte f) {
+        super(k, x, y, f);
         frame = 0;
         frameDuration = 25;
         duration = 5000;

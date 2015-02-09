@@ -10,7 +10,6 @@ import java.awt.event.MouseEvent;
  */
 public class ScreenServerList extends ScreenMenu {
 
-
     @Override
     public void draw(Graphics2D g) {
 

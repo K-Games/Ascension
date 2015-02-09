@@ -11,7 +11,7 @@ public class ParticleSwordDrive extends Particle {
     private byte player;
 
     public ParticleSwordDrive(int k, int x, int y, byte f, byte p) {
-        super( k, x, y, f);
+        super(k, x, y, f);
         frame = 0;
         frameDuration = 25;
         duration = 1000;
@@ -25,7 +25,7 @@ public class ParticleSwordDrive extends Particle {
         if (frameDuration <= 0) {
             frameDuration = 25;
             frame++;
-            if (frame >= PARTICLE_SPRITE[Globals.PARTICLE_SWORD_DRIVE].length-1) {
+            if (frame >= PARTICLE_SPRITE[Globals.PARTICLE_SWORD_DRIVE].length - 1) {
                 frame = 0;
             }
         }

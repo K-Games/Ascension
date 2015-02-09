@@ -16,7 +16,7 @@ public class PacketHandler extends Thread {
     public static void setLogic(LogicModule l) {
         logic = l;
     }
-    
+
     public PacketHandler(DatagramPacket response) {
         r = response;
     }

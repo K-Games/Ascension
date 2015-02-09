@@ -7,8 +7,8 @@ import java.awt.image.BufferedImage;
 
 public class ParticleSwordCinder extends Particle {
 
-    public ParticleSwordCinder( int k, int x, int y, byte f) {
-        super( k, x, y, f);
+    public ParticleSwordCinder(int k, int x, int y, byte f) {
+        super(k, x, y, f);
         frame = 0;
         frameDuration = 50;
         duration = 400;
@@ -26,7 +26,7 @@ public class ParticleSwordCinder extends Particle {
         }
         if (frameDuration <= 0) {
             frameDuration = 50;
-            if (frame < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_CINDER].length-1) {
+            if (frame < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_CINDER].length - 1) {
                 frame++;
             }
         }

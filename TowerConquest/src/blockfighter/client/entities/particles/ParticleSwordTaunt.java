@@ -7,7 +7,7 @@ import java.awt.image.BufferedImage;
 public class ParticleSwordTaunt extends Particle {
 
     public ParticleSwordTaunt(int k, int x, int y, byte f) {
-        super( k, x, y, f);
+        super(k, x, y, f);
         frame = 0;
         frameDuration = 25;
         duration = 400;
@@ -19,7 +19,7 @@ public class ParticleSwordTaunt extends Particle {
         frameDuration -= Globals.LOGIC_UPDATE / 1000000;
         if (frameDuration <= 0) {
             frameDuration = 25;
-            if (frame < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_TAUNT].length-1) {
+            if (frame < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_TAUNT].length - 1) {
                 frame++;
             }
         }

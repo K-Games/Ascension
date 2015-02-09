@@ -74,13 +74,17 @@ public class ItemEquip implements Item {
         ITEM_SPRITES.clear();
     }
 
-    public static void loadItemSprite(int code) {
-        BufferedImage[][] load = new BufferedImage[NUM_PLAYER_STATE][];
-
+    public static void loadItemIcon(int code) {
+        BufferedImage icon = null;
         try {
-            ITEM_ICONS.put(code, ImageIO.read(Globals.class.getResource("sprites/character/equip/" + code + "/attack/mainhand1/icon.png")));
+            icon = ImageIO.read(Globals.class.getResource("sprites/character/equip/" + code + "/attack/mainhand1/icon.png"));
         } catch (Exception ex) {
         }
+        ITEM_ICONS.put(code, icon);
+    }
+
+    public static void loadItemSprite(int code) {
+        BufferedImage[][] load = new BufferedImage[NUM_PLAYER_STATE][];
 
         load[PLAYER_STATE_ATTACK1] = new BufferedImage[5];
         for (int i = 0; i < load[PLAYER_STATE_ATTACK1].length; i++) {
@@ -172,7 +176,7 @@ public class ItemEquip implements Item {
     public static void loadItemDrawOrigin() {
         ITEM_ORIGINPOINT.put(TEMP_SWORD + "_" + Globals.PLAYER_STATE_STAND, new Point(-35, -80));
         ITEM_ORIGINPOINT.put(TEMP_SWORD + "_" + Globals.PLAYER_STATE_WALK, new Point(-33, -207));
-        ITEM_ORIGINPOINT.put(TEMP_SWORD + "_" + Globals.PLAYER_STATE_JUMP, new Point(-30, -180));
+        ITEM_ORIGINPOINT.put(TEMP_SWORD + "_" + Globals.PLAYER_STATE_JUMP, new Point(-30, -190));
         ITEM_ORIGINPOINT.put(TEMP_SWORD + "_" + Globals.PLAYER_STATE_ATTACK1, new Point(-105, -243));
         ITEM_ORIGINPOINT.put(TEMP_SWORD + "_" + Globals.PLAYER_STATE_ATTACK2, new Point(17, -117));
         ITEM_ORIGINPOINT.put(TEMP_SWORD + "_" + Globals.PLAYER_STATE_ATTACKOFF1, new Point(25, -105));
@@ -180,7 +184,7 @@ public class ItemEquip implements Item {
 
         ITEM_ORIGINPOINT.put(TEMP_BOW + "_" + Globals.PLAYER_STATE_STAND, new Point(-111, -122));
         ITEM_ORIGINPOINT.put(TEMP_BOW + "_" + Globals.PLAYER_STATE_WALK, new Point(-115, -177));
-        ITEM_ORIGINPOINT.put(TEMP_BOW + "_" + Globals.PLAYER_STATE_JUMP, new Point(-65, -165));
+        ITEM_ORIGINPOINT.put(TEMP_BOW + "_" + Globals.PLAYER_STATE_JUMP, new Point(-65, -170));
         ITEM_ORIGINPOINT.put(TEMP_BOW + "_" + Globals.PLAYER_STATE_ATTACKBOW, new Point(-25, -185));
     }
 
@@ -393,11 +397,16 @@ public class ItemEquip implements Item {
     private void drawMenu(Graphics2D g, int x, int y) {
         if (ITEM_ICONS.containsKey(itemCode)) {
             BufferedImage sprite = ITEM_ICONS.get(itemCode);
-            g.drawImage(sprite, x, y, null);
+            if (sprite != null) {
+                g.drawImage(sprite, x, y, null);
+            } else {
+                g.setFont(Globals.ARIAL_15PT);
+                g.drawString("PH", x + 20, y + 30);
+            }
         } else {
-            g.setFont(Globals.ARIAL_15PT);
-            g.drawString("PH", x + 20, y + 30);
+            loadItemIcon(itemCode);
         }
+
     }
 
     public void drawIngame(Graphics2D g, int x, int y, byte state, byte frame, byte facing) {

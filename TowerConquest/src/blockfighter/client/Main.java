@@ -9,9 +9,9 @@ import blockfighter.client.net.PacketReceiver;
 import blockfighter.client.render.RenderModule;
 import blockfighter.client.render.RenderPanel;
 import blockfighter.client.screen.Screen;
-import java.awt.*;
+import java.awt.Dimension;
 import java.lang.reflect.Field;
-import javax.swing.*;
+import javax.swing.JFrame;
 
 /**
  *
@@ -63,7 +63,7 @@ public class Main {
         Player.setLogic(logic);
         PacketHandler.setLogic(logic);
         PacketReceiver.setLogic(logic);
-        
+
         KeyHandler keyHandler = new KeyHandler();
         MouseHandler mouseHandler = new MouseHandler();
         //frame.setUndecorated(true);

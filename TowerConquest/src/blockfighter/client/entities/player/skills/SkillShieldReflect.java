@@ -8,16 +8,16 @@ import java.awt.Graphics2D;
  *
  * @author Ken Kwan
  */
-public class SkillShieldFortify extends Skill {
+public class SkillShieldReflect extends Skill {
 
-    public SkillShieldFortify() {
-        skillCode = SHIELD_FORTIFY;
+    public SkillShieldReflect() {
+        skillCode = SHIELD_REFLECT;
         maxCooldown = 15000;
     }
 
     @Override
     public void drawInfo(Graphics2D g, int x, int y) {
-        int boxHeight = 120, boxWidth = 350;
+        int boxHeight = 160, boxWidth = 375;
 
         if (y + boxHeight > 720) {
             y = 700 - boxHeight;
@@ -39,16 +39,17 @@ public class SkillShieldFortify extends Skill {
         g.drawString("Level: " + level, x + 80, y + 50);
         g.drawString("Cooldown: " + maxCooldown / 1000 + " Seconds", x + 80, y + 70);
 
-        g.drawString("Increase Armor by 20 + " + level + "%(" + (level + 20) + "%) for 5 seconds.", x + 10, y + 90);
-        g.drawString("Max: Restore 20% HP over 5 seconds.", x + 10, y + 110);
+        g.drawString("For 3 seconds, when you take damage, you explode", x + 10, y + 90);
+        g.drawString("dealing 40% + " + level * 2 + "%(" + (40 + level * 2) + "%) of damage taken.", x + 10, y + 110);
+        g.drawString("Your HP cannot fall below 5% for the duration.", x + 10, y + 130);
+        g.drawString("Max: You now reflect 40% of damage taken by allies.", x + 10, y + 150);
     }
 
     @Override
     public String getSkillName() {
         if (isMaxed()) {
-            return "Rekindling Soul";
+            return "Strength in Numbers";
         }
-        return "Fortify";
+        return "Reflect Damage";
     }
-
 }

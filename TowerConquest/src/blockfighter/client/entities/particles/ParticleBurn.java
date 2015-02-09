@@ -6,8 +6,8 @@ import java.awt.image.BufferedImage;
 
 public class ParticleBurn extends Particle {
 
-    public ParticleBurn( int k, int x, int y, byte f) {
-        super( k, x, y, f);
+    public ParticleBurn(int k, int x, int y, byte f) {
+        super(k, x, y, f);
         this.x += rng.nextInt(100) + ((facing == Globals.RIGHT) ? 60 : 0);
         this.y += rng.nextInt(200) + 20;
         frame = 0;
@@ -19,10 +19,10 @@ public class ParticleBurn extends Particle {
     public void update() {
         super.update();
         frameDuration -= Globals.LOGIC_UPDATE / 1000000;
-        y-=3;
+        y -= 3;
         if (frameDuration <= 0) {
             frameDuration = 25;
-            if (frame < PARTICLE_SPRITE[Globals.PARTICLE_BURN].length-1) {
+            if (frame < PARTICLE_SPRITE[Globals.PARTICLE_BURN].length - 1) {
                 frame++;
             }
         }

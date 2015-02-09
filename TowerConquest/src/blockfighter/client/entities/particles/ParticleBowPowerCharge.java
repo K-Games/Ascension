@@ -6,8 +6,9 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 public class ParticleBowPowerCharge extends Particle {
-    public ParticleBowPowerCharge( int k, int x, int y, byte f) {
-        super( k, x, y, f);
+
+    public ParticleBowPowerCharge(int k, int x, int y, byte f) {
+        super(k, x, y, f);
         frame = 0;
         frameDuration = 25;
         duration = 600;
@@ -19,7 +20,7 @@ public class ParticleBowPowerCharge extends Particle {
         frameDuration -= Globals.LOGIC_UPDATE / 1000000;
         if (frameDuration <= 0) {
             frameDuration = 25;
-            if (frame < PARTICLE_SPRITE[Globals.PARTICLE_BOW_POWERCHARGE].length-1) {
+            if (frame < PARTICLE_SPRITE[Globals.PARTICLE_BOW_POWERCHARGE].length - 1) {
                 frame++;
             }
         }
@@ -34,10 +35,10 @@ public class ParticleBowPowerCharge extends Particle {
             return;
         }
         BufferedImage sprite = PARTICLE_SPRITE[Globals.PARTICLE_BOW_POWERCHARGE][frame];
-        int drawSrcX = x - sprite.getWidth()/2;
+        int drawSrcX = x - sprite.getWidth() / 2;
         int drawSrcY = y;
         int drawDscY = drawSrcY + sprite.getHeight();
-        int drawDscX = x + sprite.getWidth()/2;
+        int drawDscX = x + sprite.getWidth() / 2;
         g.drawImage(sprite, drawSrcX, drawSrcY, drawDscX, drawDscY, 0, 0, sprite.getWidth(), sprite.getHeight(), null);
         g.setColor(Color.WHITE);
     }

@@ -1,7 +1,7 @@
 package blockfighter.client.render;
 
-import blockfighter.client.LogicModule;
 import blockfighter.client.Globals;
+import blockfighter.client.LogicModule;
 import blockfighter.client.screen.ScreenInventory;
 import java.util.logging.Level;
 import java.util.logging.Logger;
