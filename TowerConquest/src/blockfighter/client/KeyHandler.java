@@ -9,10 +9,10 @@ import java.awt.event.KeyListener;
  */
 public class KeyHandler implements KeyListener {
 
-    LogicModule logic = null;
+    private static LogicModule logic = null;
 
-    public KeyHandler(LogicModule logic) {
-        this.logic = logic;
+    public static void setLogic(LogicModule l) {
+        logic = l;
     }
 
     @Override

@@ -1,7 +1,6 @@
 package blockfighter.client.screen;
 
 import blockfighter.client.Globals;
-import blockfighter.client.LogicModule;
 import blockfighter.client.SaveData;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -30,8 +29,7 @@ public class ScreenSelectChar extends ScreenMenu {
 
     private byte selectNum = -1;
 
-    public ScreenSelectChar(LogicModule l) {
-        super(l);
+    public ScreenSelectChar() {
         CREATE_NAMEFIELD.setBounds(440, 300, 400, 50);
         CREATE_NAMEFIELD.setFont(Globals.ARIAL_30PT);
         CREATE_NAMEFIELD.setForeground(Color.WHITE);
@@ -210,7 +208,7 @@ public class ScreenSelectChar extends ScreenMenu {
                         break;
                     } else {
                         logic.setSelectedChar(charsData[i]);
-                        logic.setScreen(new ScreenStats(logic));
+                        logic.setScreen(new ScreenStats());
                     }
                 }
             }

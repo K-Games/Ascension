@@ -11,11 +11,14 @@ import java.net.DatagramPacket;
 public class PacketHandler extends Thread {
 
     private DatagramPacket r = null;
-    private final LogicModule logic;
+    private static LogicModule logic;
 
-    public PacketHandler(DatagramPacket response, LogicModule logic) {
+    public static void setLogic(LogicModule l) {
+        logic = l;
+    }
+    
+    public PacketHandler(DatagramPacket response) {
         r = response;
-        this.logic = logic;
     }
 
     @Override

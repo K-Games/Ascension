@@ -7,8 +7,8 @@ import java.awt.image.BufferedImage;
 
 public class ParticleBowPowerParticle extends Particle {
 
-    public ParticleBowPowerParticle(LogicModule l, int k, int x, int y, byte f) {
-        super(l, k, x, y, f);
+    public ParticleBowPowerParticle( int k, int x, int y, byte f) {
+        super( k, x, y, f);
         if (facing == Globals.RIGHT) {
             this.x += rng.nextInt(450);
         } else {

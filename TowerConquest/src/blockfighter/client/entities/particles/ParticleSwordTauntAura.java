@@ -1,7 +1,6 @@
 package blockfighter.client.entities.particles;
 
 import blockfighter.client.Globals;
-import blockfighter.client.LogicModule;
 import blockfighter.client.screen.ScreenIngame;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -11,8 +10,8 @@ public class ParticleSwordTauntAura extends Particle {
 
     private byte player;
 
-    public ParticleSwordTauntAura(LogicModule l, int k, int x, int y, byte f, byte p) {
-        super(l, k, x, y, f);
+    public ParticleSwordTauntAura( int k, int x, int y, byte f, byte p) {
+        super( k, x, y, f);
         frame = 0;
         frameDuration = 25;
         duration = 500;
@@ -28,7 +27,7 @@ public class ParticleSwordTauntAura extends Particle {
         frameDuration -= Globals.LOGIC_UPDATE / 1000000;
         if (duration > 100) {
             for (int i = 0; i < 2; i++) {
-                ParticleSwordTauntAuraParticle b = new ParticleSwordTauntAuraParticle(logic, ((ScreenIngame) logic.getScreen()).getNextParticleKey(), x, y, facing);
+                ParticleSwordTauntAuraParticle b = new ParticleSwordTauntAuraParticle(((ScreenIngame) logic.getScreen()).getNextParticleKey(), x, y, facing);
                 ((ScreenIngame) logic.getScreen()).addParticle(b);
             }
         }

@@ -1,7 +1,6 @@
 package blockfighter.client.screen;
 
 import blockfighter.client.Globals;
-import blockfighter.client.LogicModule;
 import blockfighter.client.SaveData;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -21,9 +20,8 @@ public class ScreenKeyBind extends ScreenMenu {
     private Rectangle2D.Double[] keyBox = new Rectangle2D.Double[Globals.NUM_KEYBINDS];
     private int selectedKeyBox = -1;
 
-    public ScreenKeyBind(LogicModule l) {
-        super(l);
-        c = l.getSelectedChar();
+    public ScreenKeyBind() {
+        c = logic.getSelectedChar();
 
         for (int i = 0; i < 12; i++) {
             keyBox[i] = new Rectangle2D.Double(365, 45 + (i * 50), 180, 30);

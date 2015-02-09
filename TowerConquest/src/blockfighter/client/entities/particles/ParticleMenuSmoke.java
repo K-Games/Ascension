@@ -1,7 +1,6 @@
 package blockfighter.client.entities.particles;
 
 import blockfighter.client.Globals;
-import blockfighter.client.LogicModule;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
@@ -11,8 +10,8 @@ import java.awt.image.BufferedImage;
  */
 public class ParticleMenuSmoke extends Particle {
 
-    public ParticleMenuSmoke(LogicModule l, int k, int x, int y) {
-        super(l, k, x, y);
+    public ParticleMenuSmoke( int k, int x, int y) {
+        super( k, x, y);
     }
 
     @Override

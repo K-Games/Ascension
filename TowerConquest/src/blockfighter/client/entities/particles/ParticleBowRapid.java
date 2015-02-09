@@ -1,15 +1,13 @@
 package blockfighter.client.entities.particles;
 
 import blockfighter.client.Globals;
-import blockfighter.client.LogicModule;
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 public class ParticleBowRapid extends Particle {
 
-    public ParticleBowRapid(LogicModule l, int k, int x, int y, byte f) {
-        super(l, k, x, y, f);
+    public ParticleBowRapid( int k, int x, int y, byte f) {
+        super( k, x, y, f);
         frame = 0;
         frameDuration = 50;
         duration = 300;

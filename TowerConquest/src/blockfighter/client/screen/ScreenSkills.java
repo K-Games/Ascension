@@ -1,7 +1,6 @@
 package blockfighter.client.screen;
 
 import blockfighter.client.Globals;
-import blockfighter.client.LogicModule;
 import blockfighter.client.SaveData;
 import blockfighter.client.entities.player.skills.Skill;
 import java.awt.Color;
@@ -36,9 +35,8 @@ public class ScreenSkills extends ScreenMenu {
     private int drawInfoSkill = -1, drawInfoHotkey = -1;
     private int dragSkill = -1, dragHotkey = -1;
 
-    public ScreenSkills(LogicModule l) {
-        super(l);
-        c = l.getSelectedChar();
+    public ScreenSkills() {
+        c = logic.getSelectedChar();
         hotkeyList = c.getHotkeys();
         skillList = c.getSkills();
 

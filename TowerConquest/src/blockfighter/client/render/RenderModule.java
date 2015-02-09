@@ -14,16 +14,19 @@ import javax.swing.JFrame;
 public class RenderModule extends Thread {
 
     private final RenderPanel panel;
-    private final LogicModule logic;
+    private static LogicModule logic;
     private boolean isRunning = false;
     private int FPSCount = 0;
     private JFrame mainFrame;
 
-    public RenderModule(RenderPanel p, LogicModule l, JFrame f) {
+    public RenderModule(RenderPanel p, JFrame f) {
         panel = p;
-        logic = l;
         isRunning = true;
         mainFrame = f;
+    }
+
+    public static void setLogic(LogicModule l) {
+        logic = l;
     }
 
     @Override

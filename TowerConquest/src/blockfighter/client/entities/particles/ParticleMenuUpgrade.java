@@ -14,8 +14,8 @@ public class ParticleMenuUpgrade extends Particle {
     private int color, deltaX, deltaY, oX, oY;
     private boolean set = false;
 
-    public ParticleMenuUpgrade(LogicModule l, int k, int x, int y, int c, int dX, int dY) {
-        super(l, k, x, y);
+    public ParticleMenuUpgrade( int k, int x, int y, int c, int dX, int dY) {
+        super( k, x, y);
         duration = 1000;
         color = c;
         deltaX = dX;

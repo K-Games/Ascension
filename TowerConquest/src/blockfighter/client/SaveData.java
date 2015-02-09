@@ -119,33 +119,33 @@ public class SaveData {
         for (int i = 0; i < inventory.length; i++) {
             inventory[i] = new ItemEquip[100];
         }
-        ItemEquip startEq = new ItemEquip(ItemEquip.TEMP_BOW, 1);
+        ItemEquip startEq = new ItemEquip(ItemEquip.TEMP_BOW, baseStats[Globals.STAT_LEVEL]);
         addItem(ItemEquip.getItemType(startEq.getItemCode()), startEq);
-        startEq = new ItemEquip(ItemEquip.TEMP_SWORD, 1);
+        startEq = new ItemEquip(ItemEquip.TEMP_SWORD, baseStats[Globals.STAT_LEVEL]);
         addItem(ItemEquip.getItemType(startEq.getItemCode()), startEq);
-        startEq = new ItemEquip(ItemEquip.TEMP_QUIVER, 1);
+        startEq = new ItemEquip(ItemEquip.TEMP_QUIVER, baseStats[Globals.STAT_LEVEL]);
         addItem(ItemEquip.getItemType(startEq.getItemCode()), startEq);
-        startEq = new ItemEquip(ItemEquip.TEMP_BLADE, 1);
+        startEq = new ItemEquip(ItemEquip.TEMP_BLADE, baseStats[Globals.STAT_LEVEL]);
         addItem(ItemEquip.getItemType(startEq.getItemCode()), startEq);
-        startEq = new ItemEquip(ItemEquip.TEMP_SHIELD, 1);
+        startEq = new ItemEquip(ItemEquip.TEMP_SHIELD, baseStats[Globals.STAT_LEVEL]);
         addItem(ItemEquip.getItemType(startEq.getItemCode()), startEq);
-        startEq = new ItemEquip(ItemEquip.TEMP_HEAD, 1);
+        startEq = new ItemEquip(ItemEquip.TEMP_HEAD, baseStats[Globals.STAT_LEVEL]);
         addItem(ItemEquip.getItemType(startEq.getItemCode()), startEq);
-        startEq = new ItemEquip(ItemEquip.TEMP_SHOULDER, 1);
+        startEq = new ItemEquip(ItemEquip.TEMP_SHOULDER, baseStats[Globals.STAT_LEVEL]);
         addItem(ItemEquip.getItemType(startEq.getItemCode()), startEq);
-        startEq = new ItemEquip(ItemEquip.TEMP_CHEST, 1);
+        startEq = new ItemEquip(ItemEquip.TEMP_CHEST, baseStats[Globals.STAT_LEVEL]);
         addItem(ItemEquip.getItemType(startEq.getItemCode()), startEq);
-        startEq = new ItemEquip(ItemEquip.TEMP_PANTS, 1);
+        startEq = new ItemEquip(ItemEquip.TEMP_PANTS, baseStats[Globals.STAT_LEVEL]);
         addItem(ItemEquip.getItemType(startEq.getItemCode()), startEq);
-        startEq = new ItemEquip(ItemEquip.TEMP_GLOVE, 1);
+        startEq = new ItemEquip(ItemEquip.TEMP_GLOVE, baseStats[Globals.STAT_LEVEL]);
         addItem(ItemEquip.getItemType(startEq.getItemCode()), startEq);
-        startEq = new ItemEquip(ItemEquip.TEMP_SHOE, 1);
+        startEq = new ItemEquip(ItemEquip.TEMP_SHOE, baseStats[Globals.STAT_LEVEL]);
         addItem(ItemEquip.getItemType(startEq.getItemCode()), startEq);
-        startEq = new ItemEquip(ItemEquip.TEMP_BELT, 1);
+        startEq = new ItemEquip(ItemEquip.TEMP_BELT, baseStats[Globals.STAT_LEVEL]);
         addItem(ItemEquip.getItemType(startEq.getItemCode()), startEq);
-        startEq = new ItemEquip(ItemEquip.TEMP_RING, 1);
+        startEq = new ItemEquip(ItemEquip.TEMP_RING, baseStats[Globals.STAT_LEVEL]);
         addItem(ItemEquip.getItemType(startEq.getItemCode()), startEq);
-        startEq = new ItemEquip(ItemEquip.TEMP_AMULET, 1);
+        startEq = new ItemEquip(ItemEquip.TEMP_AMULET, baseStats[Globals.STAT_LEVEL]);
         addItem(ItemEquip.getItemType(startEq.getItemCode()), startEq);
         upgrades[0] = new ItemUpgrade(1, 100000);
 

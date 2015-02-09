@@ -25,7 +25,7 @@ public class LogicModule extends Thread {
 
     private SaveData selectedChar;
     private byte selectedRoom = 0;
-    private Screen screen = new ScreenSelectChar(this);
+    private Screen screen = new ScreenSelectChar();
     private Screen lastMenu;
     private SoundModule soundModule;
 
@@ -47,7 +47,7 @@ public class LogicModule extends Thread {
     }
 
     public void receiveLogin(byte mapID, byte key, byte size) {
-        ScreenLoading loading = new ScreenLoading(this);
+        ScreenLoading loading = new ScreenLoading();
         setScreen(loading);
         loading.load(mapID);
         if (loading.getLoadedMap() == null) {
@@ -55,7 +55,7 @@ public class LogicModule extends Thread {
             sender.sendDisconnect(selectedRoom, key);
             receiver.shutdown();
         } else {
-            setScreen(new ScreenIngame(this, key, size, sender, loading.getLoadedMap()));
+            setScreen(new ScreenIngame(key, size, sender, loading.getLoadedMap()));
             sender.sendGetAll(selectedRoom, key);
         }
     }
@@ -90,7 +90,7 @@ public class LogicModule extends Thread {
             socket.setSoTimeout(5000);
             sender = new PacketSender(socket);
 
-            receiver = new PacketReceiver(this, socket);
+            receiver = new PacketReceiver(socket);
             receiver.start();
         } catch (SocketException | UnknownHostException e) {
         }

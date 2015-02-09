@@ -2,8 +2,13 @@ package blockfighter.client;
 
 import blockfighter.client.entities.items.ItemEquip;
 import blockfighter.client.entities.items.ItemUpgrade;
+import blockfighter.client.entities.particles.Particle;
+import blockfighter.client.entities.player.Player;
+import blockfighter.client.net.PacketHandler;
+import blockfighter.client.net.PacketReceiver;
 import blockfighter.client.render.RenderModule;
 import blockfighter.client.render.RenderPanel;
+import blockfighter.client.screen.Screen;
 import java.awt.*;
 import java.lang.reflect.Field;
 import javax.swing.*;
@@ -29,7 +34,7 @@ public class Main {
         final Field sysPathsField = ClassLoader.class.getDeclaredField("sys_paths");
         sysPathsField.setAccessible(true);
         sysPathsField.set(null, null);
-        
+
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -43,14 +48,24 @@ public class Main {
         ItemEquip.loadItemDetails();
         ItemEquip.loadItemDrawOrigin();
         ItemUpgrade.loadUpgradeItems();
+
         JFrame frame = new JFrame(Globals.WINDOW_TITLE);
         RenderPanel panel = new RenderPanel();
         final SoundModule sounds = new SoundModule();
         final LogicModule logic = new LogicModule(sounds);
-        RenderModule render = new RenderModule(panel, logic, frame);
+        RenderModule render = new RenderModule(panel, frame);
 
-        KeyHandler keyHandler = new KeyHandler(logic);
-        MouseHandler mouseHandler = new MouseHandler(logic);
+        Particle.setLogic(logic);
+        Screen.setLogic(logic);
+        RenderModule.setLogic(logic);
+        KeyHandler.setLogic(logic);
+        MouseHandler.setLogic(logic);
+        Player.setLogic(logic);
+        PacketHandler.setLogic(logic);
+        PacketReceiver.setLogic(logic);
+        
+        KeyHandler keyHandler = new KeyHandler();
+        MouseHandler mouseHandler = new MouseHandler();
         //frame.setUndecorated(true);
         frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

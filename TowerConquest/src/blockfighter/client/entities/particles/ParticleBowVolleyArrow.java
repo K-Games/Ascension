@@ -1,14 +1,13 @@
 package blockfighter.client.entities.particles;
 
 import blockfighter.client.Globals;
-import blockfighter.client.LogicModule;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 public class ParticleBowVolleyArrow extends Particle {
 
-    public ParticleBowVolleyArrow(LogicModule l, int k, int x, int y, byte f) {
-        super(l, k, x, y, f);
+    public ParticleBowVolleyArrow( int k, int x, int y, byte f) {
+        super( k, x, y, f);
         frame = 0;
         frameDuration = 50;
         duration = 300;

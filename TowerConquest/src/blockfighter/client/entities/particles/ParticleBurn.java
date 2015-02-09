@@ -1,15 +1,13 @@
 package blockfighter.client.entities.particles;
 
 import blockfighter.client.Globals;
-import blockfighter.client.LogicModule;
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 public class ParticleBurn extends Particle {
 
-    public ParticleBurn(LogicModule l, int k, int x, int y, byte f) {
-        super(l, k, x, y, f);
+    public ParticleBurn( int k, int x, int y, byte f) {
+        super( k, x, y, f);
         this.x += rng.nextInt(100) + ((facing == Globals.RIGHT) ? 60 : 0);
         this.y += rng.nextInt(200) + 20;
         frame = 0;

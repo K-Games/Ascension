@@ -1,14 +1,13 @@
 package blockfighter.client.entities.particles;
 
 import blockfighter.client.Globals;
-import blockfighter.client.LogicModule;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 public class ParticleBowStormArrow extends Particle {
 
-    public ParticleBowStormArrow(LogicModule l, int k, int x, int y, byte f) {
-        super(l, k, x, y, f);
+    public ParticleBowStormArrow( int k, int x, int y, byte f) {
+        super( k, x, y, f);
         this.x += rng.nextInt(30) * 20 - ((facing == Globals.RIGHT) ? 90 : 150);
         this.y += rng.nextInt(25) * 15 - 100;
         frame = 0;

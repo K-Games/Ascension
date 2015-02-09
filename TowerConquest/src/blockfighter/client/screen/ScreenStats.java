@@ -1,7 +1,6 @@
 package blockfighter.client.screen;
 
 import blockfighter.client.Globals;
-import blockfighter.client.LogicModule;
 import blockfighter.client.SaveData;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -22,8 +21,7 @@ public class ScreenStats extends ScreenMenu {
     Rectangle2D.Double[] addBox = new Rectangle2D.Double[6];
     Rectangle2D.Double resetBox;
 
-    public ScreenStats(LogicModule l) {
-        super(l);
+    public ScreenStats() {
         addBox[0] = new Rectangle2D.Double(418, 148, 30, 23);
         addBox[1] = new Rectangle2D.Double(418, 173, 30, 23);
         addBox[2] = new Rectangle2D.Double(418, 198, 30, 23);
@@ -31,7 +29,7 @@ public class ScreenStats extends ScreenMenu {
         addBox[4] = new Rectangle2D.Double(453, 173, 30, 23);
         addBox[5] = new Rectangle2D.Double(453, 198, 30, 23);
         resetBox = new Rectangle2D.Double(255, 570, 180, 30);
-        c = l.getSelectedChar();
+        c = logic.getSelectedChar();
         stats = c.getTotalStats();
         bs = c.getBaseStats();
     }

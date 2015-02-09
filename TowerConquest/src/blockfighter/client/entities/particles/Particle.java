@@ -6,6 +6,7 @@ import blockfighter.client.LogicModule;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.util.Arrays;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,12 +31,16 @@ public abstract class Particle extends Thread {
     /**
      * Reference to Logic Module.
      */
-    protected final LogicModule logic;
+    protected static LogicModule logic;
 
     /**
      * The duration of this particle in ms.
      */
     protected long duration;
+
+    public static void setLogic(LogicModule l) {
+        logic = l;
+    }
 
     public static void unloadParticles() {
         for (int i = 0; PARTICLE_SPRITE != null && i < PARTICLE_SPRITE.length; i++) {
@@ -208,6 +213,14 @@ public abstract class Particle extends Thread {
                 Logger.getLogger(Particle.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        PARTICLE_SPRITE[Globals.PARTICLE_BOW_FROSTARROW] = new BufferedImage[12];
+        for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_BOW_FROSTARROW].length; i++) {
+            try {
+                PARTICLE_SPRITE[Globals.PARTICLE_BOW_FROSTARROW][i] = ImageIO.read(Globals.class.getResource("sprites/particle/frostarrow/" + i + ".png"));
+            } catch (Exception ex) {
+                Logger.getLogger(Particle.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 
     public void update() {
@@ -235,16 +248,14 @@ public abstract class Particle extends Thread {
         return duration <= 0;
     }
 
-    public Particle(LogicModule l, int k, int x, int y) {
-        logic = l;
+    public Particle(int k, int x, int y) {
         key = k;
         this.x = x;
         this.y = y;
         duration = 200;
     }
 
-    public Particle(LogicModule l, int k, int x, int y, byte f) {
-        logic = l;
+    public Particle(int k, int x, int y, byte f) {
         key = k;
         this.x = x;
         this.y = y;
@@ -253,8 +264,8 @@ public abstract class Particle extends Thread {
     }
 
     public void draw(Graphics2D g) {
-        g.setColor(Color.blue);
-        g.fillRect((int) (x - size / 2), (int) (y - size / 2), (int) size, (int) size);
+        g.setColor(Color.BLACK);
+        g.drawRect(x, y, 560, 150);
     }
 
     public void setExpire() {

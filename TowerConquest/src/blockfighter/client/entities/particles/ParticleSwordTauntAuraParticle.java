@@ -1,14 +1,13 @@
 package blockfighter.client.entities.particles;
 
 import blockfighter.client.Globals;
-import blockfighter.client.LogicModule;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 public class ParticleSwordTauntAuraParticle extends Particle {
 
-    public ParticleSwordTauntAuraParticle(LogicModule l, int k, int x, int y, byte f) {
-        super(l, k, x, y, f);
+    public ParticleSwordTauntAuraParticle( int k, int x, int y, byte f) {
+        super( k, x, y, f);
         this.x += rng.nextInt(200) - 100;
         this.y -= rng.nextInt(40);
         frame = 0;

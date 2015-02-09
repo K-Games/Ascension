@@ -1,16 +1,14 @@
 package blockfighter.client.entities.particles;
 
 import blockfighter.client.Globals;
-import blockfighter.client.LogicModule;
 import blockfighter.client.screen.ScreenIngame;
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 public class ParticleBowPower extends Particle {
 
-    public ParticleBowPower(LogicModule l, int k, int x, int y, byte f) {
-        super(l, k, x, y, f);
+    public ParticleBowPower( int k, int x, int y, byte f) {
+        super( k, x, y, f);
         frame = 0;
         frameDuration = 25;
         duration = 600;
@@ -22,7 +20,7 @@ public class ParticleBowPower extends Particle {
         frameDuration -= Globals.LOGIC_UPDATE / 1000000;
         if (duration > 50) {
             for (int i = 0; i < 2; i++) {
-                ParticleBowPowerParticle b = new ParticleBowPowerParticle(logic, ((ScreenIngame) logic.getScreen()).getNextParticleKey(), x + ((facing == Globals.RIGHT) ? 0 : 700), y, facing);
+                ParticleBowPowerParticle b = new ParticleBowPowerParticle(((ScreenIngame) logic.getScreen()).getNextParticleKey(), x + ((facing == Globals.RIGHT) ? 0 : 700), y, facing);
                 ((ScreenIngame) logic.getScreen()).addParticle(b);
             }
         }

@@ -19,7 +19,7 @@ public class Player extends Thread {
     private String name;
     private ItemEquip[] equipment = new ItemEquip[Globals.NUM_EQUIP_SLOTS];
     private long lastUpdateTime = 5000;
-    private LogicModule logic;
+    private static LogicModule logic;
 
     public int getX() {
         return x;
@@ -72,10 +72,13 @@ public class Player extends Thread {
         lastUpdateTime = 5000;
     }
 
-    public Player(int x, int y, LogicModule l, byte k) {
+    public static void setLogic(LogicModule l) {
+        logic = l;
+    }
+
+    public Player(int x, int y, byte k) {
         this.x = x;
         this.y = y;
-        logic = l;
         key = k;
         facing = Globals.RIGHT;
         state = Globals.PLAYER_STATE_STAND;

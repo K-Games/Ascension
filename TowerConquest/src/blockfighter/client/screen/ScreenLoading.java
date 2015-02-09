@@ -1,7 +1,6 @@
 package blockfighter.client.screen;
 
 import blockfighter.client.Globals;
-import blockfighter.client.LogicModule;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.client.maps.GameMap;
 import blockfighter.client.maps.GameMapLvl1;
@@ -18,10 +17,6 @@ import java.awt.image.BufferedImage;
 public class ScreenLoading extends ScreenMenu {
 
     private GameMap map;
-
-    public ScreenLoading(LogicModule l) {
-        super(l);
-    }
 
     public void load(byte mapID) {
         Particle.loadParticles();

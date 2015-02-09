@@ -1,7 +1,6 @@
 package blockfighter.client.screen;
 
 import blockfighter.client.Globals;
-import blockfighter.client.LogicModule;
 import blockfighter.client.SaveData;
 import blockfighter.client.entities.items.ItemEquip;
 import java.awt.Color;
@@ -39,9 +38,8 @@ public class ScreenInventory extends ScreenMenu {
     private int dragItem = -1, dragEquip = -1;
     private double nextFrameTime = 0;
 
-    public ScreenInventory(LogicModule l) {
-        super(l);
-        c = l.getSelectedChar();
+    public ScreenInventory() {
+        c = logic.getSelectedChar();
         for (int i = 0; i < inventSlots.length; i++) {
             inventSlots[i] = new Rectangle2D.Double(270 + (i * 62) - (i / 10 * 620), 30 + i / 10 * 62, 60, 60);
         }

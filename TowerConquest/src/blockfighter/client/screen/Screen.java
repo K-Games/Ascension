@@ -1,5 +1,6 @@
 package blockfighter.client.screen;
 
+import blockfighter.client.LogicModule;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.client.render.RenderPanel;
 import java.awt.Color;
@@ -27,6 +28,11 @@ public abstract class Screen implements KeyListener, MouseListener, MouseMotionL
 
     protected static ExecutorService threadPool = Executors.newFixedThreadPool(10);
     protected RenderPanel panel;
+    protected static LogicModule logic;
+
+    public static void setLogic(LogicModule l) {
+        logic = l;
+    }
 
     public void drawStringOutline(Graphics2D g, String s, int x, int y, int width) {
         for (int i = 0; i < 2; i++) {

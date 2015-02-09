@@ -51,7 +51,7 @@ public class Globals {
 
     public final static byte RIGHT = 0, LEFT = 1, DOWN = 2, UP = 3;
 
-    public final static int NUM_PARTICLE_EFFECTS = 21;
+    public final static int NUM_PARTICLE_EFFECTS = 22;
     public final static byte PARTICLE_SWORD_SLASH1 = 0x00,
             PARTICLE_SWORD_SLASH2 = 0x01,
             PARTICLE_SWORD_SLASH3 = 0x02,
@@ -71,7 +71,8 @@ public class Globals {
             PARTICLE_BOW_VOLLEYBOW = 0x11,
             PARTICLE_BOW_VOLLEYARROW = 0x12,
             PARTICLE_BOW_STORM = 0x13,
-            PARTICLE_BOW_STORMARROW = 0x14;
+            PARTICLE_BOW_STORMARROW = 0x14,
+            PARTICLE_BOW_FROSTARROW = 0x15;
 
     public final static int NUM_KEYBINDS = 16,
             KEYBIND_SKILL1 = 0,
@@ -134,7 +135,7 @@ public class Globals {
             CRITCHC_BASE = 0.1,
             CRITCHC_FACT = 10,
             CRITCHC_MULT = 0.01,
-            CRITCHC_CONST = 750 / 0.85 - 750,
+            CRITCHC_CONST = 400,
             CRITDMG_BASE = 0.5,
             CRITDMG_FACT = 5.5,
             CRITDMG_MULT = 0.01,
@@ -231,7 +232,7 @@ public class Globals {
 
     public static final double calcCritChance(double spirit) {
         double chc = spirit / CRITCHC_FACT * CRITCHC_MULT + CRITCHC_BASE;
-        if (chc > 0.85) {
+        if (chc > 0.5) {
             chc = spirit / (spirit + CRITCHC_CONST);
         }
         return chc;

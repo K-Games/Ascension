@@ -10,9 +10,9 @@ import java.awt.event.MouseMotionListener;
  */
 public class MouseHandler implements MouseListener, MouseMotionListener {
 
-    private LogicModule logic;
+    private static LogicModule logic;
 
-    public MouseHandler(LogicModule l) {
+    public static void setLogic(LogicModule l) {
         logic = l;
     }
 

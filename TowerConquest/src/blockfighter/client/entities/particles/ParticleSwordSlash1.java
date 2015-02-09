@@ -1,14 +1,13 @@
 package blockfighter.client.entities.particles;
 
 import blockfighter.client.Globals;
-import blockfighter.client.LogicModule;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 public class ParticleSwordSlash1 extends Particle {
 
-    public ParticleSwordSlash1(LogicModule l, int k, int x, int y, byte f) {
-        super(l, k, x, y, f);
+    public ParticleSwordSlash1( int k, int x, int y, byte f) {
+        super( k, x, y, f);
         frame = 0;
         frameDuration = 25;
         duration = 200;

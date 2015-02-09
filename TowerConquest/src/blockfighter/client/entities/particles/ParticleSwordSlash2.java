@@ -7,8 +7,8 @@ import java.awt.image.BufferedImage;
 
 public class ParticleSwordSlash2 extends Particle {
 
-    public ParticleSwordSlash2(LogicModule l, int k, int x, int y, byte f) {
-        super(l, k, x, y, f);
+    public ParticleSwordSlash2( int k, int x, int y, byte f) {
+        super( k, x, y, f);
         frame = 0;
         frameDuration = 25;
         duration = 200;

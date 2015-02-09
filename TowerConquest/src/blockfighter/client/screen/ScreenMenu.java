@@ -1,7 +1,6 @@
 package blockfighter.client.screen;
 
 import blockfighter.client.Globals;
-import blockfighter.client.LogicModule;
 import blockfighter.client.SaveData;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.client.entities.particles.ParticleMenuSmoke;
@@ -26,14 +25,13 @@ public abstract class ScreenMenu extends Screen {
     protected double lastUpdateTime = System.nanoTime();
     protected static ConcurrentHashMap<Integer, Particle> particles = new ConcurrentHashMap<>(20);
     private Rectangle2D.Double[] menuBox = new Rectangle2D.Double[7];
-    protected LogicModule logic;
+    
     protected DecimalFormat df = new DecimalFormat("###,###,##0.##");
 
-    public ScreenMenu(LogicModule l) {
-        logic = l;
+    public ScreenMenu() {
         if (!particles.containsKey(0)) {
-            particles.put(0, new ParticleMenuSmoke(l, 0, 0, 0));
-            particles.put(1, new ParticleMenuSmoke(l, 1, 1280, 0));
+            particles.put(0, new ParticleMenuSmoke( 0, 0, 0));
+            particles.put(1, new ParticleMenuSmoke(1, 1280, 0));
         }
         for (int i = 0; i < menuBox.length; i++) {
             menuBox[i] = new Rectangle2D.Double(20, 27 + 50 * i, 180, 50);
@@ -102,26 +100,26 @@ public abstract class ScreenMenu extends Screen {
                     SaveData.saveData(logic.getSelectedChar().getSaveNum(), logic.getSelectedChar());
                     switch (i) {
                         case 0:
-                            logic.setScreen(new ScreenStats(logic));
+                            logic.setScreen(new ScreenStats());
                             break;
                         case 1:
-                            logic.setScreen(new ScreenInventory(logic));
+                            logic.setScreen(new ScreenInventory());
                             break;
                         case 2:
-                            logic.setScreen(new ScreenUpgrade(logic));
+                            logic.setScreen(new ScreenUpgrade());
                             break;
                         case 3:
-                            logic.setScreen(new ScreenSkills(logic));
+                            logic.setScreen(new ScreenSkills());
                             break;
                         case 4:
                             logic.sendLogin();
                             break;
                         case 5:
-                            logic.setScreen(new ScreenKeyBind(logic));
+                            logic.setScreen(new ScreenKeyBind());
                             break;
                         case 6:
                             logic.setSelectedChar(null);
-                            logic.setScreen(new ScreenSelectChar(logic));
+                            logic.setScreen(new ScreenSelectChar());
                             break;
                     }
                 }

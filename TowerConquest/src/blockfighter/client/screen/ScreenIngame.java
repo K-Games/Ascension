@@ -1,7 +1,6 @@
 package blockfighter.client.screen;
 
 import blockfighter.client.Globals;
-import blockfighter.client.LogicModule;
 import blockfighter.client.SaveData;
 import blockfighter.client.entities.player.Player;
 import blockfighter.client.entities.items.ItemEquip;
@@ -58,14 +57,12 @@ public class ScreenIngame extends Screen {
 
     private boolean[] keyDownMove = {false, false, false, false};
 
-    private LogicModule logic;
     private SaveData c;
     private GameMap map;
 
     private int drawInfoHotkey = -1;
 
-    public ScreenIngame(LogicModule l, byte i, byte numPlayer, PacketSender s, GameMap m) {
-        logic = l;
+    public ScreenIngame(byte i, byte numPlayer, PacketSender s, GameMap m) {
         myKey = i;
         c = logic.getSelectedChar();
         players = new ConcurrentHashMap<>(numPlayer);
@@ -345,7 +342,7 @@ public class ScreenIngame extends Screen {
         if (players.containsKey(key)) {
             players.get(key).setPos(x, y);
         } else {
-            players.put(key, new Player(x, y, logic, key));
+            players.put(key, new Player(x, y, key));
         }
     }
 
@@ -384,54 +381,57 @@ public class ScreenIngame extends Screen {
         byte playerKey;
         switch (particleID) {
             case Globals.PARTICLE_SWORD_SLASH1:
-                particles.put(key, new ParticleSwordSlash1(logic, key, x, y, facing));
+                particles.put(key, new ParticleSwordSlash1(key, x, y, facing));
                 break;
             case Globals.PARTICLE_SWORD_SLASH2:
-                particles.put(key, new ParticleSwordSlash2(logic, key, x, y, facing));
+                particles.put(key, new ParticleSwordSlash2(key, x, y, facing));
                 break;
             case Globals.PARTICLE_SWORD_SLASH3:
-                particles.put(key, new ParticleSwordSlash3(logic, key, x, y, facing));
+                particles.put(key, new ParticleSwordSlash3(key, x, y, facing));
                 break;
             case Globals.PARTICLE_SWORD_DRIVE:
                 playerKey = data[11];
-                particles.put(key, new ParticleSwordDrive(logic, key, x, y, facing, playerKey));
+                particles.put(key, new ParticleSwordDrive(key, x, y, facing, playerKey));
                 break;
             case Globals.PARTICLE_SWORD_VORPAL:
-                particles.put(key, new ParticleSwordVorpal(logic, key, x, y, facing));
+                particles.put(key, new ParticleSwordVorpal(key, x, y, facing));
                 break;
             case Globals.PARTICLE_SWORD_MULTI:
-                particles.put(key, new ParticleSwordMulti(logic, key, x, y, facing));
+                particles.put(key, new ParticleSwordMulti(key, x, y, facing));
                 break;
             case Globals.PARTICLE_SWORD_CINDER:
-                particles.put(key, new ParticleSwordCinder(logic, key, x, y, facing));
+                particles.put(key, new ParticleSwordCinder(key, x, y, facing));
                 break;
             case Globals.PARTICLE_SWORD_TAUNT:
-                particles.put(key, new ParticleSwordTaunt(logic, key, x, y, facing));
+                particles.put(key, new ParticleSwordTaunt(key, x, y, facing));
                 break;
             case Globals.PARTICLE_SWORD_TAUNTAURA1:
                 playerKey = data[11];
-                particles.put(key, new ParticleSwordTauntAura(logic, key, x, y, facing, playerKey));
+                particles.put(key, new ParticleSwordTauntAura(key, x, y, facing, playerKey));
                 break;
             case Globals.PARTICLE_BOW_ARC:
-                particles.put(key, new ParticleBowArc(logic, key, x, y, facing));
+                particles.put(key, new ParticleBowArc(key, x, y, facing));
                 break;
             case Globals.PARTICLE_BOW_RAPID:
-                particles.put(key, new ParticleBowRapid(logic, key, x, y, facing));
+                particles.put(key, new ParticleBowRapid(key, x, y, facing));
                 break;
             case Globals.PARTICLE_BOW_POWER:
-                particles.put(key, new ParticleBowPower(logic, key, x, y, facing));
+                particles.put(key, new ParticleBowPower(key, x, y, facing));
                 break;
             case Globals.PARTICLE_BOW_POWERCHARGE:
-                particles.put(key, new ParticleBowPowerCharge(logic, key, x, y, facing));
+                particles.put(key, new ParticleBowPowerCharge(key, x, y, facing));
                 break;
             case Globals.PARTICLE_BOW_VOLLEYBOW:
-                particles.put(key, new ParticleBowVolleyBow(logic, key, x, y, facing));
+                particles.put(key, new ParticleBowVolleyBow(key, x, y, facing));
                 break;
             case Globals.PARTICLE_BOW_VOLLEYARROW:
-                particles.put(key, new ParticleBowVolleyArrow(logic, key, x, y, facing));
+                particles.put(key, new ParticleBowVolleyArrow(key, x, y, facing));
                 break;
             case Globals.PARTICLE_BOW_STORM:
-                particles.put(key, new ParticleBowStormArea(logic, key, x, y, facing));
+                particles.put(key, new ParticleBowStormArea(key, x, y, facing));
+                break;
+            case Globals.PARTICLE_BOW_FROSTARROW:
+                particles.put(key, new ParticleBowFrostArrow(key, x, y, facing));
                 break;
         }
     }

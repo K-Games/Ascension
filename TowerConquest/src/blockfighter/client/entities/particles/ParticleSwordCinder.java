@@ -1,16 +1,14 @@
 package blockfighter.client.entities.particles;
 
 import blockfighter.client.Globals;
-import blockfighter.client.LogicModule;
 import blockfighter.client.screen.ScreenIngame;
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 public class ParticleSwordCinder extends Particle {
 
-    public ParticleSwordCinder(LogicModule l, int k, int x, int y, byte f) {
-        super(l, k, x, y, f);
+    public ParticleSwordCinder( int k, int x, int y, byte f) {
+        super( k, x, y, f);
         frame = 0;
         frameDuration = 50;
         duration = 400;
@@ -22,7 +20,7 @@ public class ParticleSwordCinder extends Particle {
         frameDuration -= Globals.LOGIC_UPDATE / 1000000;
         if (duration > 100) {
             for (int i = 0; i < 2; i++) {
-                ParticleBurn b = new ParticleBurn(logic, ((ScreenIngame) logic.getScreen()).getNextParticleKey(), x, y, facing);
+                ParticleBurn b = new ParticleBurn(((ScreenIngame) logic.getScreen()).getNextParticleKey(), x, y, facing);
                 ((ScreenIngame) logic.getScreen()).addParticle(b);
             }
         }

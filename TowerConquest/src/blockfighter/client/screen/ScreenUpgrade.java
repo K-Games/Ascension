@@ -1,7 +1,6 @@
 package blockfighter.client.screen;
 
 import blockfighter.client.Globals;
-import blockfighter.client.LogicModule;
 import blockfighter.client.SaveData;
 import blockfighter.client.entities.items.ItemEquip;
 import blockfighter.client.entities.items.ItemUpgrade;
@@ -49,9 +48,8 @@ public class ScreenUpgrade extends ScreenMenu {
     private boolean upgrading = false;
     private int upPart = 0;
 
-    public ScreenUpgrade(LogicModule l) {
-        super(l);
-        c = l.getSelectedChar();
+    public ScreenUpgrade() {
+        c = logic.getSelectedChar();
         for (int i = 0; i < inventSlots.length; i++) {
             inventSlots[i] = new Rectangle2D.Double(255 + (i * 62) - (i / 10 * 620), 30 + i / 10 * 62, 60, 60);
         }
@@ -100,7 +98,7 @@ public class ScreenUpgrade extends ScreenMenu {
                 if (upgradeTime > 1000) {
                     Random rng = new Random();
                     for (int i = 0; i < 5; i++) {
-                        particles.put(upPart + 2, new ParticleMenuUpgrade(logic, upPart + 2, (int) upgradeBox[0].x + 30, (int) upgradeBox[0].y + 30, upPart % 4, rng.nextInt(5) - 16, rng.nextInt(10) - 5));
+                        particles.put(upPart + 2, new ParticleMenuUpgrade(upPart + 2, (int) upgradeBox[0].x + 30, (int) upgradeBox[0].y + 30, upPart % 4, rng.nextInt(5) - 16, rng.nextInt(10) - 5));
                         upPart++;
                     }
                 }
@@ -110,12 +108,12 @@ public class ScreenUpgrade extends ScreenMenu {
                 if (ItemUpgrade.rollUpgrade(c.getUpgrades()[selectUpgrade], c.getEquip()[selectEquip])) {
                     c.getEquip()[selectEquip].addUpgrade(1);
                     for (int i = 0; i < 20; i++) {
-                        particles.put(upPart + 2, new ParticleMenuUpgradeEnd(logic, upPart + 2, (int) upgradeBox[1].x + 30, (int) upgradeBox[1].y + 30, 3, rng.nextInt(10) - 5, -5 - rng.nextInt(3)));
+                        particles.put(upPart + 2, new ParticleMenuUpgradeEnd(upPart + 2, (int) upgradeBox[1].x + 30, (int) upgradeBox[1].y + 30, 3, rng.nextInt(10) - 5, -5 - rng.nextInt(3)));
                         upPart++;
                     }
                 } else {
                     for (int i = 0; i < 20; i++) {
-                        particles.put(upPart + 2, new ParticleMenuUpgradeEnd(logic, upPart + 2, (int) upgradeBox[1].x + 30, (int) upgradeBox[1].y + 30, 2, rng.nextInt(10) - 5, -5 - rng.nextInt(3)));
+                        particles.put(upPart + 2, new ParticleMenuUpgradeEnd(upPart + 2, (int) upgradeBox[1].x + 30, (int) upgradeBox[1].y + 30, 2, rng.nextInt(10) - 5, -5 - rng.nextInt(3)));
                         upPart++;
                     }
                 }
