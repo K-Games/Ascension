@@ -1,5 +1,9 @@
 package blockfighter.server;
 
+import blockfighter.server.entities.boss.BossBase;
+import blockfighter.server.entities.player.Player;
+import blockfighter.server.entities.proj.ProjBase;
+import blockfighter.server.net.PacketHandler;
 import blockfighter.server.net.PacketReceiver;
 import blockfighter.server.net.PacketSender;
 import java.util.GregorianCalendar;
@@ -17,8 +21,20 @@ public class Main {
     public static void main(String[] args) {
         try {
             LogicModule[] server_rooms = new LogicModule[Globals.SERVER_ROOMS];
-            PacketSender sender = new PacketSender(server_rooms);
-            PacketReceiver server_BossThread = new PacketReceiver(server_rooms, sender);
+            PacketSender.setLogic(server_rooms);
+            PacketHandler.setLogic(server_rooms);
+            PacketReceiver.setLogic(server_rooms);
+
+            PacketSender sender = new PacketSender();
+            PacketReceiver server_BossThread = new PacketReceiver();
+
+            LogicModule.setPacketSender(sender);
+            PacketReceiver.setPacketSender(sender);
+            PacketHandler.setPacketSender(sender);
+
+            Player.setPacketSender(sender);
+            BossBase.setPacketSender(sender);
+            ProjBase.setPacketSender(sender);
 
             GregorianCalendar date = new GregorianCalendar();
             Globals.log("Server started", String.format("%1$td/%1$tm/%1$tY %1$tT", date), Globals.LOG_TYPE_ERR, false);
@@ -26,7 +42,6 @@ public class Main {
 
             for (byte i = 0; i < server_rooms.length; i++) {
                 server_rooms[i] = new LogicModule(i);
-                server_rooms[i].setPacketSender(sender);
                 server_rooms[i].start();
                 Globals.log("Initialization", "Room " + i, Globals.LOG_TYPE_ERR, false);
                 Globals.log("Initialization", "Room " + i, Globals.LOG_TYPE_DATA, true);

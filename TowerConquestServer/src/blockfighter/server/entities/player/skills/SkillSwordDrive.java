@@ -8,11 +8,13 @@ import blockfighter.server.Globals;
  */
 public class SkillSwordDrive extends Skill {
 
+    /**
+     * Constructor for Sword Skill Drive.
+     */
     public SkillSwordDrive() {
         skillCode = SWORD_DRIVE;
         maxCooldown = 1000;
         reqWeapon = Globals.ITEM_WEAPON;
     }
-
 
 }

@@ -8,6 +8,9 @@ import blockfighter.server.Globals;
  */
 public class SkillSwordSlash extends Skill {
 
+    /**
+     * Constructor for Sword Skill Defensive Impact.
+     */
     public SkillSwordSlash() {
         skillCode = SWORD_SLASH;
         maxCooldown = 1000;

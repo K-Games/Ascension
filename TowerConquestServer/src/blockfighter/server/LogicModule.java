@@ -25,7 +25,7 @@ public class LogicModule extends Thread {
     private final ConcurrentHashMap<Byte, Player> players = new ConcurrentHashMap<>(Globals.SERVER_MAX_PLAYERS, 0.9f, Math.max(Globals.SERVER_MAX_PLAYERS / 5, 1));
     private final ConcurrentHashMap<Integer, ProjBase> projectiles = new ConcurrentHashMap<>(500, 0.75f, 10);
 
-    private PacketSender sender;
+    private static PacketSender sender;
     private final GameMap map;
 
     private int projMaxKeys = 500;
@@ -152,10 +152,10 @@ public class LogicModule extends Thread {
     /**
      * Set a reference to the Server PacketSender.
      *
-     * @param bc Server PacketSender
+     * @param ps Server PacketSender
      */
-    public void setPacketSender(PacketSender bc) {
-        sender = bc;
+    public static void setPacketSender(PacketSender ps) {
+        sender = ps;
     }
 
     /**
@@ -185,6 +185,11 @@ public class LogicModule extends Thread {
         return map;
     }
 
+    /**
+     * Get this logic module's room number
+     *
+     * @return Byte - Room number
+     */
     public byte getRoom() {
         return room;
     }
@@ -365,6 +370,12 @@ public class LogicModule extends Thread {
         isRunning = false;
     }
 
+    /**
+     * Check if this room contains this Player's unique ID.
+     *
+     * @param id Player uID
+     * @return True if a player in this room has this uID.
+     */
     public boolean containsPlayerID(int id) {
         for (Map.Entry<Byte, Player> player : players.entrySet()) {
             if (player.getValue().getUniqueID() == id) {

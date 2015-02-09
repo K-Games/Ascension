@@ -33,9 +33,9 @@ public abstract class ProjBase extends Thread implements Projectile {
             y;
 
     /**
-     * Projectile's owning player
+     * Owning player of Projectile
      */
-    protected Player owner;
+    private Player owner;
 
     /**
      * Array of players hit by this projectile
@@ -48,29 +48,27 @@ public abstract class ProjBase extends Thread implements Projectile {
     protected long duration;
 
     /**
-     * Hitbox(es) of this projectile
+     * Hit boxes of this projectile
      */
     protected Rectangle2D.Double[] hitbox;
 
     /**
      * Reference to Server PacketSender
      */
-    protected PacketSender packetSender;
+    protected static PacketSender sender;
 
     /**
-     * Checks if this proj has already been queued to have effects to be applied
+     * Checks if this projectile has already been queued to have effects to be applied
      */
     protected boolean queuedEffect = false;
 
     /**
-     * Constructor called by subclasses to reference packetSender and logic.
+     * Constructor called by subclasses to reference sender and logic.
      *
-     * @param b Reference to server packetSender
      * @param l Reference to Logic module
      * @param k Hash map key
      */
-    public ProjBase(PacketSender b, LogicModule l, int k) {
-        packetSender = b;
+    public ProjBase(LogicModule l, int k) {
         logic = l;
         key = k;
     }
@@ -78,7 +76,6 @@ public abstract class ProjBase extends Thread implements Projectile {
     /**
      * Constructor for a empty projectile.
      *
-     * @param b Reference to server packetSender
      * @param l Reference to Logic module
      * @param k Hash map key
      * @param o Owning player
@@ -86,8 +83,8 @@ public abstract class ProjBase extends Thread implements Projectile {
      * @param y Spawning y
      * @param duration
      */
-    public ProjBase(PacketSender b, LogicModule l, int k, Player o, double x, double y, long duration) {
-        this(b, l, k);
+    public ProjBase(LogicModule l, int k, Player o, double x, double y, long duration) {
+        this(l, k);
         owner = o;
         this.x = x;
         this.y = y;
@@ -109,6 +106,15 @@ public abstract class ProjBase extends Thread implements Projectile {
     @Override
     public double getY() {
         return y;
+    }
+
+    /**
+     * Set the static packet sender.
+     *
+     * @param ps Server PacketSender.
+     */
+    public static void setPacketSender(PacketSender ps) {
+        sender = ps;
     }
 
     @Override
@@ -141,15 +147,20 @@ public abstract class ProjBase extends Thread implements Projectile {
         return key;
     }
 
-    /**
-     * Process any effects to be applied to players hit by this projectile.
-     */
     @Override
     public void processQueue() {
     }
-    
+
     @Override
-    public Rectangle2D.Double[] getHitbox(){
+    public Rectangle2D.Double[] getHitbox() {
         return hitbox;
+    }
+
+    @Override
+    public void queueEffect(ProjBase p) {
+        if (!isQueued()) {
+            logic.queueProjEffect(p);
+            queuedEffect = true;
+        }
     }
 }

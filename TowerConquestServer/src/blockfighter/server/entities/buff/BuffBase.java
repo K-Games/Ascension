@@ -1,6 +1,7 @@
 package blockfighter.server.entities.buff;
 
 import blockfighter.server.Globals;
+import blockfighter.server.entities.boss.Boss;
 import blockfighter.server.entities.player.Player;
 
 /**
@@ -13,17 +14,18 @@ public abstract class BuffBase implements Buff {
     /**
      * Owning player of buff
      */
-    protected Player owner;
+    private Player playerOwner, playerTarget;
+    private Boss bossOwner, bossTarget;
 
     /**
-     * Duration of buff/debuff in ms
+     * Duration of buff/debuff in milliseconds
      */
     protected long duration;
 
     /**
      * Constructor for buffs
      *
-     * @param d duration in ms
+     * @param d duration in milliseconds
      */
     public BuffBase(long d) {
         duration = d;
@@ -31,12 +33,42 @@ public abstract class BuffBase implements Buff {
 
     @Override
     public void setOwner(Player owner) {
-        this.owner = owner;
+        playerOwner = owner;
+    }
+
+    @Override
+    public void setOwner(Boss owner) {
+        bossOwner = owner;
+    }
+
+    @Override
+    public void setTarget(Player t) {
+        playerTarget = t;
+    }
+
+    @Override
+    public void setTarget(Boss t) {
+        bossTarget = t;
     }
 
     @Override
     public Player getOwner() {
-        return owner;
+        return playerOwner;
+    }
+
+    @Override
+    public Player getTarget() {
+        return playerTarget;
+    }
+
+    @Override
+    public Boss getBossOwner() {
+        return bossOwner;
+    }
+
+    @Override
+    public Boss getBossTarget() {
+        return bossTarget;
     }
 
     @Override

@@ -14,24 +14,26 @@ public class BuffKnockback extends BuffBase {
     /**
      * Constructor for knockback debuff
      *
-     * @param d duration in ms
+     * @param d duration in milliseconds
      * @param x x speed
      * @param y y speed
-     * @param o owning player(knocked player)
+     * @param o owning player
+     * @param t player being knocked
      */
-    public BuffKnockback(long d, double x, double y, Player o) {
+    public BuffKnockback(long d, double x, double y, Player o, Player t) {
         super(d);
         xSpeed = x;
         ySpeed = y;
-        owner = o;
+        setOwner(o);
+        setTarget(t);
     }
 
     @Override
     public void update() {
         super.update();
         if (!applied) {
-            owner.setXSpeed(xSpeed);
-            owner.setYSpeed(ySpeed);
+            getTarget().setXSpeed(xSpeed);
+            getTarget().setYSpeed(ySpeed);
             applied = true;
         }
     }

@@ -53,6 +53,11 @@ public interface Projectile {
      */
     public abstract double getY();
 
+    /**
+     * Get the hit boxes of this projectile.
+     *
+     * @return Rectangle[] - Hit boxes
+     */
     public abstract Rectangle2D.Double[] getHitbox();
 
     /**
@@ -68,9 +73,16 @@ public interface Projectile {
     public abstract void processQueue();
 
     /**
-     * Check if proj is queued to apply effects
+     * Check if projectile is queued to apply effects
      *
      * @return queuedEffect
      */
     public abstract boolean isQueued();
+
+    /**
+     * Queue projectile to apply effects.
+     *
+     * @param p Projectile queued
+     */
+    public abstract void queueEffect(ProjBase p);
 }

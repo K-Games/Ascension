@@ -2,9 +2,8 @@ package blockfighter.server.entities.proj;
 
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
-import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.buff.BuffKnockback;
-import blockfighter.server.net.PacketSender;
+import blockfighter.server.entities.player.Player;
 import java.awt.geom.Rectangle2D;
 import java.util.LinkedList;
 import java.util.Map;
@@ -18,13 +17,23 @@ public class ProjSwordSlash extends ProjBase {
 
     private final LinkedList<Player> queue = new LinkedList<>();
 
-    public ProjSwordSlash(PacketSender b, LogicModule l, int k, Player o, double x, double y, int hit) {
-        super(b, l, k);
-        owner = o;
+    /**
+     * Projectile of Sword Skill Defensive Impact.
+     *
+     * @param l Room/Logic Module
+     * @param k Projectile Key
+     * @param o Owning player
+     * @param x Spawn x-coordinate
+     * @param y Spawn y-coordinate
+     * @param hit Hit number to determine hit box.
+     */
+    public ProjSwordSlash(LogicModule l, int k, Player o, double x, double y, int hit) {
+        super(l, k);
+        setOwner(o);
         this.x = x;
         this.y = y;
         hitbox = new Rectangle2D.Double[1];
-        if (owner.getFacing() == Globals.RIGHT) {
+        if (getOwner().getFacing() == Globals.RIGHT) {
             switch (hit) {
                 case 1:
                     hitbox[0] = new Rectangle2D.Double(x - 90, y - 290, 250, 300);
@@ -57,14 +66,12 @@ public class ProjSwordSlash extends ProjBase {
         duration -= Globals.nsToMs(Globals.LOGIC_UPDATE);
         for (Map.Entry<Byte, Player> pEntry : logic.getPlayers().entrySet()) {
             Player p = pEntry.getValue();
-            if (p != owner && !pHit.contains(p) && p.intersectHitbox(hitbox[0])) {
+            if (p != getOwner() && !pHit.contains(p) && p.intersectHitbox(hitbox[0])) {
                 queue.add(p);
                 pHit.add(p);
+                queueEffect(this);
             }
-        }
-        if (!isQueued()) {
-            logic.queueProjEffect(this);
-            queuedEffect = true;
+
         }
     }
 
@@ -73,7 +80,7 @@ public class ProjSwordSlash extends ProjBase {
         while (!queue.isEmpty()) {
             Player p = queue.poll();
             if (p != null) {
-                p.queueBuff(new BuffKnockback(300, (owner.getFacing() == Globals.RIGHT) ? 4 : -4, -5, p));
+                p.queueBuff(new BuffKnockback(300, (getOwner().getFacing() == Globals.RIGHT) ? 4 : -4, -5, getOwner(), p));
             }
         }
         queuedEffect = false;

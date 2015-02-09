@@ -21,12 +21,16 @@ import java.util.concurrent.ExecutorService;
  */
 public class PacketSender {
 
-    private final LogicModule[] logic;
+    private static LogicModule[] logic;
     private DatagramSocket socket = null;
     private int bytesSent = 0;
 
     private ExecutorService threadPool;
 
+    /**
+     *
+     * @param tp
+     */
     public void setThreadPool(ExecutorService tp) {
         threadPool = tp;
     }
@@ -48,15 +52,12 @@ public class PacketSender {
     }
 
     /**
-     * Create a packetSender to send bytes to connected players.
-     * <p>
-     * Server should only have one packetSender. The packetSender should always be referenced after construction and never initialized again.
-     * </p>
+     * Set the static logic module array
      *
-     * @param logic
+     * @param l Logic Module array
      */
-    public PacketSender(LogicModule[] logic) {
-        this.logic = logic;
+    public static void setLogic(LogicModule[] l) {
+        logic = l;
     }
 
     /**

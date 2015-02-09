@@ -1,15 +1,55 @@
 package blockfighter.server.entities.player;
 
-import blockfighter.server.maps.GameMap;
-import blockfighter.server.net.PacketSender;
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.buff.Buff;
 import blockfighter.server.entities.buff.BuffKnockback;
 import blockfighter.server.entities.buff.BuffStun;
-import blockfighter.server.entities.player.skills.*;
-import blockfighter.server.entities.proj.*;
-
+import blockfighter.server.entities.player.skills.Skill;
+import blockfighter.server.entities.player.skills.SkillBowArc;
+import blockfighter.server.entities.player.skills.SkillBowFrost;
+import blockfighter.server.entities.player.skills.SkillBowPower;
+import blockfighter.server.entities.player.skills.SkillBowRapid;
+import blockfighter.server.entities.player.skills.SkillBowStorm;
+import blockfighter.server.entities.player.skills.SkillBowVolley;
+import blockfighter.server.entities.player.skills.SkillPassive1;
+import blockfighter.server.entities.player.skills.SkillPassive10;
+import blockfighter.server.entities.player.skills.SkillPassive11;
+import blockfighter.server.entities.player.skills.SkillPassive12;
+import blockfighter.server.entities.player.skills.SkillPassive2;
+import blockfighter.server.entities.player.skills.SkillPassive3;
+import blockfighter.server.entities.player.skills.SkillPassive4;
+import blockfighter.server.entities.player.skills.SkillPassive5;
+import blockfighter.server.entities.player.skills.SkillPassive6;
+import blockfighter.server.entities.player.skills.SkillPassive7;
+import blockfighter.server.entities.player.skills.SkillPassive8;
+import blockfighter.server.entities.player.skills.SkillPassive9;
+import blockfighter.server.entities.player.skills.SkillShield5;
+import blockfighter.server.entities.player.skills.SkillShield6;
+import blockfighter.server.entities.player.skills.SkillShieldCharge;
+import blockfighter.server.entities.player.skills.SkillShieldFortify;
+import blockfighter.server.entities.player.skills.SkillShieldIron;
+import blockfighter.server.entities.player.skills.SkillShieldReflect;
+import blockfighter.server.entities.player.skills.SkillSwordCinder;
+import blockfighter.server.entities.player.skills.SkillSwordDrive;
+import blockfighter.server.entities.player.skills.SkillSwordMulti;
+import blockfighter.server.entities.player.skills.SkillSwordSlash;
+import blockfighter.server.entities.player.skills.SkillSwordTaunt;
+import blockfighter.server.entities.player.skills.SkillSwordVorpal;
+import blockfighter.server.entities.proj.ProjBowArc;
+import blockfighter.server.entities.proj.ProjBowFrost;
+import blockfighter.server.entities.proj.ProjBowPower;
+import blockfighter.server.entities.proj.ProjBowRapid;
+import blockfighter.server.entities.proj.ProjBowStorm;
+import blockfighter.server.entities.proj.ProjBowVolley;
+import blockfighter.server.entities.proj.ProjSwordCinder;
+import blockfighter.server.entities.proj.ProjSwordDrive;
+import blockfighter.server.entities.proj.ProjSwordMulti;
+import blockfighter.server.entities.proj.ProjSwordSlash;
+import blockfighter.server.entities.proj.ProjSwordTaunt;
+import blockfighter.server.entities.proj.ProjSwordVorpal;
+import blockfighter.server.maps.GameMap;
+import blockfighter.server.net.PacketSender;
 import java.awt.geom.Rectangle2D;
 import java.net.InetAddress;
 import java.nio.charset.StandardCharsets;
@@ -55,12 +95,12 @@ public class Player extends Thread {
     private double nextFrameTime = 0;
     private Rectangle2D.Double hitbox;
 
-    private HashMap<Byte, Buff> buffs = new HashMap<>(128, 0.9f);
+    private HashMap<Integer, Buff> buffs = new HashMap<>(500, 0.9f);
     private Buff isStun, isKnockback;
 
     private final InetAddress address;
     private final int port;
-    private final PacketSender packetSender;
+    private static PacketSender sender;
     private final GameMap map;
     private double[] stats = new double[Globals.NUM_STATS], bonusStats = new double[Globals.NUM_STATS];
 
@@ -75,7 +115,8 @@ public class Player extends Thread {
     private ConcurrentLinkedQueue<byte[]> skillUseQueue = new ConcurrentLinkedQueue<>();
     private ConcurrentLinkedQueue<Buff> buffQueue = new ConcurrentLinkedQueue<>();
 
-    private ConcurrentLinkedQueue<Byte> buffKeys = new ConcurrentLinkedQueue<>();
+    private ConcurrentLinkedQueue<Integer> buffKeys = new ConcurrentLinkedQueue<>();
+    private int maxBuffKeys = 0;
 
     private long lastActionTime = Globals.SERVER_MAX_IDLE;
     private long skillDuration = 0;
@@ -90,12 +131,10 @@ public class Player extends Thread {
      * @param port Connected port
      * @param x Spawning x location in double
      * @param y Spawning y location in double
-     * @param bc Reference to Server PacketSender
      * @param map Reference to server's loaded map
      * @param l Reference to Logic module
      */
-    public Player(PacketSender bc, LogicModule l, byte key, InetAddress address, int port, GameMap map, double x, double y) {
-        packetSender = bc;
+    public Player(LogicModule l, byte key, InetAddress address, int port, GameMap map, double x, double y) {
         logic = l;
         this.key = key;
         this.address = address;
@@ -107,20 +146,47 @@ public class Player extends Thread {
         facing = Globals.RIGHT;
         playerState = PLAYER_STATE_STAND;
         frame = 0;
-        for (byte i = -128; i < 127; i++) {
-            buffKeys.add(i);
-        }
+        extendBuffKeys();
     }
 
-    public void returnBuffKey(byte bKey) {
+    /**
+     * Set the static packet sender for Player class
+     *
+     * @param ps Server PacketSender
+     */
+    public static void setPacketSender(PacketSender ps) {
+        sender = ps;
+    }
+
+    /**
+     * Return a freed buff key to the queue
+     *
+     * @param bKey Buff key to be queued
+     */
+    public void returnBuffKey(int bKey) {
         buffKeys.add(bKey);
     }
 
-    public Byte getNextBuffKey() {
+    /**
+     * Get the next buff key from queue
+     *
+     * @return Byte - Free buff key, null if none are available.
+     */
+    public Integer getNextBuffKey() {
+        if (buffKeys.isEmpty()) {
+            extendBuffKeys();
+        }
         if (!buffKeys.isEmpty()) {
             return buffKeys.poll();
         }
         return null;
+    }
+
+    private void extendBuffKeys() {
+        for (int i = maxBuffKeys; i < maxBuffKeys + 500; i++) {
+            buffKeys.add(i);
+        }
+        maxBuffKeys += 500;
     }
 
     /**
@@ -210,10 +276,21 @@ public class Player extends Thread {
         return frame;
     }
 
+    /**
+     * Get the item codes of the equipment on this Player
+     *
+     * @return int[] - Equipment Item Codes
+     */
     public int[] getEquip() {
         return equip;
     }
 
+    /**
+     * Get the skill level of specific skill using a skill code
+     *
+     * @param skillCode Skill code of skill
+     * @return The level of the skill
+     */
     public int getSkillLevel(byte skillCode) {
         return skills.get(skillCode).getLevel();
     }
@@ -264,6 +341,12 @@ public class Player extends Thread {
         xSpeed = speed;
     }
 
+    /**
+     * Set the level of skill with skill code
+     *
+     * @param skillCode Skill to be set
+     * @param level Level of skill to be set
+     */
     public void setSkill(byte skillCode, byte level) {
         Skill newSkill = null;
         switch (skillCode) {
@@ -309,11 +392,11 @@ public class Player extends Thread {
             case Skill.SHIELD_IRONFORT:
                 newSkill = new SkillShieldIron();
                 break;
-            case Skill.SHIELD_3:
-                newSkill = new SkillShield3();
+            case Skill.SHIELD_CHARGE:
+                newSkill = new SkillShieldCharge();
                 break;
-            case Skill.SHIELD_4:
-                newSkill = new SkillShield4();
+            case Skill.SHIELD_REFLECT:
+                newSkill = new SkillShieldReflect();
                 break;
             case Skill.SHIELD_5:
                 newSkill = new SkillShield5();
@@ -391,11 +474,11 @@ public class Player extends Thread {
         updatePlayerState();
         updateBuffs();
         updateFall();
-        
-        if (isStunned() && !isKnockback()){
+
+        if (isStunned() && !isKnockback()) {
             setXSpeed(0);
         }
-    
+
         boolean movedX = updateX(xSpeed);
         hitbox.x = x - 50;
         hitbox.y = y - 180;
@@ -539,7 +622,7 @@ public class Player extends Thread {
     private void updateSkillSwordSlash() {
         if (skillDuration % 200 == 0 && skillDuration < 600) {
             skillCounter++;
-            ProjSwordSlash proj = new ProjSwordSlash(packetSender, logic, logic.getNextProjKey(), this, x, y, skillCounter);
+            ProjSwordSlash proj = new ProjSwordSlash(logic, logic.getNextProjKey(), this, x, y, skillCounter);
             logic.queueAddProj(proj);
             byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT * 2];
             bytes[0] = Globals.DATA_PARTICLE_EFFECT;
@@ -561,7 +644,7 @@ public class Player extends Thread {
             bytes[8] = posYInt[2];
             bytes[9] = posYInt[3];
             bytes[10] = facing;
-            packetSender.sendAll(bytes, logic.getRoom());
+            sender.sendAll(bytes, logic.getRoom());
         }
 
         if (skillDuration >= 700) {
@@ -571,7 +654,7 @@ public class Player extends Thread {
 
     private void updateSkillSwordDrive() {
         if (skillDuration % 250 == 0 && skillDuration < 1000) {
-            ProjSwordDrive proj = new ProjSwordDrive(packetSender, logic, logic.getNextProjKey(), this, x, y);
+            ProjSwordDrive proj = new ProjSwordDrive(logic, logic.getNextProjKey(), this, x, y);
             logic.queueAddProj(proj);
             if (skillDuration == 0) {
                 byte[] bytes = new byte[Globals.PACKET_BYTE * 4 + Globals.PACKET_INT * 2];
@@ -579,7 +662,7 @@ public class Player extends Thread {
                 bytes[1] = Globals.PARTICLE_SWORD_DRIVE;
                 bytes[10] = facing;
                 bytes[11] = key;
-                packetSender.sendAll(bytes, logic.getRoom());
+                sender.sendAll(bytes, logic.getRoom());
             }
         }
         if (skillDuration >= 1000) {
@@ -597,7 +680,7 @@ public class Player extends Thread {
             skillCounter++;
         }
         if (skillDuration % skillTime == 0 && skillCounter < numHits) {
-            ProjSwordVorpal proj = new ProjSwordVorpal(packetSender, logic, logic.getNextProjKey(), this, x, y);
+            ProjSwordVorpal proj = new ProjSwordVorpal(logic, logic.getNextProjKey(), this, x, y);
             logic.queueAddProj(proj);
             byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT * 2];
             bytes[0] = Globals.DATA_PARTICLE_EFFECT;
@@ -613,7 +696,7 @@ public class Player extends Thread {
             bytes[8] = posYInt[2];
             bytes[9] = posYInt[3];
             bytes[10] = facing;
-            packetSender.sendAll(bytes, logic.getRoom());
+            sender.sendAll(bytes, logic.getRoom());
             skillCounter++;
         }
 
@@ -629,9 +712,9 @@ public class Player extends Thread {
             bytes[1] = Globals.PARTICLE_SWORD_TAUNTAURA1;
             bytes[10] = facing;
             bytes[11] = key;
-            packetSender.sendAll(bytes, logic.getRoom());
+            sender.sendAll(bytes, logic.getRoom());
         } else if (skillDuration == 50) {
-            ProjSwordTaunt proj = new ProjSwordTaunt(packetSender, logic, logic.getNextProjKey(), this, x, y);
+            ProjSwordTaunt proj = new ProjSwordTaunt(logic, logic.getNextProjKey(), this, x, y);
             logic.queueAddProj(proj);
             byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT * 2];
             bytes[0] = Globals.DATA_PARTICLE_EFFECT;
@@ -647,7 +730,7 @@ public class Player extends Thread {
             bytes[8] = posYInt[2];
             bytes[9] = posYInt[3];
             bytes[10] = facing;
-            packetSender.sendAll(bytes, logic.getRoom());
+            sender.sendAll(bytes, logic.getRoom());
         }
         if (skillDuration >= 500) {
             setPlayerState(PLAYER_STATE_STAND);
@@ -660,7 +743,7 @@ public class Player extends Thread {
             skillCounter++;
         }
         if (skillDuration % 50 == 0 && skillCounter < numHits) {
-            ProjSwordMulti proj = new ProjSwordMulti(packetSender, logic, logic.getNextProjKey(), this, x, y + (rng.nextInt(40) - 20));
+            ProjSwordMulti proj = new ProjSwordMulti(logic, logic.getNextProjKey(), this, x, y + (rng.nextInt(40) - 20));
             logic.queueAddProj(proj);
             byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT * 2];
             bytes[0] = Globals.DATA_PARTICLE_EFFECT;
@@ -676,7 +759,7 @@ public class Player extends Thread {
             bytes[8] = posYInt[2];
             bytes[9] = posYInt[3];
             bytes[10] = facing;
-            packetSender.sendAll(bytes, logic.getRoom());
+            sender.sendAll(bytes, logic.getRoom());
             skillCounter++;
         }
         if (skillDuration >= numHits * 50 + 600 || isStunned() || isKnockback()) {
@@ -686,7 +769,7 @@ public class Player extends Thread {
 
     private void updateSkillSwordCinder() {
         if (skillDuration == 70) {
-            ProjSwordCinder proj = new ProjSwordCinder(packetSender, logic, logic.getNextProjKey(), this, x, y);
+            ProjSwordCinder proj = new ProjSwordCinder(logic, logic.getNextProjKey(), this, x, y);
             logic.queueAddProj(proj);
             byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT * 2];
             bytes[0] = Globals.DATA_PARTICLE_EFFECT;
@@ -702,7 +785,7 @@ public class Player extends Thread {
             bytes[8] = posYInt[2];
             bytes[9] = posYInt[3];
             bytes[10] = facing;
-            packetSender.sendAll(bytes, logic.getRoom());
+            sender.sendAll(bytes, logic.getRoom());
         }
         if (skillDuration >= 600) {
             setPlayerState(PLAYER_STATE_STAND);
@@ -711,7 +794,7 @@ public class Player extends Thread {
 
     private void updateSkillBowArc() {
         if (skillDuration == 100) {
-            ProjBowArc proj = new ProjBowArc(packetSender, logic, logic.getNextProjKey(), this, x, y);
+            ProjBowArc proj = new ProjBowArc(logic, logic.getNextProjKey(), this, x, y);
             logic.queueAddProj(proj);
             byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT * 2];
             bytes[0] = Globals.DATA_PARTICLE_EFFECT;
@@ -727,7 +810,7 @@ public class Player extends Thread {
             bytes[8] = posYInt[2];
             bytes[9] = posYInt[3];
             bytes[10] = facing;
-            packetSender.sendAll(bytes, logic.getRoom());
+            sender.sendAll(bytes, logic.getRoom());
         }
         if (skillDuration >= 500) {
             setPlayerState(PLAYER_STATE_STAND);
@@ -736,7 +819,7 @@ public class Player extends Thread {
 
     private void updateSkillBowFrost() {
         if (skillDuration == 160) {
-            ProjBowFrost proj = new ProjBowFrost(packetSender, logic, logic.getNextProjKey(), this, x, y);
+            ProjBowFrost proj = new ProjBowFrost(logic, logic.getNextProjKey(), this, x, y);
             logic.queueAddProj(proj);
             byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT * 2];
             bytes[0] = Globals.DATA_PARTICLE_EFFECT;
@@ -752,7 +835,7 @@ public class Player extends Thread {
             bytes[8] = posYInt[2];
             bytes[9] = posYInt[3];
             bytes[10] = facing;
-            packetSender.sendAll(bytes, logic.getRoom());
+            sender.sendAll(bytes, logic.getRoom());
         }
         if (skillDuration >= 500) {
             setPlayerState(PLAYER_STATE_STAND);
@@ -761,7 +844,7 @@ public class Player extends Thread {
 
     private void updateSkillBowStorm() {
         if (skillDuration == 100) {
-            ProjBowStorm proj = new ProjBowStorm(packetSender, logic, logic.getNextProjKey(), this, x, y);
+            ProjBowStorm proj = new ProjBowStorm(logic, logic.getNextProjKey(), this, x, y);
             logic.queueAddProj(proj);
             byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT * 2];
             bytes[0] = Globals.DATA_PARTICLE_EFFECT;
@@ -777,7 +860,7 @@ public class Player extends Thread {
             bytes[8] = posYInt[2];
             bytes[9] = posYInt[3];
             bytes[10] = facing;
-            packetSender.sendAll(bytes, logic.getRoom());
+            sender.sendAll(bytes, logic.getRoom());
         }
         if (skillDuration >= 500) {
             setPlayerState(PLAYER_STATE_STAND);
@@ -792,7 +875,7 @@ public class Player extends Thread {
             } else if (skillDuration == 450) {
                 projY = y + 20;
             }
-            ProjBowRapid proj = new ProjBowRapid(packetSender, logic, logic.getNextProjKey(), this, x, projY);
+            ProjBowRapid proj = new ProjBowRapid(logic, logic.getNextProjKey(), this, x, projY);
             logic.queueAddProj(proj);
             byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT * 2];
             bytes[0] = Globals.DATA_PARTICLE_EFFECT;
@@ -808,7 +891,7 @@ public class Player extends Thread {
             bytes[8] = posYInt[2];
             bytes[9] = posYInt[3];
             bytes[10] = facing;
-            packetSender.sendAll(bytes, logic.getRoom());
+            sender.sendAll(bytes, logic.getRoom());
         }
         if (skillDuration >= 800) {
             setPlayerState(PLAYER_STATE_STAND);
@@ -817,7 +900,7 @@ public class Player extends Thread {
 
     private void updateSkillBowVolley() {
         if (skillDuration % 100 == 0 && skillCounter < 20) {
-            ProjBowVolley proj = new ProjBowVolley(packetSender, logic, logic.getNextProjKey(), this, x, y - 10 + rng.nextInt(40));
+            ProjBowVolley proj = new ProjBowVolley(logic, logic.getNextProjKey(), this, x, y - 10 + rng.nextInt(40));
             logic.queueAddProj(proj);
             byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT * 2];
             bytes[0] = Globals.DATA_PARTICLE_EFFECT;
@@ -833,7 +916,7 @@ public class Player extends Thread {
             bytes[8] = posYInt[2];
             bytes[9] = posYInt[3];
             bytes[10] = facing;
-            packetSender.sendAll(bytes, logic.getRoom());
+            sender.sendAll(bytes, logic.getRoom());
 
             bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT * 2];
             bytes[0] = Globals.DATA_PARTICLE_EFFECT;
@@ -849,7 +932,7 @@ public class Player extends Thread {
             bytes[8] = posYInt[2];
             bytes[9] = posYInt[3];
             bytes[10] = facing;
-            packetSender.sendAll(bytes, logic.getRoom());
+            sender.sendAll(bytes, logic.getRoom());
             skillCounter++;
         }
         if (skillDuration >= 2100 || isStunned() || isKnockback()) {
@@ -874,9 +957,9 @@ public class Player extends Thread {
             bytes[8] = posYInt[2];
             bytes[9] = posYInt[3];
             bytes[10] = facing;
-            packetSender.sendAll(bytes, logic.getRoom());
+            sender.sendAll(bytes, logic.getRoom());
         } else if (skillDuration == 800) {
-            ProjBowPower proj = new ProjBowPower(packetSender, logic, logic.getNextProjKey(), this, x, y);
+            ProjBowPower proj = new ProjBowPower(logic, logic.getNextProjKey(), this, x, y);
             logic.queueAddProj(proj);
             byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT * 2];
             bytes[0] = Globals.DATA_PARTICLE_EFFECT;
@@ -892,7 +975,7 @@ public class Player extends Thread {
             bytes[8] = posYInt[2];
             bytes[9] = posYInt[3];
             bytes[10] = facing;
-            packetSender.sendAll(bytes, logic.getRoom());
+            sender.sendAll(bytes, logic.getRoom());
         }
         if (skillDuration >= 1400 || (skillDuration < 800 && (isStunned() || isKnockback()))) {
             setPlayerState(PLAYER_STATE_STAND);
@@ -985,7 +1068,7 @@ public class Player extends Thread {
             bytes[1] = key;
             bytes[2] = Globals.STAT_MINHP;
             System.arraycopy(stat, 0, bytes, 3, stat.length);
-            packetSender.sendAll(bytes, logic.getRoom());
+            sender.sendAll(bytes, logic.getRoom());
             nextHPSend = 150;
         }
     }
@@ -994,8 +1077,8 @@ public class Player extends Thread {
         //Update exisiting buffs
         isStun = null;
         isKnockback = null;
-        LinkedList<Byte> remove = new LinkedList<>();
-        for (Map.Entry<Byte, Buff> bEntry : buffs.entrySet()) {
+        LinkedList<Integer> remove = new LinkedList<>();
+        for (Map.Entry<Integer, Buff> bEntry : buffs.entrySet()) {
             Buff b = bEntry.getValue();
             b.update();
             if (b instanceof BuffStun) {
@@ -1011,7 +1094,7 @@ public class Player extends Thread {
                 remove.add(bEntry.getKey());
             }
         }
-        for (byte bKey : remove) {
+        for (Integer bKey : remove) {
             buffs.remove(bKey);
             returnBuffKey(bKey);
         }
@@ -1019,24 +1102,40 @@ public class Player extends Thread {
         //Empty and add buffs from queue
         while (!buffQueue.isEmpty()) {
             Buff b = buffQueue.poll();
-            Byte bKey = getNextBuffKey();
+            Integer bKey = getNextBuffKey();
             if (bKey != null && b != null) {
                 buffs.put(bKey, b);
             }
         }
     }
 
+    /**
+     * Roll a damage number between the max and min damage of player.
+     *
+     * @return Randomly rolled damage.
+     */
     public double rollDamage() {
         double dmg = rng.nextInt((int) (stats[Globals.STAT_MAXDMG] - stats[Globals.STAT_MINDMG])) + stats[Globals.STAT_MINDMG];
         return dmg;
     }
 
+    /**
+     * Roll a chance to do critical hit.
+     *
+     * @return True if rolls a critical chance.
+     */
     public boolean rollCrit() {
         return rng.nextInt(10000) + 1 < (int) (stats[Globals.STAT_CRITCHANCE] * 10000);
     }
 
+    /**
+     * Roll a chance to do critical hit with addition critical chance(from skills)
+     *
+     * @param bonusCritChance Bonus chance % in decimal(40% = 0.4).
+     * @return True if rolls a critical chance.
+     */
     public boolean rollCrit(double bonusCritChance) {
-        return rng.nextInt(10000) + 1 < (int) (stats[Globals.STAT_CRITCHANCE] * 10000) + bonusCritChance;
+        return rng.nextInt(10000) + 1 < (int) ((stats[Globals.STAT_CRITCHANCE] + bonusCritChance) * 10000);
     }
 
     private void updateStats() {
@@ -1088,6 +1187,11 @@ public class Player extends Thread {
         return isKnockback != null;
     }
 
+    /**
+     * Check if player is in a skill use state
+     *
+     * @return True if player is in a skill use state.
+     */
     public boolean isUsingSkill() {
         return playerState == PLAYER_STATE_SWORD_SLASH
                 || playerState == PLAYER_STATE_SWORD_VORPAL
@@ -1179,15 +1283,30 @@ public class Player extends Thread {
         }
     }
 
+    /**
+     * Queue skill to be use. Processed in the next tick.
+     *
+     * @param data
+     */
     public void queueSkillUse(byte[] data) {
         lastActionTime = Globals.SERVER_MAX_IDLE;
         skillUseQueue.add(data);
     }
 
+    /**
+     * Queue damage to be dealt. Processed in HP updated in the next tick.
+     *
+     * @param damage
+     */
     public void queueDamage(int damage) {
         damageQueue.add(damage);
     }
 
+    /**
+     * Queue heal to be applied. Processed in HP updated in the next tick.
+     *
+     * @param heal
+     */
     public void queueHeal(int heal) {
         healQueue.add(heal);
     }
@@ -1244,6 +1363,11 @@ public class Player extends Thread {
         stateQueue.add(newState);
     }
 
+    /**
+     * Force set a player state.
+     *
+     * @param newState State to be set
+     */
     public void setPlayerState(byte newState) {
         playerState = newState;
         frame = 0;
@@ -1459,7 +1583,7 @@ public class Player extends Thread {
         bytes[7] = posYInt[1];
         bytes[8] = posYInt[2];
         bytes[9] = posYInt[3];
-        packetSender.sendAll(bytes, logic.getRoom());
+        sender.sendAll(bytes, logic.getRoom());
         updatePos = false;
     }
 
@@ -1476,7 +1600,7 @@ public class Player extends Thread {
         bytes[0] = Globals.DATA_PLAYER_SET_FACING;
         bytes[1] = key;
         bytes[2] = facing;
-        packetSender.sendAll(bytes, logic.getRoom());
+        sender.sendAll(bytes, logic.getRoom());
         updateFacing = false;
     }
 
@@ -1494,73 +1618,143 @@ public class Player extends Thread {
         bytes[1] = key;
         bytes[2] = animState;
         bytes[3] = frame;
-        packetSender.sendAll(bytes, logic.getRoom());
+        sender.sendAll(bytes, logic.getRoom());
         updateAnimState = false;
     }
 
+    /**
+     * Send set cooldown to player client.
+     *
+     * @param data
+     */
     public void sendCooldown(byte[] data) {
         skills.get(data[3]).setCooldown();
         byte[] bytes = new byte[Globals.PACKET_BYTE * 2];
         bytes[0] = Globals.DATA_PLAYER_SET_COOLDOWN;
         bytes[1] = data[3];
-        packetSender.sendPlayer(bytes, address, port);
+        sender.sendPlayer(bytes, address, port);
     }
 
+    /**
+     * Send name to all clients.
+     */
     public void sendName() {
         byte[] data = name.getBytes(StandardCharsets.UTF_8);
         byte[] bytes = new byte[Globals.PACKET_BYTE * 2 + data.length];
         bytes[0] = Globals.DATA_PLAYER_GET_NAME;
         bytes[1] = key;
         System.arraycopy(data, 0, bytes, 2, data.length);
-        packetSender.sendAll(bytes, logic.getRoom());
+        sender.sendAll(bytes, logic.getRoom());
     }
 
+    /**
+     * Set the uID of this player.
+     *
+     * @param id uID
+     */
     public void setUniqueID(int id) {
         uniqueID = id;
     }
 
+    /**
+     * Get the uID of this player.
+     *
+     * @return
+     */
     public int getUniqueID() {
         return uniqueID;
     }
 
+    /**
+     * Set the name of this player.
+     *
+     * @param s
+     */
     public void setPlayerName(String s) {
         name = s;
     }
 
+    /**
+     * Get the name of this player.
+     *
+     * @return
+     */
     public String getPlayerName() {
         return name;
     }
 
+    /**
+     * Set an amount of a specific stat.
+     *
+     * @param stat Stat Type
+     * @param amount Amount of stats
+     */
     public void setStat(byte stat, double amount) {
         stats[stat] = amount;
         updateStats();
     }
 
+    /**
+     * Get the stats of this player.
+     *
+     * @return double[] - Player Stats
+     */
     public double[] getStats() {
         return stats;
     }
 
+    /**
+     * Set bonus stats of this player(CRITCHANCE, CRITDMG, REGEN, ARMOR).
+     *
+     * @param stat Stat Type
+     * @param amount Amount of stats.
+     */
     public void setBonusStat(byte stat, double amount) {
         bonusStats[stat] = amount;
         updateStats();
     }
 
+    /**
+     * Get the bonus stats of this player(CRITCHANCE, CRITDMG, REGEN, ARMOR).
+     *
+     * @return double[] - Player Bonus Stats
+     */
     public double[] getBonusStats() {
         return bonusStats;
     }
 
+    /**
+     * Set the item code in a specific equipment slot
+     *
+     * @param slot Equipment Slot
+     * @param itemCode Item Code
+     */
     public void setEquip(int slot, int itemCode) {
         equip[slot] = itemCode;
     }
 
+    /**
+     * Disconnect a player in the next tick.
+     */
     public void disconnect() {
         connected = false;
     }
 
+    /**
+     * Check if player is still connected
+     *
+     * @return True if connected
+     */
     public boolean isConnected() {
         return connected;
     }
 
+    /**
+     * Get the item type of an item code.
+     *
+     * @param i Item Code
+     * @return Byte - Item Type
+     */
     public static byte getItemType(int i) {
         if (i >= 100000 && i <= 109999) { //Swords
             return Globals.ITEM_WEAPON;

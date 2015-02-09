@@ -8,6 +8,9 @@ import blockfighter.server.Globals;
  */
 public class SkillSwordTaunt extends Skill {
 
+    /**
+     * Constructor for Sword Skill Taunt.
+     */
     public SkillSwordTaunt() {
         skillCode = SWORD_TAUNT;
         maxCooldown = 20000;

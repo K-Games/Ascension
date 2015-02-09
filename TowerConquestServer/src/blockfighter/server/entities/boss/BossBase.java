@@ -1,13 +1,12 @@
 package blockfighter.server.entities.boss;
 
-import blockfighter.server.maps.GameMap;
-import blockfighter.server.net.PacketSender;
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.buff.Buff;
 import blockfighter.server.entities.buff.BuffKnockback;
 import blockfighter.server.entities.buff.BuffStun;
-
+import blockfighter.server.maps.GameMap;
+import blockfighter.server.net.PacketSender;
 import java.awt.geom.Rectangle2D;
 import java.util.LinkedList;
 import java.util.Map;
@@ -42,7 +41,7 @@ public abstract class BossBase extends Thread implements Boss {
     protected ConcurrentHashMap<Byte, Buff> buffs = new ConcurrentHashMap<>(10, 0.9f, 1);
     protected Buff isStun, isKnockback;
 
-    private final PacketSender packetSender;
+    protected static PacketSender packetSender;
     private final GameMap map;
 
     private ConcurrentLinkedQueue<Integer> damageQueue = new ConcurrentLinkedQueue<>();
@@ -59,12 +58,10 @@ public abstract class BossBase extends Thread implements Boss {
      * @param key The key of this player in the player array in logic module
      * @param x Spawning x location in double
      * @param y Spawning y location in double
-     * @param bc Reference to Server PacketSender
      * @param map Reference to server's loaded map
      * @param l Reference to Logic module
      */
-    public BossBase(PacketSender bc, LogicModule l, byte key, GameMap map, double x, double y) {
-        packetSender = bc;
+    public BossBase(LogicModule l, byte key, GameMap map, double x, double y) {
         logic = l;
         this.key = key;
         this.x = x;
@@ -77,6 +74,15 @@ public abstract class BossBase extends Thread implements Boss {
         for (byte i = -128; i < 127; i++) {
             buffKeys.add(i);
         }
+    }
+
+    /**
+     * Set a reference to the Server PacketSender.
+     *
+     * @param ps Server PacketSender
+     */
+    public static void setPacketSender(PacketSender ps) {
+        packetSender = ps;
     }
 
     private void returnBuffKey(byte bKey) {

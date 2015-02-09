@@ -5,6 +5,7 @@ package blockfighter.server.entities.player.skills;
  * @author Ken Kwan
  */
 public abstract class Skill {
+
     protected byte reqWeapon;
     protected byte skillCode;
     protected byte level;
@@ -26,8 +27,8 @@ public abstract class Skill {
             BOW_VOLLEY = 0x0B,
             SHIELD_FORTIFY = 0x0C,
             SHIELD_IRONFORT = 0x0D,
-            SHIELD_3 = 0x0E,
-            SHIELD_4 = 0x0F,
+            SHIELD_CHARGE = 0x0E,
+            SHIELD_REFLECT = 0x0F,
             SHIELD_5 = 0x10,
             SHIELD_6 = 0x11,
             PASSIVE_1 = 0x12,
@@ -43,10 +44,20 @@ public abstract class Skill {
             PASSIVE_11 = 0x1C,
             PASSIVE_12 = 0x1D;
 
+    /**
+     * Get this skill code of this skill.
+     *
+     * @return
+     */
     public byte getSkillCode() {
         return skillCode;
     }
 
+    /**
+     * Reduce the cooldown timer of this skill in milliseconds.
+     *
+     * @param ms Amount of milliseconds to reduce.
+     */
     public void reduceCooldown(long ms) {
         if (cooldown > 0) {
             cooldown -= ms;
@@ -55,31 +66,65 @@ public abstract class Skill {
         }
     }
 
+    /**
+     * Set the cooldown of this skill to it's maximum.
+     */
     public void setCooldown() {
         cooldown = maxCooldown;
     }
 
+    /**
+     * Get the current cooldown time of this skill.
+     *
+     * @return Cooldown in milliseconds
+     */
     public long getCooldown() {
         return cooldown;
     }
 
+    /**
+     * Get the maximum cooldown of this skill.
+     *
+     * @return Maximum cooldown in milliseconds.
+     */
     public long getMaxCooldown() {
         return maxCooldown;
     }
 
+    /**
+     * Set the level of this skill.
+     *
+     * @param lvl Skill level
+     */
     public void setLevel(byte lvl) {
         level = lvl;
     }
 
+    /**
+     * Get the skill level
+     *
+     * @return Byte - Skill level
+     */
     public byte getLevel() {
         return level;
     }
 
+    /**
+     * Check if this skill is level 30
+     *
+     * @return True if skill is level 30
+     */
     public boolean isMaxed() {
         return level == 30;
     }
-    
-    public boolean canCast(byte weaponType){
-        return weaponType == reqWeapon && cooldown <= 0 ;
+
+    /**
+     * Check if this skill can be cast with this weapon type and is off cooldown.
+     *
+     * @param weaponType Weapon Type(Item Type)
+     * @return True if weapon is same as required weapon and cooldown is <= 0
+     */
+    public boolean canCast(byte weaponType) {
+        return weaponType == reqWeapon && cooldown <= 0;
     }
 }

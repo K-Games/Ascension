@@ -16,21 +16,25 @@ import java.util.concurrent.Executors;
  */
 public class PacketReceiver extends Thread {
 
-    private final LogicModule[] logic;
-    private final PacketSender packetSender;
+    private static LogicModule[] logic;
+    private static PacketSender sender;
 
     /**
-     * A new thread for accepting connections.
-     * <p>
-     * Logic module and packetSender must have been initialized
-     * </p>
+     * Set the static logic module array
      *
-     * @param logic Logic module
-     * @param packetSender Server packetSender
+     * @param l Logic Module array
      */
-    public PacketReceiver(LogicModule[] logic, PacketSender packetSender) {
-        this.logic = logic;
-        this.packetSender = packetSender;
+    public static void setLogic(LogicModule[] l) {
+        logic = l;
+    }
+
+    /**
+     * Set the static packet sender
+     *
+     * @param ps Server PacketSender
+     */
+    public static void setPacketSender(PacketSender ps) {
+        sender = ps;
     }
 
     @Override
@@ -39,13 +43,13 @@ public class PacketReceiver extends Thread {
         try {
             DatagramSocket socket = new DatagramSocket(Globals.SERVER_PORT);
             System.out.println("Server listening on port " + Globals.SERVER_PORT);
-            packetSender.setSocket(socket);
-            packetSender.setThreadPool(tpes);
+            sender.setSocket(socket);
+            sender.setThreadPool(tpes);
             while (true) {
                 byte[] request = new byte[Globals.PACKET_MAX_SIZE];
                 DatagramPacket packet = new DatagramPacket(request, request.length);
                 socket.receive(packet);
-                tpes.execute(new PacketHandler(packetSender, packet, logic));
+                tpes.execute(new PacketHandler(packet));
             }
         } catch (SocketException ex) {
             Globals.log(ex.getLocalizedMessage(), ex, true);

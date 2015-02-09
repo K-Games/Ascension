@@ -8,6 +8,9 @@ import blockfighter.server.Globals;
  */
 public class SkillBowFrost extends Skill {
 
+    /**
+     * Constructor for Bow Skill Frost Bind.
+     */
     public SkillBowFrost() {
         skillCode = BOW_FROST;
         maxCooldown = 20000;
