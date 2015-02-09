@@ -149,13 +149,13 @@ public class ItemEquip implements Item {
     public static void loadItemDetails() {
         ITEM_NAMES.put(TEMP_SWORD, "Sword");
         ITEM_DESC.put(TEMP_SWORD, "We all start somewhere.");
-        
+
         ITEM_NAMES.put(TEMP_HEAD, "Head");
         ITEM_DESC.put(TEMP_HEAD, "As far as our eyes can see.");
-        
+
         ITEM_NAMES.put(TEMP_CHEST, "Chest");
         ITEM_DESC.put(TEMP_CHEST, "We are weak.\nSo that we can become\nstrong.");
-        
+
         ITEM_NAMES.put(TEMP_PANTS, "Pants");
         ITEM_NAMES.put(TEMP_SHOULDER, "Shoulder");
         ITEM_NAMES.put(TEMP_GLOVE, "Gloves");
@@ -202,55 +202,55 @@ public class ItemEquip implements Item {
         baseStats[Globals.STAT_LEVEL] = level;
         switch (getItemType(itemCode)) {
             case Globals.ITEM_WEAPON:
-                baseStats[Globals.STAT_POWER] = level + ((rng.nextInt(50) / 100D) * level - 0.25 * level);
+                baseStats[Globals.STAT_POWER] = level + ((rng.nextInt(51) / 100D) * level - 0.25 * level);
                 break;
             case Globals.ITEM_BOW:
-                baseStats[Globals.STAT_POWER] = level + ((rng.nextInt(50) / 100D) * level - 0.25 * level);
+                baseStats[Globals.STAT_POWER] = level + ((rng.nextInt(51) / 100D) * level - 0.25 * level);
                 break;
             case Globals.ITEM_OFFHAND:
-                baseStats[Globals.STAT_DEFENSE] = level + ((rng.nextInt(50) / 100D) * level - 0.25 * level);
+                baseStats[Globals.STAT_DEFENSE] = level + ((rng.nextInt(51) / 100D) * level - 0.25 * level);
                 break;
             case Globals.ITEM_QUIVER:
-                baseStats[Globals.STAT_POWER] = level + ((rng.nextInt(50) / 100D) * level - 0.25 * level);
+                baseStats[Globals.STAT_POWER] = level + ((rng.nextInt(51) / 100D) * level - 0.25 * level);
                 baseStats[Globals.STAT_CRITCHANCE] = Math.round(rng.nextInt(75) / 100D * level + level * 0.25) * 0.001;
                 break;
             case Globals.ITEM_CHEST:
-                baseStats[Globals.STAT_DEFENSE] = level + ((rng.nextInt(50) / 100D) * level - 0.25 * level);
+                baseStats[Globals.STAT_DEFENSE] = level + ((rng.nextInt(51) / 100D) * level - 0.25 * level);
                 break;
             case Globals.ITEM_PANTS:
-                baseStats[Globals.STAT_DEFENSE] = level + ((rng.nextInt(50) / 100D) * level - 0.25 * level);
+                baseStats[Globals.STAT_DEFENSE] = level + ((rng.nextInt(51) / 100D) * level - 0.25 * level);
                 break;
             case Globals.ITEM_HEAD:
-                baseStats[Globals.STAT_DEFENSE] = level + ((rng.nextInt(50) / 100D) * level - 0.25 * level);
-                baseStats[Globals.STAT_SPIRIT] = level + ((rng.nextInt(50) / 100D) * level - 0.25 * level);
+                baseStats[Globals.STAT_DEFENSE] = level + ((rng.nextInt(51) / 100D) * level - 0.25 * level);
+                baseStats[Globals.STAT_SPIRIT] = level + ((rng.nextInt(51) / 100D) * level - 0.25 * level);
                 break;
             case Globals.ITEM_SHOE:
-                baseStats[Globals.STAT_SPIRIT] = level + ((rng.nextInt(50) / 100D) * level - 0.25 * level);
+                baseStats[Globals.STAT_SPIRIT] = level + ((rng.nextInt(51) / 100D) * level - 0.25 * level);
                 break;
             case Globals.ITEM_BELT:
-                baseStats[Globals.STAT_SPIRIT] = level + ((rng.nextInt(50) / 100D) * level - 0.25 * level);
+                baseStats[Globals.STAT_SPIRIT] = level + ((rng.nextInt(51) / 100D) * level - 0.25 * level);
                 break;
             case Globals.ITEM_SHOULDER:
-                baseStats[Globals.STAT_DEFENSE] = level + ((rng.nextInt(50) / 100D) * level - 0.25 * level);
-                baseStats[Globals.STAT_POWER] = level + ((rng.nextInt(50) / 100D) * level - 0.25 * level);
+                baseStats[Globals.STAT_DEFENSE] = level + ((rng.nextInt(51) / 100D) * level - 0.25 * level);
+                baseStats[Globals.STAT_POWER] = level + ((rng.nextInt(51) / 100D) * level - 0.25 * level);
                 break;
             case Globals.ITEM_GLOVE:
-                baseStats[Globals.STAT_SPIRIT] = level + ((rng.nextInt(50) / 100D) * level - 0.25 * level);
-                baseStats[Globals.STAT_POWER] = level + ((rng.nextInt(50) / 100D) * level - 0.25 * level);
+                baseStats[Globals.STAT_SPIRIT] = level + ((rng.nextInt(51) / 100D) * level - 0.25 * level);
+                baseStats[Globals.STAT_POWER] = level + ((rng.nextInt(51) / 100D) * level - 0.25 * level);
                 break;
             case Globals.ITEM_AMULET:
-                baseStats[Globals.STAT_CRITDMG] = Math.round(rng.nextInt(25) / 100D * level + level * 0.75) * 0.02;
-                baseStats[Globals.STAT_REGEN] = rng.nextInt((int) level) * 3;
+                baseStats[Globals.STAT_CRITDMG] = Math.round(rng.nextInt(26) / 100D * level + level * 0.75) * 0.02;
+                baseStats[Globals.STAT_REGEN] = rng.nextInt((int) level + 1) * 3;
                 break;
             case Globals.ITEM_RING:
-                baseStats[Globals.STAT_CRITCHANCE] = Math.round(rng.nextInt(75) / 100D * level + level * 0.25) * 0.001;
-                baseStats[Globals.STAT_ARMOR] = Math.round(rng.nextInt(25) / 100D * level + level * 0.75) * 6;
+                baseStats[Globals.STAT_CRITCHANCE] = Math.round(rng.nextInt(76) / 100D * level + level * 0.25) * 0.001;
+                baseStats[Globals.STAT_ARMOR] = Math.round(rng.nextInt(26) / 100D * level + level * 0.75) * 6;
                 break;
         }
         baseStats[Globals.STAT_POWER] = Math.round(baseStats[Globals.STAT_POWER]);
         baseStats[Globals.STAT_DEFENSE] = Math.round(baseStats[Globals.STAT_DEFENSE]);
         baseStats[Globals.STAT_SPIRIT] = Math.round(baseStats[Globals.STAT_SPIRIT]);
-        bonusMult = rng.nextInt(100) / 100D;
+        bonusMult = rng.nextInt(101) / 100D;
         upgrades = 0;
     }
 

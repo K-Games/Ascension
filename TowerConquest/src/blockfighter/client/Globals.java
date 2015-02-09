@@ -1,6 +1,6 @@
 package blockfighter.client;
 
-import blockfighter.client.entities.skills.Skill;
+import blockfighter.client.entities.player.skills.Skill;
 import java.awt.Font;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -51,7 +51,7 @@ public class Globals {
 
     public final static byte RIGHT = 0, LEFT = 1, DOWN = 2, UP = 3;
 
-    public final static int NUM_PARTICLE_EFFECTS = 19;
+    public final static int NUM_PARTICLE_EFFECTS = 21;
     public final static byte PARTICLE_SWORD_SLASH1 = 0x00,
             PARTICLE_SWORD_SLASH2 = 0x01,
             PARTICLE_SWORD_SLASH3 = 0x02,
@@ -69,7 +69,9 @@ public class Globals {
             PARTICLE_BOW_POWERCHARGE = 0x0F,
             PARTICLE_BOW_POWERPARTICLE = 0x10,
             PARTICLE_BOW_VOLLEYBOW = 0x11,
-            PARTICLE_BOW_VOLLEYARROW = 0x12;
+            PARTICLE_BOW_VOLLEYARROW = 0x12,
+            PARTICLE_BOW_STORM = 0x13,
+            PARTICLE_BOW_STORMARROW = 0x14;
 
     public final static int NUM_KEYBINDS = 16,
             KEYBIND_SKILL1 = 0,
@@ -323,15 +325,11 @@ public class Globals {
             MENU_ITEMDELETE[0] = ImageIO.read(Globals.class.getResource("sprites/ui/menu/delete.png"));
             MENU_SMOKE[0] = ImageIO.read(Globals.class.getResource("sprites/ui/menu/smoke.png"));
             for (byte i = 0; i < 12; i++) {
-                SKILL_ICON[i] = ImageIO.read(Globals.class.getResource("sprites/skill/" + i + ".png"));
+                SKILL_ICON[i] = ImageIO.read(Globals.class.getResource("sprites/skillicon/" + i + ".png"));
             }
         } catch (IOException ex) {
             Logger.getLogger(Globals.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
-
-    public static final long nsToMs(double time) {
-        return (long) (time / 1000000);
     }
 
 }

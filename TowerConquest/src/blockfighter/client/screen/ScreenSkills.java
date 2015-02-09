@@ -3,7 +3,7 @@ package blockfighter.client.screen;
 import blockfighter.client.Globals;
 import blockfighter.client.LogicModule;
 import blockfighter.client.SaveData;
-import blockfighter.client.entities.skills.Skill;
+import blockfighter.client.entities.player.skills.Skill;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;

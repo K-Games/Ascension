@@ -36,7 +36,7 @@ public class LogicModule extends Thread {
 
     @Override
     public void run() {
-        soundModule.playBGM("theme.ogg");
+        //soundModule.playBGM("theme.ogg");
         while (isRunning) {
             screen.update();
         }
@@ -148,7 +148,7 @@ public class LogicModule extends Thread {
 
     public void returnMenu() {
         screen = lastMenu;
-        soundModule.playBGM("theme.ogg");
+        //soundModule.playBGM("theme.ogg");
     }
 
     public void playSound(String soundFile) {

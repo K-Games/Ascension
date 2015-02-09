@@ -3,10 +3,10 @@ package blockfighter.client.screen;
 import blockfighter.client.Globals;
 import blockfighter.client.LogicModule;
 import blockfighter.client.SaveData;
-import blockfighter.client.entities.Player;
+import blockfighter.client.entities.player.Player;
 import blockfighter.client.entities.items.ItemEquip;
 import blockfighter.client.entities.particles.*;
-import blockfighter.client.entities.skills.Skill;
+import blockfighter.client.entities.player.skills.Skill;
 import blockfighter.client.maps.GameMap;
 import blockfighter.client.net.PacketSender;
 import java.awt.Color;
@@ -429,6 +429,9 @@ public class ScreenIngame extends Screen {
                 break;
             case Globals.PARTICLE_BOW_VOLLEYARROW:
                 particles.put(key, new ParticleBowVolleyArrow(logic, key, x, y, facing));
+                break;
+            case Globals.PARTICLE_BOW_STORM:
+                particles.put(key, new ParticleBowStormArea(logic, key, x, y, facing));
                 break;
         }
     }

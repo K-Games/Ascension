@@ -46,14 +46,15 @@ public abstract class Particle extends Thread {
         }
         PARTICLE_SPRITE = null;
         LOADED = false;
+        System.gc();
     }
 
     public static void loadParticles() {
         if (LOADED) {
             return;
         }
-        LOADED = true;
         unloadParticles();
+        LOADED = true;
         PARTICLE_SPRITE = new BufferedImage[NUM_PARTICLE_EFFECTS][];
         PARTICLE_SPRITE[Globals.PARTICLE_SWORD_SLASH1] = new BufferedImage[8];
         for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_SLASH1].length; i++) {
@@ -195,6 +196,14 @@ public abstract class Particle extends Thread {
         for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_BOW_VOLLEYARROW].length; i++) {
             try {
                 PARTICLE_SPRITE[Globals.PARTICLE_BOW_VOLLEYARROW][i] = ImageIO.read(Globals.class.getResource("sprites/particle/volleyarrow/" + i + ".png"));
+            } catch (Exception ex) {
+                Logger.getLogger(Particle.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        PARTICLE_SPRITE[Globals.PARTICLE_BOW_STORMARROW] = new BufferedImage[20];
+        for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_BOW_STORMARROW].length; i++) {
+            try {
+                PARTICLE_SPRITE[Globals.PARTICLE_BOW_STORMARROW][i] = ImageIO.read(Globals.class.getResource("sprites/particle/stormarrow/" + i + ".png"));
             } catch (Exception ex) {
                 Logger.getLogger(Particle.class.getName()).log(Level.SEVERE, null, ex);
             }

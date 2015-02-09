@@ -5,13 +5,15 @@ import blockfighter.client.LogicModule;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
-public class ParticleBowVolleyArrow extends Particle {
+public class ParticleBowStormArrow extends Particle {
 
-    public ParticleBowVolleyArrow(LogicModule l, int k, int x, int y, byte f) {
+    public ParticleBowStormArrow(LogicModule l, int k, int x, int y, byte f) {
         super(l, k, x, y, f);
+        this.x += rng.nextInt(30) * 20 - ((facing == Globals.RIGHT) ? 90 : 150);
+        this.y += rng.nextInt(25) * 15 - 100;
         frame = 0;
-        frameDuration = 50;
-        duration = 300;
+        frameDuration = 25;
+        duration = 500;
     }
 
     @Override
@@ -19,8 +21,8 @@ public class ParticleBowVolleyArrow extends Particle {
         super.update();
         frameDuration -= Globals.LOGIC_UPDATE / 1000000;
         if (frameDuration <= 0) {
-            frameDuration = 50;
-            if (frame < PARTICLE_SPRITE[Globals.PARTICLE_BOW_VOLLEYARROW].length-1) {
+            frameDuration = 25;
+            if (frame < PARTICLE_SPRITE[Globals.PARTICLE_BOW_STORMARROW].length - 1) {
                 frame++;
             }
         }
@@ -28,13 +30,13 @@ public class ParticleBowVolleyArrow extends Particle {
 
     @Override
     public void draw(Graphics2D g) {
-        if (PARTICLE_SPRITE[Globals.PARTICLE_BOW_VOLLEYARROW] == null) {
+        if (PARTICLE_SPRITE[Globals.PARTICLE_BOW_STORMARROW] == null) {
             loadParticles();
         }
-        if (frame >= PARTICLE_SPRITE[Globals.PARTICLE_BOW_VOLLEYARROW].length) {
+        if (frame >= PARTICLE_SPRITE[Globals.PARTICLE_BOW_STORMARROW].length) {
             return;
         }
-        BufferedImage sprite = PARTICLE_SPRITE[Globals.PARTICLE_BOW_VOLLEYARROW][frame];
+        BufferedImage sprite = PARTICLE_SPRITE[Globals.PARTICLE_BOW_STORMARROW][frame];
         int drawSrcX = x + ((facing == Globals.RIGHT) ? 0 : sprite.getWidth());
         int drawSrcY = y;
         int drawDscY = drawSrcY + sprite.getHeight();

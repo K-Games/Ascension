@@ -3,7 +3,7 @@ package blockfighter.client.net;
 import blockfighter.client.Globals;
 import blockfighter.client.SaveData;
 import blockfighter.client.entities.items.ItemEquip;
-import blockfighter.client.entities.skills.Skill;
+import blockfighter.client.entities.player.skills.Skill;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;

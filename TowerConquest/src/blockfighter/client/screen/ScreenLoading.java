@@ -100,7 +100,6 @@ public class ScreenLoading extends ScreenMenu {
 
     @Override
     public void unload() {
-        //Particle.unloadParticles();
     }
 
 }
