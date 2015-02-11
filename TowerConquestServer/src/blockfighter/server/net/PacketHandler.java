@@ -146,7 +146,7 @@ public class PacketHandler extends Thread {
         }
         byte[] bytes = new byte[Globals.PACKET_BYTE * 2];
         bytes[0] = Globals.DATA_PING;
-        bytes[1] = data[1];
+        bytes[1] = data[3];
         sender.sendPlayer(bytes, address, port);
     }
 

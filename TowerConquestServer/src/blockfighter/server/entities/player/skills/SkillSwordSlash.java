@@ -14,7 +14,7 @@ public class SkillSwordSlash extends Skill {
     public SkillSwordSlash() {
         skillCode = SWORD_SLASH;
         maxCooldown = 1000;
-        reqWeapon = Globals.ITEM_WEAPON;
+        reqWeapon = Globals.ITEM_SWORD;
     }
 
 }

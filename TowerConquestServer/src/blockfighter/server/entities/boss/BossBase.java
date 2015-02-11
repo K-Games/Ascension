@@ -19,10 +19,16 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 public abstract class BossBase extends Thread implements Boss {
 
-    public final static int NUM_STATS = 3,
-            STAT_LEVEL = 0,
-            STAT_MAXHP = 1,
-            STAT_MINHP = 2;
+    public final static int NUM_STATS = 9;
+    public final static byte STAT_LEVEL = 0,
+            STAT_MAXHP1 = 1,
+            STAT_MINHP1 = 2,
+            STAT_MAXHP2 = 3,
+            STAT_MINHP2 = 4,
+            STAT_MAXHP3 = 5,
+            STAT_MINHP3 = 6,
+            STAT_MAXHP4 = 7,
+            STAT_MINHP4 = 8;
 
     public final static byte STATE_STAND = 0x00,
             STATE_WALK = 0x01,
@@ -192,7 +198,7 @@ public abstract class BossBase extends Thread implements Boss {
         while (!damageQueue.isEmpty()) {
             Integer dmg = damageQueue.poll();
             if (dmg != null) {
-                stats[STAT_MINHP] -= dmg;
+                stats[STAT_MINHP1] -= dmg;
                 nextHPSend = 0;
             }
         }
@@ -200,23 +206,23 @@ public abstract class BossBase extends Thread implements Boss {
         while (!healQueue.isEmpty()) {
             Integer heal = healQueue.poll();
             if (heal != null) {
-                stats[STAT_MINHP] += heal;
+                stats[STAT_MINHP1] += heal;
                 nextHPSend = 0;
             }
         }
 
-        if (stats[STAT_MINHP] > stats[STAT_MAXHP]) {
-            stats[STAT_MINHP] = stats[STAT_MAXHP];
-        } else if (stats[STAT_MINHP] < 0) {
-            stats[STAT_MINHP] = 0;
+        if (stats[STAT_MINHP1] > stats[STAT_MAXHP1]) {
+            stats[STAT_MINHP1] = stats[STAT_MAXHP1];
+        } else if (stats[STAT_MINHP1] < 0) {
+            stats[STAT_MINHP1] = 0;
         }
 
         if (nextHPSend <= 0) {
-            byte[] minHP = Globals.intToByte((int) stats[STAT_MINHP]);
+            byte[] minHP = Globals.intToByte((int) stats[STAT_MINHP1]);
             byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT];
             //bytes[0] = Globals.DATA_BOSS_GET_STAT;
             bytes[1] = key;
-            bytes[2] = STAT_MINHP;
+            bytes[2] = STAT_MINHP1;
             System.arraycopy(minHP, 0, bytes, 3, minHP.length);
             packetSender.sendAll(bytes, logic.getRoom());
             nextHPSend = 150;

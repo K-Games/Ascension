@@ -54,7 +54,7 @@ public class Globals {
             PLAYER_STATE_ATTACKOFF2 = 0x06,
             PLAYER_STATE_ATTACKBOW = 0x07;
 
-    public final static int NUM_PARTICLE_EFFECTS = 22;
+    public final static int NUM_PARTICLE_EFFECTS = 23;
     public final static byte PARTICLE_SWORD_SLASH1 = 0x00,
             PARTICLE_SWORD_SLASH2 = 0x01,
             PARTICLE_SWORD_SLASH3 = 0x02,
@@ -75,10 +75,12 @@ public class Globals {
             PARTICLE_BOW_VOLLEYARROW = 0x12,
             PARTICLE_BOW_STORM = 0x13,
             PARTICLE_BOW_STORMARROW = 0x14,
-            PARTICLE_BOW_FROSTARROW = 0x15;
+            PARTICLE_BOW_FROSTARROW = 0x15,
+            PARTICLE_SHIELD_DASH = 0x16;
 
-    public final static byte NUM_ITEM_TYPES = 10,
-            ITEM_WEAPON = 0,
+    public final static byte NUM_ITEM_TABS = 10,
+            ITEM_WEAPON = 0, //ITEM_WEAPON is the equipment slot
+            ITEM_SWORD = 0, //ITEM_SWORD is the item type.
             ITEM_HEAD = 1,
             ITEM_CHEST = 2,
             ITEM_PANTS = 3,
@@ -88,9 +90,10 @@ public class Globals {
             ITEM_BELT = 7,
             ITEM_RING = 8,
             ITEM_AMULET = 9,
-            ITEM_OFFHAND = 10,
+            ITEM_OFFHAND = 10, //OFFHAND = slot
+            ITEM_SHIELD = 10, //SHIELD = item type
             ITEM_BOW = 11,
-            ITEM_QUIVER = 12; //Only used for equipment slot index. Its the same as weapons.
+            ITEM_QUIVER = 12; //10,11,12 Only used for equipment slot index. Its the same as weapons.
 
     public final static byte NUM_EQUIP_SLOTS = 11;
 

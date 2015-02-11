@@ -14,7 +14,7 @@ public class SkillSwordDrive extends Skill {
     public SkillSwordDrive() {
         skillCode = SWORD_DRIVE;
         maxCooldown = 1000;
-        reqWeapon = Globals.ITEM_WEAPON;
+        reqWeapon = Globals.ITEM_SWORD;
     }
 
 }

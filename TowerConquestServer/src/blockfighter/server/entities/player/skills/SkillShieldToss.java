@@ -6,14 +6,14 @@ import blockfighter.server.Globals;
  *
  * @author Ken Kwan
  */
-public class SkillShieldCharge extends Skill {
+public class SkillShieldToss extends Skill {
 
     /**
-     * Constructor for Shield Skill Charge.
+     * Constructor for Shield Skill Shield Throw.
      */
-    public SkillShieldCharge() {
-        skillCode = SHIELD_CHARGE;
-        maxCooldown = 8000;
+    public SkillShieldToss() {
+        skillCode = SHIELD_TOSS;
+        maxCooldown = 5000;
         reqWeapon = Globals.ITEM_SHIELD;
     }
 

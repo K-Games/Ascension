@@ -40,6 +40,7 @@ public class PacketReceiver extends Thread {
     @Override
     public void run() {
         ExecutorService tpes = Executors.newFixedThreadPool(10);
+        //ScheduledThreadPoolExecutor lagger = new ScheduledThreadPoolExecutor(10);
         try {
             DatagramSocket socket = new DatagramSocket(Globals.SERVER_PORT);
             System.out.println("Server listening on port " + Globals.SERVER_PORT);
@@ -49,6 +50,7 @@ public class PacketReceiver extends Thread {
                 byte[] request = new byte[Globals.PACKET_MAX_SIZE];
                 DatagramPacket packet = new DatagramPacket(request, request.length);
                 socket.receive(packet);
+                //lagger.schedule(new PacketHandler(packet), 50, TimeUnit.MILLISECONDS);
                 tpes.execute(new PacketHandler(packet));
             }
         } catch (SocketException ex) {
