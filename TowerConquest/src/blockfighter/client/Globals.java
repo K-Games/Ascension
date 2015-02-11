@@ -15,8 +15,8 @@ import javax.imageio.ImageIO;
 public class Globals {
 
     public final static int SERVER_PORT = 25565;
-    private static boolean isPublic = false;
-    public static String SERVER_ADDRESS = (isPublic) ? "towerconquest.servegame.com" : "127.0.0.1";
+    private final static boolean isPublic = false;
+    public static String SERVER_ADDRESS = (isPublic) ? "towerconquest.servegame.com" : "192.168.1.2";
     public final static String GAME_VERSION = "ALPHA 0";
     public final static String WINDOW_TITLE = "Tower Conquest " + GAME_VERSION;
     public final static int WINDOW_WIDTH = 1280;
@@ -26,32 +26,33 @@ public class Globals {
     public final static Font ARIAL_30PT = new Font("Arial", Font.PLAIN, 30);
     public final static Font ARIAL_12PT = new Font("Arial", Font.PLAIN, 12);
     public final static Font ARIAL_15PT = new Font("Arial", Font.BOLD, 15);
+    public final static Font ARIAL_15PT_ITALIC = new Font("Arial", Font.ITALIC, 15);
     public final static Font ARIAL_24PT = new Font("Arial", Font.PLAIN, 24);
     public final static Font ARIAL_18PT = new Font("Arial", Font.PLAIN, 18);
 
     public final static byte MAX_NAME_LENGTH = 15;
 
-    public final static double RENDER_FPS = 63;
-    public final static double RENDER_UPDATE = 1000000000 / RENDER_FPS;
+    public final static double RENDER_FPS = 63D;
+    public final static double RENDER_UPDATE = 1000000000D / RENDER_FPS;
 
-    public final static double LOGIC_TICKS_PER_SEC = 40.0;
-    public final static double LOGIC_UPDATE = 1000000000 / LOGIC_TICKS_PER_SEC;
+    public final static double LOGIC_TICKS_PER_SEC = 40D;
+    public final static double LOGIC_UPDATE = 1000000000D / LOGIC_TICKS_PER_SEC;
 
-    public final static double SEND_KEYDOWN_PER_SEC = 15.0;
-    public final static double SEND_KEYDOWN_UPDATE = 1000000000 / SEND_KEYDOWN_PER_SEC;
+    public final static double SEND_KEYDOWN_PER_SEC = 15D;
+    public final static double SEND_KEYDOWN_UPDATE = 1000000000D / SEND_KEYDOWN_PER_SEC;
 
-    public final static double REQUESTALL_TICKS_PER_SEC = 1;
-    public final static double REQUESTALL_UPDATE = 1000000000 / REQUESTALL_TICKS_PER_SEC;
+    public final static double REQUESTALL_TICKS_PER_SEC = 1D;
+    public final static double REQUESTALL_UPDATE = 5000000000D / REQUESTALL_TICKS_PER_SEC;
 
-    public final static double PINGS_PER_SEC = 1;
-    public final static double PING_UPDATE = 1000000000 / PINGS_PER_SEC;
+    public final static double PINGS_PER_SEC = 1D;
+    public final static double PING_UPDATE = 1000000000D / PINGS_PER_SEC;
 
-    public final static double PROCESS_QUEUES_PER_SEC = 100;
-    public final static double QUEUES_UPDATE = 1000000000 / PROCESS_QUEUES_PER_SEC;
+    public final static double PROCESS_QUEUES_PER_SEC = 100D;
+    public final static double QUEUES_UPDATE = 1000000000D / PROCESS_QUEUES_PER_SEC;
 
     public final static byte RIGHT = 0, LEFT = 1, DOWN = 2, UP = 3;
 
-    public final static int NUM_PARTICLE_EFFECTS = 22;
+    public final static int NUM_PARTICLE_EFFECTS = 23;
     public final static byte PARTICLE_SWORD_SLASH1 = 0x00,
             PARTICLE_SWORD_SLASH2 = 0x01,
             PARTICLE_SWORD_SLASH3 = 0x02,
@@ -72,7 +73,8 @@ public class Globals {
             PARTICLE_BOW_VOLLEYARROW = 0x12,
             PARTICLE_BOW_STORM = 0x13,
             PARTICLE_BOW_STORMARROW = 0x14,
-            PARTICLE_BOW_FROSTARROW = 0x15;
+            PARTICLE_BOW_FROSTARROW = 0x15,
+            PARTICLE_SHIELD_DASH = 0x16;
 
     public final static int NUM_KEYBINDS = 16,
             KEYBIND_SKILL1 = 0,
@@ -92,8 +94,9 @@ public class Globals {
             KEYBIND_JUMP = 14,
             KEYBIND_DOWN = 15;
 
-    public final static byte NUM_ITEM_TYPES = 10,
-            ITEM_WEAPON = 0,
+    public final static byte NUM_ITEM_TABS = 10,
+            ITEM_WEAPON = 0, //ITEM_WEAPON is the equipment slot
+            ITEM_SWORD = 0, //ITEM_SWORD is the item type.
             ITEM_HEAD = 1,
             ITEM_CHEST = 2,
             ITEM_PANTS = 3,
@@ -104,6 +107,7 @@ public class Globals {
             ITEM_RING = 8,
             ITEM_AMULET = 9,
             ITEM_OFFHAND = 10,
+            ITEM_SHIELD = 10,
             ITEM_BOW = 11,
             ITEM_QUIVER = 12; //Only used for equipment slot index. Its the same as weapons.
 

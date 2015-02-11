@@ -11,14 +11,13 @@ import java.awt.Graphics2D;
 public class SkillShieldIron extends Skill {
 
     public SkillShieldIron() {
-        skillCode = SHIELD_IRONFORT;
+        skillCode = SHIELD_IRON;
         maxCooldown = 20000;
     }
 
     @Override
     public void drawInfo(Graphics2D g, int x, int y) {
-        int boxHeight = 220, boxWidth = 390;
-
+        int boxHeight = 160, boxWidth = 370;
         if (y + boxHeight > 720) {
             y = 700 - boxHeight;
         }
@@ -42,11 +41,7 @@ public class SkillShieldIron extends Skill {
         g.drawString("Become immobile and reduce damage taken", x + 10, y + 90);
         g.drawString("by 55 + " + level + "%(" + (level + 55) + "%) for 2 seconds.", x + 10, y + 110);
         g.drawString("Max:", x + 10, y + 130);
-        g.drawString("Take 90% of allies HP for 2 seconds.", x + 10, y + 150);
-        g.drawString("HP received can exceed your maximum HP.", x + 10, y + 170);
-        g.drawString("Allies take 0% damage for 2 seconds.", x + 10, y + 190);
-        g.drawString("Evenly distribute your remaining HP after 2 seconds.", x + 10, y + 210);
-
+        g.drawString("Allies reduce damage taken by 40% for 2 seconds.", x + 10, y + 150);
     }
 
     @Override

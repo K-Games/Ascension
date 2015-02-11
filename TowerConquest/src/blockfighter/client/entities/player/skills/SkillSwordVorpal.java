@@ -19,7 +19,6 @@ public class SkillSwordVorpal extends Skill {
     @Override
     public void drawInfo(Graphics2D g, int x, int y) {
         int boxHeight = 200, boxWidth = 450;
-
         if (y + boxHeight > 720) {
             y = 700 - boxHeight;
         }
@@ -44,7 +43,7 @@ public class SkillSwordVorpal extends Skill {
         g.drawString("Deals 100 + " + 5 * level + "%(" + (5 * level + 100) + "%) damage per hit.", x + 10, y + 110);
         g.drawString("Critical hits deal additional 40 + " + 3 * level + "%(+" + (3 * level + 40) + "%) Critical Damage.", x + 10, y + 130);
         g.drawString("Max:", x + 10, y + 150);
-        g.drawString("This attack has +40% Critical Hit Chance.", x + 10, y + 170);
+        g.drawString("This attack has +30% Critical Hit Chance.", x + 10, y + 170);
         g.drawString("Stab rapidly hit 5 times.", x + 10, y + 190);
     }
 

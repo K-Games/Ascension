@@ -17,8 +17,7 @@ public class SkillShieldCharge extends Skill {
 
     @Override
     public void drawInfo(Graphics2D g, int x, int y) {
-        int boxHeight = 160, boxWidth = 335;
-
+        int boxHeight = 160, boxWidth = 295;
         if (y + boxHeight > 720) {
             y = 700 - boxHeight;
         }
@@ -40,7 +39,7 @@ public class SkillShieldCharge extends Skill {
         g.drawString("Cooldown: " + maxCooldown / 1000 + " Seconds", x + 80, y + 70);
 
         g.drawString("Charge forward with your shield.", x + 10, y + 90);
-        g.drawString("Stop the first enemy you hit and deal", x + 10, y + 110);
+        g.drawString("Any enemies hit while charging will take", x + 10, y + 110);
         g.drawString("300% + " + level * 20 + "%(" + (300 + level * 20) + "%) damage.", x + 10, y + 130);
         g.drawString("Max: Stun the target hit for 2 seconds.", x + 10, y + 150);
     }

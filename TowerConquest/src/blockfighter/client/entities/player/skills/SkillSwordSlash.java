@@ -19,7 +19,6 @@ public class SkillSwordSlash extends Skill {
     @Override
     public void drawInfo(Graphics2D g, int x, int y) {
         int boxHeight = 140, boxWidth = 320;
-
         if (y + boxHeight > 720) {
             y = 700 - boxHeight;
         }
@@ -40,7 +39,7 @@ public class SkillSwordSlash extends Skill {
         g.drawString("Level: " + level, x + 80, y + 50);
         g.drawString("Cooldown: " + maxCooldown / 1000 + " Second", x + 80, y + 70);
 
-        g.drawString("Slash 3 times over 1 second.", x + 10, y + 90);
+        g.drawString("Slash 3 times.", x + 10, y + 90);
         g.drawString("Deals 100 + " + 4 * level + "%(" + (4 * level + 100) + "%) damage per hit.", x + 10, y + 110);
         g.drawString("Max: Take 10% less damage for 4 seconds.", x + 10, y + 130);
     }

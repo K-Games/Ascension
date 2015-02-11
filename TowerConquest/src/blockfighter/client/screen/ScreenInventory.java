@@ -26,7 +26,7 @@ public class ScreenInventory extends ScreenMenu {
     private boolean destroy = false, destroyConfirm = false;
     private Rectangle2D.Double[] inventSlots = new Rectangle2D.Double[100],
             equipSlots = new Rectangle2D.Double[Globals.NUM_EQUIP_SLOTS],
-            tabs = new Rectangle2D.Double[Globals.NUM_ITEM_TYPES],
+            tabs = new Rectangle2D.Double[Globals.NUM_ITEM_TABS],
             destroyBox = new Rectangle2D.Double[2],
             promptBox = new Rectangle2D.Double[2];
 
@@ -385,7 +385,7 @@ public class ScreenInventory extends ScreenMenu {
                 }
             }
 
-            for (int i = 0; !destroy && i < equipSlots.length; i++) {
+            for (byte i = 0; !destroy && i < equipSlots.length; i++) {
                 if (equipSlots[i].contains(e.getPoint())) {
                     if (drItem != -1) {
                         if (selectedTab == i || (selectedTab == Globals.ITEM_WEAPON && i == Globals.ITEM_OFFHAND)) {

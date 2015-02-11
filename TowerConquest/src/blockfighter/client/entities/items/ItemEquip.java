@@ -49,6 +49,7 @@ public class ItemEquip implements Item {
         TEMP_AMULET, TEMP_BLADE, TEMP_SHIELD,
         TEMP_BOW, TEMP_QUIVER};
 
+    private final static HashMap<Byte, String> ITEM_TYPENAME = new HashMap<>(13);
     private final static HashMap<Integer, String> ITEM_NAMES = new HashMap<>(ITEM_CODES.length);
     private final static HashMap<Integer, BufferedImage> ITEM_ICONS = new HashMap<>(ITEM_CODES.length);
     private final static HashMap<Integer, BufferedImage[][]> ITEM_SPRITES = new HashMap<>(ITEM_CODES.length);
@@ -151,6 +152,20 @@ public class ItemEquip implements Item {
     }
 
     public static void loadItemDetails() {
+        ITEM_TYPENAME.put(Globals.ITEM_AMULET, "Amulet");
+        ITEM_TYPENAME.put(Globals.ITEM_BELT, "Belt");
+        ITEM_TYPENAME.put(Globals.ITEM_BOW, "Bow");
+        ITEM_TYPENAME.put(Globals.ITEM_CHEST, "Chest");
+        ITEM_TYPENAME.put(Globals.ITEM_GLOVE, "Gloave");
+        ITEM_TYPENAME.put(Globals.ITEM_HEAD, "Head");
+        ITEM_TYPENAME.put(Globals.ITEM_SHIELD, "Shield");
+        ITEM_TYPENAME.put(Globals.ITEM_PANTS, "Pants");
+        ITEM_TYPENAME.put(Globals.ITEM_QUIVER, "Quiver");
+        ITEM_TYPENAME.put(Globals.ITEM_RING, "Ring");
+        ITEM_TYPENAME.put(Globals.ITEM_SHOE, "Shoe");
+        ITEM_TYPENAME.put(Globals.ITEM_SHOULDER, "Shoulder");
+        ITEM_TYPENAME.put(Globals.ITEM_SWORD, "Sword");
+
         ITEM_NAMES.put(TEMP_SWORD, "Sword");
         ITEM_DESC.put(TEMP_SWORD, "We all start somewhere.");
 
@@ -211,7 +226,7 @@ public class ItemEquip implements Item {
             case Globals.ITEM_BOW:
                 baseStats[Globals.STAT_POWER] = level + ((rng.nextInt(51) / 100D) * level - 0.25 * level);
                 break;
-            case Globals.ITEM_OFFHAND:
+            case Globals.ITEM_SHIELD:
                 baseStats[Globals.STAT_DEFENSE] = level + ((rng.nextInt(51) / 100D) * level - 0.25 * level);
                 break;
             case Globals.ITEM_QUIVER:
@@ -272,10 +287,9 @@ public class ItemEquip implements Item {
     }
 
     public void drawInfo(Graphics2D g, Rectangle2D.Double box) {
-        g.setColor(new Color(30, 30, 30, 185));
         int y = (int) box.y;
         int x = (int) box.x;
-        int boxHeight = 50, boxWidth = 200;
+        int boxHeight = 70, boxWidth;
 
         if (getTotalStats()[Globals.STAT_POWER] > 0) {
             boxHeight += 20;
@@ -302,6 +316,70 @@ public class ItemEquip implements Item {
             int lines = StringUtils.countMatches(ITEM_DESC.get(itemCode), "\n") + 1;
             boxHeight += lines * 20;
         }
+        g.setFont(Globals.ARIAL_15PT);
+        String tierString = "";
+        switch (getTier()) {
+            case ItemEquip.TIER_COMMON:
+                tierString = "Common ";
+                break;
+            case ItemEquip.TIER_UNCOMMON:
+                tierString = "Uncommon ";
+                break;
+            case ItemEquip.TIER_RARE:
+                tierString = "Rare ";
+                break;
+            case ItemEquip.TIER_RUNIC:
+                tierString = "Runic ";
+                break;
+            case ItemEquip.TIER_LEGENDARY:
+                tierString = "Legendary ";
+                break;
+            case ItemEquip.TIER_ARCHAIC:
+                tierString = "Archaic ";
+                break;
+            case ItemEquip.TIER_DIVINE:
+                tierString = "Divine ";
+                break;
+        }
+        int maxWidth = 0;
+        if (getUpgrades() > 0) {
+            maxWidth = Math.max(maxWidth, g.getFontMetrics().stringWidth(tierString + getItemName() + " +" + getUpgrades()));
+        } else {
+            maxWidth = Math.max(maxWidth, g.getFontMetrics().stringWidth(tierString + getItemName()));
+        }
+        maxWidth = Math.max(maxWidth, g.getFontMetrics().stringWidth("Type: " + ITEM_TYPENAME.get(getItemType(itemCode))));
+        maxWidth = Math.max(maxWidth, g.getFontMetrics().stringWidth("Level: " + (int) getTotalStats()[Globals.STAT_LEVEL]));
+
+        if (getTotalStats()[Globals.STAT_POWER] > 0) {
+            maxWidth = Math.max(maxWidth, g.getFontMetrics().stringWidth("Power: " + (int) getTotalStats()[Globals.STAT_POWER]));
+        }
+        if (getTotalStats()[Globals.STAT_DEFENSE] > 0) {
+            maxWidth = Math.max(maxWidth, g.getFontMetrics().stringWidth("Defense: " + (int) getTotalStats()[Globals.STAT_DEFENSE]));
+        }
+        if (getTotalStats()[Globals.STAT_SPIRIT] > 0) {
+            maxWidth = Math.max(maxWidth, g.getFontMetrics().stringWidth("Spirit: " + (int) getTotalStats()[Globals.STAT_SPIRIT]));
+        }
+        if (getTotalStats()[Globals.STAT_ARMOR] > 0) {
+            maxWidth = Math.max(maxWidth, g.getFontMetrics().stringWidth("Armor: " + (int) getTotalStats()[Globals.STAT_ARMOR]));
+        }
+        if (getTotalStats()[Globals.STAT_REGEN] > 0) {
+            maxWidth = Math.max(maxWidth, g.getFontMetrics().stringWidth("Regen: " + df.format(getTotalStats()[Globals.STAT_REGEN]) + " HP/Sec"));
+        }
+        if (getTotalStats()[Globals.STAT_CRITDMG] > 0) {
+            maxWidth = Math.max(maxWidth, g.getFontMetrics().stringWidth("Critical Damage: " + df.format(getTotalStats()[Globals.STAT_CRITDMG] * 100) + "%"));
+        }
+        if (getTotalStats()[Globals.STAT_CRITCHANCE] > 0) {
+            maxWidth = Math.max(maxWidth, g.getFontMetrics().stringWidth("Critical Chance: " + df.format(getTotalStats()[Globals.STAT_CRITCHANCE] * 100) + "%"));
+        }
+
+        g.setFont(Globals.ARIAL_15PT_ITALIC);
+        if (ITEM_DESC.containsKey(itemCode)) {
+            for (String line : ITEM_DESC.get(itemCode).split("\n")) {
+                maxWidth = Math.max(maxWidth, g.getFontMetrics().stringWidth(line));
+            }
+        }
+
+        boxWidth = maxWidth + 20;
         if (y + boxHeight > 720) {
             y = 700 - boxHeight;
         }
@@ -309,45 +387,36 @@ public class ItemEquip implements Item {
         if (x + 30 + boxWidth > 1280) {
             x = 1240 - boxWidth;
         }
+        g.setColor(new Color(30, 30, 30, 185));
         g.fillRect(x + 30, y, boxWidth, boxHeight);
         g.setColor(Color.BLACK);
         g.drawRect(x + 30, y, boxWidth, boxHeight);
         g.drawRect(x + 31, y + 1, boxWidth - 2, boxHeight - 2);
 
         g.setFont(Globals.ARIAL_15PT);
-
-        String tierString = "";
         switch (getTier()) {
             case ItemEquip.TIER_COMMON:
                 g.setColor(Color.WHITE);
-                tierString = "Common ";
                 break;
             case ItemEquip.TIER_UNCOMMON:
                 g.setColor(new Color(180, 0, 255));
-                tierString = "Uncommon ";
                 break;
             case ItemEquip.TIER_RARE:
                 g.setColor(new Color(255, 225, 0));
-                tierString = "Rare ";
                 break;
             case ItemEquip.TIER_RUNIC:
                 g.setColor(new Color(255, 130, 0));
-                tierString = "Runic ";
                 break;
             case ItemEquip.TIER_LEGENDARY:
                 g.setColor(new Color(205, 15, 0));
-                tierString = "Legendary ";
                 break;
             case ItemEquip.TIER_ARCHAIC:
                 g.setColor(new Color(0, 220, 0));
-                tierString = "Archaic ";
                 break;
             case ItemEquip.TIER_DIVINE:
                 g.setColor(new Color(0, 255, 160));
-                tierString = "Divine ";
                 break;
         }
-
         if (getUpgrades() > 0) {
             g.drawString(tierString + getItemName() + " +" + getUpgrades(), x + 40, y + 20);
         } else {
@@ -355,6 +424,10 @@ public class ItemEquip implements Item {
         }
         g.setColor(Color.WHITE);
         int rowY = 40;
+
+        g.drawString("Type: " + ITEM_TYPENAME.get(getItemType(itemCode)), x + 40, y + rowY);
+        rowY += 20;
+
         g.drawString("Level: " + (int) getTotalStats()[Globals.STAT_LEVEL], x + 40, y + rowY);
         rowY += 20;
         if (getTotalStats()[Globals.STAT_POWER] > 0) {
@@ -386,6 +459,8 @@ public class ItemEquip implements Item {
             g.drawString("Critical Chance: " + df.format(getTotalStats()[Globals.STAT_CRITCHANCE] * 100) + "%", x + 40, y + rowY);
             rowY += 20;
         }
+
+        g.setFont(Globals.ARIAL_15PT_ITALIC);
         if (ITEM_DESC.containsKey(itemCode)) {
             for (String line : ITEM_DESC.get(itemCode).split("\n")) {
                 g.drawString(line, x + 40, y + rowY);
@@ -425,7 +500,7 @@ public class ItemEquip implements Item {
     }
 
     public void drawIngame(Graphics2D g, int x, int y, byte state, byte frame, byte facing, boolean offhand) {
-        if (getItemType(itemCode) != Globals.ITEM_OFFHAND) {
+        if (getItemType(itemCode) != Globals.ITEM_SHIELD) {
             return;
         }
         drawIngame(g, x, y, state, frame, facing);
@@ -509,9 +584,9 @@ public class ItemEquip implements Item {
 
     public static byte getItemType(int i) {
         if (i >= 100000 && i <= 109999) { //Swords
-            return Globals.ITEM_WEAPON;
+            return Globals.ITEM_SWORD;
         } else if (i >= 110000 && i <= 119999) { //Shields
-            return Globals.ITEM_OFFHAND;
+            return Globals.ITEM_SHIELD;
         } else if (i >= 120000 && i <= 129999) { //Bows
             return Globals.ITEM_BOW;
         } else if (i >= 130000 && i <= 199999) { //Quivers

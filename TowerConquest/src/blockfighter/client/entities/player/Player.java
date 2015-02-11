@@ -95,7 +95,7 @@ public class Player extends Thread {
         int drawSrcX = x - ((facing == Globals.RIGHT) ? 1 : -1) * sprite.getWidth() / 2;
         int drawSrcY = y - sprite.getHeight();
         int drawDscY = drawSrcY + sprite.getHeight();
-        int drawDscX = x + ((facing == Globals.RIGHT) ? 1 : -1) * sprite.getWidth() / 2;
+        int drawDscX = drawSrcX + ((facing == Globals.RIGHT) ? 1 : -1) * sprite.getWidth();
         switch (s) {
             case Globals.PLAYER_STATE_ATTACK1:
                 drawSrcX += ((facing == Globals.RIGHT) ? 1 : -1) * 10;

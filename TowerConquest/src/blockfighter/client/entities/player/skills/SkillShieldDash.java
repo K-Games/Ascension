@@ -8,17 +8,16 @@ import java.awt.Graphics2D;
  *
  * @author Ken Kwan
  */
-public class SkillBowArc extends Skill {
+public class SkillShieldDash extends Skill {
 
-    public SkillBowArc() {
-        icon = Globals.SKILL_ICON[BOW_ARC];
-        skillCode = BOW_ARC;
-        maxCooldown = 500;
+    public SkillShieldDash() {
+        skillCode = SHIELD_DASH;
+        maxCooldown = 2000;
     }
 
     @Override
     public void drawInfo(Graphics2D g, int x, int y) {
-        int boxHeight = 140, boxWidth = 390;
+        int boxHeight = 140, boxWidth = 345;
         if (y + boxHeight > 720) {
             y = 700 - boxHeight;
         }
@@ -37,18 +36,18 @@ public class SkillBowArc extends Skill {
         g.drawString(getSkillName(), x + 80, y + 30);
         g.setFont(Globals.ARIAL_15PT);
         g.drawString("Level: " + level, x + 80, y + 50);
-        g.drawString("Cooldown: 0.5 Second", x + 80, y + 70);
+        g.drawString("Cooldown: " + maxCooldown / 1000 + " Seconds", x + 80, y + 70);
 
-        g.drawString("Fire 3 shots in an arc.", x + 10, y + 90);
-        g.drawString("Deal 37 + " + level + "%(" + (37 + level) + "%) damage per hit", x + 10, y + 110);
-        g.drawString("Max: Restore 5% damage to HP. Maximum of 10% HP.", x + 10, y + 130);
+        g.drawString("Dash a short distance over 0.25 seconds.", x + 10, y + 90);
+        g.drawString("Deal " + level + "% increased damage for 10 seconds.", x + 10, y + 110);
+        g.drawString("Max: Invulnerable during dash.", x + 10, y + 130);
     }
 
     @Override
     public String getSkillName() {
         if (isMaxed()) {
-            return "Vampiric Shot";
+            return "Unrivaled Haste";
         }
-        return "Arc Shot";
+        return "Shield Dash";
     }
 }

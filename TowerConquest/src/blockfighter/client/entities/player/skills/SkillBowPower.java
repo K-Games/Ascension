@@ -19,7 +19,6 @@ public class SkillBowPower extends Skill {
     @Override
     public void drawInfo(Graphics2D g, int x, int y) {
         int boxHeight = 180, boxWidth = 380;
-
         if (y + boxHeight > 720) {
             y = 700 - boxHeight;
         }

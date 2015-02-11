@@ -19,7 +19,6 @@ public class SkillBowVolley extends Skill {
     @Override
     public void drawInfo(Graphics2D g, int x, int y) {
         int boxHeight = 140, boxWidth = 450;
-
         if (y + boxHeight > 720) {
             y = 700 - boxHeight;
         }

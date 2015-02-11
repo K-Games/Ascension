@@ -19,7 +19,6 @@ public class SkillSwordMulti extends Skill {
     @Override
     public void drawInfo(Graphics2D g, int x, int y) {
         int boxHeight = 160, boxWidth = 320;
-
         if (y + boxHeight > 720) {
             y = 700 - boxHeight;
         }

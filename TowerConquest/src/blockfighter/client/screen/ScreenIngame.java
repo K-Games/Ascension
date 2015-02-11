@@ -3,24 +3,7 @@ package blockfighter.client.screen;
 import blockfighter.client.Globals;
 import blockfighter.client.SaveData;
 import blockfighter.client.entities.items.ItemEquip;
-import blockfighter.client.entities.particles.Particle;
-import blockfighter.client.entities.particles.ParticleBowArc;
-import blockfighter.client.entities.particles.ParticleBowFrostArrow;
-import blockfighter.client.entities.particles.ParticleBowPower;
-import blockfighter.client.entities.particles.ParticleBowPowerCharge;
-import blockfighter.client.entities.particles.ParticleBowRapid;
-import blockfighter.client.entities.particles.ParticleBowStormArea;
-import blockfighter.client.entities.particles.ParticleBowVolleyArrow;
-import blockfighter.client.entities.particles.ParticleBowVolleyBow;
-import blockfighter.client.entities.particles.ParticleSwordCinder;
-import blockfighter.client.entities.particles.ParticleSwordDrive;
-import blockfighter.client.entities.particles.ParticleSwordMulti;
-import blockfighter.client.entities.particles.ParticleSwordSlash1;
-import blockfighter.client.entities.particles.ParticleSwordSlash2;
-import blockfighter.client.entities.particles.ParticleSwordSlash3;
-import blockfighter.client.entities.particles.ParticleSwordTaunt;
-import blockfighter.client.entities.particles.ParticleSwordTauntAura;
-import blockfighter.client.entities.particles.ParticleSwordVorpal;
+import blockfighter.client.entities.particles.*;
 import blockfighter.client.entities.player.Player;
 import blockfighter.client.entities.player.skills.Skill;
 import blockfighter.client.maps.GameMap;
@@ -449,6 +432,9 @@ public class ScreenIngame extends Screen {
                 break;
             case Globals.PARTICLE_BOW_FROSTARROW:
                 particles.put(key, new ParticleBowFrostArrow(key, x, y, facing));
+                break;
+            case Globals.PARTICLE_SHIELD_DASH:
+                particles.put(key, new ParticleShieldDash(key, x, y, facing));
                 break;
         }
     }

@@ -55,15 +55,16 @@ public class ScreenSkills extends ScreenMenu {
         skillSlots[Skill.BOW_FROST] = new Rectangle2D.Double(506, 505, 60, 60);
 
         skillSlots[Skill.SHIELD_FORTIFY] = new Rectangle2D.Double(767, 55, 60, 60);
-        skillSlots[Skill.SHIELD_IRONFORT] = new Rectangle2D.Double(767, 145, 60, 60);
+        skillSlots[Skill.SHIELD_IRON] = new Rectangle2D.Double(767, 145, 60, 60);
         skillSlots[Skill.SHIELD_CHARGE] = new Rectangle2D.Double(767, 235, 60, 60);
         skillSlots[Skill.SHIELD_REFLECT] = new Rectangle2D.Double(767, 325, 60, 60);
-        skillSlots[Skill.SHIELD_5] = new Rectangle2D.Double(767, 415, 60, 60);
-        skillSlots[Skill.SHIELD_6] = new Rectangle2D.Double(767, 505, 60, 60);
+        skillSlots[Skill.SHIELD_TOSS] = new Rectangle2D.Double(767, 415, 60, 60);
+        skillSlots[Skill.SHIELD_DASH] = new Rectangle2D.Double(767, 505, 60, 60);
 
         skillSlots[Skill.PASSIVE_1] = new Rectangle2D.Double(1050, 55, 60, 60);
         skillSlots[Skill.PASSIVE_2] = new Rectangle2D.Double(1050, 140, 60, 60);
         skillSlots[Skill.PASSIVE_3] = new Rectangle2D.Double(1050, 225, 60, 60);
+        
         skillSlots[Skill.PASSIVE_4] = new Rectangle2D.Double(1050, 310, 60, 60);
         skillSlots[Skill.PASSIVE_5] = new Rectangle2D.Double(1050, 395, 60, 60);
         skillSlots[Skill.PASSIVE_6] = new Rectangle2D.Double(1050, 480, 60, 60);
@@ -71,6 +72,7 @@ public class ScreenSkills extends ScreenMenu {
         skillSlots[Skill.PASSIVE_7] = new Rectangle2D.Double(1160, 55, 60, 60);
         skillSlots[Skill.PASSIVE_8] = new Rectangle2D.Double(1160, 140, 60, 60);
         skillSlots[Skill.PASSIVE_9] = new Rectangle2D.Double(1160, 225, 60, 60);
+        
         skillSlots[Skill.PASSIVE_10] = new Rectangle2D.Double(1160, 310, 60, 60);
         skillSlots[Skill.PASSIVE_11] = new Rectangle2D.Double(1160, 395, 60, 60);
         skillSlots[Skill.PASSIVE_12] = new Rectangle2D.Double(1160, 480, 60, 60);

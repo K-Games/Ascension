@@ -21,8 +21,8 @@ import blockfighter.client.entities.player.skills.SkillPassive6;
 import blockfighter.client.entities.player.skills.SkillPassive7;
 import blockfighter.client.entities.player.skills.SkillPassive8;
 import blockfighter.client.entities.player.skills.SkillPassive9;
-import blockfighter.client.entities.player.skills.SkillShield5;
-import blockfighter.client.entities.player.skills.SkillShield6;
+import blockfighter.client.entities.player.skills.SkillShieldToss;
+import blockfighter.client.entities.player.skills.SkillShieldDash;
 import blockfighter.client.entities.player.skills.SkillShieldCharge;
 import blockfighter.client.entities.player.skills.SkillShieldFortify;
 import blockfighter.client.entities.player.skills.SkillShieldIron;
@@ -56,7 +56,7 @@ public class SaveData {
     private String name;
     private byte saveNum;
 
-    private ItemEquip[][] inventory = new ItemEquip[Globals.NUM_ITEM_TYPES][100];
+    private ItemEquip[][] inventory = new ItemEquip[Globals.NUM_ITEM_TABS][100];
     private ItemUpgrade[] upgrades = new ItemUpgrade[100];
     private ItemEquip[] equipment = new ItemEquip[Globals.NUM_EQUIP_SLOTS];
 
@@ -85,11 +85,11 @@ public class SaveData {
         skills[Skill.BOW_VOLLEY] = new SkillBowVolley();
 
         skills[Skill.SHIELD_FORTIFY] = new SkillShieldFortify();
-        skills[Skill.SHIELD_IRONFORT] = new SkillShieldIron();
+        skills[Skill.SHIELD_IRON] = new SkillShieldIron();
         skills[Skill.SHIELD_CHARGE] = new SkillShieldCharge();
         skills[Skill.SHIELD_REFLECT] = new SkillShieldReflect();
-        skills[Skill.SHIELD_5] = new SkillShield5();
-        skills[Skill.SHIELD_6] = new SkillShield6();
+        skills[Skill.SHIELD_TOSS] = new SkillShieldToss();
+        skills[Skill.SHIELD_DASH] = new SkillShieldDash();
 
         skills[Skill.PASSIVE_1] = new SkillPassive1();
         skills[Skill.PASSIVE_2] = new SkillPassive2();
@@ -603,17 +603,16 @@ public class SaveData {
         saveData(saveNum, this);
     }
 
-    public void unequipItem(int slot) {
-        boolean offhand = false;
+    public void unequipItem(byte slot) {
+        byte itemType = slot;
         if (slot == Globals.ITEM_OFFHAND) {
-            slot = Globals.ITEM_WEAPON;
-            offhand = true;
+            itemType = Globals.ITEM_WEAPON;
         }
 
-        for (int i = 0; i < inventory[slot].length; i++) {
-            if (inventory[slot][i] == null) {
-                inventory[slot][i] = equipment[(offhand) ? Globals.ITEM_OFFHAND : slot];
-                equipment[(offhand) ? Globals.ITEM_OFFHAND : slot] = null;
+        for (int i = 0; i < inventory[itemType].length; i++) {
+            if (inventory[itemType][i] == null) {
+                inventory[itemType][i] = equipment[slot];
+                equipment[slot] = null;
                 break;
             }
         }
@@ -633,7 +632,7 @@ public class SaveData {
                 return;
             }
             switch (ItemEquip.getItemType(temp.getItemCode())) {
-                case Globals.ITEM_OFFHAND:
+                case Globals.ITEM_SHIELD:
                     slot = Globals.ITEM_OFFHAND;
                     break;
                 case Globals.ITEM_BOW:
@@ -675,7 +674,7 @@ public class SaveData {
     }
 
     public void addItem(int type, ItemEquip e) {
-        if (type == Globals.ITEM_OFFHAND || type == Globals.ITEM_QUIVER || type == Globals.ITEM_BOW) {
+        if (type == Globals.ITEM_SHIELD || type == Globals.ITEM_QUIVER || type == Globals.ITEM_BOW) {
             type = Globals.ITEM_WEAPON;
         }
         for (int i = 0; i < inventory[type].length; i++) {
