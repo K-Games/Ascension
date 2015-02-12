@@ -11,13 +11,14 @@ import java.awt.Graphics2D;
 public class SkillShieldFortify extends Skill {
 
     public SkillShieldFortify() {
+        icon = Globals.SKILL_ICON[Skill.SHIELD_FORTIFY];
         skillCode = SHIELD_FORTIFY;
         maxCooldown = 15000;
     }
 
     @Override
     public void drawInfo(Graphics2D g, int x, int y) {
-        int boxHeight = 120, boxWidth = 345;
+        int boxHeight = 120, boxWidth = 350;
         if (y + boxHeight > 720) {
             y = 700 - boxHeight;
         }

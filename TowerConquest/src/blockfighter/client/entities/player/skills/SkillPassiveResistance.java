@@ -8,12 +8,11 @@ import java.awt.Graphics2D;
  *
  * @author Ken Kwan
  */
-public class SkillShieldIron extends Skill {
+public class SkillPassiveResistance extends Skill {
 
-    public SkillShieldIron() {
-        icon = Globals.SKILL_ICON[Skill.SHIELD_IRON];
-        skillCode = SHIELD_IRON;
-        maxCooldown = 20000;
+    public SkillPassiveResistance() {
+        skillCode = PASSIVE_RESISTANCE;
+        maxCooldown = 35000;
     }
 
     @Override
@@ -39,17 +38,14 @@ public class SkillShieldIron extends Skill {
         g.drawString("Level: " + level, x + 80, y + 50);
         g.drawString("Cooldown: " + maxCooldown / 1000 + " Seconds", x + 80, y + 70);
 
-        g.drawString("Become immobile and reduce damage taken", x + 10, y + 90);
-        g.drawString("by 55 + " + level + "%(" + (level + 55) + "%) for 2 seconds.", x + 10, y + 110);
-        g.drawString("Max:", x + 10, y + 130);
-        g.drawString("Allies reduce damage taken by 40% for 2 seconds.", x + 10, y + 150);
+        g.drawString("When taking damage over 75% of your HP, reduce", x + 10, y + 90);
+        g.drawString("damage taken to 75% of your HP.", x + 10, y + 110);
+        g.drawString("Reduce this passive skill cooldown by " + level + " seconds.", x + 10, y + 130);
+        g.drawString("Assign this passive to a hotkey to gain its effects.", x + 10, y + 150);
     }
 
     @Override
     public String getSkillName() {
-        if (isMaxed()) {
-            return "Allied Strength";
-        }
-        return "Iron Fortress";
+        return "Resistance";
     }
 }

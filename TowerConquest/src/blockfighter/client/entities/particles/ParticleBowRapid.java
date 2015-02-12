@@ -28,7 +28,7 @@ public class ParticleBowRapid extends Particle {
     @Override
     public void draw(Graphics2D g) {
         if (PARTICLE_SPRITE[Globals.PARTICLE_BOW_RAPID] == null) {
-            loadParticles();
+            return;
         }
         if (frame >= PARTICLE_SPRITE[Globals.PARTICLE_BOW_RAPID].length) {
             return;

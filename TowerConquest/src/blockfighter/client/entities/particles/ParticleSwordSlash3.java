@@ -28,7 +28,7 @@ public class ParticleSwordSlash3 extends Particle {
     @Override
     public void draw(Graphics2D g) {
         if (PARTICLE_SPRITE[Globals.PARTICLE_SWORD_SLASH3] == null) {
-            loadParticles();
+            return;
         }
         if (frame >= PARTICLE_SPRITE[Globals.PARTICLE_SWORD_SLASH3].length) {
             return;

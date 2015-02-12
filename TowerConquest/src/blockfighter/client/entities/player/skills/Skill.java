@@ -3,6 +3,7 @@ package blockfighter.client.entities.player.skills;
 import blockfighter.client.Globals;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.text.DecimalFormat;
 
 /**
  *
@@ -15,6 +16,7 @@ public abstract class Skill {
     protected long cooldown;
     protected long maxCooldown = 1;
     protected BufferedImage icon = Globals.MENU_BUTTON[Globals.BUTTON_SLOT];
+    protected DecimalFormat df = new DecimalFormat("###,###,##0.0#");
 
     public final static byte NUM_SKILLS = 30,
             SWORD_VORPAL = 0x00,
@@ -35,17 +37,17 @@ public abstract class Skill {
             SHIELD_REFLECT = 0x0F,
             SHIELD_TOSS = 0x10,
             SHIELD_DASH = 0x11,
-            PASSIVE_1 = 0x12,
-            PASSIVE_2 = 0x13,
-            PASSIVE_3 = 0x14,
-            PASSIVE_4 = 0x15,
-            PASSIVE_5 = 0x16,
-            PASSIVE_6 = 0x17,
-            PASSIVE_7 = 0x18,
-            PASSIVE_8 = 0x19,
-            PASSIVE_9 = 0x1A,
-            PASSIVE_10 = 0x1B,
-            PASSIVE_11 = 0x1C,
+            PASSIVE_DUALSWORD = 0x12,
+            PASSIVE_KEENEYE = 0x13,
+            PASSIVE_VITALHIT = 0x14,
+            PASSIVE_SHIELDMASTERY = 0x15,
+            PASSIVE_BARRIER = 0x16,
+            PASSIVE_RESISTANCE = 0x17,
+            PASSIVE_BOWMASTERY = 0x18,
+            PASSIVE_WILLPOWER = 0x19,
+            PASSIVE_TACTICAL = 0x1A,
+            PASSIVE_REVIVE = 0x1B,
+            PASSIVE_SHADOWCLONE = 0x1C,
             PASSIVE_12 = 0x1D;
 
     public void draw(Graphics2D g, int x, int y) {

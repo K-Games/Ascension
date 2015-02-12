@@ -8,12 +8,10 @@ import java.awt.Graphics2D;
  *
  * @author Ken Kwan
  */
-public class SkillShieldIron extends Skill {
+public class SkillPassiveWillpower extends Skill {
 
-    public SkillShieldIron() {
-        icon = Globals.SKILL_ICON[Skill.SHIELD_IRON];
-        skillCode = SHIELD_IRON;
-        maxCooldown = 20000;
+    public SkillPassiveWillpower() {
+        skillCode = PASSIVE_WILLPOWER;
     }
 
     @Override
@@ -37,19 +35,15 @@ public class SkillShieldIron extends Skill {
         g.drawString(getSkillName(), x + 80, y + 30);
         g.setFont(Globals.ARIAL_15PT);
         g.drawString("Level: " + level, x + 80, y + 50);
-        g.drawString("Cooldown: " + maxCooldown / 1000 + " Seconds", x + 80, y + 70);
 
-        g.drawString("Become immobile and reduce damage taken", x + 10, y + 90);
-        g.drawString("by 55 + " + level + "%(" + (level + 55) + "%) for 2 seconds.", x + 10, y + 110);
-        g.drawString("Max:", x + 10, y + 130);
-        g.drawString("Allies reduce damage taken by 40% for 2 seconds.", x + 10, y + 150);
+        g.drawString("Increase damage up to 5% + " + df.format(level * 0.5) + "%(" + df.format(5 + level * 0.5) + "%) based on", x + 10, y + 90);
+        g.drawString("your remaning HP.", x + 10, y + 110);
+        g.drawString("More remaining HP, grants more damage increase.", x + 10, y + 130);
+        g.drawString("Assign this passive to a hotkey to gain its effects.", x + 10, y + 150);
     }
 
     @Override
     public String getSkillName() {
-        if (isMaxed()) {
-            return "Allied Strength";
-        }
-        return "Iron Fortress";
+        return "Power Of Will";
     }
 }

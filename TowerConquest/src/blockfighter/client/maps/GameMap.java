@@ -21,10 +21,21 @@ public abstract class GameMap {
     protected static ConcurrentHashMap<Integer, Particle> particles = new ConcurrentHashMap<>(20);
     protected double lastUpdateTime = System.nanoTime();
     protected static ExecutorService threadPool = Executors.newFixedThreadPool(10);
+    private int mapID = -1;
 
     public ConcurrentHashMap<Integer, Particle> getParticles() {
         return particles;
     }
+
+    public void setMapID(int i) {
+        mapID = i;
+    }
+
+    public int getMapID() {
+        return mapID;
+    }
+
+    public abstract void loadAssets() throws Exception;
 
     public void update() {
         double now = System.nanoTime(); //Get time now

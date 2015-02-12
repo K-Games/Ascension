@@ -5,6 +5,7 @@ import blockfighter.client.LogicModule;
 import blockfighter.client.entities.items.ItemEquip;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.image.BufferedImage;
 
 /**
@@ -20,6 +21,10 @@ public class Player extends Thread {
     private ItemEquip[] equipment = new ItemEquip[Globals.NUM_EQUIP_SLOTS];
     private long lastUpdateTime = 5000;
     private static LogicModule logic;
+
+    public Point getPos() {
+        return new Point(x, y);
+    }
 
     public int getX() {
         return x;

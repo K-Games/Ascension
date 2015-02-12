@@ -22,7 +22,7 @@ public class ParticleBowVolleyBow extends Particle {
     @Override
     public void draw(Graphics2D g) {
         if (PARTICLE_SPRITE[Globals.PARTICLE_BOW_VOLLEYBOW] == null) {
-            loadParticles();
+            return;
         }
         if (frame >= PARTICLE_SPRITE[Globals.PARTICLE_BOW_VOLLEYBOW].length) {
             return;

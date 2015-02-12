@@ -43,7 +43,7 @@ public class SkillSwordCinder extends Skill {
         g.drawString("Applies Burn - Takes " + level + "% increased damage for 4 seconds.", x + 10, y + 110);
         g.drawString("Max:", x + 10, y + 130);
         g.drawString("Burn also deals 450% over 4 seconds(112.5%/s).", x + 10, y + 150);
-        g.drawString("This attack has 100% Critical Hit Chance", x + 10, y + 170);
+        g.drawString("This attack has 100% Critical Hit Chance.", x + 10, y + 170);
     }
 
     @Override

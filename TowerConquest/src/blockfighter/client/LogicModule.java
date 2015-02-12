@@ -1,5 +1,6 @@
 package blockfighter.client;
 
+import blockfighter.client.entities.particles.Particle;
 import blockfighter.client.net.PacketReceiver;
 import blockfighter.client.net.PacketSender;
 import blockfighter.client.screen.Screen;
@@ -10,6 +11,8 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -49,14 +52,17 @@ public class LogicModule extends Thread {
     public void receiveLogin(byte mapID, byte key, byte size) {
         ScreenLoading loading = new ScreenLoading();
         setScreen(loading);
-        loading.load(mapID);
-        if (loading.getLoadedMap() == null) {
+        try {
+            loading.load(mapID);
+            setScreen(new ScreenIngame(key, size, sender, loading.getLoadedMap()));
+            sender.sendGetAll(selectedRoom, key);
+        } catch (Exception e) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, e);
+            Particle.unloadParticles();
             disconnect();
             sender.sendDisconnect(selectedRoom, key);
             receiver.shutdown();
-        } else {
-            setScreen(new ScreenIngame(key, size, sender, loading.getLoadedMap()));
-            sender.sendGetAll(selectedRoom, key);
+            returnMenu();
         }
     }
 

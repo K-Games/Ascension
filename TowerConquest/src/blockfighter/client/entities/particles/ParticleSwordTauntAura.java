@@ -1,6 +1,7 @@
 package blockfighter.client.entities.particles;
 
 import blockfighter.client.Globals;
+import blockfighter.client.entities.player.Player;
 import blockfighter.client.screen.ScreenIngame;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -8,17 +9,19 @@ import java.awt.image.BufferedImage;
 
 public class ParticleSwordTauntAura extends Particle {
 
-    private byte player;
+    private Player owner;
 
-    public ParticleSwordTauntAura(int k, int x, int y, byte f, byte p) {
+    public ParticleSwordTauntAura(int k, int x, int y, byte f, Player p) {
         super(k, x, y, f);
         frame = 0;
         frameDuration = 25;
         duration = 500;
-        player = p;
-        Point point = ((ScreenIngame) logic.getScreen()).getPlayerPos(player);
-        this.x = point.x;
-        this.y = point.y;
+        owner = p;
+        Point point = owner.getPos();
+        if (point != null) {
+            x = point.x;
+            y = point.y;
+        }
     }
 
     @Override
@@ -42,12 +45,12 @@ public class ParticleSwordTauntAura extends Particle {
     @Override
     public void draw(Graphics2D g) {
         if (PARTICLE_SPRITE[Globals.PARTICLE_SWORD_TAUNTAURA1] == null) {
-            loadParticles();
+            return;
         }
         if (frame >= PARTICLE_SPRITE[Globals.PARTICLE_SWORD_TAUNTAURA1].length) {
             return;
         }
-        Point p = ((ScreenIngame) logic.getScreen()).getPlayerPos(player);
+        Point p = owner.getPos();
         if (p != null) {
             x = p.x;
             y = p.y;

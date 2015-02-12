@@ -53,7 +53,7 @@ public abstract class Particle extends Thread {
         System.gc();
     }
 
-    public static void loadParticles() {
+    public static void loadParticles() throws Exception {
         if (LOADED) {
             return;
         }
@@ -62,171 +62,87 @@ public abstract class Particle extends Thread {
         PARTICLE_SPRITE = new BufferedImage[NUM_PARTICLE_EFFECTS][];
         PARTICLE_SPRITE[Globals.PARTICLE_SWORD_SLASH1] = new BufferedImage[8];
         for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_SLASH1].length; i++) {
-            try {
-                PARTICLE_SPRITE[Globals.PARTICLE_SWORD_SLASH1][i] = ImageIO.read(Globals.class.getResource("sprites/particle/slash1/" + i + ".png"));
-            } catch (Exception ex) {
-                Logger.getLogger(Particle.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            PARTICLE_SPRITE[Globals.PARTICLE_SWORD_SLASH1][i] = ImageIO.read(Globals.class.getResource("sprites/particle/slash1/" + i + ".png"));
         }
         PARTICLE_SPRITE[Globals.PARTICLE_SWORD_SLASH2] = new BufferedImage[8];
         for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_SLASH2].length; i++) {
-            try {
-                PARTICLE_SPRITE[Globals.PARTICLE_SWORD_SLASH2][i] = ImageIO.read(Globals.class.getResource("sprites/particle/slash2/" + i + ".png"));
-            } catch (Exception ex) {
-                Logger.getLogger(Particle.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            PARTICLE_SPRITE[Globals.PARTICLE_SWORD_SLASH2][i] = ImageIO.read(Globals.class.getResource("sprites/particle/slash2/" + i + ".png"));
         }
         PARTICLE_SPRITE[Globals.PARTICLE_SWORD_SLASH3] = new BufferedImage[8];
         for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_SLASH3].length; i++) {
-            try {
-                PARTICLE_SPRITE[Globals.PARTICLE_SWORD_SLASH3][i] = ImageIO.read(Globals.class.getResource("sprites/particle/slash3/" + i + ".png"));
-            } catch (Exception ex) {
-                Logger.getLogger(Particle.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            PARTICLE_SPRITE[Globals.PARTICLE_SWORD_SLASH3][i] = ImageIO.read(Globals.class.getResource("sprites/particle/slash3/" + i + ".png"));
         }
         PARTICLE_SPRITE[Globals.PARTICLE_SWORD_DRIVE] = new BufferedImage[8];
         for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_DRIVE].length; i++) {
-            try {
-                PARTICLE_SPRITE[Globals.PARTICLE_SWORD_DRIVE][i] = ImageIO.read(Globals.class.getResource("sprites/particle/drive/" + i + ".png"));
-            } catch (Exception ex) {
-                Logger.getLogger(Particle.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            PARTICLE_SPRITE[Globals.PARTICLE_SWORD_DRIVE][i] = ImageIO.read(Globals.class.getResource("sprites/particle/drive/" + i + ".png"));
         }
         PARTICLE_SPRITE[Globals.PARTICLE_SWORD_VORPAL] = new BufferedImage[8];
         for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_VORPAL].length; i++) {
-            try {
-                PARTICLE_SPRITE[Globals.PARTICLE_SWORD_VORPAL][i] = ImageIO.read(Globals.class.getResource("sprites/particle/vorpal/" + i + ".png"));
-            } catch (Exception ex) {
-                Logger.getLogger(Particle.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            PARTICLE_SPRITE[Globals.PARTICLE_SWORD_VORPAL][i] = ImageIO.read(Globals.class.getResource("sprites/particle/vorpal/" + i + ".png"));
         }
         PARTICLE_SPRITE[Globals.PARTICLE_SWORD_MULTI] = new BufferedImage[24];
         for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_MULTI].length; i++) {
-            try {
-                PARTICLE_SPRITE[Globals.PARTICLE_SWORD_MULTI][i] = ImageIO.read(Globals.class.getResource("sprites/particle/multi/" + i + ".png"));
-            } catch (Exception ex) {
-                Logger.getLogger(Particle.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            PARTICLE_SPRITE[Globals.PARTICLE_SWORD_MULTI][i] = ImageIO.read(Globals.class.getResource("sprites/particle/multi/" + i + ".png"));
         }
         PARTICLE_SPRITE[Globals.PARTICLE_SWORD_CINDER] = new BufferedImage[8];
         for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_CINDER].length; i++) {
-            try {
-                PARTICLE_SPRITE[Globals.PARTICLE_SWORD_CINDER][i] = ImageIO.read(Globals.class.getResource("sprites/particle/cinder/" + i + ".png"));
-            } catch (Exception ex) {
-                Logger.getLogger(Particle.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            PARTICLE_SPRITE[Globals.PARTICLE_SWORD_CINDER][i] = ImageIO.read(Globals.class.getResource("sprites/particle/cinder/" + i + ".png"));
         }
         PARTICLE_SPRITE[Globals.PARTICLE_BURN] = new BufferedImage[20];
         for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_BURN].length; i++) {
-            try {
-                PARTICLE_SPRITE[Globals.PARTICLE_BURN][i] = ImageIO.read(Globals.class.getResource("sprites/particle/burn/" + i + ".png"));
-            } catch (Exception ex) {
-                Logger.getLogger(Particle.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            PARTICLE_SPRITE[Globals.PARTICLE_BURN][i] = ImageIO.read(Globals.class.getResource("sprites/particle/burn/" + i + ".png"));
         }
         PARTICLE_SPRITE[Globals.PARTICLE_SWORD_TAUNT] = new BufferedImage[16];
         for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_TAUNT].length; i++) {
-            try {
-                PARTICLE_SPRITE[Globals.PARTICLE_SWORD_TAUNT][i] = ImageIO.read(Globals.class.getResource("sprites/particle/taunt/" + i + ".png"));
-            } catch (Exception ex) {
-                Logger.getLogger(Particle.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            PARTICLE_SPRITE[Globals.PARTICLE_SWORD_TAUNT][i] = ImageIO.read(Globals.class.getResource("sprites/particle/taunt/" + i + ".png"));
         }
         PARTICLE_SPRITE[Globals.PARTICLE_SWORD_TAUNTAURA1] = new BufferedImage[20];
         for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_TAUNTAURA1].length; i++) {
-            try {
-                PARTICLE_SPRITE[Globals.PARTICLE_SWORD_TAUNTAURA1][i] = ImageIO.read(Globals.class.getResource("sprites/particle/tauntaura/" + i + ".png"));
-            } catch (Exception ex) {
-                Logger.getLogger(Particle.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            PARTICLE_SPRITE[Globals.PARTICLE_SWORD_TAUNTAURA1][i] = ImageIO.read(Globals.class.getResource("sprites/particle/tauntaura/" + i + ".png"));
         }
         PARTICLE_SPRITE[Globals.PARTICLE_SWORD_TAUNTAURA2] = new BufferedImage[10];
         for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_TAUNTAURA2].length; i++) {
-            try {
-                PARTICLE_SPRITE[Globals.PARTICLE_SWORD_TAUNTAURA2][i] = ImageIO.read(Globals.class.getResource("sprites/particle/tauntaura2/" + i + ".png"));
-            } catch (Exception ex) {
-                Logger.getLogger(Particle.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            PARTICLE_SPRITE[Globals.PARTICLE_SWORD_TAUNTAURA2][i] = ImageIO.read(Globals.class.getResource("sprites/particle/tauntaura2/" + i + ".png"));
         }
         PARTICLE_SPRITE[Globals.PARTICLE_BOW_ARC] = new BufferedImage[8];
         for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_BOW_ARC].length; i++) {
-            try {
-                PARTICLE_SPRITE[Globals.PARTICLE_BOW_ARC][i] = ImageIO.read(Globals.class.getResource("sprites/particle/arc/" + i + ".png"));
-            } catch (Exception ex) {
-                Logger.getLogger(Particle.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            PARTICLE_SPRITE[Globals.PARTICLE_BOW_ARC][i] = ImageIO.read(Globals.class.getResource("sprites/particle/arc/" + i + ".png"));
         }
         PARTICLE_SPRITE[Globals.PARTICLE_BOW_RAPID] = new BufferedImage[6];
         for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_BOW_RAPID].length; i++) {
-            try {
-                PARTICLE_SPRITE[Globals.PARTICLE_BOW_RAPID][i] = ImageIO.read(Globals.class.getResource("sprites/particle/rapid/" + i + ".png"));
-            } catch (Exception ex) {
-                Logger.getLogger(Particle.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            PARTICLE_SPRITE[Globals.PARTICLE_BOW_RAPID][i] = ImageIO.read(Globals.class.getResource("sprites/particle/rapid/" + i + ".png"));
         }
         PARTICLE_SPRITE[Globals.PARTICLE_BOW_POWER] = new BufferedImage[24];
         for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_BOW_POWER].length; i++) {
-            try {
-                PARTICLE_SPRITE[Globals.PARTICLE_BOW_POWER][i] = ImageIO.read(Globals.class.getResource("sprites/particle/power/" + i + ".png"));
-            } catch (Exception ex) {
-                Logger.getLogger(Particle.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            PARTICLE_SPRITE[Globals.PARTICLE_BOW_POWER][i] = ImageIO.read(Globals.class.getResource("sprites/particle/power/" + i + ".png"));
         }
         PARTICLE_SPRITE[Globals.PARTICLE_BOW_POWERPARTICLE] = new BufferedImage[10];
         for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_BOW_POWERPARTICLE].length; i++) {
-            try {
-                PARTICLE_SPRITE[Globals.PARTICLE_BOW_POWERPARTICLE][i] = ImageIO.read(Globals.class.getResource("sprites/particle/power2/" + i + ".png"));
-            } catch (Exception ex) {
-                Logger.getLogger(Particle.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            PARTICLE_SPRITE[Globals.PARTICLE_BOW_POWERPARTICLE][i] = ImageIO.read(Globals.class.getResource("sprites/particle/power2/" + i + ".png"));
         }
         PARTICLE_SPRITE[Globals.PARTICLE_BOW_POWERCHARGE] = new BufferedImage[24];
         for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_BOW_POWERCHARGE].length; i++) {
-            try {
-                PARTICLE_SPRITE[Globals.PARTICLE_BOW_POWERCHARGE][i] = ImageIO.read(Globals.class.getResource("sprites/particle/powercharge/" + i + ".png"));
-            } catch (Exception ex) {
-                Logger.getLogger(Particle.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            PARTICLE_SPRITE[Globals.PARTICLE_BOW_POWERCHARGE][i] = ImageIO.read(Globals.class.getResource("sprites/particle/powercharge/" + i + ".png"));
         }
         PARTICLE_SPRITE[Globals.PARTICLE_BOW_VOLLEYBOW] = new BufferedImage[1];
         for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_BOW_VOLLEYBOW].length; i++) {
-            try {
-                PARTICLE_SPRITE[Globals.PARTICLE_BOW_VOLLEYBOW][i] = ImageIO.read(Globals.class.getResource("sprites/particle/volleybow/" + i + ".png"));
-            } catch (Exception ex) {
-                Logger.getLogger(Particle.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            PARTICLE_SPRITE[Globals.PARTICLE_BOW_VOLLEYBOW][i] = ImageIO.read(Globals.class.getResource("sprites/particle/volleybow/" + i + ".png"));
         }
         PARTICLE_SPRITE[Globals.PARTICLE_BOW_VOLLEYARROW] = new BufferedImage[6];
         for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_BOW_VOLLEYARROW].length; i++) {
-            try {
-                PARTICLE_SPRITE[Globals.PARTICLE_BOW_VOLLEYARROW][i] = ImageIO.read(Globals.class.getResource("sprites/particle/volleyarrow/" + i + ".png"));
-            } catch (Exception ex) {
-                Logger.getLogger(Particle.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            PARTICLE_SPRITE[Globals.PARTICLE_BOW_VOLLEYARROW][i] = ImageIO.read(Globals.class.getResource("sprites/particle/volleyarrow/" + i + ".png"));
         }
-        PARTICLE_SPRITE[Globals.PARTICLE_BOW_STORMARROW] = new BufferedImage[20];
-        for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_BOW_STORMARROW].length; i++) {
-            try {
-                PARTICLE_SPRITE[Globals.PARTICLE_BOW_STORMARROW][i] = ImageIO.read(Globals.class.getResource("sprites/particle/stormarrow/" + i + ".png"));
-            } catch (Exception ex) {
-                Logger.getLogger(Particle.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        PARTICLE_SPRITE[Globals.PARTICLE_BOW_STORM] = new BufferedImage[20];
+        for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_BOW_STORM].length; i++) {
+            PARTICLE_SPRITE[Globals.PARTICLE_BOW_STORM][i] = ImageIO.read(Globals.class.getResource("sprites/particle/stormarrow/" + i + ".png"));
         }
         PARTICLE_SPRITE[Globals.PARTICLE_BOW_FROSTARROW] = new BufferedImage[12];
         for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_BOW_FROSTARROW].length; i++) {
-            try {
-                PARTICLE_SPRITE[Globals.PARTICLE_BOW_FROSTARROW][i] = ImageIO.read(Globals.class.getResource("sprites/particle/frostarrow/" + i + ".png"));
-            } catch (Exception ex) {
-                Logger.getLogger(Particle.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            PARTICLE_SPRITE[Globals.PARTICLE_BOW_FROSTARROW][i] = ImageIO.read(Globals.class.getResource("sprites/particle/frostarrow/" + i + ".png"));
         }
         PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_DASH] = new BufferedImage[15];
         for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_DASH].length; i++) {
-            try {
-                PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_DASH][i] = ImageIO.read(Globals.class.getResource("sprites/particle/dash/" + i + ".png"));
-            } catch (Exception ex) {
-                Logger.getLogger(Particle.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_DASH][i] = ImageIO.read(Globals.class.getResource("sprites/particle/dash/" + i + ".png"));
         }
     }
 

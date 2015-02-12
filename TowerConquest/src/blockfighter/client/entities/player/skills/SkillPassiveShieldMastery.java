@@ -8,17 +8,15 @@ import java.awt.Graphics2D;
  *
  * @author Ken Kwan
  */
-public class SkillShieldIron extends Skill {
+public class SkillPassiveShieldMastery extends Skill {
 
-    public SkillShieldIron() {
-        icon = Globals.SKILL_ICON[Skill.SHIELD_IRON];
-        skillCode = SHIELD_IRON;
-        maxCooldown = 20000;
+    public SkillPassiveShieldMastery() {
+        skillCode = PASSIVE_SHIELDMASTERY;
     }
 
     @Override
     public void drawInfo(Graphics2D g, int x, int y) {
-        int boxHeight = 160, boxWidth = 370;
+        int boxHeight = 160, boxWidth = 365;
         if (y + boxHeight > 720) {
             y = 700 - boxHeight;
         }
@@ -37,19 +35,15 @@ public class SkillShieldIron extends Skill {
         g.drawString(getSkillName(), x + 80, y + 30);
         g.setFont(Globals.ARIAL_15PT);
         g.drawString("Level: " + level, x + 80, y + 50);
-        g.drawString("Cooldown: " + maxCooldown / 1000 + " Seconds", x + 80, y + 70);
 
-        g.drawString("Become immobile and reduce damage taken", x + 10, y + 90);
-        g.drawString("by 55 + " + level + "%(" + (level + 55) + "%) for 2 seconds.", x + 10, y + 110);
-        g.drawString("Max:", x + 10, y + 130);
-        g.drawString("Allies reduce damage taken by 40% for 2 seconds.", x + 10, y + 150);
+        g.drawString("When equipped with a Sword and Shield", x + 10, y + 90);
+        g.drawString("You gain increased 15% + " + df.format(level * 0.5) + "%(" + df.format(15 + level * 0.5) + "%) damage.", x + 10, y + 110);
+        g.drawString("You take 5% + " + df.format(level * 0.5) + "%(" + df.format(5 + level * 0.5) + "%) reduced damage.", x + 10, y + 130);
+        g.drawString("Assign this passive to a hotkey to gain its effects.", x + 10, y + 150);
     }
 
     @Override
     public String getSkillName() {
-        if (isMaxed()) {
-            return "Allied Strength";
-        }
-        return "Iron Fortress";
+        return "Defender Mastery";
     }
 }

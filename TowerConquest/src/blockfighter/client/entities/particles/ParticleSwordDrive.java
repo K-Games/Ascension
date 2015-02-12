@@ -1,21 +1,21 @@
 package blockfighter.client.entities.particles;
 
 import blockfighter.client.Globals;
-import blockfighter.client.screen.ScreenIngame;
+import blockfighter.client.entities.player.Player;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 
 public class ParticleSwordDrive extends Particle {
 
-    private byte player;
+    private Player owner;
 
-    public ParticleSwordDrive(int k, int x, int y, byte f, byte p) {
+    public ParticleSwordDrive(int k, int x, int y, byte f, Player p) {
         super(k, x, y, f);
         frame = 0;
         frameDuration = 25;
         duration = 1000;
-        player = p;
+        owner = p;
     }
 
     @Override
@@ -34,12 +34,12 @@ public class ParticleSwordDrive extends Particle {
     @Override
     public void draw(Graphics2D g) {
         if (PARTICLE_SPRITE[Globals.PARTICLE_SWORD_DRIVE] == null) {
-            loadParticles();
+            return;
         }
         if (frame >= PARTICLE_SPRITE[Globals.PARTICLE_SWORD_DRIVE].length) {
             return;
         }
-        Point p = ((ScreenIngame) logic.getScreen()).getPlayerPos(player);
+        Point p = owner.getPos();
         if (p != null) {
             if (facing == Globals.RIGHT) {
                 x = p.x - 310;

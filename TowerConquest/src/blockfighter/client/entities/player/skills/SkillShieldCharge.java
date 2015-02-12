@@ -11,6 +11,7 @@ import java.awt.Graphics2D;
 public class SkillShieldCharge extends Skill {
 
     public SkillShieldCharge() {
+        icon = Globals.SKILL_ICON[Skill.SHIELD_CHARGE];
         skillCode = SHIELD_CHARGE;
         maxCooldown = 8000;
     }

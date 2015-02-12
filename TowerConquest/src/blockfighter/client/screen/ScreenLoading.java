@@ -3,7 +3,7 @@ package blockfighter.client.screen;
 import blockfighter.client.Globals;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.client.maps.GameMap;
-import blockfighter.client.maps.GameMapLvl1;
+import blockfighter.client.maps.GameMapFloor1;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
@@ -17,14 +17,16 @@ import java.awt.image.BufferedImage;
 public class ScreenLoading extends ScreenMenu {
 
     private GameMap map;
+    private byte myKey;
 
-    public void load(byte mapID) {
+    public void load(byte mapID) throws Exception {
         Particle.loadParticles();
         switch (mapID) {
             case 0:
-                map = new GameMapLvl1();
+                map = new GameMapFloor1();
                 break;
         }
+        map.loadAssets();
     }
 
     public GameMap getLoadedMap() {
@@ -97,4 +99,7 @@ public class ScreenLoading extends ScreenMenu {
     public void unload() {
     }
 
+    public void disconnect() {
+        logic.sendDisconnect(myKey);
+    }
 }

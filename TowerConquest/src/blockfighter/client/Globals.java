@@ -52,7 +52,7 @@ public class Globals {
 
     public final static byte RIGHT = 0, LEFT = 1, DOWN = 2, UP = 3;
 
-    public final static int NUM_PARTICLE_EFFECTS = 23;
+    public final static int NUM_PARTICLE_EFFECTS = 22;
     public final static byte PARTICLE_SWORD_SLASH1 = 0x00,
             PARTICLE_SWORD_SLASH2 = 0x01,
             PARTICLE_SWORD_SLASH3 = 0x02,
@@ -72,9 +72,8 @@ public class Globals {
             PARTICLE_BOW_VOLLEYBOW = 0x11,
             PARTICLE_BOW_VOLLEYARROW = 0x12,
             PARTICLE_BOW_STORM = 0x13,
-            PARTICLE_BOW_STORMARROW = 0x14,
-            PARTICLE_BOW_FROSTARROW = 0x15,
-            PARTICLE_SHIELD_DASH = 0x16;
+            PARTICLE_BOW_FROSTARROW = 0x14,
+            PARTICLE_SHIELD_DASH = 0x15;
 
     public final static int NUM_KEYBINDS = 16,
             KEYBIND_SKILL1 = 0,
@@ -329,7 +328,7 @@ public class Globals {
             MENU_TABPOINTER[0] = ImageIO.read(Globals.class.getResource("sprites/ui/menu/pointer.png"));
             MENU_ITEMDELETE[0] = ImageIO.read(Globals.class.getResource("sprites/ui/menu/delete.png"));
             MENU_SMOKE[0] = ImageIO.read(Globals.class.getResource("sprites/ui/menu/smoke.png"));
-            for (byte i = 0; i < 12; i++) {
+            for (byte i = 0; i < 18; i++) {
                 SKILL_ICON[i] = ImageIO.read(Globals.class.getResource("sprites/skillicon/" + i + ".png"));
             }
         } catch (IOException ex) {

@@ -11,6 +11,7 @@ import java.awt.Graphics2D;
 public class SkillShieldReflect extends Skill {
 
     public SkillShieldReflect() {
+        icon = Globals.SKILL_ICON[Skill.SHIELD_REFLECT];
         skillCode = SHIELD_REFLECT;
         maxCooldown = 15000;
     }

@@ -11,13 +11,14 @@ import java.awt.Graphics2D;
 public class SkillShieldToss extends Skill {
 
     public SkillShieldToss() {
+        icon = Globals.SKILL_ICON[Skill.SHIELD_TOSS];
         skillCode = SHIELD_TOSS;
         maxCooldown = 5000;
     }
 
     @Override
     public void drawInfo(Graphics2D g, int x, int y) {
-        int boxHeight = 160, boxWidth = 410;
+        int boxHeight = 140, boxWidth = 420;
         if (y + boxHeight > 720) {
             y = 700 - boxHeight;
         }
@@ -39,9 +40,8 @@ public class SkillShieldToss extends Skill {
         g.drawString("Cooldown: " + maxCooldown / 1000 + " Seconds", x + 80, y + 70);
 
         g.drawString("Throw your shield in front of you.", x + 10, y + 90);
-        g.drawString("Deals damage multiplied by 40% + " + level + "%(" + (level + 40) + "%) of Defense.", x + 10, y + 110);
-        g.drawString("Max:", x + 10, y + 130);
-        g.drawString("Throws 3 shields.", x + 10, y + 150);
+        g.drawString("Deals damage multiplied by 80% + " + level + "%(" + (level + 80) + "%) of Defense.", x + 10, y + 110);
+        g.drawString("Max: Throws 3 shields.", x + 10, y + 130);
     }
 
     @Override

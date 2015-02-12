@@ -8,17 +8,16 @@ import java.awt.Graphics2D;
  *
  * @author Ken Kwan
  */
-public class SkillShieldIron extends Skill {
+public class SkillPassiveRevive extends Skill {
 
-    public SkillShieldIron() {
-        icon = Globals.SKILL_ICON[Skill.SHIELD_IRON];
-        skillCode = SHIELD_IRON;
-        maxCooldown = 20000;
+    public SkillPassiveRevive() {
+        skillCode = PASSIVE_REVIVE;
+        maxCooldown = 120000;
     }
 
     @Override
     public void drawInfo(Graphics2D g, int x, int y) {
-        int boxHeight = 160, boxWidth = 370;
+        int boxHeight = 140, boxWidth = 365;
         if (y + boxHeight > 720) {
             y = 700 - boxHeight;
         }
@@ -38,18 +37,14 @@ public class SkillShieldIron extends Skill {
         g.setFont(Globals.ARIAL_15PT);
         g.drawString("Level: " + level, x + 80, y + 50);
         g.drawString("Cooldown: " + maxCooldown / 1000 + " Seconds", x + 80, y + 70);
-
-        g.drawString("Become immobile and reduce damage taken", x + 10, y + 90);
-        g.drawString("by 55 + " + level + "%(" + (level + 55) + "%) for 2 seconds.", x + 10, y + 110);
-        g.drawString("Max:", x + 10, y + 130);
-        g.drawString("Allies reduce damage taken by 40% for 2 seconds.", x + 10, y + 150);
+        
+        g.drawString("When you die, you will be revived after 5 seconds", x + 10, y + 90);
+        g.drawString("with 10% + " + level + "%(" + (10 + level) + "%) HP restored.", x + 10, y + 110);
+        g.drawString("Assign this passive to a hotkey to gain its effects.", x + 10, y + 130);
     }
 
     @Override
     public String getSkillName() {
-        if (isMaxed()) {
-            return "Allied Strength";
-        }
-        return "Iron Fortress";
+        return "Resurrection";
     }
 }

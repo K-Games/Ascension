@@ -28,7 +28,7 @@ public class ParticleShieldDash extends Particle {
     @Override
     public void draw(Graphics2D g) {
         if (PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_DASH] == null) {
-            loadParticles();
+            return;
         }
         if (frame >= PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_DASH].length) {
             return;

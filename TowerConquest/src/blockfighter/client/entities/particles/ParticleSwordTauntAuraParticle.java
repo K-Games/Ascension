@@ -31,7 +31,7 @@ public class ParticleSwordTauntAuraParticle extends Particle {
     @Override
     public void draw(Graphics2D g) {
         if (PARTICLE_SPRITE[Globals.PARTICLE_SWORD_TAUNTAURA2] == null) {
-            loadParticles();
+            return;
         }
         if (frame >= PARTICLE_SPRITE[Globals.PARTICLE_SWORD_TAUNTAURA2].length) {
             return;

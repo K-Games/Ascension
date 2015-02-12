@@ -29,7 +29,7 @@ public class ParticleSwordMulti extends Particle {
     public void draw(Graphics2D g) {
 
         if (PARTICLE_SPRITE[Globals.PARTICLE_SWORD_MULTI] == null) {
-            loadParticles();
+            return;
         }
         if (frame >= PARTICLE_SPRITE[Globals.PARTICLE_SWORD_MULTI].length) {
             return;

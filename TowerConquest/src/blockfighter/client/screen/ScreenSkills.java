@@ -61,20 +61,20 @@ public class ScreenSkills extends ScreenMenu {
         skillSlots[Skill.SHIELD_TOSS] = new Rectangle2D.Double(767, 415, 60, 60);
         skillSlots[Skill.SHIELD_DASH] = new Rectangle2D.Double(767, 505, 60, 60);
 
-        skillSlots[Skill.PASSIVE_1] = new Rectangle2D.Double(1050, 55, 60, 60);
-        skillSlots[Skill.PASSIVE_2] = new Rectangle2D.Double(1050, 140, 60, 60);
-        skillSlots[Skill.PASSIVE_3] = new Rectangle2D.Double(1050, 225, 60, 60);
+        skillSlots[Skill.PASSIVE_DUALSWORD] = new Rectangle2D.Double(1050, 55, 60, 60);
+        skillSlots[Skill.PASSIVE_KEENEYE] = new Rectangle2D.Double(1050, 140, 60, 60);
+        skillSlots[Skill.PASSIVE_VITALHIT] = new Rectangle2D.Double(1050, 225, 60, 60);
         
-        skillSlots[Skill.PASSIVE_4] = new Rectangle2D.Double(1050, 310, 60, 60);
-        skillSlots[Skill.PASSIVE_5] = new Rectangle2D.Double(1050, 395, 60, 60);
-        skillSlots[Skill.PASSIVE_6] = new Rectangle2D.Double(1050, 480, 60, 60);
+        skillSlots[Skill.PASSIVE_SHIELDMASTERY] = new Rectangle2D.Double(1050, 310, 60, 60);
+        skillSlots[Skill.PASSIVE_BARRIER] = new Rectangle2D.Double(1050, 395, 60, 60);
+        skillSlots[Skill.PASSIVE_RESISTANCE] = new Rectangle2D.Double(1050, 480, 60, 60);
 
-        skillSlots[Skill.PASSIVE_7] = new Rectangle2D.Double(1160, 55, 60, 60);
-        skillSlots[Skill.PASSIVE_8] = new Rectangle2D.Double(1160, 140, 60, 60);
-        skillSlots[Skill.PASSIVE_9] = new Rectangle2D.Double(1160, 225, 60, 60);
+        skillSlots[Skill.PASSIVE_BOWMASTERY] = new Rectangle2D.Double(1160, 55, 60, 60);
+        skillSlots[Skill.PASSIVE_WILLPOWER] = new Rectangle2D.Double(1160, 140, 60, 60);
+        skillSlots[Skill.PASSIVE_TACTICAL] = new Rectangle2D.Double(1160, 225, 60, 60);
         
-        skillSlots[Skill.PASSIVE_10] = new Rectangle2D.Double(1160, 310, 60, 60);
-        skillSlots[Skill.PASSIVE_11] = new Rectangle2D.Double(1160, 395, 60, 60);
+        skillSlots[Skill.PASSIVE_REVIVE] = new Rectangle2D.Double(1160, 310, 60, 60);
+        skillSlots[Skill.PASSIVE_SHADOWCLONE] = new Rectangle2D.Double(1160, 395, 60, 60);
         skillSlots[Skill.PASSIVE_12] = new Rectangle2D.Double(1160, 480, 60, 60);
         for (int i = 0; i < hotkeySlots.length; i++) {
             hotkeySlots[i] = new Rectangle2D.Double(240 + (i * 64), 605, 60, 60);

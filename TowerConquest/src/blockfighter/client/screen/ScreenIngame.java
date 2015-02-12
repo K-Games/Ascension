@@ -391,7 +391,9 @@ public class ScreenIngame extends Screen {
                 break;
             case Globals.PARTICLE_SWORD_DRIVE:
                 playerKey = data[11];
-                particles.put(key, new ParticleSwordDrive(key, x, y, facing, playerKey));
+                if (players.containsKey(playerKey)) {
+                    particles.put(key, new ParticleSwordDrive(key, x, y, facing, players.get(playerKey)));
+                }
                 break;
             case Globals.PARTICLE_SWORD_VORPAL:
                 particles.put(key, new ParticleSwordVorpal(key, x, y, facing));
@@ -407,7 +409,9 @@ public class ScreenIngame extends Screen {
                 break;
             case Globals.PARTICLE_SWORD_TAUNTAURA1:
                 playerKey = data[11];
-                particles.put(key, new ParticleSwordTauntAura(key, x, y, facing, playerKey));
+                if (players.containsKey(playerKey)) {
+                    particles.put(key, new ParticleSwordTauntAura(key, x, y, facing, players.get(playerKey)));
+                }
                 break;
             case Globals.PARTICLE_BOW_ARC:
                 particles.put(key, new ParticleBowArc(key, x, y, facing));
@@ -428,13 +432,16 @@ public class ScreenIngame extends Screen {
                 particles.put(key, new ParticleBowVolleyArrow(key, x, y, facing));
                 break;
             case Globals.PARTICLE_BOW_STORM:
-                particles.put(key, new ParticleBowStormArea(key, x, y, facing));
+                particles.put(key, new ParticleBowStormEmitter(key, x, y, facing));
                 break;
             case Globals.PARTICLE_BOW_FROSTARROW:
                 particles.put(key, new ParticleBowFrostArrow(key, x, y, facing));
                 break;
             case Globals.PARTICLE_SHIELD_DASH:
-                particles.put(key, new ParticleShieldDash(key, x, y, facing));
+                playerKey = data[11];
+                if (players.containsKey(playerKey)) {
+                    particles.put(key, new ParticleSwordShieldDashEmitter(key, x, y, facing, players.get(playerKey)));
+                }
                 break;
         }
     }

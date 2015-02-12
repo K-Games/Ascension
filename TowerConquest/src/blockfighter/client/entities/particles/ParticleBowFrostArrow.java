@@ -33,7 +33,7 @@ public class ParticleBowFrostArrow extends Particle {
     @Override
     public void draw(Graphics2D g) {
         if (PARTICLE_SPRITE[Globals.PARTICLE_BOW_FROSTARROW] == null) {
-            loadParticles();
+            return;
         }
         if (frame >= PARTICLE_SPRITE[Globals.PARTICLE_BOW_FROSTARROW].length) {
             return;

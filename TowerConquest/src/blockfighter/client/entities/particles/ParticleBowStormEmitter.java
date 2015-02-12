@@ -4,9 +4,9 @@ import blockfighter.client.Globals;
 import blockfighter.client.screen.ScreenIngame;
 import java.awt.Graphics2D;
 
-public class ParticleBowStormArea extends Particle {
+public class ParticleBowStormEmitter extends Particle {
 
-    public ParticleBowStormArea(int k, int x, int y, byte f) {
+    public ParticleBowStormEmitter(int k, int x, int y, byte f) {
         super(k, x, y, f);
         frame = 0;
         frameDuration = 25;
@@ -20,7 +20,6 @@ public class ParticleBowStormArea extends Particle {
         if (duration > 200) {
             ParticleBowStormArrow b = new ParticleBowStormArrow(((ScreenIngame) logic.getScreen()).getNextParticleKey(), x, y, facing);
             ((ScreenIngame) logic.getScreen()).addParticle(b);
-
         }
 
     }

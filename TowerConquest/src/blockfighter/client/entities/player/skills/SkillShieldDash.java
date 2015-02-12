@@ -11,13 +11,14 @@ import java.awt.Graphics2D;
 public class SkillShieldDash extends Skill {
 
     public SkillShieldDash() {
+        icon = Globals.SKILL_ICON[Skill.SHIELD_DASH];
         skillCode = SHIELD_DASH;
         maxCooldown = 2000;
     }
 
     @Override
     public void drawInfo(Graphics2D g, int x, int y) {
-        int boxHeight = 140, boxWidth = 345;
+        int boxHeight = 140, boxWidth = 320;
         if (y + boxHeight > 720) {
             y = 700 - boxHeight;
         }
@@ -39,7 +40,7 @@ public class SkillShieldDash extends Skill {
         g.drawString("Cooldown: " + maxCooldown / 1000 + " Seconds", x + 80, y + 70);
 
         g.drawString("Dash a short distance over 0.25 seconds.", x + 10, y + 90);
-        g.drawString("Deal " + level + "% increased damage for 10 seconds.", x + 10, y + 110);
+        g.drawString("Deal " + df.format(level * 0.5) + "% increased damage for 10 seconds.", x + 10, y + 110);
         g.drawString("Max: Invulnerable during dash.", x + 10, y + 130);
     }
 

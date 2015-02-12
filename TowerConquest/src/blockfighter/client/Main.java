@@ -90,6 +90,5 @@ public class Main {
         });
         logic.start();
         render.start();
-
     }
 }
