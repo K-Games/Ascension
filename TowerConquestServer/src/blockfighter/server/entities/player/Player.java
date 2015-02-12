@@ -2,52 +2,9 @@ package blockfighter.server.entities.player;
 
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
-import blockfighter.server.entities.buff.Buff;
-import blockfighter.server.entities.buff.BuffKnockback;
-import blockfighter.server.entities.buff.BuffStun;
-import blockfighter.server.entities.player.skills.Skill;
-import blockfighter.server.entities.player.skills.SkillBowArc;
-import blockfighter.server.entities.player.skills.SkillBowFrost;
-import blockfighter.server.entities.player.skills.SkillBowPower;
-import blockfighter.server.entities.player.skills.SkillBowRapid;
-import blockfighter.server.entities.player.skills.SkillBowStorm;
-import blockfighter.server.entities.player.skills.SkillBowVolley;
-import blockfighter.server.entities.player.skills.SkillPassive1;
-import blockfighter.server.entities.player.skills.SkillPassive10;
-import blockfighter.server.entities.player.skills.SkillPassive11;
-import blockfighter.server.entities.player.skills.SkillPassive12;
-import blockfighter.server.entities.player.skills.SkillPassive2;
-import blockfighter.server.entities.player.skills.SkillPassive3;
-import blockfighter.server.entities.player.skills.SkillPassive4;
-import blockfighter.server.entities.player.skills.SkillPassive5;
-import blockfighter.server.entities.player.skills.SkillPassive6;
-import blockfighter.server.entities.player.skills.SkillPassive7;
-import blockfighter.server.entities.player.skills.SkillPassive8;
-import blockfighter.server.entities.player.skills.SkillPassive9;
-import blockfighter.server.entities.player.skills.SkillShieldToss;
-import blockfighter.server.entities.player.skills.SkillShieldDash;
-import blockfighter.server.entities.player.skills.SkillShieldCharge;
-import blockfighter.server.entities.player.skills.SkillShieldFortify;
-import blockfighter.server.entities.player.skills.SkillShieldIron;
-import blockfighter.server.entities.player.skills.SkillShieldReflect;
-import blockfighter.server.entities.player.skills.SkillSwordCinder;
-import blockfighter.server.entities.player.skills.SkillSwordDrive;
-import blockfighter.server.entities.player.skills.SkillSwordMulti;
-import blockfighter.server.entities.player.skills.SkillSwordSlash;
-import blockfighter.server.entities.player.skills.SkillSwordTaunt;
-import blockfighter.server.entities.player.skills.SkillSwordVorpal;
-import blockfighter.server.entities.proj.ProjBowArc;
-import blockfighter.server.entities.proj.ProjBowFrost;
-import blockfighter.server.entities.proj.ProjBowPower;
-import blockfighter.server.entities.proj.ProjBowRapid;
-import blockfighter.server.entities.proj.ProjBowStorm;
-import blockfighter.server.entities.proj.ProjBowVolley;
-import blockfighter.server.entities.proj.ProjSwordCinder;
-import blockfighter.server.entities.proj.ProjSwordDrive;
-import blockfighter.server.entities.proj.ProjSwordMulti;
-import blockfighter.server.entities.proj.ProjSwordSlash;
-import blockfighter.server.entities.proj.ProjSwordTaunt;
-import blockfighter.server.entities.proj.ProjSwordVorpal;
+import blockfighter.server.entities.buff.*;
+import blockfighter.server.entities.player.skills.*;
+import blockfighter.server.entities.proj.*;
 import blockfighter.server.maps.GameMap;
 import blockfighter.server.net.PacketSender;
 import java.awt.geom.Rectangle2D;
@@ -410,38 +367,38 @@ public class Player extends Thread {
             case Skill.SHIELD_DASH:
                 newSkill = new SkillShieldDash();
                 break;
-            case Skill.PASSIVE_1:
-                newSkill = new SkillPassive1();
+            case Skill.PASSIVE_DUALSWORD:
+                newSkill = new SkillPassiveDualSword();
                 break;
-            case Skill.PASSIVE_2:
-                newSkill = new SkillPassive2();
+            case Skill.PASSIVE_KEENEYE:
+                newSkill = new SkillPassiveKeenEye();
                 break;
-            case Skill.PASSIVE_3:
-                newSkill = new SkillPassive3();
+            case Skill.PASSIVE_VITALHIT:
+                newSkill = new SkillPassiveVitalHit();
                 break;
-            case Skill.PASSIVE_4:
-                newSkill = new SkillPassive4();
+            case Skill.PASSIVE_SHIELDMASTERY:
+                newSkill = new SkillPassiveShieldMastery();
                 break;
-            case Skill.PASSIVE_5:
-                newSkill = new SkillPassive5();
+            case Skill.PASSIVE_BARRIER:
+                newSkill = new SkillPassiveBarrier();
                 break;
-            case Skill.PASSIVE_6:
-                newSkill = new SkillPassive6();
+            case Skill.PASSIVE_RESISTANCE:
+                newSkill = new SkillPassiveResistance();
                 break;
-            case Skill.PASSIVE_7:
-                newSkill = new SkillPassive7();
+            case Skill.PASSIVE_BOWMASTERY:
+                newSkill = new SkillPassiveBowMastery();
                 break;
-            case Skill.PASSIVE_8:
-                newSkill = new SkillPassive8();
+            case Skill.PASSIVE_WILLPOWER:
+                newSkill = new SkillPassiveWillpower();
                 break;
-            case Skill.PASSIVE_9:
-                newSkill = new SkillPassive9();
+            case Skill.PASSIVE_TACTICAL:
+                newSkill = new SkillPassiveTactical();
                 break;
-            case Skill.PASSIVE_10:
-                newSkill = new SkillPassive10();
+            case Skill.PASSIVE_REVIVE:
+                newSkill = new SkillPassiveRevive();
                 break;
-            case Skill.PASSIVE_11:
-                newSkill = new SkillPassive11();
+            case Skill.PASSIVE_SHADOWCLONE:
+                newSkill = new SkillPassiveShadowClone();
                 break;
             case Skill.PASSIVE_12:
                 newSkill = new SkillPassive12();
@@ -1081,25 +1038,14 @@ public class Player extends Thread {
         if (!isStunned() && !isKnockback()) {
             setXSpeed((facing == Globals.RIGHT) ? 15 : -15);
         }
-        if (skillDuration % 20 == 0) {
-            byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT * 2];
+
+        if (skillDuration == 0) {
+            byte[] bytes = new byte[Globals.PACKET_BYTE * 4 + Globals.PACKET_INT * 2];
             bytes[0] = Globals.DATA_PARTICLE_EFFECT;
             bytes[1] = Globals.PARTICLE_SHIELD_DASH;
-            byte[] posXInt = Globals.intToByte((int) (x + ((facing == Globals.RIGHT) ? -172 : -200)));
-            bytes[2] = posXInt[0];
-            bytes[3] = posXInt[1];
-            bytes[4] = posXInt[2];
-            bytes[5] = posXInt[3];
-            byte[] posYInt = Globals.intToByte((int) (y - 330));
-            bytes[6] = posYInt[0];
-            bytes[7] = posYInt[1];
-            bytes[8] = posYInt[2];
-            bytes[9] = posYInt[3];
             bytes[10] = facing;
+            bytes[11] = key;
             sender.sendAll(bytes, logic.getRoom());
-        }
-        if (skillDuration == 0) {
-
             setYSpeed(-4);
         }
 

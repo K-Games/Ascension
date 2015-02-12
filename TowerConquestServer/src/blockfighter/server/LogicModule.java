@@ -3,7 +3,7 @@ package blockfighter.server;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.proj.ProjBase;
 import blockfighter.server.maps.GameMap;
-import blockfighter.server.maps.GameMapLvl1;
+import blockfighter.server.maps.GameMapFloor1;
 import blockfighter.server.net.PacketSender;
 import java.util.LinkedList;
 import java.util.Map;
@@ -51,7 +51,7 @@ public class LogicModule extends Thread {
     public LogicModule(byte r) {
         room = r;
         isRunning = true;
-        map = new GameMapLvl1();
+        map = new GameMapFloor1();
         for (int i = 0; i < 500; i++) {
             projKeys.add(i);
         }

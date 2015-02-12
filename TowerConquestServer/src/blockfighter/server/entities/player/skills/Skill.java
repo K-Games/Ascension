@@ -6,7 +6,7 @@ package blockfighter.server.entities.player.skills;
  */
 public abstract class Skill {
 
-    protected byte reqWeapon;
+    protected byte reqWeapon = -1;
     protected byte skillCode;
     protected byte level;
     protected long cooldown;
@@ -31,17 +31,17 @@ public abstract class Skill {
             SHIELD_REFLECT = 0x0F,
             SHIELD_TOSS = 0x10,
             SHIELD_DASH = 0x11,
-            PASSIVE_1 = 0x12,
-            PASSIVE_2 = 0x13,
-            PASSIVE_3 = 0x14,
-            PASSIVE_4 = 0x15,
-            PASSIVE_5 = 0x16,
-            PASSIVE_6 = 0x17,
-            PASSIVE_7 = 0x18,
-            PASSIVE_8 = 0x19,
-            PASSIVE_9 = 0x1A,
-            PASSIVE_10 = 0x1B,
-            PASSIVE_11 = 0x1C,
+            PASSIVE_DUALSWORD = 0x12,
+            PASSIVE_KEENEYE = 0x13,
+            PASSIVE_VITALHIT = 0x14,
+            PASSIVE_SHIELDMASTERY = 0x15,
+            PASSIVE_BARRIER = 0x16,
+            PASSIVE_RESISTANCE = 0x17,
+            PASSIVE_BOWMASTERY = 0x18,
+            PASSIVE_WILLPOWER = 0x19,
+            PASSIVE_TACTICAL = 0x1A,
+            PASSIVE_REVIVE = 0x1B,
+            PASSIVE_SHADOWCLONE = 0x1C,
             PASSIVE_12 = 0x1D;
 
     /**
@@ -125,6 +125,6 @@ public abstract class Skill {
      * @return True if weapon is same as required weapon and cooldown is <= 0
      */
     public boolean canCast(byte weaponType) {
-        return weaponType == reqWeapon && cooldown <= 0;
+        return (weaponType == reqWeapon || reqWeapon == -1) && cooldown <= 0;
     }
 }
