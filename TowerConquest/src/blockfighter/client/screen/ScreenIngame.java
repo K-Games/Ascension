@@ -4,6 +4,7 @@ import blockfighter.client.Globals;
 import blockfighter.client.SaveData;
 import blockfighter.client.entities.items.ItemEquip;
 import blockfighter.client.entities.particles.*;
+import blockfighter.client.entities.damage.Damage;
 import blockfighter.client.entities.player.Player;
 import blockfighter.client.entities.player.skills.Skill;
 import blockfighter.client.maps.GameMap;
@@ -38,7 +39,12 @@ public class ScreenIngame extends Screen {
     private ConcurrentLinkedQueue<byte[]> dataQueue = new ConcurrentLinkedQueue<>();
     private DecimalFormat df = new DecimalFormat("0.0");
     private ConcurrentHashMap<Byte, Player> players;
-    private ConcurrentHashMap<Integer, Particle> particles = new ConcurrentHashMap<>(500);
+    private ConcurrentHashMap<Integer, Particle> particles = new ConcurrentHashMap<>(500, 0.9f, 1);
+    private ConcurrentHashMap<Integer, Damage> dmgNum = new ConcurrentHashMap<>(500, 0.9f, 1);
+
+    private final ConcurrentLinkedQueue<Integer> dmgKeys = new ConcurrentLinkedQueue<>();
+    private int numDmgKeys = 500;
+
     private final ConcurrentLinkedQueue<Integer> particleKeys = new ConcurrentLinkedQueue<>();
     private int numParticleKeys = 500;
 
@@ -49,7 +55,7 @@ public class ScreenIngame extends Screen {
     private byte pID = 0;
     private PacketSender sender = null;
 
-    private double lastUpdateTime = 0;
+    private double lastUpdateTime = 0, lastDmgUpdateTime = 0;
     private double lastRequestTime = 50;
     private double lastQueueTime = 0;
     private double lastPingTime = 0;
@@ -100,6 +106,11 @@ public class ScreenIngame extends Screen {
             lastSendKeyTime = now;
         }
 
+        if (now - lastDmgUpdateTime >= Globals.DMG_UPDATE) {
+            updateDmgNum();
+            lastDmgUpdateTime = now;
+        }
+
         if (now - lastUpdateTime >= Globals.LOGIC_UPDATE) {
             Skill[] skills = c.getSkills();
             for (Skill skill : skills) {
@@ -127,6 +138,31 @@ public class ScreenIngame extends Screen {
             Thread.sleep(0, 1);
         } catch (InterruptedException ex) {
             Logger.getLogger(ScreenInventory.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void updateDmgNum() {
+        for (Map.Entry<Integer, Damage> pEntry : dmgNum.entrySet()) {
+            threadPool.execute(pEntry.getValue());
+        }
+        LinkedList<Integer> remove = new LinkedList<>();
+        for (Map.Entry<Integer, Damage> pEntry : dmgNum.entrySet()) {
+            try {
+                pEntry.getValue().join();
+                if (pEntry.getValue().isExpired()) {
+                    remove.add(pEntry.getKey());
+                }
+            } catch (InterruptedException ex) {
+            }
+        }
+        removeDmgNum(remove);
+    }
+
+    private void removeDmgNum(LinkedList<Integer> remove) {
+        while (!remove.isEmpty()) {
+            int p = remove.pop();
+            returnDmgKey(p);
+            dmgNum.remove(p);
         }
     }
 
@@ -190,6 +226,9 @@ public class ScreenIngame extends Screen {
         for (Map.Entry<Integer, Particle> pEntry : particles.entrySet()) {
             pEntry.getValue().draw(g);
         }
+        for (Map.Entry<Integer, Damage> pEntry : dmgNum.entrySet()) {
+            pEntry.getValue().draw(g);
+        }
 
         g.setTransform(resetForm);
         g.setRenderingHint(
@@ -203,7 +242,7 @@ public class ScreenIngame extends Screen {
                     Globals.WINDOW_WIDTH / 2 - hud.getWidth() / 2 + 2, Globals.WINDOW_HEIGHT - hud.getHeight() + 2,
                     (int) (players.get(myKey).getStat(Globals.STAT_MINHP) / players.get(myKey).getStat(Globals.STAT_MAXHP) * 802D), 38,
                     null);
-
+            g.setFont(Globals.ARIAL_18PT);
             int width = g.getFontMetrics().stringWidth((int) players.get(myKey).getStat(Globals.STAT_MINHP) + "/" + (int) players.get(myKey).getStat(Globals.STAT_MAXHP));
             drawStringOutline(g, (int) players.get(myKey).getStat(Globals.STAT_MINHP) + "/" + (int) players.get(myKey).getStat(Globals.STAT_MAXHP), Globals.WINDOW_WIDTH / 2 - width / 2, Globals.WINDOW_HEIGHT - hud.getHeight() + 28, 1);
             g.setColor(Color.WHITE);
@@ -261,8 +300,22 @@ public class ScreenIngame extends Screen {
         return new Point(players.get(key).getX(), players.get(key).getY());
     }
 
+    public void returnDmgKey(int key) {
+        dmgKeys.add(key);
+    }
+
     public void returnParticleKey(int key) {
         particleKeys.add(key);
+    }
+
+    public int getNextDmgKey() {
+        if (dmgKeys.isEmpty()) {
+            for (int i = numDmgKeys; i < numDmgKeys + 500; i++) {
+                dmgKeys.add(i);
+            }
+            numDmgKeys += 500;
+        }
+        return dmgKeys.remove();
     }
 
     public int getNextParticleKey() {
@@ -306,6 +359,9 @@ public class ScreenIngame extends Screen {
                     break;
                 case Globals.DATA_PLAYER_SET_COOLDOWN:
                     dataPlayerSetCooldown(data);
+                    break;
+                case Globals.DATA_DAMAGE:
+                    dataDamage(data);
                     break;
             }
         }
@@ -369,6 +425,15 @@ public class ScreenIngame extends Screen {
         if (players.containsKey(key)) {
             players.remove(key);
         }
+    }
+
+    private void dataDamage(byte[] data) {
+        byte type = data[1];
+        int x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
+        int y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
+        int dmg = Globals.bytesToInt(Arrays.copyOfRange(data, 10, 14));
+        int key = getNextDmgKey();
+        dmgNum.put(key, new Damage(dmg, type, new Point(x, y)));
     }
 
     private void dataParticleEffect(byte[] data) {
@@ -453,6 +518,10 @@ public class ScreenIngame extends Screen {
             System.arraycopy(data, 2, temp, 0, temp.length);
             players.get(key).setPlayerName(new String(temp, StandardCharsets.UTF_8).trim());
         }
+    }
+
+    public void addDmgNum(Damage d) {
+        dmgNum.put(getNextDmgKey(), d);
     }
 
     public void addParticle(Particle newP) {

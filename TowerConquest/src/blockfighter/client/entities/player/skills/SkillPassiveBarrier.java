@@ -37,7 +37,7 @@ public class SkillPassiveBarrier extends Skill {
         g.setFont(Globals.ARIAL_15PT);
         g.drawString("Level: " + level, x + 80, y + 50);
         g.drawString("Cooldown: " + maxCooldown / 1000 + " Seconds", x + 80, y + 70);
-        
+
         g.drawString("After taking damage over 50% of HP, gain a barrier", x + 10, y + 90);
         g.drawString("absorbing up to 20% + " + level + "%(" + (20 + level) + "%) of HP in damage.", x + 10, y + 110);
         g.drawString("Assign this passive to a hotkey to gain its effects.", x + 10, y + 130);

@@ -19,8 +19,8 @@ public class ParticleSwordTauntAura extends Particle {
         owner = p;
         Point point = owner.getPos();
         if (point != null) {
-            x = point.x;
-            y = point.y;
+            this.x = point.x;
+            this.y = point.y;
         }
     }
 

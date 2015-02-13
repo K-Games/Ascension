@@ -18,9 +18,6 @@ public class SkillPassive12 extends Skill {
 
     @Override
     public String getSkillName() {
-        if (isMaxed()) {
-            return "Max";
-        }
         return "normal";
     }
 }

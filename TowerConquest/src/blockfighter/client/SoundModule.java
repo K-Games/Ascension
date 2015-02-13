@@ -13,6 +13,7 @@ public class SoundModule {
 
     public SoundModule() {
         soundModule = new SoundSystemJPCT();
+        soundModule.setMasterVolume(0.7f);
         SoundSystemConfig.setSoundFilesPackage("blockfighter/client/sounds/");
     }
 

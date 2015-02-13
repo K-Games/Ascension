@@ -64,7 +64,7 @@ public class ScreenSkills extends ScreenMenu {
         skillSlots[Skill.PASSIVE_DUALSWORD] = new Rectangle2D.Double(1050, 55, 60, 60);
         skillSlots[Skill.PASSIVE_KEENEYE] = new Rectangle2D.Double(1050, 140, 60, 60);
         skillSlots[Skill.PASSIVE_VITALHIT] = new Rectangle2D.Double(1050, 225, 60, 60);
-        
+
         skillSlots[Skill.PASSIVE_SHIELDMASTERY] = new Rectangle2D.Double(1050, 310, 60, 60);
         skillSlots[Skill.PASSIVE_BARRIER] = new Rectangle2D.Double(1050, 395, 60, 60);
         skillSlots[Skill.PASSIVE_RESISTANCE] = new Rectangle2D.Double(1050, 480, 60, 60);
@@ -72,7 +72,7 @@ public class ScreenSkills extends ScreenMenu {
         skillSlots[Skill.PASSIVE_BOWMASTERY] = new Rectangle2D.Double(1160, 55, 60, 60);
         skillSlots[Skill.PASSIVE_WILLPOWER] = new Rectangle2D.Double(1160, 140, 60, 60);
         skillSlots[Skill.PASSIVE_TACTICAL] = new Rectangle2D.Double(1160, 225, 60, 60);
-        
+
         skillSlots[Skill.PASSIVE_REVIVE] = new Rectangle2D.Double(1160, 310, 60, 60);
         skillSlots[Skill.PASSIVE_SHADOWCLONE] = new Rectangle2D.Double(1160, 395, 60, 60);
         skillSlots[Skill.PASSIVE_12] = new Rectangle2D.Double(1160, 480, 60, 60);

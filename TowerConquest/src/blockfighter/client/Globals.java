@@ -16,7 +16,7 @@ public class Globals {
 
     public final static int SERVER_PORT = 25565;
     private final static boolean isPublic = false;
-    public static String SERVER_ADDRESS = (isPublic) ? "towerconquest.servegame.com" : "192.168.1.2";
+    public static String SERVER_ADDRESS = (isPublic) ? "27.252.248.56" : "192.168.1.2";
     public final static String GAME_VERSION = "ALPHA 0";
     public final static String WINDOW_TITLE = "Tower Conquest " + GAME_VERSION;
     public final static int WINDOW_WIDTH = 1280;
@@ -37,6 +37,9 @@ public class Globals {
 
     public final static double LOGIC_TICKS_PER_SEC = 40D;
     public final static double LOGIC_UPDATE = 1000000000D / LOGIC_TICKS_PER_SEC;
+
+    public final static double DMG_TICKS_PER_SEC = 60D;
+    public final static double DMG_UPDATE = 1000000000D / DMG_TICKS_PER_SEC;
 
     public final static double SEND_KEYDOWN_PER_SEC = 15D;
     public final static double SEND_KEYDOWN_UPDATE = 1000000000D / SEND_KEYDOWN_PER_SEC;
@@ -174,11 +177,13 @@ public class Globals {
             DATA_PLAYER_SET_STATE = 0x06,
             DATA_PLAYER_USESKILL = 0x07,
             DATA_PARTICLE_EFFECT = 0x08,
+            DATA_SOUND_EFFECT = 0x09,
             DATA_PLAYER_DISCONNECT = 0x0A,
             DATA_PLAYER_GET_NAME = 0x0B,
             DATA_PLAYER_GET_STAT = 0x0C,
             DATA_PLAYER_GET_EQUIP = 0x0D,
-            DATA_PLAYER_SET_COOLDOWN = 0x0E;
+            DATA_PLAYER_SET_COOLDOWN = 0x0E,
+            DATA_DAMAGE = 0x0F;
 
     public final static BufferedImage[][] CHAR_SPRITE = new BufferedImage[NUM_PLAYER_STATE][];
     public final static BufferedImage[] HUD = new BufferedImage[2];
