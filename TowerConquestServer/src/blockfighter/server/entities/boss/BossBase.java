@@ -2,6 +2,7 @@ package blockfighter.server.entities.boss;
 
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
+import blockfighter.server.entities.boss.damage.Damage;
 import blockfighter.server.entities.buff.Buff;
 import blockfighter.server.entities.buff.BuffKnockback;
 import blockfighter.server.entities.buff.BuffStun;
@@ -50,7 +51,7 @@ public abstract class BossBase extends Thread implements Boss {
     protected static PacketSender packetSender;
     private final GameMap map;
 
-    private ConcurrentLinkedQueue<Integer> damageQueue = new ConcurrentLinkedQueue<>();
+    private ConcurrentLinkedQueue<Damage> damageQueue = new ConcurrentLinkedQueue<>();
     private ConcurrentLinkedQueue<Integer> healQueue = new ConcurrentLinkedQueue<>();
     private ConcurrentLinkedQueue<Byte> stateQueue = new ConcurrentLinkedQueue<>();
     private ConcurrentLinkedQueue<Buff> buffQueue = new ConcurrentLinkedQueue<>();
@@ -196,9 +197,11 @@ public abstract class BossBase extends Thread implements Boss {
     @Override
     public void updateHP() {
         while (!damageQueue.isEmpty()) {
-            Integer dmg = damageQueue.poll();
+            Damage dmg = damageQueue.poll();
             if (dmg != null) {
-                stats[STAT_MINHP1] -= dmg;
+                int amount = dmg.getDamage();
+                dmg.proc();
+                stats[STAT_MINHP1] -= amount;
                 nextHPSend = 0;
             }
         }
@@ -305,7 +308,7 @@ public abstract class BossBase extends Thread implements Boss {
     }
 
     @Override
-    public void queueDamage(int damage) {
+    public void queueDamage(Damage damage) {
         damageQueue.add(damage);
     }
 

@@ -147,11 +147,13 @@ public class Globals {
             DATA_PLAYER_SET_STATE = 0x06,
             DATA_PLAYER_USESKILL = 0x07,
             DATA_PARTICLE_EFFECT = 0x08,
+            DATA_SOUND_EFFECT = 0x09,
             DATA_PLAYER_DISCONNECT = 0x0A,
             DATA_PLAYER_GET_NAME = 0x0B,
             DATA_PLAYER_GET_STAT = 0x0C,
             DATA_PLAYER_GET_EQUIP = 0x0D,
-            DATA_PLAYER_SET_COOLDOWN = 0x0E;
+            DATA_PLAYER_SET_COOLDOWN = 0x0E,
+            DATA_DAMAGE = 0x0F;
 
     public final static void log(final String info, final String classname, final byte logType, final boolean console) {
 

@@ -2,6 +2,7 @@ package blockfighter.server.entities.proj;
 
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
+import blockfighter.server.entities.boss.damage.Damage;
 import blockfighter.server.entities.buff.BuffKnockback;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.player.skills.Skill;
@@ -61,7 +62,11 @@ public class ProjBowPower extends ProjBase {
             Player p = queue.poll();
             if (p != null) {
                 int damage = (int) (getOwner().rollDamage() * (5 + getOwner().getSkillLevel(Skill.BOW_POWER)));
-                p.queueDamage(damage);
+                boolean crit = getOwner().rollCrit();
+                if (crit) {
+                    damage = (int) getOwner().criticalDamage(damage);
+                }
+                p.queueDamage(new Damage(damage, true, getOwner(), p, crit, hitbox[0], p.getHitbox()));
                 p.queueBuff(new BuffKnockback(500, (getOwner().getFacing() == Globals.RIGHT) ? 20 : -20, -25, getOwner(), p));
             }
         }

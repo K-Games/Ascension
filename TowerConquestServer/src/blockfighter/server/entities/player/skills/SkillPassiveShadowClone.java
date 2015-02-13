@@ -8,7 +8,7 @@ public class SkillPassiveShadowClone extends Skill {
 
     public SkillPassiveShadowClone() {
         skillCode = PASSIVE_SHADOWCLONE;
-        maxCooldown = 500;
+        maxCooldown = 250;
     }
 
 }

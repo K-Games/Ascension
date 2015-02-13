@@ -4,6 +4,7 @@
  */
 package blockfighter.server.entities.boss;
 
+import blockfighter.server.entities.boss.damage.Damage;
 import blockfighter.server.entities.buff.Buff;
 import java.awt.geom.Rectangle2D;
 
@@ -125,7 +126,7 @@ public interface Boss {
 
     public abstract boolean updateY(double change);
 
-    public abstract void queueDamage(int damage);
+    public abstract void queueDamage(Damage damage);
 
     public abstract void queueHeal(int heal);
 

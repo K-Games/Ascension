@@ -6,7 +6,9 @@ import blockfighter.server.entities.proj.ProjBase;
 import blockfighter.server.net.PacketHandler;
 import blockfighter.server.net.PacketReceiver;
 import blockfighter.server.net.PacketSender;
+import java.awt.Dimension;
 import java.util.GregorianCalendar;
+import javax.swing.JFrame;
 
 /**
  * Start module of server
@@ -19,6 +21,16 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        javax.swing.SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                createAndShowGUI();
+            }
+        });
+
+    }
+
+    private static void createAndShowGUI() {
         try {
             LogicModule[] server_rooms = new LogicModule[Globals.SERVER_ROOMS];
             PacketSender.setLogic(server_rooms);
@@ -51,6 +63,14 @@ public class Main {
         } catch (Exception ex) {
             Globals.log(ex.getLocalizedMessage(), ex, true);
         }
-    }
+        JFrame frame = new JFrame("Tower Conquest Server ALPHA 0");
 
+        //frame.setUndecorated(true);
+        frame.setResizable(false);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.getContentPane().setPreferredSize(new Dimension(350, 10));
+        frame.pack();
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+    }
 }

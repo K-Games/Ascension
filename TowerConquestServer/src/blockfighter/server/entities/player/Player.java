@@ -2,6 +2,7 @@ package blockfighter.server.entities.player;
 
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
+import blockfighter.server.entities.boss.damage.Damage;
 import blockfighter.server.entities.buff.*;
 import blockfighter.server.entities.player.skills.*;
 import blockfighter.server.entities.proj.*;
@@ -72,7 +73,7 @@ public class Player extends Thread {
     private boolean connected = true;
     private Random rng = new Random();
 
-    private ConcurrentLinkedQueue<Integer> damageQueue = new ConcurrentLinkedQueue<>();
+    private ConcurrentLinkedQueue<Damage> damageQueue = new ConcurrentLinkedQueue<>();
     private ConcurrentLinkedQueue<Integer> healQueue = new ConcurrentLinkedQueue<>();
     private ConcurrentLinkedQueue<Byte> stateQueue = new ConcurrentLinkedQueue<>();
     private ConcurrentLinkedQueue<byte[]> skillUseQueue = new ConcurrentLinkedQueue<>();
@@ -255,7 +256,14 @@ public class Player extends Thread {
      * @return The level of the skill
      */
     public int getSkillLevel(byte skillCode) {
+        if (!hasSkill(skillCode)) {
+            return -1;
+        }
         return skills.get(skillCode).getLevel();
+    }
+
+    public boolean hasSkill(byte skillCode) {
+        return skills.containsKey(skillCode);
     }
 
     /**
@@ -501,7 +509,7 @@ public class Player extends Thread {
         byte[] data = skillUseQueue.poll();
         skillUseQueue.clear();
         if (data != null && !isStunned() && !isKnockback()) {
-            if (skills.containsKey(data[3])) {
+            if (hasSkill(data[3])) {
                 skillDuration = 0;
                 skillCounter = 0;
                 switch (data[3]) {
@@ -1113,10 +1121,15 @@ public class Player extends Thread {
     private void updateHP() {
         //Empty damage queued
         while (!damageQueue.isEmpty()) {
-            Integer dmg = damageQueue.poll();
+            Damage dmg = damageQueue.poll();
             if (dmg != null) {
-                dmg = (int) (dmg * stats[Globals.STAT_DAMAGEREDUCT]);
-                stats[Globals.STAT_MINHP] -= dmg;
+                int amount = dmg.getDamage();
+                dmg.proc();
+                sendDamage(dmg);
+                if (!dmg.isTrueDamage()) {
+                    amount = (int) (amount * stats[Globals.STAT_DAMAGEREDUCT]);
+                }
+                stats[Globals.STAT_MINHP] -= amount;
                 nextHPSend = 0;
             }
         }
@@ -1205,6 +1218,10 @@ public class Player extends Thread {
         return rng.nextInt(10000) + 1 < (int) (stats[Globals.STAT_CRITCHANCE] * 10000);
     }
 
+    public double criticalDamage(double dmg) {
+        return dmg * (1 + stats[Globals.STAT_CRITDMG]);
+    }
+
     /**
      * Roll a chance to do critical hit with addition critical chance(from skills)
      *
@@ -1244,6 +1261,10 @@ public class Player extends Thread {
      */
     public boolean intersectHitbox(Rectangle2D.Double box) {
         return hitbox.intersects(box);
+    }
+
+    public Rectangle2D.Double getHitbox() {
+        return hitbox;
     }
 
     /**
@@ -1381,7 +1402,7 @@ public class Player extends Thread {
      *
      * @param damage
      */
-    public void queueDamage(int damage) {
+    public void queueDamage(Damage damage) {
         damageQueue.add(damage);
     }
 
@@ -1431,6 +1452,20 @@ public class Player extends Thread {
         y = y + change;
         updatePos = true;
         return true;
+    }
+
+    public void damageProc(Damage dmg) {
+        if (hasSkill(Skill.PASSIVE_SHADOWCLONE) && skills.get(Skill.PASSIVE_SHADOWCLONE).canCast((byte) -1)) {
+            if (rng.nextInt(100) + 1 <= 20 + getSkillLevel(Skill.PASSIVE_SHADOWCLONE)) {
+                skills.get(Skill.PASSIVE_SHADOWCLONE).setCooldown();
+                sendCooldown(Skill.PASSIVE_SHADOWCLONE);
+                if (dmg.getTarget() != null) {
+                    dmg.getTarget().queueDamage(new Damage((int) (dmg.getDamage() * 0.5D), false, false, dmg.getOwner(), dmg.getTarget(), false, dmg.getDmgPoint()));
+                } else if (dmg.getBossTarget() != null) {
+                    dmg.getBossTarget().queueDamage(new Damage((int) (dmg.getDamage() * 0.5D), false, dmg.getOwner(), dmg.getBossTarget(), false, dmg.getDmgPoint()));
+                }
+            }
+        }
     }
 
     /**
@@ -1722,11 +1757,40 @@ public class Player extends Thread {
      * @param data
      */
     public void sendCooldown(byte[] data) {
-        skills.get(data[3]).setCooldown();
         byte[] bytes = new byte[Globals.PACKET_BYTE * 2];
         bytes[0] = Globals.DATA_PLAYER_SET_COOLDOWN;
         bytes[1] = data[3];
         sender.sendPlayer(bytes, address, port);
+    }
+
+    public void sendCooldown(byte skillCode) {
+        byte[] bytes = new byte[Globals.PACKET_BYTE * 2];
+        bytes[0] = Globals.DATA_PLAYER_SET_COOLDOWN;
+        bytes[1] = skillCode;
+        sender.sendPlayer(bytes, address, port);
+    }
+
+    public void sendDamage(Damage dmg) {
+        byte[] bytes = new byte[Globals.PACKET_BYTE * 2 + Globals.PACKET_INT * 3];
+        bytes[0] = Globals.DATA_DAMAGE;
+        bytes[1] = (!dmg.isCrit()) ? Damage.DAMAGE_TYPE_PLAYER : Damage.DAMAGE_TYPE_PLAYERCRIT;
+        byte[] posXInt = Globals.intToByte(dmg.getDmgPoint().x);
+        bytes[2] = posXInt[0];
+        bytes[3] = posXInt[1];
+        bytes[4] = posXInt[2];
+        bytes[5] = posXInt[3];
+        byte[] posYInt = Globals.intToByte(dmg.getDmgPoint().y);
+        bytes[6] = posYInt[0];
+        bytes[7] = posYInt[1];
+        bytes[8] = posYInt[2];
+        bytes[9] = posYInt[3];
+        byte[] d = Globals.intToByte(dmg.getDamage());
+        bytes[10] = d[0];
+        bytes[11] = d[1];
+        bytes[12] = d[2];
+        bytes[13] = d[3];
+        sender.sendAll(bytes, logic.getRoom());
+        updatePos = false;
     }
 
     /**
