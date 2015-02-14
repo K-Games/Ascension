@@ -2,7 +2,7 @@ package blockfighter.server.entities.proj;
 
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
-import blockfighter.server.entities.boss.damage.Damage;
+import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.buff.BuffKnockback;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.player.skills.Skill;
@@ -67,7 +67,11 @@ public class ProjBowStorm extends ProjBase {
                 int damage = (int) (getOwner().rollDamage() * 0.1 + (.01 * getOwner().getSkillLevel(Skill.BOW_STORM)));
                 boolean crit = getOwner().rollCrit();
                 if (crit) {
-                    damage = (int) getOwner().criticalDamage(damage);
+                    if (getOwner().isSkillMaxed(Skill.BOW_STORM)) {
+                        damage = (int) getOwner().criticalDamage(damage, 5);
+                    } else {
+                        damage = (int) getOwner().criticalDamage(damage);
+                    }
                 }
                 p.queueDamage(new Damage(damage, true, getOwner(), p, crit, hitbox[0], p.getHitbox()));
                 p.queueBuff(new BuffKnockback(200, (getOwner().getFacing() == Globals.RIGHT) ? 2 : -2, -2, getOwner(), p));

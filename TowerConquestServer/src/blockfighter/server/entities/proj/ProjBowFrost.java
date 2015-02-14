@@ -2,7 +2,7 @@ package blockfighter.server.entities.proj;
 
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
-import blockfighter.server.entities.boss.damage.Damage;
+import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.buff.BuffKnockback;
 import blockfighter.server.entities.buff.BuffStun;
 import blockfighter.server.entities.player.Player;
@@ -66,7 +66,7 @@ public class ProjBowFrost extends ProjBase {
         while (!queue.isEmpty()) {
             Player p = queue.poll();
             if (p != null) {
-                int damage = (int) (getOwner().rollDamage() + (.3 * getOwner().getSkillLevel(Skill.BOW_FROST)));
+                int damage = (int) (getOwner().rollDamage() * (1 + .3 * getOwner().getSkillLevel(Skill.BOW_FROST)));
                 boolean crit = getOwner().rollCrit();
                 if (crit) {
                     damage = (int) getOwner().criticalDamage(damage);

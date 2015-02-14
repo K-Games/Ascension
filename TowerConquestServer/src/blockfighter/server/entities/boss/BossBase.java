@@ -2,7 +2,7 @@ package blockfighter.server.entities.boss;
 
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
-import blockfighter.server.entities.boss.damage.Damage;
+import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.buff.Buff;
 import blockfighter.server.entities.buff.BuffKnockback;
 import blockfighter.server.entities.buff.BuffStun;
@@ -48,7 +48,7 @@ public abstract class BossBase extends Thread implements Boss {
     protected ConcurrentHashMap<Byte, Buff> buffs = new ConcurrentHashMap<>(10, 0.9f, 1);
     protected Buff isStun, isKnockback;
 
-    protected static PacketSender packetSender;
+    protected static PacketSender sender;
     private final GameMap map;
 
     private ConcurrentLinkedQueue<Damage> damageQueue = new ConcurrentLinkedQueue<>();
@@ -89,7 +89,7 @@ public abstract class BossBase extends Thread implements Boss {
      * @param ps Server PacketSender
      */
     public static void setPacketSender(PacketSender ps) {
-        packetSender = ps;
+        sender = ps;
     }
 
     private void returnBuffKey(byte bKey) {
@@ -227,7 +227,7 @@ public abstract class BossBase extends Thread implements Boss {
             bytes[1] = key;
             bytes[2] = STAT_MINHP1;
             System.arraycopy(minHP, 0, bytes, 3, minHP.length);
-            packetSender.sendAll(bytes, logic.getRoom());
+            sender.sendAll(bytes, logic.getRoom());
             nextHPSend = 150;
         }
     }
@@ -379,7 +379,7 @@ public abstract class BossBase extends Thread implements Boss {
         bytes[7] = posYInt[1];
         bytes[8] = posYInt[2];
         bytes[9] = posYInt[3];
-        packetSender.sendAll(bytes, logic.getRoom());
+        sender.sendAll(bytes, logic.getRoom());
         updatePos = false;
     }
 
@@ -389,7 +389,7 @@ public abstract class BossBase extends Thread implements Boss {
         //bytes[0] = Globals.DATA_BOSS_SET_FACING;
         bytes[1] = key;
         bytes[2] = facing;
-        packetSender.sendAll(bytes, logic.getRoom());
+        sender.sendAll(bytes, logic.getRoom());
         updateFacing = false;
     }
 
@@ -400,7 +400,30 @@ public abstract class BossBase extends Thread implements Boss {
         bytes[1] = key;
         bytes[2] = animState;
         bytes[3] = frame;
-        packetSender.sendAll(bytes, logic.getRoom());
+        sender.sendAll(bytes, logic.getRoom());
         updateAnimState = false;
+    }
+
+    @Override
+    public void sendDamage(Damage dmg) {
+        byte[] bytes = new byte[Globals.PACKET_BYTE * 2 + Globals.PACKET_INT * 3];
+        bytes[0] = Globals.DATA_DAMAGE;
+        bytes[1] = (!dmg.isCrit()) ? Damage.DAMAGE_TYPE_PLAYER : Damage.DAMAGE_TYPE_PLAYERCRIT;
+        byte[] posXInt = Globals.intToByte(dmg.getDmgPoint().x);
+        bytes[2] = posXInt[0];
+        bytes[3] = posXInt[1];
+        bytes[4] = posXInt[2];
+        bytes[5] = posXInt[3];
+        byte[] posYInt = Globals.intToByte(dmg.getDmgPoint().y);
+        bytes[6] = posYInt[0];
+        bytes[7] = posYInt[1];
+        bytes[8] = posYInt[2];
+        bytes[9] = posYInt[3];
+        byte[] d = Globals.intToByte(dmg.getDamage());
+        bytes[10] = d[0];
+        bytes[11] = d[1];
+        bytes[12] = d[2];
+        bytes[13] = d[3];
+        sender.sendAll(bytes, logic.getRoom());
     }
 }

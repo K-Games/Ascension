@@ -3,7 +3,9 @@ package blockfighter.server.entities.proj;
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.buff.BuffKnockback;
+import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.player.Player;
+import blockfighter.server.entities.player.skills.Skill;
 import java.awt.geom.Rectangle2D;
 import java.util.LinkedList;
 import java.util.Map;
@@ -14,6 +16,8 @@ import java.util.Map;
  * @author Ken Kwan
  */
 public class ProjSwordDrive extends ProjBase {
+
+    private boolean healed = false;
 
     private final LinkedList<Player> queue = new LinkedList<>();
 
@@ -59,7 +63,17 @@ public class ProjSwordDrive extends ProjBase {
         while (!queue.isEmpty()) {
             Player p = queue.poll();
             if (p != null) {
+                int damage = (int) (getOwner().rollDamage() * (.75 + 0.03 * getOwner().getSkillLevel(Skill.SWORD_DRIVE)));
+                boolean crit = getOwner().rollCrit();
+                if (crit) {
+                    damage = (int) getOwner().criticalDamage(damage);
+                }
+                p.queueDamage(new Damage(damage, true, getOwner(), p, crit, hitbox[0], p.getHitbox()));
                 p.queueBuff(new BuffKnockback(300, (getOwner().getFacing() == Globals.RIGHT) ? 4 : -4, -5, getOwner(), p));
+                if (!healed && getOwner().isSkillMaxed(Skill.SWORD_DRIVE)) {
+                    double heal = getOwner().getStats()[Globals.STAT_MAXHP] * 0.005;
+                    getOwner().queueHeal((int) heal);
+                }
             }
         }
         queuedEffect = false;

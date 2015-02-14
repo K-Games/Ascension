@@ -2,7 +2,7 @@ package blockfighter.server.entities.player;
 
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
-import blockfighter.server.entities.boss.damage.Damage;
+import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.buff.*;
 import blockfighter.server.entities.player.skills.*;
 import blockfighter.server.entities.proj.*;
@@ -260,6 +260,14 @@ public class Player extends Thread {
             return -1;
         }
         return skills.get(skillCode).getLevel();
+    }
+
+    public Skill getSkill(byte skillCode) {
+        return skills.get(skillCode);
+    }
+
+    public boolean isSkillMaxed(byte skillCode) {
+        return skills.get(skillCode).isMaxed();
     }
 
     public boolean hasSkill(byte skillCode) {
@@ -643,8 +651,10 @@ public class Player extends Thread {
                         if (!skills.get(data[3]).canCast(getItemType(equip[Globals.ITEM_OFFHAND]))) {
                             return;
                         }
+                        queuePlayerState(PLAYER_STATE_SHIELD_FORTIFY);
                         skills.get(data[3]).setCooldown();
                         sendCooldown(data);
+                        nextFrameTime = 20000000;
                         break;
                     case Skill.SHIELD_IRON:
                         if (!skills.get(data[3]).canCast(getItemType(equip[Globals.ITEM_OFFHAND]))) {
@@ -1035,8 +1045,31 @@ public class Player extends Thread {
         }
     }
 
+    private void updateSkillShieldFortify() {
+        if (skillDuration == 0) {
+            byte[] bytes = new byte[Globals.PACKET_BYTE * 4 + Globals.PACKET_INT * 2];
+            bytes[0] = Globals.DATA_PARTICLE_EFFECT;
+            bytes[1] = Globals.PARTICLE_SHIELD_FORTIFY;
+            bytes[11] = key;
+            sender.sendAll(bytes, logic.getRoom());
+        }
+        if (skillDuration >= 500) {
+            setPlayerState(PLAYER_STATE_STAND);
+        }
+    }
+
     private void updateSkillShieldCharge() {
-        setXSpeed((facing == Globals.RIGHT) ? 13 : -13);
+        setXSpeed((facing == Globals.RIGHT) ? 18 : -18);
+        if (skillDuration == 0) {
+            ProjShieldCharge proj = new ProjShieldCharge(logic, logic.getNextProjKey(), this, x, y);
+            logic.queueAddProj(proj);
+            byte[] bytes = new byte[Globals.PACKET_BYTE * 4 + Globals.PACKET_INT * 2];
+            bytes[0] = Globals.DATA_PARTICLE_EFFECT;
+            bytes[1] = Globals.PARTICLE_SHIELD_CHARGE;
+            bytes[10] = facing;
+            bytes[11] = key;
+            sender.sendAll(bytes, logic.getRoom());
+        }
         if (skillDuration >= 750) {
             setPlayerState(PLAYER_STATE_STAND);
         }
@@ -1108,6 +1141,9 @@ public class Player extends Thread {
                 break;
             case PLAYER_STATE_SHIELD_CHARGE:
                 updateSkillShieldCharge();
+                break;
+            case PLAYER_STATE_SHIELD_FORTIFY:
+                updateSkillShieldFortify();
                 break;
         }
     }
@@ -1220,6 +1256,10 @@ public class Player extends Thread {
 
     public double criticalDamage(double dmg) {
         return dmg * (1 + stats[Globals.STAT_CRITDMG]);
+    }
+
+    public double criticalDamage(double dmg, double bonusCritDmg) {
+        return dmg * (1 + stats[Globals.STAT_CRITDMG] + bonusCritDmg);
     }
 
     /**
@@ -1683,6 +1723,14 @@ public class Player extends Thread {
                     nextFrameTime = 20000000;
                 }
                 break;
+            case PLAYER_STATE_SHIELD_FORTIFY:
+                nextFrameTime -= Globals.LOGIC_UPDATE;
+                animState = Globals.PLAYER_STATE_BUFF;
+                if (nextFrameTime <= 0 && frame < 9) {
+                    frame++;
+                    nextFrameTime = 20000000;
+                }
+                break;
         }
         if (animState != prevAnimState || frame != prevFrame) {
             updateAnimState = true;
@@ -1773,7 +1821,11 @@ public class Player extends Thread {
     public void sendDamage(Damage dmg) {
         byte[] bytes = new byte[Globals.PACKET_BYTE * 2 + Globals.PACKET_INT * 3];
         bytes[0] = Globals.DATA_DAMAGE;
-        bytes[1] = (!dmg.isCrit()) ? Damage.DAMAGE_TYPE_PLAYER : Damage.DAMAGE_TYPE_PLAYERCRIT;
+        if (dmg.getOwner() != null) {
+            bytes[1] = (!dmg.isCrit()) ? Damage.DAMAGE_TYPE_PLAYER : Damage.DAMAGE_TYPE_PLAYERCRIT;
+        } else {
+            bytes[1] = Damage.DAMAGE_TYPE_BOSS;
+        }
         byte[] posXInt = Globals.intToByte(dmg.getDmgPoint().x);
         bytes[2] = posXInt[0];
         bytes[3] = posXInt[1];
@@ -1790,7 +1842,6 @@ public class Player extends Thread {
         bytes[12] = d[2];
         bytes[13] = d[3];
         sender.sendAll(bytes, logic.getRoom());
-        updatePos = false;
     }
 
     /**

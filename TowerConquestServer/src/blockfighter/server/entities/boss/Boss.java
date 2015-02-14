@@ -4,7 +4,7 @@
  */
 package blockfighter.server.entities.boss;
 
-import blockfighter.server.entities.boss.damage.Damage;
+import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.buff.Buff;
 import java.awt.geom.Rectangle2D;
 
@@ -191,5 +191,7 @@ public interface Boss {
      * </p>
      */
     public abstract void sendState();
+
+    public abstract void sendDamage(Damage dmg);
 
 }

@@ -2,6 +2,7 @@ package blockfighter.server.entities.proj;
 
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
+import blockfighter.server.entities.boss.Boss;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.net.PacketSender;
 import java.awt.geom.Rectangle2D;
@@ -37,6 +38,7 @@ public abstract class ProjBase extends Thread implements Projectile {
      */
     private Player owner;
 
+    private Boss bossOwner;
     /**
      * Array of players hit by this projectile
      */
@@ -93,6 +95,16 @@ public abstract class ProjBase extends Thread implements Projectile {
         this.duration = duration;
     }
 
+    public ProjBase(LogicModule l, int k, Boss o, double x, double y, long duration) {
+        this(l, k);
+        bossOwner = o;
+        this.x = x;
+        this.y = y;
+        hitbox = new Rectangle2D.Double[1];
+        hitbox[0] = new Rectangle2D.Double(0, 0, 0, 0);
+        this.duration = duration;
+    }
+
     @Override
     public void update() {
         duration -= Globals.LOGIC_UPDATE / 1000000;
@@ -125,6 +137,11 @@ public abstract class ProjBase extends Thread implements Projectile {
     @Override
     public Player getOwner() {
         return owner;
+    }
+
+    @Override
+    public Boss getBossOwner() {
+        return bossOwner;
     }
 
     @Override

@@ -3,7 +3,9 @@ package blockfighter.server.entities.proj;
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.buff.BuffKnockback;
+import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.player.Player;
+import blockfighter.server.entities.player.skills.Skill;
 import java.awt.geom.Rectangle2D;
 import java.util.LinkedList;
 import java.util.Map;
@@ -80,6 +82,12 @@ public class ProjSwordSlash extends ProjBase {
         while (!queue.isEmpty()) {
             Player p = queue.poll();
             if (p != null) {
+                int damage = (int) (getOwner().rollDamage() * (1 + 0.04 * getOwner().getSkillLevel(Skill.SWORD_SLASH)));
+                boolean crit = getOwner().rollCrit();
+                if (crit) {
+                    damage = (int) getOwner().criticalDamage(damage);
+                }
+                p.queueDamage(new Damage(damage, true, getOwner(), p, crit, hitbox[0], p.getHitbox()));
                 p.queueBuff(new BuffKnockback(300, (getOwner().getFacing() == Globals.RIGHT) ? 4 : -4, -5, getOwner(), p));
             }
         }

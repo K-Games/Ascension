@@ -44,7 +44,7 @@ public class Globals {
 
     public final static double GRAVITY = 0.35, MAX_FALLSPEED = 11.5;
 
-    public final static int NUM_PLAYER_STATE = 8;
+    public final static int NUM_PLAYER_STATE = 9;
     public final static byte PLAYER_STATE_STAND = 0x00,
             PLAYER_STATE_WALK = 0x01,
             PLAYER_STATE_JUMP = 0x02,
@@ -52,9 +52,10 @@ public class Globals {
             PLAYER_STATE_ATTACK2 = 0x04,
             PLAYER_STATE_ATTACKOFF1 = 0x05,
             PLAYER_STATE_ATTACKOFF2 = 0x06,
-            PLAYER_STATE_ATTACKBOW = 0x07;
+            PLAYER_STATE_ATTACKBOW = 0x07,
+            PLAYER_STATE_BUFF = 0x08;
 
-    public final static int NUM_PARTICLE_EFFECTS = 22;
+    public final static int NUM_PARTICLE_EFFECTS = 25;
     public final static byte PARTICLE_SWORD_SLASH1 = 0x00,
             PARTICLE_SWORD_SLASH2 = 0x01,
             PARTICLE_SWORD_SLASH3 = 0x02,
@@ -75,7 +76,10 @@ public class Globals {
             PARTICLE_BOW_VOLLEYARROW = 0x12,
             PARTICLE_BOW_STORM = 0x13,
             PARTICLE_BOW_FROSTARROW = 0x14,
-            PARTICLE_SHIELD_DASH = 0x15;
+            PARTICLE_SHIELD_DASH = 0x15,
+            PARTICLE_SHIELD_FORTIFY = 0x16,
+            PARTICLE_SHIELD_CHARGE = 0x17,
+            PARTICLE_SHIELD_CHARGEPARTICLE = 0x18;
 
     public final static byte NUM_ITEM_TABS = 10,
             ITEM_WEAPON = 0, //ITEM_WEAPON is the equipment slot
@@ -122,7 +126,7 @@ public class Globals {
             CRITCHC_BASE = 0.1,
             CRITCHC_FACT = 10,
             CRITCHC_MULT = 0.01,
-            CRITCHC_CONST = 750 / 0.85 - 750,
+            CRITCHC_CONST = 400,
             CRITDMG_BASE = 0.5,
             CRITDMG_FACT = 5.5,
             CRITDMG_MULT = 0.01,
@@ -245,7 +249,7 @@ public class Globals {
 
     public static final double calcCritChance(double spirit) {
         double chc = spirit / CRITCHC_FACT * CRITCHC_MULT + CRITCHC_BASE;
-        if (chc > 0.85) {
+        if (chc > 0.5) {
             chc = spirit / (spirit + CRITCHC_CONST);
         }
         return chc;

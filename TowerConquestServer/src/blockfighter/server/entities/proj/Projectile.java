@@ -1,5 +1,6 @@
 package blockfighter.server.entities.proj;
 
+import blockfighter.server.entities.boss.Boss;
 import blockfighter.server.entities.player.Player;
 import java.awt.geom.Rectangle2D;
 
@@ -26,6 +27,8 @@ public interface Projectile {
      * @return Owning Player entity
      */
     public abstract Player getOwner();
+
+    public abstract Boss getBossOwner();
 
     /**
      * Update logic of this projectile.
