@@ -505,7 +505,19 @@ public class ScreenIngame extends Screen {
             case Globals.PARTICLE_SHIELD_DASH:
                 playerKey = data[11];
                 if (players.containsKey(playerKey)) {
-                    particles.put(key, new ParticleSwordShieldDashEmitter(key, x, y, facing, players.get(playerKey)));
+                    particles.put(key, new ParticleShieldDashEmitter(key, x, y, facing, players.get(playerKey)));
+                }
+                break;
+            case Globals.PARTICLE_SHIELD_FORTIFY:
+                playerKey = data[11];
+                if (players.containsKey(playerKey)) {
+                    particles.put(key, new ParticleShieldFortify(key, x, y, facing, players.get(playerKey)));
+                }
+                break;
+            case Globals.PARTICLE_SHIELD_CHARGE:
+                playerKey = data[11];
+                if (players.containsKey(playerKey)) {
+                    particles.put(key, new ParticleShieldCharge(key, x, y, facing, players.get(playerKey)));
                 }
                 break;
         }

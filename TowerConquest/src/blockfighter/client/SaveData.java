@@ -2,37 +2,7 @@ package blockfighter.client;
 
 import blockfighter.client.entities.items.ItemEquip;
 import blockfighter.client.entities.items.ItemUpgrade;
-import blockfighter.client.entities.player.skills.Skill;
-import blockfighter.client.entities.player.skills.SkillBowArc;
-import blockfighter.client.entities.player.skills.SkillBowFrost;
-import blockfighter.client.entities.player.skills.SkillBowPower;
-import blockfighter.client.entities.player.skills.SkillBowRapid;
-import blockfighter.client.entities.player.skills.SkillBowStorm;
-import blockfighter.client.entities.player.skills.SkillBowVolley;
-import blockfighter.client.entities.player.skills.SkillPassiveDualSword;
-import blockfighter.client.entities.player.skills.SkillPassiveRevive;
-import blockfighter.client.entities.player.skills.SkillPassiveShadowClone;
-import blockfighter.client.entities.player.skills.SkillPassive12;
-import blockfighter.client.entities.player.skills.SkillPassiveKeenEye;
-import blockfighter.client.entities.player.skills.SkillPassiveVitalHit;
-import blockfighter.client.entities.player.skills.SkillPassiveShieldMastery;
-import blockfighter.client.entities.player.skills.SkillPassiveBarrier;
-import blockfighter.client.entities.player.skills.SkillPassiveResistance;
-import blockfighter.client.entities.player.skills.SkillPassiveBowMastery;
-import blockfighter.client.entities.player.skills.SkillPassiveWillpower;
-import blockfighter.client.entities.player.skills.SkillPassiveTactical;
-import blockfighter.client.entities.player.skills.SkillShieldToss;
-import blockfighter.client.entities.player.skills.SkillShieldDash;
-import blockfighter.client.entities.player.skills.SkillShieldCharge;
-import blockfighter.client.entities.player.skills.SkillShieldFortify;
-import blockfighter.client.entities.player.skills.SkillShieldIron;
-import blockfighter.client.entities.player.skills.SkillShieldReflect;
-import blockfighter.client.entities.player.skills.SkillSwordCinder;
-import blockfighter.client.entities.player.skills.SkillSwordDrive;
-import blockfighter.client.entities.player.skills.SkillSwordMulti;
-import blockfighter.client.entities.player.skills.SkillSwordSlash;
-import blockfighter.client.entities.player.skills.SkillSwordTaunt;
-import blockfighter.client.entities.player.skills.SkillSwordVorpal;
+import blockfighter.client.entities.player.skills.*;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
@@ -113,6 +83,9 @@ public class SaveData {
         baseStats[Globals.STAT_SPIRIT] = 0;
         baseStats[Globals.STAT_EXP] = 0;
         baseStats[Globals.STAT_SKILLPOINTS] = 3 * baseStats[Globals.STAT_LEVEL];
+        for (int i = 0; i < upgrades.length; i++) {
+            upgrades[i] = new ItemUpgrade(1, (int) baseStats[Globals.STAT_LEVEL]+50);
+        }
         //Empty inventory
         for (int i = 0; i < inventory.length; i++) {
             inventory[i] = new ItemEquip[100];
@@ -145,7 +118,6 @@ public class SaveData {
         addItem(ItemEquip.getItemType(startEq.getItemCode()), startEq);
         startEq = new ItemEquip(ItemEquip.TEMP_AMULET, baseStats[Globals.STAT_LEVEL]);
         addItem(ItemEquip.getItemType(startEq.getItemCode()), startEq);
-        upgrades[0] = new ItemUpgrade(1, 100000);
 
         keybinds[Globals.KEYBIND_SKILL1] = KeyEvent.VK_Q;
         keybinds[Globals.KEYBIND_SKILL2] = KeyEvent.VK_W;

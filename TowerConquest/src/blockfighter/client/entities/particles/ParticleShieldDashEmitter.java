@@ -6,11 +6,11 @@ import blockfighter.client.screen.ScreenIngame;
 import java.awt.Graphics2D;
 import java.awt.Point;
 
-public class ParticleSwordShieldDashEmitter extends Particle {
+public class ParticleShieldDashEmitter extends Particle {
 
     private Player owner;
 
-    public ParticleSwordShieldDashEmitter(int k, int x, int y, byte f, Player p) {
+    public ParticleShieldDashEmitter(int k, int x, int y, byte f, Player p) {
         super(k, x, y, f);
         frame = 0;
         duration = 250;

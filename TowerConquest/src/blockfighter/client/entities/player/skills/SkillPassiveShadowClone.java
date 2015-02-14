@@ -12,7 +12,7 @@ public class SkillPassiveShadowClone extends Skill {
 
     public SkillPassiveShadowClone() {
         skillCode = PASSIVE_SHADOWCLONE;
-        maxCooldown = 250;
+        maxCooldown = 200;
     }
 
     @Override
@@ -36,7 +36,7 @@ public class SkillPassiveShadowClone extends Skill {
         g.drawString(getSkillName(), x + 80, y + 30);
         g.setFont(Globals.ARIAL_15PT);
         g.drawString("Level: " + level, x + 80, y + 50);
-        g.drawString("Cooldown: 0.25 Second", x + 80, y + 70);
+        g.drawString("Cooldown: 0.2 Second", x + 80, y + 70);
 
         g.drawString("When you deal damage there is a 20% + " + level + "%(" + (20 + level) + "%)", x + 10, y + 90);
         g.drawString("chance a shadow attacks for 50% of the damage.", x + 10, y + 110);

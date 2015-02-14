@@ -39,8 +39,8 @@ public class ItemEquip implements Item {
 
     public final static double UPGRADE_CRITCHANCE = 0.002,//0.2%
             UPGRADE_CRITDMG = 0.02, //2%
-            UPGRADE_REGEN = 3,
-            UPGRADE_ARMOR = 6;
+            UPGRADE_REGEN = 8,
+            UPGRADE_ARMOR = 42;
 
     public final static int[] ITEM_CODES = {
         TEMP_SWORD, TEMP_HEAD, TEMP_CHEST,
@@ -148,6 +148,13 @@ public class ItemEquip implements Item {
             load[PLAYER_STATE_JUMP][0] = ImageIO.read(Globals.class.getResource("sprites/character/equip/" + code + "/jump/0.png"));
         } catch (Exception ex) {
         }
+        load[PLAYER_STATE_BUFF] = new BufferedImage[10];
+        for (int i = 0; i < load[PLAYER_STATE_BUFF].length; i++) {
+            try {
+                load[PLAYER_STATE_BUFF][i] = ImageIO.read(Globals.class.getResource("sprites/character/equip/" + code + "/buff/" + i + ".png"));
+            } catch (Exception ex) {
+            }
+        }
         ITEM_SPRITES.put(code, load);
     }
 
@@ -156,7 +163,7 @@ public class ItemEquip implements Item {
         ITEM_TYPENAME.put(Globals.ITEM_BELT, "Belt");
         ITEM_TYPENAME.put(Globals.ITEM_BOW, "Bow");
         ITEM_TYPENAME.put(Globals.ITEM_CHEST, "Chest");
-        ITEM_TYPENAME.put(Globals.ITEM_GLOVE, "Gloave");
+        ITEM_TYPENAME.put(Globals.ITEM_GLOVE, "Glove");
         ITEM_TYPENAME.put(Globals.ITEM_HEAD, "Head");
         ITEM_TYPENAME.put(Globals.ITEM_SHIELD, "Shield");
         ITEM_TYPENAME.put(Globals.ITEM_PANTS, "Pants");
@@ -221,49 +228,49 @@ public class ItemEquip implements Item {
         baseStats[Globals.STAT_LEVEL] = level;
         switch (getItemType(itemCode)) {
             case Globals.ITEM_WEAPON:
-                baseStats[Globals.STAT_POWER] = level + ((rng.nextInt(51) / 100D) * level - 0.25 * level);
+                baseStats[Globals.STAT_POWER] = level + (rng.nextInt(26) / 100D) * level;
                 break;
             case Globals.ITEM_BOW:
-                baseStats[Globals.STAT_POWER] = level + ((rng.nextInt(51) / 100D) * level - 0.25 * level);
+                baseStats[Globals.STAT_POWER] = level + (rng.nextInt(26) / 100D) * level;
                 break;
             case Globals.ITEM_SHIELD:
-                baseStats[Globals.STAT_DEFENSE] = level + ((rng.nextInt(51) / 100D) * level - 0.25 * level);
+                baseStats[Globals.STAT_DEFENSE] = level + (rng.nextInt(26) / 100D) * level;
                 break;
             case Globals.ITEM_QUIVER:
-                baseStats[Globals.STAT_POWER] = level + ((rng.nextInt(51) / 100D) * level - 0.25 * level);
+                baseStats[Globals.STAT_POWER] = level + (rng.nextInt(26) / 100D) * level;
                 baseStats[Globals.STAT_CRITCHANCE] = Math.round(rng.nextInt(26) / 100D * level + level * 0.75) * 0.001;
                 break;
             case Globals.ITEM_CHEST:
-                baseStats[Globals.STAT_DEFENSE] = level + ((rng.nextInt(51) / 100D) * level - 0.25 * level);
+                baseStats[Globals.STAT_DEFENSE] = level + (rng.nextInt(26) / 100D) * level;
                 break;
             case Globals.ITEM_PANTS:
-                baseStats[Globals.STAT_DEFENSE] = level + ((rng.nextInt(51) / 100D) * level - 0.25 * level);
+                baseStats[Globals.STAT_DEFENSE] = level + (rng.nextInt(26) / 100D) * level;
                 break;
             case Globals.ITEM_HEAD:
-                baseStats[Globals.STAT_DEFENSE] = level + ((rng.nextInt(51) / 100D) * level - 0.25 * level);
-                baseStats[Globals.STAT_SPIRIT] = level + ((rng.nextInt(51) / 100D) * level - 0.25 * level);
+                baseStats[Globals.STAT_DEFENSE] = level + (rng.nextInt(26) / 100D) * level;
+                baseStats[Globals.STAT_SPIRIT] = level + (rng.nextInt(26) / 100D) * level;
                 break;
             case Globals.ITEM_SHOE:
-                baseStats[Globals.STAT_SPIRIT] = level + ((rng.nextInt(51) / 100D) * level - 0.25 * level);
+                baseStats[Globals.STAT_SPIRIT] = level + (rng.nextInt(26) / 100D) * level;
                 break;
             case Globals.ITEM_BELT:
-                baseStats[Globals.STAT_SPIRIT] = level + ((rng.nextInt(51) / 100D) * level - 0.25 * level);
+                baseStats[Globals.STAT_SPIRIT] = level + (rng.nextInt(26) / 100D) * level;
                 break;
             case Globals.ITEM_SHOULDER:
-                baseStats[Globals.STAT_DEFENSE] = level + ((rng.nextInt(51) / 100D) * level - 0.25 * level);
-                baseStats[Globals.STAT_POWER] = level + ((rng.nextInt(51) / 100D) * level - 0.25 * level);
+                baseStats[Globals.STAT_DEFENSE] = level + (rng.nextInt(26) / 100D) * level;
+                baseStats[Globals.STAT_POWER] = level +(rng.nextInt(26) / 100D) * level;
                 break;
             case Globals.ITEM_GLOVE:
-                baseStats[Globals.STAT_SPIRIT] = level + ((rng.nextInt(51) / 100D) * level - 0.25 * level);
-                baseStats[Globals.STAT_POWER] = level + ((rng.nextInt(51) / 100D) * level - 0.25 * level);
+                baseStats[Globals.STAT_SPIRIT] = level + (rng.nextInt(26) / 100D) * level;
+                baseStats[Globals.STAT_POWER] = level + (rng.nextInt(26) / 100D) * level;
                 break;
             case Globals.ITEM_AMULET:
                 baseStats[Globals.STAT_CRITDMG] = Math.round(rng.nextInt(26) / 100D * level + level * 0.75) * 0.02;
-                baseStats[Globals.STAT_REGEN] = rng.nextInt((int) level + 1) * 3;
+                baseStats[Globals.STAT_REGEN] = rng.nextInt((int) level + 1) * 5;
                 break;
             case Globals.ITEM_RING:
                 baseStats[Globals.STAT_CRITCHANCE] = Math.round(rng.nextInt(26) / 100D * level + level * 0.75) * 0.001;
-                baseStats[Globals.STAT_ARMOR] = Math.round(rng.nextInt(26) / 100D * level + level * 0.75) * 6;
+                baseStats[Globals.STAT_ARMOR] = Math.round(rng.nextInt(26) / 100D * level + level * 0.75) * 18;
                 break;
         }
         baseStats[Globals.STAT_POWER] = Math.round(baseStats[Globals.STAT_POWER]);
