@@ -7,6 +7,7 @@ import blockfighter.server.entities.player.Player;
 import blockfighter.server.net.PacketSender;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Abstract class for projectiles/attacks
@@ -63,6 +64,7 @@ public abstract class ProjBase extends Thread implements Projectile {
      * Checks if this projectile has already been queued to have effects to be applied
      */
     protected boolean queuedEffect = false;
+    private static Random rng = new Random();
 
     /**
      * Constructor called by subclasses to reference sender and logic.
@@ -179,5 +181,9 @@ public abstract class ProjBase extends Thread implements Projectile {
             logic.queueProjEffect(p);
             queuedEffect = true;
         }
+    }
+
+    public static int rng(int i) {
+        return rng.nextInt(i);
     }
 }

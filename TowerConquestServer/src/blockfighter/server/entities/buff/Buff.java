@@ -87,5 +87,9 @@ public interface Buff {
      * @return True if duration <= 0
      */
     public abstract boolean isExpired();
+    
+    public abstract boolean isDebuff();
+    
+    public abstract void setDebuff(boolean set);
 
 }

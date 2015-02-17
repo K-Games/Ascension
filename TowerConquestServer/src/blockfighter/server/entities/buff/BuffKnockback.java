@@ -26,6 +26,7 @@ public class BuffKnockback extends BuffBase {
         ySpeed = y;
         setOwner(o);
         setTarget(t);
+        setDebuff(true);
     }
 
     @Override

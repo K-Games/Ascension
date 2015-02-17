@@ -55,7 +55,7 @@ public class Globals {
             PLAYER_STATE_ATTACKBOW = 0x07,
             PLAYER_STATE_BUFF = 0x08;
 
-    public final static int NUM_PARTICLE_EFFECTS = 25;
+    public final static int NUM_PARTICLE_EFFECTS = 28;
     public final static byte PARTICLE_SWORD_SLASH1 = 0x00,
             PARTICLE_SWORD_SLASH2 = 0x01,
             PARTICLE_SWORD_SLASH3 = 0x02,
@@ -79,7 +79,13 @@ public class Globals {
             PARTICLE_SHIELD_DASH = 0x15,
             PARTICLE_SHIELD_FORTIFY = 0x16,
             PARTICLE_SHIELD_CHARGE = 0x17,
-            PARTICLE_SHIELD_CHARGEPARTICLE = 0x18;
+            PARTICLE_SHIELD_CHARGEPARTICLE = 0x18,
+            PARTICLE_SHIELD_REFLECTCAST = 0x19,
+            PARTICLE_SHIELD_REFLECTHIT = 0x1A,
+            PARTICLE_SHIELD_REFLECTBUFF = 0x1B,
+            PARTICLE_SHIELD_IRON = 0x1C,
+            PARTICLE_SHIELD_IRONALLY = 0x1D,
+            PARTICLE_SHIELD_FORTIFYBUFF = 0x1E;
 
     public final static byte NUM_ITEM_TABS = 10,
             ITEM_WEAPON = 0, //ITEM_WEAPON is the equipment slot

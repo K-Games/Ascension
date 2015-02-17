@@ -2,9 +2,9 @@ package blockfighter.server.entities.proj;
 
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
-import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.buff.BuffKnockback;
 import blockfighter.server.entities.buff.BuffStun;
+import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.player.skills.Skill;
 import java.awt.geom.Rectangle2D;
@@ -20,6 +20,7 @@ public class ProjBowFrost extends ProjBase {
 
     private final LinkedList<Player> queue = new LinkedList<>();
     private double speedX = 0;
+    private final boolean isSecondary;
 
     /**
      * Projectile of Bow Skill Frost Bind.
@@ -29,12 +30,14 @@ public class ProjBowFrost extends ProjBase {
      * @param o Owning player
      * @param x Spawn x-coordinate
      * @param y Spawn y-coordinate
+     * @param isSec Is a secondary(non-freezing) shot.
      */
-    public ProjBowFrost(LogicModule l, int k, Player o, double x, double y) {
+    public ProjBowFrost(LogicModule l, int k, Player o, double x, double y, boolean isSec) {
         super(l, k);
         setOwner(o);
         this.x = x;
         this.y = y;
+        isSecondary = isSec;
         hitbox = new Rectangle2D.Double[1];
         if (getOwner().getFacing() == Globals.RIGHT) {
             hitbox[0] = new Rectangle2D.Double(x + 80, y - 190, 300, 148);
@@ -66,14 +69,19 @@ public class ProjBowFrost extends ProjBase {
         while (!queue.isEmpty()) {
             Player p = queue.poll();
             if (p != null) {
-                int damage = (int) (getOwner().rollDamage() * (1 + .3 * getOwner().getSkillLevel(Skill.BOW_FROST)));
+                int damage;
+                if (!isSecondary) {
+                    damage = (int) (getOwner().rollDamage() * (1 + .3 * getOwner().getSkillLevel(Skill.BOW_FROST)));
+                    p.queueBuff(new BuffStun(2000));
+                } else {
+                    damage = (int) (getOwner().rollDamage() * 2.5);
+                }
                 boolean crit = getOwner().rollCrit();
                 if (crit) {
                     damage = (int) getOwner().criticalDamage(damage);
                 }
                 p.queueDamage(new Damage(damage, true, getOwner(), p, crit, hitbox[0], p.getHitbox()));
-                p.queueBuff(new BuffKnockback(200, (getOwner().getFacing() == Globals.RIGHT) ? 10 : -10, -10, getOwner(), p));
-                p.queueBuff(new BuffStun(2000));
+                p.queueBuff(new BuffKnockback(200, (getOwner().getFacing() == Globals.RIGHT) ? 10 : -10, -4, getOwner(), p));
             }
         }
         queuedEffect = false;

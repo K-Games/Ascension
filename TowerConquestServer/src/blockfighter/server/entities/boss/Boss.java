@@ -4,8 +4,8 @@
  */
 package blockfighter.server.entities.boss;
 
-import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.buff.Buff;
+import blockfighter.server.entities.damage.Damage;
 import java.awt.geom.Rectangle2D;
 
 /**

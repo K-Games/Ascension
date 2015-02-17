@@ -13,6 +13,7 @@ public class BuffStun extends BuffBase {
      */
     public BuffStun(long d) {
         super(d);
+        setDebuff(true);
     }
 
 }

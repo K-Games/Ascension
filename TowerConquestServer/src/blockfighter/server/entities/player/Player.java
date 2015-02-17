@@ -11,6 +11,7 @@ import blockfighter.server.net.PacketSender;
 import java.awt.geom.Rectangle2D;
 import java.net.InetAddress;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -53,14 +54,16 @@ public class Player extends Thread {
     private String name = "";
     private double x, y, ySpeed, xSpeed;
     private boolean[] dirKeydown = new boolean[4];
-    private boolean isFalling = false, isJumping = false;
+    private boolean isFalling = false, isJumping = false, isInvulnerable = false;
     private boolean updatePos = false, updateFacing = false, updateAnimState = false;
     private byte playerState, animState, facing, frame;
     private double nextFrameTime = 0;
     private Rectangle2D.Double hitbox;
 
-    private HashMap<Integer, Buff> buffs = new HashMap<>(500, 0.9f);
+    private HashMap<Integer, Buff> buffs = new HashMap<>(150, 0.9f);
     private Buff isStun, isKnockback;
+    private ArrayList<Buff> reflects = new ArrayList<>(10);
+    private ArrayList<BuffDmgReduct> dmgReduct = new ArrayList<>(10);
 
     private final InetAddress address;
     private final int port;
@@ -147,10 +150,10 @@ public class Player extends Thread {
     }
 
     private void extendBuffKeys() {
-        for (int i = maxBuffKeys; i < maxBuffKeys + 500; i++) {
+        for (int i = maxBuffKeys; i < maxBuffKeys + 150; i++) {
             buffKeys.add(i);
         }
-        maxBuffKeys += 500;
+        maxBuffKeys += 150;
     }
 
     /**
@@ -267,11 +270,24 @@ public class Player extends Thread {
     }
 
     public boolean isSkillMaxed(byte skillCode) {
+        if (!hasSkill(skillCode)) {
+            return false;
+        }
         return skills.get(skillCode).isMaxed();
     }
 
     public boolean hasSkill(byte skillCode) {
         return skills.containsKey(skillCode);
+    }
+
+    public Map.Entry<Integer, Buff> hasBuff(Class buffType) {
+        for (Map.Entry<Integer, Buff> bEntry : buffs.entrySet()) {
+            Buff b = bEntry.getValue();
+            if (buffType.isInstance(b)) {
+                return bEntry;
+            }
+        }
+        return null;
     }
 
     /**
@@ -660,15 +676,19 @@ public class Player extends Thread {
                         if (!skills.get(data[3]).canCast(getItemType(equip[Globals.ITEM_OFFHAND]))) {
                             return;
                         }
+                        queuePlayerState(PLAYER_STATE_SHIELD_IRON);
                         skills.get(data[3]).setCooldown();
                         sendCooldown(data);
+                        nextFrameTime = 20000000;
                         break;
                     case Skill.SHIELD_REFLECT:
                         if (!skills.get(data[3]).canCast(getItemType(equip[Globals.ITEM_OFFHAND]))) {
                             return;
                         }
+                        queuePlayerState(PLAYER_STATE_SHIELD_REFLECT);
                         skills.get(data[3]).setCooldown();
                         sendCooldown(data);
+                        nextFrameTime = 20000000;
                         break;
                     case Skill.SHIELD_TOSS:
                         if (!skills.get(data[3]).canCast(getItemType(equip[Globals.ITEM_OFFHAND]))) {
@@ -683,6 +703,9 @@ public class Player extends Thread {
     }
 
     private void updateSkillSwordSlash() {
+        if (isSkillMaxed(Skill.SWORD_SLASH) && skillDuration == 0) {
+            queueBuff(new BuffSwordSlash(4000, .1, this));
+        }
         if (skillDuration % 200 == 0 && skillDuration < 600) {
             skillCounter++;
             ProjSwordSlash proj = new ProjSwordSlash(logic, logic.getNextProjKey(), this, x, y, skillCounter);
@@ -720,11 +743,11 @@ public class Player extends Thread {
             ProjSwordDrive proj = new ProjSwordDrive(logic, logic.getNextProjKey(), this, x, y);
             logic.queueAddProj(proj);
             if (skillDuration == 0) {
-                byte[] bytes = new byte[Globals.PACKET_BYTE * 4 + Globals.PACKET_INT * 2];
+                byte[] bytes = new byte[Globals.PACKET_BYTE * 4];
                 bytes[0] = Globals.DATA_PARTICLE_EFFECT;
                 bytes[1] = Globals.PARTICLE_SWORD_DRIVE;
-                bytes[10] = facing;
-                bytes[11] = key;
+                bytes[2] = facing;
+                bytes[3] = key;
                 sender.sendAll(bytes, logic.getRoom());
             }
         }
@@ -770,11 +793,13 @@ public class Player extends Thread {
 
     private void updateSkillSwordTaunt() {
         if (skillDuration == 0) {
-            byte[] bytes = new byte[Globals.PACKET_BYTE * 4 + Globals.PACKET_INT * 2];
+            if (isSkillMaxed(Skill.SWORD_TAUNT)) {
+                queueBuff(new BuffSwordTaunt(10000, 0.2, 0.2, this));
+            }
+            byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
             bytes[0] = Globals.DATA_PARTICLE_EFFECT;
             bytes[1] = Globals.PARTICLE_SWORD_TAUNTAURA1;
-            bytes[10] = facing;
-            bytes[11] = key;
+            bytes[2] = key;
             sender.sendAll(bytes, logic.getRoom());
         } else if (skillDuration == 50) {
             ProjSwordTaunt proj = new ProjSwordTaunt(logic, logic.getNextProjKey(), this, x, y);
@@ -802,6 +827,9 @@ public class Player extends Thread {
 
     private void updateSkillSwordMulti() {
         int numHits = skills.get(Skill.SWORD_MULTI).getLevel() + 6;
+        if (isSkillMaxed(Skill.SWORD_MULTI) && !isInvulnerable()) {
+            setInvulnerable(true);
+        }
         if (skillCounter == numHits) {
             skillCounter++;
         }
@@ -826,6 +854,7 @@ public class Player extends Thread {
             skillCounter++;
         }
         if (skillDuration >= numHits * 50 + 600 || isStunned() || isKnockback()) {
+            setInvulnerable(false);
             setPlayerState(PLAYER_STATE_STAND);
         }
     }
@@ -875,6 +904,10 @@ public class Player extends Thread {
             bytes[10] = facing;
             sender.sendAll(bytes, logic.getRoom());
         }
+        if (skillDuration == 150 || skillDuration == 200) {
+            ProjBowArc proj = new ProjBowArc(logic, logic.getNextProjKey(), this, x, y);
+            logic.queueAddProj(proj);
+        }
         if (skillDuration >= 500) {
             setPlayerState(PLAYER_STATE_STAND);
         }
@@ -882,7 +915,27 @@ public class Player extends Thread {
 
     private void updateSkillBowFrost() {
         if (skillDuration == 160) {
-            ProjBowFrost proj = new ProjBowFrost(logic, logic.getNextProjKey(), this, x, y);
+            ProjBowFrost proj = new ProjBowFrost(logic, logic.getNextProjKey(), this, x, y, false);
+            logic.queueAddProj(proj);
+            byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT * 2];
+            bytes[0] = Globals.DATA_PARTICLE_EFFECT;
+            bytes[1] = Globals.PARTICLE_BOW_FROSTARROW;
+            byte[] posXInt = Globals.intToByte((int) proj.getHitbox()[0].getX());
+            bytes[2] = posXInt[0];
+            bytes[3] = posXInt[1];
+            bytes[4] = posXInt[2];
+            bytes[5] = posXInt[3];
+            byte[] posYInt = Globals.intToByte((int) proj.getHitbox()[0].getY());
+            bytes[6] = posYInt[0];
+            bytes[7] = posYInt[1];
+            bytes[8] = posYInt[2];
+            bytes[9] = posYInt[3];
+            bytes[10] = facing;
+            sender.sendAll(bytes, logic.getRoom());
+        }
+
+        if (isSkillMaxed(Skill.BOW_FROST) && (skillDuration == 250 || skillDuration == 340)) {
+            ProjBowFrost proj = new ProjBowFrost(logic, logic.getNextProjKey(), this, x, y, true);
             logic.queueAddProj(proj);
             byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT * 2];
             bytes[0] = Globals.DATA_PARTICLE_EFFECT;
@@ -1040,20 +1093,109 @@ public class Player extends Thread {
             bytes[10] = facing;
             sender.sendAll(bytes, logic.getRoom());
         }
-        if (skillDuration >= 1400 || (skillDuration < 800 && (isStunned() || isKnockback()))) {
+        if (skillDuration >= 1400 || (!isSkillMaxed(Skill.BOW_POWER) && skillDuration < 800 && (isStunned() || isKnockback()))) {
             setPlayerState(PLAYER_STATE_STAND);
         }
     }
 
     private void updateSkillShieldFortify() {
         if (skillDuration == 0) {
-            byte[] bytes = new byte[Globals.PACKET_BYTE * 4 + Globals.PACKET_INT * 2];
+            byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
             bytes[0] = Globals.DATA_PARTICLE_EFFECT;
             bytes[1] = Globals.PARTICLE_SHIELD_FORTIFY;
-            bytes[11] = key;
+            bytes[2] = key;
+            sender.sendAll(bytes, logic.getRoom());
+
+        }
+        if (skillDuration >= 350) {
+            queueBuff(new BuffShieldFortify(5000, 0.01 + 0.005 * getSkillLevel(Skill.SHIELD_FORTIFY), this));
+            byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
+            bytes[0] = Globals.DATA_PARTICLE_EFFECT;
+            bytes[1] = Globals.PARTICLE_SHIELD_FORTIFYBUFF;
+            bytes[2] = key;
+            sender.sendAll(bytes, logic.getRoom());
+            setPlayerState(PLAYER_STATE_STAND);
+        }
+    }
+
+    private void updateSkillShieldIron() {
+        if (skillDuration == 0) {
+            byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
+            bytes[0] = Globals.DATA_PARTICLE_EFFECT;
+            bytes[1] = Globals.PARTICLE_SHIELD_IRON;
+            bytes[2] = key;
             sender.sendAll(bytes, logic.getRoom());
         }
-        if (skillDuration >= 500) {
+        if (skillDuration == 300) {
+            queueBuff(new BuffShieldIron(2000, 0.55 + 0.01 * getSkillLevel(Skill.SHIELD_IRON)));
+            if (isSkillMaxed(Skill.SHIELD_IRON)) {
+                for (Map.Entry<Byte, Player> player : logic.getPlayers().entrySet()) {
+                    Player p = player.getValue();
+                    if (p != this) {
+                        p.queueBuff(new BuffShieldIron(2000, 0.4));
+                        byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
+                        bytes[0] = Globals.DATA_PARTICLE_EFFECT;
+                        bytes[1] = Globals.PARTICLE_SHIELD_IRONALLY;
+                        bytes[2] = p.getKey();
+                        sender.sendAll(bytes, logic.getRoom());
+                    }
+                }
+            }
+        }
+        if (skillDuration >= 2300) {
+            setPlayerState(PLAYER_STATE_STAND);
+        }
+    }
+
+    private void updateSkillShieldReflectHit(double dmgTaken, double mult) {
+        ProjShieldReflect proj = new ProjShieldReflect(logic, logic.getNextProjKey(), this, x, y, dmgTaken * mult);
+        logic.queueAddProj(proj);
+        byte[] bytes = new byte[Globals.PACKET_BYTE * 2 + Globals.PACKET_INT * 2];
+        bytes[0] = Globals.DATA_PARTICLE_EFFECT;
+        bytes[1] = Globals.PARTICLE_SHIELD_REFLECTHIT;
+        byte[] posXInt = Globals.intToByte((int) x);
+        bytes[2] = posXInt[0];
+        bytes[3] = posXInt[1];
+        bytes[4] = posXInt[2];
+        bytes[5] = posXInt[3];
+        byte[] posYInt = Globals.intToByte((int) y);
+        bytes[6] = posYInt[0];
+        bytes[7] = posYInt[1];
+        bytes[8] = posYInt[2];
+        bytes[9] = posYInt[3];
+        sender.sendAll(bytes, logic.getRoom());
+    }
+
+    private void updateSkillShieldReflectCast() {
+        if (skillDuration == 0) {
+            byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
+            bytes[0] = Globals.DATA_PARTICLE_EFFECT;
+            bytes[1] = Globals.PARTICLE_SHIELD_REFLECTCAST;
+            bytes[2] = key;
+            sender.sendAll(bytes, logic.getRoom());
+
+            queueBuff(new BuffShieldReflect(3000, .4 + 0.02 * getSkillLevel(Skill.SHIELD_REFLECT), this, this));
+            bytes = new byte[Globals.PACKET_BYTE * 3];
+            bytes[0] = Globals.DATA_PARTICLE_EFFECT;
+            bytes[1] = Globals.PARTICLE_SHIELD_REFLECTBUFF;
+            bytes[2] = key;
+            sender.sendAll(bytes, logic.getRoom());
+
+            if (isSkillMaxed(Skill.SHIELD_REFLECT)) {
+                for (Map.Entry<Byte, Player> player : logic.getPlayers().entrySet()) {
+                    Player p = player.getValue();
+                    if (p != this) {
+                        p.queueBuff(new BuffShieldReflect(3000, 0.4, this, p));
+                        bytes = new byte[Globals.PACKET_BYTE * 3];
+                        bytes[0] = Globals.DATA_PARTICLE_EFFECT;
+                        bytes[1] = Globals.PARTICLE_SHIELD_REFLECTCAST;
+                        bytes[2] = p.getKey();
+                        sender.sendAll(bytes, logic.getRoom());
+                    }
+                }
+            }
+        }
+        if (skillDuration >= 350) {
             setPlayerState(PLAYER_STATE_STAND);
         }
     }
@@ -1063,11 +1205,11 @@ public class Player extends Thread {
         if (skillDuration == 0) {
             ProjShieldCharge proj = new ProjShieldCharge(logic, logic.getNextProjKey(), this, x, y);
             logic.queueAddProj(proj);
-            byte[] bytes = new byte[Globals.PACKET_BYTE * 4 + Globals.PACKET_INT * 2];
+            byte[] bytes = new byte[Globals.PACKET_BYTE * 4];
             bytes[0] = Globals.DATA_PARTICLE_EFFECT;
             bytes[1] = Globals.PARTICLE_SHIELD_CHARGE;
-            bytes[10] = facing;
-            bytes[11] = key;
+            bytes[2] = facing;
+            bytes[3] = key;
             sender.sendAll(bytes, logic.getRoom());
         }
         if (skillDuration >= 750) {
@@ -1079,18 +1221,23 @@ public class Player extends Thread {
         if (!isStunned() && !isKnockback()) {
             setXSpeed((facing == Globals.RIGHT) ? 15 : -15);
         }
+        if (isSkillMaxed(Skill.SHIELD_DASH) && !isInvulnerable()) {
+            setInvulnerable(true);
+        }
 
         if (skillDuration == 0) {
-            byte[] bytes = new byte[Globals.PACKET_BYTE * 4 + Globals.PACKET_INT * 2];
+            queueBuff(new BuffShieldDash(10000, 0.01 + 0.003 * getSkillLevel(Skill.SHIELD_DASH), this));
+            byte[] bytes = new byte[Globals.PACKET_BYTE * 4];
             bytes[0] = Globals.DATA_PARTICLE_EFFECT;
             bytes[1] = Globals.PARTICLE_SHIELD_DASH;
-            bytes[10] = facing;
-            bytes[11] = key;
+            bytes[2] = facing;
+            bytes[3] = key;
             sender.sendAll(bytes, logic.getRoom());
             setYSpeed(-4);
         }
 
         if (skillDuration >= 250 || isStunned() || isKnockback()) {
+            setInvulnerable(false);
             setPlayerState(PLAYER_STATE_STAND);
         }
     }
@@ -1145,6 +1292,12 @@ public class Player extends Thread {
             case PLAYER_STATE_SHIELD_FORTIFY:
                 updateSkillShieldFortify();
                 break;
+            case PLAYER_STATE_SHIELD_REFLECT:
+                updateSkillShieldReflectCast();
+                break;
+            case PLAYER_STATE_SHIELD_IRON:
+                updateSkillShieldIron();
+                break;
         }
     }
 
@@ -1159,12 +1312,40 @@ public class Player extends Thread {
         while (!damageQueue.isEmpty()) {
             Damage dmg = damageQueue.poll();
             if (dmg != null) {
+                //Check if player is using maxed Whirlwind 
+                if (isInvulnerable()) {
+                    //Take no damage
+                    continue;
+                }
                 int amount = dmg.getDamage();
+
+                //Proc stuff like shadow attack
                 dmg.proc();
+
+                //Check if I have reflect damage buff and reflect off owner
+                if (dmg.canReflect()) {
+                    for (Buff b : reflects) {
+                        if (b instanceof BuffShieldReflect) {
+                            ((BuffShieldReflect) b).getOwner().updateSkillShieldReflectHit(amount, ((BuffShieldReflect) b).getMultiplier());
+                        }
+                    }
+                }
+                //Send client damage display
                 sendDamage(dmg);
+
+                //If it isnt true damage do reduction
                 if (!dmg.isTrueDamage()) {
                     amount = (int) (amount * stats[Globals.STAT_DAMAGEREDUCT]);
                 }
+
+                //Buff Reductions
+                for (BuffDmgReduct b : dmgReduct) {
+                    if (b != null) {
+                        amount = (int) (amount * b.getDmgTakenMult());
+                    }
+                }
+
+                //Final damage taken
                 stats[Globals.STAT_MINHP] -= amount;
                 nextHPSend = 0;
             }
@@ -1203,6 +1384,8 @@ public class Player extends Thread {
         //Update exisiting buffs
         isStun = null;
         isKnockback = null;
+        reflects.clear();
+        dmgReduct.clear();
         LinkedList<Integer> remove = new LinkedList<>();
         for (Map.Entry<Integer, Buff> bEntry : buffs.entrySet()) {
             Buff b = bEntry.getValue();
@@ -1215,6 +1398,11 @@ public class Player extends Thread {
                 if (isKnockback == null || (isKnockback != null && isKnockback.getDuration() < b.getDuration())) {
                     isKnockback = b;
                 }
+            } else if (b instanceof BuffShieldReflect) {
+                reflects.add(b);
+            }
+            if (b instanceof BuffDmgReduct) {
+                dmgReduct.add((BuffDmgReduct) b);
             }
             if (b.isExpired()) {
                 remove.add(bEntry.getKey());
@@ -1228,9 +1416,22 @@ public class Player extends Thread {
         //Empty and add buffs from queue
         while (!buffQueue.isEmpty()) {
             Buff b = buffQueue.poll();
-            Integer bKey = getNextBuffKey();
-            if (bKey != null && b != null) {
-                buffs.put(bKey, b);
+            if (b != null) {
+                //Check for max whirlwind and if is debuff
+                if (isInvulnerable() && b.isDebuff()) {
+                    //Don't apply debuff
+                    continue;
+                }
+                if (b instanceof BuffShieldDash) {
+                    Map.Entry<Integer, Buff> prevBuff = hasBuff(BuffShieldDash.class);
+                    if (prevBuff != null) {
+                        buffs.remove(prevBuff.getKey());
+                    }
+                }
+                Integer bKey = getNextBuffKey();
+                if (bKey != null) {
+                    buffs.put(bKey, b);
+                }
             }
         }
     }
@@ -1242,6 +1443,14 @@ public class Player extends Thread {
      */
     public double rollDamage() {
         double dmg = rng.nextInt((int) (stats[Globals.STAT_MAXDMG] - stats[Globals.STAT_MINDMG])) + stats[Globals.STAT_MINDMG];
+        double mult = 1;
+        for (Map.Entry<Integer, Buff> bEntry : buffs.entrySet()) {
+            Buff b = bEntry.getValue();
+            if (b instanceof BuffDmgIncrease) {
+                mult += ((BuffDmgIncrease) b).getDmgIncrease();
+            }
+        }
+        dmg *= mult;
         return dmg;
     }
 
@@ -1251,15 +1460,7 @@ public class Player extends Thread {
      * @return True if rolls a critical chance.
      */
     public boolean rollCrit() {
-        return rng.nextInt(10000) + 1 < (int) (stats[Globals.STAT_CRITCHANCE] * 10000);
-    }
-
-    public double criticalDamage(double dmg) {
-        return dmg * (1 + stats[Globals.STAT_CRITDMG]);
-    }
-
-    public double criticalDamage(double dmg, double bonusCritDmg) {
-        return dmg * (1 + stats[Globals.STAT_CRITDMG] + bonusCritDmg);
+        return rollCrit(0);
     }
 
     /**
@@ -1270,6 +1471,14 @@ public class Player extends Thread {
      */
     public boolean rollCrit(double bonusCritChance) {
         return rng.nextInt(10000) + 1 < (int) ((stats[Globals.STAT_CRITCHANCE] + bonusCritChance) * 10000);
+    }
+
+    public double criticalDamage(double dmg) {
+        return criticalDamage(dmg, 0);
+    }
+
+    public double criticalDamage(double dmg, double bonusCritDmg) {
+        return dmg * (1 + stats[Globals.STAT_CRITDMG] + bonusCritDmg);
     }
 
     private void updateStats() {
@@ -1500,7 +1709,7 @@ public class Player extends Thread {
                 skills.get(Skill.PASSIVE_SHADOWCLONE).setCooldown();
                 sendCooldown(Skill.PASSIVE_SHADOWCLONE);
                 if (dmg.getTarget() != null) {
-                    dmg.getTarget().queueDamage(new Damage((int) (dmg.getDamage() * 0.5D), false, false, dmg.getOwner(), dmg.getTarget(), false, dmg.getDmgPoint()));
+                    dmg.getTarget().queueDamage(new Damage((int) (dmg.getDamage() * 0.5D), false, dmg.getOwner(), dmg.getTarget(), false, dmg.getDmgPoint()));
                 } else if (dmg.getBossTarget() != null) {
                     dmg.getBossTarget().queueDamage(new Damage((int) (dmg.getDamage() * 0.5D), false, dmg.getOwner(), dmg.getBossTarget(), false, dmg.getDmgPoint()));
                 }
@@ -1731,6 +1940,22 @@ public class Player extends Thread {
                     nextFrameTime = 20000000;
                 }
                 break;
+            case PLAYER_STATE_SHIELD_REFLECT:
+                nextFrameTime -= Globals.LOGIC_UPDATE;
+                animState = Globals.PLAYER_STATE_BUFF;
+                if (nextFrameTime <= 0 && frame < 9) {
+                    frame++;
+                    nextFrameTime = 20000000;
+                }
+                break;
+            case PLAYER_STATE_SHIELD_IRON:
+                nextFrameTime -= Globals.LOGIC_UPDATE;
+                animState = Globals.PLAYER_STATE_BUFF;
+                if (nextFrameTime <= 0 && frame < 9) {
+                    frame++;
+                    nextFrameTime = 20000000;
+                }
+                break;
         }
         if (animState != prevAnimState || frame != prevFrame) {
             updateAnimState = true;
@@ -1854,6 +2079,14 @@ public class Player extends Thread {
         bytes[1] = key;
         System.arraycopy(data, 0, bytes, 2, data.length);
         sender.sendAll(bytes, logic.getRoom());
+    }
+
+    public void setInvulnerable(boolean set) {
+        isInvulnerable = set;
+    }
+
+    public boolean isInvulnerable() {
+        return isInvulnerable;
     }
 
     /**

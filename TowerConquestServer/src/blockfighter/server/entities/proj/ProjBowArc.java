@@ -61,20 +61,18 @@ public class ProjBowArc extends ProjBase {
         while (!queue.isEmpty()) {
             Player p = queue.poll();
             if (p != null) {
-                for (int i = 0; i < 3; i++) {
-                    int damage = (int) (getOwner().rollDamage() * (.37 + .01 * getOwner().getSkillLevel(Skill.BOW_ARC)));
-                    boolean crit = getOwner().rollCrit();
-                    if (crit) {
-                        damage = (int) getOwner().criticalDamage(damage);
+                int damage = (int) (getOwner().rollDamage() * (.37 + .01 * getOwner().getSkillLevel(Skill.BOW_ARC)));
+                boolean crit = getOwner().rollCrit();
+                if (crit) {
+                    damage = (int) getOwner().criticalDamage(damage);
+                }
+                p.queueDamage(new Damage(damage, true, getOwner(), p, crit, hitbox[0], p.getHitbox()));
+                if (getOwner().isSkillMaxed(Skill.BOW_ARC)) {
+                    double heal = damage * 0.05;
+                    if (heal > getOwner().getStats()[Globals.STAT_MAXHP] * 1 / 30D) {
+                        heal = getOwner().getStats()[Globals.STAT_MAXHP] * 1 / 30D;
                     }
-                    p.queueDamage(new Damage(damage, true, getOwner(), p, crit, hitbox[0], p.getHitbox()));
-                    if (getOwner().isSkillMaxed(Skill.BOW_ARC)) {
-                        double heal = damage * 0.05;
-                        if (heal > getOwner().getStats()[Globals.STAT_MAXHP] * 1 / 30D) {
-                            heal = getOwner().getStats()[Globals.STAT_MAXHP] * 1 / 30D;
-                        }
-                        getOwner().queueHeal((int) heal);
-                    }
+                    getOwner().queueHeal((int) heal);
                 }
                 p.queueBuff(new BuffKnockback(300, (getOwner().getFacing() == Globals.RIGHT) ? 4 : -4, -5, getOwner(), p));
             }

@@ -2,8 +2,8 @@ package blockfighter.server.entities.proj;
 
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
-import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.buff.BuffKnockback;
+import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.player.skills.Skill;
 import java.awt.geom.Rectangle2D;
@@ -64,6 +64,9 @@ public class ProjBowRapid extends ProjBase {
                 boolean crit = getOwner().rollCrit();
                 if (crit) {
                     damage = (int) getOwner().criticalDamage(damage);
+                }
+                if (getOwner().isSkillMaxed(Skill.BOW_RAPID) && rng(50) + 1 <= 50) {
+                    damage *= 2;
                 }
                 p.queueDamage(new Damage(damage, true, getOwner(), p, crit, hitbox[0], p.getHitbox()));
                 p.queueBuff(new BuffKnockback(300, (getOwner().getFacing() == Globals.RIGHT) ? 4 : -4, -5, getOwner(), p));

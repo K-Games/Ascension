@@ -21,24 +21,23 @@ import java.util.logging.Logger;
  */
 public class LogicModule extends Thread {
 
+    private static PacketSender sender;
     private boolean isRunning = false;
+    private byte room = -1;
+
     private final ConcurrentHashMap<Byte, Player> players = new ConcurrentHashMap<>(Globals.SERVER_MAX_PLAYERS, 0.9f, Math.max(Globals.SERVER_MAX_PLAYERS / 5, 1));
     private final ConcurrentHashMap<Integer, ProjBase> projectiles = new ConcurrentHashMap<>(500, 0.75f, 10);
-
-    private static PacketSender sender;
     private final GameMap map;
-
     private int projMaxKeys = 500;
 
     private final ConcurrentLinkedQueue<Byte> playerKeys = new ConcurrentLinkedQueue<>();
+    private final ConcurrentLinkedQueue<Integer> projKeys = new ConcurrentLinkedQueue<>();
 
     private final ConcurrentLinkedQueue<Player> pAddQueue = new ConcurrentLinkedQueue<>();
     private final ConcurrentLinkedQueue<byte[]> pDirKeydownQueue = new ConcurrentLinkedQueue<>();
     private final ConcurrentLinkedQueue<byte[]> pUseSkillQueue = new ConcurrentLinkedQueue<>();
-    private final ConcurrentLinkedQueue<Integer> projKeys = new ConcurrentLinkedQueue<>();
     private final ConcurrentLinkedQueue<ProjBase> projEffectQueue = new ConcurrentLinkedQueue<>();
     private final ConcurrentLinkedQueue<ProjBase> projAddQueue = new ConcurrentLinkedQueue<>();
-    private byte room = -1;
 
     /**
      * Create a server logic module
@@ -52,6 +51,27 @@ public class LogicModule extends Thread {
         room = r;
         isRunning = true;
         map = new GameMapFloor1();
+        for (int i = 0; i < 500; i++) {
+            projKeys.add(i);
+        }
+        for (byte i = 0; i < Globals.SERVER_MAX_PLAYERS; i++) {
+            playerKeys.add(i);
+        }
+    }
+
+    public void reset() {
+        players.clear();
+        projectiles.clear();
+        projKeys.clear();
+        playerKeys.clear();
+
+        pAddQueue.clear();
+        pDirKeydownQueue.clear();
+        pUseSkillQueue.clear();
+        projEffectQueue.clear();
+        projAddQueue.clear();
+
+        projMaxKeys = 500;
         for (int i = 0; i < 500; i++) {
             projKeys.add(i);
         }

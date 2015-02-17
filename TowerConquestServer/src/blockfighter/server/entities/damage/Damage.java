@@ -18,15 +18,16 @@ public class Damage {
     private int damage;
     private boolean canProc = false,
             isTrueDamage = false,
-            isCrit = false;
+            isCrit = false,
+            canReflect = true;
+
     private Player owner, target;
     private Boss bossOwner, bossTarget;
     private Point dmgPoint;
 
-    public Damage(int dmg, boolean proc, boolean trueDmg, Player o, Player t, boolean crit, Point p) {
+    public Damage(int dmg, boolean proc, Player o, Player t, boolean crit, Point p) {
         damage = dmg;
         canProc = proc;
-        isTrueDamage = trueDmg;
         owner = o;
         target = t;
         dmgPoint = p;
@@ -153,5 +154,13 @@ public class Damage {
         if (canProc && owner != null) {
             owner.damageProc(this);
         }
+    }
+
+    public void setCanReflect(boolean set) {
+        canReflect = set;
+    }
+    
+    public boolean canReflect(){
+        return canReflect;
     }
 }

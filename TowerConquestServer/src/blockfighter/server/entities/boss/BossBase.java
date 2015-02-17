@@ -2,10 +2,10 @@ package blockfighter.server.entities.boss;
 
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
-import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.buff.Buff;
 import blockfighter.server.entities.buff.BuffKnockback;
 import blockfighter.server.entities.buff.BuffStun;
+import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.maps.GameMap;
 import blockfighter.server.net.PacketSender;
 import java.awt.geom.Rectangle2D;

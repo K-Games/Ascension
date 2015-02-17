@@ -16,6 +16,7 @@ public abstract class BuffBase implements Buff {
      */
     private Player playerOwner, playerTarget;
     private Boss bossOwner, bossTarget;
+    private boolean isDebuff = false;
 
     /**
      * Duration of buff/debuff in milliseconds
@@ -86,4 +87,13 @@ public abstract class BuffBase implements Buff {
         return duration <= 0;
     }
 
+    @Override
+    public boolean isDebuff() {
+        return isDebuff;
+    }
+    
+    @Override
+    public void setDebuff(boolean set){
+        isDebuff = set;
+    }
 }

@@ -73,6 +73,7 @@ public class ProjSwordDrive extends ProjBase {
                 if (!healed && getOwner().isSkillMaxed(Skill.SWORD_DRIVE)) {
                     double heal = getOwner().getStats()[Globals.STAT_MAXHP] * 0.005;
                     getOwner().queueHeal((int) heal);
+                    healed = true;
                 }
             }
         }
