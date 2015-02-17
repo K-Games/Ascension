@@ -1,6 +1,7 @@
 package blockfighter.client.entities.player.skills;
 
 import blockfighter.client.Globals;
+import blockfighter.client.entities.items.ItemEquip;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
@@ -14,6 +15,7 @@ public class SkillBowArc extends Skill {
         icon = Globals.SKILL_ICON[BOW_ARC];
         skillCode = BOW_ARC;
         maxCooldown = 500;
+        reqWeapon = Globals.ITEM_BOW;
     }
 
     @Override
@@ -36,7 +38,7 @@ public class SkillBowArc extends Skill {
         g.setFont(Globals.ARIAL_18PT);
         g.drawString(getSkillName(), x + 80, y + 30);
         g.setFont(Globals.ARIAL_15PT);
-        g.drawString("Level: " + level, x + 80, y + 50);
+        g.drawString("Level: " + level + " - Requires " + ItemEquip.getItemTypeName(reqWeapon), x + 80, y + 50);
         g.drawString("Cooldown: 0.5 Second", x + 80, y + 70);
 
         g.drawString("Fire 3 shots in an arc.", x + 10, y + 90);

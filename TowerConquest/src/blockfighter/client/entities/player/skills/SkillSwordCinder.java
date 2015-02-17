@@ -1,6 +1,7 @@
 package blockfighter.client.entities.player.skills;
 
 import blockfighter.client.Globals;
+import blockfighter.client.entities.items.ItemEquip;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
@@ -14,6 +15,7 @@ public class SkillSwordCinder extends Skill {
         icon = Globals.SKILL_ICON[SWORD_CINDER];
         skillCode = SWORD_CINDER;
         maxCooldown = 6000;
+        reqWeapon = Globals.ITEM_SWORD;
     }
 
     @Override
@@ -36,7 +38,7 @@ public class SkillSwordCinder extends Skill {
         g.setFont(Globals.ARIAL_18PT);
         g.drawString(getSkillName(), x + 80, y + 30);
         g.setFont(Globals.ARIAL_15PT);
-        g.drawString("Level: " + level, x + 80, y + 50);
+        g.drawString("Level: " + level + " - Requires " + ItemEquip.getItemTypeName(reqWeapon), x + 80, y + 50);
         g.drawString("Cooldown: " + maxCooldown / 1000 + " Seconds", x + 80, y + 70);
 
         g.drawString("Deal 450% damage.", x + 10, y + 90);

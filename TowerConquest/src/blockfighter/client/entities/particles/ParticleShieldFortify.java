@@ -10,8 +10,8 @@ public class ParticleShieldFortify extends Particle {
 
     private Player owner;
 
-    public ParticleShieldFortify(int k, int x, int y, byte f, Player p) {
-        super(k, x, y, f);
+    public ParticleShieldFortify(int k, Player p) {
+        super(k, 0, 0);
         frame = 0;
         frameDuration = 25;
         duration = 500;

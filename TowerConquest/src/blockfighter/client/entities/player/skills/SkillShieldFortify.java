@@ -1,6 +1,7 @@
 package blockfighter.client.entities.player.skills;
 
 import blockfighter.client.Globals;
+import blockfighter.client.entities.items.ItemEquip;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
@@ -14,11 +15,12 @@ public class SkillShieldFortify extends Skill {
         icon = Globals.SKILL_ICON[Skill.SHIELD_FORTIFY];
         skillCode = SHIELD_FORTIFY;
         maxCooldown = 15000;
+        reqWeapon = Globals.ITEM_SHIELD;
     }
 
     @Override
     public void drawInfo(Graphics2D g, int x, int y) {
-        int boxHeight = 120, boxWidth = 350;
+        int boxHeight = 120, boxWidth = 415;
         if (y + boxHeight > 720) {
             y = 700 - boxHeight;
         }
@@ -36,10 +38,10 @@ public class SkillShieldFortify extends Skill {
         g.setFont(Globals.ARIAL_18PT);
         g.drawString(getSkillName(), x + 80, y + 30);
         g.setFont(Globals.ARIAL_15PT);
-        g.drawString("Level: " + level, x + 80, y + 50);
+        g.drawString("Level: " + level + " - Requires " + ItemEquip.getItemTypeName(reqWeapon), x + 80, y + 50);
         g.drawString("Cooldown: " + maxCooldown / 1000 + " Seconds", x + 80, y + 70);
 
-        g.drawString("Increase Armor by 20 + " + level + "%(" + (level + 20) + "%) for 5 seconds.", x + 10, y + 90);
+        g.drawString("Reduce damage taken by 1 + " + df.format(0.5 * level) + "%(" + df.format(0.5 * level + 1) + "%) for 5 seconds.", x + 10, y + 90);
         g.drawString("Max: Restore 20% HP over 5 seconds.", x + 10, y + 110);
     }
 

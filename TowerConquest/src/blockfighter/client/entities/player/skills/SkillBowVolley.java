@@ -1,6 +1,7 @@
 package blockfighter.client.entities.player.skills;
 
 import blockfighter.client.Globals;
+import blockfighter.client.entities.items.ItemEquip;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
@@ -14,6 +15,7 @@ public class SkillBowVolley extends Skill {
         icon = Globals.SKILL_ICON[BOW_VOLLEY];
         skillCode = BOW_VOLLEY;
         maxCooldown = 7000;
+        reqWeapon = Globals.ITEM_BOW;
     }
 
     @Override
@@ -36,7 +38,7 @@ public class SkillBowVolley extends Skill {
         g.setFont(Globals.ARIAL_18PT);
         g.drawString(getSkillName(), x + 80, y + 30);
         g.setFont(Globals.ARIAL_15PT);
-        g.drawString("Level: " + level, x + 80, y + 50);
+        g.drawString("Level: " + level + " - Requires " + ItemEquip.getItemTypeName(reqWeapon), x + 80, y + 50);
         g.drawString("Cooldown: " + maxCooldown / 1000 + " Seconds", x + 80, y + 70);
 
         g.drawString("Fire 20 shots over 2 seconds. Can be interrupted.", x + 10, y + 90);

@@ -12,7 +12,6 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  *
@@ -26,12 +25,16 @@ public abstract class Screen implements KeyListener, MouseListener, MouseMotionL
 
     public abstract ConcurrentHashMap<Integer, Particle> getParticles();
 
-    protected static ExecutorService threadPool = Executors.newFixedThreadPool(10);
+    protected static ExecutorService threadPool;
     protected RenderPanel panel;
     protected static LogicModule logic;
 
     public static void setLogic(LogicModule l) {
         logic = l;
+    }
+
+    public static void setThreadPool(ExecutorService tp) {
+        threadPool = tp;
     }
 
     public void drawStringOutline(Graphics2D g, String s, int x, int y, int width) {

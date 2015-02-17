@@ -25,7 +25,7 @@ public class PacketReceiver extends Thread {
 
     private static LogicModule logic;
     private DatagramSocket socket = null;
-    private static ExecutorService tpes = Executors.newFixedThreadPool(4);
+    private static ExecutorService threadPool = Executors.newFixedThreadPool(4);
     private boolean isConnected = true;
 
     public static void setLogic(LogicModule l) {
@@ -43,7 +43,7 @@ public class PacketReceiver extends Thread {
                 byte[] request = new byte[Globals.PACKET_MAX_SIZE];
                 DatagramPacket p = new DatagramPacket(request, request.length);
                 socket.receive(p);
-                tpes.execute(new PacketHandler(p));
+                threadPool.execute(new PacketHandler(p));
             }
         } catch (SocketTimeoutException | SocketException e) {
         } catch (IOException ex) {

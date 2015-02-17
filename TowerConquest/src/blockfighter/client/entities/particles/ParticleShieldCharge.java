@@ -11,16 +11,16 @@ public class ParticleShieldCharge extends Particle {
 
     private Player owner;
 
-    public ParticleShieldCharge(int k, int x, int y, byte f, Player p) {
-        super(k, x, y, f);
+    public ParticleShieldCharge(int k, byte f, Player p) {
+        super(k, 0, 0, f);
         frame = 0;
         frameDuration = 25;
         duration = 750;
         owner = p;
         Point point = owner.getPos();
         if (point != null) {
-            this.x = point.x;
-            this.y = point.y;
+            x = point.x;
+            y = point.y;
         }
     }
 

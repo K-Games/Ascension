@@ -84,7 +84,7 @@ public class SaveData {
         baseStats[Globals.STAT_EXP] = 0;
         baseStats[Globals.STAT_SKILLPOINTS] = 3 * baseStats[Globals.STAT_LEVEL];
         for (int i = 0; i < upgrades.length; i++) {
-            upgrades[i] = new ItemUpgrade(1, (int) baseStats[Globals.STAT_LEVEL]+50);
+            upgrades[i] = new ItemUpgrade(1, (int) baseStats[Globals.STAT_LEVEL] + 50);
         }
         //Empty inventory
         for (int i = 0; i < inventory.length; i++) {

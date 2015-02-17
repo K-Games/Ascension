@@ -146,7 +146,10 @@ public abstract class Particle extends Thread {
         for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_FORTIFY].length; i++) {
             PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_FORTIFY][i] = ImageIO.read(Globals.class.getResource("sprites/particle/fortify/" + i + ".png"));
         }
-
+        PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_FORTIFYBUFF] = new BufferedImage[8];
+        for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_FORTIFYBUFF].length; i++) {
+            PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_FORTIFYBUFF][i] = ImageIO.read(Globals.class.getResource("sprites/particle/fortifybuff/" + i + ".png"));
+        }
         PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_CHARGE] = new BufferedImage[1];
         for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_CHARGE].length; i++) {
             PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_CHARGE][i] = ImageIO.read(Globals.class.getResource("sprites/particle/charge/" + i + ".png"));
@@ -154,6 +157,26 @@ public abstract class Particle extends Thread {
         PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_CHARGEPARTICLE] = new BufferedImage[8];
         for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_CHARGEPARTICLE].length; i++) {
             PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_CHARGEPARTICLE][i] = ImageIO.read(Globals.class.getResource("sprites/particle/charge2/" + i + ".png"));
+        }
+        PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_REFLECTCAST] = new BufferedImage[16];
+        for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_REFLECTCAST].length; i++) {
+            PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_REFLECTCAST][i] = ImageIO.read(Globals.class.getResource("sprites/particle/reflectcast/" + i + ".png"));
+        }
+        PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_REFLECTBUFF] = new BufferedImage[16];
+        for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_REFLECTBUFF].length; i++) {
+            PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_REFLECTBUFF][i] = ImageIO.read(Globals.class.getResource("sprites/particle/reflectbuff/" + i + ".png"));
+        }
+        PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_REFLECTHIT] = new BufferedImage[16];
+        for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_REFLECTHIT].length; i++) {
+            PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_REFLECTHIT][i] = ImageIO.read(Globals.class.getResource("sprites/particle/reflecthit/" + i + ".png"));
+        }
+        PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_IRON] = new BufferedImage[12];
+        for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_IRON].length; i++) {
+            PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_IRON][i] = ImageIO.read(Globals.class.getResource("sprites/particle/ironfort/" + i + ".png"));
+        }
+        PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_IRONALLY] = new BufferedImage[12];
+        for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_IRONALLY].length; i++) {
+            PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_IRONALLY][i] = ImageIO.read(Globals.class.getResource("sprites/particle/ironfortally/" + i + ".png"));
         }
     }
 

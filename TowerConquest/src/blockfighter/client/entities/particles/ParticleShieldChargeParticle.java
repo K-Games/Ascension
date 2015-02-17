@@ -12,7 +12,9 @@ public class ParticleShieldChargeParticle extends Particle {
         frameDuration = 50;
         duration = 400;
         this.y += rng.nextInt(11) * 15;
-        if (facing == Globals.RIGHT) x += 428;
+        if (facing == Globals.RIGHT) {
+            x += 428;
+        }
     }
 
     @Override
@@ -39,7 +41,7 @@ public class ParticleShieldChargeParticle extends Particle {
         int drawSrcX = x;
         int drawSrcY = y;
         int drawDscY = drawSrcY + sprite.getHeight();
-        int drawDscX = x + sprite.getWidth() ;
+        int drawDscX = x + sprite.getWidth();
         g.drawImage(sprite, drawSrcX, drawSrcY, drawDscX, drawDscY, 0, 0, sprite.getWidth(), sprite.getHeight(), null);
     }
 }

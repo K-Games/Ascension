@@ -11,6 +11,7 @@ import java.text.DecimalFormat;
  */
 public abstract class Skill {
 
+    protected byte reqWeapon = -1;
     protected byte skillCode;
     protected byte level;
     protected long cooldown;

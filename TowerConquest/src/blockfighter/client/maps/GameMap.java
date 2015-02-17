@@ -8,7 +8,6 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,11 +19,15 @@ public abstract class GameMap {
 
     protected static ConcurrentHashMap<Integer, Particle> particles = new ConcurrentHashMap<>(20);
     protected double lastUpdateTime = System.nanoTime();
-    protected static ExecutorService threadPool = Executors.newFixedThreadPool(10);
+    protected static ExecutorService threadPool;
     private int mapID = -1;
 
     public ConcurrentHashMap<Integer, Particle> getParticles() {
         return particles;
+    }
+
+    public static void setThreadPool(ExecutorService tp) {
+        threadPool = tp;
     }
 
     public void setMapID(int i) {

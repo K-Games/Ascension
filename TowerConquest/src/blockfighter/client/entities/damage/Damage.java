@@ -25,7 +25,7 @@ public class Damage extends Thread {
         x = loc.x;
         y = loc.y;
         speedY = -13;
-        speedX = (new Random().nextInt(3) - 1) *3;
+        speedX = (new Random().nextInt(3) - 1) * 3;
     }
 
     @Override

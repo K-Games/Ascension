@@ -11,16 +11,16 @@ public class ParticleSwordTauntAura extends Particle {
 
     private Player owner;
 
-    public ParticleSwordTauntAura(int k, int x, int y, byte f, Player p) {
-        super(k, x, y, f);
+    public ParticleSwordTauntAura(int k, Player p) {
+        super(k, 0, 0);
         frame = 0;
         frameDuration = 25;
         duration = 500;
         owner = p;
         Point point = owner.getPos();
         if (point != null) {
-            this.x = point.x;
-            this.y = point.y;
+            x = point.x;
+            y = point.y;
         }
     }
 

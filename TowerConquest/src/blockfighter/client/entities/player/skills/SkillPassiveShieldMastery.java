@@ -37,7 +37,7 @@ public class SkillPassiveShieldMastery extends Skill {
         g.drawString("Level: " + level, x + 80, y + 50);
 
         g.drawString("When equipped with a Sword and Shield", x + 10, y + 90);
-        g.drawString("You gain increased 15% + " + df.format(level * 0.5) + "%(" + df.format(15 + level * 0.5) + "%) damage.", x + 10, y + 110);
+        g.drawString("you gain increased 15% + " + df.format(level * 0.5) + "%(" + df.format(15 + level * 0.5) + "%) damage.", x + 10, y + 110);
         g.drawString("You take 5% + " + df.format(level * 0.5) + "%(" + df.format(5 + level * 0.5) + "%) reduced damage.", x + 10, y + 130);
         g.drawString("Assign this passive to a hotkey to gain its effects.", x + 10, y + 150);
     }

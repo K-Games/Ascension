@@ -56,7 +56,7 @@ public class Globals {
 
     public final static byte RIGHT = 0, LEFT = 1, DOWN = 2, UP = 3;
 
-    public final static int NUM_PARTICLE_EFFECTS = 25;
+    public final static int NUM_PARTICLE_EFFECTS = 31;
     public final static byte PARTICLE_SWORD_SLASH1 = 0x00,
             PARTICLE_SWORD_SLASH2 = 0x01,
             PARTICLE_SWORD_SLASH3 = 0x02,
@@ -80,7 +80,13 @@ public class Globals {
             PARTICLE_SHIELD_DASH = 0x15,
             PARTICLE_SHIELD_FORTIFY = 0x16,
             PARTICLE_SHIELD_CHARGE = 0x17,
-            PARTICLE_SHIELD_CHARGEPARTICLE = 0x18;
+            PARTICLE_SHIELD_CHARGEPARTICLE = 0x18,
+            PARTICLE_SHIELD_REFLECTCAST = 0x19,
+            PARTICLE_SHIELD_REFLECTHIT = 0x1A,
+            PARTICLE_SHIELD_REFLECTBUFF = 0x1B,
+            PARTICLE_SHIELD_IRON = 0x1C,
+            PARTICLE_SHIELD_IRONALLY = 0x1D,
+            PARTICLE_SHIELD_FORTIFYBUFF = 0x1E;
 
     public final static int NUM_KEYBINDS = 16,
             KEYBIND_SKILL1 = 0,
@@ -314,12 +320,12 @@ public class Globals {
             for (int i = 0; i < CHAR_SPRITE[PLAYER_STATE_WALK].length; i++) {
                 CHAR_SPRITE[PLAYER_STATE_WALK][i] = ImageIO.read(Globals.class.getResource("sprites/character/walk/" + i + ".png"));
             }
-            
+
             CHAR_SPRITE[PLAYER_STATE_BUFF] = new BufferedImage[10];
             for (int i = 0; i < CHAR_SPRITE[PLAYER_STATE_BUFF].length; i++) {
                 CHAR_SPRITE[PLAYER_STATE_BUFF][i] = ImageIO.read(Globals.class.getResource("sprites/character/buff/" + i + ".png"));
             }
-            
+
             CHAR_SPRITE[PLAYER_STATE_JUMP] = new BufferedImage[1];
             CHAR_SPRITE[PLAYER_STATE_JUMP][0] = ImageIO.read(Globals.class.getResource("sprites/character/jump/0.png"));
 

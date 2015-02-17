@@ -10,8 +10,8 @@ public class ParticleShieldDashEmitter extends Particle {
 
     private Player owner;
 
-    public ParticleShieldDashEmitter(int k, int x, int y, byte f, Player p) {
-        super(k, x, y, f);
+    public ParticleShieldDashEmitter(int k, byte f, Player p) {
+        super(k, 0, 0, f);
         frame = 0;
         duration = 250;
         owner = p;

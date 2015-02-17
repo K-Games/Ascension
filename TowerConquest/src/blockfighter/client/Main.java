@@ -4,6 +4,7 @@ import blockfighter.client.entities.items.ItemEquip;
 import blockfighter.client.entities.items.ItemUpgrade;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.client.entities.player.Player;
+import blockfighter.client.maps.GameMap;
 import blockfighter.client.net.PacketHandler;
 import blockfighter.client.net.PacketReceiver;
 import blockfighter.client.render.RenderModule;
@@ -11,6 +12,8 @@ import blockfighter.client.render.RenderPanel;
 import blockfighter.client.screen.Screen;
 import java.awt.Dimension;
 import java.lang.reflect.Field;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import javax.swing.JFrame;
 
 /**
@@ -63,7 +66,11 @@ public class Main {
         Player.setLogic(logic);
         PacketHandler.setLogic(logic);
         PacketReceiver.setLogic(logic);
-
+        
+        ExecutorService threadPool = Executors.newFixedThreadPool(10);
+        Screen.setThreadPool(threadPool);
+        GameMap.setThreadPool(threadPool);
+        
         KeyHandler keyHandler = new KeyHandler();
         MouseHandler mouseHandler = new MouseHandler();
         //frame.setUndecorated(true);

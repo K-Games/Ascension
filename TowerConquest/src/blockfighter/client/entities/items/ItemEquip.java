@@ -173,26 +173,26 @@ public class ItemEquip implements Item {
         ITEM_TYPENAME.put(Globals.ITEM_SHOULDER, "Shoulder");
         ITEM_TYPENAME.put(Globals.ITEM_SWORD, "Sword");
 
-        ITEM_NAMES.put(TEMP_SWORD, "Sword");
-        ITEM_DESC.put(TEMP_SWORD, "We all start somewhere.");
+        ITEM_NAMES.put(TEMP_SWORD, "Juggernaut's Blade");
+        ITEM_DESC.put(TEMP_SWORD, "SPPIIIIIINNNNN!");
 
-        ITEM_NAMES.put(TEMP_HEAD, "Head");
-        ITEM_DESC.put(TEMP_HEAD, "As far as our eyes can\nsee.");
+        ITEM_NAMES.put(TEMP_HEAD, "Wards");
+        ITEM_DESC.put(TEMP_HEAD, "Ward's plz CM.");
 
-        ITEM_NAMES.put(TEMP_CHEST, "Chest");
-        ITEM_DESC.put(TEMP_CHEST, "We are weak.\nSo that we can become\nstrong.");
+        ITEM_NAMES.put(TEMP_CHEST, "THAT CHEST");
+        ITEM_DESC.put(TEMP_CHEST, "Lifting brah.");
 
-        ITEM_NAMES.put(TEMP_PANTS, "Pants");
-        ITEM_NAMES.put(TEMP_SHOULDER, "Shoulder");
-        ITEM_NAMES.put(TEMP_GLOVE, "Gloves");
-        ITEM_NAMES.put(TEMP_SHOE, "Shoes");
-        ITEM_NAMES.put(TEMP_BELT, "Belt");
-        ITEM_NAMES.put(TEMP_RING, "Ring");
-        ITEM_NAMES.put(TEMP_AMULET, "Amulet");
-        ITEM_NAMES.put(TEMP_BLADE, "Blade");
-        ITEM_NAMES.put(TEMP_SHIELD, "Shield");
-        ITEM_NAMES.put(TEMP_BOW, "Bow");
-        ITEM_NAMES.put(TEMP_QUIVER, "Quiver");
+        ITEM_NAMES.put(TEMP_PANTS, "Pants, BABY!");
+        ITEM_NAMES.put(TEMP_SHOULDER, "Carry Shoulders");
+        ITEM_NAMES.put(TEMP_GLOVE, "MIDAS!?");
+        ITEM_NAMES.put(TEMP_SHOE, "Boots of Travel");
+        ITEM_NAMES.put(TEMP_BELT, "BELT OF GIANT STRENGTH");
+        ITEM_NAMES.put(TEMP_RING, "Ring of Basilius");
+        ITEM_NAMES.put(TEMP_AMULET, "Null Talisman");
+        ITEM_NAMES.put(TEMP_BLADE, "Blades of Attack");
+        ITEM_NAMES.put(TEMP_SHIELD, "Poor Man's Shield");
+        ITEM_NAMES.put(TEMP_BOW, "Drow Ranger");
+        ITEM_NAMES.put(TEMP_QUIVER, "WindRUNNER");
     }
 
     public static void loadItemDrawOrigin() {
@@ -216,6 +216,10 @@ public class ItemEquip implements Item {
 
     public double[] getBaseStats() {
         return baseStats;
+    }
+
+    public static String getItemTypeName(byte itemType) {
+        return ITEM_TYPENAME.get(itemType);
     }
 
     public ItemEquip(int ic) {
@@ -258,7 +262,7 @@ public class ItemEquip implements Item {
                 break;
             case Globals.ITEM_SHOULDER:
                 baseStats[Globals.STAT_DEFENSE] = level + (rng.nextInt(26) / 100D) * level;
-                baseStats[Globals.STAT_POWER] = level +(rng.nextInt(26) / 100D) * level;
+                baseStats[Globals.STAT_POWER] = level + (rng.nextInt(26) / 100D) * level;
                 break;
             case Globals.ITEM_GLOVE:
                 baseStats[Globals.STAT_SPIRIT] = level + (rng.nextInt(26) / 100D) * level;
