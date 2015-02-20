@@ -172,7 +172,7 @@ public class PacketHandler extends Thread {
             return;
         }
 
-        Player newPlayer = new Player(logic[room], freeKey, address, port, logic[room].getMap(), Math.random() * 1180.0 + 100, 0);
+        Player newPlayer = new Player(logic[room], freeKey, address, port, logic[room].getMap(), 0, 0);
 
         temp = new byte[Globals.MAX_NAME_LENGTH];
         System.arraycopy(data, 2, temp, 0, temp.length);

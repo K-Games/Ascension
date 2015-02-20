@@ -91,5 +91,5 @@ public interface Buff {
     public abstract boolean isDebuff();
     
     public abstract void setDebuff(boolean set);
-
+    public abstract Byte getParticleID();
 }

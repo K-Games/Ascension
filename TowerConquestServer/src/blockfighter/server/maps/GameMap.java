@@ -10,7 +10,7 @@ import java.awt.geom.Rectangle2D;
  */
 public abstract class GameMap {
 
-    Rectangle2D.Double[] platforms = new Rectangle2D.Double[3];
+    Rectangle2D.Double[] platforms;
     double[] boundary = new double[2];
     byte mapID = -1;
 
@@ -18,10 +18,6 @@ public abstract class GameMap {
      * Load server map
      */
     public GameMap() {
-        platforms[0] = new Rectangle2D.Double(0, 620, 5000, 30);
-        platforms[1] = new Rectangle2D.Double(200, 400, 300, 30);
-        platforms[2] = new Rectangle2D.Double(600, 180, 300, 30);
-
         boundary[Globals.MAP_LEFT] = 0.0;
         boundary[Globals.MAP_RIGHT] = 1280.0;
     }
@@ -86,5 +82,9 @@ public abstract class GameMap {
      */
     public byte getMapID() {
         return mapID;
+    }
+    
+    public double[] getBoundary(){
+        return boundary;
     }
 }

@@ -69,7 +69,6 @@ public class ProjSwordDrive extends ProjBase {
                     damage = (int) getOwner().criticalDamage(damage);
                 }
                 p.queueDamage(new Damage(damage, true, getOwner(), p, crit, hitbox[0], p.getHitbox()));
-                p.queueBuff(new BuffKnockback(300, (getOwner().getFacing() == Globals.RIGHT) ? 4 : -4, -5, getOwner(), p));
                 if (!healed && getOwner().isSkillMaxed(Skill.SWORD_DRIVE)) {
                     double heal = getOwner().getStats()[Globals.STAT_MAXHP] * 0.005;
                     getOwner().queueHeal((int) heal);

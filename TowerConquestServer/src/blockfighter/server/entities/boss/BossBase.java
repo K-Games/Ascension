@@ -180,7 +180,11 @@ public abstract class BossBase extends Thread implements Boss {
 
     @Override
     public void run() {
-        update();
+        try {
+            update();
+        } catch (Exception ex) {
+            Globals.log(ex.getLocalizedMessage(), ex, true);
+        }
     }
 
     @Override

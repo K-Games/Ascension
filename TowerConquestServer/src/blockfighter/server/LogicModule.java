@@ -11,8 +11,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Logic module of the server. Updates all objects and their interactions.
@@ -87,26 +85,30 @@ public class LogicModule extends Thread {
         ExecutorService threadPool = Executors.newFixedThreadPool(10);
 
         while (isRunning) {
-            processQueues(threadPool);
-            double now = System.nanoTime();
-            long nowMs = System.currentTimeMillis();
-            if (now - lastUpdateTime >= Globals.LOGIC_UPDATE) {
-                updatePlayers(threadPool);
-                updateProjectiles(threadPool);
-                lastUpdateTime = now;
-            }
+            try {
+                processQueues(threadPool);
+                double now = System.nanoTime();
+                long nowMs = System.currentTimeMillis();
+                if (now - lastUpdateTime >= Globals.LOGIC_UPDATE) {
+                    updatePlayers(threadPool);
+                    updateProjectiles(threadPool);
+                    lastUpdateTime = now;
+                }
 
-            if (nowMs - lastRefreshAll >= 30000) {
-                sender.broadcastAllPlayersUpdate(room);
-                //System.out.println(sender.getBytes()/1024D);
-                //sender.resetByte();
-                lastRefreshAll = nowMs;
+                if (nowMs - lastRefreshAll >= 30000) {
+                    sender.broadcastAllPlayersUpdate(room);
+                    //System.out.println(sender.getBytes()/1024D);
+                    //sender.resetByte();
+                    lastRefreshAll = nowMs;
+                }
+            } catch (Exception ex) {
+                Globals.log(ex.getLocalizedMessage(), ex, true);
             }
 
             try {
                 Thread.sleep(0, 1);
             } catch (InterruptedException ex) {
-                Logger.getLogger(LogicModule.class.getName()).log(Level.SEVERE, null, ex);
+                Globals.log(ex.getLocalizedMessage(), ex, true);
             }
         }
         threadPool.shutdownNow();
@@ -295,14 +297,18 @@ public class LogicModule extends Thread {
         queues[0] = new Thread() {
             @Override
             public void run() {
-                while (!pDirKeydownQueue.isEmpty()) {
-                    byte[] data = pDirKeydownQueue.poll();
-                    if (data != null) {
-                        byte key = data[2], dir = data[3], value = data[4];
-                        if (players.containsKey(key)) {
-                            players.get(key).setDirKeydown(dir, value == 1);
+                try {
+                    while (!pDirKeydownQueue.isEmpty()) {
+                        byte[] data = pDirKeydownQueue.poll();
+                        if (data != null) {
+                            byte key = data[2], dir = data[3], value = data[4];
+                            if (players.containsKey(key)) {
+                                players.get(key).setDirKeydown(dir, value == 1);
+                            }
                         }
                     }
+                } catch (Exception ex) {
+                    Globals.log(ex.getLocalizedMessage(), ex, true);
                 }
             }
         };
@@ -310,14 +316,18 @@ public class LogicModule extends Thread {
         queues[1] = new Thread() {
             @Override
             public void run() {
-                while (!pUseSkillQueue.isEmpty()) {
-                    byte[] data = pUseSkillQueue.poll();
-                    if (data != null) {
-                        byte key = data[2];
-                        if (players.containsKey(key)) {
-                            players.get(key).queueSkillUse(data);
+                try {
+                    while (!pUseSkillQueue.isEmpty()) {
+                        byte[] data = pUseSkillQueue.poll();
+                        if (data != null) {
+                            byte key = data[2];
+                            if (players.containsKey(key)) {
+                                players.get(key).queueSkillUse(data);
+                            }
                         }
                     }
+                } catch (Exception ex) {
+                    Globals.log(ex.getLocalizedMessage(), ex, true);
                 }
             }
         };
@@ -325,11 +335,15 @@ public class LogicModule extends Thread {
         queues[2] = new Thread() {
             @Override
             public void run() {
-                while (!projEffectQueue.isEmpty()) {
-                    ProjBase proj = projEffectQueue.poll();
-                    if (proj != null) {
-                        proj.processQueue();
+                try {
+                    while (!projEffectQueue.isEmpty()) {
+                        ProjBase proj = projEffectQueue.poll();
+                        if (proj != null) {
+                            proj.processQueue();
+                        }
                     }
+                } catch (Exception ex) {
+                    Globals.log(ex.getLocalizedMessage(), ex, true);
                 }
             }
         };
@@ -337,11 +351,15 @@ public class LogicModule extends Thread {
         queues[3] = new Thread() {
             @Override
             public void run() {
-                while (!projAddQueue.isEmpty()) {
-                    ProjBase p = projAddQueue.poll();
-                    if (p != null) {
-                        projectiles.put(p.getKey(), p);
+                try {
+                    while (!projAddQueue.isEmpty()) {
+                        ProjBase p = projAddQueue.poll();
+                        if (p != null) {
+                            projectiles.put(p.getKey(), p);
+                        }
                     }
+                } catch (Exception ex) {
+                    Globals.log(ex.getLocalizedMessage(), ex, true);
                 }
             }
         };

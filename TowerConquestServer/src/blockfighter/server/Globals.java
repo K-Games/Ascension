@@ -14,7 +14,7 @@ import java.util.concurrent.Executors;
  */
 public class Globals {
 
-    public final static boolean LOGGING = false;
+    public final static boolean LOGGING = true;
 
     public final static String ERRLOG_FILE = "ErrorLog.log",
             DATALOG_FILE = "DataLog.log";
@@ -42,9 +42,9 @@ public class Globals {
     public final static byte RIGHT = 0, LEFT = 1, DOWN = 2, UP = 3;
     public final static byte MAP_LEFT = 0, MAP_RIGHT = 1;
 
-    public final static double GRAVITY = 0.35, MAX_FALLSPEED = 11.5;
+    public final static double GRAVITY = 0.35, MAX_FALLSPEED = 12.5;
 
-    public final static int NUM_PLAYER_STATE = 9;
+    public final static int NUM_PLAYER_STATE = 10;
     public final static byte PLAYER_STATE_STAND = 0x00,
             PLAYER_STATE_WALK = 0x01,
             PLAYER_STATE_JUMP = 0x02,
@@ -53,9 +53,10 @@ public class Globals {
             PLAYER_STATE_ATTACKOFF1 = 0x05,
             PLAYER_STATE_ATTACKOFF2 = 0x06,
             PLAYER_STATE_ATTACKBOW = 0x07,
-            PLAYER_STATE_BUFF = 0x08;
+            PLAYER_STATE_BUFF = 0x08,
+            PLAYER_STATE_DEAD = 0x09;
 
-    public final static int NUM_PARTICLE_EFFECTS = 28;
+    public final static int NUM_PARTICLE_EFFECTS = 34;
     public final static byte PARTICLE_SWORD_SLASH1 = 0x00,
             PARTICLE_SWORD_SLASH2 = 0x01,
             PARTICLE_SWORD_SLASH3 = 0x02,
@@ -85,7 +86,10 @@ public class Globals {
             PARTICLE_SHIELD_REFLECTBUFF = 0x1B,
             PARTICLE_SHIELD_IRON = 0x1C,
             PARTICLE_SHIELD_IRONALLY = 0x1D,
-            PARTICLE_SHIELD_FORTIFYBUFF = 0x1E;
+            PARTICLE_SHIELD_FORTIFYBUFF = 0x1E,
+            PARTICLE_SHIELD_TOSS = 0x1F,
+            PARTICLE_SWORD_TAUNTBUFF = 0x20,
+            PARTICLE_SWORD_SLASHBUFF = 0x21;
 
     public final static byte NUM_ITEM_TABS = 10,
             ITEM_WEAPON = 0, //ITEM_WEAPON is the equipment slot
@@ -124,8 +128,8 @@ public class Globals {
             STAT_SKILLPOINTS = 14,
             STAT_DAMAGEREDUCT = 15;
 
-    public final static double HP_BASE = 100,
-            HP_MULT = 30,
+    public final static double HP_BASE = 3000,
+            HP_MULT = 250,
             REDUCT_CONST = 150,
             ARMOR_MULT = 6,
             REGEN_MULT = 1.5,
@@ -163,7 +167,8 @@ public class Globals {
             DATA_PLAYER_GET_STAT = 0x0C,
             DATA_PLAYER_GET_EQUIP = 0x0D,
             DATA_PLAYER_SET_COOLDOWN = 0x0E,
-            DATA_DAMAGE = 0x0F;
+            DATA_DAMAGE = 0x0F,
+            DATA_PLAYER_GIVEEXP = 0x10;
 
     public final static void log(final String info, final String classname, final byte logType, final boolean console) {
 

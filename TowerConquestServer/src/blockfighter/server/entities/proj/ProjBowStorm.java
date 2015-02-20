@@ -74,7 +74,6 @@ public class ProjBowStorm extends ProjBase {
                     }
                 }
                 p.queueDamage(new Damage(damage, true, getOwner(), p, crit, hitbox[0], p.getHitbox()));
-                p.queueBuff(new BuffKnockback(200, (getOwner().getFacing() == Globals.RIGHT) ? 2 : -2, -2, getOwner(), p));
             }
         }
         queuedEffect = false;

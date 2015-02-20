@@ -15,12 +15,13 @@ import java.util.Map;
  *
  * @author Ken Kwan
  */
-public class ProjSwordVorpal extends ProjBase {
+public class ProjShieldToss extends ProjBase {
 
     private final LinkedList<Player> queue = new LinkedList<>();
+    private double speedX = 0;
 
     /**
-     * Projectile of Sword Skill Vorpal.
+     * Projectile of Bow Skill Frost Bind.
      *
      * @param l Room/Logic Module
      * @param k Projectile Key
@@ -28,23 +29,27 @@ public class ProjSwordVorpal extends ProjBase {
      * @param x Spawn x-coordinate
      * @param y Spawn y-coordinate
      */
-    public ProjSwordVorpal(LogicModule l, int k, Player o, double x, double y) {
+    public ProjShieldToss(LogicModule l, int k, Player o, double x, double y) {
         super(l, k);
         setOwner(o);
         this.x = x;
         this.y = y;
         hitbox = new Rectangle2D.Double[1];
         if (getOwner().getFacing() == Globals.RIGHT) {
-            hitbox[0] = new Rectangle2D.Double(x - 50, y - 150, 350, 113);
+            hitbox[0] = new Rectangle2D.Double(x + 80, y - 190, 190, 190);
+            speedX = 8;
         } else {
-            hitbox[0] = new Rectangle2D.Double(x - 350 + 50, y - 150, 350, 113);
+            hitbox[0] = new Rectangle2D.Double(x - 254 - 80, y - 190, 190, 190);
+            speedX = -8;
         }
-        duration = 200;
+        duration = 500;
     }
 
     @Override
     public void update() {
         duration -= Globals.nsToMs(Globals.LOGIC_UPDATE);
+        x += speedX;
+        hitbox[0].x += speedX;
         for (Map.Entry<Byte, Player> pEntry : logic.getPlayers().entrySet()) {
             Player p = pEntry.getValue();
             if (p != getOwner() && !pHit.contains(p) && p.intersectHitbox(hitbox[0])) {
@@ -60,13 +65,14 @@ public class ProjSwordVorpal extends ProjBase {
         while (!queue.isEmpty()) {
             Player p = queue.poll();
             if (p != null) {
-                int damage = (int) (getOwner().rollDamage() * (1 + 0.05 * getOwner().getSkillLevel(Skill.SWORD_VORPAL)));
-                boolean crit = getOwner().rollCrit(getOwner().isSkillMaxed(Skill.SWORD_VORPAL) ? 0.3 : 0);
+                int damage = (int) (getOwner().rollDamage() * (getOwner().getStats()[Globals.STAT_DEFENSE] * (0.08 + .001 * getOwner().getSkillLevel(Skill.SHIELD_TOSS))));
+                
+                boolean crit = getOwner().rollCrit();
                 if (crit) {
-                    damage = (int) getOwner().criticalDamage(damage, 0.4 + 0.03 * getOwner().getSkillLevel(Skill.SWORD_VORPAL));
+                    damage = (int) getOwner().criticalDamage(damage);
                 }
                 p.queueDamage(new Damage(damage, true, getOwner(), p, crit, hitbox[0], p.getHitbox()));
-                p.queueBuff(new BuffKnockback(200, (getOwner().getFacing() == Globals.RIGHT) ? 1 : -1, -3, getOwner(), p));
+                p.queueBuff(new BuffKnockback(200, (getOwner().getFacing() == Globals.RIGHT) ? 10 : -10, -4, getOwner(), p));
             }
         }
         queuedEffect = false;

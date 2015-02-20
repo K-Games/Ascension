@@ -148,7 +148,11 @@ public abstract class ProjBase extends Thread implements Projectile {
 
     @Override
     public void run() {
-        update();
+        try {
+            update();
+        } catch (Exception ex) {
+            Globals.log(ex.getLocalizedMessage(), ex, true);
+        }
     }
 
     @Override

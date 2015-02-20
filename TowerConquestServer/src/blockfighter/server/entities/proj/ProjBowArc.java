@@ -74,7 +74,6 @@ public class ProjBowArc extends ProjBase {
                     }
                     getOwner().queueHeal((int) heal);
                 }
-                p.queueBuff(new BuffKnockback(300, (getOwner().getFacing() == Globals.RIGHT) ? 4 : -4, -5, getOwner(), p));
             }
         }
         queuedEffect = false;
