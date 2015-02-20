@@ -4,6 +4,7 @@ import blockfighter.client.Globals;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.client.screen.ScreenInventory;
 import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -21,6 +22,7 @@ public abstract class GameMap {
     protected double lastUpdateTime = System.nanoTime();
     protected static ExecutorService threadPool;
     private int mapID = -1;
+    BufferedImage bg;
 
     public ConcurrentHashMap<Integer, Particle> getParticles() {
         return particles;
@@ -80,5 +82,9 @@ public abstract class GameMap {
         for (Map.Entry<Integer, Particle> pEntry : particles.entrySet()) {
             pEntry.getValue().draw(g);
         }
+    }
+    
+    public void drawBg(Graphics2D g){
+        g.drawImage(bg, 0, 0, null);
     }
 }

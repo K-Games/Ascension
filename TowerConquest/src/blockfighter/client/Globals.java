@@ -17,7 +17,7 @@ public class Globals {
 
     public final static int SERVER_PORT = 25565;
     private final static boolean isPublic = false;
-    public static String SERVER_ADDRESS = (isPublic) ? "27.252.248.56" : "192.168.1.2";
+    public static String SERVER_ADDRESS = (isPublic) ? "27.252.228.151" : "192.168.1.2";
     public final static String GAME_VERSION = "ALPHA 0";
     public final static String WINDOW_TITLE = "Tower Conquest " + GAME_VERSION;
     public final static int WINDOW_WIDTH = 1280;
@@ -56,7 +56,7 @@ public class Globals {
 
     public final static byte RIGHT = 0, LEFT = 1, DOWN = 2, UP = 3;
 
-    public final static int NUM_PARTICLE_EFFECTS = 31;
+    public final static int NUM_PARTICLE_EFFECTS = 34;
     public final static byte PARTICLE_SWORD_SLASH1 = 0x00,
             PARTICLE_SWORD_SLASH2 = 0x01,
             PARTICLE_SWORD_SLASH3 = 0x02,
@@ -86,7 +86,10 @@ public class Globals {
             PARTICLE_SHIELD_REFLECTBUFF = 0x1B,
             PARTICLE_SHIELD_IRON = 0x1C,
             PARTICLE_SHIELD_IRONALLY = 0x1D,
-            PARTICLE_SHIELD_FORTIFYBUFF = 0x1E;
+            PARTICLE_SHIELD_FORTIFYBUFF = 0x1E,
+            PARTICLE_SHIELD_TOSS = 0x1F,
+            PARTICLE_SWORD_TAUNTBUFF = 0x20,
+            PARTICLE_SWORD_SLASHBUFF = 0x21;
 
     public final static int NUM_KEYBINDS = 16,
             KEYBIND_SKILL1 = 0,
@@ -143,8 +146,8 @@ public class Globals {
             STAT_SKILLPOINTS = 14,
             STAT_DAMAGEREDUCT = 15;
 
-    public final static double HP_BASE = 100,
-            HP_MULT = 30,
+    public final static double HP_BASE = 3000,//PvE = 100
+            HP_MULT = 250,//PvE = 30
             REDUCT_CONST = 150,
             ARMOR_MULT = 6,
             REGEN_MULT = 1.5,
@@ -161,7 +164,7 @@ public class Globals {
             MAXDMG_BASE = 40,
             STAT_PER_LEVEL = 7;
 
-    public final static int NUM_PLAYER_STATE = 9;
+    public final static int NUM_PLAYER_STATE = 10;
     public final static byte PLAYER_STATE_STAND = 0x00,
             PLAYER_STATE_WALK = 0x01,
             PLAYER_STATE_JUMP = 0x02,
@@ -170,7 +173,8 @@ public class Globals {
             PLAYER_STATE_ATTACKOFF1 = 0x05,
             PLAYER_STATE_ATTACKOFF2 = 0x06,
             PLAYER_STATE_ATTACKBOW = 0x07,
-            PLAYER_STATE_BUFF = 0x08;
+            PLAYER_STATE_BUFF = 0x08,
+            PLAYER_STATE_DEAD = 0x09;
 
     //Packet globals
     public final static int PACKET_MAX_SIZE = 512;
@@ -194,7 +198,8 @@ public class Globals {
             DATA_PLAYER_GET_STAT = 0x0C,
             DATA_PLAYER_GET_EQUIP = 0x0D,
             DATA_PLAYER_SET_COOLDOWN = 0x0E,
-            DATA_DAMAGE = 0x0F;
+            DATA_DAMAGE = 0x0F,
+            DATA_PLAYER_GIVEEXP = 0x10;
 
     public final static BufferedImage[][] CHAR_SPRITE = new BufferedImage[NUM_PLAYER_STATE][];
     public final static BufferedImage[] HUD = new BufferedImage[2];
@@ -311,7 +316,7 @@ public class Globals {
                 CHAR_SPRITE[PLAYER_STATE_ATTACKBOW][i] = ImageIO.read(Globals.class.getResource("sprites/character/attack/bow/" + i + ".png"));
             }
 
-            CHAR_SPRITE[PLAYER_STATE_STAND] = new BufferedImage[9];
+            CHAR_SPRITE[PLAYER_STATE_STAND] = new BufferedImage[10];
             for (int i = 0; i < CHAR_SPRITE[PLAYER_STATE_STAND].length; i++) {
                 CHAR_SPRITE[PLAYER_STATE_STAND][i] = ImageIO.read(Globals.class.getResource("sprites/character/stand/" + i + ".png"));
             }
@@ -325,7 +330,10 @@ public class Globals {
             for (int i = 0; i < CHAR_SPRITE[PLAYER_STATE_BUFF].length; i++) {
                 CHAR_SPRITE[PLAYER_STATE_BUFF][i] = ImageIO.read(Globals.class.getResource("sprites/character/buff/" + i + ".png"));
             }
-
+            CHAR_SPRITE[PLAYER_STATE_DEAD] = new BufferedImage[15];
+            for (int i = 0; i < CHAR_SPRITE[PLAYER_STATE_DEAD].length; i++) {
+                CHAR_SPRITE[PLAYER_STATE_DEAD][i] = ImageIO.read(Globals.class.getResource("sprites/character/dead/" + i + ".png"));
+            }
             CHAR_SPRITE[PLAYER_STATE_JUMP] = new BufferedImage[1];
             CHAR_SPRITE[PLAYER_STATE_JUMP][0] = ImageIO.read(Globals.class.getResource("sprites/character/jump/0.png"));
 

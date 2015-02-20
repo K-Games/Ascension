@@ -5,14 +5,14 @@ import blockfighter.client.screen.ScreenIngame;
 import java.awt.Graphics2D;
 import java.awt.Point;
 
-public class ParticleShieldFortifyEmitter extends Particle {
+public class ParticleSwordSlashBuffEmitter extends Particle {
 
     private Player owner;
 
-    public ParticleShieldFortifyEmitter(int k, Player p) {
+    public ParticleSwordSlashBuffEmitter(int k, Player p) {
         super(k, 0, 0);
         frame = 0;
-        duration = 5000;
+        duration = 4000;
         owner = p;
     }
 
@@ -25,8 +25,8 @@ public class ParticleShieldFortifyEmitter extends Particle {
                 x = p.x;
                 y = p.y;
             }
-            for (int i = 0; i < 5; i++) {
-                ParticleShieldFortifyBuff b = new ParticleShieldFortifyBuff(((ScreenIngame) logic.getScreen()).getNextParticleKey(), x, y, facing);
+            for (int i = 0; i < 2; i++) {
+                ParticleSwordSlashBuffParticle b = new ParticleSwordSlashBuffParticle(((ScreenIngame) logic.getScreen()).getNextParticleKey(), x, y, facing);
                 ((ScreenIngame) logic.getScreen()).addParticle(b);
             }
         }

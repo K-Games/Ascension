@@ -37,7 +37,7 @@ public class SkillPassiveDualSword extends Skill {
         g.drawString("Level: " + level, x + 80, y + 50);
 
         g.drawString("When equipped with 2 Swords you gain", x + 10, y + 90);
-        g.drawString("7.5% + " + df.format(level * 0.25) + "%(" + df.format(7.5 + level * 0.25) + "%) Critical Hit Chance.", x + 10, y + 110);
+        g.drawString("4% + " + df.format(level * 0.2) + "%(" + df.format(4 + level * 0.2) + "%) Critical Hit Chance.", x + 10, y + 110);
         g.drawString("Assign this passive to a hotkey to gain its effects.", x + 10, y + 130);
     }
 

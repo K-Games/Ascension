@@ -214,6 +214,7 @@ public class ScreenIngame extends Screen {
     @Override
     public void draw(Graphics2D g) {
         AffineTransform resetForm = g.getTransform();
+        map.drawBg(g);
         if (players != null && myKey != -1 && players.containsKey(myKey)) {
             g.translate(640.0 - players.get(myKey).getX(), 500.0 - players.get(myKey).getY());
         }
@@ -363,8 +364,16 @@ public class ScreenIngame extends Screen {
                 case Globals.DATA_DAMAGE:
                     dataDamage(data);
                     break;
+                case Globals.DATA_PLAYER_GIVEEXP:
+                    dataPlayerGiveEXP(data);
+                    break;
             }
         }
+    }
+
+    private void dataPlayerGiveEXP(byte[] data) {
+        int amount = Globals.bytesToInt(Arrays.copyOfRange(data, 1, 5));
+        c.addExp(amount);
     }
 
     private void dataPlayerSetCooldown(byte[] data) {
@@ -599,6 +608,24 @@ public class ScreenIngame extends Screen {
                 playerKey = data[2];
                 if (players.containsKey(playerKey)) {
                     particles.put(key, new ParticleShieldFortifyEmitter(key, players.get(playerKey)));
+                }
+                break;
+            case Globals.PARTICLE_SHIELD_TOSS:
+                x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
+                y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
+                facing = data[10];
+                particles.put(key, new ParticleShieldToss(key, x, y, facing));
+                break;
+            case Globals.PARTICLE_SWORD_TAUNTBUFF:
+                playerKey = data[2];
+                if (players.containsKey(playerKey)) {
+                    particles.put(key, new ParticleSwordTauntBuffEmitter(key, players.get(playerKey)));
+                }
+                break;
+            case Globals.PARTICLE_SWORD_SLASHBUFF:
+                playerKey = data[2];
+                if (players.containsKey(playerKey)) {
+                    particles.put(key, new ParticleSwordSlashBuffEmitter(key, players.get(playerKey)));
                 }
                 break;
         }

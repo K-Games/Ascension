@@ -177,7 +177,11 @@ public class SaveData {
         pos = saveItems(data, c.upgrades, pos);
         pos = saveSkills(data, c, pos);
         pos = saveHotkeys(data, c, pos);
-        saveKeyBind(data, c.getKeyBind(), pos);
+        pos = saveKeyBind(data, c.getKeyBind(), pos);
+
+        temp = Globals.intToByte((int) c.baseStats[Globals.STAT_EXP]);
+        System.arraycopy(temp, 0, data, pos, temp.length);
+        pos += temp.length;
 
         try {
             FileUtils.writeByteArrayToFile(new File(saveNum + ".tcdat"), data);
@@ -325,7 +329,11 @@ public class SaveData {
         pos = readItems(data, c.upgrades, pos);
         pos = readSkills(data, c, pos);
         pos = readHotkeys(data, c, pos);
-        readKeyBind(data, c.getKeyBind(), pos);
+        pos = readKeyBind(data, c.getKeyBind(), pos);
+
+        System.arraycopy(data, pos, temp, 0, temp.length);
+        c.baseStats[Globals.STAT_EXP] = Globals.bytesToInt(temp);
+        pos += temp.length;
 
         c.calcStats();
         return c;
@@ -469,8 +477,23 @@ public class SaveData {
         return uniqueID;
     }
 
+    public void addExp(double amount) {
+        baseStats[Globals.STAT_EXP] += amount;
+        if (baseStats[Globals.STAT_LEVEL] == 100) {
+            if (baseStats[Globals.STAT_EXP] >= Globals.calcEXP(baseStats[Globals.STAT_LEVEL])) {
+                baseStats[Globals.STAT_EXP] = Globals.calcEXP(baseStats[Globals.STAT_LEVEL]);
+            }
+            return;
+        }
+        while (baseStats[Globals.STAT_EXP] >= Globals.calcEXP(baseStats[Globals.STAT_LEVEL])) {
+            levelUp();
+        }
+    }
+
     public void levelUp() {
+        baseStats[Globals.STAT_EXP] -= Globals.calcEXP(baseStats[Globals.STAT_LEVEL]);
         baseStats[Globals.STAT_LEVEL] += 1;
+        baseStats[Globals.STAT_POINTS] += Globals.STAT_PER_LEVEL;
         baseStats[Globals.STAT_SKILLPOINTS] += 3;
         calcStats();
     }

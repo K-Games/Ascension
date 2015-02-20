@@ -98,7 +98,7 @@ public class ScreenStats extends ScreenMenu {
         drawStringOutline(g, "Armor: " + (int) stats[Globals.STAT_ARMOR], 255, secStat + 50, 1);
         drawStringOutline(g, "Regen: " + df.format(stats[Globals.STAT_REGEN]) + " HP/Sec", 255, secStat + 75, 1);
         drawStringOutline(g, "Critical Hit Chance: " + df.format(stats[Globals.STAT_CRITCHANCE] * 100) + "%", 255, secStat + 100, 1);
-        drawStringOutline(g, "Critical Hit Damage: " + df.format(stats[Globals.STAT_CRITDMG] * 100) + "%", 255, secStat + 125, 1);
+        drawStringOutline(g, "Critical Hit Damage: " + df.format((1 + stats[Globals.STAT_CRITDMG]) * 100) + "%", 255, secStat + 125, 1);
         drawStringOutline(g, "Effective HP: " + df.format((int) Globals.calcEHP(
                 stats[Globals.STAT_DAMAGEREDUCT],
                 stats[Globals.STAT_MAXHP])), 255, secStat + 180, 1);
@@ -117,7 +117,7 @@ public class ScreenStats extends ScreenMenu {
         g.drawString("Armor: " + (int) stats[Globals.STAT_ARMOR], 255, secStat + 50);
         g.drawString("Regen: " + df.format(stats[Globals.STAT_REGEN]) + " HP/Sec", 255, secStat + 75);
         g.drawString("Critical Hit Chance: " + df.format(stats[Globals.STAT_CRITCHANCE] * 100) + "%", 255, secStat + 100);
-        g.drawString("Critical Hit Damage: " + df.format(stats[Globals.STAT_CRITDMG] * 100) + "%", 255, secStat + 125);
+        g.drawString("Critical Hit Damage: " + df.format((1 + stats[Globals.STAT_CRITDMG]) * 100) + "%", 255, secStat + 125);
 
         g.drawString("Effective HP: " + df.format((int) Globals.calcEHP(
                 stats[Globals.STAT_DAMAGEREDUCT],

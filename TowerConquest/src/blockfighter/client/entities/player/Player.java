@@ -94,7 +94,7 @@ public class Player extends Thread {
     public void draw(Graphics2D g) {
         byte s = state, f = frame;
         if (f >= Globals.CHAR_SPRITE[s].length) {
-            f = 0;
+            return;
         }
         BufferedImage sprite = Globals.CHAR_SPRITE[s][f];
         int drawSrcX = x - ((facing == Globals.RIGHT) ? 1 : -1) * sprite.getWidth() / 2;
