@@ -24,7 +24,7 @@ public class Damage {
     private Player owner, target;
     private Boss bossOwner, bossTarget;
     private Point dmgPoint;
-
+    
     public Damage(int dmg, boolean proc, Player o, Player t, boolean crit, Point p) {
         damage = dmg;
         canProc = proc;
@@ -163,4 +163,5 @@ public class Damage {
     public boolean canReflect(){
         return canReflect;
     }
+
 }

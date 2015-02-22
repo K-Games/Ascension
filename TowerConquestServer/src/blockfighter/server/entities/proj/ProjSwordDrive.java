@@ -62,7 +62,7 @@ public class ProjSwordDrive extends ProjBase {
     public void processQueue() {
         while (!queue.isEmpty()) {
             Player p = queue.poll();
-            if (p != null) {
+            if (p != null && !p.isDead()) {
                 int damage = (int) (getOwner().rollDamage() * (.75 + 0.03 * getOwner().getSkillLevel(Skill.SWORD_DRIVE)));
                 boolean crit = getOwner().rollCrit();
                 if (crit) {
@@ -74,6 +74,7 @@ public class ProjSwordDrive extends ProjBase {
                     getOwner().queueHeal((int) heal);
                     healed = true;
                 }
+                p.queueBuff(new BuffKnockback(200, (getOwner().getFacing() == Globals.RIGHT) ? 3 : -3, 0, getOwner(), p));
             }
         }
         queuedEffect = false;

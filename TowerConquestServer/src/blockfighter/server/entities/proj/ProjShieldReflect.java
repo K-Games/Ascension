@@ -46,7 +46,7 @@ public class ProjShieldReflect extends ProjBase {
     public void processQueue() {
         while (!queue.isEmpty()) {
             Player p = queue.poll();
-            if (p != null) {
+            if (p != null && !p.isDead()) {
                 Damage dmgEntity = new Damage((int) dmg, true, getOwner(), p, false, hitbox[0], p.getHitbox());
                 dmgEntity.setCanReflect(false);
                 p.queueDamage(dmgEntity);

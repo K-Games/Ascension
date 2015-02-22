@@ -14,7 +14,7 @@ import java.util.concurrent.Executors;
  */
 public class Globals {
 
-    public final static boolean LOGGING = true;
+    public final static boolean LOGGING = false;
 
     public final static String ERRLOG_FILE = "ErrorLog.log",
             DATALOG_FILE = "DataLog.log";
@@ -56,7 +56,7 @@ public class Globals {
             PLAYER_STATE_BUFF = 0x08,
             PLAYER_STATE_DEAD = 0x09;
 
-    public final static int NUM_PARTICLE_EFFECTS = 34;
+    public final static int NUM_PARTICLE_EFFECTS = 37;
     public final static byte PARTICLE_SWORD_SLASH1 = 0x00,
             PARTICLE_SWORD_SLASH2 = 0x01,
             PARTICLE_SWORD_SLASH3 = 0x02,
@@ -89,7 +89,10 @@ public class Globals {
             PARTICLE_SHIELD_FORTIFYBUFF = 0x1E,
             PARTICLE_SHIELD_TOSS = 0x1F,
             PARTICLE_SWORD_TAUNTBUFF = 0x20,
-            PARTICLE_SWORD_SLASHBUFF = 0x21;
+            PARTICLE_SWORD_SLASHBUFF = 0x21, 
+            PARTICLE_SHIELD_DASHBUFF = 0x22, 
+            PARTICLE_BOW_VOLLEYBUFF = 0x23, 
+            PARTICLE_PASSIVE_RESIST = 0x24;
 
     public final static byte NUM_ITEM_TABS = 10,
             ITEM_WEAPON = 0, //ITEM_WEAPON is the equipment slot
@@ -129,7 +132,7 @@ public class Globals {
             STAT_DAMAGEREDUCT = 15;
 
     public final static double HP_BASE = 3000,
-            HP_MULT = 250,
+            HP_MULT = 200,
             REDUCT_CONST = 150,
             ARMOR_MULT = 6,
             REGEN_MULT = 1.5,

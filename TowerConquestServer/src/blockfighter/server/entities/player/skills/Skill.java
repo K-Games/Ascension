@@ -127,4 +127,8 @@ public abstract class Skill {
     public boolean canCast(byte weaponType) {
         return (weaponType == reqWeapon || reqWeapon == -1) && cooldown <= 0;
     }
+
+    public boolean canCast() {
+        return reqWeapon == -1 && cooldown <= 0;
+    }
 }

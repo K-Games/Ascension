@@ -64,7 +64,7 @@ public class ProjShieldToss extends ProjBase {
     public void processQueue() {
         while (!queue.isEmpty()) {
             Player p = queue.poll();
-            if (p != null) {
+            if (p != null && !p.isDead()) {
                 int damage = (int) (getOwner().rollDamage() * (getOwner().getStats()[Globals.STAT_DEFENSE] * (0.08 + .001 * getOwner().getSkillLevel(Skill.SHIELD_TOSS))));
                 
                 boolean crit = getOwner().rollCrit();

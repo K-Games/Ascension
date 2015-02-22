@@ -68,11 +68,11 @@ public class ProjBowFrost extends ProjBase {
     public void processQueue() {
         while (!queue.isEmpty()) {
             Player p = queue.poll();
-            if (p != null) {
+            if (p != null && !p.isDead()) {
                 int damage;
                 if (!isSecondary) {
                     damage = (int) (getOwner().rollDamage() * (1 + .3 * getOwner().getSkillLevel(Skill.BOW_FROST)));
-                    p.queueBuff(new BuffStun(2000));
+                    p.queueBuff(new BuffStun(getOwner().isSkillMaxed(Skill.BOW_FROST) ? 4000 : 2000));
                 } else {
                     damage = (int) (getOwner().rollDamage() * 2.5);
                 }

@@ -43,12 +43,22 @@ public abstract class BuffBase implements Buff {
     }
 
     @Override
+    public void setBossOwner(Boss owner) {
+        bossOwner = owner;
+    }
+
+    @Override
     public void setTarget(Player t) {
         playerTarget = t;
     }
 
     @Override
     public void setTarget(Boss t) {
+        bossTarget = t;
+    }
+
+    @Override
+    public void setBossTarget(Boss t) {
         bossTarget = t;
     }
 

@@ -60,7 +60,7 @@ public class ProjBowPower extends ProjBase {
     public void processQueue() {
         while (!queue.isEmpty()) {
             Player p = queue.poll();
-            if (p != null) {
+            if (p != null && !p.isDead()) {
                 int damage = (int) (getOwner().rollDamage() * (5 + getOwner().getSkillLevel(Skill.BOW_POWER)));
                 boolean crit = getOwner().rollCrit();
                 if (crit) {

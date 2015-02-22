@@ -59,14 +59,14 @@ public class ProjSwordMulti extends ProjBase {
     public void processQueue() {
         while (!queue.isEmpty()) {
             Player p = queue.poll();
-            if (p != null) {
+            if (p != null && !p.isDead()) {
                 int damage = (int) (getOwner().rollDamage());
                 boolean crit = getOwner().rollCrit();
                 if (crit) {
                     damage = (int) getOwner().criticalDamage(damage);
                 }
                 p.queueDamage(new Damage(damage, true, getOwner(), p, crit, hitbox[0], p.getHitbox()));
-                p.queueBuff(new BuffKnockback(200, (getOwner().getFacing() == Globals.RIGHT) ? 1 : -1, -1, getOwner(), p));
+                p.queueBuff(new BuffKnockback(60, (getOwner().getFacing() == Globals.RIGHT) ? 1 : -1, -1, getOwner(), p));
             }
         }
         queuedEffect = false;

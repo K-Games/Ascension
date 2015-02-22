@@ -67,7 +67,7 @@ public class ProjShieldCharge extends ProjBase {
     public void processQueue() {
         while (!queue.isEmpty()) {
             Player p = queue.poll();
-            if (p != null) {
+            if (p != null && !p.isDead()) {
                 int damage = (int) (getOwner().rollDamage() * (3 + .2 * getOwner().getSkillLevel(Skill.SHIELD_CHARGE)));
                 boolean crit = getOwner().rollCrit();
                 if (crit) {

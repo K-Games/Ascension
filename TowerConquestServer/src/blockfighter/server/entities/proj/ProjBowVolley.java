@@ -3,6 +3,7 @@ package blockfighter.server.entities.proj;
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.buff.BuffBowVolley;
+import blockfighter.server.entities.buff.BuffKnockback;
 import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.player.skills.Skill;
@@ -18,6 +19,7 @@ import java.util.Map;
 public class ProjBowVolley extends ProjBase {
 
     private final LinkedList<Player> queue = new LinkedList<>();
+    private boolean buffed = false;
 
     /**
      * Projectile of Bow Skill Volley.
@@ -59,15 +61,26 @@ public class ProjBowVolley extends ProjBase {
     public void processQueue() {
         while (!queue.isEmpty()) {
             Player p = queue.poll();
-            if (p != null) {
+            if (p != null && !p.isDead()) {
                 int damage = (int) (getOwner().rollDamage() * (.25 + getOwner().getSkillLevel(Skill.BOW_VOLLEY) * .02));
                 boolean crit = getOwner().rollCrit();
                 if (crit) {
                     damage = (int) getOwner().criticalDamage(damage);
-                    getOwner().queueBuff(new BuffBowVolley(4000, 0.01, getOwner()));
-                    //To add buff particle
+                    if (!buffed) {
+                        buffed = true;
+                        if (getOwner().isSkillMaxed(Skill.BOW_VOLLEY)) {
+                            getOwner().queueBuff(new BuffBowVolley(4000, 0.01, getOwner()));
+                            byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
+                            bytes[0] = Globals.DATA_PARTICLE_EFFECT;
+                            bytes[1] = Globals.PARTICLE_BOW_VOLLEYBUFF;
+                            bytes[2] = getOwner().getKey();
+                            sender.sendAll(bytes, logic.getRoom());
+                        }
+                        
+                    }
                 }
                 p.queueDamage(new Damage(damage, true, getOwner(), p, crit, hitbox[0], p.getHitbox()));
+                p.queueBuff(new BuffKnockback(50, (getOwner().getFacing() == Globals.RIGHT) ? 1 : -1, 0, getOwner(), p));
             }
         }
         queuedEffect = false;

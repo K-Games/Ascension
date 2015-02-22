@@ -81,7 +81,7 @@ public class ProjSwordSlash extends ProjBase {
     public void processQueue() {
         while (!queue.isEmpty()) {
             Player p = queue.poll();
-            if (p != null) {
+            if (p != null && !p.isDead()) {
                 int damage = (int) (getOwner().rollDamage() * (1 + 0.04 * getOwner().getSkillLevel(Skill.SWORD_SLASH)));
                 boolean crit = getOwner().rollCrit();
                 if (crit) {

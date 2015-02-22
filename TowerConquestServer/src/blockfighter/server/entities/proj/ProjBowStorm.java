@@ -46,7 +46,7 @@ public class ProjBowStorm extends ProjBase {
     @Override
     public void update() {
         duration -= Globals.nsToMs(Globals.LOGIC_UPDATE);
-        if (duration % 100 == 0 && duration < 5000) {
+        if (duration % 200 == 0 && duration < 5000) {
             pHit.clear();
         }
         for (Map.Entry<Byte, Player> pEntry : logic.getPlayers().entrySet()) {
@@ -63,8 +63,8 @@ public class ProjBowStorm extends ProjBase {
     public void processQueue() {
         while (!queue.isEmpty()) {
             Player p = queue.poll();
-            if (p != null) {
-                int damage = (int) (getOwner().rollDamage() * 0.1 + (.01 * getOwner().getSkillLevel(Skill.BOW_STORM)));
+            if (p != null && !p.isDead()) {
+                int damage = (int) (getOwner().rollDamage() * 0.8 + (.08 * getOwner().getSkillLevel(Skill.BOW_STORM)));
                 boolean crit = getOwner().rollCrit();
                 if (crit) {
                     if (getOwner().isSkillMaxed(Skill.BOW_STORM)) {

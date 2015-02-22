@@ -33,8 +33,12 @@ public class BuffKnockback extends BuffBase {
     public void update() {
         super.update();
         if (!applied) {
-            getTarget().setXSpeed(xSpeed);
-            getTarget().setYSpeed(ySpeed);
+            if (xSpeed != 0) {
+                getTarget().setXSpeed(xSpeed);
+            }
+            if (ySpeed != 0) {
+                getTarget().setYSpeed(ySpeed);
+            }
             applied = true;
         }
     }

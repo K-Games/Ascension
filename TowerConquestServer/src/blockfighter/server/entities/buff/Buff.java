@@ -27,6 +27,8 @@ public interface Buff {
      */
     public abstract void setOwner(Boss owner);
 
+    public abstract void setBossOwner(Boss owner);
+
     /**
      * Set the target or affected player of this buff
      *
@@ -40,6 +42,8 @@ public interface Buff {
      * @param target
      */
     public abstract void setTarget(Boss target);
+
+    public abstract void setBossTarget(Boss target);
 
     /**
      * Return the owner of this buff/debuff.
@@ -87,9 +91,10 @@ public interface Buff {
      * @return True if duration <= 0
      */
     public abstract boolean isExpired();
-    
+
     public abstract boolean isDebuff();
-    
+
     public abstract void setDebuff(boolean set);
+
     public abstract Byte getParticleID();
 }

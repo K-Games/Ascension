@@ -11,4 +11,9 @@ public class SkillPassiveResistance extends Skill {
         maxCooldown = 35000;
     }
 
+    @Override
+    public void setCooldown() {
+        super.setCooldown();
+        reduceCooldown(1000 * level);
+    }
 }
