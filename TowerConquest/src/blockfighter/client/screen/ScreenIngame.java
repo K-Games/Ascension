@@ -628,6 +628,29 @@ public class ScreenIngame extends Screen {
                     particles.put(key, new ParticleSwordSlashBuffEmitter(key, players.get(playerKey)));
                 }
                 break;
+            case Globals.PARTICLE_SHIELD_DASHBUFF:
+                playerKey = data[2];
+                if (players.containsKey(playerKey)) {
+                    particles.put(key, new ParticleShieldDashBuffEmitter(key, players.get(playerKey)));
+                }
+                break;
+            case Globals.PARTICLE_BOW_VOLLEYBUFF:
+                playerKey = data[2];
+                if (players.containsKey(playerKey)) {
+                    particles.put(key, new ParticleBowVolleyBuffEmitter(key, players.get(playerKey)));
+                }
+                break;
+            case Globals.PARTICLE_BURN:
+                playerKey = data[2];
+                if (players.containsKey(playerKey)) {
+                    particles.put(key, new ParticleBurnBuffEmitter(key, players.get(playerKey)));
+                }
+                break;
+            case Globals.PARTICLE_PASSIVE_RESIST:
+                x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
+                y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
+                particles.put(key, new ParticlePassiveResist(key, x, y));
+                break;
         }
     }
 

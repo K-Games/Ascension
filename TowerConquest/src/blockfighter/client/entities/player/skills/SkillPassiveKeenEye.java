@@ -12,16 +12,17 @@ public class SkillPassiveKeenEye extends Skill {
 
     public SkillPassiveKeenEye() {
         skillCode = PASSIVE_KEENEYE;
+        skillName = "Keen Eye";
     }
 
     @Override
     public void drawInfo(Graphics2D g, int x, int y) {
-        int boxHeight = 120, boxWidth = 365;
-        if (y + boxHeight > 720) {
+        int boxHeight = (level < 30) ? 210 : 165, boxWidth = 365;
+        if (y + boxHeight > 700) {
             y = 700 - boxHeight;
         }
 
-        if (x + 30 + boxWidth > 1280) {
+        if (x + 30 + boxWidth > 1240) {
             x = 1240 - boxWidth;
         }
         g.setColor(new Color(30, 30, 30, 185));
@@ -36,12 +37,19 @@ public class SkillPassiveKeenEye extends Skill {
         g.setFont(Globals.ARIAL_15PT);
         g.drawString("Level: " + level, x + 80, y + 50);
 
-        g.drawString("Increase Critical Hit Chance by 1% + " + df.format(level * 0.3) + "%(" + df.format(1 + level * 0.3) + "%)", x + 10, y + 90);
+        g.drawString("Increases Critical Hit Chance.", x + 10, y + 90);
+
+        g.setColor(new Color(255, 190, 0));
         g.drawString("Assign this passive to a hotkey to gain its effects.", x + 10, y + 110);
+
+        g.setColor(Color.WHITE);
+        g.drawString("[Level " + level + "]", x + 10, y + 135);
+        g.drawString("Additional " + df.format(1 + level * 0.3) + "% Critical Hit Chance", x + 10, y + 155);
+
+        if (level < 30) {
+            g.drawString("[Level " + (level + 1) + "]", x + 10, y + 180);
+            g.drawString("Additional " + df.format(1 + (level + 1) * 0.3) + "% Critical Hit Chance", x + 10, y + 200);
+        }
     }
 
-    @Override
-    public String getSkillName() {
-        return "Keen Eye";
-    }
 }

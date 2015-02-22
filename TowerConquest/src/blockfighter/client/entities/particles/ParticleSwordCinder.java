@@ -20,7 +20,7 @@ public class ParticleSwordCinder extends Particle {
         frameDuration -= Globals.LOGIC_UPDATE / 1000000;
         if (duration > 100) {
             for (int i = 0; i < 2; i++) {
-                ParticleBurn b = new ParticleBurn(((ScreenIngame) logic.getScreen()).getNextParticleKey(), x, y, facing);
+                ParticleSwordCinderParticle b = new ParticleSwordCinderParticle(((ScreenIngame) logic.getScreen()).getNextParticleKey(), x, y, facing);
                 ((ScreenIngame) logic.getScreen()).addParticle(b);
             }
         }

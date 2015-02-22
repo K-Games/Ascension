@@ -17,7 +17,7 @@ public class Globals {
 
     public final static int SERVER_PORT = 25565;
     private final static boolean isPublic = false;
-    public static String SERVER_ADDRESS = (isPublic) ? "27.252.228.151" : "192.168.1.2";
+    public static String SERVER_ADDRESS = (isPublic) ? "towerconquest.servegame.com" : "192.168.1.2";
     public final static String GAME_VERSION = "ALPHA 0";
     public final static String WINDOW_TITLE = "Tower Conquest " + GAME_VERSION;
     public final static int WINDOW_WIDTH = 1280;
@@ -56,7 +56,7 @@ public class Globals {
 
     public final static byte RIGHT = 0, LEFT = 1, DOWN = 2, UP = 3;
 
-    public final static int NUM_PARTICLE_EFFECTS = 34;
+    public final static int NUM_PARTICLE_EFFECTS = 37;
     public final static byte PARTICLE_SWORD_SLASH1 = 0x00,
             PARTICLE_SWORD_SLASH2 = 0x01,
             PARTICLE_SWORD_SLASH3 = 0x02,
@@ -89,7 +89,10 @@ public class Globals {
             PARTICLE_SHIELD_FORTIFYBUFF = 0x1E,
             PARTICLE_SHIELD_TOSS = 0x1F,
             PARTICLE_SWORD_TAUNTBUFF = 0x20,
-            PARTICLE_SWORD_SLASHBUFF = 0x21;
+            PARTICLE_SWORD_SLASHBUFF = 0x21, 
+            PARTICLE_SHIELD_DASHBUFF = 0x22, 
+            PARTICLE_BOW_VOLLEYBUFF = 0x23, 
+            PARTICLE_PASSIVE_RESIST = 0x24;
 
     public final static int NUM_KEYBINDS = 16,
             KEYBIND_SKILL1 = 0,
@@ -147,7 +150,7 @@ public class Globals {
             STAT_DAMAGEREDUCT = 15;
 
     public final static double HP_BASE = 3000,//PvE = 100
-            HP_MULT = 250,//PvE = 30
+            HP_MULT = 200,//PvE = 30
             REDUCT_CONST = 150,
             ARMOR_MULT = 6,
             REGEN_MULT = 1.5,

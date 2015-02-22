@@ -186,6 +186,18 @@ public abstract class Particle extends Thread {
         for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_SLASHBUFF].length; i++) {
             PARTICLE_SPRITE[Globals.PARTICLE_SWORD_SLASHBUFF][i] = ImageIO.read(Globals.class.getResource("sprites/particle/slashbuff/" + i + ".png"));
         }
+        PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_DASHBUFF] = new BufferedImage[6];
+        for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_DASHBUFF].length; i++) {
+            PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_DASHBUFF][i] = ImageIO.read(Globals.class.getResource("sprites/particle/dashbuff/" + i + ".png"));
+        }
+        PARTICLE_SPRITE[Globals.PARTICLE_BOW_VOLLEYBUFF] = new BufferedImage[6];
+        for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_BOW_VOLLEYBUFF].length; i++) {
+            PARTICLE_SPRITE[Globals.PARTICLE_BOW_VOLLEYBUFF][i] = ImageIO.read(Globals.class.getResource("sprites/particle/volleybuff/" + i + ".png"));
+        }
+        PARTICLE_SPRITE[Globals.PARTICLE_PASSIVE_RESIST] = new BufferedImage[12];
+        for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_PASSIVE_RESIST].length; i++) {
+            PARTICLE_SPRITE[Globals.PARTICLE_PASSIVE_RESIST][i] = ImageIO.read(Globals.class.getResource("sprites/particle/resist/" + i + ".png"));
+        }
     }
 
     public void update() {

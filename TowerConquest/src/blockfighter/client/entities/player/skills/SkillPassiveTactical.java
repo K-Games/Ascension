@@ -11,17 +11,18 @@ import java.awt.Graphics2D;
 public class SkillPassiveTactical extends Skill {
 
     public SkillPassiveTactical() {
+        skillName = "Tactical Execution";
         skillCode = PASSIVE_TACTICAL;
     }
 
     @Override
     public void drawInfo(Graphics2D g, int x, int y) {
-        int boxHeight = 140, boxWidth = 370;
-        if (y + boxHeight > 720) {
+        int boxHeight = (level < 30) ? 230 : 185, boxWidth = 370;
+        if (y + boxHeight > 700) {
             y = 700 - boxHeight;
         }
 
-        if (x + 30 + boxWidth > 1280) {
+        if (x + 30 + boxWidth > 1240) {
             x = 1240 - boxWidth;
         }
         g.setColor(new Color(30, 30, 30, 185));
@@ -37,12 +38,19 @@ public class SkillPassiveTactical extends Skill {
         g.drawString("Level: " + level, x + 80, y + 50);
 
         g.drawString("Each successful skill used without taking damage", x + 10, y + 90);
-        g.drawString("increases damage by 1%, up to " + (level + 1) + "%.", x + 10, y + 110);
+        g.drawString("increases damage dealt by 1%.", x + 10, y + 110);
+
+        g.setColor(new Color(255, 190, 0));
         g.drawString("Assign this passive to a hotkey to gain its effects.", x + 10, y + 130);
+
+        g.setColor(Color.WHITE);
+        g.drawString("[Level " + level + "]", x + 10, y + 155);
+        g.drawString("Increases damage dealt up to " + (level + 1) + "%.", x + 10, y + 175);
+
+        if (level < 30) {
+            g.drawString("[Level " + (level + 1) + "]", x + 10, y + 200);
+            g.drawString("Increases damage dealt up to " + ((level + 1) + 1) + "%.", x + 10, y + 220);
+        }
     }
 
-    @Override
-    public String getSkillName() {
-        return "Tactical Execution";
-    }
 }

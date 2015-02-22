@@ -16,16 +16,18 @@ public class SkillSwordVorpal extends Skill {
         skillCode = SWORD_VORPAL;
         maxCooldown = 4000;
         reqWeapon = Globals.ITEM_SWORD;
+        skillName = "Vorpal Strike";
+        maxSkillName = "Echoing Fury";
     }
 
     @Override
     public void drawInfo(Graphics2D g, int x, int y) {
-        int boxHeight = 200, boxWidth = 430;
-        if (y + boxHeight > 720) {
+        int boxHeight = (level < 30) ? 295 : 230, boxWidth = 370;
+        if (y + boxHeight > 700) {
             y = 700 - boxHeight;
         }
 
-        if (x + 30 + boxWidth > 1280) {
+        if (x + 30 + boxWidth > 1240) {
             x = 1240 - boxWidth;
         }
         g.setColor(new Color(30, 30, 30, 185));
@@ -42,19 +44,23 @@ public class SkillSwordVorpal extends Skill {
         g.drawString("Cooldown: " + maxCooldown / 1000 + " Seconds", x + 80, y + 70);
 
         g.drawString("Stab rapidly 3 times.", x + 10, y + 90);
-        g.drawString("Deals 100 + " + 5 * level + "%(" + (5 * level + 100) + "%) damage per hit.", x + 10, y + 110);
-        g.drawString("Critical hits deal additional 40 + " + 3 * level + "%(" + (3 * level + 40) + "%) Critical Damage.", x + 10, y + 130);
-        g.drawString("Max:", x + 10, y + 150);
-        g.drawString("This attack has +30% Critical Hit Chance.", x + 10, y + 170);
-        g.drawString("Stab rapidly hit 5 times.", x + 10, y + 190);
-    }
 
-    @Override
-    public String getSkillName() {
-        if (isMaxed()) {
-            return "Echoing Fury";
+        g.drawString("[Level " + level + "]", x + 10, y + 115);
+        g.drawString("Deals " + (5 * level + 100) + "% damage per hit.", x + 10, y + 135);
+        g.drawString("Critical Hits deal additional +" + (3 * level + 40) + "% Critical Damage.", x + 10, y + 155);
+        if (level < 30) {
+            g.drawString("[Level " + (level + 1) + "]", x + 10, y + 180);
+            g.drawString("Deals " + (5 * (level + 1) + 100) + "% damage per hit.", x + 10, y + 200);
+            g.drawString("Critical Hits deal additional +" + (3 * (level + 1) + 40) + "% Critical Damage.", x + 10, y + 220);
+
+            g.drawString("[Level 30 Bonus]", x + 10, y + 245);
+            g.drawString("This attack has +30% Critical Hit Chance.", x + 10, y + 265);
+            g.drawString("Stab rapidly hit 5 times.", x + 10, y + 285);
+        } else {
+            g.drawString("[Level 30 Bonus]", x + 10, y + 180);
+            g.drawString("This attack has +30% Critical Hit Chance.", x + 10, y + 200);
+            g.drawString("Stab rapidly hit 5 times.", x + 10, y + 220);
         }
-        return "Vorpal Strike";
     }
 
 }

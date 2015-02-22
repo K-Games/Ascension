@@ -16,16 +16,18 @@ public class SkillSwordMulti extends Skill {
         skillCode = SWORD_MULTI;
         maxCooldown = 6000;
         reqWeapon = Globals.ITEM_SWORD;
+        skillName = "Whirlwind";
+        maxSkillName = "Relentless Barrage";
     }
 
     @Override
     public void drawInfo(Graphics2D g, int x, int y) {
-        int boxHeight = 160, boxWidth = 320;
-        if (y + boxHeight > 720) {
+        int  boxHeight = (level < 30) ? 255 : 210, boxWidth = 300;
+        if (y + boxHeight > 700) {
             y = 700 - boxHeight;
         }
 
-        if (x + 30 + boxWidth > 1280) {
+        if (x + 30 + boxWidth > 1240) {
             x = 1240 - boxWidth;
         }
         g.setColor(new Color(30, 30, 30, 185));
@@ -41,18 +43,21 @@ public class SkillSwordMulti extends Skill {
         g.drawString("Level: " + level + " - Requires " + ItemEquip.getItemTypeName(reqWeapon), x + 80, y + 50);
         g.drawString("Cooldown: " + maxCooldown / 1000 + " Seconds", x + 80, y + 70);
 
-        g.drawString("Perform 6 + " + level + "(" + (6 + level) + ") consecutive strikes.", x + 10, y + 90);
-        g.drawString("Can be interrupted.", x + 10, y + 110);
-        g.drawString("Deals 100% damage per hit.", x + 10, y + 130);
-        g.drawString("Max: Invulnerable over the attack duration.", x + 10, y + 150);
-    }
+        g.drawString("Perform numerous consecutive attacks.", x + 10, y + 90);
+        g.drawString("Deals 100% damage per hit.", x + 10, y + 110);
 
-    @Override
-    public String getSkillName() {
-        if (isMaxed()) {
-            return "Relentless Barrage";
+        g.drawString("[Level " + level + "]", x + 10, y + 135);
+        g.drawString("Perform " + (6 + level) + " attacks.", x + 10, y + 155);
+        if (level < 30) {
+            g.drawString("[Level " + (level + 1) + "]", x + 10, y + 180);
+            g.drawString("Perform " + (6 + (level + 1)) + " attacks.", x + 10, y + 200);
+
+            g.drawString("[Level 30 Bonus]", x + 10, y + 225);
+            g.drawString("Invulnerable during the attack duration.", x + 10, y + 245);
+        } else {
+            g.drawString("[Level 30 Bonus]", x + 10, y + 180);
+            g.drawString("Invulnerable during the attack duration.", x + 10, y + 200);
         }
-        return "Whirlwind";
     }
 
 }

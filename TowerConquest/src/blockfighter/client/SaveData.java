@@ -77,7 +77,7 @@ public class SaveData {
 
     public void newCharacter() {
         //Set level 1
-        baseStats[Globals.STAT_LEVEL] = 1;
+        baseStats[Globals.STAT_LEVEL] = 20;
         baseStats[Globals.STAT_POWER] = 0;
         baseStats[Globals.STAT_DEFENSE] = 0;
         baseStats[Globals.STAT_SPIRIT] = 0;

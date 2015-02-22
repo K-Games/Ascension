@@ -16,16 +16,18 @@ public class SkillShieldIron extends Skill {
         skillCode = SHIELD_IRON;
         maxCooldown = 20000;
         reqWeapon = Globals.ITEM_SHIELD;
+        skillName = "Iron Fortress";
+        maxSkillName = "Inpenetrable Armor";
     }
 
     @Override
     public void drawInfo(Graphics2D g, int x, int y) {
-        int boxHeight = 160, boxWidth = 370;
-        if (y + boxHeight > 720) {
+        int boxHeight = (level < 30) ? 235 : 190, boxWidth = 370;
+        if (y + boxHeight > 700) {
             y = 700 - boxHeight;
         }
 
-        if (x + 30 + boxWidth > 1280) {
+        if (x + 30 + boxWidth > 1240) {
             x = 1240 - boxWidth;
         }
         g.setColor(new Color(30, 30, 30, 185));
@@ -41,17 +43,20 @@ public class SkillShieldIron extends Skill {
         g.drawString("Level: " + level + " - Requires " + ItemEquip.getItemTypeName(reqWeapon), x + 80, y + 50);
         g.drawString("Cooldown: " + maxCooldown / 1000 + " Seconds", x + 80, y + 70);
 
-        g.drawString("Become immobile and reduce damage taken", x + 10, y + 90);
-        g.drawString("by 55 + " + level + "%(" + (level + 55) + "%) for 2 seconds.", x + 10, y + 110);
-        g.drawString("Max:", x + 10, y + 130);
-        g.drawString("Allies reduce damage taken by 40% for 2 seconds.", x + 10, y + 150);
+        g.drawString("Become immobile and reduce damage taken.", x + 10, y + 90);
+
+        g.drawString("[Level " + level + "]", x + 10, y + 115);
+        g.drawString("Reduce damage taken by " + (level + 55) + "%.", x + 10, y + 135);
+        if (level < 30) {
+            g.drawString("[Level " + (level + 1) + "]", x + 10, y + 160);
+            g.drawString("Reduce damage taken by " + ((level + 1) + 55) + "%.", x + 10, y + 180);
+
+            g.drawString("[Level 30 Bonus]", x + 10, y + 205);
+            g.drawString("Allies reduce damage taken by 40% for 2 seconds.", x + 10, y + 225);
+        } else {
+            g.drawString("[Level 30 Bonus]", x + 10, y + 160);
+            g.drawString("Allies reduce damage taken by 40% for 2 seconds.", x + 10, y + 180);
+        }
     }
 
-    @Override
-    public String getSkillName() {
-        if (isMaxed()) {
-            return "Inpenetrable Armor";
-        }
-        return "Iron Fortress";
-    }
 }

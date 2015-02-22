@@ -16,16 +16,18 @@ public class SkillSwordCinder extends Skill {
         skillCode = SWORD_CINDER;
         maxCooldown = 6000;
         reqWeapon = Globals.ITEM_SWORD;
+        skillName = "Cinder";
+        maxSkillName = "Searing Laceration";
     }
 
     @Override
     public void drawInfo(Graphics2D g, int x, int y) {
-        int boxHeight = 180, boxWidth = 430;
-        if (y + boxHeight > 720) {
+        int boxHeight =(level < 30) ? 315 : 250, boxWidth = 430;
+        if (y + boxHeight > 700) {
             y = 700 - boxHeight;
         }
 
-        if (x + 30 + boxWidth > 1280) {
+        if (x + 30 + boxWidth > 1240) {
             x = 1240 - boxWidth;
         }
         g.setColor(new Color(30, 30, 30, 185));
@@ -41,19 +43,25 @@ public class SkillSwordCinder extends Skill {
         g.drawString("Level: " + level + " - Requires " + ItemEquip.getItemTypeName(reqWeapon), x + 80, y + 50);
         g.drawString("Cooldown: " + maxCooldown / 1000 + " Seconds", x + 80, y + 70);
 
-        g.drawString("Deal 450% damage.", x + 10, y + 90);
-        g.drawString("Applies Burn - Takes " + level + "% increased damage for 4 seconds.", x + 10, y + 110);
-        g.drawString("Max:", x + 10, y + 130);
-        g.drawString("Burn also deals 450% over 4 seconds(112.5%/s).", x + 10, y + 150);
-        g.drawString("This attack has 100% Critical Hit Chance.", x + 10, y + 170);
-    }
+        g.drawString("Deal a single massive damage hit. Enemies hit will burn", x + 10, y + 90);
+        g.drawString("and takes increased damage for 4 seconds.", x + 10, y + 110);
 
-    @Override
-    public String getSkillName() {
-        if (isMaxed()) {
-            return "Searing Laceration";
+        g.drawString("[Level " + level + "]", x + 10, y + 135);
+        g.drawString("Deals " + (450 + level * 20) + "% damage.", x + 10, y + 155);
+        g.drawString("Burning enemies take " + level + "% increased damage.", x + 10, y + 175);
+        if (level < 30) {
+            g.drawString("[Level " + (level + 1) + "]", x + 10, y + 200);
+            g.drawString("Deals " + (450 + (level + 1) * 20) + "% damage.", x + 10, y + 220);
+            g.drawString("Burning enemies take " + (level + 1) + "% increased damage.", x + 10, y + 240);
+
+            g.drawString("[Level 30 Bonus]", x + 10, y + 265);
+            g.drawString("Burn also deals 1500% damage over 4 seconds(375%/s).", x + 10, y + 285);
+            g.drawString("This attack has 100% Critical Hit Chance.", x + 10, y + 305);
+        } else {
+            g.drawString("[Level 30 Bonus]", x + 10, y + 200);
+            g.drawString("Burn also deals 1500% damage over 4 seconds(375%/s).", x + 10, y + 220);
+            g.drawString("This attack has 100% Critical Hit Chance.", x + 10, y + 240);
         }
-        return "Cinder";
     }
 
 }

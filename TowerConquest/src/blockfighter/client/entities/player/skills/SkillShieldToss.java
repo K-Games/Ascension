@@ -16,16 +16,18 @@ public class SkillShieldToss extends Skill {
         skillCode = SHIELD_TOSS;
         maxCooldown = 10000;
         reqWeapon = Globals.ITEM_SHIELD;
+        skillName = "Shield Throw";
+        maxSkillName = "Guardian's Shield";
     }
 
     @Override
     public void drawInfo(Graphics2D g, int x, int y) {
-        int boxHeight = 140, boxWidth = 420;
-        if (y + boxHeight > 720) {
+        int boxHeight = (level < 30) ? 255 : 210, boxWidth = 395;
+        if (y + boxHeight > 700) {
             y = 700 - boxHeight;
         }
 
-        if (x + 30 + boxWidth > 1280) {
+        if (x + 30 + boxWidth > 1240) {
             x = 1240 - boxWidth;
         }
         g.setColor(new Color(30, 30, 30, 185));
@@ -42,15 +44,20 @@ public class SkillShieldToss extends Skill {
         g.drawString("Cooldown: " + maxCooldown / 1000 + " Seconds", x + 80, y + 70);
 
         g.drawString("Throw your shield in front of you.", x + 10, y + 90);
-        g.drawString("Deals damage multiplied by 8% + " + df.format(level * .1) + "%(" + df.format(level * .1 + 8) + "%) of Defense.", x + 10, y + 110);
-        g.drawString("Max: Throws 3 shields.", x + 10, y + 130);
+        g.drawString("Deals damage multiplied by a portion of your Defense.", x + 10, y + 110);
+
+        g.drawString("[Level " + level + "]", x + 10, y + 135);
+        g.drawString("Deals damage multiplied by " + df.format(level * .1 + 8) + "% of Defense.", x + 10, y + 155);
+        if (level < 30) {
+            g.drawString("[Level " + (level + 1) + "]", x + 10, y + 180);
+            g.drawString("Deals damage multiplied by " + df.format((level + 1) * .1 + 8) + "% of Defense.", x + 10, y + 200);
+
+            g.drawString("[Level 30 Bonus]", x + 10, y + 225);
+            g.drawString("Throws 3 shields.", x + 10, y + 245);
+        } else {
+            g.drawString("[Level 30 Bonus]", x + 10, y + 180);
+            g.drawString("Throws 3 shields.", x + 10, y + 200);
+        }
     }
 
-    @Override
-    public String getSkillName() {
-        if (isMaxed()) {
-            return "Guardian's Shield";
-        }
-        return "Shield Throw";
-    }
 }

@@ -15,9 +15,4 @@ public class SkillPassive12 extends Skill {
     @Override
     public void drawInfo(Graphics2D g, int x, int y) {
     }
-
-    @Override
-    public String getSkillName() {
-        return "normal";
-    }
 }

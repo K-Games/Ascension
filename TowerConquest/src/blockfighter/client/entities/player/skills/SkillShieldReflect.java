@@ -16,16 +16,18 @@ public class SkillShieldReflect extends Skill {
         skillCode = SHIELD_REFLECT;
         maxCooldown = 15000;
         reqWeapon = Globals.ITEM_SHIELD;
+        skillName = "Reflect Damage";
+        maxSkillName = "Strength in Numbers";
     }
 
     @Override
     public void drawInfo(Graphics2D g, int x, int y) {
-        int boxHeight = 160, boxWidth = 380;
-        if (y + boxHeight > 720) {
+        int boxHeight = (level < 30) ? 255 : 210, boxWidth = 380;
+        if (y + boxHeight > 700) {
             y = 700 - boxHeight;
         }
 
-        if (x + 30 + boxWidth > 1280) {
+        if (x + 30 + boxWidth > 1240) {
             x = 1240 - boxWidth;
         }
         g.setColor(new Color(30, 30, 30, 185));
@@ -42,16 +44,20 @@ public class SkillShieldReflect extends Skill {
         g.drawString("Cooldown: " + maxCooldown / 1000 + " Seconds", x + 80, y + 70);
 
         g.drawString("For 3 seconds, when you take damage, you explode", x + 10, y + 90);
-        g.drawString("dealing 40% + " + level * 2 + "%(" + (40 + level * 2) + "%) of damage taken.", x + 10, y + 110);
-        g.drawString("Your HP cannot fall below 5% for the duration.", x + 10, y + 130);
-        g.drawString("Max: You now reflect 40% of damage taken by allies.", x + 10, y + 150);
+        g.drawString("dealing a portion of damage taken.", x + 10, y + 110);
+        
+        g.drawString("[Level " + level + "]", x + 10, y + 135);
+        g.drawString("Deals " + (40 + level * 2) + "% of damage taken.", x + 10, y + 155);
+        if (level < 30) {
+            g.drawString("[Level " + (level + 1) + "]", x + 10, y + 180);
+            g.drawString("Deals " + (40 + (level + 1) * 2) + "% of damage taken.", x + 10, y + 200);
+
+            g.drawString("[Level 30 Bonus]", x + 10, y + 225);
+            g.drawString("You reflect 40% of damage taken by allies.", x + 10, y + 245);
+        } else {
+            g.drawString("[Level 30 Bonus]", x + 10, y + 180);
+            g.drawString("You reflect 40% of damage taken by allies.", x + 10, y + 200);
+        }
     }
 
-    @Override
-    public String getSkillName() {
-        if (isMaxed()) {
-            return "Strength in Numbers";
-        }
-        return "Reflect Damage";
-    }
 }

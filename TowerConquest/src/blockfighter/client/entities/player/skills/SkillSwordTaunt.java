@@ -16,16 +16,18 @@ public class SkillSwordTaunt extends Skill {
         skillCode = SWORD_TAUNT;
         maxCooldown = 20000;
         reqWeapon = Globals.ITEM_SWORD;
+        skillName = "Taunt";
+        maxSkillName = "Roaring Challenge";
     }
 
     @Override
     public void drawInfo(Graphics2D g, int x, int y) {
-        int boxHeight = 180, boxWidth = 330;
-        if (y + boxHeight > 720) {
+        int boxHeight = (level < 30) ? 255 : 210, boxWidth = 385;
+        if (y + boxHeight > 700) {
             y = 700 - boxHeight;
         }
 
-        if (x + 30 + boxWidth > 1280) {
+        if (x + 30 + boxWidth > 1240) {
             x = 1240 - boxWidth;
         }
         g.setColor(new Color(30, 30, 30, 185));
@@ -41,18 +43,22 @@ public class SkillSwordTaunt extends Skill {
         g.drawString("Level: " + level + " - Requires " + ItemEquip.getItemTypeName(reqWeapon), x + 80, y + 50);
         g.drawString("Cooldown: " + maxCooldown / 1000 + " Seconds", x + 80, y + 70);
 
-        g.drawString("Deal 250 + " + 10 * level + "%(" + (10 * level + 250) + "%) damage.", x + 10, y + 90);
-        g.drawString("Draw aggro by 100x damage dealt.", x + 10, y + 110);
-        g.drawString("Max:", x + 10, y + 130);
-        g.drawString("Take 20% less damage for 10 seconds.", x + 10, y + 150);
-        g.drawString("Deal 20% increased damage for 10 seconds.", x + 10, y + 170);
+        g.drawString("Deal damage and aggro equal to 100x damage dealt.", x + 10, y + 90);
+
+        g.drawString("[Level " + level + "]", x + 10, y + 115);
+        g.drawString("Deals " + (10 * level + 250) + "% damage.", x + 10, y + 135);
+        if (level < 30) {
+            g.drawString("[Level " + (level + 1) + "]", x + 10, y + 160);
+            g.drawString("Deals " + (10 * (level + 1) + 250) + "% damage.", x + 10, y + 180);
+
+            g.drawString("[Level 30 Bonus]", x + 10, y + 205);
+            g.drawString("Take 20% less damage for 10 seconds.", x + 10, y + 225);
+            g.drawString("Deal 20% increased damage for 10 seconds.", x + 10, y + 245);
+        } else {
+            g.drawString("[Level 30 Bonus]", x + 10, y + 160);
+            g.drawString("Take 20% less damage for 10 seconds.", x + 10, y + 180);
+            g.drawString("Deal 20% increased damage for 10 seconds.", x + 10, y + 200);
+        }
     }
 
-    @Override
-    public String getSkillName() {
-        if (isMaxed()) {
-            return "Roaring Challenge";
-        }
-        return "Taunt";
-    }
 }

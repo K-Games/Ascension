@@ -16,16 +16,18 @@ public class SkillBowFrost extends Skill {
         skillCode = BOW_FROST;
         maxCooldown = 20000;
         reqWeapon = Globals.ITEM_BOW;
+        skillName = "Frost Bind";
+        maxSkillName = "Eternal Blizzard";
     }
 
     @Override
     public void drawInfo(Graphics2D g, int x, int y) {
-        int boxHeight = 180, boxWidth = 290;
-        if (y + boxHeight > 720) {
+        int boxHeight = (level < 30) ? 255 : 210, boxWidth = 400;
+        if (y + boxHeight > 700) {
             y = 700 - boxHeight;
         }
 
-        if (x + 30 + boxWidth > 1280) {
+        if (x + 30 + boxWidth > 1240) {
             x = 1240 - boxWidth;
         }
         g.setColor(new Color(30, 30, 30, 185));
@@ -41,19 +43,22 @@ public class SkillBowFrost extends Skill {
         g.drawString("Level: " + level + " - Requires " + ItemEquip.getItemTypeName(reqWeapon), x + 80, y + 50);
         g.drawString("Cooldown: " + maxCooldown / 1000 + " Seconds", x + 80, y + 70);
 
-        g.drawString("Deal 100 + " + 30 * level + "%(" + (100 + 30 * level) + "%) damage.", x + 10, y + 90);
-        g.drawString("Freeze targets hit  for 2 seconds", x + 10, y + 110);
-        g.drawString("Max:", x + 10, y + 130);
-        g.drawString("Freeze now lasts for 4 seconds.", x + 10, y + 150);
-        g.drawString("Addition 2 shots dealing 250% damage.", x + 10, y + 170);
+        g.drawString("Shoot a frost arrow freezing targets hit for 2 seconds.", x + 10, y + 90);
 
-    }
+        g.drawString("[Level " + level + "]", x + 10, y + 115);
+        g.drawString("Deals " + (100 + 30 * level) + "% damage.", x + 10, y + 135);
+        if (level < 30) {
+            g.drawString("[Level " + (level + 1) + "]", x + 10, y + 160);
+            g.drawString("Deals " + (100 + 30 * (level + 1)) + "% damage.", x + 10, y + 180);
 
-    @Override
-    public String getSkillName() {
-        if (isMaxed()) {
-            return "Eternal Blizzard";
+            g.drawString("[Level 30 Bonus]", x + 10, y + 205);
+            g.drawString("Freeze now lasts for 4 seconds.", x + 10, y + 225);
+            g.drawString("Additional 2 shots that deals 250% damage.", x + 10, y + 245);
+        } else {
+            g.drawString("[Level 30 Bonus]", x + 10, y + 160);
+            g.drawString("Freeze now lasts for 4 seconds.", x + 10, y + 180);
+            g.drawString("Additional 2 shots that deals 250% damage.", x + 10, y + 200);
         }
-        return "Frost Bind";
     }
+
 }

@@ -11,18 +11,19 @@ import java.awt.Graphics2D;
 public class SkillPassiveShadowClone extends Skill {
 
     public SkillPassiveShadowClone() {
+        skillName = "Shadow Attack";
         skillCode = PASSIVE_SHADOWCLONE;
         maxCooldown = 200;
     }
 
     @Override
     public void drawInfo(Graphics2D g, int x, int y) {
-        int boxHeight = 140, boxWidth = 365;
-        if (y + boxHeight > 720) {
+        int boxHeight = (level < 30) ? 230 : 185, boxWidth = 380;
+        if (y + boxHeight > 700) {
             y = 700 - boxHeight;
         }
 
-        if (x + 30 + boxWidth > 1280) {
+        if (x + 30 + boxWidth > 1240) {
             x = 1240 - boxWidth;
         }
         g.setColor(new Color(30, 30, 30, 185));
@@ -38,13 +39,19 @@ public class SkillPassiveShadowClone extends Skill {
         g.drawString("Level: " + level, x + 80, y + 50);
         g.drawString("Cooldown: 0.2 Second", x + 80, y + 70);
 
-        g.drawString("When you deal damage there is a 20% + " + level + "%(" + (20 + level) + "%)", x + 10, y + 90);
-        g.drawString("chance a shadow attacks for 50% of the damage.", x + 10, y + 110);
-        g.drawString("Assign this passive to a hotkey to gain its effects.", x + 10, y + 130);
-    }
+        g.drawString("When you deal damage there is a chance to summon", x + 10, y + 90);
+        g.drawString("a shadow that attacks for 50% of the damage dealt.", x + 10, y + 110);
 
-    @Override
-    public String getSkillName() {
-        return "Shadow Attack";
+        g.setColor(new Color(255, 190, 0));
+        g.drawString("Assign this passive to a hotkey to gain its effects.", x + 10, y + 130);
+
+        g.setColor(Color.WHITE);
+        g.drawString("[Level " + level + "]", x + 10, y + 155);
+        g.drawString((20 + level) + "% chance to summon a shadow.", x + 10, y + 175);
+        
+        if (level < 30) {
+            g.drawString("[Level " + (level + 1) + "]", x + 10, y + 200);
+            g.drawString((20 + (level + 1)) + "% chance to summon a shadow.", x + 10, y + 220);
+        }
     }
 }

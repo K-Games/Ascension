@@ -8,7 +8,7 @@ public class ParticleSwordSlashBuffParticle extends Particle {
 
     public ParticleSwordSlashBuffParticle(int k, int x, int y, byte f) {
         super(k, x, y, f);
-        this.x += rng.nextInt(150) - 80;
+        this.x += rng.nextInt(100) - 60;
         this.y -= rng.nextInt(40);
         frame = 0;
         frameDuration = 50;

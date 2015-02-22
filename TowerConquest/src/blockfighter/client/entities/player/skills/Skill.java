@@ -1,6 +1,8 @@
 package blockfighter.client.entities.player.skills;
 
 import blockfighter.client.Globals;
+import blockfighter.client.entities.items.ItemEquip;
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.text.DecimalFormat;
@@ -17,7 +19,8 @@ public abstract class Skill {
     protected long cooldown;
     protected long maxCooldown = 1;
     protected BufferedImage icon = Globals.MENU_BUTTON[Globals.BUTTON_SLOT];
-    protected DecimalFormat df = new DecimalFormat("###,###,##0.0#");
+    protected DecimalFormat df = new DecimalFormat("###,###,##0.##");
+    protected String desc, currentLvl, nextLvl, skillName, maxSkillName;
 
     public final static byte NUM_SKILLS = 30,
             SWORD_VORPAL = 0x00,
@@ -57,7 +60,12 @@ public abstract class Skill {
 
     public abstract void drawInfo(Graphics2D g, int x, int y);
 
-    public abstract String getSkillName();
+    public String getSkillName() {
+        if (maxSkillName != null && isMaxed()) {
+            return maxSkillName;
+        }
+        return skillName;
+    }
 
     public byte getSkillCode() {
         return skillCode;

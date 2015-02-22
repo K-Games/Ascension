@@ -12,16 +12,17 @@ public class SkillPassiveVitalHit extends Skill {
 
     public SkillPassiveVitalHit() {
         skillCode = PASSIVE_VITALHIT;
+        skillName = "Vital Hit";
     }
 
     @Override
     public void drawInfo(Graphics2D g, int x, int y) {
-        int boxHeight = 120, boxWidth = 365;
-        if (y + boxHeight > 720) {
+        int boxHeight = (level < 30) ? 210: 165, boxWidth = 365;
+        if (y + boxHeight > 700) {
             y = 700 - boxHeight;
         }
 
-        if (x + 30 + boxWidth > 1280) {
+        if (x + 30 + boxWidth > 1240) {
             x = 1240 - boxWidth;
         }
         g.setColor(new Color(30, 30, 30, 185));
@@ -36,12 +37,19 @@ public class SkillPassiveVitalHit extends Skill {
         g.setFont(Globals.ARIAL_15PT);
         g.drawString("Level: " + level, x + 80, y + 50);
 
-        g.drawString("Increase Critical Hit Damage by 10% + " + level * 2 + "%(" + (10 + level * 2) + "%)", x + 10, y + 90);
+        g.drawString("Increases Critical Hit Damage.", x + 10, y + 90);
+        
+        g.setColor(new Color(255, 190, 0));
         g.drawString("Assign this passive to a hotkey to gain its effects.", x + 10, y + 110);
+
+        g.setColor(Color.WHITE);
+        g.drawString("[Level " + level + "]", x + 10, y + 135);
+        g.drawString("Additional " + (10 + level * 2) + "% Critical Hit Damage.", x + 10, y + 155);
+
+        if (level < 30) {
+            g.drawString("[Level " + (level + 1) + "]", x + 10, y + 180);
+            g.drawString("Additional " + (10 + (level + 1) * 2) + "% Critical Hit Damage.", x + 10, y + 200);
+        }
     }
 
-    @Override
-    public String getSkillName() {
-        return "Vital Hit";
-    }
 }

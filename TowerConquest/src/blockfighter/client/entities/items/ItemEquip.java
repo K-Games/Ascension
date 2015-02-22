@@ -40,7 +40,8 @@ public class ItemEquip implements Item {
     public final static double UPGRADE_CRITCHANCE = 0.002,//0.2%
             UPGRADE_CRITDMG = 0.02, //2%
             UPGRADE_REGEN = 8,
-            UPGRADE_ARMOR = 42;
+            UPGRADE_ARMOR = 24,
+            UPGRADE_MULT = 0.05;
 
     public final static int[] ITEM_CODES = {
         TEMP_SWORD, TEMP_HEAD, TEMP_CHEST,

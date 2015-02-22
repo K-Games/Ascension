@@ -4,12 +4,12 @@ import blockfighter.client.Globals;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
-public class ParticleBurn extends Particle {
+public class ParticleBurnBuffParticle extends Particle {
 
-    public ParticleBurn(int k, int x, int y, byte f) {
+    public ParticleBurnBuffParticle(int k, int x, int y, byte f) {
         super(k, x, y, f);
-        this.x += rng.nextInt(100) + ((facing == Globals.RIGHT) ? 60 : 0);
-        this.y += rng.nextInt(200) + 20;
+        this.x += rng.nextInt(100) - 60;
+        this.y -= rng.nextInt(200) + 20;
         frame = 0;
         frameDuration = 25;
         duration = 500;
