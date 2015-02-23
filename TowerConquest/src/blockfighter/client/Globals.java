@@ -56,7 +56,7 @@ public class Globals {
 
     public final static byte RIGHT = 0, LEFT = 1, DOWN = 2, UP = 3;
 
-    public final static int NUM_PARTICLE_EFFECTS = 37;
+    public final static int NUM_PARTICLE_EFFECTS = 39;
     public final static byte PARTICLE_SWORD_SLASH1 = 0x00,
             PARTICLE_SWORD_SLASH2 = 0x01,
             PARTICLE_SWORD_SLASH3 = 0x02,
@@ -89,10 +89,12 @@ public class Globals {
             PARTICLE_SHIELD_FORTIFYBUFF = 0x1E,
             PARTICLE_SHIELD_TOSS = 0x1F,
             PARTICLE_SWORD_TAUNTBUFF = 0x20,
-            PARTICLE_SWORD_SLASHBUFF = 0x21, 
-            PARTICLE_SHIELD_DASHBUFF = 0x22, 
-            PARTICLE_BOW_VOLLEYBUFF = 0x23, 
-            PARTICLE_PASSIVE_RESIST = 0x24;
+            PARTICLE_SWORD_SLASHBUFF = 0x21,
+            PARTICLE_SHIELD_DASHBUFF = 0x22,
+            PARTICLE_BOW_VOLLEYBUFF = 0x23,
+            PARTICLE_PASSIVE_RESIST = 0x24,
+            PARTICLE_PASSIVE_BARRIER = 0x25,
+            PARTICLE_PASSIVE_SHADOWATTACK = 0x26;
 
     public final static int NUM_KEYBINDS = 16,
             KEYBIND_SKILL1 = 0,
@@ -215,7 +217,9 @@ public class Globals {
     public final static BufferedImage[] MENU_TABPOINTER = new BufferedImage[1];
     public final static BufferedImage[] MENU_ITEMDELETE = new BufferedImage[1];
 
-    public final static BufferedImage[][] DAMAGE_FONT = new BufferedImage[3][10];
+    //Use Cooper Std Black size 25
+    public final static BufferedImage[][] DAMAGE_FONT = new BufferedImage[4][10];
+    public final static BufferedImage[] EXP_WORD = new BufferedImage[1];
 
     public final static BufferedImage[] SKILL_ICON = new BufferedImage[Skill.NUM_SKILLS];
 
@@ -279,8 +283,8 @@ public class Globals {
         return maxHP / reduct;
     }
 
-    public static final double calcEXP(double level) {
-        return Math.pow(level, 3.75) + 100;
+    public static final int calcEXPtoNxtLvl(double level) {
+        return (int) (Math.round(Math.pow(level, 3.75) + 100));
     }
 
     public static final byte[] intToByte(int input) {
@@ -362,7 +366,7 @@ public class Globals {
             MENU_TABPOINTER[0] = ImageIO.read(Globals.class.getResource("sprites/ui/menu/pointer.png"));
             MENU_ITEMDELETE[0] = ImageIO.read(Globals.class.getResource("sprites/ui/menu/delete.png"));
             MENU_SMOKE[0] = ImageIO.read(Globals.class.getResource("sprites/ui/menu/smoke.png"));
-            for (byte i = 0; i < 18; i++) {
+            for (byte i = 0; i < 29; i++) {
                 SKILL_ICON[i] = ImageIO.read(Globals.class.getResource("sprites/skillicon/" + i + ".png"));
             }
 
@@ -370,7 +374,9 @@ public class Globals {
                 DAMAGE_FONT[Damage.DAMAGE_TYPE_BOSS][i] = ImageIO.read(Globals.class.getResource("sprites/damage/boss/" + i + ".png"));
                 DAMAGE_FONT[Damage.DAMAGE_TYPE_PLAYER][i] = ImageIO.read(Globals.class.getResource("sprites/damage/player/" + i + ".png"));
                 DAMAGE_FONT[Damage.DAMAGE_TYPE_PLAYERCRIT][i] = ImageIO.read(Globals.class.getResource("sprites/damage/playercrit/" + i + ".png"));
+                DAMAGE_FONT[Damage.DAMAGE_TYPE_EXP][i] = ImageIO.read(Globals.class.getResource("sprites/damage/exp/" + i + ".png"));
             }
+            EXP_WORD[0] = ImageIO.read(Globals.class.getResource("sprites/damage/exp/exp.png"));
 
         } catch (IOException ex) {
             Logger.getLogger(Globals.class.getName()).log(Level.SEVERE, null, ex);

@@ -49,7 +49,7 @@ public class SkillSwordDrive extends Skill {
         g.drawString("Deals " + (3 * level + 75) + "% damage per hit.", x + 10, y + 135);
         if (level < 30) {
             g.drawString("[Level " + (level + 1) + "]", x + 10, y + 160);
-            g.drawString("Deals " + (3 * (level + 1)  + 75) + "% damage per hit.", x + 10, y + 180);
+            g.drawString("Deals " + (3 * (level + 1) + 75) + "% damage per hit.", x + 10, y + 180);
 
             g.drawString("[Level 30 Bonus]", x + 10, y + 205);
             g.drawString("Restore 0.5% HP per hit(2%).", x + 10, y + 225);

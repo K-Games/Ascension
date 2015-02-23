@@ -10,8 +10,8 @@ public class ParticlePassiveResist extends Particle {
     public ParticlePassiveResist(int k, int x, int y) {
         super(k, x, y, Globals.RIGHT);
         frame = 0;
-        frameDuration = 50;
-        duration = 600;
+        frameDuration = 25;
+        duration = 300;
     }
 
     @Override
@@ -19,7 +19,7 @@ public class ParticlePassiveResist extends Particle {
         super.update();
         frameDuration -= Globals.LOGIC_UPDATE / 1000000;
         if (frameDuration <= 0) {
-            frameDuration = 50;
+            frameDuration = 25;
             if (frame < PARTICLE_SPRITE[Globals.PARTICLE_PASSIVE_RESIST].length - 1) {
                 frame++;
             }
@@ -36,9 +36,9 @@ public class ParticlePassiveResist extends Particle {
         }
         BufferedImage sprite = PARTICLE_SPRITE[Globals.PARTICLE_PASSIVE_RESIST][frame];
         int drawSrcX = x - sprite.getWidth() / 2;
-        int drawSrcY = y - sprite.getHeight()+ 50;
+        int drawSrcY = y - sprite.getHeight() + 50;
         int drawDscY = drawSrcY + sprite.getHeight();
-        int drawDscX = x + sprite.getWidth() / 2;
+        int drawDscX = drawSrcX + sprite.getWidth();
         g.drawImage(sprite, drawSrcX, drawSrcY, drawDscX, drawDscY, 0, 0, sprite.getWidth(), sprite.getHeight(), null);
         g.setColor(Color.WHITE);
     }

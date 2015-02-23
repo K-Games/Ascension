@@ -12,8 +12,9 @@ public class SkillPassiveResistance extends Skill {
 
     public SkillPassiveResistance() {
         skillName = "Resistance";
-        skillCode = PASSIVE_RESISTANCE;
+        skillCode = PASSIVE_RESIST;
         maxCooldown = 35000;
+        icon = Globals.SKILL_ICON[PASSIVE_RESIST];
     }
 
     @Override

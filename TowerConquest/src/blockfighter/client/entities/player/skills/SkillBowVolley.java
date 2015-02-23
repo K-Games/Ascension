@@ -22,7 +22,7 @@ public class SkillBowVolley extends Skill {
 
     @Override
     public void drawInfo(Graphics2D g, int x, int y) {
-        int boxHeight = 235, boxWidth = 410;
+        int boxHeight = (level < 30) ? 235 : 190, boxWidth = 410;
         if (y + boxHeight > 700) {
             y = 700 - boxHeight;
         }
@@ -47,14 +47,18 @@ public class SkillBowVolley extends Skill {
 
         g.drawString("[Level " + level + "]", x + 10, y + 115);
         g.drawString("Deals " + (25 + 2 * level) + "% damage per hit", x + 10, y + 135);
-        
+
         if (level < 30) {
             g.drawString("[Level " + (level + 1) + "]", x + 10, y + 160);
             g.drawString("Deals " + (25 + 2 * (level + 1)) + "% damage per hit", x + 10, y + 180);
+
+            g.drawString("[Level 30 Bonus]", x + 10, y + 205);
+            g.drawString("Each Critical Hit increases damage by 1% for 4 seconds.", x + 10, y + 225);
+        } else {
+            g.drawString("[Level 30 Bonus]", x + 10, y + 160);
+            g.drawString("Each Critical Hit increases damage by 1% for 4 seconds.", x + 10, y + 180);
         }
-        
-        g.drawString("[Level 30 Bonus]", x + 10, y + 205);
-        g.drawString("Each Critical Hit increases damage by 1% for 4 seconds.", x + 10, y + 225);
+
     }
 
 }

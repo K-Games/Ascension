@@ -13,6 +13,7 @@ public class SkillPassiveShieldMastery extends Skill {
     public SkillPassiveShieldMastery() {
         skillName = "Defender Mastery";
         skillCode = PASSIVE_SHIELDMASTERY;
+        icon = Globals.SKILL_ICON[PASSIVE_SHIELDMASTERY];
     }
 
     @Override

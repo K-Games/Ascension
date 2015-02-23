@@ -13,6 +13,7 @@ public class SkillPassiveTactical extends Skill {
     public SkillPassiveTactical() {
         skillName = "Tactical Execution";
         skillCode = PASSIVE_TACTICAL;
+        icon = Globals.SKILL_ICON[PASSIVE_TACTICAL];
     }
 
     @Override

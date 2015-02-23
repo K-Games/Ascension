@@ -13,6 +13,7 @@ public class SkillPassiveWillpower extends Skill {
     public SkillPassiveWillpower() {
         skillCode = PASSIVE_WILLPOWER;
         skillName = "Power Of Will";
+        icon = Globals.SKILL_ICON[PASSIVE_WILLPOWER];
     }
 
     @Override

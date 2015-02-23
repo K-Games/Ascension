@@ -12,7 +12,7 @@ import java.awt.Graphics2D;
 public class SkillShieldReflect extends Skill {
 
     public SkillShieldReflect() {
-        icon = Globals.SKILL_ICON[Skill.SHIELD_REFLECT];
+        icon = Globals.SKILL_ICON[SHIELD_REFLECT];
         skillCode = SHIELD_REFLECT;
         maxCooldown = 15000;
         reqWeapon = Globals.ITEM_SHIELD;
@@ -45,7 +45,7 @@ public class SkillShieldReflect extends Skill {
 
         g.drawString("For 3 seconds, when you take damage, you explode", x + 10, y + 90);
         g.drawString("dealing a portion of damage taken.", x + 10, y + 110);
-        
+
         g.drawString("[Level " + level + "]", x + 10, y + 135);
         g.drawString("Deals " + (40 + level * 2) + "% of damage taken.", x + 10, y + 155);
         if (level < 30) {

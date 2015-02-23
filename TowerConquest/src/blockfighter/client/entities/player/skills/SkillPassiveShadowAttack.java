@@ -8,17 +8,18 @@ import java.awt.Graphics2D;
  *
  * @author Ken Kwan
  */
-public class SkillPassiveShadowClone extends Skill {
+public class SkillPassiveShadowAttack extends Skill {
 
-    public SkillPassiveShadowClone() {
-        skillName = "Shadow Attack";
-        skillCode = PASSIVE_SHADOWCLONE;
+    public SkillPassiveShadowAttack() {
+        skillName = "Piercing Shadows";
+        skillCode = PASSIVE_SHADOWATTACK;
         maxCooldown = 200;
+        icon = Globals.SKILL_ICON[PASSIVE_SHADOWATTACK];
     }
 
     @Override
     public void drawInfo(Graphics2D g, int x, int y) {
-        int boxHeight = (level < 30) ? 230 : 185, boxWidth = 380;
+        int boxHeight = (level < 30) ? 230 : 185, boxWidth = 415;
         if (y + boxHeight > 700) {
             y = 700 - boxHeight;
         }
@@ -39,19 +40,19 @@ public class SkillPassiveShadowClone extends Skill {
         g.drawString("Level: " + level, x + 80, y + 50);
         g.drawString("Cooldown: 0.2 Second", x + 80, y + 70);
 
-        g.drawString("When you deal damage there is a chance to summon", x + 10, y + 90);
-        g.drawString("a shadow that attacks for 50% of the damage dealt.", x + 10, y + 110);
+        g.drawString("When you deal damage there is a chance a shadow blade", x + 10, y + 90);
+        g.drawString("pierces that same target for 50% of the damage dealt.", x + 10, y + 110);
 
         g.setColor(new Color(255, 190, 0));
         g.drawString("Assign this passive to a hotkey to gain its effects.", x + 10, y + 130);
 
         g.setColor(Color.WHITE);
         g.drawString("[Level " + level + "]", x + 10, y + 155);
-        g.drawString((20 + level) + "% chance to summon a shadow.", x + 10, y + 175);
-        
+        g.drawString((20 + level) + "% chance to summon a shadow blade.", x + 10, y + 175);
+
         if (level < 30) {
             g.drawString("[Level " + (level + 1) + "]", x + 10, y + 200);
-            g.drawString((20 + (level + 1)) + "% chance to summon a shadow.", x + 10, y + 220);
+            g.drawString((20 + (level + 1)) + "% chance to summon a shadow blade.", x + 10, y + 220);
         }
     }
 }

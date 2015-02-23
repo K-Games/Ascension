@@ -50,7 +50,7 @@ public class SkillBowPower extends Skill {
         if (level < 30) {
             g.drawString("[Level " + (level + 1) + "]", x + 10, y + 160);
             g.drawString("Deals " + (500 + 100 * (level + 1)) + "% damage.", x + 10, y + 180);
-            
+
             g.drawString("[Level 30 Bonus]", x + 10, y + 205);
             g.drawString("Can no longer be interrupted.", x + 10, y + 225);
             g.drawString("Critical Hits deal +300% Critical Hit damage.", x + 10, y + 245);

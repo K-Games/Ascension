@@ -12,7 +12,7 @@ import java.awt.Graphics2D;
 public class SkillShieldToss extends Skill {
 
     public SkillShieldToss() {
-        icon = Globals.SKILL_ICON[Skill.SHIELD_TOSS];
+        icon = Globals.SKILL_ICON[SHIELD_TOSS];
         skillCode = SHIELD_TOSS;
         maxCooldown = 10000;
         reqWeapon = Globals.ITEM_SHIELD;

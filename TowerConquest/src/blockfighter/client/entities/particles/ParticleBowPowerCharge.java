@@ -38,7 +38,7 @@ public class ParticleBowPowerCharge extends Particle {
         int drawSrcX = x - sprite.getWidth() / 2;
         int drawSrcY = y;
         int drawDscY = drawSrcY + sprite.getHeight();
-        int drawDscX = x + sprite.getWidth() / 2;
+        int drawDscX = drawSrcX + sprite.getWidth();
         g.drawImage(sprite, drawSrcX, drawSrcY, drawDscX, drawDscY, 0, 0, sprite.getWidth(), sprite.getHeight(), null);
         g.setColor(Color.WHITE);
     }

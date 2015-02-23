@@ -12,7 +12,7 @@ import java.awt.Graphics2D;
 public class SkillShieldIron extends Skill {
 
     public SkillShieldIron() {
-        icon = Globals.SKILL_ICON[Skill.SHIELD_IRON];
+        icon = Globals.SKILL_ICON[SHIELD_IRON];
         skillCode = SHIELD_IRON;
         maxCooldown = 20000;
         reqWeapon = Globals.ITEM_SHIELD;

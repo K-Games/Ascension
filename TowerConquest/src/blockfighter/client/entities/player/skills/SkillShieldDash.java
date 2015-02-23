@@ -12,7 +12,7 @@ import java.awt.Graphics2D;
 public class SkillShieldDash extends Skill {
 
     public SkillShieldDash() {
-        icon = Globals.SKILL_ICON[Skill.SHIELD_DASH];
+        icon = Globals.SKILL_ICON[SHIELD_DASH];
         skillCode = SHIELD_DASH;
         maxCooldown = 2000;
         reqWeapon = Globals.ITEM_SHIELD;

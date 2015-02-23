@@ -102,8 +102,8 @@ public class ScreenStats extends ScreenMenu {
         drawStringOutline(g, "Effective HP: " + df.format((int) Globals.calcEHP(
                 stats[Globals.STAT_DAMAGEREDUCT],
                 stats[Globals.STAT_MAXHP])), 255, secStat + 180, 1);
-        drawStringOutline(g, "Exp: " + df.format((int) (bs[Globals.STAT_EXP])) + "/" + df.format((int) Globals.calcEXP(bs[Globals.STAT_LEVEL]))
-                + "(" + df.format((bs[Globals.STAT_EXP] / Globals.calcEXP(bs[Globals.STAT_LEVEL])) * 100) + "%)", 255, secStat + 205, 1);
+        drawStringOutline(g, "Exp: " + df.format((bs[Globals.STAT_EXP])) + "/" + df.format(Globals.calcEXPtoNxtLvl(bs[Globals.STAT_LEVEL]))
+                + "(" + df.format((bs[Globals.STAT_EXP] / Globals.calcEXPtoNxtLvl(bs[Globals.STAT_LEVEL])) * 100) + "%)", 255, secStat + 205, 1);
 
         g.setColor(Color.WHITE);
         g.drawString("Level: " + (int) stats[Globals.STAT_LEVEL], 255, 130);
@@ -123,8 +123,8 @@ public class ScreenStats extends ScreenMenu {
                 stats[Globals.STAT_DAMAGEREDUCT],
                 stats[Globals.STAT_MAXHP])), 255, secStat + 180);
 
-        g.drawString("Exp: " + df.format((int) (bs[Globals.STAT_EXP])) + "/" + df.format((int) Globals.calcEXP(bs[Globals.STAT_LEVEL]))
-                + "(" + df.format((bs[Globals.STAT_EXP] / Globals.calcEXP(bs[Globals.STAT_LEVEL])) * 100) + "%)", 255, secStat + 205);
+        g.drawString("Exp: " + df.format((bs[Globals.STAT_EXP])) + "/" + df.format(Globals.calcEXPtoNxtLvl(bs[Globals.STAT_LEVEL]))
+                + "(" + df.format((bs[Globals.STAT_EXP] / Globals.calcEXPtoNxtLvl(bs[Globals.STAT_LEVEL])) * 100) + "%)", 255, secStat + 205);
 
         g.setColor(Color.BLACK);
         g.fillRect(255, secStat + 215, 450, 40);
@@ -133,7 +133,7 @@ public class ScreenStats extends ScreenMenu {
         g.setColor(Color.BLACK);
         g.fillRect(257, secStat + 217, 446, 36);
         g.setColor(new Color(255, 175, 0));
-        g.fillRect(258, secStat + 218, (int) (bs[Globals.STAT_EXP] / Globals.calcEXP(bs[Globals.STAT_LEVEL]) * 444), 34);
+        g.fillRect(258, secStat + 218, (int) (bs[Globals.STAT_EXP] / Globals.calcEXPtoNxtLvl(bs[Globals.STAT_LEVEL]) * 444), 34);
 
         button = Globals.MENU_BUTTON[Globals.BUTTON_SMALLRECT];
         g.drawImage(button, (int) resetBox.x, (int) resetBox.y, null);

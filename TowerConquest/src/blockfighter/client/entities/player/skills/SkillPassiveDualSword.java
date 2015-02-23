@@ -13,6 +13,7 @@ public class SkillPassiveDualSword extends Skill {
     public SkillPassiveDualSword() {
         skillCode = PASSIVE_DUALSWORD;
         skillName = "Dual Wield Mastery";
+        icon = Globals.SKILL_ICON[PASSIVE_DUALSWORD];
     }
 
     @Override

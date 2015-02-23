@@ -66,12 +66,12 @@ public class SaveData {
         skills[Skill.PASSIVE_VITALHIT] = new SkillPassiveVitalHit();
         skills[Skill.PASSIVE_SHIELDMASTERY] = new SkillPassiveShieldMastery();
         skills[Skill.PASSIVE_BARRIER] = new SkillPassiveBarrier();
-        skills[Skill.PASSIVE_RESISTANCE] = new SkillPassiveResistance();
+        skills[Skill.PASSIVE_RESIST] = new SkillPassiveResistance();
         skills[Skill.PASSIVE_BOWMASTERY] = new SkillPassiveBowMastery();
         skills[Skill.PASSIVE_WILLPOWER] = new SkillPassiveWillpower();
         skills[Skill.PASSIVE_TACTICAL] = new SkillPassiveTactical();
         skills[Skill.PASSIVE_REVIVE] = new SkillPassiveRevive();
-        skills[Skill.PASSIVE_SHADOWCLONE] = new SkillPassiveShadowClone();
+        skills[Skill.PASSIVE_SHADOWATTACK] = new SkillPassiveShadowAttack();
         skills[Skill.PASSIVE_12] = new SkillPassive12();
     }
 
@@ -480,18 +480,18 @@ public class SaveData {
     public void addExp(double amount) {
         baseStats[Globals.STAT_EXP] += amount;
         if (baseStats[Globals.STAT_LEVEL] == 100) {
-            if (baseStats[Globals.STAT_EXP] >= Globals.calcEXP(baseStats[Globals.STAT_LEVEL])) {
-                baseStats[Globals.STAT_EXP] = Globals.calcEXP(baseStats[Globals.STAT_LEVEL]);
+            if (baseStats[Globals.STAT_EXP] >= Globals.calcEXPtoNxtLvl(baseStats[Globals.STAT_LEVEL])) {
+                baseStats[Globals.STAT_EXP] = Globals.calcEXPtoNxtLvl(baseStats[Globals.STAT_LEVEL]);
             }
             return;
         }
-        while (baseStats[Globals.STAT_EXP] >= Globals.calcEXP(baseStats[Globals.STAT_LEVEL])) {
+        while (baseStats[Globals.STAT_EXP] >= Globals.calcEXPtoNxtLvl(baseStats[Globals.STAT_LEVEL])) {
             levelUp();
         }
     }
 
     public void levelUp() {
-        baseStats[Globals.STAT_EXP] -= Globals.calcEXP(baseStats[Globals.STAT_LEVEL]);
+        baseStats[Globals.STAT_EXP] -= Globals.calcEXPtoNxtLvl(baseStats[Globals.STAT_LEVEL]);
         baseStats[Globals.STAT_LEVEL] += 1;
         baseStats[Globals.STAT_POINTS] += Globals.STAT_PER_LEVEL;
         baseStats[Globals.STAT_SKILLPOINTS] += 3;

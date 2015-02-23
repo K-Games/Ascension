@@ -13,7 +13,7 @@ public class ParticleBowVolleyBuffParticle extends Particle {
         this.x += rng.nextInt(100) - 60;
         this.y -= rng.nextInt(40) + 58;
         xDouble = this.x;
-        xSpeed = rng.nextInt(10) * .75 -3.75;
+        xSpeed = rng.nextInt(10) * .75 - 3.75;
         frame = 0;
         frameDuration = 50;
         duration = 300;

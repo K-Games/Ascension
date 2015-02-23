@@ -22,7 +22,7 @@ public class SkillSwordCinder extends Skill {
 
     @Override
     public void drawInfo(Graphics2D g, int x, int y) {
-        int boxHeight =(level < 30) ? 315 : 250, boxWidth = 430;
+        int boxHeight = (level < 30) ? 315 : 250, boxWidth = 430;
         if (y + boxHeight > 700) {
             y = 700 - boxHeight;
         }

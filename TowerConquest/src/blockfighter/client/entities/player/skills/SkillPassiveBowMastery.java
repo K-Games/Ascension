@@ -13,6 +13,7 @@ public class SkillPassiveBowMastery extends Skill {
     public SkillPassiveBowMastery() {
         skillCode = PASSIVE_BOWMASTERY;
         skillName = "Bow Mastery";
+        icon = Globals.SKILL_ICON[PASSIVE_BOWMASTERY];
     }
 
     @Override

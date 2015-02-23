@@ -40,7 +40,7 @@ public class ParticleShieldIron extends Particle {
         }
         Point p = owner.getPos();
         BufferedImage sprite = PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_IRON][frame];
-        x = p.x - sprite.getWidth() / 2 ;
+        x = p.x - sprite.getWidth() / 2;
         y = p.y - sprite.getHeight() + 65;
         int drawSrcX = x;
         int drawSrcY = y;

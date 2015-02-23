@@ -651,6 +651,16 @@ public class ScreenIngame extends Screen {
                 y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
                 particles.put(key, new ParticlePassiveResist(key, x, y));
                 break;
+            case Globals.PARTICLE_PASSIVE_BARRIER:
+                x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
+                y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
+                particles.put(key, new ParticlePassiveBarrier(key, x, y));
+                break;
+            case Globals.PARTICLE_PASSIVE_SHADOWATTACK:
+                x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
+                y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
+                particles.put(key, new ParticlePassiveShadowAttack(key, x, y));
+                break;
         }
     }
 

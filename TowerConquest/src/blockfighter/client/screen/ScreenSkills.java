@@ -67,14 +67,14 @@ public class ScreenSkills extends ScreenMenu {
 
         skillSlots[Skill.PASSIVE_SHIELDMASTERY] = new Rectangle2D.Double(1050, 310, 60, 60);
         skillSlots[Skill.PASSIVE_BARRIER] = new Rectangle2D.Double(1050, 395, 60, 60);
-        skillSlots[Skill.PASSIVE_RESISTANCE] = new Rectangle2D.Double(1050, 480, 60, 60);
+        skillSlots[Skill.PASSIVE_RESIST] = new Rectangle2D.Double(1050, 480, 60, 60);
 
         skillSlots[Skill.PASSIVE_BOWMASTERY] = new Rectangle2D.Double(1160, 55, 60, 60);
         skillSlots[Skill.PASSIVE_WILLPOWER] = new Rectangle2D.Double(1160, 140, 60, 60);
         skillSlots[Skill.PASSIVE_TACTICAL] = new Rectangle2D.Double(1160, 225, 60, 60);
 
         skillSlots[Skill.PASSIVE_REVIVE] = new Rectangle2D.Double(1160, 310, 60, 60);
-        skillSlots[Skill.PASSIVE_SHADOWCLONE] = new Rectangle2D.Double(1160, 395, 60, 60);
+        skillSlots[Skill.PASSIVE_SHADOWATTACK] = new Rectangle2D.Double(1160, 395, 60, 60);
         skillSlots[Skill.PASSIVE_12] = new Rectangle2D.Double(1160, 480, 60, 60);
         for (int i = 0; i < hotkeySlots.length; i++) {
             hotkeySlots[i] = new Rectangle2D.Double(240 + (i * 64), 605, 60, 60);
@@ -84,7 +84,7 @@ public class ScreenSkills extends ScreenMenu {
         }
 
         for (int i = 18; i < addBox.length; i++) {
-            addBox[i] = new Rectangle2D.Double(skillSlots[i].x + 58, skillSlots[i].y + 37, 30, 23);
+            addBox[i] = new Rectangle2D.Double(skillSlots[i].x + 59, skillSlots[i].y + 37, 30, 23);
         }
         resetBox = new Rectangle2D.Double(1050, 630, 180, 30);
     }

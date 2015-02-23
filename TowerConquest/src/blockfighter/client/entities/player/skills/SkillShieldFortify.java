@@ -12,7 +12,7 @@ import java.awt.Graphics2D;
 public class SkillShieldFortify extends Skill {
 
     public SkillShieldFortify() {
-        icon = Globals.SKILL_ICON[Skill.SHIELD_FORTIFY];
+        icon = Globals.SKILL_ICON[SHIELD_FORTIFY];
         skillCode = SHIELD_FORTIFY;
         maxCooldown = 15000;
         reqWeapon = Globals.ITEM_SHIELD;

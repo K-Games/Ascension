@@ -12,7 +12,7 @@ import java.awt.Graphics2D;
 public class SkillShieldCharge extends Skill {
 
     public SkillShieldCharge() {
-        icon = Globals.SKILL_ICON[Skill.SHIELD_CHARGE];
+        icon = Globals.SKILL_ICON[SHIELD_CHARGE];
         skillCode = SHIELD_CHARGE;
         maxCooldown = 8000;
         reqWeapon = Globals.ITEM_SHIELD;
@@ -50,7 +50,7 @@ public class SkillShieldCharge extends Skill {
         g.drawString("Deals " + (300 + level * 20) + "% damage.", x + 10, y + 155);
         if (level < 30) {
             g.drawString("[Level " + (level + 1) + "]", x + 10, y + 180);
-            g.drawString("Deals " + (300 +  (level + 1) * 20) + "% damage.", x + 10, y + 200);
+            g.drawString("Deals " + (300 + (level + 1) * 20) + "% damage.", x + 10, y + 200);
 
             g.drawString("[Level 30 Bonus]", x + 10, y + 225);
             g.drawString("Stun enemies hit for 2 seconds.", x + 10, y + 245);

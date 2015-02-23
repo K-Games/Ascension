@@ -74,7 +74,7 @@ public class ScreenInventory extends ScreenMenu {
             updateParticles(particles);
             nextFrameTime -= Globals.LOGIC_UPDATE;
             if (nextFrameTime <= 0) {
-                if (charFrame >= 8) {
+                if (charFrame >= 9) {
                     charFrame = 0;
                 } else {
                     charFrame++;

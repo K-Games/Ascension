@@ -66,11 +66,11 @@ public class Main {
         Player.setLogic(logic);
         PacketHandler.setLogic(logic);
         PacketReceiver.setLogic(logic);
-        
+
         ExecutorService threadPool = Executors.newFixedThreadPool(10);
         Screen.setThreadPool(threadPool);
         GameMap.setThreadPool(threadPool);
-        
+
         KeyHandler keyHandler = new KeyHandler();
         MouseHandler mouseHandler = new MouseHandler();
         //frame.setUndecorated(true);

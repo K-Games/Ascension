@@ -14,6 +14,7 @@ public class SkillPassiveRevive extends Skill {
         skillCode = PASSIVE_REVIVE;
         skillName = "Resurrection";
         maxCooldown = 120000;
+        icon = Globals.SKILL_ICON[PASSIVE_REVIVE];
     }
 
     @Override

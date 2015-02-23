@@ -13,6 +13,7 @@ public class SkillPassiveKeenEye extends Skill {
     public SkillPassiveKeenEye() {
         skillCode = PASSIVE_KEENEYE;
         skillName = "Keen Eye";
+        icon = Globals.SKILL_ICON[PASSIVE_KEENEYE];
     }
 
     @Override

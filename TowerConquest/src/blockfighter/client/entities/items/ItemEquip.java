@@ -41,7 +41,7 @@ public class ItemEquip implements Item {
             UPGRADE_CRITDMG = 0.02, //2%
             UPGRADE_REGEN = 8,
             UPGRADE_ARMOR = 24,
-            UPGRADE_MULT = 0.05;
+            UPGRADE_MULT = 0.04;
 
     public final static int[] ITEM_CODES = {
         TEMP_SWORD, TEMP_HEAD, TEMP_CHEST,
@@ -531,9 +531,9 @@ public class ItemEquip implements Item {
 
     private void update() {
         System.arraycopy(baseStats, 0, totalStats, 0, baseStats.length);
-        totalStats[Globals.STAT_POWER] = Math.round(baseStats[Globals.STAT_POWER] * (1 + bonusMult + upgrades * 0.02));
-        totalStats[Globals.STAT_DEFENSE] = Math.round(baseStats[Globals.STAT_DEFENSE] * (1 + bonusMult + upgrades * 0.02));
-        totalStats[Globals.STAT_SPIRIT] = Math.round(baseStats[Globals.STAT_SPIRIT] * (1 + bonusMult + upgrades * 0.02));
+        totalStats[Globals.STAT_POWER] = Math.round(baseStats[Globals.STAT_POWER] * (1 + bonusMult + upgrades * UPGRADE_MULT));
+        totalStats[Globals.STAT_DEFENSE] = Math.round(baseStats[Globals.STAT_DEFENSE] * (1 + bonusMult + upgrades * UPGRADE_MULT));
+        totalStats[Globals.STAT_SPIRIT] = Math.round(baseStats[Globals.STAT_SPIRIT] * (1 + bonusMult + upgrades * UPGRADE_MULT));
 
         if (baseStats[Globals.STAT_CRITCHANCE] > 0) {
             totalStats[Globals.STAT_CRITCHANCE] = baseStats[Globals.STAT_CRITCHANCE] + upgrades * UPGRADE_CRITCHANCE;
@@ -547,15 +547,15 @@ public class ItemEquip implements Item {
         if (baseStats[Globals.STAT_REGEN] > 0) {
             totalStats[Globals.STAT_REGEN] = baseStats[Globals.STAT_REGEN] + upgrades * UPGRADE_REGEN;
         }
-        if (bonusMult + upgrades * 0.01 >= 1.1) {
+        if (bonusMult + upgrades * UPGRADE_MULT >= 1.1) {
             tier = TIER_DIVINE;
-        } else if (bonusMult + upgrades * 0.01 >= 0.96) {
+        } else if (bonusMult + upgrades * UPGRADE_MULT >= 0.96) {
             tier = TIER_ARCHAIC;
-        } else if (bonusMult + upgrades * 0.01 >= 0.81) {
+        } else if (bonusMult + upgrades * UPGRADE_MULT >= 0.81) {
             tier = TIER_LEGENDARY;
-        } else if (bonusMult + upgrades * 0.01 >= 0.51) {
+        } else if (bonusMult + upgrades * UPGRADE_MULT >= 0.51) {
             tier = TIER_RUNIC;
-        } else if (bonusMult + upgrades * 0.01 >= 0.15) {
+        } else if (bonusMult + upgrades * UPGRADE_MULT >= 0.15) {
             tier = TIER_RARE;
         } else {
             if (totalStats[Globals.STAT_CRITCHANCE] > 0

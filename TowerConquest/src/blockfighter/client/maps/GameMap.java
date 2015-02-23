@@ -83,8 +83,8 @@ public abstract class GameMap {
             pEntry.getValue().draw(g);
         }
     }
-    
-    public void drawBg(Graphics2D g){
+
+    public void drawBg(Graphics2D g) {
         g.drawImage(bg, 0, 0, null);
     }
 }

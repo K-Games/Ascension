@@ -198,6 +198,14 @@ public abstract class Particle extends Thread {
         for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_PASSIVE_RESIST].length; i++) {
             PARTICLE_SPRITE[Globals.PARTICLE_PASSIVE_RESIST][i] = ImageIO.read(Globals.class.getResource("sprites/particle/resist/" + i + ".png"));
         }
+        PARTICLE_SPRITE[Globals.PARTICLE_PASSIVE_BARRIER] = new BufferedImage[12];
+        for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_PASSIVE_BARRIER].length; i++) {
+            PARTICLE_SPRITE[Globals.PARTICLE_PASSIVE_BARRIER][i] = ImageIO.read(Globals.class.getResource("sprites/particle/barrier/" + i + ".png"));
+        }
+        PARTICLE_SPRITE[Globals.PARTICLE_PASSIVE_SHADOWATTACK] = new BufferedImage[16];
+        for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_PASSIVE_SHADOWATTACK].length; i++) {
+            PARTICLE_SPRITE[Globals.PARTICLE_PASSIVE_SHADOWATTACK][i] = ImageIO.read(Globals.class.getResource("sprites/particle/shadowattack/" + i + ".png"));
+        }
     }
 
     public void update() {

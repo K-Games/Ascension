@@ -13,11 +13,12 @@ public class SkillPassiveVitalHit extends Skill {
     public SkillPassiveVitalHit() {
         skillCode = PASSIVE_VITALHIT;
         skillName = "Vital Hit";
+        icon = Globals.SKILL_ICON[PASSIVE_VITALHIT];
     }
 
     @Override
     public void drawInfo(Graphics2D g, int x, int y) {
-        int boxHeight = (level < 30) ? 210: 165, boxWidth = 365;
+        int boxHeight = (level < 30) ? 210 : 165, boxWidth = 365;
         if (y + boxHeight > 700) {
             y = 700 - boxHeight;
         }
@@ -38,7 +39,7 @@ public class SkillPassiveVitalHit extends Skill {
         g.drawString("Level: " + level, x + 80, y + 50);
 
         g.drawString("Increases Critical Hit Damage.", x + 10, y + 90);
-        
+
         g.setColor(new Color(255, 190, 0));
         g.drawString("Assign this passive to a hotkey to gain its effects.", x + 10, y + 110);
 
