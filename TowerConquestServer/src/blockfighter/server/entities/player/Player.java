@@ -61,9 +61,10 @@ public class Player extends Thread {
     private Rectangle2D.Double hitbox;
 
     private ConcurrentHashMap<Integer, Buff> buffs = new ConcurrentHashMap<>(150, 0.9f, 1);
-    private Buff isStun, isKnockback;
+    private Buff stunDebuff, knockbackDebuff, barrierBuff;
     private ArrayList<Buff> reflects = new ArrayList<>(10);
-    private double dmgReduct = 1, dmgAmp = 1;
+    private double dmgReduct, dmgAmp;
+    private double barrierDmgTaken = 0, tacticalDmgMult = 0;
 
     private final InetAddress address;
     private final int port;
@@ -74,17 +75,16 @@ public class Player extends Thread {
     private int[] equip = new int[Globals.NUM_EQUIP_SLOTS];
     private ConcurrentHashMap<Byte, Skill> skills = new ConcurrentHashMap<>(Skill.NUM_SKILLS, 0.9f, 1);
     private boolean connected = true;
-    private Random rng = new Random();
+    private static Random rng = new Random();
 
     private ConcurrentLinkedQueue<Damage> damageQueue = new ConcurrentLinkedQueue<>();
     private ConcurrentLinkedQueue<Integer> healQueue = new ConcurrentLinkedQueue<>();
-    private Byte nextState;
     private ConcurrentLinkedQueue<byte[]> skillUseQueue = new ConcurrentLinkedQueue<>();
     private ConcurrentLinkedQueue<Buff> buffQueue = new ConcurrentLinkedQueue<>();
 
     private ConcurrentLinkedQueue<Integer> buffKeys = new ConcurrentLinkedQueue<>();
     private int maxBuffKeys = 0;
-
+    private Byte nextState;
     private long lastActionTime = Globals.SERVER_MAX_IDLE;
     private long skillDuration = 0;
     private int skillCounter = 0;
@@ -425,7 +425,7 @@ public class Player extends Thread {
             case Skill.PASSIVE_BARRIER:
                 newSkill = new SkillPassiveBarrier();
                 break;
-            case Skill.PASSIVE_RESISTANCE:
+            case Skill.PASSIVE_RESIST:
                 newSkill = new SkillPassiveResistance();
                 break;
             case Skill.PASSIVE_BOWMASTERY:
@@ -440,8 +440,8 @@ public class Player extends Thread {
             case Skill.PASSIVE_REVIVE:
                 newSkill = new SkillPassiveRevive();
                 break;
-            case Skill.PASSIVE_SHADOWCLONE:
-                newSkill = new SkillPassiveShadowClone();
+            case Skill.PASSIVE_SHADOWATTACK:
+                newSkill = new SkillPassiveShadowAttack();
                 break;
             case Skill.PASSIVE_12:
                 newSkill = new SkillPassive12();
@@ -730,6 +730,12 @@ public class Player extends Thread {
                         sendCooldown(data);
                         nextFrameTime = 40000000;
                         break;
+                }
+
+                //Tactical Execution Passive
+                //Add after being able to cast skill
+                if (hasSkill(Skill.PASSIVE_TACTICAL) && tacticalDmgMult < 0.01 + 0.01 * getSkillLevel(Skill.PASSIVE_TACTICAL)) {
+                    tacticalDmgMult += 0.01;
                 }
             }
         }
@@ -1421,11 +1427,11 @@ public class Player extends Thread {
                 }
 
                 //Resistance Passive
-                if (hasSkill(Skill.PASSIVE_RESISTANCE) && skills.get(Skill.PASSIVE_RESISTANCE).canCast()) {
+                if (hasSkill(Skill.PASSIVE_RESIST) && skills.get(Skill.PASSIVE_RESIST).canCast()) {
                     if (amount > stats[Globals.STAT_MAXHP] * .5) {
                         amount = (int) (stats[Globals.STAT_MAXHP] * .5);
-                        skills.get(Skill.PASSIVE_RESISTANCE).setCooldown();
-                        sendCooldown(Skill.PASSIVE_RESISTANCE);
+                        skills.get(Skill.PASSIVE_RESIST).setCooldown();
+                        sendCooldown(Skill.PASSIVE_RESIST);
                         byte[] bytes = new byte[Globals.PACKET_BYTE * 2 + Globals.PACKET_INT * 2];
                         bytes[0] = Globals.DATA_PARTICLE_EFFECT;
                         bytes[1] = Globals.PARTICLE_PASSIVE_RESIST;
@@ -1442,11 +1448,39 @@ public class Player extends Thread {
                         sender.sendAll(bytes, logic.getRoom());
                     }
                 }
+                //Barrier reduction
+                if (barrierBuff != null) {
+                    amount = (int) ((BuffPassiveBarrier) barrierBuff).reduceDmg(amount);
+                    byte[] bytes = new byte[Globals.PACKET_BYTE * 2 + Globals.PACKET_INT * 2];
+                    bytes[0] = Globals.DATA_PARTICLE_EFFECT;
+                    bytes[1] = Globals.PARTICLE_PASSIVE_BARRIER;
+                    byte[] posXInt = Globals.intToByte(dmg.getDmgPoint().x);
+                    bytes[2] = posXInt[0];
+                    bytes[3] = posXInt[1];
+                    bytes[4] = posXInt[2];
+                    bytes[5] = posXInt[3];
+                    byte[] posYInt = Globals.intToByte(dmg.getDmgPoint().y);
+                    bytes[6] = posYInt[0];
+                    bytes[7] = posYInt[1];
+                    bytes[8] = posYInt[2];
+                    bytes[9] = posYInt[3];
+                    sender.sendAll(bytes, logic.getRoom());
+                }
+                tacticalDmgMult = 0;
                 //Send client damage display
                 sendDamage(dmg, amount);
                 //Final damage taken
                 stats[Globals.STAT_MINHP] -= amount;
-                nextHPSend = 0;
+                if (amount > 0) {
+                    nextHPSend = 0;
+                }
+                if (hasSkill(Skill.PASSIVE_BARRIER)) {
+                    barrierDmgTaken += amount;
+                    if (barrierDmgTaken >= stats[Globals.STAT_MAXHP] * 0.5) {
+                        barrierDmgTaken = 0;
+                        queueBuff(new BuffPassiveBarrier(stats[Globals.STAT_MAXHP] * (0.2 + 0.01 * getSkillLevel(Skill.PASSIVE_BARRIER)), this));
+                    }
+                }
             }
         }
         //Empty healing queued
@@ -1485,32 +1519,46 @@ public class Player extends Thread {
 
     private void updateBuffs() {
         //Update exisiting buffs
-        isStun = null;
-        isKnockback = null;
+        stunDebuff = null;
+        knockbackDebuff = null;
+        barrierBuff = null;
         reflects.clear();
         dmgReduct = 1;
         dmgAmp = 1;
         LinkedList<Integer> remove = new LinkedList<>();
+
         for (Map.Entry<Integer, Buff> bEntry : buffs.entrySet()) {
             Buff b = bEntry.getValue();
             b.update();
+
+            //Track if stunned, knocked or has a barrier buff.
             if (b instanceof BuffStun) {
-                if (isStun == null || (isStun != null && isStun.getDuration() < b.getDuration())) {
-                    isStun = b;
+                if (stunDebuff == null) {
+                    stunDebuff = b;
                 }
             } else if (b instanceof BuffKnockback) {
-                if (isKnockback == null || (isKnockback != null && isKnockback.getDuration() < b.getDuration())) {
-                    isKnockback = b;
+                if (knockbackDebuff == null) {
+                    knockbackDebuff = b;
                 }
             } else if (b instanceof BuffShieldReflect) {
                 reflects.add(b);
+            } else if (b instanceof BuffPassiveBarrier) {
+                if (barrierBuff == null) {
+                    barrierBuff = b;
+                }
             }
+
+            //Add all the damage reduction buffs(Multiplicative)
             if (b instanceof BuffDmgReduct) {
                 dmgReduct = dmgReduct * ((BuffDmgReduct) b).getDmgTakenMult();
             }
+
+            //Add all the damage intake amplification(Additive)
             if (b instanceof BuffDmgTakenAmp) {
                 dmgAmp = dmgAmp + ((BuffDmgTakenAmp) b).getDmgTakenAmp();
             }
+
+            //Remove expired buffs
             if (b.isExpired()) {
                 remove.add(bEntry.getKey());
             }
@@ -1524,19 +1572,17 @@ public class Player extends Thread {
         while (!buffQueue.isEmpty()) {
             Buff b = buffQueue.poll();
             if (b != null) {
-                //Check for max whirlwind and if is debuff
                 if (isInvulnerable() && b.isDebuff()) {
-                    //Don't apply debuff
+                    //Don't apply debuff when invulnerable
                     continue;
-
                 }
+
                 if (b instanceof BuffShieldDash) {
                     Map.Entry<Integer, Buff> prevBuff = hasBuff(BuffShieldDash.class);
                     if (prevBuff != null) {
                         buffs.remove(prevBuff.getKey());
                     }
-                }
-                if (b instanceof BuffSwordSlash) {
+                } else if (b instanceof BuffSwordSlash) {
                     Map.Entry<Integer, Buff> prevBuff = hasBuff(BuffSwordSlash.class);
                     if (prevBuff != null) {
                         buffs.remove(prevBuff.getKey());
@@ -1548,6 +1594,34 @@ public class Player extends Thread {
                 }
             }
         }
+    }
+
+    private void die() {
+        for (Map.Entry<Byte, Player> player : logic.getPlayers().entrySet()) {
+            if (player.getValue() != this) {
+                player.getValue().giveEXP(Globals.calcEXPtoNxtLvl(stats[Globals.STAT_LEVEL]) / 7);
+            }
+        }
+        setDead(true);
+        setFacing(Globals.RIGHT);
+        setPlayerState(PLAYER_STATE_DEAD);
+        damageQueue.clear();
+        healQueue.clear();
+        skillUseQueue.clear();
+        buffQueue.clear();
+        barrierDmgTaken = 0;
+        respawnTimer = 5000000000D;
+    }
+
+    private void respawn() {
+        setDead(false);
+        respawnTimer = 0;
+        buffs.clear();
+        stats[Globals.STAT_MINHP] = stats[Globals.STAT_MAXHP];
+        setXSpeed(0);
+        double xSpawnBound = logic.getMap().getBoundary()[Globals.MAP_RIGHT] - logic.getMap().getBoundary()[Globals.MAP_LEFT];
+        setPos(rng.nextInt((int) xSpawnBound) + logic.getMap().getBoundary()[Globals.MAP_LEFT], -100);
+        queuePlayerState(PLAYER_STATE_STAND);
     }
 
     /**
@@ -1575,29 +1649,10 @@ public class Player extends Thread {
             //(5% + 0.5% Per Level) * %HP Left
             mult += (0.05 + 0.005 * getSkillLevel(Skill.PASSIVE_WILLPOWER)) * (stats[Globals.STAT_MINHP] / stats[Globals.STAT_MAXHP]);
         }
+        //Tactical Execution Passive
+        mult += tacticalDmgMult;
         dmg *= mult;
         return dmg;
-    }
-
-    private void die() {
-        setDead(true);
-        setFacing(Globals.RIGHT);
-        setPlayerState(PLAYER_STATE_DEAD);
-        damageQueue.clear();
-        healQueue.clear();
-        skillUseQueue.clear();
-        buffQueue.clear();
-        respawnTimer = 5000000000D;
-    }
-
-    private void respawn() {
-        setDead(false);
-        respawnTimer = 0;
-        stats[Globals.STAT_MINHP] = stats[Globals.STAT_MAXHP];
-        setXSpeed(0);
-        double xSpawnBound = logic.getMap().getBoundary()[Globals.MAP_RIGHT] - logic.getMap().getBoundary()[Globals.MAP_LEFT];
-        setPos(rng.nextInt((int) xSpawnBound) + logic.getMap().getBoundary()[Globals.MAP_LEFT], -100);
-        queuePlayerState(PLAYER_STATE_STAND);
     }
 
     /**
@@ -1681,6 +1736,26 @@ public class Player extends Thread {
         bytes[3] = exp[2];
         bytes[4] = exp[3];
         sender.sendPlayer(bytes, address, port);
+
+        bytes = new byte[Globals.PACKET_BYTE * 2 + Globals.PACKET_INT * 3];
+        bytes[0] = Globals.DATA_DAMAGE;
+        bytes[1] = Damage.DAMAGE_TYPE_EXP;
+        byte[] posXInt = Globals.intToByte((int) x - 20);
+        bytes[2] = posXInt[0];
+        bytes[3] = posXInt[1];
+        bytes[4] = posXInt[2];
+        bytes[5] = posXInt[3];
+        byte[] posYInt = Globals.intToByte((int) y);
+        bytes[6] = posYInt[0];
+        bytes[7] = posYInt[1];
+        bytes[8] = posYInt[2];
+        bytes[9] = posYInt[3];
+        byte[] d = Globals.intToByte((int) amount);
+        bytes[10] = d[0];
+        bytes[11] = d[1];
+        bytes[12] = d[2];
+        bytes[13] = d[3];
+        sender.sendAll(bytes, logic.getRoom());
     }
 
     /**
@@ -1703,7 +1778,7 @@ public class Player extends Thread {
      * @return isStun
      */
     public synchronized boolean isStunned() {
-        return isStun != null;
+        return stunDebuff != null;
     }
 
     /**
@@ -1712,7 +1787,7 @@ public class Player extends Thread {
      * @return isKnockback
      */
     public synchronized boolean isKnockback() {
-        return isKnockback != null;
+        return knockbackDebuff != null;
     }
 
     /**
@@ -1885,11 +1960,24 @@ public class Player extends Thread {
     }
 
     public void damageProc(Damage dmg) {
-        if (hasSkill(Skill.PASSIVE_SHADOWCLONE) && skills.get(Skill.PASSIVE_SHADOWCLONE).canCast()) {
-            if (rng.nextInt(100) + 1 <= 20 + getSkillLevel(Skill.PASSIVE_SHADOWCLONE)) {
-                skills.get(Skill.PASSIVE_SHADOWCLONE).setCooldown();
-                sendCooldown(Skill.PASSIVE_SHADOWCLONE);
-                //To do Add effect
+        if (hasSkill(Skill.PASSIVE_SHADOWATTACK) && skills.get(Skill.PASSIVE_SHADOWATTACK).canCast()) {
+            if (rng.nextInt(100) + 1 <= 20 + getSkillLevel(Skill.PASSIVE_SHADOWATTACK)) {
+                skills.get(Skill.PASSIVE_SHADOWATTACK).setCooldown();
+                sendCooldown(Skill.PASSIVE_SHADOWATTACK);
+                byte[] bytes = new byte[Globals.PACKET_BYTE * 2 + Globals.PACKET_INT * 2];
+                bytes[0] = Globals.DATA_PARTICLE_EFFECT;
+                bytes[1] = Globals.PARTICLE_PASSIVE_SHADOWATTACK;
+                byte[] posXInt = Globals.intToByte(dmg.getDmgPoint().x);
+                bytes[2] = posXInt[0];
+                bytes[3] = posXInt[1];
+                bytes[4] = posXInt[2];
+                bytes[5] = posXInt[3];
+                byte[] posYInt = Globals.intToByte(dmg.getDmgPoint().y);
+                bytes[6] = posYInt[0];
+                bytes[7] = posYInt[1];
+                bytes[8] = posYInt[2];
+                bytes[9] = posYInt[3];
+                sender.sendAll(bytes, logic.getRoom());
                 if (dmg.getTarget() != null) {
                     dmg.getTarget().queueDamage(new Damage((int) (dmg.getDamage() * 0.5D), false, dmg.getOwner(), dmg.getTarget(), false, dmg.getDmgPoint()));
                 } else if (dmg.getBossTarget() != null) {

@@ -7,7 +7,7 @@ package blockfighter.server.entities.player.skills;
 public class SkillPassiveResistance extends Skill {
 
     public SkillPassiveResistance() {
-        skillCode = PASSIVE_RESISTANCE;
+        skillCode = PASSIVE_RESIST;
         maxCooldown = 35000;
     }
 

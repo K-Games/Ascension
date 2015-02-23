@@ -66,7 +66,7 @@ public class ProjSwordMulti extends ProjBase {
                     damage = (int) getOwner().criticalDamage(damage);
                 }
                 p.queueDamage(new Damage(damage, true, getOwner(), p, crit, hitbox[0], p.getHitbox()));
-                p.queueBuff(new BuffKnockback(60, (getOwner().getFacing() == Globals.RIGHT) ? 1 : -1, -1, getOwner(), p));
+                p.queueBuff(new BuffKnockback(60, (getOwner().getFacing() == Globals.RIGHT) ? .1 : -.1, -1, getOwner(), p));
             }
         }
         queuedEffect = false;

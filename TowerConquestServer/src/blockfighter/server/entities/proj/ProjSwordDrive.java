@@ -74,7 +74,7 @@ public class ProjSwordDrive extends ProjBase {
                     getOwner().queueHeal((int) heal);
                     healed = true;
                 }
-                p.queueBuff(new BuffKnockback(200, (getOwner().getFacing() == Globals.RIGHT) ? 3 : -3, 0, getOwner(), p));
+                p.queueBuff(new BuffKnockback(150, (getOwner().getFacing() == Globals.RIGHT) ? .5 : -.5, -3, getOwner(), p));
             }
         }
         queuedEffect = false;

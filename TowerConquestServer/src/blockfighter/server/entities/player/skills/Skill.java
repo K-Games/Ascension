@@ -36,12 +36,12 @@ public abstract class Skill {
             PASSIVE_VITALHIT = 0x14,
             PASSIVE_SHIELDMASTERY = 0x15,
             PASSIVE_BARRIER = 0x16,
-            PASSIVE_RESISTANCE = 0x17,
+            PASSIVE_RESIST = 0x17,
             PASSIVE_BOWMASTERY = 0x18,
             PASSIVE_WILLPOWER = 0x19,
             PASSIVE_TACTICAL = 0x1A,
             PASSIVE_REVIVE = 0x1B,
-            PASSIVE_SHADOWCLONE = 0x1C,
+            PASSIVE_SHADOWATTACK = 0x1C,
             PASSIVE_12 = 0x1D;
 
     /**

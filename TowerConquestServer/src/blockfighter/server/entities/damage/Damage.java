@@ -13,7 +13,8 @@ public class Damage {
 
     public final static byte DAMAGE_TYPE_PLAYER = 0x00,
             DAMAGE_TYPE_PLAYERCRIT = 0x01,
-            DAMAGE_TYPE_BOSS = 0x02;
+            DAMAGE_TYPE_BOSS = 0x02,
+            DAMAGE_TYPE_EXP = 0x03;
 
     private int damage;
     private boolean canProc = false,
@@ -24,7 +25,7 @@ public class Damage {
     private Player owner, target;
     private Boss bossOwner, bossTarget;
     private Point dmgPoint;
-    
+
     public Damage(int dmg, boolean proc, Player o, Player t, boolean crit, Point p) {
         damage = dmg;
         canProc = proc;
@@ -159,8 +160,8 @@ public class Damage {
     public void setCanReflect(boolean set) {
         canReflect = set;
     }
-    
-    public boolean canReflect(){
+
+    public boolean canReflect() {
         return canReflect;
     }
 

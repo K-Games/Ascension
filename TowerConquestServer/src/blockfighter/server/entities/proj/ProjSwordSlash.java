@@ -88,7 +88,7 @@ public class ProjSwordSlash extends ProjBase {
                     damage = (int) getOwner().criticalDamage(damage);
                 }
                 p.queueDamage(new Damage(damage, true, getOwner(), p, crit, hitbox[0], p.getHitbox()));
-                p.queueBuff(new BuffKnockback(200, (getOwner().getFacing() == Globals.RIGHT) ? 1 : -1, -3, getOwner(), p));
+                p.queueBuff(new BuffKnockback(200, (getOwner().getFacing() == Globals.RIGHT) ? 0.5 : -0.5, -3, getOwner(), p));
             }
         }
         queuedEffect = false;
