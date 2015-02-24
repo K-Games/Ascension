@@ -6,14 +6,13 @@ import blockfighter.server.entities.player.Player;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.nio.charset.StandardCharsets;
-import java.util.Map;
 
 /**
  * Threads to handle incoming requests.
  *
  * @author Ken Kwan
  */
-public class PacketHandler extends Thread {
+public class PacketHandler implements Runnable {
 
     private DatagramPacket requestPacket = null;
     private static LogicModule[] logic;
@@ -162,8 +161,8 @@ public class PacketHandler extends Thread {
         int id = Globals.bytesToInt(temp);
 
         if (logic[room].containsPlayerID(id)) {
-            Globals.log("DATA_PLAYER_LOGIN", address + ":" + port + " uID Already In Room :" + id, Globals.LOG_TYPE_DATA, true);
-            return;
+        Globals.log("DATA_PLAYER_LOGIN", address + ":" + port + " uID Already In Room :" + id, Globals.LOG_TYPE_DATA, true);
+        return;
         }
 
         byte freeKey = logic[room].getNextPlayerKey();
@@ -210,7 +209,6 @@ public class PacketHandler extends Thread {
             }
             newPlayer.setSkill(data[i * 2 + 97], data[i * 2 + 98]);
         }
-        Globals.log("DATA_PLAYER_LOGIN", address + ":" + port + " Logged in Room " + room + " Key: " + freeKey + " Name: " + newPlayer.getPlayerName(), Globals.LOG_TYPE_DATA, true);
         logic[room].queueAddPlayer(newPlayer);
 
         byte[] bytes = new byte[Globals.PACKET_BYTE * 4];
@@ -219,10 +217,9 @@ public class PacketHandler extends Thread {
         bytes[2] = freeKey;
         bytes[3] = Globals.SERVER_MAX_PLAYERS;
         sender.sendPlayer(bytes, address, port);
-        //newPlayer.getStats()[Globals.STAT_MINHP] = newPlayer.getStats()[Globals.STAT_MAXHP];
+        Globals.log("DATA_PLAYER_LOGIN", address + ":" + port + " Logged in Room " + room + " Key: " + freeKey + " Name: " + newPlayer.getPlayerName(), Globals.LOG_TYPE_DATA, true);
+        
         newPlayer.sendPos();
-        newPlayer.sendFacing();
-        newPlayer.sendState();
         newPlayer.sendName();
     }
 
@@ -231,38 +228,7 @@ public class PacketHandler extends Thread {
         if (!logic[room].getPlayers().containsKey(data[2])) {
             return;
         }
-        for (Map.Entry<Byte, Player> pEntry : logic[room].getPlayers().entrySet()) {
-            Player player = pEntry.getValue();
-
-            byte[] bytes = new byte[Globals.PACKET_BYTE * 2 + Globals.PACKET_INT * 2];
-            bytes[0] = Globals.DATA_PLAYER_SET_POS;
-            bytes[1] = player.getKey();
-
-            byte[] posXInt = Globals.intToByte((int) player.getX());
-            bytes[2] = posXInt[0];
-            bytes[3] = posXInt[1];
-            bytes[4] = posXInt[2];
-            bytes[5] = posXInt[3];
-            byte[] posYInt = Globals.intToByte((int) player.getY());
-            bytes[6] = posYInt[0];
-            bytes[7] = posYInt[1];
-            bytes[8] = posYInt[2];
-            bytes[9] = posYInt[3];
-            sender.sendPlayer(bytes, address, port);
-
-            bytes = new byte[Globals.PACKET_BYTE * 3];
-            bytes[0] = Globals.DATA_PLAYER_SET_FACING;
-            bytes[1] = player.getKey();
-            bytes[2] = player.getFacing();
-            sender.sendPlayer(bytes, address, port);
-
-            bytes = new byte[Globals.PACKET_BYTE * 4];
-            bytes[0] = Globals.DATA_PLAYER_SET_STATE;
-            bytes[1] = player.getKey();
-            bytes[2] = player.getAnimState();
-            bytes[3] = player.getFrame();
-            sender.sendPlayer(bytes, address, port);
-        }
+        sender.broadcastAllPlayersUpdate(room);
     }
 
     private void receivePlayerSetMove(byte[] data, byte room) {

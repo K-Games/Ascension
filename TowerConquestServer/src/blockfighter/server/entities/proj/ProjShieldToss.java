@@ -65,14 +65,14 @@ public class ProjShieldToss extends ProjBase {
         while (!queue.isEmpty()) {
             Player p = queue.poll();
             if (p != null && !p.isDead()) {
-                int damage = (int) (getOwner().rollDamage() * (getOwner().getStats()[Globals.STAT_DEFENSE] * (0.08 + .001 * getOwner().getSkillLevel(Skill.SHIELD_TOSS))));
-                
+                int damage = (int) (getOwner().rollDamage() + (getOwner().getStats()[Globals.STAT_DEFENSE] * (30 + getOwner().getSkillLevel(Skill.SHIELD_TOSS))));
+
                 boolean crit = getOwner().rollCrit();
                 if (crit) {
                     damage = (int) getOwner().criticalDamage(damage);
                 }
                 p.queueDamage(new Damage(damage, true, getOwner(), p, crit, hitbox[0], p.getHitbox()));
-                p.queueBuff(new BuffKnockback(200, (getOwner().getFacing() == Globals.RIGHT) ? 10 : -10, -4, getOwner(), p));
+                p.queueBuff(new BuffKnockback(200, (getOwner().getFacing() == Globals.RIGHT) ? 5 : -5, -4, getOwner(), p));
             }
         }
         queuedEffect = false;

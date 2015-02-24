@@ -20,10 +20,9 @@ import java.util.concurrent.Executors;
 public class LogicModule extends Thread {
 
     private static PacketSender sender;
-    private boolean isRunning = false;
     private byte room = -1;
 
-    private final ConcurrentHashMap<Byte, Player> players = new ConcurrentHashMap<>(Globals.SERVER_MAX_PLAYERS, 0.9f, Math.max(Globals.SERVER_MAX_PLAYERS / 5, 1));
+    private final ConcurrentHashMap<Byte, Player> players = new ConcurrentHashMap<>(Globals.SERVER_MAX_PLAYERS, 0.9f, Math.max(Globals.SERVER_MAX_PLAYERS / 5, 3));
     private final ConcurrentHashMap<Integer, ProjBase> projectiles = new ConcurrentHashMap<>(500, 0.75f, 10);
     private final GameMap map;
     private int projMaxKeys = 500;
@@ -37,6 +36,10 @@ public class LogicModule extends Thread {
     private final ConcurrentLinkedQueue<ProjBase> projEffectQueue = new ConcurrentLinkedQueue<>();
     private final ConcurrentLinkedQueue<ProjBase> projAddQueue = new ConcurrentLinkedQueue<>();
 
+    private static ExecutorService threadPool = Executors.newFixedThreadPool(10 * Globals.SERVER_ROOMS);
+    private long lastRefreshAll = 0;
+    private double lastUpdateTime = 0;
+
     /**
      * Create a server logic module
      * <p>
@@ -47,7 +50,6 @@ public class LogicModule extends Thread {
      */
     public LogicModule(byte r) {
         room = r;
-        isRunning = true;
         map = new GameMapFloor1();
         for (int i = 0; i < 500; i++) {
             projKeys.add(i);
@@ -55,6 +57,10 @@ public class LogicModule extends Thread {
         for (byte i = 0; i < Globals.SERVER_MAX_PLAYERS; i++) {
             playerKeys.add(i);
         }
+    }
+
+    public static void shutdownThreads() {
+        threadPool.shutdownNow();
     }
 
     public void reset() {
@@ -80,42 +86,28 @@ public class LogicModule extends Thread {
 
     @Override
     public void run() {
-        double lastUpdateTime = System.nanoTime();
-        long lastRefreshAll = System.currentTimeMillis();
-        ExecutorService threadPool = Executors.newFixedThreadPool(10);
-
-        while (isRunning) {
-            try {
-                processQueues(threadPool);
-                double now = System.nanoTime();
-                long nowMs = System.currentTimeMillis();
-                if (now - lastUpdateTime >= Globals.LOGIC_UPDATE) {
-                    updatePlayers(threadPool);
-                    updateProjectiles(threadPool);
-                    lastUpdateTime = now;
-                }
-
-                if (nowMs - lastRefreshAll >= 30000) {
-                    sender.broadcastAllPlayersUpdate(room);
-                    //System.out.println(sender.getBytes()/1024D);
-                    //sender.resetByte();
-                    lastRefreshAll = nowMs;
-                }
-            } catch (Exception ex) {
-                Globals.log(ex.getLocalizedMessage(), ex, true);
+        try {
+            processQueues();
+            double now = System.nanoTime();
+            long nowMs = System.currentTimeMillis();
+            if (now - lastUpdateTime >= Globals.LOGIC_UPDATE) {
+                updatePlayers();
+                updateProjectiles();
+                lastUpdateTime = now;
             }
 
-            try {
-                Thread.sleep(0, 1);
-            } catch (InterruptedException ex) {
-                Globals.log(ex.getLocalizedMessage(), ex, true);
+            if (nowMs - lastRefreshAll >= 30000) {
+                //sender.broadcastAllPlayersUpdate(room);
+                //System.out.println(sender.getBytes()/1024D);
+                //sender.resetByte();
+                lastRefreshAll = nowMs;
             }
+        } catch (Exception ex) {
+            Globals.log(ex.getLocalizedMessage(), ex, true);
         }
-        threadPool.shutdownNow();
-        Globals.LOG_THREADS.shutdown();
     }
 
-    private void updatePlayers(ExecutorService threadPool) {
+    private void updatePlayers() {
         for (Map.Entry<Byte, Player> player : players.entrySet()) {
             threadPool.execute(player.getValue());
         }
@@ -145,7 +137,7 @@ public class LogicModule extends Thread {
         }
     }
 
-    private void updateProjectiles(ExecutorService threadPool) {
+    private void updateProjectiles() {
         for (Map.Entry<Integer, ProjBase> p : projectiles.entrySet()) {
             threadPool.execute(p.getValue());
         }
@@ -283,9 +275,10 @@ public class LogicModule extends Thread {
         projEffectQueue.add(p);
     }
 
-    private void processQueues(ExecutorService threadPool) {
-        Thread[] queues = new Thread[4];
-
+    private void processQueues() {
+        Runnable[] queues = new Runnable[4];
+        
+        sender.processSendQueue();
         while (!pAddQueue.isEmpty()) {
             Player newPlayer = pAddQueue.poll();
             if (newPlayer != null) {
@@ -294,7 +287,7 @@ public class LogicModule extends Thread {
             }
         }
 
-        queues[0] = new Thread() {
+        queues[0] = new Runnable() {
             @Override
             public void run() {
                 try {
@@ -313,7 +306,7 @@ public class LogicModule extends Thread {
             }
         };
 
-        queues[1] = new Thread() {
+        queues[1] = new Runnable() {
             @Override
             public void run() {
                 try {
@@ -332,7 +325,7 @@ public class LogicModule extends Thread {
             }
         };
 
-        queues[2] = new Thread() {
+        queues[2] = new Runnable() {
             @Override
             public void run() {
                 try {
@@ -348,7 +341,7 @@ public class LogicModule extends Thread {
             }
         };
 
-        queues[3] = new Thread() {
+        queues[3] = new Runnable() {
             @Override
             public void run() {
                 try {
@@ -364,16 +357,8 @@ public class LogicModule extends Thread {
             }
         };
 
-        for (Thread t : queues) {
+        for (Runnable t : queues) {
             threadPool.execute(t);
-        }
-
-        for (Thread t : queues) {
-            try {
-                t.join();
-            } catch (InterruptedException ex) {
-                Globals.log(ex.getLocalizedMessage(), ex, true);
-            }
         }
     }
 
@@ -399,13 +384,6 @@ public class LogicModule extends Thread {
      */
     public void returnProjKey(int key) {
         projKeys.add(key);
-    }
-
-    /**
-     * Kill server logic.
-     */
-    public void shutdown() {
-        isRunning = false;
     }
 
     /**

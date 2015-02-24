@@ -39,29 +39,25 @@ public class PacketReceiver extends Thread {
 
     @Override
     public void run() {
-        ExecutorService tpes = Executors.newFixedThreadPool(10);
-        //ScheduledThreadPoolExecutor lagger = new ScheduledThreadPoolExecutor(10);
+        ExecutorService threadPool = Executors.newFixedThreadPool(3);
         try {
             DatagramSocket socket = new DatagramSocket(Globals.SERVER_PORT);
             System.out.println("Server listening on port " + Globals.SERVER_PORT);
             sender.setSocket(socket);
-            sender.setThreadPool(tpes);
             while (true) {
                 byte[] request = new byte[Globals.PACKET_MAX_SIZE];
                 DatagramPacket packet = new DatagramPacket(request, request.length);
                 socket.receive(packet);
-                //lagger.schedule(new PacketHandler(packet), 50, TimeUnit.MILLISECONDS);
-                tpes.execute(new PacketHandler(packet));
+                threadPool.execute(new PacketHandler(packet));
             }
         } catch (SocketException ex) {
             Globals.log(ex.getLocalizedMessage(), ex, true);
         } catch (IOException ex) {
             Globals.log(ex.getLocalizedMessage(), ex, true);
         } finally {
-            for (LogicModule l : logic) {
-                l.shutdown();
-            }
-            tpes.shutdownNow();
+            Globals.LOG_THREADPOOL.shutdown();
+            LogicModule.shutdownThreads();
+            threadPool.shutdownNow();
         }
     }
 }

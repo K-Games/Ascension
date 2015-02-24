@@ -64,7 +64,7 @@ public class ProjBowStorm extends ProjBase {
         while (!queue.isEmpty()) {
             Player p = queue.poll();
             if (p != null && !p.isDead()) {
-                int damage = (int) (getOwner().rollDamage() * 0.8 + (.08 * getOwner().getSkillLevel(Skill.BOW_STORM)));
+                int damage = (int) (getOwner().rollDamage() * 0.6 + (.06 * getOwner().getSkillLevel(Skill.BOW_STORM)));
                 boolean crit = getOwner().rollCrit();
                 if (crit) {
                     if (getOwner().isSkillMaxed(Skill.BOW_STORM)) {

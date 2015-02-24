@@ -40,7 +40,7 @@ public class ProjBowPower extends ProjBase {
             hitbox[0] = new Rectangle2D.Double(x - 700 - 80, y - 185, 700, 150);
 
         }
-        duration = 600;
+        duration = 300;
     }
 
     @Override

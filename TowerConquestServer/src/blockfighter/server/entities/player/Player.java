@@ -54,7 +54,7 @@ public class Player extends Thread {
     private String name = "";
     private double x, y, ySpeed, xSpeed;
     private boolean[] dirKeydown = new boolean[4];
-    private boolean isFalling = false, isJumping = false, isInvulnerable = false, isDead = false;
+    private boolean isFalling = false, isJumping = false, isInvulnerable = false, isDead = false, isRemoveDebuff = false;
     private boolean updatePos = false, updateFacing = false, updateAnimState = false;
     private byte playerState, animState, facing, frame;
     private double nextFrameTime = 0, respawnTimer = 0;
@@ -186,14 +186,10 @@ public class Player extends Thread {
         return key;
     }
 
-    /**
-     * Return this player's current state.
-     * <p>
-     * Used for updating animation state and player interactions. States are listed in Globals.
-     * </p>
-     *
-     * @return The player's state in byte
-     */
+    public byte getPlayerState() {
+        return playerState;
+    }
+
     public byte getAnimState() {
         return animState;
     }
@@ -527,7 +523,6 @@ public class Player extends Thread {
             Globals.log("Player", address + ":" + port + " Idle disconnected Key: " + key, Globals.LOG_TYPE_DATA, true);
             disconnect();
         }
-
     }
 
     private void updateDead() {
@@ -553,7 +548,7 @@ public class Player extends Thread {
     }
 
     private void updateSkillCast() {
-        if (isUsingSkill()) {
+        if (isUsingSkill() || isStunned() || isKnockback()) {
             skillUseQueue.clear();
             return;
         }
@@ -563,179 +558,181 @@ public class Player extends Thread {
 
         byte[] data = skillUseQueue.poll();
         skillUseQueue.clear();
-        if (data != null && !isStunned() && !isKnockback()) {
-            if (hasSkill(data[3])) {
-                skillDuration = 0;
-                skillCounter = 0;
-                switch (data[3]) {
-                    case Skill.SWORD_SLASH:
-                        if (!skills.get(data[3]).canCast(getItemType(equip[Globals.ITEM_WEAPON]))) {
-                            return;
-                        }
-                        queuePlayerState(PLAYER_STATE_SWORD_SLASH);
-                        skills.get(data[3]).setCooldown();
-                        sendCooldown(data);
-                        nextFrameTime = 40000000;
-                        break;
-                    case Skill.SWORD_VORPAL:
-                        if (!skills.get(data[3]).canCast(getItemType(equip[Globals.ITEM_WEAPON]))) {
-                            return;
-                        }
-                        queuePlayerState(PLAYER_STATE_SWORD_VORPAL);
-                        skills.get(data[3]).setCooldown();
-                        sendCooldown(data);
-                        nextFrameTime = 40000000;
-                        break;
-                    case Skill.SWORD_DRIVE:
-                        if (!skills.get(data[3]).canCast(getItemType(equip[Globals.ITEM_WEAPON]))) {
-                            return;
-                        }
-                        queuePlayerState(PLAYER_STATE_SWORD_DRIVE);
-                        skills.get(data[3]).setCooldown();
-                        sendCooldown(data);
-                        nextFrameTime = 40000000;
-                        break;
-                    case Skill.SWORD_MULTI:
-                        if (!skills.get(data[3]).canCast(getItemType(equip[Globals.ITEM_WEAPON]))) {
-                            return;
-                        }
-                        queuePlayerState(PLAYER_STATE_SWORD_MULTI);
-                        skills.get(data[3]).setCooldown();
-                        sendCooldown(data);
-                        nextFrameTime = 40000000;
-                        break;
-                    case Skill.SWORD_CINDER:
-                        if (!skills.get(data[3]).canCast(getItemType(equip[Globals.ITEM_WEAPON]))) {
-                            return;
-                        }
-                        queuePlayerState(PLAYER_STATE_SWORD_CINDER);
-                        skills.get(data[3]).setCooldown();
-                        sendCooldown(data);
-                        nextFrameTime = 40000000;
-                        break;
-                    case Skill.SWORD_TAUNT:
-                        if (!skills.get(data[3]).canCast(getItemType(equip[Globals.ITEM_WEAPON]))) {
-                            return;
-                        }
-                        queuePlayerState(PLAYER_STATE_SWORD_TAUNT);
-                        skills.get(data[3]).setCooldown();
-                        sendCooldown(data);
-                        nextFrameTime = 40000000;
-                        break;
-                    case Skill.BOW_ARC:
-                        if (!skills.get(data[3]).canCast(getItemType(equip[Globals.ITEM_WEAPON]))) {
-                            return;
-                        }
-                        queuePlayerState(PLAYER_STATE_BOW_ARC);
-                        skills.get(data[3]).setCooldown();
-                        sendCooldown(data);
-                        nextFrameTime = 20000000;
-                        break;
-                    case Skill.BOW_POWER:
-                        if (!skills.get(data[3]).canCast(getItemType(equip[Globals.ITEM_WEAPON]))) {
-                            return;
-                        }
-                        queuePlayerState(PLAYER_STATE_BOW_POWER);
-                        skills.get(data[3]).setCooldown();
-                        sendCooldown(data);
-                        nextFrameTime = 40000000;
-                        break;
-                    case Skill.BOW_RAPID:
-                        if (!skills.get(data[3]).canCast(getItemType(equip[Globals.ITEM_WEAPON]))) {
-                            return;
-                        }
-                        queuePlayerState(PLAYER_STATE_BOW_RAPID);
-                        skills.get(data[3]).setCooldown();
-                        sendCooldown(data);
-                        nextFrameTime = 20000000;
-                        break;
-                    case Skill.BOW_VOLLEY:
-                        if (!skills.get(data[3]).canCast(getItemType(equip[Globals.ITEM_WEAPON]))) {
-                            return;
-                        }
-                        queuePlayerState(PLAYER_STATE_BOW_VOLLEY);
-                        skills.get(data[3]).setCooldown();
-                        sendCooldown(data);
-                        nextFrameTime = 0;
-                        break;
-                    case Skill.BOW_STORM:
-                        if (!skills.get(data[3]).canCast(getItemType(equip[Globals.ITEM_WEAPON]))) {
-                            return;
-                        }
-                        queuePlayerState(PLAYER_STATE_BOW_STORM);
-                        skills.get(data[3]).setCooldown();
-                        sendCooldown(data);
-                        nextFrameTime = 20000000;
-                        break;
-                    case Skill.BOW_FROST:
-                        if (!skills.get(data[3]).canCast(getItemType(equip[Globals.ITEM_WEAPON]))) {
-                            return;
-                        }
-                        queuePlayerState(PLAYER_STATE_BOW_FROST);
-                        skills.get(data[3]).setCooldown();
-                        sendCooldown(data);
-                        nextFrameTime = 40000000;
-                        break;
-                    case Skill.SHIELD_CHARGE:
-                        if (!skills.get(data[3]).canCast(getItemType(equip[Globals.ITEM_OFFHAND]))) {
-                            return;
-                        }
-                        queuePlayerState(PLAYER_STATE_SHIELD_CHARGE);
-                        skills.get(data[3]).setCooldown();
-                        sendCooldown(data);
-                        nextFrameTime = 20000000;
-                        break;
-                    case Skill.SHIELD_DASH:
-                        if (!skills.get(data[3]).canCast(getItemType(equip[Globals.ITEM_OFFHAND]))) {
-                            return;
-                        }
-                        queuePlayerState(PLAYER_STATE_SHIELD_DASH);
-                        skills.get(data[3]).setCooldown();
-                        sendCooldown(data);
-                        nextFrameTime = 10000000;
-                        break;
-                    case Skill.SHIELD_FORTIFY:
-                        if (!skills.get(data[3]).canCast(getItemType(equip[Globals.ITEM_OFFHAND]))) {
-                            return;
-                        }
-                        queuePlayerState(PLAYER_STATE_SHIELD_FORTIFY);
-                        skills.get(data[3]).setCooldown();
-                        sendCooldown(data);
-                        nextFrameTime = 20000000;
-                        break;
-                    case Skill.SHIELD_IRON:
-                        if (!skills.get(data[3]).canCast(getItemType(equip[Globals.ITEM_OFFHAND]))) {
-                            return;
-                        }
-                        queuePlayerState(PLAYER_STATE_SHIELD_IRON);
-                        skills.get(data[3]).setCooldown();
-                        sendCooldown(data);
-                        nextFrameTime = 20000000;
-                        break;
-                    case Skill.SHIELD_REFLECT:
-                        if (!skills.get(data[3]).canCast(getItemType(equip[Globals.ITEM_OFFHAND]))) {
-                            return;
-                        }
-                        queuePlayerState(PLAYER_STATE_SHIELD_REFLECT);
-                        skills.get(data[3]).setCooldown();
-                        sendCooldown(data);
-                        nextFrameTime = 20000000;
-                        break;
-                    case Skill.SHIELD_TOSS:
-                        if (!skills.get(data[3]).canCast(getItemType(equip[Globals.ITEM_OFFHAND]))) {
-                            return;
-                        }
-                        queuePlayerState(PLAYER_STATE_SHIELD_TOSS);
-                        skills.get(data[3]).setCooldown();
-                        sendCooldown(data);
-                        nextFrameTime = 40000000;
-                        break;
-                }
+        if (data != null) {
+            if (data[3] == Skill.SHIELD_IRON || (!isStunned() && !isKnockback())) {
+                if (hasSkill(data[3])) {
+                    skillDuration = 0;
+                    skillCounter = 0;
+                    switch (data[3]) {
+                        case Skill.SWORD_SLASH:
+                            if (!skills.get(data[3]).canCast(getItemType(equip[Globals.ITEM_WEAPON]))) {
+                                return;
+                            }
+                            queuePlayerState(PLAYER_STATE_SWORD_SLASH);
+                            skills.get(data[3]).setCooldown();
+                            sendCooldown(data);
+                            nextFrameTime = 40000000;
+                            break;
+                        case Skill.SWORD_VORPAL:
+                            if (!skills.get(data[3]).canCast(getItemType(equip[Globals.ITEM_WEAPON]))) {
+                                return;
+                            }
+                            queuePlayerState(PLAYER_STATE_SWORD_VORPAL);
+                            skills.get(data[3]).setCooldown();
+                            sendCooldown(data);
+                            nextFrameTime = 40000000;
+                            break;
+                        case Skill.SWORD_DRIVE:
+                            if (!skills.get(data[3]).canCast(getItemType(equip[Globals.ITEM_WEAPON]))) {
+                                return;
+                            }
+                            queuePlayerState(PLAYER_STATE_SWORD_DRIVE);
+                            skills.get(data[3]).setCooldown();
+                            sendCooldown(data);
+                            nextFrameTime = 40000000;
+                            break;
+                        case Skill.SWORD_MULTI:
+                            if (!skills.get(data[3]).canCast(getItemType(equip[Globals.ITEM_WEAPON]))) {
+                                return;
+                            }
+                            queuePlayerState(PLAYER_STATE_SWORD_MULTI);
+                            skills.get(data[3]).setCooldown();
+                            sendCooldown(data);
+                            nextFrameTime = 40000000;
+                            break;
+                        case Skill.SWORD_CINDER:
+                            if (!skills.get(data[3]).canCast(getItemType(equip[Globals.ITEM_WEAPON]))) {
+                                return;
+                            }
+                            queuePlayerState(PLAYER_STATE_SWORD_CINDER);
+                            skills.get(data[3]).setCooldown();
+                            sendCooldown(data);
+                            nextFrameTime = 40000000;
+                            break;
+                        case Skill.SWORD_TAUNT:
+                            if (!skills.get(data[3]).canCast(getItemType(equip[Globals.ITEM_WEAPON]))) {
+                                return;
+                            }
+                            queuePlayerState(PLAYER_STATE_SWORD_TAUNT);
+                            skills.get(data[3]).setCooldown();
+                            sendCooldown(data);
+                            nextFrameTime = 40000000;
+                            break;
+                        case Skill.BOW_ARC:
+                            if (!skills.get(data[3]).canCast(getItemType(equip[Globals.ITEM_WEAPON]))) {
+                                return;
+                            }
+                            queuePlayerState(PLAYER_STATE_BOW_ARC);
+                            skills.get(data[3]).setCooldown();
+                            sendCooldown(data);
+                            nextFrameTime = 20000000;
+                            break;
+                        case Skill.BOW_POWER:
+                            if (!skills.get(data[3]).canCast(getItemType(equip[Globals.ITEM_WEAPON]))) {
+                                return;
+                            }
+                            queuePlayerState(PLAYER_STATE_BOW_POWER);
+                            skills.get(data[3]).setCooldown();
+                            sendCooldown(data);
+                            nextFrameTime = 40000000;
+                            break;
+                        case Skill.BOW_RAPID:
+                            if (!skills.get(data[3]).canCast(getItemType(equip[Globals.ITEM_WEAPON]))) {
+                                return;
+                            }
+                            queuePlayerState(PLAYER_STATE_BOW_RAPID);
+                            skills.get(data[3]).setCooldown();
+                            sendCooldown(data);
+                            nextFrameTime = 20000000;
+                            break;
+                        case Skill.BOW_VOLLEY:
+                            if (!skills.get(data[3]).canCast(getItemType(equip[Globals.ITEM_WEAPON]))) {
+                                return;
+                            }
+                            queuePlayerState(PLAYER_STATE_BOW_VOLLEY);
+                            skills.get(data[3]).setCooldown();
+                            sendCooldown(data);
+                            nextFrameTime = 0;
+                            break;
+                        case Skill.BOW_STORM:
+                            if (!skills.get(data[3]).canCast(getItemType(equip[Globals.ITEM_WEAPON]))) {
+                                return;
+                            }
+                            queuePlayerState(PLAYER_STATE_BOW_STORM);
+                            skills.get(data[3]).setCooldown();
+                            sendCooldown(data);
+                            nextFrameTime = 20000000;
+                            break;
+                        case Skill.BOW_FROST:
+                            if (!skills.get(data[3]).canCast(getItemType(equip[Globals.ITEM_WEAPON]))) {
+                                return;
+                            }
+                            queuePlayerState(PLAYER_STATE_BOW_FROST);
+                            skills.get(data[3]).setCooldown();
+                            sendCooldown(data);
+                            nextFrameTime = 40000000;
+                            break;
+                        case Skill.SHIELD_CHARGE:
+                            if (!skills.get(data[3]).canCast(getItemType(equip[Globals.ITEM_OFFHAND]))) {
+                                return;
+                            }
+                            queuePlayerState(PLAYER_STATE_SHIELD_CHARGE);
+                            skills.get(data[3]).setCooldown();
+                            sendCooldown(data);
+                            nextFrameTime = 20000000;
+                            break;
+                        case Skill.SHIELD_DASH:
+                            if (!skills.get(data[3]).canCast(getItemType(equip[Globals.ITEM_OFFHAND]))) {
+                                return;
+                            }
+                            queuePlayerState(PLAYER_STATE_SHIELD_DASH);
+                            skills.get(data[3]).setCooldown();
+                            sendCooldown(data);
+                            nextFrameTime = 10000000;
+                            break;
+                        case Skill.SHIELD_FORTIFY:
+                            if (!skills.get(data[3]).canCast(getItemType(equip[Globals.ITEM_OFFHAND]))) {
+                                return;
+                            }
+                            queuePlayerState(PLAYER_STATE_SHIELD_FORTIFY);
+                            skills.get(data[3]).setCooldown();
+                            sendCooldown(data);
+                            nextFrameTime = 20000000;
+                            break;
+                        case Skill.SHIELD_IRON:
+                            if (!skills.get(data[3]).canCast(getItemType(equip[Globals.ITEM_OFFHAND]))) {
+                                return;
+                            }
+                            queuePlayerState(PLAYER_STATE_SHIELD_IRON);
+                            skills.get(data[3]).setCooldown();
+                            sendCooldown(data);
+                            nextFrameTime = 20000000;
+                            break;
+                        case Skill.SHIELD_REFLECT:
+                            if (!skills.get(data[3]).canCast(getItemType(equip[Globals.ITEM_OFFHAND]))) {
+                                return;
+                            }
+                            queuePlayerState(PLAYER_STATE_SHIELD_REFLECT);
+                            skills.get(data[3]).setCooldown();
+                            sendCooldown(data);
+                            nextFrameTime = 20000000;
+                            break;
+                        case Skill.SHIELD_TOSS:
+                            if (!skills.get(data[3]).canCast(getItemType(equip[Globals.ITEM_OFFHAND]))) {
+                                return;
+                            }
+                            queuePlayerState(PLAYER_STATE_SHIELD_TOSS);
+                            skills.get(data[3]).setCooldown();
+                            sendCooldown(data);
+                            nextFrameTime = 40000000;
+                            break;
+                    }
 
-                //Tactical Execution Passive
-                //Add after being able to cast skill
-                if (hasSkill(Skill.PASSIVE_TACTICAL) && tacticalDmgMult < 0.01 + 0.01 * getSkillLevel(Skill.PASSIVE_TACTICAL)) {
-                    tacticalDmgMult += 0.01;
+                    //Tactical Execution Passive
+                    //Add after being able to cast skill
+                    if (hasSkill(Skill.PASSIVE_TACTICAL) && tacticalDmgMult < 0.01 + 0.01 * getSkillLevel(Skill.PASSIVE_TACTICAL)) {
+                        tacticalDmgMult += 0.01;
+                    }
                 }
             }
         }
@@ -902,7 +899,7 @@ public class Player extends Thread {
             sender.sendAll(bytes, logic.getRoom());
             skillCounter++;
         }
-        if (skillDuration >= numHits * 50 + 600 || isStunned() || isKnockback()) {
+        if (skillDuration >= numHits * 50 + 600 || (!isInvulnerable() && (isStunned() || isKnockback()))) {
             setInvulnerable(false);
             setPlayerState(PLAYER_STATE_STAND);
         }
@@ -1174,7 +1171,8 @@ public class Player extends Thread {
             bytes[2] = key;
             sender.sendAll(bytes, logic.getRoom());
         }
-        if (skillDuration == 200) {
+        if (skillDuration == 100) {
+            setRemovingDebuff(true);
             queueBuff(new BuffShieldIron(2000, 0.55 + 0.01 * getSkillLevel(Skill.SHIELD_IRON)));
             if (isSkillMaxed(Skill.SHIELD_IRON)) {
                 for (Map.Entry<Byte, Player> player : logic.getPlayers().entrySet()) {
@@ -1190,7 +1188,8 @@ public class Player extends Thread {
                 }
             }
         }
-        if (skillDuration >= 2200) {
+        if (skillDuration >= 2100) {
+            setRemovingDebuff(false);
             setPlayerState(PLAYER_STATE_STAND);
         }
     }
@@ -1426,10 +1425,17 @@ public class Player extends Thread {
                     amount = (int) (amount * (1 - (0.05 + 0.005 * getSkillLevel(Skill.PASSIVE_SHIELDMASTERY))));
                 }
 
+                //Dual Wield Passive Reduction
+                if (hasSkill(Skill.PASSIVE_DUALSWORD)
+                        && getItemType(equip[Globals.ITEM_WEAPON]) == Globals.ITEM_SWORD
+                        && getItemType(equip[Globals.ITEM_OFFHAND]) == Globals.ITEM_SWORD) {
+                    amount = (int) (amount * (1 - (0.01 * getSkillLevel(Skill.PASSIVE_DUALSWORD))));
+                }
+
                 //Resistance Passive
-                if (hasSkill(Skill.PASSIVE_RESIST) && skills.get(Skill.PASSIVE_RESIST).canCast()) {
-                    if (amount > stats[Globals.STAT_MAXHP] * .5) {
-                        amount = (int) (stats[Globals.STAT_MAXHP] * .5);
+                if (hasSkill(Skill.PASSIVE_RESIST) && stats[Globals.STAT_MINHP] > stats[Globals.STAT_MAXHP] * 0.5 && skills.get(Skill.PASSIVE_RESIST).canCast()) {
+                    if (amount > stats[Globals.STAT_MAXHP] * 0.5) {
+                        amount = (int) (stats[Globals.STAT_MAXHP] * 0.5);
                         skills.get(Skill.PASSIVE_RESIST).setCooldown();
                         sendCooldown(Skill.PASSIVE_RESIST);
                         byte[] bytes = new byte[Globals.PACKET_BYTE * 2 + Globals.PACKET_INT * 2];
@@ -1512,7 +1518,7 @@ public class Player extends Thread {
             bytes[1] = key;
             bytes[2] = Globals.STAT_MINHP;
             System.arraycopy(stat, 0, bytes, 3, stat.length);
-            sender.sendAll(bytes, logic.getRoom());
+            sender.sendPlayer(bytes, address, port);
             nextHPSend = 150;
         }
     }
@@ -1532,11 +1538,11 @@ public class Player extends Thread {
             b.update();
 
             //Track if stunned, knocked or has a barrier buff.
-            if (b instanceof BuffStun) {
+            if (canDebuffAffect() && b instanceof BuffStun) {
                 if (stunDebuff == null) {
                     stunDebuff = b;
                 }
-            } else if (b instanceof BuffKnockback) {
+            } else if (canDebuffAffect() && b instanceof BuffKnockback) {
                 if (knockbackDebuff == null) {
                     knockbackDebuff = b;
                 }
@@ -1558,8 +1564,8 @@ public class Player extends Thread {
                 dmgAmp = dmgAmp + ((BuffDmgTakenAmp) b).getDmgTakenAmp();
             }
 
-            //Remove expired buffs
-            if (b.isExpired()) {
+            //Remove expired buffs/remove debuffs when invulnerable/special state
+            if (b.isExpired() || (!canDebuffAffect() && b.isDebuff())) {
                 remove.add(bEntry.getKey());
             }
         }
@@ -1572,7 +1578,7 @@ public class Player extends Thread {
         while (!buffQueue.isEmpty()) {
             Buff b = buffQueue.poll();
             if (b != null) {
-                if (isInvulnerable() && b.isDebuff()) {
+                if (!canDebuffAffect() && b.isDebuff()) {
                     //Don't apply debuff when invulnerable
                     continue;
                 }
@@ -1602,6 +1608,8 @@ public class Player extends Thread {
                 player.getValue().giveEXP(Globals.calcEXPtoNxtLvl(stats[Globals.STAT_LEVEL]) / 7);
             }
         }
+        setInvulnerable(false);
+        setRemovingDebuff(false);
         setDead(true);
         setFacing(Globals.RIGHT);
         setPlayerState(PLAYER_STATE_DEAD);
@@ -1614,6 +1622,8 @@ public class Player extends Thread {
     }
 
     private void respawn() {
+        setInvulnerable(false);
+        setRemovingDebuff(false);
         setDead(false);
         respawnTimer = 0;
         buffs.clear();
@@ -1677,7 +1687,7 @@ public class Player extends Thread {
                 && getItemType(equip[Globals.ITEM_WEAPON]) == Globals.ITEM_SWORD
                 && getItemType(equip[Globals.ITEM_OFFHAND]) == Globals.ITEM_SWORD) {
             //Check if has Dual Sword passive AND Mainhand/Offhand are both Swords.
-            totalCritChance += 0.04 + 0.002 * getSkillLevel(Skill.PASSIVE_DUALSWORD);
+            totalCritChance += 0.06 + 0.003 * getSkillLevel(Skill.PASSIVE_DUALSWORD);
         }
         //Keen Eye Passive
         if (hasSkill(Skill.PASSIVE_KEENEYE)) {
@@ -1777,7 +1787,7 @@ public class Player extends Thread {
      *
      * @return isStun
      */
-    public synchronized boolean isStunned() {
+    public boolean isStunned() {
         return stunDebuff != null;
     }
 
@@ -1786,7 +1796,7 @@ public class Player extends Thread {
      *
      * @return isKnockback
      */
-    public synchronized boolean isKnockback() {
+    public boolean isKnockback() {
         return knockbackDebuff != null;
     }
 
@@ -2376,6 +2386,18 @@ public class Player extends Thread {
 
     public boolean isInvulnerable() {
         return isInvulnerable;
+    }
+
+    private void setRemovingDebuff(boolean set) {
+        isRemoveDebuff = set;
+    }
+
+    public boolean isRemovingDebuff() {
+        return isRemoveDebuff;
+    }
+
+    public boolean canDebuffAffect() {
+        return !isInvulnerable() && !isRemovingDebuff();
     }
 
     /**

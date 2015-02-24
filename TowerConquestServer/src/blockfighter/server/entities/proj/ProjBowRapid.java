@@ -60,7 +60,7 @@ public class ProjBowRapid extends ProjBase {
         while (!queue.isEmpty()) {
             Player p = queue.poll();
             if (p != null && !p.isDead()) {
-                int damage = (int) (getOwner().rollDamage() * (.75 + getOwner().getSkillLevel(Skill.BOW_RAPID) * .01));
+                int damage = (int) (getOwner().rollDamage() * (.75 + 0.02 * getOwner().getSkillLevel(Skill.BOW_RAPID)));
                 boolean crit = getOwner().rollCrit();
                 if (crit) {
                     damage = (int) getOwner().criticalDamage(damage);
@@ -69,7 +69,7 @@ public class ProjBowRapid extends ProjBase {
                     damage *= 2;
                 }
                 p.queueDamage(new Damage(damage, true, getOwner(), p, crit, hitbox[0], p.getHitbox()));
-                p.queueBuff(new BuffKnockback(100, (getOwner().getFacing() == Globals.RIGHT) ? 3 : -3, -3, getOwner(), p));
+                p.queueBuff(new BuffKnockback(70, (getOwner().getFacing() == Globals.RIGHT) ? 3 : -3, -2, getOwner(), p));
             }
         }
         queuedEffect = false;

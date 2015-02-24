@@ -20,7 +20,7 @@ public class BuffShieldFortify extends BuffBase implements BuffDmgReduct {
     public void update() {
         super.update();
         if (getOwner().isSkillMaxed(Skill.SHIELD_FORTIFY)) {
-            int amount = (int) (getOwner().getStats()[Globals.STAT_MAXHP] * .2 / (maxDuration * 1000000 / Globals.LOGIC_UPDATE));
+            int amount = (int) (getOwner().getStats()[Globals.STAT_MAXHP] * 0.075 / (maxDuration * 1000000 / Globals.LOGIC_UPDATE));
             getOwner().queueHeal(amount);
         }
     }

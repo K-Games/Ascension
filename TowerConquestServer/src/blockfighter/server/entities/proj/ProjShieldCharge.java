@@ -68,7 +68,7 @@ public class ProjShieldCharge extends ProjBase {
         while (!queue.isEmpty()) {
             Player p = queue.poll();
             if (p != null && !p.isDead()) {
-                int damage = (int) (getOwner().rollDamage() * (3 + .2 * getOwner().getSkillLevel(Skill.SHIELD_CHARGE)));
+                int damage = (int) (getOwner().rollDamage() * (1.5 + .2 * getOwner().getSkillLevel(Skill.SHIELD_CHARGE)));
                 boolean crit = getOwner().rollCrit();
                 if (crit) {
                     damage = (int) getOwner().criticalDamage(damage);
@@ -76,7 +76,7 @@ public class ProjShieldCharge extends ProjBase {
                 p.queueDamage(new Damage(damage, true, getOwner(), p, crit, hitbox[0], p.getHitbox()));
                 p.queueBuff(new BuffKnockback(300, (getOwner().getFacing() == Globals.RIGHT) ? 4 : -4, -5, getOwner(), p));
                 if (getOwner().isSkillMaxed(Skill.SHIELD_CHARGE)) {
-                    p.queueBuff(new BuffStun(2000));
+                    p.queueBuff(new BuffStun(1000));
                 }
             }
         }

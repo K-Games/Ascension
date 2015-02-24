@@ -61,7 +61,7 @@ public class ProjSwordTaunt extends ProjBase {
         while (!queue.isEmpty()) {
             Player p = queue.poll();
             if (p != null && !p.isDead()) {
-                int damage = (int) (getOwner().rollDamage() * (2.5 + 0.1 * getOwner().getSkillLevel(Skill.SWORD_TAUNT)));
+                int damage = (int) (getOwner().rollDamage() * (6 + 0.2 * getOwner().getSkillLevel(Skill.SWORD_TAUNT)));
                 boolean crit = getOwner().rollCrit();
                 if (crit) {
                     damage = (int) getOwner().criticalDamage(damage);

@@ -8,7 +8,9 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.Map;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * The server packetSender.
@@ -24,15 +26,26 @@ public class PacketSender {
     private static LogicModule[] logic;
     private DatagramSocket socket = null;
     private int bytesSent = 0;
+    private ConcurrentLinkedQueue<DatagramPacket> sendAllQueue = new ConcurrentLinkedQueue<>();
 
-    private ExecutorService threadPool;
+    private static ExecutorService threadPool = Executors.newScheduledThreadPool(15);
 
-    /**
-     *
-     * @param tp
-     */
-    public void setThreadPool(ExecutorService tp) {
-        threadPool = tp;
+    public void processSendQueue() {
+        while (!sendAllQueue.isEmpty()) {
+            final DatagramPacket p = sendAllQueue.poll();
+            if (p != null) {
+                threadPool.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            socket.send(p);
+                        } catch (IOException ex) {
+                            Globals.log(ex.getLocalizedMessage(), ex, true);
+                        }
+                    }
+                });
+            }
+        }
     }
 
     /**
@@ -101,20 +114,12 @@ public class PacketSender {
      * @param room room to send to
      */
     public void sendAll(final byte[] bytes, final byte room) {
-        threadPool.execute(new Runnable() {
-            @Override
-            public void run() {
-                for (Map.Entry<Byte, Player> pEntry : logic[room].getPlayers().entrySet()) {
-                    try {
-                        DatagramPacket packet = createPacket(bytes, pEntry.getValue());
-                        socket.send(packet);
-                        //bytesSent += bytes.length;
-                    } catch (IOException ex) {
-                        Globals.log(ex.getLocalizedMessage(), ex, true);
-                    }
-                }
-            }
-        });
+        for (Map.Entry<Byte, Player> pEntry : logic[room].getPlayers().entrySet()) {
+            DatagramPacket packet = createPacket(bytes, pEntry.getValue());
+            sendAllQueue.add(packet);
+            //socket.send(packet);
+            //bytesSent += bytes.length;
+        }
     }
 
     /**

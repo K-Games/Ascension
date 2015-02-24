@@ -62,7 +62,7 @@ public class ProjBowVolley extends ProjBase {
         while (!queue.isEmpty()) {
             Player p = queue.poll();
             if (p != null && !p.isDead()) {
-                int damage = (int) (getOwner().rollDamage() * (.25 + getOwner().getSkillLevel(Skill.BOW_VOLLEY) * .02));
+                int damage = (int) (getOwner().rollDamage() * (.75 + getOwner().getSkillLevel(Skill.BOW_VOLLEY) * .03));
                 boolean crit = getOwner().rollCrit();
                 if (crit) {
                     damage = (int) getOwner().criticalDamage(damage);
@@ -76,11 +76,10 @@ public class ProjBowVolley extends ProjBase {
                             bytes[2] = getOwner().getKey();
                             sender.sendAll(bytes, logic.getRoom());
                         }
-                        
                     }
                 }
                 p.queueDamage(new Damage(damage, true, getOwner(), p, crit, hitbox[0], p.getHitbox()));
-                p.queueBuff(new BuffKnockback(50, (getOwner().getFacing() == Globals.RIGHT) ? 1 : -1, 0, getOwner(), p));
+                p.queueBuff(new BuffKnockback(50, (getOwner().getFacing() == Globals.RIGHT) ? 1 : -1, -0.1, getOwner(), p));
             }
         }
         queuedEffect = false;

@@ -8,6 +8,9 @@ import blockfighter.server.net.PacketReceiver;
 import blockfighter.server.net.PacketSender;
 import java.awt.Dimension;
 import java.util.GregorianCalendar;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import javax.swing.JFrame;
 
 /**
@@ -27,7 +30,6 @@ public class Main {
                 createAndShowGUI();
             }
         });
-
     }
 
     private static void createAndShowGUI() {
@@ -51,10 +53,10 @@ public class Main {
             GregorianCalendar date = new GregorianCalendar();
             Globals.log("Server started", String.format("%1$td/%1$tm/%1$tY %1$tT", date), Globals.LOG_TYPE_ERR, false);
             Globals.log("Server started", String.format("%1$td/%1$tm/%1$tY %1$tT", date), Globals.LOG_TYPE_DATA, true);
-
+            ScheduledExecutorService threadPool = Executors.newScheduledThreadPool(server_rooms.length);
             for (byte i = 0; i < server_rooms.length; i++) {
                 server_rooms[i] = new LogicModule(i);
-                server_rooms[i].start();
+                threadPool.scheduleAtFixedRate(server_rooms[i], 0, 1, TimeUnit.MILLISECONDS);
                 Globals.log("Initialization", "Room " + i, Globals.LOG_TYPE_ERR, false);
                 Globals.log("Initialization", "Room " + i, Globals.LOG_TYPE_DATA, true);
             }
@@ -63,7 +65,7 @@ public class Main {
         } catch (Exception ex) {
             Globals.log(ex.getLocalizedMessage(), ex, true);
         }
-        JFrame frame = new JFrame("Tower Conquest Server ALPHA 0");
+        JFrame frame = new JFrame(Globals.WINDOW_TITLE);
 
         //frame.setUndecorated(true);
         frame.setResizable(false);

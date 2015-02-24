@@ -71,8 +71,8 @@ public class ProjBowFrost extends ProjBase {
             if (p != null && !p.isDead()) {
                 int damage;
                 if (!isSecondary) {
-                    damage = (int) (getOwner().rollDamage() * (1 + .3 * getOwner().getSkillLevel(Skill.BOW_FROST)));
-                    p.queueBuff(new BuffStun(getOwner().isSkillMaxed(Skill.BOW_FROST) ? 4000 : 2000));
+                    damage = (int) (getOwner().rollDamage() * (1 + .2 * getOwner().getSkillLevel(Skill.BOW_FROST)));
+                    p.queueBuff(new BuffStun(getOwner().isSkillMaxed(Skill.BOW_FROST) ? 2500 : 1500));
                 } else {
                     damage = (int) (getOwner().rollDamage() * 2.5);
                 }
@@ -81,7 +81,7 @@ public class ProjBowFrost extends ProjBase {
                     damage = (int) getOwner().criticalDamage(damage);
                 }
                 p.queueDamage(new Damage(damage, true, getOwner(), p, crit, hitbox[0], p.getHitbox()));
-                p.queueBuff(new BuffKnockback(200, (getOwner().getFacing() == Globals.RIGHT) ? 10 : -10, -4, getOwner(), p));
+                p.queueBuff(new BuffKnockback(200, (getOwner().getFacing() == Globals.RIGHT) ? 7 : -7, -4, getOwner(), p));
             }
         }
         queuedEffect = false;

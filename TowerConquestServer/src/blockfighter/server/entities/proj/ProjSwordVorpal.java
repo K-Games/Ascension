@@ -60,7 +60,7 @@ public class ProjSwordVorpal extends ProjBase {
         while (!queue.isEmpty()) {
             Player p = queue.poll();
             if (p != null && !p.isDead()) {
-                int damage = (int) (getOwner().rollDamage() * (1 + 0.05 * getOwner().getSkillLevel(Skill.SWORD_VORPAL)));
+                int damage = (int) (getOwner().rollDamage() * (1 + 0.06 * getOwner().getSkillLevel(Skill.SWORD_VORPAL)));
                 boolean crit = getOwner().rollCrit(getOwner().isSkillMaxed(Skill.SWORD_VORPAL) ? 0.3 : 0);
                 if (crit) {
                     damage = (int) getOwner().criticalDamage(damage, 0.4 + 0.03 * getOwner().getSkillLevel(Skill.SWORD_VORPAL));

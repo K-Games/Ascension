@@ -21,16 +21,18 @@ public class Globals {
 
     public final static byte LOG_TYPE_ERR = 0x00,
             LOG_TYPE_DATA = 0x01;
-
+    
+    public final static String GAME_VERSION = "ALPHA 1u0";
+    public final static String WINDOW_TITLE = "Tower Conquest " + GAME_VERSION;
     private final static int SERVER_ID = (int) (Math.random() * 50000);
 
-    public final static ExecutorService LOG_THREADS = Executors.newFixedThreadPool(2);
+    public final static ExecutorService LOG_THREADPOOL = Executors.newSingleThreadExecutor();
 
     public final static String SERVER_ADDRESS = "0.0.0.0";
     public final static int SERVER_PORT = 25565;
     public final static byte SERVER_MAX_PLAYERS = 10;
     public final static byte SERVER_ROOMS = 1;
-    public final static long SERVER_MAX_IDLE = 90000;
+    public final static long SERVER_MAX_IDLE = 300000;
 
     public final static byte MAX_NAME_LENGTH = 15;
 
@@ -214,7 +216,7 @@ public class Globals {
             }
         };
 
-        LOG_THREADS.execute(logging);
+        LOG_THREADPOOL.execute(logging);
     }
 
     public static final void log(final String ex, final Exception e, final boolean console) {
@@ -240,7 +242,7 @@ public class Globals {
             }
         };
 
-        LOG_THREADS.execute(logging);
+        LOG_THREADPOOL.execute(logging);
     }
 
     public static final double calcEXPtoNxtLvl(double level) {
