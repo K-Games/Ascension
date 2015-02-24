@@ -14,7 +14,7 @@ public class SkillShieldIron extends Skill {
     public SkillShieldIron() {
         icon = Globals.SKILL_ICON[SHIELD_IRON];
         skillCode = SHIELD_IRON;
-        maxCooldown = 20000;
+        maxCooldown = 13000;
         reqWeapon = Globals.ITEM_SHIELD;
         skillName = "Iron Fortress";
         maxSkillName = "Inpenetrable Armor";

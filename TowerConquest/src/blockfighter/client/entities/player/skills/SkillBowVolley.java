@@ -46,11 +46,11 @@ public class SkillBowVolley extends Skill {
         g.drawString("Fire 20 shots over 2 seconds. Can be interrupted.", x + 10, y + 90);
 
         g.drawString("[Level " + level + "]", x + 10, y + 115);
-        g.drawString("Deals " + (25 + 2 * level) + "% damage per hit", x + 10, y + 135);
+        g.drawString("Deals " + (75 + 3 * level) + "% damage per hit", x + 10, y + 135);
 
         if (level < 30) {
             g.drawString("[Level " + (level + 1) + "]", x + 10, y + 160);
-            g.drawString("Deals " + (25 + 2 * (level + 1)) + "% damage per hit", x + 10, y + 180);
+            g.drawString("Deals " + (75 + 3 * (level + 1)) + "% damage per hit", x + 10, y + 180);
 
             g.drawString("[Level 30 Bonus]", x + 10, y + 205);
             g.drawString("Each Critical Hit increases damage by 1% for 4 seconds.", x + 10, y + 225);

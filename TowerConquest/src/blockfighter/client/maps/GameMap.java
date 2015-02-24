@@ -2,15 +2,12 @@ package blockfighter.client.maps;
 
 import blockfighter.client.Globals;
 import blockfighter.client.entities.particles.Particle;
-import blockfighter.client.screen.ScreenInventory;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -47,11 +44,6 @@ public abstract class GameMap {
         if (now - lastUpdateTime >= Globals.LOGIC_UPDATE) {
             updateParticles(particles);
             lastUpdateTime = now;
-        }
-        try {
-            Thread.sleep(0, 1);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(ScreenInventory.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

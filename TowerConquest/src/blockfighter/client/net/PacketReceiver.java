@@ -25,7 +25,7 @@ public class PacketReceiver extends Thread {
 
     private static LogicModule logic;
     private DatagramSocket socket = null;
-    private static ExecutorService threadPool = Executors.newFixedThreadPool(4);
+    private static ExecutorService threadPool = Executors.newFixedThreadPool(5);
     private boolean isConnected = true;
 
     public static void setLogic(LogicModule l) {

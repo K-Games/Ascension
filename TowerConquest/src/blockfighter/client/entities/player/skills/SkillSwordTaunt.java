@@ -14,7 +14,7 @@ public class SkillSwordTaunt extends Skill {
     public SkillSwordTaunt() {
         icon = Globals.SKILL_ICON[SWORD_TAUNT];
         skillCode = SWORD_TAUNT;
-        maxCooldown = 20000;
+        maxCooldown = 12000;
         reqWeapon = Globals.ITEM_SWORD;
         skillName = "Taunt";
         maxSkillName = "Roaring Challenge";
@@ -46,10 +46,10 @@ public class SkillSwordTaunt extends Skill {
         g.drawString("Deal damage and aggro equal to 100x damage dealt.", x + 10, y + 90);
 
         g.drawString("[Level " + level + "]", x + 10, y + 115);
-        g.drawString("Deals " + (10 * level + 250) + "% damage.", x + 10, y + 135);
+        g.drawString("Deals " + (20 * level + 600) + "% damage.", x + 10, y + 135);
         if (level < 30) {
             g.drawString("[Level " + (level + 1) + "]", x + 10, y + 160);
-            g.drawString("Deals " + (10 * (level + 1) + 250) + "% damage.", x + 10, y + 180);
+            g.drawString("Deals " + (20 * (level + 1) + 600) + "% damage.", x + 10, y + 180);
 
             g.drawString("[Level 30 Bonus]", x + 10, y + 205);
             g.drawString("Take 20% less damage for 10 seconds.", x + 10, y + 225);

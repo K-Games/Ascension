@@ -2,9 +2,6 @@ package blockfighter.client.render;
 
 import blockfighter.client.Globals;
 import blockfighter.client.LogicModule;
-import blockfighter.client.screen.ScreenInventory;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFrame;
 
 /**
@@ -15,13 +12,13 @@ public class RenderModule extends Thread {
 
     private final RenderPanel panel;
     private static LogicModule logic;
-    private boolean isRunning = false;
     private int FPSCount = 0;
     private JFrame mainFrame;
+    double lastUpdateTime; //Last time we rendered
+    double lastFPSTime; //Last time FPS count reset
 
     public RenderModule(RenderPanel p, JFrame f) {
         panel = p;
-        isRunning = true;
         mainFrame = f;
     }
 
@@ -31,33 +28,15 @@ public class RenderModule extends Thread {
 
     @Override
     public void run() {
+        double now = System.nanoTime(); //Get time now
+        panel.setScreen(logic.getScreen());
+        panel.repaint();
+        FPSCount++;
 
-        double lastUpdateTime = System.nanoTime(); //Last time we rendered
-        double lastFPSTime = lastUpdateTime; //Last time FPS count reset
-        panel.setLayout(null);
-
-        while (isRunning) {
-            double now = System.nanoTime(); //Get time now
-            if (now - lastUpdateTime >= Globals.RENDER_UPDATE) {
-                panel.setScreen(logic.getScreen());
-                logic.getScreen().setRenderPanel(panel);
-                panel.repaint();
-                FPSCount++;
-                lastUpdateTime = now;
-            }
-
-            if (now - lastFPSTime >= 1000000000) {
-                panel.setFPSCount(FPSCount);
-                FPSCount = 0;
-                lastFPSTime = now;
-            }
-
-            try {
-                Thread.sleep(0, 1);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(ScreenInventory.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
+        if (now - lastFPSTime >= 1000000000) {
+            panel.setFPSCount(FPSCount);
+            FPSCount = 0;
+            lastFPSTime = now;
         }
     }
 }

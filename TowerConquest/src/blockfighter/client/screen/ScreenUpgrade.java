@@ -15,8 +15,6 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 
 /**
@@ -126,12 +124,6 @@ public class ScreenUpgrade extends ScreenMenu {
             updateParticles(particles);
             lastUpdateTime = now;
         }
-        try {
-            Thread.sleep(0, 1);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(ScreenInventory.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
     }
 
     @Override

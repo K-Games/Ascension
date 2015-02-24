@@ -18,7 +18,7 @@ public class SkillPassiveDualSword extends Skill {
 
     @Override
     public void drawInfo(Graphics2D g, int x, int y) {
-        int boxHeight = (level < 30) ? 230 : 185, boxWidth = 365;
+        int boxHeight = (level < 30) ? 270 : 205, boxWidth = 365;
         if (y + boxHeight > 700) {
             y = 700 - boxHeight;
         }
@@ -46,10 +46,12 @@ public class SkillPassiveDualSword extends Skill {
 
         g.setColor(Color.WHITE);
         g.drawString("[Level " + level + "]", x + 10, y + 155);
-        g.drawString("Additional " + df.format(4 + level * 0.2) + "% Critical Hit Chance.", x + 10, y + 175);
+        g.drawString("Additional " + df.format(6 + level * 0.3) + "% Critical Hit Chance.", x + 10, y + 175);
+        g.drawString("Take " + df.format(level) + "% reduced damage.", x + 10, y + 195);
         if (level < 30) {
-            g.drawString("[Level " + (level + 1) + "]", x + 10, y + 200);
-            g.drawString("Additional " + df.format(4 + (level + 1) * 0.2) + "% Critical Hit Chance.", x + 10, y + 220);
+            g.drawString("[Level " + (level + 1) + "]", x + 10, y + 220);
+            g.drawString("Additional " + df.format(6 + (level + 1) * 0.3) + "% Critical Hit Chance.", x + 10, y + 240);
+            g.drawString("Take " + df.format(level + 1) + "% reduced damage.", x + 10, y + 260);
         }
     }
 }

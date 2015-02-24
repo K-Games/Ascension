@@ -83,13 +83,6 @@ public class ScreenInventory extends ScreenMenu {
             }
             lastUpdateTime = now;
         }
-
-        try {
-            Thread.sleep(0, 1);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(ScreenInventory.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
     }
 
     @Override

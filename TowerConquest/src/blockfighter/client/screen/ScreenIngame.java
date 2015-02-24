@@ -25,8 +25,6 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -133,12 +131,6 @@ public class ScreenIngame extends Screen {
             sender.sendGetPing(pID, logic.getSelectedRoom(), myKey);
             lastPingTime = now;
         }
-
-        try {
-            Thread.sleep(0, 1);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(ScreenInventory.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 
     private void updateDmgNum() {
@@ -213,6 +205,7 @@ public class ScreenIngame extends Screen {
 
     @Override
     public void draw(Graphics2D g) {
+        g.setClip(0, 0, 1280, 720);
         AffineTransform resetForm = g.getTransform();
         map.drawBg(g);
         if (players != null && myKey != -1 && players.containsKey(myKey)) {

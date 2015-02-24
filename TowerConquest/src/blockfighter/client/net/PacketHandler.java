@@ -8,7 +8,7 @@ import java.net.DatagramPacket;
  *
  * @author Ken Kwan
  */
-public class PacketHandler extends Thread {
+public class PacketHandler implements Runnable {
 
     private DatagramPacket r = null;
     private static LogicModule logic;

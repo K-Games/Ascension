@@ -14,7 +14,7 @@ public class ParticleShieldIron extends Particle {
         super(k, 0, 0);
         frame = 0;
         frameDuration = 25;
-        duration = 2300;
+        duration = 2100;
         owner = p;
     }
 

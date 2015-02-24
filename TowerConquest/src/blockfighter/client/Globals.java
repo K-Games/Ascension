@@ -16,9 +16,9 @@ import javax.imageio.ImageIO;
 public class Globals {
 
     public final static int SERVER_PORT = 25565;
-    private final static boolean isPublic = false;
+    private final static boolean isPublic = true;
     public static String SERVER_ADDRESS = (isPublic) ? "towerconquest.servegame.com" : "192.168.1.2";
-    public final static String GAME_VERSION = "ALPHA 0";
+    public final static String GAME_VERSION = "ALPHA 1u0";
     public final static String WINDOW_TITLE = "Tower Conquest " + GAME_VERSION;
     public final static int WINDOW_WIDTH = 1280;
     public final static int WINDOW_HEIGHT = 720;
@@ -33,17 +33,18 @@ public class Globals {
 
     public final static byte MAX_NAME_LENGTH = 15;
 
-    public final static double RENDER_FPS = 63D;
-    public final static double RENDER_UPDATE = 1000000000D / RENDER_FPS;
+    //Render 60 fps in microseconds
+    public final static long RENDER_FPS = 60;
+    public final static long RENDER_UPDATE = 1000000 / RENDER_FPS;
 
     public final static double LOGIC_TICKS_PER_SEC = 40D;
     public final static double LOGIC_UPDATE = 1000000000D / LOGIC_TICKS_PER_SEC;
 
-    public final static double DMG_TICKS_PER_SEC = 60D;
-    public final static double DMG_UPDATE = 1000000000D / DMG_TICKS_PER_SEC;
+    //public final static double DMG_TICKS_PER_SEC = 60D;
+    public final static double DMG_UPDATE = 15000000D;
 
-    public final static double SEND_KEYDOWN_PER_SEC = 15D;
-    public final static double SEND_KEYDOWN_UPDATE = 1000000000D / SEND_KEYDOWN_PER_SEC;
+    //public final static double SEND_KEYDOWN_PER_SEC = 10D;
+    public final static double SEND_KEYDOWN_UPDATE = 100000000D;
 
     public final static double REQUESTALL_TICKS_PER_SEC = 1D;
     public final static double REQUESTALL_UPDATE = 5000000000D / REQUESTALL_TICKS_PER_SEC;

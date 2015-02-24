@@ -13,8 +13,6 @@ import java.awt.image.BufferedImage;
 import java.text.DecimalFormat;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -49,11 +47,6 @@ public abstract class ScreenMenu extends Screen {
         if (now - lastUpdateTime >= Globals.LOGIC_UPDATE) {
             updateParticles(particles);
             lastUpdateTime = now;
-        }
-        try {
-            Thread.sleep(0, 1);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(ScreenInventory.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

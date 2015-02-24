@@ -52,10 +52,10 @@ public class SkillShieldFortify extends Skill {
             g.drawString("Reduce damage taken by " + df.format(0.5 * (level + 1) + 1) + "%.", x + 10, y + 180);
 
             g.drawString("[Level 30 Bonus]", x + 10, y + 205);
-            g.drawString("Restore 20% HP over 5 seconds.", x + 10, y + 225);
+            g.drawString("Restore 7.5% HP over 5 seconds.", x + 10, y + 225);
         } else {
             g.drawString("[Level 30 Bonus]", x + 10, y + 160);
-            g.drawString("Restore 20% HP over 5 seconds.", x + 10, y + 180);
+            g.drawString("Restore 7.5% HP over 5 seconds.", x + 10, y + 180);
         }
     }
 

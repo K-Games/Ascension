@@ -20,8 +20,6 @@ import java.util.logging.Logger;
  */
 public class LogicModule extends Thread {
 
-    private boolean isRunning = false;
-
     //Shared Data
     private PacketSender sender = null;
     private PacketReceiver receiver = null;
@@ -33,20 +31,13 @@ public class LogicModule extends Thread {
     private SoundModule soundModule;
 
     public LogicModule(SoundModule s) {
-        isRunning = true;
         soundModule = s;
     }
 
     @Override
     public void run() {
         //soundModule.playBGM("theme.ogg");
-        while (isRunning) {
-            screen.update();
-        }
-    }
-
-    public boolean isRunning() {
-        return isRunning;
+        screen.update();
     }
 
     public void receiveLogin(byte mapID, byte key, byte size) {

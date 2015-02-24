@@ -47,16 +47,16 @@ public class SkillShieldCharge extends Skill {
         g.drawString("Any enemies hit while charging will take damage.", x + 10, y + 110);
 
         g.drawString("[Level " + level + "]", x + 10, y + 135);
-        g.drawString("Deals " + (300 + level * 20) + "% damage.", x + 10, y + 155);
+        g.drawString("Deals " + (150 + level * 20) + "% damage.", x + 10, y + 155);
         if (level < 30) {
             g.drawString("[Level " + (level + 1) + "]", x + 10, y + 180);
-            g.drawString("Deals " + (300 + (level + 1) * 20) + "% damage.", x + 10, y + 200);
+            g.drawString("Deals " + (150 + (level + 1) * 20) + "% damage.", x + 10, y + 200);
 
             g.drawString("[Level 30 Bonus]", x + 10, y + 225);
-            g.drawString("Stun enemies hit for 2 seconds.", x + 10, y + 245);
+            g.drawString("Stun enemies hit for 1 second.", x + 10, y + 245);
         } else {
             g.drawString("[Level 30 Bonus]", x + 10, y + 180);
-            g.drawString("Stun enemies hit for 2 seconds.", x + 10, y + 200);
+            g.drawString("Stun enemies hit for 1 second.", x + 10, y + 200);
         }
     }
 

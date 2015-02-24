@@ -26,7 +26,7 @@ public abstract class Screen implements KeyListener, MouseListener, MouseMotionL
     public abstract ConcurrentHashMap<Integer, Particle> getParticles();
 
     protected static ExecutorService threadPool;
-    protected RenderPanel panel;
+    protected static RenderPanel panel;
     protected static LogicModule logic;
 
     public static void setLogic(LogicModule l) {
@@ -68,7 +68,7 @@ public abstract class Screen implements KeyListener, MouseListener, MouseMotionL
         }
     }
 
-    public void setRenderPanel(RenderPanel r) {
+    public static void setRenderPanel(RenderPanel r) {
         panel = r;
     }
 

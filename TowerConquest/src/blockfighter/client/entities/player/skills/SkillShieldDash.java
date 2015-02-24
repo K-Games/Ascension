@@ -15,8 +15,8 @@ public class SkillShieldDash extends Skill {
         icon = Globals.SKILL_ICON[SHIELD_DASH];
         skillCode = SHIELD_DASH;
         maxCooldown = 2000;
-        reqWeapon = Globals.ITEM_SHIELD;
-        skillName = "Shield Dash";
+        //reqWeapon = Globals.ITEM_SHIELD;
+        skillName = "Dash";
         maxSkillName = "Unrivaled Haste";
     }
 
@@ -40,7 +40,7 @@ public class SkillShieldDash extends Skill {
         g.setFont(Globals.ARIAL_18PT);
         g.drawString(getSkillName(), x + 80, y + 30);
         g.setFont(Globals.ARIAL_15PT);
-        g.drawString("Level: " + level + " - Requires " + ItemEquip.getItemTypeName(reqWeapon), x + 80, y + 50);
+        g.drawString("Level: " + level, x + 80, y + 50);
         g.drawString("Cooldown: " + maxCooldown / 1000 + " Seconds", x + 80, y + 70);
 
         g.drawString("Dash a short distance over 0.25 seconds.", x + 10, y + 90);

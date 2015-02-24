@@ -46,10 +46,10 @@ public class SkillBowRapid extends Skill {
         g.drawString("Fire 3 shots over 1 second.", x + 10, y + 90);
 
         g.drawString("[Level " + level + "]", x + 10, y + 115);
-        g.drawString("Deals " + (75 + level) + "% damage per hit.", x + 10, y + 135);
+        g.drawString("Deals " + (75 + level*2) + "% damage per hit.", x + 10, y + 135);
         if (level < 30) {
             g.drawString("[Level " + (level + 1) + "]", x + 10, y + 160);
-            g.drawString("Deals " + (75 + (level + 1)) + "% damage per hit.", x + 10, y + 180);
+            g.drawString("Deals " + (75 + (level + 1)*2) + "% damage per hit.", x + 10, y + 180);
 
             g.drawString("[Level 30 Bonus]", x + 10, y + 205);
             g.drawString("Each shot has 50% Chance to deal 2x damage.", x + 10, y + 225);

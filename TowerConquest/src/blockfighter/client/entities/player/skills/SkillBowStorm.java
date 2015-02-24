@@ -46,10 +46,10 @@ public class SkillBowStorm extends Skill {
         g.drawString("Launch a hail of arrows, damaging the area in front.", x + 10, y + 90);
 
         g.drawString("[Level " + level + "]", x + 10, y + 115);
-        g.drawString("Deals " + (400 + 40 * level) + "% damage per second for 5 seconds.", x + 10, y + 135);
+        g.drawString("Deals " + (300 + 30 * level) + "% damage per second for 5 seconds.", x + 10, y + 135);
         if (level < 30) {
             g.drawString("[Level " + (level + 1) + "]", x + 10, y + 160);
-            g.drawString("Deals " + (400 + 40 * (level + 1)) + "% damage per second for 5 seconds.", x + 10, y + 180);
+            g.drawString("Deals " + (300 + 30 * (level + 1)) + "% damage per second for 5 seconds.", x + 10, y + 180);
 
             g.drawString("[Level 30 Bonus]", x + 10, y + 205);
             g.drawString("Critical Hits have bonus +500% Critical Hit Damage.", x + 10, y + 225);

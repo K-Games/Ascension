@@ -46,10 +46,10 @@ public class SkillBowArc extends Skill {
         g.drawString("Fire 3 shots in an arc.", x + 10, y + 90);
 
         g.drawString("[Level " + level + "]", x + 10, y + 115);
-        g.drawString("Deal " + (37 + level) + "% damage per hit.", x + 10, y + 135);
+        g.drawString("Deal " + (80 + level * 2) + "% damage per hit.", x + 10, y + 135);
         if (level < 30) {
             g.drawString("[Level " + (level + 1) + "]", x + 10, y + 160);
-            g.drawString("Deal " + (37 + (level + 1)) + "% damage per hit.", x + 10, y + 180);
+            g.drawString("Deal " + (80 + (level + 1) * 2) + "% damage per hit.", x + 10, y + 180);
 
             g.drawString("[Level 30 Bonus]", x + 10, y + 205);
             g.drawString("Restore 5% damage to HP. Maximum of 10% HP.", x + 10, y + 225);

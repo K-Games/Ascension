@@ -14,6 +14,8 @@ import java.awt.Dimension;
 import java.lang.reflect.Field;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import javax.swing.JFrame;
 
 /**
@@ -58,6 +60,7 @@ public class Main {
         final LogicModule logic = new LogicModule(sounds);
         RenderModule render = new RenderModule(panel, frame);
 
+        Screen.setRenderPanel(panel);
         Particle.setLogic(logic);
         Screen.setLogic(logic);
         RenderModule.setLogic(logic);
@@ -67,7 +70,7 @@ public class Main {
         PacketHandler.setLogic(logic);
         PacketReceiver.setLogic(logic);
 
-        ExecutorService threadPool = Executors.newFixedThreadPool(10);
+        ExecutorService threadPool = Executors.newFixedThreadPool(4);
         Screen.setThreadPool(threadPool);
         GameMap.setThreadPool(threadPool);
 
@@ -81,7 +84,8 @@ public class Main {
         frame.setLocationRelativeTo(null);
         frame.getContentPane().add(panel, null);
         frame.setVisible(true);
-
+        
+        panel.setLayout(null);
         panel.setFocusable(true);
         panel.addKeyListener(keyHandler);
         panel.addMouseMotionListener(mouseHandler);
@@ -95,7 +99,10 @@ public class Main {
                 sounds.shutdown();
             }
         });
-        logic.start();
-        render.start();
+        final ScheduledExecutorService service = Executors.newScheduledThreadPool(2);
+        service.scheduleAtFixedRate(logic, 0, 5, TimeUnit.MILLISECONDS);
+        //logic.start();
+        service.scheduleAtFixedRate(render, 0, Globals.RENDER_UPDATE, TimeUnit.MICROSECONDS);
+        //render.start();
     }
 }

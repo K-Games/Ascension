@@ -44,13 +44,13 @@ public class SkillShieldToss extends Skill {
         g.drawString("Cooldown: " + maxCooldown / 1000 + " Seconds", x + 80, y + 70);
 
         g.drawString("Throw your shield in front of you.", x + 10, y + 90);
-        g.drawString("Deals damage multiplied by a portion of your Defense.", x + 10, y + 110);
+        g.drawString("Deals damage with Defense as additional damage.", x + 10, y + 110);
 
         g.drawString("[Level " + level + "]", x + 10, y + 135);
-        g.drawString("Deals damage multiplied by " + df.format(level * .1 + 8) + "% of Defense.", x + 10, y + 155);
+        g.drawString("Deals damage + Defense multiplied by " + df.format(10 +  level) + ".", x + 10, y + 155);
         if (level < 30) {
             g.drawString("[Level " + (level + 1) + "]", x + 10, y + 180);
-            g.drawString("Deals damage multiplied by " + df.format((level + 1) * .1 + 8) + "% of Defense.", x + 10, y + 200);
+            g.drawString("Deals damage + Defense multiplied by " + df.format(10 + (level + 1)) + ".", x + 10, y + 200);
 
             g.drawString("[Level 30 Bonus]", x + 10, y + 225);
             g.drawString("Throws 3 shields.", x + 10, y + 245);
