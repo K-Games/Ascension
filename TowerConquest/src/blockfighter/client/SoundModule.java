@@ -7,11 +7,12 @@ import paulscode.sound.SoundSystemJPCT;
  *
  * @author Ken Kwan
  */
-public class SoundModule {
+public class SoundModule implements Runnable {
 
     private SoundSystemJPCT soundModule;
 
-    public SoundModule() {
+    @Override
+    public void run() {
         soundModule = new SoundSystemJPCT();
         soundModule.setMasterVolume(0.7f);
         SoundSystemConfig.setSoundFilesPackage("blockfighter/client/sounds/");
@@ -22,11 +23,19 @@ public class SoundModule {
     }
 
     public void playSound(String soundFile) {
-        soundModule.quickPlay(soundFile, false);
+        if (isLoaded()) {
+            soundModule.quickPlay(soundFile, false);
+        }
     }
 
     public void playBGM(String bgmFile) {
-        soundModule.stop("bgm");
-        soundModule.backgroundMusic("bgm", bgmFile);
+        if (isLoaded()) {
+            soundModule.stop("bgm");
+            soundModule.backgroundMusic("bgm", bgmFile);
+        }
+    }
+
+    public boolean isLoaded() {
+        return soundModule != null;
     }
 }

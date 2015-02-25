@@ -16,7 +16,7 @@ import javax.imageio.ImageIO;
 public class Globals {
 
     public final static int SERVER_PORT = 25565;
-    private final static boolean isPublic = true;
+    private final static boolean isPublic = false;
     public static String SERVER_ADDRESS = (isPublic) ? "towerconquest.servegame.com" : "192.168.1.2";
     public final static String GAME_VERSION = "ALPHA 1u0";
     public final static String WINDOW_TITLE = "Tower Conquest " + GAME_VERSION;
@@ -46,8 +46,8 @@ public class Globals {
     //public final static double SEND_KEYDOWN_PER_SEC = 10D;
     public final static double SEND_KEYDOWN_UPDATE = 100000000D;
 
-    public final static double REQUESTALL_TICKS_PER_SEC = 1D;
-    public final static double REQUESTALL_UPDATE = 5000000000D / REQUESTALL_TICKS_PER_SEC;
+    //public final static double REQUESTALL_TICKS_PER_SEC = 1D;
+    public final static double REQUESTALL_UPDATE = 10000000000D;
 
     public final static double PINGS_PER_SEC = 1D;
     public final static double PING_UPDATE = 1000000000D / PINGS_PER_SEC;

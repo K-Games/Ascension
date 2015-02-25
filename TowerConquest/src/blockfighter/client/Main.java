@@ -53,10 +53,13 @@ public class Main {
         ItemEquip.loadItemDetails();
         ItemEquip.loadItemDrawOrigin();
         ItemUpgrade.loadUpgradeItems();
+        ExecutorService threadPool = Executors.newFixedThreadPool(4);
 
         JFrame frame = new JFrame(Globals.WINDOW_TITLE);
         RenderPanel panel = new RenderPanel();
         final SoundModule sounds = new SoundModule();
+        threadPool.execute(sounds);
+        
         final LogicModule logic = new LogicModule(sounds);
         RenderModule render = new RenderModule(panel, frame);
 
@@ -70,7 +73,6 @@ public class Main {
         PacketHandler.setLogic(logic);
         PacketReceiver.setLogic(logic);
 
-        ExecutorService threadPool = Executors.newFixedThreadPool(4);
         Screen.setThreadPool(threadPool);
         GameMap.setThreadPool(threadPool);
 
@@ -84,7 +86,7 @@ public class Main {
         frame.setLocationRelativeTo(null);
         frame.getContentPane().add(panel, null);
         frame.setVisible(true);
-        
+
         panel.setLayout(null);
         panel.setFocusable(true);
         panel.addKeyListener(keyHandler);
