@@ -15,22 +15,23 @@ import java.util.concurrent.Executors;
 /**
  * The server packetSender.
  * <p>
- * The packet sender does not create the datagram packet. It is just a thread to send data. Datagram packet is created outside this class. Sends data to players. Only one is created on the server.
+ * The packet sender does not create the datagram packet. It is just a thread to send data. Datagram packet data is created outside this class. Sends data to players. Only one is created on the server.
  * Client side packet sender DOES construct the datagram packet.
  * </p>
  *
  * @author Ken Kwan
  */
-public class PacketSender {
+public class PacketSender implements Runnable {
 
     private static LogicModule[] logic;
     private DatagramSocket socket = null;
     private int bytesSent = 0;
     private ConcurrentLinkedQueue<DatagramPacket> sendAllQueue = new ConcurrentLinkedQueue<>();
 
-    private static ExecutorService threadPool = Executors.newScheduledThreadPool(15);
+    private static ExecutorService threadPool = Executors.newCachedThreadPool();
 
-    public void processSendQueue() {
+    @Override
+    public void run() {
         while (!sendAllQueue.isEmpty()) {
             final DatagramPacket p = sendAllQueue.poll();
             if (p != null) {

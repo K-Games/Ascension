@@ -39,28 +39,29 @@ public class Main {
             PacketHandler.setLogic(server_rooms);
             PacketReceiver.setLogic(server_rooms);
 
-            PacketSender sender = new PacketSender();
-            PacketReceiver server_BossThread = new PacketReceiver();
+            PacketSender packetSender = new PacketSender();
+            PacketReceiver packetReceiver = new PacketReceiver();
 
-            LogicModule.setPacketSender(sender);
-            PacketReceiver.setPacketSender(sender);
-            PacketHandler.setPacketSender(sender);
+            LogicModule.setPacketSender(packetSender);
+            PacketReceiver.setPacketSender(packetSender);
+            PacketHandler.setPacketSender(packetSender);
 
-            Player.setPacketSender(sender);
-            BossBase.setPacketSender(sender);
-            ProjBase.setPacketSender(sender);
+            Player.setPacketSender(packetSender);
+            BossBase.setPacketSender(packetSender);
+            ProjBase.setPacketSender(packetSender);
 
             GregorianCalendar date = new GregorianCalendar();
             Globals.log("Server started", String.format("%1$td/%1$tm/%1$tY %1$tT", date), Globals.LOG_TYPE_ERR, false);
             Globals.log("Server started", String.format("%1$td/%1$tm/%1$tY %1$tT", date), Globals.LOG_TYPE_DATA, true);
-            ScheduledExecutorService threadPool = Executors.newScheduledThreadPool(server_rooms.length);
+            ScheduledExecutorService threadPool = Executors.newScheduledThreadPool(server_rooms.length+1);
+            threadPool.scheduleAtFixedRate(packetSender, 0, 500, TimeUnit.MICROSECONDS);
             for (byte i = 0; i < server_rooms.length; i++) {
                 server_rooms[i] = new LogicModule(i);
                 threadPool.scheduleAtFixedRate(server_rooms[i], 0, 1, TimeUnit.MILLISECONDS);
                 Globals.log("Initialization", "Room " + i, Globals.LOG_TYPE_ERR, false);
                 Globals.log("Initialization", "Room " + i, Globals.LOG_TYPE_DATA, true);
             }
-            server_BossThread.start();
+            packetReceiver.start();
 
         } catch (Exception ex) {
             Globals.log(ex.getLocalizedMessage(), ex, true);

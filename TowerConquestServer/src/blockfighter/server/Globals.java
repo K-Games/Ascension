@@ -241,7 +241,6 @@ public class Globals {
                 }
             }
         };
-
         LOG_THREADPOOL.execute(logging);
     }
 

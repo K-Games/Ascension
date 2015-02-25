@@ -278,7 +278,6 @@ public class LogicModule extends Thread {
     private void processQueues() {
         Runnable[] queues = new Runnable[4];
         
-        sender.processSendQueue();
         while (!pAddQueue.isEmpty()) {
             Player newPlayer = pAddQueue.poll();
             if (newPlayer != null) {
