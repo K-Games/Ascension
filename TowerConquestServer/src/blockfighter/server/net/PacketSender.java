@@ -11,12 +11,13 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
 /**
  * The server packetSender.
  * <p>
- * The packet sender does not create the datagram packet. It is just a thread to send data. Datagram packet data is created outside this class. Sends data to players. Only one is created on the server.
- * Client side packet sender DOES construct the datagram packet.
+ * The packet sender does not create the datagram packet. It is just a thread to send data. Datagram packet data is created outside this class. Sends data to players. Only one is created on the
+ * server. Client side packet sender DOES construct the datagram packet.
  * </p>
  *
  * @author Ken Kwan
@@ -28,7 +29,13 @@ public class PacketSender implements Runnable {
     private int bytesSent = 0;
     private ConcurrentLinkedQueue<DatagramPacket> sendAllQueue = new ConcurrentLinkedQueue<>();
 
-    private static ExecutorService threadPool = Executors.newCachedThreadPool();
+    private static ExecutorService threadPool = Executors.newCachedThreadPool(
+            new BasicThreadFactory.Builder()
+            .namingPattern("PacketSender-%d")
+            .daemon(true)
+            .priority(Thread.MAX_PRIORITY)
+            .build()
+    );
 
     @Override
     public void run() {
@@ -131,9 +138,7 @@ public class PacketSender implements Runnable {
     public void broadcastAllPlayersUpdate(byte room) {
         for (Map.Entry<Byte, Player> pEntry : logic[room].getPlayers().entrySet()) {
             Player player = pEntry.getValue();
-            player.sendPos();
-            player.sendState();
-            player.sendFacing();
+            player.sendData();
         }
     }
 

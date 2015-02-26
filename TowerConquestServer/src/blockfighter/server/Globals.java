@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
 /**
  * All the server globals constants and helper methods.
@@ -22,17 +23,23 @@ public class Globals {
     public final static byte LOG_TYPE_ERR = 0x00,
             LOG_TYPE_DATA = 0x01;
     
-    public final static String GAME_VERSION = "ALPHA 1u0";
+    public final static String GAME_VERSION = "ALPHA 1u1";
     public final static String WINDOW_TITLE = "Tower Conquest " + GAME_VERSION;
     private final static int SERVER_ID = (int) (Math.random() * 50000);
 
-    public final static ExecutorService LOG_THREADPOOL = Executors.newSingleThreadExecutor();
+    public final static ExecutorService LOG_THREADPOOL = Executors.newSingleThreadExecutor(
+            new BasicThreadFactory.Builder()
+            .namingPattern("Logger-%d")
+            .daemon(true)
+            .priority(Thread.MIN_PRIORITY)
+            .build()
+    );
 
     public final static String SERVER_ADDRESS = "0.0.0.0";
     public final static int SERVER_PORT = 25565;
     public final static byte SERVER_MAX_PLAYERS = 10;
     public final static byte SERVER_ROOMS = 1;
-    public final static long SERVER_MAX_IDLE = 300000;
+    public final static long SERVER_MAX_IDLE = 180000;
 
     public final static byte MAX_NAME_LENGTH = 15;
 

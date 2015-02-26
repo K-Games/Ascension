@@ -13,7 +13,7 @@ public class SkillShieldIron extends Skill {
      */
     public SkillShieldIron() {
         skillCode = SHIELD_IRON;
-        maxCooldown = 13000;
+        maxCooldown = 15000;
         reqWeapon = Globals.ITEM_SHIELD;
     }
 

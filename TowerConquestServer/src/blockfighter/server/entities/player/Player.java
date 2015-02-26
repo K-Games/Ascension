@@ -548,7 +548,7 @@ public class Player extends Thread {
     }
 
     private void updateSkillCast() {
-        if (isUsingSkill() || isStunned() || isKnockback()) {
+        if (isUsingSkill()) {
             skillUseQueue.clear();
             return;
         }
@@ -1484,7 +1484,7 @@ public class Player extends Thread {
                     barrierDmgTaken += amount;
                     if (barrierDmgTaken >= stats[Globals.STAT_MAXHP] * 0.5) {
                         barrierDmgTaken = 0;
-                        queueBuff(new BuffPassiveBarrier(stats[Globals.STAT_MAXHP] * (0.2 + 0.01 * getSkillLevel(Skill.PASSIVE_BARRIER)), this));
+                        queueBuff(new BuffPassiveBarrier(stats[Globals.STAT_MAXHP] * (0.1 + 0.005 * getSkillLevel(Skill.PASSIVE_BARRIER)), this));
                     }
                 }
             }
@@ -1903,6 +1903,7 @@ public class Player extends Thread {
      */
     public void queueSkillUse(byte[] data) {
         lastActionTime = Globals.SERVER_MAX_IDLE;
+        skillUseQueue.clear();
         if (!isDead()) {
             skillUseQueue.add(data);
         }
@@ -2259,6 +2260,30 @@ public class Player extends Thread {
         if (animState != prevAnimState || frame != prevFrame) {
             updateAnimState = true;
         }
+    }
+
+    public void sendData() {
+        byte[] bytes = new byte[Globals.PACKET_BYTE * 5 + Globals.PACKET_INT * 2];
+        bytes[0] = Globals.DATA_PLAYER_GET_ALL;
+        bytes[1] = key;
+        byte[] posXInt = Globals.intToByte((int) x);
+        bytes[2] = posXInt[0];
+        bytes[3] = posXInt[1];
+        bytes[4] = posXInt[2];
+        bytes[5] = posXInt[3];
+        byte[] posYInt = Globals.intToByte((int) y);
+        bytes[6] = posYInt[0];
+        bytes[7] = posYInt[1];
+        bytes[8] = posYInt[2];
+        bytes[9] = posYInt[3];
+        bytes[10] = facing;
+        bytes[11] = animState;
+        bytes[12] = frame;
+
+        sender.sendAll(bytes, logic.getRoom());
+        updatePos = false;
+        updateFacing = false;
+        updateAnimState = false;
     }
 
     /**

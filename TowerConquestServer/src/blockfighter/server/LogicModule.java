@@ -11,6 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
 /**
  * Logic module of the server. Updates all objects and their interactions.
@@ -36,7 +37,12 @@ public class LogicModule extends Thread {
     private final ConcurrentLinkedQueue<ProjBase> projEffectQueue = new ConcurrentLinkedQueue<>();
     private final ConcurrentLinkedQueue<ProjBase> projAddQueue = new ConcurrentLinkedQueue<>();
 
-    private static ExecutorService threadPool = Executors.newFixedThreadPool(10 * Globals.SERVER_ROOMS);
+    private static ExecutorService threadPool = Executors.newFixedThreadPool(10 * Globals.SERVER_ROOMS,
+            new BasicThreadFactory.Builder()
+            .namingPattern("LogicModule-%d")
+            .daemon(true)
+            .priority(Thread.NORM_PRIORITY)
+            .build());
     private long lastRefreshAll = 0;
     private double lastUpdateTime = 0;
 
@@ -57,10 +63,6 @@ public class LogicModule extends Thread {
         for (byte i = 0; i < Globals.SERVER_MAX_PLAYERS; i++) {
             playerKeys.add(i);
         }
-    }
-
-    public static void shutdownThreads() {
-        threadPool.shutdownNow();
     }
 
     public void reset() {

@@ -8,6 +8,7 @@ import java.net.DatagramSocket;
 import java.net.SocketException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
 /**
  * Thread to accept incoming connections.
@@ -39,7 +40,12 @@ public class PacketReceiver extends Thread {
 
     @Override
     public void run() {
-        ExecutorService threadPool = Executors.newFixedThreadPool(3);
+        ExecutorService threadPool = Executors.newFixedThreadPool(3,
+                new BasicThreadFactory.Builder()
+                .namingPattern("PacketReceiver-%d")
+                .daemon(true)
+                .priority(Thread.NORM_PRIORITY)
+                .build());
         try {
             DatagramSocket socket = new DatagramSocket(Globals.SERVER_PORT);
             System.out.println("Server listening on port " + Globals.SERVER_PORT);
@@ -54,10 +60,6 @@ public class PacketReceiver extends Thread {
             Globals.log(ex.getLocalizedMessage(), ex, true);
         } catch (IOException ex) {
             Globals.log(ex.getLocalizedMessage(), ex, true);
-        } finally {
-            Globals.LOG_THREADPOOL.shutdown();
-            LogicModule.shutdownThreads();
-            threadPool.shutdownNow();
         }
     }
 }
