@@ -48,11 +48,11 @@ public class SkillPassiveBarrier extends Skill {
 
         g.setColor(Color.WHITE);
         g.drawString("[Level " + level + "]", x + 10, y + 155);
-        g.drawString("Absorbs up to " + (20 + level) + "% of HP.", x + 10, y + 175);
+        g.drawString("Absorbs up to " + df.format(10 + level*0.5) + "% of HP.", x + 10, y + 175);
 
         if (level < 30) {
             g.drawString("[Level " + (level + 1) + "]", x + 10, y + 200);
-            g.drawString("Absorbs up to " + (20 + (level + 1)) + "% of HP.", x + 10, y + 220);
+            g.drawString("Absorbs up to " + (10 + (level + 1)*0.5) + "% of HP.", x + 10, y + 220);
         }
     }
 }

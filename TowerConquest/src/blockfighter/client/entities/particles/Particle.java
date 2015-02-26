@@ -1,7 +1,7 @@
 package blockfighter.client.entities.particles;
 
 import blockfighter.client.Globals;
-import static blockfighter.client.Globals.*;
+import static blockfighter.client.Globals.NUM_PARTICLE_EFFECTS;
 import blockfighter.client.LogicModule;
 import java.awt.Color;
 import java.awt.Graphics2D;

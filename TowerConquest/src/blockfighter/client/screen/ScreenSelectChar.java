@@ -11,6 +11,7 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import javax.swing.BorderFactory;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -34,6 +35,7 @@ public class ScreenSelectChar extends ScreenMenu {
         CREATE_NAMEFIELD.setFont(Globals.ARIAL_30PT);
         CREATE_NAMEFIELD.setForeground(Color.WHITE);
         CREATE_NAMEFIELD.setOpaque(false);
+        CREATE_NAMEFIELD.setCaretColor(Color.WHITE);
         CREATE_NAMEFIELD.setBorder(BorderFactory.createEmptyBorder());
 
         loadSaveData();
@@ -174,6 +176,7 @@ public class ScreenSelectChar extends ScreenMenu {
                 CREATE_NAMEFIELD.setText("");
                 if (panel != null) {
                     panel.remove(CREATE_NAMEFIELD);
+                    panel.revalidate();
                 }
                 break;
             }
@@ -192,7 +195,7 @@ public class ScreenSelectChar extends ScreenMenu {
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        if (e.getButton() == MouseEvent.BUTTON1) {
+        if (SwingUtilities.isLeftMouseButton(e)) {
             if (createPrompt) {
                 mouseReleased_Create(e);
                 return;
@@ -208,6 +211,7 @@ public class ScreenSelectChar extends ScreenMenu {
                         CREATE_NAMEFIELD.setBorder(BorderFactory.createEmptyBorder());
                         if (panel != null) {
                             panel.add(CREATE_NAMEFIELD);
+                            panel.revalidate();
                         }
                         selectNum = i;
                         break;
@@ -242,6 +246,9 @@ public class ScreenSelectChar extends ScreenMenu {
 
     @Override
     public void unload() {
+        if (panel != null) {
+            panel.remove(CREATE_NAMEFIELD);
+        }
     }
 
 }

@@ -100,29 +100,26 @@ public class Player extends Thread {
         int drawSrcX = x - ((facing == Globals.RIGHT) ? 1 : -1) * sprite.getWidth() / 2;
         int drawSrcY = y - sprite.getHeight();
         int drawDscY = drawSrcY + sprite.getHeight();
-        int drawDscX = drawSrcX + ((facing == Globals.RIGHT) ? 1 : -1) * sprite.getWidth();
         switch (s) {
             case Globals.PLAYER_STATE_ATTACK1:
                 drawSrcX += ((facing == Globals.RIGHT) ? 1 : -1) * 10;
-                drawDscX += ((facing == Globals.RIGHT) ? 1 : -1) * 10;
                 break;
             case Globals.PLAYER_STATE_ATTACK2:
                 drawSrcX += ((facing == Globals.RIGHT) ? 1 : -1) * 25;
-                drawDscX += ((facing == Globals.RIGHT) ? 1 : -1) * 25;
                 break;
             case Globals.PLAYER_STATE_ATTACKOFF1:
                 drawSrcX += ((facing == Globals.RIGHT) ? 1 : -1) * 40;
-                drawDscX += ((facing == Globals.RIGHT) ? 1 : -1) * 40;
                 break;
             case Globals.PLAYER_STATE_ATTACKOFF2:
                 drawSrcX += ((facing == Globals.RIGHT) ? 1 : -1) * 40;
-                drawDscX += ((facing == Globals.RIGHT) ? 1 : -1) * 40;
                 break;
         }
-        g.drawImage(sprite, drawSrcX, drawSrcY, drawDscX, drawDscY, 0, 0, sprite.getWidth(), sprite.getHeight(), null);
+        int drawDscX = drawSrcX + ((facing == Globals.RIGHT) ? 1 : -1) * sprite.getWidth();
         if (equipment[Globals.ITEM_OFFHAND] != null) {
             equipment[Globals.ITEM_OFFHAND].drawIngame(g, x, y, s, f, facing, true);
         }
+        g.drawImage(sprite, drawSrcX, drawSrcY, drawDscX, drawDscY, 0, 0, sprite.getWidth(), sprite.getHeight(), null);
+
         if (equipment[Globals.ITEM_CHEST] != null) {
             equipment[Globals.ITEM_CHEST].drawIngame(g, x, y, s, f, facing);
         }

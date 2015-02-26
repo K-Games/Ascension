@@ -13,6 +13,7 @@ import java.awt.image.BufferedImage;
 import java.text.DecimalFormat;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -71,7 +72,7 @@ public abstract class ScreenMenu extends Screen {
         drawStringOutline(g, "Inventory", 40, 112, 2);
         drawStringOutline(g, "Upgrades", 40, 162, 2);
         drawStringOutline(g, "Skills", 40, 212, 2);
-        drawStringOutline(g, "Server List", 40, 262, 2);
+        drawStringOutline(g, "Connect", 40, 262, 2);
         drawStringOutline(g, "Key Bindings", 40, 312, 2);
         drawStringOutline(g, "Characters", 40, 362, 2);
 
@@ -80,14 +81,15 @@ public abstract class ScreenMenu extends Screen {
         g.drawString("Inventory", 40, 112);
         g.drawString("Upgrades", 40, 162);
         g.drawString("Skills", 40, 212);
-        g.drawString("Server List", 40, 262);
+        g.drawString("Connect", 40, 262);
         g.drawString("Key Bindings", 40, 312);
         g.drawString("Characters", 40, 362);
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        if (e.getButton() == MouseEvent.BUTTON1) {
+        panel.requestFocus();
+        if (SwingUtilities.isLeftMouseButton(e)) {
             for (int i = 0; i < menuBox.length; i++) {
                 if (menuBox[i].contains(e.getPoint())) {
                     SaveData.saveData(logic.getSelectedChar().getSaveNum(), logic.getSelectedChar());
@@ -105,7 +107,8 @@ public abstract class ScreenMenu extends Screen {
                             logic.setScreen(new ScreenSkills());
                             break;
                         case 4:
-                            logic.sendLogin();
+                            logic.setScreen(new ScreenServerList());
+                            //logic.sendLogin();
                             break;
                         case 5:
                             logic.setScreen(new ScreenKeyBind());

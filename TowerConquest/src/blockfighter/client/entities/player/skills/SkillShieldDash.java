@@ -1,7 +1,6 @@
 package blockfighter.client.entities.player.skills;
 
 import blockfighter.client.Globals;
-import blockfighter.client.entities.items.ItemEquip;
 import java.awt.Color;
 import java.awt.Graphics2D;
 

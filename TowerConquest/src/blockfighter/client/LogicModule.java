@@ -7,6 +7,7 @@ import blockfighter.client.screen.Screen;
 import blockfighter.client.screen.ScreenIngame;
 import blockfighter.client.screen.ScreenLoading;
 import blockfighter.client.screen.ScreenSelectChar;
+import blockfighter.client.screen.ScreenServerList;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
@@ -27,7 +28,7 @@ public class LogicModule extends Thread {
     private SaveData selectedChar;
     private byte selectedRoom = 0;
     private Screen screen = new ScreenSelectChar();
-    private Screen lastMenu;
+    //private Screen screen = new ScreenSpriteTest();
     private SoundModule soundModule;
 
     public LogicModule(SoundModule s) {
@@ -52,7 +53,6 @@ public class LogicModule extends Thread {
             Particle.unloadParticles();
             disconnect();
             sender.sendDisconnect(selectedRoom, key);
-            receiver.shutdown();
             returnMenu();
         }
     }
@@ -77,21 +77,41 @@ public class LogicModule extends Thread {
         sender.sendUseSkill(selectedRoom, k, sc);
     }
 
-    public void sendLogin() {
-        if (receiver != null && receiver.isConnected()) {
-            return;
-        }
-        try {
-            DatagramSocket socket = new DatagramSocket();
-            socket.connect(InetAddress.getByName(Globals.SERVER_ADDRESS), Globals.SERVER_PORT);
-            socket.setSoTimeout(5000);
-            sender = new PacketSender(socket);
-
-            receiver = new PacketReceiver(socket);
-            receiver.start();
-        } catch (SocketException | UnknownHostException e) {
-        }
-        sender.sendLogin(selectedRoom, selectedChar);
+    public void sendLogin(final String server) {
+        Thread send = new Thread() {
+            @Override
+            public void run() {
+                if (receiver != null && receiver.isConnected()) {
+                    return;
+                }
+                try {
+                    DatagramSocket socket = new DatagramSocket();
+                    Globals.SERVER_ADDRESS = server;
+                    if (screen instanceof ScreenServerList) {
+                        ((ScreenServerList) screen).setStatus(ScreenServerList.STATUS_CONNECTING);
+                    }
+                    socket.connect(InetAddress.getByName(Globals.SERVER_ADDRESS), Globals.SERVER_PORT);
+                    socket.setSoTimeout(5000);
+                    sender = new PacketSender(socket);
+                    receiver = new PacketReceiver(socket);
+                    receiver.setName("Reciever");
+                    receiver.start();
+                    System.out.println("Connecting to " + server);
+                    sender.sendLogin(selectedRoom, selectedChar);
+                } catch (SocketException e) {
+                    if (screen instanceof ScreenServerList) {
+                        ((ScreenServerList) screen).setStatus(ScreenServerList.STATUS_SOCKETCLOSED);
+                    }
+                } catch (UnknownHostException ex) {
+                    if (screen instanceof ScreenServerList) {
+                        ((ScreenServerList) screen).setStatus(ScreenServerList.STATUS_UNKNOWNHOST);
+                    }
+                }
+            }
+        };
+        send.setName("HostResolver");
+        send.setDaemon(true);
+        send.start();
     }
 
     public Screen getScreen() {
@@ -138,13 +158,15 @@ public class LogicModule extends Thread {
     public void setScreen(Screen s) {
         screen.unload();
         screen = s;
-        if (!(s instanceof ScreenIngame) && !(s instanceof ScreenLoading)) {
-            lastMenu = screen;
-        }
     }
 
     public void returnMenu() {
-        screen = lastMenu;
+        if (receiver != null) {
+            receiver.shutdown();
+            receiver = null;
+            sender = null;
+        }
+        setScreen(new ScreenServerList());
         //soundModule.playBGM("theme.ogg");
     }
 

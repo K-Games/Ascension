@@ -103,8 +103,6 @@ public class Main {
         });
         final ScheduledExecutorService service = Executors.newScheduledThreadPool(2);
         service.scheduleAtFixedRate(logic, 0, 5, TimeUnit.MILLISECONDS);
-        //logic.start();
         service.scheduleAtFixedRate(render, 0, Globals.RENDER_UPDATE, TimeUnit.MICROSECONDS);
-        //render.start();
     }
 }

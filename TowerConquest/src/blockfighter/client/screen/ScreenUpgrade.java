@@ -197,12 +197,13 @@ public class ScreenUpgrade extends ScreenMenu {
     private void drawSlots(Graphics2D g) {
         BufferedImage button = Globals.MENU_BUTTON[Globals.BUTTON_SLOT];
         BufferedImage character = Globals.CHAR_SPRITE[Globals.PLAYER_STATE_STAND][charFrame];
-
-        g.drawImage(character, 1050, 100, null);
+        
         int x = 1050 + character.getWidth() / 2, y = 100 + character.getHeight();
         if (c.getEquip()[Globals.ITEM_OFFHAND] != null) {
             c.getEquip()[Globals.ITEM_OFFHAND].drawIngame(g, x, y, Globals.PLAYER_STATE_STAND, charFrame, Globals.RIGHT, true);
         }
+        g.drawImage(character, 1050, 100, null);
+
         if (c.getEquip()[Globals.ITEM_CHEST] != null) {
             c.getEquip()[Globals.ITEM_CHEST].drawIngame(g, x, y, Globals.PLAYER_STATE_STAND, charFrame, Globals.RIGHT);
         }

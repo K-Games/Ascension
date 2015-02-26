@@ -2,9 +2,44 @@ package blockfighter.client.screen;
 
 import blockfighter.client.Globals;
 import blockfighter.client.SaveData;
-import blockfighter.client.entities.items.ItemEquip;
-import blockfighter.client.entities.particles.*;
 import blockfighter.client.entities.damage.Damage;
+import blockfighter.client.entities.items.ItemEquip;
+import blockfighter.client.entities.particles.Particle;
+import blockfighter.client.entities.particles.ParticleBowArc;
+import blockfighter.client.entities.particles.ParticleBowFrostArrow;
+import blockfighter.client.entities.particles.ParticleBowPower;
+import blockfighter.client.entities.particles.ParticleBowPowerCharge;
+import blockfighter.client.entities.particles.ParticleBowRapid;
+import blockfighter.client.entities.particles.ParticleBowStormEmitter;
+import blockfighter.client.entities.particles.ParticleBowVolleyArrow;
+import blockfighter.client.entities.particles.ParticleBowVolleyBow;
+import blockfighter.client.entities.particles.ParticleBowVolleyBuffEmitter;
+import blockfighter.client.entities.particles.ParticleBurnBuffEmitter;
+import blockfighter.client.entities.particles.ParticlePassiveBarrier;
+import blockfighter.client.entities.particles.ParticlePassiveResist;
+import blockfighter.client.entities.particles.ParticlePassiveShadowAttack;
+import blockfighter.client.entities.particles.ParticleShieldCharge;
+import blockfighter.client.entities.particles.ParticleShieldDashBuffEmitter;
+import blockfighter.client.entities.particles.ParticleShieldDashEmitter;
+import blockfighter.client.entities.particles.ParticleShieldFortify;
+import blockfighter.client.entities.particles.ParticleShieldFortifyEmitter;
+import blockfighter.client.entities.particles.ParticleShieldIron;
+import blockfighter.client.entities.particles.ParticleShieldIronAlly;
+import blockfighter.client.entities.particles.ParticleShieldReflectCast;
+import blockfighter.client.entities.particles.ParticleShieldReflectEmitter;
+import blockfighter.client.entities.particles.ParticleShieldReflectHit;
+import blockfighter.client.entities.particles.ParticleShieldToss;
+import blockfighter.client.entities.particles.ParticleSwordCinder;
+import blockfighter.client.entities.particles.ParticleSwordDrive;
+import blockfighter.client.entities.particles.ParticleSwordMulti;
+import blockfighter.client.entities.particles.ParticleSwordSlash1;
+import blockfighter.client.entities.particles.ParticleSwordSlash2;
+import blockfighter.client.entities.particles.ParticleSwordSlash3;
+import blockfighter.client.entities.particles.ParticleSwordSlashBuffEmitter;
+import blockfighter.client.entities.particles.ParticleSwordTaunt;
+import blockfighter.client.entities.particles.ParticleSwordTauntAura;
+import blockfighter.client.entities.particles.ParticleSwordTauntBuffEmitter;
+import blockfighter.client.entities.particles.ParticleSwordVorpal;
 import blockfighter.client.entities.player.Player;
 import blockfighter.client.entities.player.skills.Skill;
 import blockfighter.client.maps.GameMap;
@@ -59,7 +94,8 @@ public class ScreenIngame extends Screen {
     private double lastPingTime = 0;
     private double lastSendKeyTime = 0;
 
-    private boolean[] keyDownMove = {false, false, false, false};
+    private boolean[] moveKeyDown = {false, false, false, false};
+    private boolean[] skillKeyDown = new boolean[12];
 
     private SaveData c;
     private GameMap map;
@@ -97,10 +133,15 @@ public class ScreenIngame extends Screen {
         }
 
         if (now - lastSendKeyTime >= Globals.SEND_KEYDOWN_UPDATE) {
-            sender.sendMove(logic.getSelectedRoom(), myKey, Globals.UP, keyDownMove[Globals.UP]);
-            sender.sendMove(logic.getSelectedRoom(), myKey, Globals.DOWN, keyDownMove[Globals.DOWN]);
-            sender.sendMove(logic.getSelectedRoom(), myKey, Globals.LEFT, keyDownMove[Globals.LEFT]);
-            sender.sendMove(logic.getSelectedRoom(), myKey, Globals.RIGHT, keyDownMove[Globals.RIGHT]);
+            sender.sendMove(logic.getSelectedRoom(), myKey, Globals.UP, moveKeyDown[Globals.UP]);
+            sender.sendMove(logic.getSelectedRoom(), myKey, Globals.DOWN, moveKeyDown[Globals.DOWN]);
+            sender.sendMove(logic.getSelectedRoom(), myKey, Globals.LEFT, moveKeyDown[Globals.LEFT]);
+            sender.sendMove(logic.getSelectedRoom(), myKey, Globals.RIGHT, moveKeyDown[Globals.RIGHT]);
+            for (int i = 0; i < skillKeyDown.length; i++) {
+                if (skillKeyDown[i]) {
+                    logic.sendUseSkill(myKey, c.getHotkeys()[i].getSkillCode());
+                }
+            }
             lastSendKeyTime = now;
         }
 
@@ -327,6 +368,9 @@ public class ScreenIngame extends Screen {
             byte[] data = dataQueue.remove();
             byte dataType = data[0];
             switch (dataType) {
+                case Globals.DATA_PLAYER_GET_ALL:
+                    dataPlayerGetAll(data);
+                    break;
                 case Globals.DATA_PLAYER_SET_POS:
                     dataPlayerSetPos(data);
                     break;
@@ -393,6 +437,21 @@ public class ScreenIngame extends Screen {
         }
     }
 
+    private void dataPlayerGetAll(byte[] data) {
+        byte key = data[1];
+        int x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
+        int y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
+        byte facing = data[10], state = data[11], frame = data[12];
+        if (players.containsKey(key)) {
+            players.get(key).setPos(x, y);
+        } else {
+            players.put(key, new Player(x, y, key));
+        }
+        players.get(key).setFacing(facing);
+        players.get(key).setState(state);
+        players.get(key).setFrame(frame);
+    }
+
     private void dataPlayerSetPos(byte[] data) {
         byte key = data[1];
         int x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
@@ -424,7 +483,7 @@ public class ScreenIngame extends Screen {
 
     private void dataPlayerDisconnect(byte[] data) {
         byte key = data[1];
-        if (players.containsKey(key)) {
+        if (players.containsKey(key) && key != myKey) {
             players.remove(key);
         }
     }
@@ -692,8 +751,12 @@ public class ScreenIngame extends Screen {
         }
     }
 
-    public void setKeyDown(int direction, boolean move) {
-        keyDownMove[direction] = move;
+    private void setKeyDown(int direction, boolean set) {
+        moveKeyDown[direction] = set;
+    }
+
+    private void setSkillKeyDown(int slot, boolean set) {
+        skillKeyDown[slot] = set;
     }
 
     @Override
@@ -712,8 +775,55 @@ public class ScreenIngame extends Screen {
             setKeyDown(Globals.LEFT, true);
         } else if (key == c.getKeyBind()[Globals.KEYBIND_RIGHT]) {
             setKeyDown(Globals.RIGHT, true);
+        }else if (key == c.getKeyBind()[Globals.KEYBIND_SKILL1]) {
+            if (c.getHotkeys()[0] != null) {
+                setSkillKeyDown(0, true);
+            }
+        } else if (key == c.getKeyBind()[Globals.KEYBIND_SKILL2]) {
+            if (c.getHotkeys()[1] != null) {
+                setSkillKeyDown(1, true);
+            }
+        } else if (key == c.getKeyBind()[Globals.KEYBIND_SKILL3]) {
+            if (c.getHotkeys()[2] != null) {
+                setSkillKeyDown(2, true);
+            }
+        } else if (key == c.getKeyBind()[Globals.KEYBIND_SKILL4]) {
+            if (c.getHotkeys()[3] != null) {
+                setSkillKeyDown(3, true);
+            }
+        } else if (key == c.getKeyBind()[Globals.KEYBIND_SKILL5]) {
+            if (c.getHotkeys()[4] != null) {
+                setSkillKeyDown(4, true);
+            }
+        } else if (key == c.getKeyBind()[Globals.KEYBIND_SKILL6]) {
+            if (c.getHotkeys()[5] != null) {
+                setSkillKeyDown(5, true);
+            }
+        } else if (key == c.getKeyBind()[Globals.KEYBIND_SKILL7]) {
+            if (c.getHotkeys()[6] != null) {
+                setSkillKeyDown(6, true);
+            }
+        } else if (key == c.getKeyBind()[Globals.KEYBIND_SKILL8]) {
+            if (c.getHotkeys()[7] != null) {
+                setSkillKeyDown(7, true);
+            }
+        } else if (key == c.getKeyBind()[Globals.KEYBIND_SKILL9]) {
+            if (c.getHotkeys()[8] != null) {
+                setSkillKeyDown(8, true);
+            }
+        } else if (key == c.getKeyBind()[Globals.KEYBIND_SKILL10]) {
+            if (c.getHotkeys()[9] != null) {
+                setSkillKeyDown(9, true);
+            }
+        } else if (key == c.getKeyBind()[Globals.KEYBIND_SKILL11]) {
+            if (c.getHotkeys()[10] != null) {
+                setSkillKeyDown(10, true);
+            }
+        } else if (key == c.getKeyBind()[Globals.KEYBIND_SKILL12]) {
+            if (c.getHotkeys()[11] != null) {
+                setSkillKeyDown(11, true);
+            }
         }
-
     }
 
     @Override
@@ -729,51 +839,51 @@ public class ScreenIngame extends Screen {
             setKeyDown(Globals.RIGHT, false);
         } else if (key == c.getKeyBind()[Globals.KEYBIND_SKILL1]) {
             if (c.getHotkeys()[0] != null) {
-                logic.sendUseSkill(myKey, c.getHotkeys()[0].getSkillCode());
+                setSkillKeyDown(0, false);
             }
         } else if (key == c.getKeyBind()[Globals.KEYBIND_SKILL2]) {
             if (c.getHotkeys()[1] != null) {
-                logic.sendUseSkill(myKey, c.getHotkeys()[1].getSkillCode());
+                setSkillKeyDown(1, false);
             }
         } else if (key == c.getKeyBind()[Globals.KEYBIND_SKILL3]) {
             if (c.getHotkeys()[2] != null) {
-                logic.sendUseSkill(myKey, c.getHotkeys()[2].getSkillCode());
+                setSkillKeyDown(2, false);
             }
         } else if (key == c.getKeyBind()[Globals.KEYBIND_SKILL4]) {
             if (c.getHotkeys()[3] != null) {
-                logic.sendUseSkill(myKey, c.getHotkeys()[3].getSkillCode());
+                setSkillKeyDown(3, false);
             }
         } else if (key == c.getKeyBind()[Globals.KEYBIND_SKILL5]) {
             if (c.getHotkeys()[4] != null) {
-                logic.sendUseSkill(myKey, c.getHotkeys()[4].getSkillCode());
+                setSkillKeyDown(4, false);
             }
         } else if (key == c.getKeyBind()[Globals.KEYBIND_SKILL6]) {
             if (c.getHotkeys()[5] != null) {
-                logic.sendUseSkill(myKey, c.getHotkeys()[5].getSkillCode());
+                setSkillKeyDown(5, false);
             }
         } else if (key == c.getKeyBind()[Globals.KEYBIND_SKILL7]) {
             if (c.getHotkeys()[6] != null) {
-                logic.sendUseSkill(myKey, c.getHotkeys()[6].getSkillCode());
+                setSkillKeyDown(6, false);
             }
         } else if (key == c.getKeyBind()[Globals.KEYBIND_SKILL8]) {
             if (c.getHotkeys()[7] != null) {
-                logic.sendUseSkill(myKey, c.getHotkeys()[7].getSkillCode());
+                setSkillKeyDown(7, false);
             }
         } else if (key == c.getKeyBind()[Globals.KEYBIND_SKILL9]) {
             if (c.getHotkeys()[8] != null) {
-                logic.sendUseSkill(myKey, c.getHotkeys()[8].getSkillCode());
+                setSkillKeyDown(8, false);
             }
         } else if (key == c.getKeyBind()[Globals.KEYBIND_SKILL10]) {
             if (c.getHotkeys()[9] != null) {
-                logic.sendUseSkill(myKey, c.getHotkeys()[9].getSkillCode());
+                setSkillKeyDown(9, false);
             }
         } else if (key == c.getKeyBind()[Globals.KEYBIND_SKILL11]) {
             if (c.getHotkeys()[10] != null) {
-                logic.sendUseSkill(myKey, c.getHotkeys()[10].getSkillCode());
+                setSkillKeyDown(10, false);
             }
         } else if (key == c.getKeyBind()[Globals.KEYBIND_SKILL12]) {
             if (c.getHotkeys()[11] != null) {
-                logic.sendUseSkill(myKey, c.getHotkeys()[11].getSkillCode());
+                setSkillKeyDown(11, false);
             }
         }
 

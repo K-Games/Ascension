@@ -1,6 +1,5 @@
 package blockfighter.client.render;
 
-import blockfighter.client.Globals;
 import blockfighter.client.LogicModule;
 import javax.swing.JFrame;
 

@@ -24,12 +24,10 @@ public class GameMapFloor1 extends GameMap {
 
         g.drawRect(700, 100, 300, 30);
 
-        g.drawRect(1200, -150, 300, 30);
         g.drawRect(1200, 350, 300, 30);
 
         g.drawRect(1700, 100, 300, 30);
 
-        g.drawRect(2200, -150, 300, 30);
         g.drawRect(2200, 350, 300, 30);
 
         g.drawRect(2700, 100, 300, 30);

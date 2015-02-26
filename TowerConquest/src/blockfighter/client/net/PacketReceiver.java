@@ -9,6 +9,7 @@ import blockfighter.client.Globals;
 import blockfighter.client.LogicModule;
 import blockfighter.client.screen.ScreenIngame;
 import blockfighter.client.screen.ScreenLoading;
+import blockfighter.client.screen.ScreenServerList;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -45,7 +46,14 @@ public class PacketReceiver extends Thread {
                 socket.receive(p);
                 threadPool.execute(new PacketHandler(p));
             }
-        } catch (SocketTimeoutException | SocketException e) {
+        } catch (SocketTimeoutException e) {
+            if (logic.getScreen() instanceof ScreenServerList) {
+                ((ScreenServerList) logic.getScreen()).setStatus(ScreenServerList.STATUS_FAILEDCONNECT);
+            }
+        } catch (SocketException e) {
+            if (logic.getScreen() instanceof ScreenServerList) {
+                ((ScreenServerList) logic.getScreen()).setStatus(ScreenServerList.STATUS_SOCKETCLOSED);
+            }
         } catch (IOException ex) {
         }
         System.out.println("Receiver End");

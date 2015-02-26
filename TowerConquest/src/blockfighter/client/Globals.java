@@ -16,8 +16,7 @@ import javax.imageio.ImageIO;
 public class Globals {
 
     public final static int SERVER_PORT = 25565;
-    private final static boolean isPublic = false;
-    public static String SERVER_ADDRESS = (isPublic) ? "towerconquest.servegame.com" : "192.168.1.2";
+    public static String SERVER_ADDRESS = "towerconquest.servegame.com";
     public final static String GAME_VERSION = "ALPHA 1u0";
     public final static String WINDOW_TITLE = "Tower Conquest " + GAME_VERSION;
     public final static int WINDOW_WIDTH = 1280;
