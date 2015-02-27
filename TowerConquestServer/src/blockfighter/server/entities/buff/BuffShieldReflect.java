@@ -6,7 +6,7 @@ import blockfighter.server.entities.player.Player;
  *
  * @author Ken Kwan
  */
-public class BuffShieldReflect extends BuffBase {
+public class BuffShieldReflect extends Buff {
 
     private double multiplier = 1;
 

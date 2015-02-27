@@ -15,7 +15,7 @@ import org.apache.commons.lang3.concurrent.BasicThreadFactory;
  */
 public class Globals {
 
-    public final static boolean LOGGING = false;
+    public final static boolean LOGGING = true;
 
     public final static String ERRLOG_FILE = "ErrorLog.log",
             DATALOG_FILE = "DataLog.log";

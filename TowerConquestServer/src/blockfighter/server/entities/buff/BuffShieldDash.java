@@ -6,7 +6,7 @@ import blockfighter.server.entities.player.Player;
  *
  * @author Ken Kwan
  */
-public class BuffShieldDash extends BuffBase implements BuffDmgIncrease{
+public class BuffShieldDash extends Buff implements BuffDmgIncrease{
     private final double dmgIncrease;
 
     public BuffShieldDash(long d, double inc, Player o) {

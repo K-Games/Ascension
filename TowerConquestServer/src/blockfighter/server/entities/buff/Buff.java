@@ -1,100 +1,98 @@
-/*
- * Interface of player buffs/debuffs
- * An abstract class will implement this interface for logic updates
- */
 package blockfighter.server.entities.buff;
 
+import blockfighter.server.Globals;
 import blockfighter.server.entities.boss.Boss;
 import blockfighter.server.entities.player.Player;
 
 /**
+ * Abstract class for all buffs/debuffs
  *
  * @author Ken Kwan
  */
-public interface Buff {
+public abstract class Buff {
 
     /**
-     * Set the player owner of this buff/debuff.
+     * Owning player of buff
+     */
+    private Player playerOwner, playerTarget;
+    private Boss bossOwner, bossTarget;
+    private boolean isDebuff = false;
+    private Byte particleID = null;
+    /**
+     * Duration of buff/debuff in milliseconds
+     */
+    protected long duration;
+
+    /**
+     * Constructor for buffs
      *
-     * @param owner The owning Player entity
+     * @param d duration in milliseconds
      */
-    public abstract void setOwner(Player owner);
+    public Buff(long d) {
+        duration = d;
+    }
 
-    /**
-     * Set the boss owner of this buff/debuff.
-     *
-     * @param owner The owning Player entity
-     */
-    public abstract void setOwner(Boss owner);
+    public void setOwner(Player owner) {
+        playerOwner = owner;
+    }
 
-    public abstract void setBossOwner(Boss owner);
+    public void setOwner(Boss owner) {
+        bossOwner = owner;
+    }
 
-    /**
-     * Set the target or affected player of this buff
-     *
-     * @param target
-     */
-    public abstract void setTarget(Player target);
+    public void setBossOwner(Boss owner) {
+        bossOwner = owner;
+    }
 
-    /**
-     * Set the target or affected boss of this buff
-     *
-     * @param target
-     */
-    public abstract void setTarget(Boss target);
+    public void setTarget(Player t) {
+        playerTarget = t;
+    }
 
-    public abstract void setBossTarget(Boss target);
+    public void setTarget(Boss t) {
+        bossTarget = t;
+    }
 
-    /**
-     * Return the owner of this buff/debuff.
-     *
-     * @return Owning Player entity
-     */
-    public abstract Player getOwner();
+    public void setBossTarget(Boss t) {
+        bossTarget = t;
+    }
 
-    /**
-     * Get the targeted or affected player of this buff.
-     *
-     * @return Player target/affected
-     */
-    public abstract Player getTarget();
+    public Player getOwner() {
+        return playerOwner;
+    }
 
-    /**
-     * Get the owning Boss of this buff.
-     *
-     * @return Owning Boss entity
-     */
-    public abstract Boss getBossOwner();
+    public Player getTarget() {
+        return playerTarget;
+    }
 
-    /**
-     * Get the targeted or affected boss of this buff.
-     *
-     * @return Boss target/affected
-     */
-    public abstract Boss getBossTarget();
+    public Boss getBossOwner() {
+        return bossOwner;
+    }
 
-    /**
-     * Update logic of this buff/debuff. Update duration
-     */
-    public abstract void update();
+    public Boss getBossTarget() {
+        return bossTarget;
+    }
 
-    /**
-     * Return the duration left on this buff/debuff
-     *
-     * @return Duration left in milliseconds.
-     */
-    public abstract long getDuration();
+    public void update() {
+        duration -= Globals.nsToMs(Globals.LOGIC_UPDATE);
+    }
 
-    /**
-     * Check if buff/debuff expired(duration=0).
-     *
-     * @return True if duration <= 0
-     */
-    public abstract boolean isExpired();
+    public long getDuration() {
+        return duration;
+    }
 
-    public abstract boolean isDebuff();
+    public boolean isExpired() {
+        return duration <= 0;
+    }
 
-    public abstract void setDebuff(boolean set);
+    public boolean isDebuff() {
+        return isDebuff;
+    }
 
-    public abstract Byte getParticleID();
+    public void setDebuff(boolean set) {
+        isDebuff = set;
+    }
+
+    public Byte getParticleID() {
+        return particleID;
+    }
 }

@@ -15,7 +15,7 @@ import java.util.Map;
  *
  * @author Ken Kwan
  */
-public class ProjSwordVorpal extends ProjBase {
+public class ProjSwordVorpal extends Projectile {
 
     private final LinkedList<Player> queue = new LinkedList<>();
 

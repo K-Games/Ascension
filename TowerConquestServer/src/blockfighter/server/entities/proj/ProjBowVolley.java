@@ -16,7 +16,7 @@ import java.util.Map;
  *
  * @author Ken Kwan
  */
-public class ProjBowVolley extends ProjBase {
+public class ProjBowVolley extends Projectile {
 
     private final LinkedList<Player> queue = new LinkedList<>();
     private boolean buffed = false;

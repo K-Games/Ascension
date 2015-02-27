@@ -13,7 +13,7 @@ import java.util.Map;
  *
  * @author Ken Kwan
  */
-public class ProjShieldReflect extends ProjBase {
+public class ProjShieldReflect extends Projectile {
 
     private double dmg;
     private final LinkedList<Player> queue = new LinkedList<>();

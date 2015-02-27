@@ -6,7 +6,7 @@ import blockfighter.server.entities.player.Player;
  *
  * @author Ken Kwan
  */
-public class BuffKnockback extends BuffBase {
+public class BuffKnockback extends Buff {
 
     private double xSpeed, ySpeed;
     private boolean applied = false;

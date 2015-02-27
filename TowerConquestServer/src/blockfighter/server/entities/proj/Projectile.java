@@ -1,91 +1,181 @@
 package blockfighter.server.entities.proj;
 
+import blockfighter.server.Globals;
+import blockfighter.server.LogicModule;
 import blockfighter.server.entities.boss.Boss;
 import blockfighter.server.entities.player.Player;
+import blockfighter.server.net.PacketSender;
 import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
+import java.util.Random;
 
 /**
- * This is the interface of projectiles and attacks.
- * <p>
- * An abstract projectiles/attacks class implements this interface so that the server will update these on each logic cycle. All projectiles must be an extension of the abstract class.
- * </p>
+ * Abstract class for projectiles/attacks
  *
  * @author Ken Kwan
  */
-public interface Projectile {
+public abstract class Projectile extends Thread {
 
     /**
-     * Set the owner of this projectile.
+     * Hash map key paired with this
+     */
+    protected final int key;
+    /**
+     * Reference to Logic Module.
+     */
+    protected final LogicModule logic;
+
+    /**
+     * Projectile x position.
+     */
+    protected double x,
+            /**
+             * Projectile y position.
+             */
+            y;
+
+    /**
+     * Owning player of Projectile
+     */
+    private Player owner;
+
+    private Boss bossOwner;
+    /**
+     * Array of players hit by this projectile
+     */
+    protected ArrayList<Player> pHit = new ArrayList<>();
+
+    /**
+     * The duration of this projectile in ns.
+     */
+    protected long duration;
+
+    /**
+     * Hit boxes of this projectile
+     */
+    protected Rectangle2D.Double[] hitbox;
+
+    /**
+     * Reference to Server PacketSender
+     */
+    protected static PacketSender sender;
+
+    /**
+     * Checks if this projectile has already been queued to have effects to be applied
+     */
+    protected boolean queuedEffect = false;
+    private static Random rng = new Random();
+
+    /**
+     * Constructor called by subclasses to reference sender and logic.
      *
-     * @param owner The owning Player entity
+     * @param l Reference to Logic module
+     * @param k Hash map key
      */
-    public abstract void setOwner(Player owner);
+    public Projectile(LogicModule l, int k) {
+        logic = l;
+        key = k;
+    }
 
     /**
-     * Return the owner of this projectile.
+     * Constructor for a empty projectile.
      *
-     * @return Owning Player entity
+     * @param l Reference to Logic module
+     * @param k Hash map key
+     * @param o Owning player
+     * @param x Spawning x
+     * @param y Spawning y
+     * @param duration
      */
-    public abstract Player getOwner();
+    public Projectile(LogicModule l, int k, Player o, double x, double y, long duration) {
+        this(l, k);
+        owner = o;
+        this.x = x;
+        this.y = y;
+        hitbox = new Rectangle2D.Double[1];
+        hitbox[0] = new Rectangle2D.Double(0, 0, 0, 0);
+        this.duration = duration;
+    }
 
-    public abstract Boss getBossOwner();
+    public Projectile(LogicModule l, int k, Boss o, double x, double y, long duration) {
+        this(l, k);
+        bossOwner = o;
+        this.x = x;
+        this.y = y;
+        hitbox = new Rectangle2D.Double[1];
+        hitbox[0] = new Rectangle2D.Double(0, 0, 0, 0);
+        this.duration = duration;
+    }
+
+    public void update() {
+        duration -= Globals.LOGIC_UPDATE / 1000000;
+    }
+
+    public double getX() {
+        return x;
+    }
+
+    public double getY() {
+        return y;
+    }
 
     /**
-     * Update logic of this projectile.
-     */
-    public abstract void update();
-
-    /**
-     * Return the x position of this projectile.
+     * Set the static packet sender.
      *
-     * @return current x location in double
+     * @param ps Server PacketSender.
      */
-    public abstract double getX();
+    public static void setPacketSender(PacketSender ps) {
+        sender = ps;
+    }
 
-    /**
-     * Return the key of this projectile.
-     *
-     * @return Key value
-     */
-    public abstract int getKey();
+    public void setOwner(Player owner) {
+        this.owner = owner;
+    }
 
-    /**
-     * Return the y position of this projectile.
-     *
-     * @return current y location in double
-     */
-    public abstract double getY();
+    public Player getOwner() {
+        return owner;
+    }
 
-    /**
-     * Get the hit boxes of this projectile.
-     *
-     * @return Rectangle[] - Hit boxes
-     */
-    public abstract Rectangle2D.Double[] getHitbox();
+    public Boss getBossOwner() {
+        return bossOwner;
+    }
 
-    /**
-     * Check if projectile expired(duration=0).
-     *
-     * @return True if duration <= 0
-     */
-    public abstract boolean isExpired();
+    @Override
+    public void run() {
+        try {
+            update();
+        } catch (Exception ex) {
+            Globals.log(ex.getLocalizedMessage(), ex, true);
+        }
+    }
 
-    /**
-     * Process any effects to be applied to players hit by this projectile.
-     */
-    public abstract void processQueue();
+    public boolean isExpired() {
+        return duration <= 0;
+    }
 
-    /**
-     * Check if projectile is queued to apply effects
-     *
-     * @return queuedEffect
-     */
-    public abstract boolean isQueued();
+    public boolean isQueued() {
+        return queuedEffect;
+    }
 
-    /**
-     * Queue projectile to apply effects.
-     *
-     * @param p Projectile queued
-     */
-    public abstract void queueEffect(ProjBase p);
+    public int getKey() {
+        return key;
+    }
+
+    public void processQueue() {
+    }
+
+    public Rectangle2D.Double[] getHitbox() {
+        return hitbox;
+    }
+
+    public void queueEffect(Projectile p) {
+        if (!isQueued()) {
+            logic.queueProjEffect(p);
+            queuedEffect = true;
+        }
+    }
+
+    public static int rng(int i) {
+        return rng.nextInt(i);
+    }
 }

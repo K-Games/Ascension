@@ -15,7 +15,7 @@ import java.util.Map;
  *
  * @author Ken Kwan
  */
-public class ProjBowStorm extends ProjBase {
+public class ProjBowStorm extends Projectile {
 
     private final LinkedList<Player> queue = new LinkedList<>();
 

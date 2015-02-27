@@ -16,7 +16,7 @@ import java.util.Map;
  *
  * @author Ken Kwan
  */
-public class ProjShieldCharge extends ProjBase {
+public class ProjShieldCharge extends Projectile {
 
     private final LinkedList<Player> queue = new LinkedList<>();
 

@@ -1,8 +1,8 @@
 package blockfighter.server;
 
-import blockfighter.server.entities.boss.BossBase;
+import blockfighter.server.entities.boss.Boss;
 import blockfighter.server.entities.player.Player;
-import blockfighter.server.entities.proj.ProjBase;
+import blockfighter.server.entities.proj.Projectile;
 import blockfighter.server.net.PacketHandler;
 import blockfighter.server.net.PacketReceiver;
 import blockfighter.server.net.PacketSender;
@@ -58,8 +58,8 @@ public class Main {
             PacketHandler.setPacketSender(packetSender);
 
             Player.setPacketSender(packetSender);
-            BossBase.setPacketSender(packetSender);
-            ProjBase.setPacketSender(packetSender);
+            Boss.setPacketSender(packetSender);
+            Projectile.setPacketSender(packetSender);
 
             GregorianCalendar date = new GregorianCalendar();
             Globals.log("Server started", String.format("%1$td/%1$tm/%1$tY %1$tT", date), Globals.LOG_TYPE_ERR, false);

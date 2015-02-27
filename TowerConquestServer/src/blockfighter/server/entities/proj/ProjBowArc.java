@@ -15,7 +15,7 @@ import java.util.Map;
  *
  * @author Ken Kwan
  */
-public class ProjBowArc extends ProjBase {
+public class ProjBowArc extends Projectile {
 
     private final LinkedList<Player> queue = new LinkedList<>();
 

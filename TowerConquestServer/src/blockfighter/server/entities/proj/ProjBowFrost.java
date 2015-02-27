@@ -16,7 +16,7 @@ import java.util.Map;
  *
  * @author Ken Kwan
  */
-public class ProjBowFrost extends ProjBase {
+public class ProjBowFrost extends Projectile {
 
     private final LinkedList<Player> queue = new LinkedList<>();
     private double speedX = 0;
@@ -72,7 +72,6 @@ public class ProjBowFrost extends ProjBase {
                 int damage;
                 if (!isSecondary) {
                     damage = (int) (getOwner().rollDamage() * (1 + .2 * getOwner().getSkillLevel(Skill.BOW_FROST)));
-                    p.queueBuff(new BuffStun(getOwner().isSkillMaxed(Skill.BOW_FROST) ? 2500 : 1500));
                 } else {
                     damage = (int) (getOwner().rollDamage() * 2.5);
                 }
@@ -82,6 +81,7 @@ public class ProjBowFrost extends ProjBase {
                 }
                 p.queueDamage(new Damage(damage, true, getOwner(), p, crit, hitbox[0], p.getHitbox()));
                 p.queueBuff(new BuffKnockback(200, (getOwner().getFacing() == Globals.RIGHT) ? 7 : -7, -4, getOwner(), p));
+                p.queueBuff(new BuffStun(getOwner().isSkillMaxed(Skill.BOW_FROST) ? 2500 : 1500));
             }
         }
         queuedEffect = false;

@@ -2,7 +2,7 @@ package blockfighter.server.entities.buff;
 
 import blockfighter.server.entities.player.Player;
 
-public class BuffPassiveBarrier extends BuffBase {
+public class BuffPassiveBarrier extends Buff {
 
     private double barrierAmount;
 

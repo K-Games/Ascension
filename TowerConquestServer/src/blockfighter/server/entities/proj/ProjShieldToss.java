@@ -15,7 +15,7 @@ import java.util.Map;
  *
  * @author Ken Kwan
  */
-public class ProjShieldToss extends ProjBase {
+public class ProjShieldToss extends Projectile {
 
     private final LinkedList<Player> queue = new LinkedList<>();
     private double speedX = 0;

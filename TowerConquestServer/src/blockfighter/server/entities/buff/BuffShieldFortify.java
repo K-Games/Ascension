@@ -4,7 +4,7 @@ import blockfighter.server.Globals;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.player.skills.Skill;
 
-public class BuffShieldFortify extends BuffBase implements BuffDmgReduct {
+public class BuffShieldFortify extends Buff implements BuffDmgReduct {
 
     private final double dmgReduct, dmgTakenMult;
     private final long maxDuration;

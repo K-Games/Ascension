@@ -16,7 +16,7 @@ import java.util.Map;
  *
  * @author Ken Kwan
  */
-public class ProjSwordCinder extends ProjBase {
+public class ProjSwordCinder extends Projectile {
 
     private final LinkedList<Player> queue = new LinkedList<>();
 

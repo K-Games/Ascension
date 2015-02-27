@@ -15,7 +15,7 @@ import java.util.Map;
  *
  * @author Ken Kwan
  */
-public class ProjSwordSlash extends ProjBase {
+public class ProjSwordSlash extends Projectile {
 
     private final LinkedList<Player> queue = new LinkedList<>();
 

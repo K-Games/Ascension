@@ -15,7 +15,7 @@ import java.util.Map;
  *
  * @author Ken Kwan
  */
-public class ProjSwordDrive extends ProjBase {
+public class ProjSwordDrive extends Projectile {
 
     private boolean healed = false;
 

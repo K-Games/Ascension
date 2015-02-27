@@ -9,7 +9,7 @@ import java.awt.Point;
  *
  * @author Ken Kwan
  */
-public class BuffBurn extends BuffBase implements BuffDmgTakenAmp {
+public class BuffBurn extends Buff implements BuffDmgTakenAmp {
 
     private final double dmgAmp, dmgPerSec;
     private long nextDmgTime = 500;

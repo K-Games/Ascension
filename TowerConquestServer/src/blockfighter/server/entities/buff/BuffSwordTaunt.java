@@ -2,7 +2,7 @@ package blockfighter.server.entities.buff;
 
 import blockfighter.server.entities.player.Player;
 
-public class BuffSwordTaunt extends BuffBase implements BuffDmgReduct, BuffDmgIncrease {
+public class BuffSwordTaunt extends Buff implements BuffDmgReduct, BuffDmgIncrease {
 
     private final double dmgReduct, dmgTakenMult, dmgIncrease;
 

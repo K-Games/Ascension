@@ -1652,7 +1652,7 @@ public class Player extends Thread {
         if (hasSkill(Skill.PASSIVE_SHIELDMASTERY)
                 && getItemType(equip[Globals.ITEM_WEAPON]) == Globals.ITEM_SWORD
                 && getItemType(equip[Globals.ITEM_OFFHAND]) == Globals.ITEM_SHIELD) {
-            mult += 0.1 + 0.005 * getSkillLevel(Skill.PASSIVE_SHIELDMASTERY);
+            mult += 0.09 + 0.002 * getSkillLevel(Skill.PASSIVE_SHIELDMASTERY);
         }
         //Power of Will Passive
         if (hasSkill(Skill.PASSIVE_WILLPOWER)) {

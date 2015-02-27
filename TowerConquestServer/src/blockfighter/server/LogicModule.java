@@ -1,7 +1,7 @@
 package blockfighter.server;
 
 import blockfighter.server.entities.player.Player;
-import blockfighter.server.entities.proj.ProjBase;
+import blockfighter.server.entities.proj.Projectile;
 import blockfighter.server.maps.GameMap;
 import blockfighter.server.maps.GameMapFloor1;
 import blockfighter.server.net.PacketSender;
@@ -24,7 +24,7 @@ public class LogicModule extends Thread {
     private byte room = -1;
 
     private final ConcurrentHashMap<Byte, Player> players = new ConcurrentHashMap<>(Globals.SERVER_MAX_PLAYERS, 0.9f, Math.max(Globals.SERVER_MAX_PLAYERS / 5, 3));
-    private final ConcurrentHashMap<Integer, ProjBase> projectiles = new ConcurrentHashMap<>(500, 0.75f, 10);
+    private final ConcurrentHashMap<Integer, Projectile> projectiles = new ConcurrentHashMap<>(500, 0.75f, 10);
     private final GameMap map;
     private int projMaxKeys = 500;
 
@@ -34,8 +34,8 @@ public class LogicModule extends Thread {
     private final ConcurrentLinkedQueue<Player> pAddQueue = new ConcurrentLinkedQueue<>();
     private final ConcurrentLinkedQueue<byte[]> pDirKeydownQueue = new ConcurrentLinkedQueue<>();
     private final ConcurrentLinkedQueue<byte[]> pUseSkillQueue = new ConcurrentLinkedQueue<>();
-    private final ConcurrentLinkedQueue<ProjBase> projEffectQueue = new ConcurrentLinkedQueue<>();
-    private final ConcurrentLinkedQueue<ProjBase> projAddQueue = new ConcurrentLinkedQueue<>();
+    private final ConcurrentLinkedQueue<Projectile> projEffectQueue = new ConcurrentLinkedQueue<>();
+    private final ConcurrentLinkedQueue<Projectile> projAddQueue = new ConcurrentLinkedQueue<>();
 
     private static ExecutorService threadPool = Executors.newFixedThreadPool(10 * Globals.SERVER_ROOMS,
             new BasicThreadFactory.Builder()
@@ -140,11 +140,11 @@ public class LogicModule extends Thread {
     }
 
     private void updateProjectiles() {
-        for (Map.Entry<Integer, ProjBase> p : projectiles.entrySet()) {
+        for (Map.Entry<Integer, Projectile> p : projectiles.entrySet()) {
             threadPool.execute(p.getValue());
         }
         LinkedList<Integer> remove = new LinkedList<>();
-        for (Map.Entry<Integer, ProjBase> p : projectiles.entrySet()) {
+        for (Map.Entry<Integer, Projectile> p : projectiles.entrySet()) {
             try {
                 p.getValue().join();
                 if (p.getValue().isExpired()) {
@@ -188,7 +188,7 @@ public class LogicModule extends Thread {
      *
      * @return Array of connected players
      */
-    public ConcurrentHashMap<Integer, ProjBase> getProj() {
+    public ConcurrentHashMap<Integer, Projectile> getProj() {
         return projectiles;
     }
 
@@ -264,7 +264,7 @@ public class LogicModule extends Thread {
      *
      * @param p New projectile to be added
      */
-    public void queueAddProj(ProjBase p) {
+    public void queueAddProj(Projectile p) {
         projAddQueue.add(p);
     }
 
@@ -273,7 +273,7 @@ public class LogicModule extends Thread {
      *
      * @param p Projectile which will affect the player
      */
-    public void queueProjEffect(ProjBase p) {
+    public void queueProjEffect(Projectile p) {
         projEffectQueue.add(p);
     }
 
@@ -331,7 +331,7 @@ public class LogicModule extends Thread {
             public void run() {
                 try {
                     while (!projEffectQueue.isEmpty()) {
-                        ProjBase proj = projEffectQueue.poll();
+                        Projectile proj = projEffectQueue.poll();
                         if (proj != null) {
                             proj.processQueue();
                         }
@@ -347,7 +347,7 @@ public class LogicModule extends Thread {
             public void run() {
                 try {
                     while (!projAddQueue.isEmpty()) {
-                        ProjBase p = projAddQueue.poll();
+                        Projectile p = projAddQueue.poll();
                         if (p != null) {
                             projectiles.put(p.getKey(), p);
                         }

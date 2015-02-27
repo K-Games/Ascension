@@ -4,7 +4,7 @@ package blockfighter.server.entities.buff;
  *
  * @author Ken Kwan
  */
-public class BuffStun extends BuffBase {
+public class BuffStun extends Buff {
 
     /**
      * Construct stun debuff

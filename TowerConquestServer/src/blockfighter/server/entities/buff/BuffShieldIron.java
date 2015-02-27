@@ -1,6 +1,6 @@
 package blockfighter.server.entities.buff;
 
-public class BuffShieldIron extends BuffBase implements BuffDmgReduct {
+public class BuffShieldIron extends Buff implements BuffDmgReduct {
 
     private final double dmgReduct, dmgTakenMult;
 
