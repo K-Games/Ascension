@@ -46,12 +46,12 @@ public class SkillPassiveShieldMastery extends Skill {
 
         g.setColor(Color.WHITE);
         g.drawString("[Level " + level + "]", x + 10, y + 155);
-        g.drawString("Deal additional " + df.format(10 + level * 0.5) + "% damage.", x + 10, y + 175);
+        g.drawString("Deal additional " + df.format(9 + level * 0.2) + "% damage.", x + 10, y + 175);
         g.drawString("Take " + df.format(5 + level * 0.5) + "% reduced damage.", x + 10, y + 195);
 
         if (level < 30) {
             g.drawString("[Level " + (level + 1) + "]", x + 10, y + 220);
-            g.drawString("Deal additional " + df.format(10 + (level + 1) * 0.5) + "% damage.", x + 10, y + 240);
+            g.drawString("Deal additional " + df.format(9 + (level + 1) * 0.2) + "% damage.", x + 10, y + 240);
             g.drawString("Take " + df.format(5 + (level + 1) * 0.5) + "% reduced damage.", x + 10, y + 260);
         }
     }

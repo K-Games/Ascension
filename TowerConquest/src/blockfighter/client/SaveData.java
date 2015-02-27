@@ -114,7 +114,7 @@ public class SaveData {
         baseStats[Globals.STAT_EXP] = 0;
         baseStats[Globals.STAT_SKILLPOINTS] = 3 * baseStats[Globals.STAT_LEVEL];
         //for (int i = 0; i < upgrades.length; i++) {
-            //upgrades[i] = new ItemUpgrade(1, (int) baseStats[Globals.STAT_LEVEL] + 50);
+        //upgrades[i] = new ItemUpgrade(1, (int) baseStats[Globals.STAT_LEVEL] + 50);
         //}
         //Empty inventory
         for (int i = 0; i < inventory.length; i++) {
@@ -509,7 +509,7 @@ public class SaveData {
 
     public void addExp(double amount) {
         baseStats[Globals.STAT_EXP] += amount;
-        if (baseStats[Globals.STAT_LEVEL] == 100) {
+        if (baseStats[Globals.STAT_LEVEL] >= 100) {
             if (baseStats[Globals.STAT_EXP] >= Globals.calcEXPtoNxtLvl(baseStats[Globals.STAT_LEVEL])) {
                 baseStats[Globals.STAT_EXP] = Globals.calcEXPtoNxtLvl(baseStats[Globals.STAT_LEVEL]);
             }
@@ -523,12 +523,16 @@ public class SaveData {
     public void levelUp() {
         baseStats[Globals.STAT_EXP] -= Globals.calcEXPtoNxtLvl(baseStats[Globals.STAT_LEVEL]);
         baseStats[Globals.STAT_LEVEL] += 1;
-        baseStats[Globals.STAT_POINTS] += Globals.STAT_PER_LEVEL;
-        baseStats[Globals.STAT_SKILLPOINTS] += 3;
         calcStats();
+        saveData(saveNum, this);
     }
 
     public void calcStats() {
+        
+        if (baseStats[Globals.STAT_LEVEL] > 100) {
+            baseStats[Globals.STAT_LEVEL] = 100;
+        }
+        
         for (int i = 0; i < bonusStats.length; i++) {
             bonusStats[i] = 0;
             for (ItemEquip e : equipment) {
@@ -542,6 +546,28 @@ public class SaveData {
                 - (baseStats[Globals.STAT_POWER]
                 + baseStats[Globals.STAT_DEFENSE]
                 + baseStats[Globals.STAT_SPIRIT]);
+
+        if (baseStats[Globals.STAT_POWER]
+                + baseStats[Globals.STAT_DEFENSE]
+                + baseStats[Globals.STAT_SPIRIT] > baseStats[Globals.STAT_LEVEL] * Globals.STAT_PER_LEVEL) {
+            baseStats[Globals.STAT_POINTS] = baseStats[Globals.STAT_LEVEL] * Globals.STAT_PER_LEVEL;
+            baseStats[Globals.STAT_POWER] = 0;
+            baseStats[Globals.STAT_DEFENSE] = 0;
+            baseStats[Globals.STAT_SPIRIT] = 0;
+        }
+
+        int totalSP = 0;
+        for (Skill s : skills) {
+            totalSP += s.getLevel();
+        }
+        baseStats[Globals.STAT_SKILLPOINTS] = Globals.SP_PER_LEVEL * baseStats[Globals.STAT_LEVEL] - totalSP;
+
+        if (totalSP > Globals.SP_PER_LEVEL * baseStats[Globals.STAT_LEVEL]) {
+            for (Skill s : skills) {
+                s.setLevel((byte) 0);
+            }
+            baseStats[Globals.STAT_SKILLPOINTS] = Globals.SP_PER_LEVEL * baseStats[Globals.STAT_LEVEL];
+        }
 
         System.arraycopy(baseStats, 0, totalStats, 0, baseStats.length);
 
@@ -603,7 +629,7 @@ public class SaveData {
         for (Skill skill : skills) {
             skill.setLevel((byte) 0);
         }
-        baseStats[Globals.STAT_SKILLPOINTS] = 3 * baseStats[Globals.STAT_LEVEL];
+        calcStats();
         saveData(saveNum, this);
     }
 

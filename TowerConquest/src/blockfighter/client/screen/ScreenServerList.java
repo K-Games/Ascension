@@ -55,7 +55,7 @@ public class ScreenServerList extends ScreenMenu {
     public static String loadServerList() {
         try {
             return FileUtils.readLines(new File("server.txt"), StandardCharsets.UTF_8).get(0);
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             return "";
         }
     }
@@ -63,7 +63,7 @@ public class ScreenServerList extends ScreenMenu {
     public static void saveServerList(String address) {
         try {
             FileUtils.writeStringToFile(new File("server.txt"), address, StandardCharsets.UTF_8);
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(SaveData.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

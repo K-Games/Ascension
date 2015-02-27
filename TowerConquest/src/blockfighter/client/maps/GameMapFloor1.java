@@ -40,7 +40,7 @@ public class GameMapFloor1 extends GameMap {
 
     @Override
     public void loadAssets() throws Exception {
-        bg = ImageIO.read(Globals.class.getResource("sprites/maps/" + getMapID() + "/bg.png"));
+        bg = ImageIO.read(Globals.class.getResourceAsStream("sprites/maps/" + getMapID() + "/bg.png"));
     }
 
 }

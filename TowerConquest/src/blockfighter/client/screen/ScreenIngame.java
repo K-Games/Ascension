@@ -937,7 +937,7 @@ public class ScreenIngame extends Screen {
 
     @Override
     public void unload() {
-        Particle.unloadParticles();
+        //Particle.unloadParticles();
         ItemEquip.unloadSprites();
     }
 

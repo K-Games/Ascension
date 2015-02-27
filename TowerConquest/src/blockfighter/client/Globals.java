@@ -17,7 +17,7 @@ public class Globals {
 
     public final static int SERVER_PORT = 25565;
     public static String SERVER_ADDRESS = "towerconquest.servegame.com";
-    public final static String GAME_VERSION = "ALPHA 1u0";
+    public final static String GAME_VERSION = "ALPHA 1u1";
     public final static String WINDOW_TITLE = "Tower Conquest " + GAME_VERSION;
     public final static int WINDOW_WIDTH = 1280;
     public final static int WINDOW_HEIGHT = 720;
@@ -167,7 +167,8 @@ public class Globals {
             MAXDMG_MULT = 21,
             MINDMG_BASE = 20,
             MAXDMG_BASE = 40,
-            STAT_PER_LEVEL = 7;
+            STAT_PER_LEVEL = 7,
+            SP_PER_LEVEL = 3;
 
     public final static int NUM_PLAYER_STATE = 10;
     public final static byte PLAYER_STATE_STAND = 0x00,
@@ -304,79 +305,79 @@ public class Globals {
         try {
             CHAR_SPRITE[PLAYER_STATE_ATTACK1] = new BufferedImage[5];
             for (int i = 0; i < CHAR_SPRITE[PLAYER_STATE_ATTACK1].length; i++) {
-                CHAR_SPRITE[PLAYER_STATE_ATTACK1][i] = ImageIO.read(Globals.class.getResource("sprites/character/attack/mainhand1/" + i + ".png"));
+                CHAR_SPRITE[PLAYER_STATE_ATTACK1][i] = ImageIO.read(Globals.class.getResourceAsStream("sprites/character/attack/mainhand1/" + i + ".png"));
             }
             CHAR_SPRITE[PLAYER_STATE_ATTACK2] = new BufferedImage[5];
             for (int i = 0; i < CHAR_SPRITE[PLAYER_STATE_ATTACK2].length; i++) {
-                CHAR_SPRITE[PLAYER_STATE_ATTACK2][i] = ImageIO.read(Globals.class.getResource("sprites/character/attack/mainhand2/" + i + ".png"));
+                CHAR_SPRITE[PLAYER_STATE_ATTACK2][i] = ImageIO.read(Globals.class.getResourceAsStream("sprites/character/attack/mainhand2/" + i + ".png"));
             }
             CHAR_SPRITE[PLAYER_STATE_ATTACKOFF1] = new BufferedImage[5];
             for (int i = 0; i < CHAR_SPRITE[PLAYER_STATE_ATTACKOFF1].length; i++) {
-                CHAR_SPRITE[PLAYER_STATE_ATTACKOFF1][i] = ImageIO.read(Globals.class.getResource("sprites/character/attack/offhand1/" + i + ".png"));
+                CHAR_SPRITE[PLAYER_STATE_ATTACKOFF1][i] = ImageIO.read(Globals.class.getResourceAsStream("sprites/character/attack/offhand1/" + i + ".png"));
             }
             CHAR_SPRITE[PLAYER_STATE_ATTACKOFF2] = new BufferedImage[5];
             for (int i = 0; i < CHAR_SPRITE[PLAYER_STATE_ATTACKOFF2].length; i++) {
-                CHAR_SPRITE[PLAYER_STATE_ATTACKOFF2][i] = ImageIO.read(Globals.class.getResource("sprites/character/attack/offhand2/" + i + ".png"));
+                CHAR_SPRITE[PLAYER_STATE_ATTACKOFF2][i] = ImageIO.read(Globals.class.getResourceAsStream("sprites/character/attack/offhand2/" + i + ".png"));
             }
             CHAR_SPRITE[PLAYER_STATE_ATTACKBOW] = new BufferedImage[5];
             for (int i = 0; i < CHAR_SPRITE[PLAYER_STATE_ATTACKBOW].length; i++) {
-                CHAR_SPRITE[PLAYER_STATE_ATTACKBOW][i] = ImageIO.read(Globals.class.getResource("sprites/character/attack/bow/" + i + ".png"));
+                CHAR_SPRITE[PLAYER_STATE_ATTACKBOW][i] = ImageIO.read(Globals.class.getResourceAsStream("sprites/character/attack/bow/" + i + ".png"));
             }
 
             CHAR_SPRITE[PLAYER_STATE_STAND] = new BufferedImage[10];
             for (int i = 0; i < CHAR_SPRITE[PLAYER_STATE_STAND].length; i++) {
-                CHAR_SPRITE[PLAYER_STATE_STAND][i] = ImageIO.read(Globals.class.getResource("sprites/character/stand/" + i + ".png"));
+                CHAR_SPRITE[PLAYER_STATE_STAND][i] = ImageIO.read(Globals.class.getResourceAsStream("sprites/character/stand/" + i + ".png"));
             }
 
             CHAR_SPRITE[PLAYER_STATE_WALK] = new BufferedImage[19];
             for (int i = 0; i < CHAR_SPRITE[PLAYER_STATE_WALK].length; i++) {
-                CHAR_SPRITE[PLAYER_STATE_WALK][i] = ImageIO.read(Globals.class.getResource("sprites/character/walk/" + i + ".png"));
+                CHAR_SPRITE[PLAYER_STATE_WALK][i] = ImageIO.read(Globals.class.getResourceAsStream("sprites/character/walk/" + i + ".png"));
             }
 
             CHAR_SPRITE[PLAYER_STATE_BUFF] = new BufferedImage[10];
             for (int i = 0; i < CHAR_SPRITE[PLAYER_STATE_BUFF].length; i++) {
-                CHAR_SPRITE[PLAYER_STATE_BUFF][i] = ImageIO.read(Globals.class.getResource("sprites/character/buff/" + i + ".png"));
+                CHAR_SPRITE[PLAYER_STATE_BUFF][i] = ImageIO.read(Globals.class.getResourceAsStream("sprites/character/buff/" + i + ".png"));
             }
             CHAR_SPRITE[PLAYER_STATE_DEAD] = new BufferedImage[15];
             for (int i = 0; i < CHAR_SPRITE[PLAYER_STATE_DEAD].length; i++) {
-                CHAR_SPRITE[PLAYER_STATE_DEAD][i] = ImageIO.read(Globals.class.getResource("sprites/character/dead/" + i + ".png"));
+                CHAR_SPRITE[PLAYER_STATE_DEAD][i] = ImageIO.read(Globals.class.getResourceAsStream("sprites/character/dead/" + i + ".png"));
             }
             CHAR_SPRITE[PLAYER_STATE_JUMP] = new BufferedImage[1];
-            CHAR_SPRITE[PLAYER_STATE_JUMP][0] = ImageIO.read(Globals.class.getResource("sprites/character/jump/0.png"));
+            CHAR_SPRITE[PLAYER_STATE_JUMP][0] = ImageIO.read(Globals.class.getResourceAsStream("sprites/character/jump/0.png"));
 
-            HUD[0] = ImageIO.read(Globals.class.getResource("sprites/ui/ingame/ui.png"));
-            HUD[1] = ImageIO.read(Globals.class.getResource("sprites/ui/ingame/hp.png"));
+            HUD[0] = ImageIO.read(Globals.class.getResourceAsStream("sprites/ui/ingame/ui.png"));
+            HUD[1] = ImageIO.read(Globals.class.getResourceAsStream("sprites/ui/ingame/hp.png"));
 
             for (byte i = 0; i < MENU_BG.length; i++) {
-                MENU_BG[i] = ImageIO.read(Globals.class.getResource("sprites/ui/menu/bg" + (i + 1) + ".png"));
+                MENU_BG[i] = ImageIO.read(Globals.class.getResourceAsStream("sprites/ui/menu/bg" + (i + 1) + ".png"));
             }
 
             for (byte i = 0; i < MENU_BUTTON.length; i++) {
-                MENU_BUTTON[i] = ImageIO.read(Globals.class.getResource("sprites/ui/menu/button" + (i + 1) + ".png"));
+                MENU_BUTTON[i] = ImageIO.read(Globals.class.getResourceAsStream("sprites/ui/menu/button" + (i + 1) + ".png"));
             }
 
             for (byte i = 0; i < MENU_WINDOW.length; i++) {
-                MENU_WINDOW[i] = ImageIO.read(Globals.class.getResource("sprites/ui/menu/window" + (i + 1) + ".png"));
+                MENU_WINDOW[i] = ImageIO.read(Globals.class.getResourceAsStream("sprites/ui/menu/window" + (i + 1) + ".png"));
             }
 
             for (byte i = 0; i < MENU_UPGRADEPARTICLE.length; i++) {
-                MENU_UPGRADEPARTICLE[i] = ImageIO.read(Globals.class.getResource("sprites/ui/menu/particle" + (i + 1) + ".png"));
+                MENU_UPGRADEPARTICLE[i] = ImageIO.read(Globals.class.getResourceAsStream("sprites/ui/menu/particle" + (i + 1) + ".png"));
             }
 
-            MENU_TABPOINTER[0] = ImageIO.read(Globals.class.getResource("sprites/ui/menu/pointer.png"));
-            MENU_ITEMDELETE[0] = ImageIO.read(Globals.class.getResource("sprites/ui/menu/delete.png"));
-            MENU_SMOKE[0] = ImageIO.read(Globals.class.getResource("sprites/ui/menu/smoke.png"));
+            MENU_TABPOINTER[0] = ImageIO.read(Globals.class.getResourceAsStream("sprites/ui/menu/pointer.png"));
+            MENU_ITEMDELETE[0] = ImageIO.read(Globals.class.getResourceAsStream("sprites/ui/menu/delete.png"));
+            MENU_SMOKE[0] = ImageIO.read(Globals.class.getResourceAsStream("sprites/ui/menu/smoke.png"));
             for (byte i = 0; i < 29; i++) {
-                SKILL_ICON[i] = ImageIO.read(Globals.class.getResource("sprites/skillicon/" + i + ".png"));
+                SKILL_ICON[i] = ImageIO.read(Globals.class.getResourceAsStream("sprites/skillicon/" + i + ".png"));
             }
 
             for (byte i = 0; i < 10; i++) {
-                DAMAGE_FONT[Damage.DAMAGE_TYPE_BOSS][i] = ImageIO.read(Globals.class.getResource("sprites/damage/boss/" + i + ".png"));
-                DAMAGE_FONT[Damage.DAMAGE_TYPE_PLAYER][i] = ImageIO.read(Globals.class.getResource("sprites/damage/player/" + i + ".png"));
-                DAMAGE_FONT[Damage.DAMAGE_TYPE_PLAYERCRIT][i] = ImageIO.read(Globals.class.getResource("sprites/damage/playercrit/" + i + ".png"));
-                DAMAGE_FONT[Damage.DAMAGE_TYPE_EXP][i] = ImageIO.read(Globals.class.getResource("sprites/damage/exp/" + i + ".png"));
+                DAMAGE_FONT[Damage.DAMAGE_TYPE_BOSS][i] = ImageIO.read(Globals.class.getResourceAsStream("sprites/damage/boss/" + i + ".png"));
+                DAMAGE_FONT[Damage.DAMAGE_TYPE_PLAYER][i] = ImageIO.read(Globals.class.getResourceAsStream("sprites/damage/player/" + i + ".png"));
+                DAMAGE_FONT[Damage.DAMAGE_TYPE_PLAYERCRIT][i] = ImageIO.read(Globals.class.getResourceAsStream("sprites/damage/playercrit/" + i + ".png"));
+                DAMAGE_FONT[Damage.DAMAGE_TYPE_EXP][i] = ImageIO.read(Globals.class.getResourceAsStream("sprites/damage/exp/" + i + ".png"));
             }
-            EXP_WORD[0] = ImageIO.read(Globals.class.getResource("sprites/damage/exp/exp.png"));
+            EXP_WORD[0] = ImageIO.read(Globals.class.getResourceAsStream("sprites/damage/exp/exp.png"));
 
         } catch (IOException ex) {
             Logger.getLogger(Globals.class.getName()).log(Level.SEVERE, null, ex);
