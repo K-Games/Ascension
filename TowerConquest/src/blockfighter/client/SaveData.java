@@ -113,9 +113,9 @@ public class SaveData {
         baseStats[Globals.STAT_SPIRIT] = 0;
         baseStats[Globals.STAT_EXP] = 0;
         baseStats[Globals.STAT_SKILLPOINTS] = 3 * baseStats[Globals.STAT_LEVEL];
-        //for (int i = 0; i < upgrades.length; i++) {
-        //upgrades[i] = new ItemUpgrade(1, (int) baseStats[Globals.STAT_LEVEL] + 50);
-        //}
+        for (int i = 0; i < upgrades.length; i++) {
+            upgrades[i] = new ItemUpgrade(1, (int) baseStats[Globals.STAT_LEVEL] + 1);
+        }
         //Empty inventory
         for (int i = 0; i < inventory.length; i++) {
             inventory[i] = new ItemEquip[100];
@@ -528,11 +528,11 @@ public class SaveData {
     }
 
     public void calcStats() {
-        
+
         if (baseStats[Globals.STAT_LEVEL] > 100) {
             baseStats[Globals.STAT_LEVEL] = 100;
         }
-        
+
         for (int i = 0; i < bonusStats.length; i++) {
             bonusStats[i] = 0;
             for (ItemEquip e : equipment) {

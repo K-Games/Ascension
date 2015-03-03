@@ -21,6 +21,7 @@ public class Player extends Thread {
     private ItemEquip[] equipment = new ItemEquip[Globals.NUM_EQUIP_SLOTS];
     private long lastUpdateTime = 5000;
     private static LogicModule logic;
+    private boolean disconnect = false;
 
     public Point getPos() {
         return new Point(x, y);
@@ -40,6 +41,10 @@ public class Player extends Thread {
 
     public String getPlayerName() {
         return name;
+    }
+
+    public void disconnect() {
+        disconnect = true;
     }
 
     public void setPos(int x, int y) {
@@ -89,6 +94,7 @@ public class Player extends Thread {
         state = Globals.PLAYER_STATE_STAND;
         name = "";
         frame = 0;
+        setDaemon(true);
     }
 
     public void draw(Graphics2D g) {
@@ -169,6 +175,6 @@ public class Player extends Thread {
     }
 
     public boolean isDisconnected() {
-        return lastUpdateTime <= 0;
+        return disconnect || lastUpdateTime <= 0;
     }
 }

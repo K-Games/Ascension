@@ -19,7 +19,7 @@ import java.util.logging.Logger;
  *
  * @author Ken Kwan
  */
-public class LogicModule extends Thread {
+public class LogicModule implements Runnable {
 
     //Shared Data
     private PacketSender sender = null;
@@ -38,7 +38,11 @@ public class LogicModule extends Thread {
     @Override
     public void run() {
         //soundModule.playBGM("theme.ogg");
-        screen.update();
+        try {
+            screen.update();
+        } catch (Exception ex) {
+            System.err.println(ex);
+        }
     }
 
     public void receiveLogin(byte mapID, byte key, byte size) {
@@ -46,15 +50,31 @@ public class LogicModule extends Thread {
         setScreen(loading);
         try {
             loading.load(mapID);
-            setScreen(new ScreenIngame(key, size, sender, loading.getLoadedMap()));
-            sender.sendGetAll(selectedRoom, key);
+            setScreen(new ScreenIngame(key, size, loading.getLoadedMap()));
+            sendGetAll(key);
         } catch (Exception e) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, e);
             Particle.unloadParticles();
             disconnect();
-            sender.sendDisconnect(selectedRoom, key);
+            sendDisconnect(key);
             returnMenu();
         }
+    }
+
+    public void sendGetPing(byte k, byte pID) {
+        sender.sendGetPing(selectedRoom, k, pID);
+    }
+
+    public void sendGetAll(byte k) {
+        sender.sendGetAll(selectedRoom, k);
+    }
+
+    public void sendSetBossType(byte k) {
+        sender.sendSetBossType(selectedRoom, k);
+    }
+
+    public void sendGetBossStat(byte k, byte s) {
+        sender.sendGetBossStat(selectedRoom, k, s);
     }
 
     public void sendGetName(byte k) {
@@ -77,7 +97,12 @@ public class LogicModule extends Thread {
         sender.sendUseSkill(selectedRoom, k, sc);
     }
 
-    public void sendLogin(final String server) {
+    public void sendMoveKey(byte k, byte dir, boolean b) {
+        sender.sendMove(selectedRoom, k, dir, b);
+    }
+
+    public void sendLogin(final String server, byte r) {
+        selectedRoom = r;
         Thread send = new Thread() {
             @Override
             public void run() {

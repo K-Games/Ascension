@@ -2,7 +2,6 @@ package blockfighter.client.entities.particles;
 
 import blockfighter.client.Globals;
 import blockfighter.client.screen.ScreenIngame;
-import java.awt.Graphics2D;
 
 public class ParticleBowStormEmitter extends Particle {
 
@@ -22,9 +21,5 @@ public class ParticleBowStormEmitter extends Particle {
             ((ScreenIngame) logic.getScreen()).addParticle(b);
         }
 
-    }
-
-    @Override
-    public void draw(Graphics2D g) {
     }
 }

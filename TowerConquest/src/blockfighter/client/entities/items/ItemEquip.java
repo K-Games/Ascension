@@ -240,7 +240,7 @@ public class ItemEquip implements Item {
             load[PLAYER_STATE_JUMP][0] = ImageIO.read(Globals.class.getResourceAsStream("sprites/character/equip/" + code + "/offhand/jump/0.png"));
         } catch (Exception ex) {
         }
-        
+
         load[PLAYER_STATE_BUFF] = new BufferedImage[10];
         for (int i = 0; i < load[PLAYER_STATE_BUFF].length; i++) {
             try {
@@ -248,7 +248,7 @@ public class ItemEquip implements Item {
             } catch (Exception ex) {
             }
         }
-        
+
         load[PLAYER_STATE_DEAD] = new BufferedImage[15];
         for (int i = 0; i < load[PLAYER_STATE_DEAD].length; i++) {
             try {
@@ -315,7 +315,7 @@ public class ItemEquip implements Item {
         ITEM_ORIGINPOINT.put(TEMP_BOW + "_" + Globals.PLAYER_STATE_WALK, new Point(-115, -177));
         ITEM_ORIGINPOINT.put(TEMP_BOW + "_" + Globals.PLAYER_STATE_JUMP, new Point(-65, -170));
         ITEM_ORIGINPOINT.put(TEMP_BOW + "_" + Globals.PLAYER_STATE_ATTACKBOW, new Point(-25, -185));
-        
+
         ITEM_ORIGINPOINT.put(TEMP_BLADE + "_" + Globals.PLAYER_STATE_STAND, new Point(-45, -80));
         ITEM_ORIGINPOINT.put(TEMP_BLADE + "_" + Globals.PLAYER_STATE_WALK, new Point(-38, -200));
         ITEM_ORIGINPOINT.put(TEMP_BLADE + "_" + Globals.PLAYER_STATE_JUMP, new Point(-35, -180));

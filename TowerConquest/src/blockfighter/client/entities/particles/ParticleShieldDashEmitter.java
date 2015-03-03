@@ -3,7 +3,6 @@ package blockfighter.client.entities.particles;
 import blockfighter.client.Globals;
 import blockfighter.client.entities.player.Player;
 import blockfighter.client.screen.ScreenIngame;
-import java.awt.Graphics2D;
 import java.awt.Point;
 
 public class ParticleShieldDashEmitter extends Particle {
@@ -29,9 +28,5 @@ public class ParticleShieldDashEmitter extends Particle {
             ParticleShieldDash b = new ParticleShieldDash(((ScreenIngame) logic.getScreen()).getNextParticleKey(), x + ((facing == Globals.RIGHT) ? -172 : -200), y - 330, facing);
             ((ScreenIngame) logic.getScreen()).addParticle(b);
         }
-    }
-
-    @Override
-    public void draw(Graphics2D g) {
     }
 }

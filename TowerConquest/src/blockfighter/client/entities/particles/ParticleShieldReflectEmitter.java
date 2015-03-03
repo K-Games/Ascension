@@ -2,7 +2,6 @@ package blockfighter.client.entities.particles;
 
 import blockfighter.client.entities.player.Player;
 import blockfighter.client.screen.ScreenIngame;
-import java.awt.Graphics2D;
 import java.awt.Point;
 
 public class ParticleShieldReflectEmitter extends Particle {
@@ -31,9 +30,5 @@ public class ParticleShieldReflectEmitter extends Particle {
             }
 
         }
-    }
-
-    @Override
-    public void draw(Graphics2D g) {
     }
 }

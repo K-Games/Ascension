@@ -7,7 +7,7 @@ import javax.swing.JFrame;
  *
  * @author Ken Kwan
  */
-public class RenderModule extends Thread {
+public class RenderModule implements Runnable {
 
     private final RenderPanel panel;
     private static LogicModule logic;

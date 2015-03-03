@@ -113,6 +113,25 @@ public class PacketSender {
         sendPacket(requestPacket);
     }
 
+    public void sendSetBossType(byte room, byte bossKey) {
+        byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
+        bytes[0] = Globals.DATA_BOSS_SET_TYPE;
+        bytes[1] = room;
+        bytes[2] = bossKey;
+        DatagramPacket requestPacket = createPacket(bytes);
+        sendPacket(requestPacket);
+    }
+
+    public void sendGetBossStat(byte room, byte key, byte stat) {
+        byte[] bytes = new byte[Globals.PACKET_BYTE * 4];
+        bytes[0] = Globals.DATA_BOSS_GET_STAT;
+        bytes[1] = room;
+        bytes[2] = key;
+        bytes[3] = stat;
+        DatagramPacket requestPacket = createPacket(bytes);
+        sendPacket(requestPacket);
+    }
+
     public void sendGetAll(byte room, byte myKey) {
         byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
         bytes[0] = Globals.DATA_PLAYER_GET_ALL;
@@ -143,7 +162,7 @@ public class PacketSender {
         sendPacket(requestPacket);
     }
 
-    public void sendGetPing(byte pID, byte room, byte myKey) {
+    public void sendGetPing(byte room, byte myKey, byte pID) {
         byte[] bytes = new byte[Globals.PACKET_BYTE * 4];
         bytes[0] = Globals.DATA_PING;
         bytes[1] = room;
@@ -194,6 +213,7 @@ public class PacketSender {
         try {
             socket.send(packet);
         } catch (Exception ex) {
+            System.err.println("sendPacket:" + ex.getMessage());
         }
     }
 

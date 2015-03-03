@@ -1,5 +1,6 @@
 package blockfighter.client;
 
+import blockfighter.client.entities.boss.Boss;
 import blockfighter.client.entities.items.ItemEquip;
 import blockfighter.client.entities.items.ItemUpgrade;
 import blockfighter.client.entities.particles.Particle;
@@ -59,7 +60,7 @@ public class Main {
         RenderPanel panel = new RenderPanel();
         final SoundModule sounds = new SoundModule();
         threadPool.execute(sounds);
-        
+
         final LogicModule logic = new LogicModule(sounds);
         RenderModule render = new RenderModule(panel, frame);
 
@@ -70,6 +71,7 @@ public class Main {
         KeyHandler.setLogic(logic);
         MouseHandler.setLogic(logic);
         Player.setLogic(logic);
+        Boss.setLogic(logic);
         PacketHandler.setLogic(logic);
         PacketReceiver.setLogic(logic);
 

@@ -34,6 +34,7 @@ public class Damage extends Thread {
             speedY = -13;
             speedX = (new Random().nextInt(3) - 1) * 3;
         }
+        setDaemon(true);
     }
 
     @Override

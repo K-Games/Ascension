@@ -205,7 +205,13 @@ public class Globals {
             DATA_PLAYER_GET_EQUIP = 0x0D,
             DATA_PLAYER_SET_COOLDOWN = 0x0E,
             DATA_DAMAGE = 0x0F,
-            DATA_PLAYER_GIVEEXP = 0x10;
+            DATA_PLAYER_GIVEEXP = 0x10,
+            DATA_BOSS_SET_POS = 0x11,
+            DATA_BOSS_SET_FACING = 0x12,
+            DATA_BOSS_SET_STATE = 0x13,
+            DATA_BOSS_PARTICLE_EFFECT = 0x14,
+            DATA_BOSS_SET_TYPE = 0x15,
+            DATA_BOSS_GET_STAT = 0x16;
 
     public final static BufferedImage[][] CHAR_SPRITE = new BufferedImage[NUM_PLAYER_STATE][];
     public final static BufferedImage[] HUD = new BufferedImage[2];

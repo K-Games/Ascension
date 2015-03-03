@@ -1,7 +1,6 @@
 package blockfighter.client.screen;
 
 import blockfighter.client.Globals;
-import blockfighter.client.SaveData;
 import static blockfighter.client.screen.Screen.panel;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -11,10 +10,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.swing.JComboBox;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import org.apache.commons.io.FileUtils;
@@ -31,6 +28,7 @@ public class ScreenServerList extends ScreenMenu {
             STATUS_UNKNOWNHOST = 3;
 
     private final JTextField SERVERADDRESS_FIELD = new JTextField();
+    private final JComboBox SERVER_ROOMS = new JComboBox();
     private Rectangle connect = new Rectangle(650, 230, 200, 70);
     private String status = "Waiting to connect...";
     private boolean connecting = false;
@@ -43,10 +41,26 @@ public class ScreenServerList extends ScreenMenu {
         SERVERADDRESS_FIELD.setCaretColor(Color.WHITE);
         SERVERADDRESS_FIELD.setOpaque(true);
         SERVERADDRESS_FIELD.setText(loadServerList());
+
+        try {
+            SERVER_ROOMS.addItem("PVP");
+            for (int i = 0; i < 100; i++) {
+                SERVER_ROOMS.addItem("Level " + (i + 1));
+            }
+        } catch (Exception e) {
+
+        }
+        SERVER_ROOMS.setFont(Globals.ARIAL_24PT);
+        SERVER_ROOMS.setForeground(Color.WHITE);
+        SERVER_ROOMS.setBackground(Color.BLACK);
+        SERVER_ROOMS.setOpaque(true);
+        SERVER_ROOMS.setBounds(1000, 150, 150, 40);
+
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
                 panel.add(SERVERADDRESS_FIELD);
+                panel.add(SERVER_ROOMS);
                 panel.revalidate();
             }
         });
@@ -64,7 +78,7 @@ public class ScreenServerList extends ScreenMenu {
         try {
             FileUtils.writeStringToFile(new File("server.txt"), address, StandardCharsets.UTF_8);
         } catch (Exception ex) {
-            Logger.getLogger(SaveData.class.getName()).log(Level.SEVERE, null, ex);
+            System.err.println("saveServerList: Failed to save server name.");
         }
     }
 
@@ -145,7 +159,7 @@ public class ScreenServerList extends ScreenMenu {
                 if (SERVERADDRESS_FIELD.getText().trim().length() > 0) {
                     connecting = true;
                     saveServerList(SERVERADDRESS_FIELD.getText().trim());
-                    logic.sendLogin(SERVERADDRESS_FIELD.getText().trim());
+                    logic.sendLogin(SERVERADDRESS_FIELD.getText().trim(), (byte) SERVER_ROOMS.getSelectedIndex());
                 }
             }
         }
@@ -177,6 +191,7 @@ public class ScreenServerList extends ScreenMenu {
             @Override
             public void run() {
                 panel.remove(SERVERADDRESS_FIELD);
+                panel.remove(SERVER_ROOMS);
                 panel.revalidate();
             }
         });

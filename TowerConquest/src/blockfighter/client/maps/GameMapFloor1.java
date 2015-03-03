@@ -6,13 +6,14 @@ import java.awt.Graphics2D;
 import javax.imageio.ImageIO;
 
 /**
+ * PvP map
  *
  * @author Ken Kwan
  */
 public class GameMapFloor1 extends GameMap {
 
     public GameMapFloor1() {
-        setMapID(0);
+        setMapID(1);
     }
 
     @Override
@@ -24,11 +25,11 @@ public class GameMapFloor1 extends GameMap {
 
         g.drawRect(700, 100, 300, 30);
 
-        g.drawRect(1200, 350, 300, 30);
+        g.drawRect(1200, -150, 300, 30);
 
-        g.drawRect(1700, 100, 300, 30);
+        g.drawRect(1700, -150, 300, 30);
 
-        g.drawRect(2200, 350, 300, 30);
+        g.drawRect(2200, -150, 300, 30);
 
         g.drawRect(2700, 100, 300, 30);
 
@@ -40,7 +41,7 @@ public class GameMapFloor1 extends GameMap {
 
     @Override
     public void loadAssets() throws Exception {
-        bg = ImageIO.read(Globals.class.getResourceAsStream("sprites/maps/" + getMapID() + "/bg.png"));
+        bg = ImageIO.read(Globals.class.getResourceAsStream("sprites/maps/0/bg.png"));
     }
 
 }

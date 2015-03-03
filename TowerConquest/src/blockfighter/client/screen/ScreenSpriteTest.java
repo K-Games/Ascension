@@ -137,7 +137,7 @@ public class ScreenSpriteTest extends ScreenMenu {
         e.drawIngame(g, x, y, Globals.PLAYER_STATE_ATTACKOFF2, att4Frame, Globals.RIGHT, true);
         g.drawImage(character, 650 + 40, 400, null);
         e.drawIngame(g, x, y, Globals.PLAYER_STATE_ATTACKOFF2, att4Frame, Globals.RIGHT);
-        
+
         character = Globals.CHAR_SPRITE[Globals.PLAYER_STATE_ATTACKBOW][att5Frame];
         x = 950 + character.getWidth() / 2;
         y = 400 + character.getHeight();

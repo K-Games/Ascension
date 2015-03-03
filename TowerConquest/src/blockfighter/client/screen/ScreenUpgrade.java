@@ -5,7 +5,6 @@ import blockfighter.client.SaveData;
 import blockfighter.client.entities.items.ItemEquip;
 import blockfighter.client.entities.items.ItemUpgrade;
 import blockfighter.client.entities.particles.ParticleMenuUpgrade;
-import blockfighter.client.entities.particles.ParticleMenuUpgradeEnd;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -42,7 +41,7 @@ public class ScreenUpgrade extends ScreenMenu {
     private int drawItem = -1, drawEquip = -1, drawSelect = -1;
 
     private byte charFrame = 0;
-    private double nextFrameTime = 0, upgradeTime = 0;
+    private double nextFrameTime = 0;
     private boolean upgrading = false;
     private int upPart = 0;
 
@@ -80,7 +79,6 @@ public class ScreenUpgrade extends ScreenMenu {
     public void update() {
         double now = System.nanoTime(); //Get time now
         if (now - lastUpdateTime >= Globals.LOGIC_UPDATE) {
-
             nextFrameTime -= Globals.LOGIC_UPDATE;
             if (nextFrameTime <= 0) {
                 if (charFrame >= 8) {
@@ -91,28 +89,16 @@ public class ScreenUpgrade extends ScreenMenu {
                 nextFrameTime = 150000000;
             }
 
-            if (upgradeTime > 0) {
-                upgradeTime -= Globals.LOGIC_UPDATE / 1000000;
-                if (upgradeTime > 1000) {
-                    Random rng = new Random();
-                    for (int i = 0; i < 5; i++) {
-                        particles.put(upPart + 2, new ParticleMenuUpgrade(upPart + 2, (int) upgradeBox[0].x + 30, (int) upgradeBox[0].y + 30, upPart % 4, rng.nextInt(5) - 16, rng.nextInt(10) - 5));
-                        upPart++;
-                    }
-                }
-            }
-            if (upgrading && upgradeTime <= 0) {
+            if (upgrading) {
                 Random rng = new Random();
                 if (ItemUpgrade.rollUpgrade(c.getUpgrades()[selectUpgrade], c.getEquip()[selectEquip])) {
                     c.getEquip()[selectEquip].addUpgrade(1);
                     for (int i = 0; i < 20; i++) {
-                        particles.put(upPart + 2, new ParticleMenuUpgradeEnd(upPart + 2, (int) upgradeBox[1].x + 30, (int) upgradeBox[1].y + 30, 3, rng.nextInt(10) - 5, -5 - rng.nextInt(3)));
-                        upPart++;
+                        particles.put(i + 2, new ParticleMenuUpgrade(upPart + 2, (int) upgradeBox[1].x + 30, (int) upgradeBox[1].y + 30, 3, rng.nextInt(10) - 5, -5 - rng.nextInt(3)));
                     }
                 } else {
                     for (int i = 0; i < 20; i++) {
-                        particles.put(upPart + 2, new ParticleMenuUpgradeEnd(upPart + 2, (int) upgradeBox[1].x + 30, (int) upgradeBox[1].y + 30, 2, rng.nextInt(10) - 5, -5 - rng.nextInt(3)));
-                        upPart++;
+                        particles.put(i + 2, new ParticleMenuUpgrade(upPart + 2, (int) upgradeBox[1].x + 30, (int) upgradeBox[1].y + 30, 2, rng.nextInt(10) - 5, -5 - rng.nextInt(3)));
                     }
                 }
                 c.destroyItem(selectUpgrade);
@@ -121,6 +107,7 @@ public class ScreenUpgrade extends ScreenMenu {
                 selectUpgrade = -1;
                 upgrading = false;
             }
+
             updateParticles(particles);
             lastUpdateTime = now;
         }
@@ -197,7 +184,7 @@ public class ScreenUpgrade extends ScreenMenu {
     private void drawSlots(Graphics2D g) {
         BufferedImage button = Globals.MENU_BUTTON[Globals.BUTTON_SLOT];
         BufferedImage character = Globals.CHAR_SPRITE[Globals.PLAYER_STATE_STAND][charFrame];
-        
+
         int x = 1050 + character.getWidth() / 2, y = 100 + character.getHeight();
         if (c.getEquip()[Globals.ITEM_OFFHAND] != null) {
             c.getEquip()[Globals.ITEM_OFFHAND].drawIngame(g, x, y, Globals.PLAYER_STATE_STAND, charFrame, Globals.RIGHT, true);
@@ -451,7 +438,6 @@ public class ScreenUpgrade extends ScreenMenu {
                 if (selectUpgrade >= 0 && selectEquip >= 0) {
                     upPart = 0;
                     upgrading = true;
-                    upgradeTime = 1500;
                 }
             }
         }

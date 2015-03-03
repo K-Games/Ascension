@@ -3,7 +3,6 @@ package blockfighter.client.entities.particles;
 import blockfighter.client.Globals;
 import static blockfighter.client.Globals.NUM_PARTICLE_EFFECTS;
 import blockfighter.client.LogicModule;
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.Random;
@@ -238,6 +237,7 @@ public abstract class Particle extends Thread {
         this.x = x;
         this.y = y;
         duration = 200;
+        setDaemon(true);
     }
 
     public Particle(int k, int x, int y, byte f) {
@@ -246,11 +246,10 @@ public abstract class Particle extends Thread {
         this.y = y;
         facing = f;
         duration = 200;
+        setDaemon(true);
     }
 
     public void draw(Graphics2D g) {
-        g.setColor(Color.BLACK);
-        g.drawRect(x, y, 560, 150);
     }
 
     public void setExpire() {

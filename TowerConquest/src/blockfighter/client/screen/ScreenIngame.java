@@ -2,6 +2,7 @@ package blockfighter.client.screen;
 
 import blockfighter.client.Globals;
 import blockfighter.client.SaveData;
+import blockfighter.client.entities.boss.Boss;
 import blockfighter.client.entities.damage.Damage;
 import blockfighter.client.entities.items.ItemEquip;
 import blockfighter.client.entities.particles.Particle;
@@ -43,7 +44,6 @@ import blockfighter.client.entities.particles.ParticleSwordVorpal;
 import blockfighter.client.entities.player.Player;
 import blockfighter.client.entities.player.skills.Skill;
 import blockfighter.client.maps.GameMap;
-import blockfighter.client.net.PacketSender;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -72,6 +72,7 @@ public class ScreenIngame extends Screen {
     private ConcurrentLinkedQueue<byte[]> dataQueue = new ConcurrentLinkedQueue<>();
     private DecimalFormat df = new DecimalFormat("0.0");
     private ConcurrentHashMap<Byte, Player> players;
+    private ConcurrentHashMap<Byte, Boss> bosses = new ConcurrentHashMap<>();
     private ConcurrentHashMap<Integer, Particle> particles = new ConcurrentHashMap<>(500, 0.9f, 1);
     private ConcurrentHashMap<Integer, Damage> dmgNum = new ConcurrentHashMap<>(500, 0.9f, 1);
 
@@ -86,7 +87,6 @@ public class ScreenIngame extends Screen {
     private long pingTime = 0;
     private int ping = 0;
     private byte pID = 0;
-    private PacketSender sender = null;
 
     private double lastUpdateTime = 0, lastDmgUpdateTime = 0;
     private double lastRequestTime = 50;
@@ -102,11 +102,10 @@ public class ScreenIngame extends Screen {
 
     private int drawInfoHotkey = -1;
 
-    public ScreenIngame(byte i, byte numPlayer, PacketSender s, GameMap m) {
+    public ScreenIngame(byte i, byte numPlayer, GameMap m) {
         myKey = i;
         c = logic.getSelectedChar();
         players = new ConcurrentHashMap<>(numPlayer);
-        sender = s;
         for (int j = 0; j < hotkeySlots.length; j++) {
             hotkeySlots[j] = new Rectangle2D.Double(Globals.WINDOW_WIDTH / 2 - Globals.HUD[0].getWidth() / 2 + 10 + (j * 66), 656, 60, 60);
         }
@@ -133,10 +132,9 @@ public class ScreenIngame extends Screen {
         }
 
         if (now - lastSendKeyTime >= Globals.SEND_KEYDOWN_UPDATE) {
-            sender.sendMove(logic.getSelectedRoom(), myKey, Globals.UP, moveKeyDown[Globals.UP]);
-            sender.sendMove(logic.getSelectedRoom(), myKey, Globals.DOWN, moveKeyDown[Globals.DOWN]);
-            sender.sendMove(logic.getSelectedRoom(), myKey, Globals.LEFT, moveKeyDown[Globals.LEFT]);
-            sender.sendMove(logic.getSelectedRoom(), myKey, Globals.RIGHT, moveKeyDown[Globals.RIGHT]);
+            for (byte i = 0; i < moveKeyDown.length; i++) {
+                logic.sendMoveKey(myKey, i, moveKeyDown[i]);
+            }
             for (int i = 0; i < skillKeyDown.length; i++) {
                 if (skillKeyDown[i]) {
                     logic.sendUseSkill(myKey, c.getHotkeys()[i].getSkillCode());
@@ -159,17 +157,18 @@ public class ScreenIngame extends Screen {
             }
             updateParticles(particles);
             updatePlayers();
+            updateBosses();
             lastUpdateTime = now;
         }
 
         if (now - lastRequestTime >= Globals.REQUESTALL_UPDATE) {
-            sender.sendGetAll(logic.getSelectedRoom(), myKey);
+            logic.sendGetAll(myKey);
             lastRequestTime = now;
         }
         if (now - lastPingTime >= Globals.PING_UPDATE) {
             pID = (byte) (Math.random() * 256);
             pingTime = System.currentTimeMillis();
-            sender.sendGetPing(pID, logic.getSelectedRoom(), myKey);
+            logic.sendGetPing(myKey, pID);
             lastPingTime = now;
         }
     }
@@ -225,6 +224,18 @@ public class ScreenIngame extends Screen {
         }
     }
 
+    private void updateBosses() {
+        for (Map.Entry<Byte, Boss> pEntry : bosses.entrySet()) {
+            threadPool.execute(pEntry.getValue());
+        }
+        for (Map.Entry<Byte, Boss> pEntry : bosses.entrySet()) {
+            try {
+                pEntry.getValue().join();
+            } catch (InterruptedException ex) {
+            }
+        }
+    }
+
     private void updatePlayers() {
         for (Map.Entry<Byte, Player> pEntry : players.entrySet()) {
             threadPool.execute(pEntry.getValue());
@@ -255,6 +266,11 @@ public class ScreenIngame extends Screen {
         map.draw(g);
         if (players != null) {
             for (Map.Entry<Byte, Player> pEntry : players.entrySet()) {
+                pEntry.getValue().draw(g);
+            }
+        }
+        if (bosses != null) {
+            for (Map.Entry<Byte, Boss> pEntry : bosses.entrySet()) {
                 pEntry.getValue().draw(g);
             }
         }
@@ -404,6 +420,24 @@ public class ScreenIngame extends Screen {
                 case Globals.DATA_PLAYER_GIVEEXP:
                     dataPlayerGiveEXP(data);
                     break;
+                case Globals.DATA_BOSS_GET_STAT:
+                    dataBossGetStat(data);
+                    break;
+                case Globals.DATA_BOSS_PARTICLE_EFFECT:
+                    dataBossParticleEffect(data);
+                    break;
+                case Globals.DATA_BOSS_SET_POS:
+                    dataBossSetPos(data);
+                    break;
+                case Globals.DATA_BOSS_SET_FACING:
+                    dataBossSetFacing(data);
+                    break;
+                case Globals.DATA_BOSS_SET_STATE:
+                    dataBossSetState(data);
+                    break;
+                case Globals.DATA_BOSS_SET_TYPE:
+                    dataBossSetType(data);
+                    break;
             }
         }
     }
@@ -484,7 +518,7 @@ public class ScreenIngame extends Screen {
     private void dataPlayerDisconnect(byte[] data) {
         byte key = data[1];
         if (players.containsKey(key) && key != myKey) {
-            players.remove(key);
+            players.get(key).disconnect();
         }
     }
 
@@ -725,6 +759,66 @@ public class ScreenIngame extends Screen {
         }
     }
 
+    private void dataBossParticleEffect(byte[] data) {
+        byte key = data[1];
+        if (bosses.containsKey(key)) {
+            bosses.get(key).addParticle(data);
+        }
+    }
+
+    private void dataBossSetType(byte[] data) {
+        byte key = data[1], type = data[2];
+        if (!bosses.containsKey(key)) {
+            int x = Globals.bytesToInt(Arrays.copyOfRange(data, 3, 7));
+            int y = Globals.bytesToInt(Arrays.copyOfRange(data, 7, 11));
+            bosses.put(key, Boss.spawnBoss(type, key, x, y));
+        }
+    }
+
+    private void dataBossSetPos(byte[] data) {
+        byte key = data[1];
+        if (bosses.containsKey(key)) {
+            int x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
+            int y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
+            bosses.get(key).setPos(x, y);
+        } else {
+            logic.sendSetBossType(key);
+        }
+    }
+
+    private void dataBossSetFacing(byte[] data) {
+        byte key = data[1];
+        if (bosses.containsKey(key)) {
+            byte facing = data[2];
+            bosses.get(key).setFacing(facing);
+        } else {
+            logic.sendSetBossType(key);
+        }
+    }
+
+    private void dataBossSetState(byte[] data) {
+        byte key = data[1];
+        if (bosses.containsKey(key)) {
+            byte state = data[2];
+            byte frame = data[3];
+            bosses.get(key).setState(state);
+            bosses.get(key).setFrame(frame);
+        } else {
+            logic.sendSetBossType(key);
+        }
+    }
+
+    private void dataBossGetStat(byte[] data) {
+        byte key = data[1];
+        if (bosses.containsKey(key)) {
+            byte stat = data[2];
+            int amount = Globals.bytesToInt(Arrays.copyOfRange(data, 3, 7));
+            bosses.get(key).setStat(stat, amount);
+        } else {
+            logic.sendSetBossType(key);
+        }
+    }
+
     public void addDmgNum(Damage d) {
         dmgNum.put(getNextDmgKey(), d);
     }
@@ -775,7 +869,7 @@ public class ScreenIngame extends Screen {
             setKeyDown(Globals.LEFT, true);
         } else if (key == c.getKeyBind()[Globals.KEYBIND_RIGHT]) {
             setKeyDown(Globals.RIGHT, true);
-        }else if (key == c.getKeyBind()[Globals.KEYBIND_SKILL1]) {
+        } else if (key == c.getKeyBind()[Globals.KEYBIND_SKILL1]) {
             if (c.getHotkeys()[0] != null) {
                 setSkillKeyDown(0, true);
             }
@@ -840,50 +934,62 @@ public class ScreenIngame extends Screen {
         } else if (key == c.getKeyBind()[Globals.KEYBIND_SKILL1]) {
             if (c.getHotkeys()[0] != null) {
                 setSkillKeyDown(0, false);
+                logic.sendUseSkill(myKey, c.getHotkeys()[0].getSkillCode());
             }
         } else if (key == c.getKeyBind()[Globals.KEYBIND_SKILL2]) {
             if (c.getHotkeys()[1] != null) {
                 setSkillKeyDown(1, false);
+                logic.sendUseSkill(myKey, c.getHotkeys()[1].getSkillCode());
             }
         } else if (key == c.getKeyBind()[Globals.KEYBIND_SKILL3]) {
             if (c.getHotkeys()[2] != null) {
                 setSkillKeyDown(2, false);
+                logic.sendUseSkill(myKey, c.getHotkeys()[2].getSkillCode());
             }
         } else if (key == c.getKeyBind()[Globals.KEYBIND_SKILL4]) {
             if (c.getHotkeys()[3] != null) {
                 setSkillKeyDown(3, false);
+                logic.sendUseSkill(myKey, c.getHotkeys()[3].getSkillCode());
             }
         } else if (key == c.getKeyBind()[Globals.KEYBIND_SKILL5]) {
             if (c.getHotkeys()[4] != null) {
                 setSkillKeyDown(4, false);
+                logic.sendUseSkill(myKey, c.getHotkeys()[4].getSkillCode());
             }
         } else if (key == c.getKeyBind()[Globals.KEYBIND_SKILL6]) {
             if (c.getHotkeys()[5] != null) {
                 setSkillKeyDown(5, false);
+                logic.sendUseSkill(myKey, c.getHotkeys()[5].getSkillCode());
             }
         } else if (key == c.getKeyBind()[Globals.KEYBIND_SKILL7]) {
             if (c.getHotkeys()[6] != null) {
                 setSkillKeyDown(6, false);
+                logic.sendUseSkill(myKey, c.getHotkeys()[6].getSkillCode());
             }
         } else if (key == c.getKeyBind()[Globals.KEYBIND_SKILL8]) {
             if (c.getHotkeys()[7] != null) {
                 setSkillKeyDown(7, false);
+                logic.sendUseSkill(myKey, c.getHotkeys()[7].getSkillCode());
             }
         } else if (key == c.getKeyBind()[Globals.KEYBIND_SKILL9]) {
             if (c.getHotkeys()[8] != null) {
                 setSkillKeyDown(8, false);
+                logic.sendUseSkill(myKey, c.getHotkeys()[8].getSkillCode());
             }
         } else if (key == c.getKeyBind()[Globals.KEYBIND_SKILL10]) {
             if (c.getHotkeys()[9] != null) {
                 setSkillKeyDown(9, false);
+                logic.sendUseSkill(myKey, c.getHotkeys()[9].getSkillCode());
             }
         } else if (key == c.getKeyBind()[Globals.KEYBIND_SKILL11]) {
             if (c.getHotkeys()[10] != null) {
                 setSkillKeyDown(10, false);
+                logic.sendUseSkill(myKey, c.getHotkeys()[10].getSkillCode());
             }
         } else if (key == c.getKeyBind()[Globals.KEYBIND_SKILL12]) {
             if (c.getHotkeys()[11] != null) {
                 setSkillKeyDown(11, false);
+                logic.sendUseSkill(myKey, c.getHotkeys()[11].getSkillCode());
             }
         }
 
@@ -939,6 +1045,9 @@ public class ScreenIngame extends Screen {
     public void unload() {
         //Particle.unloadParticles();
         ItemEquip.unloadSprites();
+        for (Map.Entry<Byte, Boss> pEntry : bosses.entrySet()) {
+            pEntry.getValue().unload();
+        }
     }
 
 }

@@ -14,7 +14,7 @@ public class SkillBowRapid extends Skill {
     public SkillBowRapid() {
         icon = Globals.SKILL_ICON[BOW_RAPID];
         skillCode = BOW_RAPID;
-        maxCooldown = 1000;
+        maxCooldown = 700;
         reqWeapon = Globals.ITEM_BOW;
         skillName = "Rapid Fire";
         maxSkillName = "RNGESUS";
@@ -41,15 +41,15 @@ public class SkillBowRapid extends Skill {
         g.drawString(getSkillName(), x + 80, y + 30);
         g.setFont(Globals.ARIAL_15PT);
         g.drawString("Level: " + level + " - Requires " + ItemEquip.getItemTypeName(reqWeapon), x + 80, y + 50);
-        g.drawString("Cooldown: " + maxCooldown / 1000 + " Second", x + 80, y + 70);
+        g.drawString("Cooldown: 0.7 Second", x + 80, y + 70);
 
         g.drawString("Fire 3 shots over 1 second.", x + 10, y + 90);
 
         g.drawString("[Level " + level + "]", x + 10, y + 115);
-        g.drawString("Deals " + (75 + level*2) + "% damage per hit.", x + 10, y + 135);
+        g.drawString("Deals " + (75 + level * 2) + "% damage per hit.", x + 10, y + 135);
         if (level < 30) {
             g.drawString("[Level " + (level + 1) + "]", x + 10, y + 160);
-            g.drawString("Deals " + (75 + (level + 1)*2) + "% damage per hit.", x + 10, y + 180);
+            g.drawString("Deals " + (75 + (level + 1) * 2) + "% damage per hit.", x + 10, y + 180);
 
             g.drawString("[Level 30 Bonus]", x + 10, y + 205);
             g.drawString("Each shot has 50% Chance to deal 2x damage.", x + 10, y + 225);
