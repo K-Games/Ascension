@@ -2,13 +2,11 @@ package blockfighter.server.entities.proj;
 
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
-import blockfighter.server.entities.buff.BuffKnockback;
+import blockfighter.server.entities.boss.Boss;
 import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.player.skills.Skill;
 import java.awt.geom.Rectangle2D;
-import java.util.LinkedList;
-import java.util.Map;
 
 /**
  * This is the base projectile class. Create projectile classes off this.
@@ -16,8 +14,6 @@ import java.util.Map;
  * @author Ken Kwan
  */
 public class ProjBowStorm extends Projectile {
-
-    private final LinkedList<Player> queue = new LinkedList<>();
 
     /**
      * Projectile of Bow Skill Arrow Storm.
@@ -45,35 +41,44 @@ public class ProjBowStorm extends Projectile {
 
     @Override
     public void update() {
-        duration -= Globals.nsToMs(Globals.LOGIC_UPDATE);
+        super.update();
         if (duration % 200 == 0 && duration < 5000) {
             pHit.clear();
-        }
-        for (Map.Entry<Byte, Player> pEntry : logic.getPlayers().entrySet()) {
-            Player p = pEntry.getValue();
-            if (p != getOwner() && !pHit.contains(p) && p.intersectHitbox(hitbox[0])) {
-                queue.add(p);
-                pHit.add(p);
-                queueEffect(this);
-            }
         }
     }
 
     @Override
     public void processQueue() {
-        while (!queue.isEmpty()) {
-            Player p = queue.poll();
+        while (!playerQueue.isEmpty()) {
+            Player p = playerQueue.poll(), owner = getOwner();
             if (p != null && !p.isDead()) {
-                int damage = (int) (getOwner().rollDamage() * 0.6 + (.06 * getOwner().getSkillLevel(Skill.BOW_STORM)));
-                boolean crit = getOwner().rollCrit();
+                int damage = (int) (owner.rollDamage() * 0.6 + (.06 * owner.getSkillLevel(Skill.BOW_STORM)));
+                boolean crit = owner.rollCrit();
                 if (crit) {
-                    if (getOwner().isSkillMaxed(Skill.BOW_STORM)) {
-                        damage = (int) getOwner().criticalDamage(damage, 5);
+                    if (owner.isSkillMaxed(Skill.BOW_STORM)) {
+                        damage = (int) owner.criticalDamage(damage, 5);
                     } else {
-                        damage = (int) getOwner().criticalDamage(damage);
+                        damage = (int) owner.criticalDamage(damage);
                     }
                 }
-                p.queueDamage(new Damage(damage, true, getOwner(), p, crit, hitbox[0], p.getHitbox()));
+                p.queueDamage(new Damage(damage, true, owner, p, crit, hitbox[0], p.getHitbox()));
+            }
+        }
+
+        while (!bossQueue.isEmpty()) {
+            Boss b = bossQueue.poll();
+            Player owner = getOwner();
+            if (b != null && !b.isDead()) {
+                int damage = (int) (owner.rollDamage() * 0.6 + (.06 * owner.getSkillLevel(Skill.BOW_STORM)));
+                boolean crit = owner.rollCrit();
+                if (crit) {
+                    if (owner.isSkillMaxed(Skill.BOW_STORM)) {
+                        damage = (int) owner.criticalDamage(damage, 5);
+                    } else {
+                        damage = (int) owner.criticalDamage(damage);
+                    }
+                }
+                b.queueDamage(new Damage(damage, true, owner, b, crit, hitbox[0], b.getHitbox()));
             }
         }
         queuedEffect = false;

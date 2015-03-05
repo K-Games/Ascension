@@ -2,13 +2,12 @@ package blockfighter.server.entities.proj;
 
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
+import blockfighter.server.entities.boss.Boss;
 import blockfighter.server.entities.buff.BuffKnockback;
 import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.player.skills.Skill;
 import java.awt.geom.Rectangle2D;
-import java.util.LinkedList;
-import java.util.Map;
 
 /**
  * This is the base projectile class. Create projectile classes off this.
@@ -16,8 +15,6 @@ import java.util.Map;
  * @author Ken Kwan
  */
 public class ProjBowArc extends Projectile {
-
-    private final LinkedList<Player> queue = new LinkedList<>();
 
     /**
      * Projectile of Bow Skill Arcshot.
@@ -40,41 +37,48 @@ public class ProjBowArc extends Projectile {
             hitbox[0] = new Rectangle2D.Double(x - 490 - 80, y - 284, 490, 350);
 
         }
-        duration = 400;
-    }
-
-    @Override
-    public void update() {
-        duration -= Globals.nsToMs(Globals.LOGIC_UPDATE);
-        for (Map.Entry<Byte, Player> pEntry : logic.getPlayers().entrySet()) {
-            Player p = pEntry.getValue();
-            if (p != getOwner() && !pHit.contains(p) && p.intersectHitbox(hitbox[0])) {
-                queue.add(p);
-                pHit.add(p);
-                queueEffect(this);
-            }
-        }
+        duration = 300;
     }
 
     @Override
     public void processQueue() {
-        while (!queue.isEmpty()) {
-            Player p = queue.poll();
+        while (!playerQueue.isEmpty()) {
+            Player p = playerQueue.poll(), owner = getOwner();
             if (p != null && !p.isDead()) {
-                int damage = (int) (getOwner().rollDamage() * (.8 + .02 * getOwner().getSkillLevel(Skill.BOW_ARC)));
-                boolean crit = getOwner().rollCrit();
+                int damage = (int) (owner.rollDamage() * (.8 + .02 * owner.getSkillLevel(Skill.BOW_ARC)));
+                boolean crit = owner.rollCrit();
                 if (crit) {
-                    damage = (int) getOwner().criticalDamage(damage);
+                    damage = (int) owner.criticalDamage(damage);
                 }
-                p.queueDamage(new Damage(damage, true, getOwner(), p, crit, hitbox[0], p.getHitbox()));
-                if (getOwner().isSkillMaxed(Skill.BOW_ARC)) {
+                p.queueDamage(new Damage(damage, true, owner, p, crit, hitbox[0], p.getHitbox()));
+                if (owner.isSkillMaxed(Skill.BOW_ARC)) {
                     double heal = damage * 0.05;
-                    if (heal > getOwner().getStats()[Globals.STAT_MAXHP] * 1 / 30D) {
-                        heal = getOwner().getStats()[Globals.STAT_MAXHP] * 1 / 30D;
+                    if (heal > owner.getStats()[Globals.STAT_MAXHP] * 1 / 30D) {
+                        heal = owner.getStats()[Globals.STAT_MAXHP] * 1 / 30D;
                     }
-                    getOwner().queueHeal((int) heal);
+                    owner.queueHeal((int) heal);
                 }
-                p.queueBuff(new BuffKnockback(50, (getOwner().getFacing() == Globals.RIGHT) ? 1 : -1, -0.1, getOwner(), p));
+                p.queueBuff(new BuffKnockback(50, (owner.getFacing() == Globals.RIGHT) ? 1 : -1, -0.1, owner, p));
+            }
+        }
+
+        while (!bossQueue.isEmpty()) {
+            Boss b = bossQueue.poll();
+            Player owner = getOwner();
+            if (b != null && !b.isDead()) {
+                int damage = (int) (owner.rollDamage() * (.8 + .02 * owner.getSkillLevel(Skill.BOW_ARC)));
+                boolean crit = owner.rollCrit();
+                if (crit) {
+                    damage = (int) owner.criticalDamage(damage);
+                }
+                b.queueDamage(new Damage(damage, true, owner, b, crit, hitbox[0], b.getHitbox()));
+                if (owner.isSkillMaxed(Skill.BOW_ARC)) {
+                    double heal = damage * 0.05;
+                    if (heal > owner.getStats()[Globals.STAT_MAXHP] * 1 / 30D) {
+                        heal = owner.getStats()[Globals.STAT_MAXHP] * 1 / 30D;
+                    }
+                    owner.queueHeal((int) heal);
+                }
             }
         }
         queuedEffect = false;

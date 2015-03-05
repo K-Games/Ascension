@@ -13,7 +13,7 @@ public class SkillBowRapid extends Skill {
      */
     public SkillBowRapid() {
         skillCode = BOW_RAPID;
-        maxCooldown = 1000;
+        maxCooldown = 700;
         reqWeapon = Globals.ITEM_BOW;
     }
 

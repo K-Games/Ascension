@@ -27,9 +27,9 @@ public class Main {
             .priority(Thread.NORM_PRIORITY)
             .build());
 
-    private static ScheduledExecutorService threadPool = Executors.newScheduledThreadPool(Globals.SERVER_ROOMS,
+    private static ScheduledExecutorService threadPool = Executors.newScheduledThreadPool(Math.max(Globals.SERVER_ROOMS / 20, 1),
             new BasicThreadFactory.Builder()
-            .namingPattern("ServerRoom-%d")
+            .namingPattern("LogicModuleScheduler-%d")
             .daemon(true)
             .priority(Thread.NORM_PRIORITY)
             .build());
@@ -48,13 +48,11 @@ public class Main {
             LogicModule[] server_rooms = new LogicModule[Globals.SERVER_ROOMS];
             PacketSender.setLogic(server_rooms);
             PacketHandler.setLogic(server_rooms);
-            PacketReceiver.setLogic(server_rooms);
 
             PacketSender packetSender = new PacketSender();
             PacketReceiver packetReceiver = new PacketReceiver();
 
             LogicModule.setPacketSender(packetSender);
-            PacketReceiver.setPacketSender(packetSender);
             PacketHandler.setPacketSender(packetSender);
 
             Player.setPacketSender(packetSender);

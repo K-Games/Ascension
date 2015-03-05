@@ -14,10 +14,13 @@ import java.util.concurrent.Executors;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
 /**
- * The server packetSender.
+ * The server Packet Sender.
  * <p>
- * The packet sender does not create the datagram packet. It is just a thread to send data. Datagram packet data is created outside this class. Sends data to players. Only one is created on the
- * server. Client side packet sender DOES construct the datagram packet.
+ * <div>Sends bytes packaged in a DatagramPacket via a DatagramSocket.</div>
+ * <p>
+ * The Packet Sender does not create the datagram packet. DatagramPackets are created outside this class. Client-side Packet Sender <b>DOES</b> construct the datagram packet. </p>
+ * <div>Only one PacketSender is created on the server during program entry.</div>
+ *
  * </p>
  *
  * @author Ken Kwan
@@ -25,7 +28,7 @@ import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 public class PacketSender implements Runnable {
 
     private static LogicModule[] logic;
-    private DatagramSocket socket = null;
+    private static DatagramSocket socket = null;
     private int bytesSent = 0;
     private ConcurrentLinkedQueue<DatagramPacket> sendAllQueue = new ConcurrentLinkedQueue<>();
 
@@ -73,7 +76,7 @@ public class PacketSender implements Runnable {
     }
 
     /**
-     * Set the static logic module array
+     * Set the static Logic Module array
      *
      * @param l Logic Module array
      */
@@ -84,21 +87,21 @@ public class PacketSender implements Runnable {
     /**
      * Set the socket of the server.
      *
-     * @param socket The DatagramSocket that was initialized at the start
+     * @param s The DatagramSocket that was initialized in the Packet Receiver
      */
-    public void setSocket(DatagramSocket socket) {
-        this.socket = socket;
+    public static void setSocket(DatagramSocket s) {
+        socket = s;
     }
 
     /**
-     * Send data to specific player.
+     * Send bytes to a specific player.
      * <p>
-     * Get IP address and port from the player object.
+     * Get destination IP address and port from the Player object.
      * </p>
      *
-     * @param bytes Data to be sent in bytes
-     * @param address IP address of player
-     * @param port Connected port of player
+     * @param bytes Data to be sent in byte array
+     * @param address IP address of destination player
+     * @param port Port of destination player
      */
     public void sendPlayer(final byte[] bytes, final InetAddress address, final int port) {
         threadPool.execute(new Runnable() {
@@ -116,10 +119,10 @@ public class PacketSender implements Runnable {
     }
 
     /**
-     * Send data to every connected player
+     * Queue bytes to be sent to every connected player.
      *
-     * @param bytes Data to be sent in bytes
-     * @param room room to send to
+     * @param bytes Data to be sent in byte array
+     * @param room Room(Logic Module index) that contains the players
      */
     public void sendAll(final byte[] bytes, final byte room) {
         for (Map.Entry<Byte, Player> pEntry : logic[room].getPlayers().entrySet()) {
@@ -131,9 +134,9 @@ public class PacketSender implements Runnable {
     }
 
     /**
-     * Broadcast an update to all players about all players.
+     * Broadcast an update to all players about all player's data.
      *
-     * @param room Room which is broadcasting all player update
+     * @param room Room(Logic Module index) which is broadcasting the all player update.
      */
     public void broadcastAllPlayersUpdate(byte room) {
         for (Map.Entry<Byte, Player> pEntry : logic[room].getPlayers().entrySet()) {

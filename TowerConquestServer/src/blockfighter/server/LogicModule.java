@@ -1,8 +1,10 @@
 package blockfighter.server;
 
+import blockfighter.server.entities.boss.Boss;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.proj.Projectile;
 import blockfighter.server.maps.GameMap;
+import blockfighter.server.maps.GameMapArena;
 import blockfighter.server.maps.GameMapFloor1;
 import blockfighter.server.net.PacketSender;
 import java.util.LinkedList;
@@ -24,8 +26,10 @@ public class LogicModule extends Thread {
     private byte room = -1;
 
     private final ConcurrentHashMap<Byte, Player> players = new ConcurrentHashMap<>(Globals.SERVER_MAX_PLAYERS, 0.9f, Math.max(Globals.SERVER_MAX_PLAYERS / 5, 3));
-    private final ConcurrentHashMap<Integer, Projectile> projectiles = new ConcurrentHashMap<>(500, 0.75f, 10);
-    private final GameMap map;
+    private final ConcurrentHashMap<Byte, Boss> bosses = new ConcurrentHashMap<>(1, 0.9f, 1);
+    private final ConcurrentHashMap<Integer, Projectile> projectiles = new ConcurrentHashMap<>(500, 0.75f, 3);
+    
+    private GameMap map;
     private int projMaxKeys = 500;
 
     private final ConcurrentLinkedQueue<Byte> playerKeys = new ConcurrentLinkedQueue<>();
@@ -36,15 +40,17 @@ public class LogicModule extends Thread {
     private final ConcurrentLinkedQueue<byte[]> pUseSkillQueue = new ConcurrentLinkedQueue<>();
     private final ConcurrentLinkedQueue<Projectile> projEffectQueue = new ConcurrentLinkedQueue<>();
     private final ConcurrentLinkedQueue<Projectile> projAddQueue = new ConcurrentLinkedQueue<>();
-
-    private static ExecutorService threadPool = Executors.newFixedThreadPool(10 * Globals.SERVER_ROOMS,
+    
+    private long lastRefreshAll = 0;
+    private double lastUpdateTime = 0;
+    
+    private static ExecutorService threadPool = Executors.newFixedThreadPool(10,
             new BasicThreadFactory.Builder()
             .namingPattern("LogicModule-%d")
             .daemon(true)
             .priority(Thread.NORM_PRIORITY)
             .build());
-    private long lastRefreshAll = 0;
-    private double lastUpdateTime = 0;
+
 
     /**
      * Create a server logic module
@@ -56,7 +62,11 @@ public class LogicModule extends Thread {
      */
     public LogicModule(byte r) {
         room = r;
-        map = new GameMapFloor1();
+        if (r == 0) {
+            map = new GameMapArena();
+        } else {
+            map = new GameMapFloor1();
+        }
         for (int i = 0; i < 500; i++) {
             projKeys.add(i);
         }
@@ -65,8 +75,18 @@ public class LogicModule extends Thread {
         }
     }
 
+    /**
+     * Set a reference to the Server PacketSender.
+     *
+     * @param ps Server PacketSender
+     */
+    public static void setPacketSender(PacketSender ps) {
+        sender = ps;
+    }
+
     public void reset() {
         players.clear();
+        bosses.clear();
         projectiles.clear();
         projKeys.clear();
         playerKeys.clear();
@@ -78,6 +98,12 @@ public class LogicModule extends Thread {
         projAddQueue.clear();
 
         projMaxKeys = 500;
+
+        if (room == 0) {
+            map = new GameMapArena();
+        } else {
+            map = new GameMapFloor1();
+        }
         for (int i = 0; i < 500; i++) {
             projKeys.add(i);
         }
@@ -89,11 +115,21 @@ public class LogicModule extends Thread {
     @Override
     public void run() {
         try {
+            boolean fin = false;
             processQueues();
+            if (bosses.isEmpty()) {
+                Boss[] newBosses = map.getBosses(this);
+                if (newBosses != null) {
+                    for (Boss b : newBosses) {
+                        bosses.put(b.getKey(), b);
+                    }
+                }
+            }
             double now = System.nanoTime();
             long nowMs = System.currentTimeMillis();
             if (now - lastUpdateTime >= Globals.LOGIC_UPDATE) {
                 updatePlayers();
+                updateBosses();
                 updateProjectiles();
                 lastUpdateTime = now;
             }
@@ -104,8 +140,28 @@ public class LogicModule extends Thread {
                 //sender.resetByte();
                 lastRefreshAll = nowMs;
             }
+
+            for (Map.Entry<Byte, Boss> boss : bosses.entrySet()) {
+                fin = boss.getValue().isDead();
+            }
+            if (fin) {
+                reset();
+            }
         } catch (Exception ex) {
             Globals.log(ex.getLocalizedMessage(), ex, true);
+        }
+    }
+
+    private void updateBosses() {
+        for (Map.Entry<Byte, Boss> boss : bosses.entrySet()) {
+            threadPool.execute(boss.getValue());
+        }
+        for (Map.Entry<Byte, Boss> boss : bosses.entrySet()) {
+            try {
+                boss.getValue().join();
+            } catch (InterruptedException ex) {
+                Globals.log(ex.getLocalizedMessage(), ex, true);
+            }
         }
     }
 
@@ -166,21 +222,16 @@ public class LogicModule extends Thread {
     }
 
     /**
-     * Set a reference to the Server PacketSender.
-     *
-     * @param ps Server PacketSender
-     */
-    public static void setPacketSender(PacketSender ps) {
-        sender = ps;
-    }
-
-    /**
      * Return the array of players.
      *
      * @return Hash map of connected players
      */
     public ConcurrentHashMap<Byte, Player> getPlayers() {
         return players;
+    }
+
+    public ConcurrentHashMap<Byte, Boss> getBosses() {
+        return bosses;
     }
 
     /**
@@ -279,7 +330,7 @@ public class LogicModule extends Thread {
 
     private void processQueues() {
         Runnable[] queues = new Runnable[4];
-        
+
         while (!pAddQueue.isEmpty()) {
             Player newPlayer = pAddQueue.poll();
             if (newPlayer != null) {

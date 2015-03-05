@@ -2,14 +2,13 @@ package blockfighter.server.entities.proj;
 
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
+import blockfighter.server.entities.boss.Boss;
 import blockfighter.server.entities.buff.BuffKnockback;
 import blockfighter.server.entities.buff.BuffStun;
 import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.player.skills.Skill;
 import java.awt.geom.Rectangle2D;
-import java.util.LinkedList;
-import java.util.Map;
 
 /**
  * This is the base projectile class. Create projectile classes off this.
@@ -18,7 +17,6 @@ import java.util.Map;
  */
 public class ProjBowFrost extends Projectile {
 
-    private final LinkedList<Player> queue = new LinkedList<>();
     private double speedX = 0;
     private final boolean isSecondary;
 
@@ -51,37 +49,49 @@ public class ProjBowFrost extends Projectile {
 
     @Override
     public void update() {
-        duration -= Globals.nsToMs(Globals.LOGIC_UPDATE);
         x += speedX;
         hitbox[0].x += speedX;
-        for (Map.Entry<Byte, Player> pEntry : logic.getPlayers().entrySet()) {
-            Player p = pEntry.getValue();
-            if (p != getOwner() && !pHit.contains(p) && p.intersectHitbox(hitbox[0])) {
-                queue.add(p);
-                pHit.add(p);
-                queueEffect(this);
-            }
-        }
+        super.update();
     }
 
     @Override
     public void processQueue() {
-        while (!queue.isEmpty()) {
-            Player p = queue.poll();
+        while (!playerQueue.isEmpty()) {
+            Player p = playerQueue.poll(), owner = getOwner();
             if (p != null && !p.isDead()) {
                 int damage;
                 if (!isSecondary) {
-                    damage = (int) (getOwner().rollDamage() * (1 + .2 * getOwner().getSkillLevel(Skill.BOW_FROST)));
+                    damage = (int) (owner.rollDamage() * (1 + .2 * owner.getSkillLevel(Skill.BOW_FROST)));
                 } else {
-                    damage = (int) (getOwner().rollDamage() * 2.5);
+                    damage = (int) (owner.rollDamage() * 2.5);
                 }
-                boolean crit = getOwner().rollCrit();
+                boolean crit = owner.rollCrit();
                 if (crit) {
-                    damage = (int) getOwner().criticalDamage(damage);
+                    damage = (int) owner.criticalDamage(damage);
                 }
-                p.queueDamage(new Damage(damage, true, getOwner(), p, crit, hitbox[0], p.getHitbox()));
-                p.queueBuff(new BuffKnockback(200, (getOwner().getFacing() == Globals.RIGHT) ? 7 : -7, -4, getOwner(), p));
-                p.queueBuff(new BuffStun(getOwner().isSkillMaxed(Skill.BOW_FROST) ? 2500 : 1500));
+                p.queueDamage(new Damage(damage, true, owner, p, crit, hitbox[0], p.getHitbox()));
+                p.queueBuff(new BuffKnockback(200, (owner.getFacing() == Globals.RIGHT) ? 3 : -3, -4, owner, p));
+                p.queueBuff(new BuffStun(owner.isSkillMaxed(Skill.BOW_FROST) ? 2500 : 1500));
+            }
+        }
+        while (!bossQueue.isEmpty()) {
+            Boss b = bossQueue.poll();
+            Player owner = getOwner();
+            if (b != null && !b.isDead()) {
+                int damage;
+                if (!isSecondary) {
+                    damage = (int) (owner.rollDamage() * (1 + .2 * owner.getSkillLevel(Skill.BOW_FROST)));
+                } else {
+                    damage = (int) (owner.rollDamage() * 2.5);
+                }
+                boolean crit = owner.rollCrit();
+                if (crit) {
+                    damage = (int) owner.criticalDamage(damage);
+                }
+                b.queueDamage(new Damage(damage, true, owner, b, crit, hitbox[0], b.getHitbox()));
+                if (!isSecondary) {
+                    b.queueBuff(new BuffStun(owner.isSkillMaxed(Skill.BOW_FROST) ? 2500 : 1500));
+                }
             }
         }
         queuedEffect = false;

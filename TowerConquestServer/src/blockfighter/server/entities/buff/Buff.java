@@ -1,6 +1,7 @@
 package blockfighter.server.entities.buff;
 
 import blockfighter.server.Globals;
+import blockfighter.server.entities.GameEntity;
 import blockfighter.server.entities.boss.Boss;
 import blockfighter.server.entities.player.Player;
 
@@ -9,7 +10,7 @@ import blockfighter.server.entities.player.Player;
  *
  * @author Ken Kwan
  */
-public abstract class Buff {
+public abstract class Buff implements GameEntity{
 
     /**
      * Owning player of buff
@@ -30,6 +31,13 @@ public abstract class Buff {
      */
     public Buff(long d) {
         duration = d;
+    }
+
+    public void reduceDuration(long amount) {
+        duration -= amount;
+        if (duration < 500) {
+            duration = 500;
+        }
     }
 
     public void setOwner(Player owner) {
@@ -72,6 +80,7 @@ public abstract class Buff {
         return bossTarget;
     }
 
+    @Override
     public void update() {
         duration -= Globals.nsToMs(Globals.LOGIC_UPDATE);
     }

@@ -8,6 +8,7 @@ public class BuffShieldFortify extends Buff implements BuffDmgReduct {
 
     private final double dmgReduct, dmgTakenMult;
     private final long maxDuration;
+
     public BuffShieldFortify(long d, double reduct, Player o) {
         super(d);
         maxDuration = d;

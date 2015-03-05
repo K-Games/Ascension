@@ -15,7 +15,7 @@ public class Damage {
             DAMAGE_TYPE_PLAYERCRIT = 0x01,
             DAMAGE_TYPE_BOSS = 0x02,
             DAMAGE_TYPE_EXP = 0x03;
-
+    private byte type;
     private int damage;
     private boolean canProc = false,
             isTrueDamage = false,
@@ -33,6 +33,7 @@ public class Damage {
         target = t;
         dmgPoint = p;
         isCrit = crit;
+        type = (isCrit) ? DAMAGE_TYPE_PLAYERCRIT : DAMAGE_TYPE_PLAYER;
     }
 
     public Damage(int dmg, boolean trueDmg, Boss o, Player t, Point p) {
@@ -41,6 +42,7 @@ public class Damage {
         bossOwner = o;
         target = t;
         dmgPoint = p;
+        type = DAMAGE_TYPE_BOSS;
     }
 
     public Damage(int dmg, Boss o, Player t, Point p) {
@@ -48,6 +50,7 @@ public class Damage {
         bossOwner = o;
         target = t;
         dmgPoint = p;
+        type = DAMAGE_TYPE_BOSS;
     }
 
     public Damage(int dmg, boolean proc, Player o, Boss t, boolean crit, Point p) {
@@ -57,6 +60,7 @@ public class Damage {
         bossTarget = t;
         dmgPoint = p;
         isCrit = crit;
+        type = (isCrit) ? DAMAGE_TYPE_PLAYERCRIT : DAMAGE_TYPE_PLAYER;
     }
 
     public Damage(int dmg, Player o, Boss t, boolean crit, Point p) {
@@ -66,6 +70,7 @@ public class Damage {
         bossTarget = t;
         dmgPoint = p;
         isCrit = crit;
+        type = (isCrit) ? DAMAGE_TYPE_PLAYERCRIT : DAMAGE_TYPE_PLAYER;
     }
 
     public Damage(int dmg, boolean proc, Player o, Player t, boolean crit, Rectangle2D.Double box1, Rectangle2D.Double box2) {
@@ -76,6 +81,7 @@ public class Damage {
         Rectangle2D box = box1.createIntersection(box2);
         dmgPoint = new Point((int) (box.getX() + box.getWidth() / 2), (int) (box.getY() + box.getHeight() / 2));
         isCrit = crit;
+        type = (isCrit) ? DAMAGE_TYPE_PLAYERCRIT : DAMAGE_TYPE_PLAYER;
     }
 
     public Damage(int dmg, boolean trueDmg, Boss o, Player t, Rectangle2D.Double box1, Rectangle2D.Double box2) {
@@ -85,6 +91,7 @@ public class Damage {
         target = t;
         Rectangle2D box = box1.createIntersection(box2);
         dmgPoint = new Point((int) (box.getX() + box.getWidth() / 2), (int) (box.getY() + box.getHeight() / 2));
+        type = DAMAGE_TYPE_BOSS;
     }
 
     public Damage(int dmg, Boss o, Player t, Rectangle2D.Double box1, Rectangle2D.Double box2) {
@@ -93,6 +100,7 @@ public class Damage {
         target = t;
         Rectangle2D box = box1.createIntersection(box2);
         dmgPoint = new Point((int) (box.getX() + box.getWidth() / 2), (int) (box.getY() + box.getHeight() / 2));
+        type = DAMAGE_TYPE_BOSS;
     }
 
     public Damage(int dmg, boolean proc, Player o, Boss t, boolean crit, Rectangle2D.Double box1, Rectangle2D.Double box2) {
@@ -103,6 +111,7 @@ public class Damage {
         Rectangle2D box = box1.createIntersection(box2);
         dmgPoint = new Point((int) (box.getX() + box.getWidth() / 2), (int) (box.getY() + box.getHeight() / 2));
         isCrit = crit;
+        type = (isCrit) ? DAMAGE_TYPE_PLAYERCRIT : DAMAGE_TYPE_PLAYER;
     }
 
     public Damage(int dmg, Player o, Boss t, boolean crit, Rectangle2D.Double box1, Rectangle2D.Double box2) {
@@ -113,6 +122,7 @@ public class Damage {
         Rectangle2D box = box1.createIntersection(box2);
         dmgPoint = new Point((int) (box.getX() + box.getWidth() / 2), (int) (box.getY() + box.getHeight() / 2));
         isCrit = crit;
+        type = (isCrit) ? DAMAGE_TYPE_PLAYERCRIT : DAMAGE_TYPE_PLAYER;
     }
 
     public int getDamage() {
@@ -147,8 +157,8 @@ public class Damage {
         return dmgPoint;
     }
 
-    public boolean isCrit() {
-        return isCrit;
+    public byte getDamageType() {
+        return type;
     }
 
     public void proc() {

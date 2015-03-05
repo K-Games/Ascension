@@ -3,15 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package blockfighter.server.entities.buff;
+package blockfighter.server.entities;
 
 /**
  *
  * @author Ken Kwan
  */
-public interface BuffDmgReduct {
+public interface GameEntity {
 
-    public double getDmgReduction();
-
-    public double getDmgTakenMult();
+    public void update();
 }

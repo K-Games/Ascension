@@ -2,6 +2,7 @@ package blockfighter.server.entities.player;
 
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
+import blockfighter.server.entities.GameEntity;
 import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.buff.*;
 import blockfighter.server.entities.player.skills.*;
@@ -14,7 +15,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -23,7 +23,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  *
  * @author Ken Kwan
  */
-public class Player extends Thread {
+public class Player extends Thread implements GameEntity {
 
     public final static byte PLAYER_STATE_STAND = 0x00,
             PLAYER_STATE_WALK = 0x01,
@@ -75,7 +75,6 @@ public class Player extends Thread {
     private int[] equip = new int[Globals.NUM_EQUIP_SLOTS];
     private ConcurrentHashMap<Byte, Skill> skills = new ConcurrentHashMap<>(Skill.NUM_SKILLS, 0.9f, 1);
     private boolean connected = true;
-    private static Random rng = new Random();
 
     private ConcurrentLinkedQueue<Damage> damageQueue = new ConcurrentLinkedQueue<>();
     private ConcurrentLinkedQueue<Integer> healQueue = new ConcurrentLinkedQueue<>();
@@ -464,6 +463,7 @@ public class Player extends Thread {
      * Must be called every tick. Specific logic updates are separated into other methods. Specific logic updates must be private.
      * </p>
      */
+    @Override
     public void update() {
         if (!isConnected()) {
             return;
@@ -741,40 +741,22 @@ public class Player extends Thread {
     private void updateSkillSwordSlash() {
         if (isSkillMaxed(Skill.SWORD_SLASH) && skillDuration == 0) {
             queueBuff(new BuffSwordSlash(4000, .1, this));
-            byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
-            bytes[0] = Globals.DATA_PARTICLE_EFFECT;
-            bytes[1] = Globals.PARTICLE_SWORD_SLASHBUFF;
-            bytes[2] = key;
-            sender.sendAll(bytes, logic.getRoom());
+            sendParticle(logic.getRoom(), Globals.PARTICLE_SWORD_SLASHBUFF, key);
         }
         if (skillDuration % 200 == 0 && skillDuration < 600) {
             skillCounter++;
             ProjSwordSlash proj = new ProjSwordSlash(logic, logic.getNextProjKey(), this, x, y, skillCounter);
             logic.queueAddProj(proj);
-            byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT * 2];
-            bytes[0] = Globals.DATA_PARTICLE_EFFECT;
             if (skillCounter == 1) {
-                bytes[1] = Globals.PARTICLE_SWORD_SLASH1;
+                sendParticle(logic.getRoom(), Globals.PARTICLE_SWORD_SLASH1, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(), facing);
             } else if (skillCounter == 2) {
-                bytes[1] = Globals.PARTICLE_SWORD_SLASH2;
+                sendParticle(logic.getRoom(), Globals.PARTICLE_SWORD_SLASH2, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(), facing);
             } else if (skillCounter == 3) {
-                bytes[1] = Globals.PARTICLE_SWORD_SLASH3;
+                sendParticle(logic.getRoom(), Globals.PARTICLE_SWORD_SLASH3, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(), facing);
             }
-            byte[] posXInt = Globals.intToByte((int) proj.getHitbox()[0].getX());
-            bytes[2] = posXInt[0];
-            bytes[3] = posXInt[1];
-            bytes[4] = posXInt[2];
-            bytes[5] = posXInt[3];
-            byte[] posYInt = Globals.intToByte((int) proj.getHitbox()[0].getY());
-            bytes[6] = posYInt[0];
-            bytes[7] = posYInt[1];
-            bytes[8] = posYInt[2];
-            bytes[9] = posYInt[3];
-            bytes[10] = facing;
-            sender.sendAll(bytes, logic.getRoom());
         }
 
-        if (skillDuration >= 700) {
+        if (skillDuration >= 600 || isStunned() || isKnockback()) {
             setPlayerState(PLAYER_STATE_STAND);
         }
     }
@@ -784,12 +766,7 @@ public class Player extends Thread {
             ProjSwordDrive proj = new ProjSwordDrive(logic, logic.getNextProjKey(), this, x, y);
             logic.queueAddProj(proj);
             if (skillDuration == 0) {
-                byte[] bytes = new byte[Globals.PACKET_BYTE * 4];
-                bytes[0] = Globals.DATA_PARTICLE_EFFECT;
-                bytes[1] = Globals.PARTICLE_SWORD_DRIVE;
-                bytes[2] = facing;
-                bytes[3] = key;
-                sender.sendAll(bytes, logic.getRoom());
+                sendParticle(logic.getRoom(), Globals.PARTICLE_SWORD_DRIVE, key, facing);
             }
         }
         if (skillDuration >= 1000) {
@@ -809,21 +786,7 @@ public class Player extends Thread {
         if (skillDuration % skillTime == 0 && skillCounter < numHits) {
             ProjSwordVorpal proj = new ProjSwordVorpal(logic, logic.getNextProjKey(), this, x, y);
             logic.queueAddProj(proj);
-            byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT * 2];
-            bytes[0] = Globals.DATA_PARTICLE_EFFECT;
-            bytes[1] = Globals.PARTICLE_SWORD_VORPAL;
-            byte[] posXInt = Globals.intToByte((int) proj.getHitbox()[0].getX());
-            bytes[2] = posXInt[0];
-            bytes[3] = posXInt[1];
-            bytes[4] = posXInt[2];
-            bytes[5] = posXInt[3];
-            byte[] posYInt = Globals.intToByte((int) proj.getHitbox()[0].getY());
-            bytes[6] = posYInt[0];
-            bytes[7] = posYInt[1];
-            bytes[8] = posYInt[2];
-            bytes[9] = posYInt[3];
-            bytes[10] = facing;
-            sender.sendAll(bytes, logic.getRoom());
+            sendParticle(logic.getRoom(), Globals.PARTICLE_SWORD_VORPAL, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(), facing);
             skillCounter++;
         }
 
@@ -836,37 +799,15 @@ public class Player extends Thread {
         if (skillDuration == 0) {
             if (isSkillMaxed(Skill.SWORD_TAUNT)) {
                 queueBuff(new BuffSwordTaunt(10000, 0.2, 0.2, this));
-                byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
-                bytes[0] = Globals.DATA_PARTICLE_EFFECT;
-                bytes[1] = Globals.PARTICLE_SWORD_TAUNTBUFF;
-                bytes[2] = key;
-                sender.sendAll(bytes, logic.getRoom());
+                sendParticle(logic.getRoom(), Globals.PARTICLE_SWORD_TAUNTBUFF, key);
             }
-            byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
-            bytes[0] = Globals.DATA_PARTICLE_EFFECT;
-            bytes[1] = Globals.PARTICLE_SWORD_TAUNTAURA1;
-            bytes[2] = key;
-            sender.sendAll(bytes, logic.getRoom());
+            sendParticle(logic.getRoom(), Globals.PARTICLE_SWORD_TAUNTAURA1, key);
         } else if (skillDuration == 50) {
             ProjSwordTaunt proj = new ProjSwordTaunt(logic, logic.getNextProjKey(), this, x, y);
             logic.queueAddProj(proj);
-            byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT * 2];
-            bytes[0] = Globals.DATA_PARTICLE_EFFECT;
-            bytes[1] = Globals.PARTICLE_SWORD_TAUNT;
-            byte[] posXInt = Globals.intToByte((int) proj.getHitbox()[0].getX());
-            bytes[2] = posXInt[0];
-            bytes[3] = posXInt[1];
-            bytes[4] = posXInt[2];
-            bytes[5] = posXInt[3];
-            byte[] posYInt = Globals.intToByte((int) proj.getHitbox()[0].getY());
-            bytes[6] = posYInt[0];
-            bytes[7] = posYInt[1];
-            bytes[8] = posYInt[2];
-            bytes[9] = posYInt[3];
-            bytes[10] = facing;
-            sender.sendAll(bytes, logic.getRoom());
+            sendParticle(logic.getRoom(), Globals.PARTICLE_SWORD_TAUNT, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(), facing);
         }
-        if (skillDuration >= 500) {
+        if (skillDuration >= 350) {
             setPlayerState(PLAYER_STATE_STAND);
         }
     }
@@ -880,52 +821,24 @@ public class Player extends Thread {
             skillCounter++;
         }
         if (skillDuration % 50 == 0 && skillCounter < numHits) {
-            ProjSwordMulti proj = new ProjSwordMulti(logic, logic.getNextProjKey(), this, x, y + (rng.nextInt(40) - 20));
+            ProjSwordMulti proj = new ProjSwordMulti(logic, logic.getNextProjKey(), this, x, y + (Globals.rng(40) - 20));
             logic.queueAddProj(proj);
-            byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT * 2];
-            bytes[0] = Globals.DATA_PARTICLE_EFFECT;
-            bytes[1] = Globals.PARTICLE_SWORD_MULTI;
-            byte[] posXInt = Globals.intToByte((int) proj.getHitbox()[0].getX());
-            bytes[2] = posXInt[0];
-            bytes[3] = posXInt[1];
-            bytes[4] = posXInt[2];
-            bytes[5] = posXInt[3];
-            byte[] posYInt = Globals.intToByte((int) proj.getHitbox()[0].getY());
-            bytes[6] = posYInt[0];
-            bytes[7] = posYInt[1];
-            bytes[8] = posYInt[2];
-            bytes[9] = posYInt[3];
-            bytes[10] = facing;
-            sender.sendAll(bytes, logic.getRoom());
+            sendParticle(logic.getRoom(), Globals.PARTICLE_SWORD_MULTI, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(), facing);
             skillCounter++;
         }
-        if (skillDuration >= numHits * 50 + 600 || (!isInvulnerable() && (isStunned() || isKnockback()))) {
+        if (skillDuration >= numHits * 50 + 110 || (!isInvulnerable() && (isStunned() || isKnockback()))) {
             setInvulnerable(false);
             setPlayerState(PLAYER_STATE_STAND);
         }
     }
 
     private void updateSkillSwordCinder() {
-        if (skillDuration == 70) {
+        if (skillDuration == 50) {
             ProjSwordCinder proj = new ProjSwordCinder(logic, logic.getNextProjKey(), this, x, y);
             logic.queueAddProj(proj);
-            byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT * 2];
-            bytes[0] = Globals.DATA_PARTICLE_EFFECT;
-            bytes[1] = Globals.PARTICLE_SWORD_CINDER;
-            byte[] posXInt = Globals.intToByte((int) proj.getHitbox()[0].getX());
-            bytes[2] = posXInt[0];
-            bytes[3] = posXInt[1];
-            bytes[4] = posXInt[2];
-            bytes[5] = posXInt[3];
-            byte[] posYInt = Globals.intToByte((int) proj.getHitbox()[0].getY());
-            bytes[6] = posYInt[0];
-            bytes[7] = posYInt[1];
-            bytes[8] = posYInt[2];
-            bytes[9] = posYInt[3];
-            bytes[10] = facing;
-            sender.sendAll(bytes, logic.getRoom());
+            sendParticle(logic.getRoom(), Globals.PARTICLE_SWORD_CINDER, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(), facing);
         }
-        if (skillDuration >= 600) {
+        if (skillDuration >= 350) {
             setPlayerState(PLAYER_STATE_STAND);
         }
     }
@@ -934,27 +847,13 @@ public class Player extends Thread {
         if (skillDuration == 100) {
             ProjBowArc proj = new ProjBowArc(logic, logic.getNextProjKey(), this, x, y);
             logic.queueAddProj(proj);
-            byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT * 2];
-            bytes[0] = Globals.DATA_PARTICLE_EFFECT;
-            bytes[1] = Globals.PARTICLE_BOW_ARC;
-            byte[] posXInt = Globals.intToByte((int) proj.getHitbox()[0].getX());
-            bytes[2] = posXInt[0];
-            bytes[3] = posXInt[1];
-            bytes[4] = posXInt[2];
-            bytes[5] = posXInt[3];
-            byte[] posYInt = Globals.intToByte((int) proj.getHitbox()[0].getY());
-            bytes[6] = posYInt[0];
-            bytes[7] = posYInt[1];
-            bytes[8] = posYInt[2];
-            bytes[9] = posYInt[3];
-            bytes[10] = facing;
-            sender.sendAll(bytes, logic.getRoom());
+            sendParticle(logic.getRoom(), Globals.PARTICLE_BOW_ARC, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(), facing);
         }
         if (skillDuration == 150 || skillDuration == 200) {
             ProjBowArc proj = new ProjBowArc(logic, logic.getNextProjKey(), this, x, y);
             logic.queueAddProj(proj);
         }
-        if (skillDuration >= 500) {
+        if (skillDuration >= 300) {
             setPlayerState(PLAYER_STATE_STAND);
         }
     }
@@ -963,43 +862,15 @@ public class Player extends Thread {
         if (skillDuration == 160) {
             ProjBowFrost proj = new ProjBowFrost(logic, logic.getNextProjKey(), this, x, y, false);
             logic.queueAddProj(proj);
-            byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT * 2];
-            bytes[0] = Globals.DATA_PARTICLE_EFFECT;
-            bytes[1] = Globals.PARTICLE_BOW_FROSTARROW;
-            byte[] posXInt = Globals.intToByte((int) proj.getHitbox()[0].getX());
-            bytes[2] = posXInt[0];
-            bytes[3] = posXInt[1];
-            bytes[4] = posXInt[2];
-            bytes[5] = posXInt[3];
-            byte[] posYInt = Globals.intToByte((int) proj.getHitbox()[0].getY());
-            bytes[6] = posYInt[0];
-            bytes[7] = posYInt[1];
-            bytes[8] = posYInt[2];
-            bytes[9] = posYInt[3];
-            bytes[10] = facing;
-            sender.sendAll(bytes, logic.getRoom());
+            sendParticle(logic.getRoom(), Globals.PARTICLE_BOW_FROSTARROW, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(), facing);
         }
 
         if (isSkillMaxed(Skill.BOW_FROST) && (skillDuration == 250 || skillDuration == 340)) {
             ProjBowFrost proj = new ProjBowFrost(logic, logic.getNextProjKey(), this, x, y, true);
             logic.queueAddProj(proj);
-            byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT * 2];
-            bytes[0] = Globals.DATA_PARTICLE_EFFECT;
-            bytes[1] = Globals.PARTICLE_BOW_FROSTARROW;
-            byte[] posXInt = Globals.intToByte((int) proj.getHitbox()[0].getX());
-            bytes[2] = posXInt[0];
-            bytes[3] = posXInt[1];
-            bytes[4] = posXInt[2];
-            bytes[5] = posXInt[3];
-            byte[] posYInt = Globals.intToByte((int) proj.getHitbox()[0].getY());
-            bytes[6] = posYInt[0];
-            bytes[7] = posYInt[1];
-            bytes[8] = posYInt[2];
-            bytes[9] = posYInt[3];
-            bytes[10] = facing;
-            sender.sendAll(bytes, logic.getRoom());
+            sendParticle(logic.getRoom(), Globals.PARTICLE_BOW_FROSTARROW, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(), facing);
         }
-        if (skillDuration >= 500) {
+        if (skillDuration >= 380) {
             setPlayerState(PLAYER_STATE_STAND);
         }
     }
@@ -1008,23 +879,9 @@ public class Player extends Thread {
         if (skillDuration == 100) {
             ProjBowStorm proj = new ProjBowStorm(logic, logic.getNextProjKey(), this, x, y);
             logic.queueAddProj(proj);
-            byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT * 2];
-            bytes[0] = Globals.DATA_PARTICLE_EFFECT;
-            bytes[1] = Globals.PARTICLE_BOW_STORM;
-            byte[] posXInt = Globals.intToByte((int) proj.getHitbox()[0].getX());
-            bytes[2] = posXInt[0];
-            bytes[3] = posXInt[1];
-            bytes[4] = posXInt[2];
-            bytes[5] = posXInt[3];
-            byte[] posYInt = Globals.intToByte((int) proj.getHitbox()[0].getY());
-            bytes[6] = posYInt[0];
-            bytes[7] = posYInt[1];
-            bytes[8] = posYInt[2];
-            bytes[9] = posYInt[3];
-            bytes[10] = facing;
-            sender.sendAll(bytes, logic.getRoom());
+            sendParticle(logic.getRoom(), Globals.PARTICLE_BOW_STORM, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(), facing);
         }
-        if (skillDuration >= 500) {
+        if (skillDuration >= 200) {
             setPlayerState(PLAYER_STATE_STAND);
         }
     }
@@ -1039,105 +896,33 @@ public class Player extends Thread {
             }
             ProjBowRapid proj = new ProjBowRapid(logic, logic.getNextProjKey(), this, x, projY);
             logic.queueAddProj(proj);
-            byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT * 2];
-            bytes[0] = Globals.DATA_PARTICLE_EFFECT;
-            bytes[1] = Globals.PARTICLE_BOW_RAPID;
-            byte[] posXInt = Globals.intToByte((int) proj.getHitbox()[0].getX());
-            bytes[2] = posXInt[0];
-            bytes[3] = posXInt[1];
-            bytes[4] = posXInt[2];
-            bytes[5] = posXInt[3];
-            byte[] posYInt = Globals.intToByte((int) proj.getHitbox()[0].getY());
-            bytes[6] = posYInt[0];
-            bytes[7] = posYInt[1];
-            bytes[8] = posYInt[2];
-            bytes[9] = posYInt[3];
-            bytes[10] = facing;
-            sender.sendAll(bytes, logic.getRoom());
+            sendParticle(logic.getRoom(), Globals.PARTICLE_BOW_RAPID, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(), facing);
         }
-        if (skillDuration >= 800) {
+        if (skillDuration >= 550) {
             setPlayerState(PLAYER_STATE_STAND);
         }
     }
 
     private void updateSkillBowVolley() {
         if (skillDuration % 100 == 0 && skillCounter < 20) {
-            ProjBowVolley proj = new ProjBowVolley(logic, logic.getNextProjKey(), this, x, y - 10 + rng.nextInt(40));
+            ProjBowVolley proj = new ProjBowVolley(logic, logic.getNextProjKey(), this, x, y - 10 + Globals.rng(40));
             logic.queueAddProj(proj);
-            byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT * 2];
-            bytes[0] = Globals.DATA_PARTICLE_EFFECT;
-            bytes[1] = Globals.PARTICLE_BOW_VOLLEYARROW;
-            byte[] posXInt = Globals.intToByte((int) proj.getHitbox()[0].getX());
-            bytes[2] = posXInt[0];
-            bytes[3] = posXInt[1];
-            bytes[4] = posXInt[2];
-            bytes[5] = posXInt[3];
-            byte[] posYInt = Globals.intToByte((int) proj.getHitbox()[0].getY());
-            bytes[6] = posYInt[0];
-            bytes[7] = posYInt[1];
-            bytes[8] = posYInt[2];
-            bytes[9] = posYInt[3];
-            bytes[10] = facing;
-            sender.sendAll(bytes, logic.getRoom());
-
-            bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT * 2];
-            bytes[0] = Globals.DATA_PARTICLE_EFFECT;
-            bytes[1] = Globals.PARTICLE_BOW_VOLLEYBOW;
-            posXInt = Globals.intToByte((int) x);
-            bytes[2] = posXInt[0];
-            bytes[3] = posXInt[1];
-            bytes[4] = posXInt[2];
-            bytes[5] = posXInt[3];
-            posYInt = Globals.intToByte((int) y);
-            bytes[6] = posYInt[0];
-            bytes[7] = posYInt[1];
-            bytes[8] = posYInt[2];
-            bytes[9] = posYInt[3];
-            bytes[10] = facing;
-            sender.sendAll(bytes, logic.getRoom());
+            sendParticle(logic.getRoom(), Globals.PARTICLE_BOW_VOLLEYARROW, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(), facing);
+            sendParticle(logic.getRoom(), Globals.PARTICLE_BOW_VOLLEYBOW, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(), facing);
             skillCounter++;
         }
-        if (skillDuration >= 2100 || isStunned() || isKnockback()) {
+        if (skillDuration >= 1900 || isStunned() || isKnockback()) {
             setPlayerState(PLAYER_STATE_STAND);
         }
     }
 
     private void updateSkillBowPower() {
         if (skillDuration <= 400 && skillDuration % 50 == 0) {
-            //Charging particles
-            byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT * 2];
-            bytes[0] = Globals.DATA_PARTICLE_EFFECT;
-            bytes[1] = Globals.PARTICLE_BOW_POWERCHARGE;
-            byte[] posXInt = Globals.intToByte((int) x + ((facing == Globals.RIGHT) ? 75 : -75));
-            bytes[2] = posXInt[0];
-            bytes[3] = posXInt[1];
-            bytes[4] = posXInt[2];
-            bytes[5] = posXInt[3];
-            byte[] posYInt = Globals.intToByte((int) y - 250);
-            bytes[6] = posYInt[0];
-            bytes[7] = posYInt[1];
-            bytes[8] = posYInt[2];
-            bytes[9] = posYInt[3];
-            bytes[10] = facing;
-            sender.sendAll(bytes, logic.getRoom());
+            sendParticle(logic.getRoom(), Globals.PARTICLE_BOW_POWERCHARGE, x + ((facing == Globals.RIGHT) ? 75 : -75), y - 250, facing);
         } else if (skillDuration == 800) {
             ProjBowPower proj = new ProjBowPower(logic, logic.getNextProjKey(), this, x, y);
             logic.queueAddProj(proj);
-            byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT * 2];
-            bytes[0] = Globals.DATA_PARTICLE_EFFECT;
-            bytes[1] = Globals.PARTICLE_BOW_POWER;
-            byte[] posXInt = Globals.intToByte((int) proj.getHitbox()[0].getX());
-            bytes[2] = posXInt[0];
-            bytes[3] = posXInt[1];
-            bytes[4] = posXInt[2];
-            bytes[5] = posXInt[3];
-            byte[] posYInt = Globals.intToByte((int) proj.getHitbox()[0].getY());
-            bytes[6] = posYInt[0];
-            bytes[7] = posYInt[1];
-            bytes[8] = posYInt[2];
-            bytes[9] = posYInt[3];
-            bytes[10] = facing;
-            sender.sendAll(bytes, logic.getRoom());
+            sendParticle(logic.getRoom(), Globals.PARTICLE_BOW_POWER, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(), facing);
         }
         if (skillDuration >= 1400 || (!isSkillMaxed(Skill.BOW_POWER) && skillDuration < 800 && (isStunned() || isKnockback()))) {
             setPlayerState(PLAYER_STATE_STAND);
@@ -1146,30 +931,18 @@ public class Player extends Thread {
 
     private void updateSkillShieldFortify() {
         if (skillDuration == 0) {
-            byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
-            bytes[0] = Globals.DATA_PARTICLE_EFFECT;
-            bytes[1] = Globals.PARTICLE_SHIELD_FORTIFY;
-            bytes[2] = key;
-            sender.sendAll(bytes, logic.getRoom());
+            sendParticle(logic.getRoom(), Globals.PARTICLE_SHIELD_FORTIFY, key);
         }
         if (skillDuration >= 350) {
             queueBuff(new BuffShieldFortify(5000, 0.01 + 0.005 * getSkillLevel(Skill.SHIELD_FORTIFY), this));
-            byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
-            bytes[0] = Globals.DATA_PARTICLE_EFFECT;
-            bytes[1] = Globals.PARTICLE_SHIELD_FORTIFYBUFF;
-            bytes[2] = key;
-            sender.sendAll(bytes, logic.getRoom());
+            sendParticle(logic.getRoom(), Globals.PARTICLE_SHIELD_FORTIFYBUFF, key);
             setPlayerState(PLAYER_STATE_STAND);
         }
     }
 
     private void updateSkillShieldIron() {
         if (skillDuration == 0) {
-            byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
-            bytes[0] = Globals.DATA_PARTICLE_EFFECT;
-            bytes[1] = Globals.PARTICLE_SHIELD_IRON;
-            bytes[2] = key;
-            sender.sendAll(bytes, logic.getRoom());
+            sendParticle(logic.getRoom(), Globals.PARTICLE_SHIELD_IRON, key);
         }
         if (skillDuration == 100) {
             setRemovingDebuff(true);
@@ -1179,11 +952,7 @@ public class Player extends Thread {
                     Player p = player.getValue();
                     if (p != this) {
                         p.queueBuff(new BuffShieldIron(2000, 0.4));
-                        byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
-                        bytes[0] = Globals.DATA_PARTICLE_EFFECT;
-                        bytes[1] = Globals.PARTICLE_SHIELD_IRONALLY;
-                        bytes[2] = p.getKey();
-                        sender.sendAll(bytes, logic.getRoom());
+                        sendParticle(logic.getRoom(), Globals.PARTICLE_SHIELD_IRONALLY, p.getKey());
                     }
                 }
             }
@@ -1197,47 +966,20 @@ public class Player extends Thread {
     private void updateSkillShieldReflectHit(double dmgTaken, double mult) {
         ProjShieldReflect proj = new ProjShieldReflect(logic, logic.getNextProjKey(), this, x, y, dmgTaken * mult);
         logic.queueAddProj(proj);
-        byte[] bytes = new byte[Globals.PACKET_BYTE * 2 + Globals.PACKET_INT * 2];
-        bytes[0] = Globals.DATA_PARTICLE_EFFECT;
-        bytes[1] = Globals.PARTICLE_SHIELD_REFLECTHIT;
-        byte[] posXInt = Globals.intToByte((int) x);
-        bytes[2] = posXInt[0];
-        bytes[3] = posXInt[1];
-        bytes[4] = posXInt[2];
-        bytes[5] = posXInt[3];
-        byte[] posYInt = Globals.intToByte((int) y);
-        bytes[6] = posYInt[0];
-        bytes[7] = posYInt[1];
-        bytes[8] = posYInt[2];
-        bytes[9] = posYInt[3];
-        sender.sendAll(bytes, logic.getRoom());
+        sendParticle(logic.getRoom(), Globals.PARTICLE_SHIELD_REFLECTHIT, x, y);
     }
 
     private void updateSkillShieldReflectCast() {
         if (skillDuration == 0) {
-            byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
-            bytes[0] = Globals.DATA_PARTICLE_EFFECT;
-            bytes[1] = Globals.PARTICLE_SHIELD_REFLECTCAST;
-            bytes[2] = key;
-            sender.sendAll(bytes, logic.getRoom());
-
             queueBuff(new BuffShieldReflect(3000, .4 + 0.02 * getSkillLevel(Skill.SHIELD_REFLECT), this, this));
-            bytes = new byte[Globals.PACKET_BYTE * 3];
-            bytes[0] = Globals.DATA_PARTICLE_EFFECT;
-            bytes[1] = Globals.PARTICLE_SHIELD_REFLECTBUFF;
-            bytes[2] = key;
-            sender.sendAll(bytes, logic.getRoom());
-
+            sendParticle(logic.getRoom(), Globals.PARTICLE_SHIELD_REFLECTCAST, key);
+            sendParticle(logic.getRoom(), Globals.PARTICLE_SHIELD_REFLECTBUFF, key);
             if (isSkillMaxed(Skill.SHIELD_REFLECT)) {
                 for (Map.Entry<Byte, Player> player : logic.getPlayers().entrySet()) {
                     Player p = player.getValue();
                     if (p != this) {
                         p.queueBuff(new BuffShieldReflect(3000, 0.4, this, p));
-                        bytes = new byte[Globals.PACKET_BYTE * 3];
-                        bytes[0] = Globals.DATA_PARTICLE_EFFECT;
-                        bytes[1] = Globals.PARTICLE_SHIELD_REFLECTCAST;
-                        bytes[2] = p.getKey();
-                        sender.sendAll(bytes, logic.getRoom());
+                        sendParticle(logic.getRoom(), Globals.PARTICLE_SHIELD_REFLECTCAST, p.getKey());
                     }
                 }
             }
@@ -1251,21 +993,7 @@ public class Player extends Thread {
         if (skillDuration == 100 || (isSkillMaxed(Skill.SHIELD_TOSS) && (skillDuration == 300 || skillDuration == 500))) {
             ProjShieldToss proj = new ProjShieldToss(logic, logic.getNextProjKey(), this, x, y);
             logic.queueAddProj(proj);
-            byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT * 2];
-            bytes[0] = Globals.DATA_PARTICLE_EFFECT;
-            bytes[1] = Globals.PARTICLE_SHIELD_TOSS;
-            byte[] posXInt = Globals.intToByte((int) proj.getHitbox()[0].x);
-            bytes[2] = posXInt[0];
-            bytes[3] = posXInt[1];
-            bytes[4] = posXInt[2];
-            bytes[5] = posXInt[3];
-            byte[] posYInt = Globals.intToByte((int) proj.getHitbox()[0].y);
-            bytes[6] = posYInt[0];
-            bytes[7] = posYInt[1];
-            bytes[8] = posYInt[2];
-            bytes[9] = posYInt[3];
-            bytes[10] = facing;
-            sender.sendAll(bytes, logic.getRoom());
+            sendParticle(logic.getRoom(), Globals.PARTICLE_SHIELD_TOSS, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(), facing);
         }
         if (skillDuration >= 700) {
             setPlayerState(PLAYER_STATE_STAND);
@@ -1277,12 +1005,7 @@ public class Player extends Thread {
         if (skillDuration == 0) {
             ProjShieldCharge proj = new ProjShieldCharge(logic, logic.getNextProjKey(), this, x, y);
             logic.queueAddProj(proj);
-            byte[] bytes = new byte[Globals.PACKET_BYTE * 4];
-            bytes[0] = Globals.DATA_PARTICLE_EFFECT;
-            bytes[1] = Globals.PARTICLE_SHIELD_CHARGE;
-            bytes[2] = facing;
-            bytes[3] = key;
-            sender.sendAll(bytes, logic.getRoom());
+            sendParticle(logic.getRoom(), Globals.PARTICLE_SHIELD_CHARGE, key, facing);
         }
         if (skillDuration >= 750) {
             setPlayerState(PLAYER_STATE_STAND);
@@ -1299,18 +1022,8 @@ public class Player extends Thread {
 
         if (skillDuration == 0) {
             queueBuff(new BuffShieldDash(5000, 0.01 + 0.003 * getSkillLevel(Skill.SHIELD_DASH), this));
-            byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
-            bytes[0] = Globals.DATA_PARTICLE_EFFECT;
-            bytes[1] = Globals.PARTICLE_SHIELD_DASHBUFF;
-            bytes[2] = key;
-            sender.sendAll(bytes, logic.getRoom());
-
-            bytes = new byte[Globals.PACKET_BYTE * 4];
-            bytes[0] = Globals.DATA_PARTICLE_EFFECT;
-            bytes[1] = Globals.PARTICLE_SHIELD_DASH;
-            bytes[2] = facing;
-            bytes[3] = key;
-            sender.sendAll(bytes, logic.getRoom());
+            sendParticle(logic.getRoom(), Globals.PARTICLE_SHIELD_DASHBUFF, key);
+            sendParticle(logic.getRoom(), Globals.PARTICLE_SHIELD_DASH, key, facing);
             setYSpeed(-4);
         }
 
@@ -1438,39 +1151,13 @@ public class Player extends Thread {
                         amount = (int) (stats[Globals.STAT_MAXHP] * 0.5);
                         skills.get(Skill.PASSIVE_RESIST).setCooldown();
                         sendCooldown(Skill.PASSIVE_RESIST);
-                        byte[] bytes = new byte[Globals.PACKET_BYTE * 2 + Globals.PACKET_INT * 2];
-                        bytes[0] = Globals.DATA_PARTICLE_EFFECT;
-                        bytes[1] = Globals.PARTICLE_PASSIVE_RESIST;
-                        byte[] posXInt = Globals.intToByte((int) x);
-                        bytes[2] = posXInt[0];
-                        bytes[3] = posXInt[1];
-                        bytes[4] = posXInt[2];
-                        bytes[5] = posXInt[3];
-                        byte[] posYInt = Globals.intToByte((int) y);
-                        bytes[6] = posYInt[0];
-                        bytes[7] = posYInt[1];
-                        bytes[8] = posYInt[2];
-                        bytes[9] = posYInt[3];
-                        sender.sendAll(bytes, logic.getRoom());
+                        sendParticle(logic.getRoom(), Globals.PARTICLE_PASSIVE_RESIST, x, y);
                     }
                 }
                 //Barrier reduction
                 if (barrierBuff != null) {
                     amount = (int) ((BuffPassiveBarrier) barrierBuff).reduceDmg(amount);
-                    byte[] bytes = new byte[Globals.PACKET_BYTE * 2 + Globals.PACKET_INT * 2];
-                    bytes[0] = Globals.DATA_PARTICLE_EFFECT;
-                    bytes[1] = Globals.PARTICLE_PASSIVE_BARRIER;
-                    byte[] posXInt = Globals.intToByte(dmg.getDmgPoint().x);
-                    bytes[2] = posXInt[0];
-                    bytes[3] = posXInt[1];
-                    bytes[4] = posXInt[2];
-                    bytes[5] = posXInt[3];
-                    byte[] posYInt = Globals.intToByte(dmg.getDmgPoint().y);
-                    bytes[6] = posYInt[0];
-                    bytes[7] = posYInt[1];
-                    bytes[8] = posYInt[2];
-                    bytes[9] = posYInt[3];
-                    sender.sendAll(bytes, logic.getRoom());
+                    sendParticle(logic.getRoom(), Globals.PARTICLE_PASSIVE_BARRIER, dmg.getDmgPoint().x, dmg.getDmgPoint().y);
                 }
                 tacticalDmgMult = 0;
                 //Send client damage display
@@ -1603,9 +1290,11 @@ public class Player extends Thread {
     }
 
     private void die() {
-        for (Map.Entry<Byte, Player> player : logic.getPlayers().entrySet()) {
-            if (player.getValue() != this) {
-                player.getValue().giveEXP(Globals.calcEXPtoNxtLvl(stats[Globals.STAT_LEVEL]) / 7);
+        if (logic.getMap().isPvP()) {
+            for (Map.Entry<Byte, Player> player : logic.getPlayers().entrySet()) {
+                if (player.getValue() != this) {
+                    player.getValue().giveEXP(Globals.calcEXPtoNxtLvl(stats[Globals.STAT_LEVEL]) / 7);
+                }
             }
         }
         setInvulnerable(false);
@@ -1630,7 +1319,7 @@ public class Player extends Thread {
         stats[Globals.STAT_MINHP] = stats[Globals.STAT_MAXHP];
         setXSpeed(0);
         double xSpawnBound = logic.getMap().getBoundary()[Globals.MAP_RIGHT] - logic.getMap().getBoundary()[Globals.MAP_LEFT];
-        setPos(rng.nextInt((int) xSpawnBound) + logic.getMap().getBoundary()[Globals.MAP_LEFT], -100);
+        setPos(Globals.rng((int) xSpawnBound) + logic.getMap().getBoundary()[Globals.MAP_LEFT], -100);
         queuePlayerState(PLAYER_STATE_STAND);
     }
 
@@ -1640,7 +1329,7 @@ public class Player extends Thread {
      * @return Randomly rolled damage.
      */
     public double rollDamage() {
-        double dmg = rng.nextInt((int) (stats[Globals.STAT_MAXDMG] - stats[Globals.STAT_MINDMG])) + stats[Globals.STAT_MINDMG];
+        double dmg = Globals.rng((int) (stats[Globals.STAT_MAXDMG] - stats[Globals.STAT_MINDMG])) + stats[Globals.STAT_MINDMG];
         double mult = 1;
         for (Map.Entry<Integer, Buff> bEntry : buffs.entrySet()) {
             Buff b = bEntry.getValue();
@@ -1693,7 +1382,7 @@ public class Player extends Thread {
         if (hasSkill(Skill.PASSIVE_KEENEYE)) {
             totalCritChance += 0.01 + 0.003 * getSkillLevel(Skill.PASSIVE_KEENEYE);
         }
-        return rng.nextInt(10000) + 1 < (int) (totalCritChance * 10000);
+        return Globals.rng(10000) + 1 < (int) (totalCritChance * 10000);
     }
 
     public double criticalDamage(double dmg) {
@@ -1735,6 +1424,17 @@ public class Player extends Thread {
         stats[Globals.STAT_REGEN] = stats[Globals.STAT_REGEN] + bonusStats[Globals.STAT_REGEN];
         stats[Globals.STAT_ARMOR] = stats[Globals.STAT_ARMOR] + bonusStats[Globals.STAT_ARMOR];
         stats[Globals.STAT_DAMAGEREDUCT] = 1 - Globals.calcReduction(stats[Globals.STAT_ARMOR]);
+    }
+
+    public void giveDrop(double lvl) {
+        byte[] bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_INT];
+        bytes[0] = Globals.DATA_PLAYER_GIVEDROP;
+        byte[] lev = Globals.intToByte((int) lvl);
+        bytes[1] = lev[0];
+        bytes[2] = lev[1];
+        bytes[3] = lev[2];
+        bytes[4] = lev[3];
+        sender.sendPlayer(bytes, address, port);
     }
 
     public void giveEXP(double amount) {
@@ -1972,23 +1672,10 @@ public class Player extends Thread {
 
     public void damageProc(Damage dmg) {
         if (hasSkill(Skill.PASSIVE_SHADOWATTACK) && skills.get(Skill.PASSIVE_SHADOWATTACK).canCast()) {
-            if (rng.nextInt(100) + 1 <= 20 + getSkillLevel(Skill.PASSIVE_SHADOWATTACK)) {
+            if (Globals.rng(100) + 1 <= 20 + getSkillLevel(Skill.PASSIVE_SHADOWATTACK)) {
                 skills.get(Skill.PASSIVE_SHADOWATTACK).setCooldown();
                 sendCooldown(Skill.PASSIVE_SHADOWATTACK);
-                byte[] bytes = new byte[Globals.PACKET_BYTE * 2 + Globals.PACKET_INT * 2];
-                bytes[0] = Globals.DATA_PARTICLE_EFFECT;
-                bytes[1] = Globals.PARTICLE_PASSIVE_SHADOWATTACK;
-                byte[] posXInt = Globals.intToByte(dmg.getDmgPoint().x);
-                bytes[2] = posXInt[0];
-                bytes[3] = posXInt[1];
-                bytes[4] = posXInt[2];
-                bytes[5] = posXInt[3];
-                byte[] posYInt = Globals.intToByte(dmg.getDmgPoint().y);
-                bytes[6] = posYInt[0];
-                bytes[7] = posYInt[1];
-                bytes[8] = posYInt[2];
-                bytes[9] = posYInt[3];
-                sender.sendAll(bytes, logic.getRoom());
+                sendParticle(logic.getRoom(), Globals.PARTICLE_PASSIVE_SHADOWATTACK, dmg.getDmgPoint().x, dmg.getDmgPoint().y);
                 if (dmg.getTarget() != null) {
                     dmg.getTarget().queueDamage(new Damage((int) (dmg.getDamage() * 0.5D), false, dmg.getOwner(), dmg.getTarget(), false, dmg.getDmgPoint()));
                 } else if (dmg.getBossTarget() != null) {
@@ -2370,11 +2057,7 @@ public class Player extends Thread {
     public void sendDamage(Damage dmg, int dmgDealt) {
         byte[] bytes = new byte[Globals.PACKET_BYTE * 2 + Globals.PACKET_INT * 3];
         bytes[0] = Globals.DATA_DAMAGE;
-        if (dmg.getOwner() != null) {
-            bytes[1] = (!dmg.isCrit()) ? Damage.DAMAGE_TYPE_PLAYER : Damage.DAMAGE_TYPE_PLAYERCRIT;
-        } else {
-            bytes[1] = Damage.DAMAGE_TYPE_BOSS;
-        }
+        bytes[1] = dmg.getDamageType();
         byte[] posXInt = Globals.intToByte(dmg.getDmgPoint().x);
         bytes[2] = posXInt[0];
         bytes[3] = posXInt[1];
@@ -2562,5 +2245,59 @@ public class Player extends Thread {
             return Globals.ITEM_AMULET;
         }
         return -1;
+
     }
+
+    public static void sendParticle(byte room, byte particleID, double x, double y, byte facing) {
+        byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT * 2];
+        bytes[0] = Globals.DATA_PARTICLE_EFFECT;
+        bytes[1] = particleID;
+        byte[] posXInt = Globals.intToByte((int) x);
+        bytes[2] = posXInt[0];
+        bytes[3] = posXInt[1];
+        bytes[4] = posXInt[2];
+        bytes[5] = posXInt[3];
+        byte[] posYInt = Globals.intToByte((int) y);
+        bytes[6] = posYInt[0];
+        bytes[7] = posYInt[1];
+        bytes[8] = posYInt[2];
+        bytes[9] = posYInt[3];
+        bytes[10] = facing;
+        sender.sendAll(bytes, room);
+    }
+
+    public static void sendParticle(byte room, byte particleID, double x, double y) {
+        byte[] bytes = new byte[Globals.PACKET_BYTE * 2 + Globals.PACKET_INT * 2];
+        bytes[0] = Globals.DATA_PARTICLE_EFFECT;
+        bytes[1] = particleID;
+        byte[] posXInt = Globals.intToByte((int) x);
+        bytes[2] = posXInt[0];
+        bytes[3] = posXInt[1];
+        bytes[4] = posXInt[2];
+        bytes[5] = posXInt[3];
+        byte[] posYInt = Globals.intToByte((int) y);
+        bytes[6] = posYInt[0];
+        bytes[7] = posYInt[1];
+        bytes[8] = posYInt[2];
+        bytes[9] = posYInt[3];
+        sender.sendAll(bytes, room);
+    }
+
+    public static void sendParticle(byte room, byte particleID, byte key) {
+        byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
+        bytes[0] = Globals.DATA_PARTICLE_EFFECT;
+        bytes[1] = particleID;
+        bytes[2] = key;
+        sender.sendAll(bytes, room);
+    }
+
+    public static void sendParticle(byte room, byte particleID, byte key, byte facing) {
+        byte[] bytes = new byte[Globals.PACKET_BYTE * 4];
+        bytes[0] = Globals.DATA_PARTICLE_EFFECT;
+        bytes[1] = particleID;
+        bytes[2] = facing;
+        bytes[3] = key;
+        sender.sendAll(bytes, room);
+    }
+
 }

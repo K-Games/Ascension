@@ -2,14 +2,13 @@ package blockfighter.server.entities.proj;
 
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
+import blockfighter.server.entities.boss.Boss;
 import blockfighter.server.entities.buff.BuffKnockback;
 import blockfighter.server.entities.buff.BuffStun;
 import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.player.skills.Skill;
 import java.awt.geom.Rectangle2D;
-import java.util.LinkedList;
-import java.util.Map;
 
 /**
  * This is the base projectile class. Create projectile classes off this.
@@ -17,8 +16,6 @@ import java.util.Map;
  * @author Ken Kwan
  */
 public class ProjShieldCharge extends Projectile {
-
-    private final LinkedList<Player> queue = new LinkedList<>();
 
     /**
      * Projectile of Sword Skill Drive.
@@ -46,37 +43,47 @@ public class ProjShieldCharge extends Projectile {
 
     @Override
     public void update() {
-        duration -= Globals.nsToMs(Globals.LOGIC_UPDATE);
+        y = getOwner().getY() - 176;
+        hitbox[0].y = getOwner().getY() - 176;
         if (getOwner().getFacing() == Globals.RIGHT) {
+            x = getOwner().getX() - 200;
             hitbox[0].x = getOwner().getX() - 200;
         } else {
+            x = getOwner().getX() - 428 + 200;
             hitbox[0].x = getOwner().getX() - 428 + 200;
         }
-
-        for (Map.Entry<Byte, Player> pEntry : logic.getPlayers().entrySet()) {
-            Player p = pEntry.getValue();
-            if (p != getOwner() && !pHit.contains(p) && p.intersectHitbox(hitbox[0])) {
-                queue.add(p);
-                pHit.add(p);
-                queueEffect(this);
-            }
-        }
+        super.update();
     }
 
     @Override
     public void processQueue() {
-        while (!queue.isEmpty()) {
-            Player p = queue.poll();
+        while (!playerQueue.isEmpty()) {
+            Player p = playerQueue.poll(), owner = getOwner();
             if (p != null && !p.isDead()) {
-                int damage = (int) (getOwner().rollDamage() * (1.5 + .2 * getOwner().getSkillLevel(Skill.SHIELD_CHARGE)));
-                boolean crit = getOwner().rollCrit();
+                int damage = (int) (owner.rollDamage() * (1.5 + .2 * owner.getSkillLevel(Skill.SHIELD_CHARGE)));
+                boolean crit = owner.rollCrit();
                 if (crit) {
-                    damage = (int) getOwner().criticalDamage(damage);
+                    damage = (int) owner.criticalDamage(damage);
                 }
-                p.queueDamage(new Damage(damage, true, getOwner(), p, crit, hitbox[0], p.getHitbox()));
-                p.queueBuff(new BuffKnockback(300, (getOwner().getFacing() == Globals.RIGHT) ? 4 : -4, -5, getOwner(), p));
-                if (getOwner().isSkillMaxed(Skill.SHIELD_CHARGE)) {
+                p.queueDamage(new Damage(damage, true, owner, p, crit, hitbox[0], p.getHitbox()));
+                p.queueBuff(new BuffKnockback(300, (owner.getFacing() == Globals.RIGHT) ? 4 : -4, -5, owner, p));
+                if (owner.isSkillMaxed(Skill.SHIELD_CHARGE)) {
                     p.queueBuff(new BuffStun(1000));
+                }
+            }
+        }
+        while (!bossQueue.isEmpty()) {
+            Boss b = bossQueue.poll();
+            Player owner = getOwner();
+            if (b != null && !b.isDead()) {
+                int damage = (int) (owner.rollDamage() * (1.5 + .2 * owner.getSkillLevel(Skill.SHIELD_CHARGE)));
+                boolean crit = owner.rollCrit();
+                if (crit) {
+                    damage = (int) owner.criticalDamage(damage);
+                }
+                b.queueDamage(new Damage(damage, true, owner, b, crit, hitbox[0], b.getHitbox()));
+                if (owner.isSkillMaxed(Skill.SHIELD_CHARGE)) {
+                    b.queueBuff(new BuffStun(1000));
                 }
             }
         }

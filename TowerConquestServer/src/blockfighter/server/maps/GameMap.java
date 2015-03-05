@@ -1,6 +1,8 @@
 package blockfighter.server.maps;
 
 import blockfighter.server.Globals;
+import blockfighter.server.LogicModule;
+import blockfighter.server.entities.boss.Boss;
 import java.awt.geom.Rectangle2D;
 
 /**
@@ -13,9 +15,11 @@ public abstract class GameMap {
     Rectangle2D.Double[] platforms;
     double[] boundary = new double[2];
     byte mapID = -1;
+    boolean isPvP = false;
+    LogicModule logic;
 
     /**
-     * Load server map
+     * Default Game Map Constructor Sets map boundaries at default. Left boundary is 0, right boundary is 1280.
      */
     public GameMap() {
         boundary[Globals.MAP_LEFT] = 0.0;
@@ -36,13 +40,12 @@ public abstract class GameMap {
     /**
      * Check if the current y is falling
      * <p>
-     * Take increment into account (Y+FallSpeed) <br/>
-     * A new Rectangle2D.Double is created based on x,y with a width of 30 <br/>
-     * and height of 1 to check for intersections with any of the platforms.
+     * Takes increment into account (Y+FallSpeed) <br/>
+     * Every platform is checked against the input location with a rectangle sized 90x1
      * </p>
      *
      * @param x x coordinate of location
-     * @param y y of location(player's bottom)
+     * @param y y of location(entity's bottom)
      * @param fallspeed The distance to be increased in Y in double
      * @return True if there is no intersection with any platform.
      */
@@ -83,8 +86,14 @@ public abstract class GameMap {
     public byte getMapID() {
         return mapID;
     }
-    
-    public double[] getBoundary(){
+
+    public double[] getBoundary() {
         return boundary;
     }
+
+    public boolean isPvP() {
+        return isPvP;
+    }
+
+    public abstract Boss[] getBosses(LogicModule l);
 }

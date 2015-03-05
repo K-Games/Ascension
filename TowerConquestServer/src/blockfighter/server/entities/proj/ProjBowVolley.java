@@ -2,14 +2,13 @@ package blockfighter.server.entities.proj;
 
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
+import blockfighter.server.entities.boss.Boss;
 import blockfighter.server.entities.buff.BuffBowVolley;
 import blockfighter.server.entities.buff.BuffKnockback;
 import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.player.skills.Skill;
 import java.awt.geom.Rectangle2D;
-import java.util.LinkedList;
-import java.util.Map;
 
 /**
  * This is the base projectile class. Create projectile classes off this.
@@ -18,7 +17,6 @@ import java.util.Map;
  */
 public class ProjBowVolley extends Projectile {
 
-    private final LinkedList<Player> queue = new LinkedList<>();
     private boolean buffed = false;
 
     /**
@@ -45,41 +43,52 @@ public class ProjBowVolley extends Projectile {
     }
 
     @Override
-    public void update() {
-        duration -= Globals.nsToMs(Globals.LOGIC_UPDATE);
-        for (Map.Entry<Byte, Player> pEntry : logic.getPlayers().entrySet()) {
-            Player p = pEntry.getValue();
-            if (p != getOwner() && !pHit.contains(p) && p.intersectHitbox(hitbox[0])) {
-                queue.add(p);
-                pHit.add(p);
-                queueEffect(this);
-            }
-        }
-    }
-
-    @Override
     public void processQueue() {
-        while (!queue.isEmpty()) {
-            Player p = queue.poll();
+        while (!playerQueue.isEmpty()) {
+            Player p = playerQueue.poll(), owner = getOwner();
             if (p != null && !p.isDead()) {
-                int damage = (int) (getOwner().rollDamage() * (.75 + getOwner().getSkillLevel(Skill.BOW_VOLLEY) * .03));
-                boolean crit = getOwner().rollCrit();
+                int damage = (int) (owner.rollDamage() * (.75 + owner.getSkillLevel(Skill.BOW_VOLLEY) * .03));
+                boolean crit = owner.rollCrit();
                 if (crit) {
-                    damage = (int) getOwner().criticalDamage(damage);
+                    damage = (int) owner.criticalDamage(damage);
                     if (!buffed) {
                         buffed = true;
-                        if (getOwner().isSkillMaxed(Skill.BOW_VOLLEY)) {
-                            getOwner().queueBuff(new BuffBowVolley(4000, 0.01, getOwner()));
+                        if (owner.isSkillMaxed(Skill.BOW_VOLLEY)) {
+                            owner.queueBuff(new BuffBowVolley(4000, 0.01, owner));
                             byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
                             bytes[0] = Globals.DATA_PARTICLE_EFFECT;
                             bytes[1] = Globals.PARTICLE_BOW_VOLLEYBUFF;
-                            bytes[2] = getOwner().getKey();
+                            bytes[2] = owner.getKey();
                             sender.sendAll(bytes, logic.getRoom());
                         }
                     }
                 }
-                p.queueDamage(new Damage(damage, true, getOwner(), p, crit, hitbox[0], p.getHitbox()));
-                p.queueBuff(new BuffKnockback(50, (getOwner().getFacing() == Globals.RIGHT) ? 1 : -1, -0.1, getOwner(), p));
+                p.queueDamage(new Damage(damage, true, owner, p, crit, hitbox[0], p.getHitbox()));
+                p.queueBuff(new BuffKnockback(50, (owner.getFacing() == Globals.RIGHT) ? 1 : -1, -0.1, owner, p));
+            }
+        }
+
+        while (!bossQueue.isEmpty()) {
+            Boss b = bossQueue.poll();
+            Player owner = getOwner();
+            if (b != null && !b.isDead()) {
+                int damage = (int) (owner.rollDamage() * (.75 + owner.getSkillLevel(Skill.BOW_VOLLEY) * .03));
+                boolean crit = owner.rollCrit();
+                if (crit) {
+                    damage = (int) owner.criticalDamage(damage);
+                    if (!buffed) {
+                        buffed = true;
+                        if (owner.isSkillMaxed(Skill.BOW_VOLLEY)) {
+                            owner.queueBuff(new BuffBowVolley(4000, 0.01, owner));
+                            byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
+                            bytes[0] = Globals.DATA_PARTICLE_EFFECT;
+                            bytes[1] = Globals.PARTICLE_BOW_VOLLEYBUFF;
+                            bytes[2] = owner.getKey();
+                            sender.sendAll(bytes, logic.getRoom());
+                        }
+                    }
+                }
+                b.queueDamage(new Damage(damage, true, owner, b, crit, hitbox[0], b.getHitbox()));
             }
         }
         queuedEffect = false;

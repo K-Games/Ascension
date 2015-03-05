@@ -2,19 +2,21 @@ package blockfighter.server.entities.proj;
 
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
+import blockfighter.server.entities.GameEntity;
 import blockfighter.server.entities.boss.Boss;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.net.PacketSender;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
-import java.util.Random;
+import java.util.LinkedList;
+import java.util.Map;
 
 /**
  * Abstract class for projectiles/attacks
  *
  * @author Ken Kwan
  */
-public abstract class Projectile extends Thread {
+public abstract class Projectile extends Thread implements GameEntity {
 
     /**
      * Hash map key paired with this
@@ -35,18 +37,27 @@ public abstract class Projectile extends Thread {
             y;
 
     /**
-     * Owning player of Projectile
+     * Owning Player of Projectile
      */
     private Player owner;
 
+    /**
+     * Owning Boss of Projectile
+     */
     private Boss bossOwner;
     /**
      * Array of players hit by this projectile
      */
     protected ArrayList<Player> pHit = new ArrayList<>();
-
+    
     /**
-     * The duration of this projectile in ns.
+     * Queue of players to be hit by projectile
+     */
+    protected final LinkedList<Player> playerQueue = new LinkedList<>();
+    protected ArrayList<Boss> bHit = new ArrayList<>();
+    protected final LinkedList<Boss> bossQueue = new LinkedList<>();
+    /**
+     * The duration of this projectile in nanoseconds.
      */
     protected long duration;
 
@@ -64,7 +75,6 @@ public abstract class Projectile extends Thread {
      * Checks if this projectile has already been queued to have effects to be applied
      */
     protected boolean queuedEffect = false;
-    private static Random rng = new Random();
 
     /**
      * Constructor called by subclasses to reference sender and logic.
@@ -103,12 +113,34 @@ public abstract class Projectile extends Thread {
         this.x = x;
         this.y = y;
         hitbox = new Rectangle2D.Double[1];
-        hitbox[0] = new Rectangle2D.Double(0, 0, 0, 0);
         this.duration = duration;
     }
 
+    @Override
     public void update() {
         duration -= Globals.LOGIC_UPDATE / 1000000;
+        if (hitbox[0] == null) {
+            return;
+        }
+        if (logic.getMap().isPvP()) {
+            for (Map.Entry<Byte, Player> pEntry : logic.getPlayers().entrySet()) {
+                Player p = pEntry.getValue();
+                if (p != getOwner() && !pHit.contains(p) && !p.isInvulnerable() && p.intersectHitbox(hitbox[0])) {
+                    playerQueue.add(p);
+                    pHit.add(p);
+                    queueEffect(this);
+                }
+            }
+        }
+
+        for (Map.Entry<Byte, Boss> bEntry : logic.getBosses().entrySet()) {
+            Boss b = bEntry.getValue();
+            if (!bHit.contains(b) && b.intersectHitbox(hitbox[0])) {
+                bossQueue.add(b);
+                bHit.add(b);
+                queueEffect(this);
+            }
+        }
     }
 
     public double getX() {
@@ -134,6 +166,10 @@ public abstract class Projectile extends Thread {
 
     public Player getOwner() {
         return owner;
+    }
+
+    public void setBossOwner(Boss owner) {
+        bossOwner = owner;
     }
 
     public Boss getBossOwner() {
@@ -173,9 +209,5 @@ public abstract class Projectile extends Thread {
             logic.queueProjEffect(p);
             queuedEffect = true;
         }
-    }
-
-    public static int rng(int i) {
-        return rng.nextInt(i);
     }
 }

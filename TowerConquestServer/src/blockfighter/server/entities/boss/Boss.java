@@ -2,10 +2,13 @@ package blockfighter.server.entities.boss;
 
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
+import blockfighter.server.entities.GameEntity;
 import blockfighter.server.entities.buff.Buff;
 import blockfighter.server.entities.buff.BuffKnockback;
 import blockfighter.server.entities.buff.BuffStun;
 import blockfighter.server.entities.damage.Damage;
+import blockfighter.server.entities.player.Player;
+import blockfighter.server.entities.player.skills.Skill;
 import blockfighter.server.maps.GameMap;
 import blockfighter.server.net.PacketSender;
 import java.awt.geom.Rectangle2D;
@@ -18,9 +21,9 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  *
  * @author Ken Kwan
  */
-public abstract class Boss extends Thread {
+public abstract class Boss extends Thread implements GameEntity {
 
-    public final static int NUM_STATS = 9;
+    public final static int NUM_STATS = 3;
     public final static byte STAT_LEVEL = 0,
             STAT_MAXHP = 1,
             STAT_MINHP = 2;
@@ -29,10 +32,12 @@ public abstract class Boss extends Thread {
             STATE_WALK = 0x01,
             STATE_JUMP = 0x02;
 
+    public final static byte BOSS_LIGHTNING = 0x00;
+
     protected final byte key;
     protected final LogicModule logic;
     protected double x, y, ySpeed, xSpeed;
-    protected boolean isFalling = false;
+    protected boolean isFalling = false, isDead = false;
     protected boolean updatePos = false, updateFacing = false, updateAnimState = false;
     protected byte bossState, animState, facing, frame;
     protected double nextFrameTime = 0;
@@ -41,27 +46,23 @@ public abstract class Boss extends Thread {
 
     protected ConcurrentHashMap<Byte, Buff> buffs = new ConcurrentHashMap<>(10, 0.9f, 1);
     protected Buff isStun, isKnockback;
+    protected Byte nextState;
+    protected long stunReduction = 0;
 
     protected static PacketSender sender;
-    private final GameMap map;
+    protected final GameMap map;
 
-    private ConcurrentLinkedQueue<Damage> damageQueue = new ConcurrentLinkedQueue<>();
-    private ConcurrentLinkedQueue<Integer> healQueue = new ConcurrentLinkedQueue<>();
-    private ConcurrentLinkedQueue<Byte> stateQueue = new ConcurrentLinkedQueue<>();
-    private ConcurrentLinkedQueue<Buff> buffQueue = new ConcurrentLinkedQueue<>();
-    private ConcurrentLinkedQueue<Byte> buffKeys = new ConcurrentLinkedQueue<>();
+    protected ConcurrentLinkedQueue<Damage> damageQueue = new ConcurrentLinkedQueue<>();
+    protected ConcurrentLinkedQueue<Integer> healQueue = new ConcurrentLinkedQueue<>();
+    protected ConcurrentLinkedQueue<Buff> buffQueue = new ConcurrentLinkedQueue<>();
+    protected ConcurrentLinkedQueue<Byte> buffKeys = new ConcurrentLinkedQueue<>();
 
-    private long nextHPSend = 0;
+    protected ConcurrentHashMap<Player, Double> aggroCounter = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<Byte, Skill> skills = new ConcurrentHashMap<>(2, 0.9f, 1);
+    protected long nextHPSend = 0;
+    protected long skillDuration = 0;
+    protected byte type;
 
-    /**
-     * Create a new player entity in the server.
-     *
-     * @param key The key of this player in the player array in logic module
-     * @param x Spawning x location in double
-     * @param y Spawning y location in double
-     * @param map Reference to server's loaded map
-     * @param l Reference to Logic module
-     */
     public Boss(LogicModule l, byte key, GameMap map, double x, double y) {
         logic = l;
         this.key = key;
@@ -86,8 +87,36 @@ public abstract class Boss extends Thread {
         sender = ps;
     }
 
+    public void addSkill(byte sc, Skill s) {
+        skills.put(sc, s);
+    }
+
+    public boolean canCast(byte sc) {
+        return skills.get(sc).canCast();
+    }
+
+    public void setCooldown(byte sc) {
+        skills.get(sc).setCooldown();
+    }
+
+    public void reduceCooldown(byte sc, long amount) {
+        skills.get(sc).reduceCooldown(amount);
+    }
+
+    public abstract Player getTarget();
+
+    public abstract boolean isUsingSkill();
+
+    public boolean isDead() {
+        return isDead;
+    }
+
     private void returnBuffKey(byte bKey) {
         buffKeys.add(bKey);
+    }
+
+    public Rectangle2D.Double getHitbox() {
+        return hitbox;
     }
 
     private Byte getNextBuffKey() {
@@ -95,6 +124,14 @@ public abstract class Boss extends Thread {
             return buffKeys.poll();
         }
         return null;
+    }
+
+    public double[] getStats() {
+        return stats;
+    }
+
+    public byte getType() {
+        return type;
     }
 
     /**
@@ -172,16 +209,20 @@ public abstract class Boss extends Thread {
         }
     }
 
+    @Override
     public abstract void update();
 
     public void updateBossState() {
-        while (!stateQueue.isEmpty()) {
-            Byte newState = stateQueue.poll();
-            if (newState != null && bossState != newState) {
-                setBossState(newState);
-                stateQueue.clear();
-            }
+        if (nextState != null && bossState != nextState) {
+            setBossState(nextState);
+            nextState = null;
         }
+    }
+
+    public void addAggro(Player p, double amount) {
+        double aggro = (aggroCounter.containsKey(p)) ? aggroCounter.get(p) : 0;
+        aggro += amount;
+        aggroCounter.put(p, aggro);
     }
 
     public void updateHP() {
@@ -190,6 +231,8 @@ public abstract class Boss extends Thread {
             if (dmg != null) {
                 int amount = dmg.getDamage();
                 dmg.proc();
+                addAggro(dmg.getOwner(), dmg.getDamage());
+                sendDamage(dmg);
                 stats[STAT_MINHP] -= amount;
                 nextHPSend = 0;
             }
@@ -209,16 +252,28 @@ public abstract class Boss extends Thread {
             stats[STAT_MINHP] = 0;
         }
 
+        if (stats[STAT_MINHP] == 0) {
+            die();
+        }
+
         if (nextHPSend <= 0) {
-            byte[] minHP = Globals.intToByte((int) stats[STAT_MINHP]);
+            byte[] minHP = Globals.intToByte((int) (stats[STAT_MINHP] / stats[STAT_MAXHP] * 10000));
             byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT];
-            //bytes[0] = Globals.DATA_BOSS_GET_STAT;
+            bytes[0] = Globals.DATA_BOSS_GET_STAT;
             bytes[1] = key;
             bytes[2] = STAT_MINHP;
             System.arraycopy(minHP, 0, bytes, 3, minHP.length);
             sender.sendAll(bytes, logic.getRoom());
             nextHPSend = 150;
         }
+    }
+
+    private void die() {
+        for (Map.Entry<Byte, Player> player : logic.getPlayers().entrySet()) {
+            player.getValue().giveEXP(Globals.calcEXPtoNxtLvl(stats[STAT_LEVEL]) / 3);
+            player.getValue().giveDrop(stats[STAT_LEVEL]);
+        }
+        isDead = true;
     }
 
     public void updateBuffs() {
@@ -228,14 +283,11 @@ public abstract class Boss extends Thread {
         for (Map.Entry<Byte, Buff> bEntry : buffs.entrySet()) {
             Buff b = bEntry.getValue();
             b.update();
-            if (b instanceof BuffStun) {
-                if (isStun == null || (isStun != null && isStun.getDuration() < b.getDuration())) {
-                    isStun = b;
-                }
-            } else if (b instanceof BuffKnockback) {
-                if (isKnockback == null || (isKnockback != null && isKnockback.getDuration() < b.getDuration())) {
-                    isKnockback = b;
-                }
+            if (isStun == null && b instanceof BuffStun) {
+                isStun = b;
+                stunReduction += 100;
+            } else if (isKnockback == null && b instanceof BuffKnockback) {
+                isKnockback = b;
             }
             if (b.isExpired()) {
                 remove.add(bEntry.getKey());
@@ -250,6 +302,9 @@ public abstract class Boss extends Thread {
             Buff b = buffQueue.poll();
             Byte bKey = getNextBuffKey();
             if (bKey != null && b != null) {
+                if (b instanceof BuffStun) {
+                    b.reduceDuration(stunReduction);
+                }
                 buffs.put(bKey, b);
             }
         }
@@ -274,7 +329,7 @@ public abstract class Boss extends Thread {
     public void updateFall() {
         if (ySpeed != 0) {
             updateY(ySpeed);
-            queueBossState(STATE_JUMP);
+            //queueBossState(STATE_JUMP);
         }
 
         setYSpeed(ySpeed + Globals.GRAVITY);
@@ -286,7 +341,7 @@ public abstract class Boss extends Thread {
         if (!isFalling && ySpeed > 0) {
             y = map.getValidY(x, y, ySpeed);
             setYSpeed(0);
-            queueBossState(STATE_STAND);
+            //queueBossState(STATE_STAND);
         }
     }
 
@@ -301,6 +356,12 @@ public abstract class Boss extends Thread {
     public void setFacing(byte f) {
         facing = f;
         updateFacing = true;
+    }
+
+    public void updateSkillCd() {
+        for (Map.Entry<Byte, Skill> s : skills.entrySet()) {
+            s.getValue().reduceCooldown((long) (Globals.LOGIC_UPDATE / 1000000));
+        }
     }
 
     public boolean updateX(double change) {
@@ -330,8 +391,7 @@ public abstract class Boss extends Thread {
     }
 
     public void queueBossState(byte newState) {
-        stateQueue.clear();
-        stateQueue.add(newState);
+        nextState = newState;
     }
 
     public void setBossState(byte newState) {
@@ -342,7 +402,7 @@ public abstract class Boss extends Thread {
 
     public void sendPos() {
         byte[] bytes = new byte[Globals.PACKET_BYTE * 2 + Globals.PACKET_INT * 2];
-        //bytes[0] = Globals.DATA_BOSS_SET_POS;
+        bytes[0] = Globals.DATA_BOSS_SET_POS;
         bytes[1] = key;
         byte[] posXInt = Globals.intToByte((int) x);
         bytes[2] = posXInt[0];
@@ -360,7 +420,7 @@ public abstract class Boss extends Thread {
 
     public void sendFacing() {
         byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
-        //bytes[0] = Globals.DATA_BOSS_SET_FACING;
+        bytes[0] = Globals.DATA_BOSS_SET_FACING;
         bytes[1] = key;
         bytes[2] = facing;
         sender.sendAll(bytes, logic.getRoom());
@@ -369,7 +429,7 @@ public abstract class Boss extends Thread {
 
     public void sendState() {
         byte[] bytes = new byte[Globals.PACKET_BYTE * 4];
-        //bytes[0] = Globals.DATA_BOSS_SET_STATE;
+        bytes[0] = Globals.DATA_BOSS_SET_STATE;
         bytes[1] = key;
         bytes[2] = animState;
         bytes[3] = frame;
@@ -380,7 +440,7 @@ public abstract class Boss extends Thread {
     public void sendDamage(Damage dmg) {
         byte[] bytes = new byte[Globals.PACKET_BYTE * 2 + Globals.PACKET_INT * 3];
         bytes[0] = Globals.DATA_DAMAGE;
-        bytes[1] = (!dmg.isCrit()) ? Damage.DAMAGE_TYPE_PLAYER : Damage.DAMAGE_TYPE_PLAYERCRIT;
+        bytes[1] = dmg.getDamageType();
         byte[] posXInt = Globals.intToByte(dmg.getDmgPoint().x);
         bytes[2] = posXInt[0];
         bytes[3] = posXInt[1];
@@ -397,5 +457,23 @@ public abstract class Boss extends Thread {
         bytes[12] = d[2];
         bytes[13] = d[3];
         sender.sendAll(bytes, logic.getRoom());
+    }
+
+    public static void sendBossParticle(byte key, byte room, byte particleID, double x, double y) {
+        byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT * 2];
+        bytes[0] = Globals.DATA_BOSS_PARTICLE_EFFECT;
+        bytes[1] = key;
+        bytes[2] = particleID;
+        byte[] posXInt = Globals.intToByte((int) x);
+        bytes[3] = posXInt[0];
+        bytes[4] = posXInt[1];
+        bytes[5] = posXInt[2];
+        bytes[6] = posXInt[3];
+        byte[] posYInt = Globals.intToByte((int) y);
+        bytes[7] = posYInt[0];
+        bytes[8] = posYInt[1];
+        bytes[9] = posYInt[2];
+        bytes[10] = posYInt[3];
+        sender.sendAll(bytes, room);
     }
 }

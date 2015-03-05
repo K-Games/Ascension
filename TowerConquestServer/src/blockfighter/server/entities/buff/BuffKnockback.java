@@ -1,5 +1,6 @@
 package blockfighter.server.entities.buff;
 
+import blockfighter.server.entities.boss.Boss;
 import blockfighter.server.entities.player.Player;
 
 /**
@@ -21,6 +22,15 @@ public class BuffKnockback extends Buff {
      * @param t player being knocked
      */
     public BuffKnockback(long d, double x, double y, Player o, Player t) {
+        super(d);
+        xSpeed = x;
+        ySpeed = y;
+        setOwner(o);
+        setTarget(t);
+        setDebuff(true);
+    }
+
+    public BuffKnockback(long d, double x, double y, Boss o, Player t) {
         super(d);
         xSpeed = x;
         ySpeed = y;

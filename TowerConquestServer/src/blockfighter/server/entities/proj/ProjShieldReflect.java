@@ -1,12 +1,10 @@
 package blockfighter.server.entities.proj;
 
-import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
+import blockfighter.server.entities.boss.Boss;
 import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.player.Player;
 import java.awt.geom.Rectangle2D;
-import java.util.LinkedList;
-import java.util.Map;
 
 /**
  * This is the base projectile class. Create projectile classes off this.
@@ -16,7 +14,6 @@ import java.util.Map;
 public class ProjShieldReflect extends Projectile {
 
     private double dmg;
-    private final LinkedList<Player> queue = new LinkedList<>();
 
     public ProjShieldReflect(LogicModule l, int k, Player o, double x, double y, double damage) {
         super(l, k);
@@ -30,26 +27,22 @@ public class ProjShieldReflect extends Projectile {
     }
 
     @Override
-    public void update() {
-        duration -= Globals.nsToMs(Globals.LOGIC_UPDATE);
-        for (Map.Entry<Byte, Player> pEntry : logic.getPlayers().entrySet()) {
-            Player p = pEntry.getValue();
-            if (p != getOwner() && !pHit.contains(p) && p.intersectHitbox(hitbox[0])) {
-                queue.add(p);
-                pHit.add(p);
-                queueEffect(this);
-            }
-        }
-    }
-
-    @Override
     public void processQueue() {
-        while (!queue.isEmpty()) {
-            Player p = queue.poll();
+        while (!playerQueue.isEmpty()) {
+            Player p = playerQueue.poll(), owner = getOwner();
             if (p != null && !p.isDead()) {
-                Damage dmgEntity = new Damage((int) dmg, true, getOwner(), p, false, hitbox[0], p.getHitbox());
+                Damage dmgEntity = new Damage((int) dmg, true, owner, p, false, hitbox[0], p.getHitbox());
                 dmgEntity.setCanReflect(false);
                 p.queueDamage(dmgEntity);
+            }
+        }
+        while (!bossQueue.isEmpty()) {
+            Boss b = bossQueue.poll();
+            Player owner = getOwner();
+            if (b != null && !b.isDead()) {
+                Damage dmgEntity = new Damage((int) dmg, true, owner, b, false, hitbox[0], b.getHitbox());
+                dmgEntity.setCanReflect(false);
+                b.queueDamage(dmgEntity);
             }
         }
         queuedEffect = false;

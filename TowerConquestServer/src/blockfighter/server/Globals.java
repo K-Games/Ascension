@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
@@ -15,17 +16,18 @@ import org.apache.commons.lang3.concurrent.BasicThreadFactory;
  */
 public class Globals {
 
-    public final static boolean LOGGING = true;
+    public final static boolean LOGGING = false;
 
     public final static String ERRLOG_FILE = "ErrorLog.log",
             DATALOG_FILE = "DataLog.log";
 
     public final static byte LOG_TYPE_ERR = 0x00,
             LOG_TYPE_DATA = 0x01;
-    
+
     public final static String GAME_VERSION = "ALPHA 1u1";
     public final static String WINDOW_TITLE = "Tower Conquest " + GAME_VERSION;
     private final static int SERVER_ID = (int) (Math.random() * 50000);
+    private static Random rng = new Random();
 
     public final static ExecutorService LOG_THREADPOOL = Executors.newSingleThreadExecutor(
             new BasicThreadFactory.Builder()
@@ -38,7 +40,7 @@ public class Globals {
     public final static String SERVER_ADDRESS = "0.0.0.0";
     public final static int SERVER_PORT = 25565;
     public final static byte SERVER_MAX_PLAYERS = 10;
-    public final static byte SERVER_ROOMS = 1;
+    public final static byte SERVER_ROOMS = 101;
     public final static long SERVER_MAX_IDLE = 180000;
 
     public final static byte MAX_NAME_LENGTH = 15;
@@ -101,7 +103,7 @@ public class Globals {
             PARTICLE_SWORD_SLASHBUFF = 0x21,
             PARTICLE_SHIELD_DASHBUFF = 0x22,
             PARTICLE_BOW_VOLLEYBUFF = 0x23,
-            PARTICLE_PASSIVE_RESIST = 0x24, 
+            PARTICLE_PASSIVE_RESIST = 0x24,
             PARTICLE_PASSIVE_BARRIER = 0x25,
             PARTICLE_PASSIVE_SHADOWATTACK = 0x26;
 
@@ -182,7 +184,14 @@ public class Globals {
             DATA_PLAYER_GET_EQUIP = 0x0D,
             DATA_PLAYER_SET_COOLDOWN = 0x0E,
             DATA_DAMAGE = 0x0F,
-            DATA_PLAYER_GIVEEXP = 0x10;
+            DATA_PLAYER_GIVEEXP = 0x10,
+            DATA_BOSS_SET_POS = 0x11,
+            DATA_BOSS_SET_FACING = 0x12,
+            DATA_BOSS_SET_STATE = 0x13,
+            DATA_BOSS_PARTICLE_EFFECT = 0x14,
+            DATA_BOSS_SET_TYPE = 0x15,
+            DATA_BOSS_GET_STAT = 0x16,
+            DATA_PLAYER_GIVEDROP = 0x17;
 
     public final static void log(final String info, final String classname, final byte logType, final boolean console) {
 
@@ -307,4 +316,9 @@ public class Globals {
     public static final long nsToMs(double time) {
         return (long) (time / 1000000);
     }
+
+    public static final int rng(int i) {
+        return rng.nextInt(i);
+    }
+
 }

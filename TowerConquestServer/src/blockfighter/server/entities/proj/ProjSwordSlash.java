@@ -2,13 +2,12 @@ package blockfighter.server.entities.proj;
 
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
+import blockfighter.server.entities.boss.Boss;
 import blockfighter.server.entities.buff.BuffKnockback;
 import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.player.skills.Skill;
 import java.awt.geom.Rectangle2D;
-import java.util.LinkedList;
-import java.util.Map;
 
 /**
  * This is the base projectile class. Create projectile classes off this.
@@ -16,8 +15,6 @@ import java.util.Map;
  * @author Ken Kwan
  */
 public class ProjSwordSlash extends Projectile {
-
-    private final LinkedList<Player> queue = new LinkedList<>();
 
     /**
      * Projectile of Sword Skill Defensive Impact.
@@ -64,31 +61,29 @@ public class ProjSwordSlash extends Projectile {
     }
 
     @Override
-    public void update() {
-        duration -= Globals.nsToMs(Globals.LOGIC_UPDATE);
-        for (Map.Entry<Byte, Player> pEntry : logic.getPlayers().entrySet()) {
-            Player p = pEntry.getValue();
-            if (p != getOwner() && !pHit.contains(p) && p.intersectHitbox(hitbox[0])) {
-                queue.add(p);
-                pHit.add(p);
-                queueEffect(this);
-            }
-
-        }
-    }
-
-    @Override
     public void processQueue() {
-        while (!queue.isEmpty()) {
-            Player p = queue.poll();
+        while (!playerQueue.isEmpty()) {
+            Player p = playerQueue.poll(), owner = getOwner();
             if (p != null && !p.isDead()) {
-                int damage = (int) (getOwner().rollDamage() * (1 + 0.04 * getOwner().getSkillLevel(Skill.SWORD_SLASH)));
-                boolean crit = getOwner().rollCrit();
+                int damage = (int) (owner.rollDamage() * (1 + 0.04 * owner.getSkillLevel(Skill.SWORD_SLASH)));
+                boolean crit = owner.rollCrit();
                 if (crit) {
-                    damage = (int) getOwner().criticalDamage(damage);
+                    damage = (int) owner.criticalDamage(damage);
                 }
-                p.queueDamage(new Damage(damage, true, getOwner(), p, crit, hitbox[0], p.getHitbox()));
-                p.queueBuff(new BuffKnockback(200, (getOwner().getFacing() == Globals.RIGHT) ? 0.5 : -0.5, -3, getOwner(), p));
+                p.queueDamage(new Damage(damage, true, owner, p, crit, hitbox[0], p.getHitbox()));
+                p.queueBuff(new BuffKnockback(150, (owner.getFacing() == Globals.RIGHT) ? 0.5 : -0.5, -3, owner, p));
+            }
+        }
+        while (!bossQueue.isEmpty()) {
+            Boss b = bossQueue.poll();
+            Player owner = getOwner();
+            if (b != null && !b.isDead()) {
+                int damage = (int) (owner.rollDamage() * (1 + 0.04 * owner.getSkillLevel(Skill.SWORD_SLASH)));
+                boolean crit = owner.rollCrit();
+                if (crit) {
+                    damage = (int) owner.criticalDamage(damage);
+                }
+                b.queueDamage(new Damage(damage, true, owner, b, crit, hitbox[0], b.getHitbox()));
             }
         }
         queuedEffect = false;

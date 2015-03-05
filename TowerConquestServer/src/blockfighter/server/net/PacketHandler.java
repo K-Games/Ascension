@@ -2,6 +2,7 @@ package blockfighter.server.net;
 
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
+import blockfighter.server.entities.boss.Boss;
 import blockfighter.server.entities.player.Player;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
@@ -19,7 +20,7 @@ public class PacketHandler implements Runnable {
     private static PacketSender sender;
 
     /**
-     * Initialize request handler when a request is received by the socket.
+     * Packet Handler constructor Initialized when a packet is received on the Packet Receiver.
      *
      * @param request Packet that is received
      */
@@ -28,7 +29,7 @@ public class PacketHandler implements Runnable {
     }
 
     /**
-     * Set the static logic module array
+     * Set the static Logic Module array
      *
      * @param l Logic Module array
      */
@@ -37,7 +38,7 @@ public class PacketHandler implements Runnable {
     }
 
     /**
-     * Set the static packet sender
+     * Set the static Packet Sender
      *
      * @param ps Server PacketSender
      */
@@ -84,10 +85,62 @@ public class PacketHandler implements Runnable {
             case Globals.DATA_PLAYER_GET_EQUIP:
                 receivePlayerGetEquip(data, room, address, port);
                 break;
+            case Globals.DATA_BOSS_GET_STAT:
+                receiveBossGetStat(data, room, address, port);
+                break;
+            case Globals.DATA_BOSS_SET_TYPE:
+                receiveBossSetType(data, room, address, port);
+                break;
             default:
                 Globals.log("DATA_UNKNOWN", address.toString(), Globals.LOG_TYPE_DATA, true);
                 break;
         }
+    }
+
+    private void receiveBossGetStat(byte[] data, byte room, InetAddress address, int port) {
+        if (!logic[room].getBosses().containsKey(data[2])) {
+            return;
+        }
+        byte[] stat;
+        switch (data[3]) {
+            case Boss.STAT_MAXHP:
+                stat = Globals.intToByte(10000);
+                break;
+            case Boss.STAT_MINHP:
+                double[] bStats = logic[room].getBosses().get(data[2]).getStats();
+                double hpPercent = bStats[Boss.STAT_MINHP] / bStats[Boss.STAT_MAXHP] * 10000;
+                stat = Globals.intToByte((int) hpPercent);
+                break;
+            default:
+                stat = Globals.intToByte((int) logic[room].getBosses().get(data[2]).getStats()[data[3]]);
+        }
+        byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT];
+        bytes[0] = Globals.DATA_BOSS_GET_STAT;
+        bytes[1] = data[2];
+        bytes[2] = data[3];
+        System.arraycopy(stat, 0, bytes, 3, stat.length);
+        sender.sendPlayer(bytes, address, port);
+    }
+
+    private void receiveBossSetType(byte[] data, byte room, InetAddress address, int port) {
+        if (!logic[room].getBosses().containsKey(data[2])) {
+            return;
+        }
+        byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT * 2];
+        bytes[0] = Globals.DATA_BOSS_SET_TYPE;
+        bytes[1] = data[2];
+        bytes[2] = logic[room].getBosses().get(data[2]).getType();
+        byte[] posXInt = Globals.intToByte((int) logic[room].getBosses().get(data[2]).getX());
+        bytes[3] = posXInt[0];
+        bytes[4] = posXInt[1];
+        bytes[5] = posXInt[2];
+        bytes[6] = posXInt[3];
+        byte[] posYInt = Globals.intToByte((int) logic[room].getBosses().get(data[2]).getY());
+        bytes[7] = posYInt[0];
+        bytes[8] = posYInt[1];
+        bytes[9] = posYInt[2];
+        bytes[10] = posYInt[3];
+        sender.sendPlayer(bytes, address, port);
     }
 
     private void receivePlayerGetEquip(byte[] data, byte room, InetAddress address, int port) {
@@ -161,8 +214,8 @@ public class PacketHandler implements Runnable {
         int id = Globals.bytesToInt(temp);
 
         if (logic[room].containsPlayerID(id)) {
-        Globals.log("DATA_PLAYER_LOGIN", address + ":" + port + " uID Already In Room :" + id, Globals.LOG_TYPE_DATA, true);
-        return;
+            Globals.log("DATA_PLAYER_LOGIN", address + ":" + port + " uID Already In Room :" + id, Globals.LOG_TYPE_DATA, true);
+            return;
         }
 
         byte freeKey = logic[room].getNextPlayerKey();
@@ -171,7 +224,7 @@ public class PacketHandler implements Runnable {
             return;
         }
 
-        Player newPlayer = new Player(logic[room], freeKey, address, port, logic[room].getMap(), 0, 0);
+        Player newPlayer = new Player(logic[room], freeKey, address, port, logic[room].getMap(), logic[room].getMap().getBoundary()[Globals.MAP_LEFT]+50, 0);
 
         temp = new byte[Globals.MAX_NAME_LENGTH];
         System.arraycopy(data, 2, temp, 0, temp.length);
@@ -218,7 +271,7 @@ public class PacketHandler implements Runnable {
         bytes[3] = Globals.SERVER_MAX_PLAYERS;
         sender.sendPlayer(bytes, address, port);
         Globals.log("DATA_PLAYER_LOGIN", address + ":" + port + " Logged in Room " + room + " Key: " + freeKey + " Name: " + newPlayer.getPlayerName(), Globals.LOG_TYPE_DATA, true);
-        
+
         newPlayer.sendPos();
         newPlayer.sendName();
     }
