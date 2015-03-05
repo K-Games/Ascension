@@ -3,7 +3,6 @@ package blockfighter.client.entities.particles;
 import blockfighter.client.Globals;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.util.Random;
 
 /**
  *
@@ -26,7 +25,7 @@ public class ParticleMenuUpgrade extends Particle {
         super.update();
         x += deltaX;
         y += deltaY;
-        if (new Random().nextInt(2) == 0) {
+        if (Globals.rng(2) == 0) {
             deltaY++;
         }
 

@@ -43,7 +43,7 @@ public class SkillSwordTaunt extends Skill {
         g.drawString("Level: " + level + " - Requires " + ItemEquip.getItemTypeName(reqWeapon), x + 80, y + 50);
         g.drawString("Cooldown: " + maxCooldown / 1000 + " Seconds", x + 80, y + 70);
 
-        g.drawString("Deal damage and aggro equal to 100x damage dealt.", x + 10, y + 90);
+        g.drawString("Deal damage and aggro equal to 15x damage dealt.", x + 10, y + 90);
 
         g.drawString("[Level " + level + "]", x + 10, y + 115);
         g.drawString("Deals " + (20 * level + 600) + "% damage.", x + 10, y + 135);

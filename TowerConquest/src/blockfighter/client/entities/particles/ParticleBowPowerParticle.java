@@ -9,11 +9,11 @@ public class ParticleBowPowerParticle extends Particle {
     public ParticleBowPowerParticle(int k, int x, int y, byte f) {
         super(k, x, y, f);
         if (facing == Globals.RIGHT) {
-            this.x += rng.nextInt(450);
+            this.x += Globals.rng(450);
         } else {
-            this.x -= rng.nextInt(450) - 25;
+            this.x -= Globals.rng(450) - 25;
         }
-        this.y += rng.nextInt(80) + 25;
+        this.y += Globals.rng(80) + 25;
         frame = 0;
         frameDuration = 25;
         duration = 250;

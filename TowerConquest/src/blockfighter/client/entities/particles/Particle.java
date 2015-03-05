@@ -5,7 +5,6 @@ import static blockfighter.client.Globals.NUM_PARTICLE_EFFECTS;
 import blockfighter.client.LogicModule;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.util.Random;
 import javax.imageio.ImageIO;
 
 /**
@@ -23,7 +22,6 @@ public abstract class Particle extends Thread {
     protected static BufferedImage[][] PARTICLE_SPRITE;
     protected final int key;
     private static boolean LOADED = false;
-    protected final static Random rng = new Random();
     /**
      * Reference to Logic Module.
      */
@@ -56,6 +54,7 @@ public abstract class Particle extends Thread {
         }
         unloadParticles();
         LOADED = true;
+        //Remove repetition later
         PARTICLE_SPRITE = new BufferedImage[NUM_PARTICLE_EFFECTS][];
         PARTICLE_SPRITE[Globals.PARTICLE_SWORD_SLASH1] = new BufferedImage[8];
         for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_SLASH1].length; i++) {

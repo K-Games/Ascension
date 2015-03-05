@@ -22,7 +22,6 @@ import java.util.logging.Logger;
 public class LogicModule implements Runnable {
 
     //Shared Data
-    private PacketSender sender = null;
     private PacketReceiver receiver = null;
 
     private SaveData selectedChar;
@@ -62,43 +61,43 @@ public class LogicModule implements Runnable {
     }
 
     public void sendGetPing(byte k, byte pID) {
-        sender.sendGetPing(selectedRoom, k, pID);
+        PacketSender.sendGetPing(selectedRoom, k, pID);
     }
 
     public void sendGetAll(byte k) {
-        sender.sendGetAll(selectedRoom, k);
+        PacketSender.sendGetAll(selectedRoom, k);
     }
 
     public void sendSetBossType(byte k) {
-        sender.sendSetBossType(selectedRoom, k);
+        PacketSender.sendSetBossType(selectedRoom, k);
     }
 
     public void sendGetBossStat(byte k, byte s) {
-        sender.sendGetBossStat(selectedRoom, k, s);
+        PacketSender.sendGetBossStat(selectedRoom, k, s);
     }
 
     public void sendGetName(byte k) {
-        sender.sendGetName(selectedRoom, k);
+        PacketSender.sendGetName(selectedRoom, k);
     }
 
     public void sendGetStat(byte k, byte s) {
-        sender.sendGetStat(selectedRoom, k, s);
+        PacketSender.sendGetStat(selectedRoom, k, s);
     }
 
     public void sendGetEquip(byte k) {
-        sender.sendGetEquip(selectedRoom, k);
+        PacketSender.sendGetEquip(selectedRoom, k);
     }
 
     public void sendDisconnect(byte k) {
-        sender.sendDisconnect(selectedRoom, k);
+        PacketSender.sendDisconnect(selectedRoom, k);
     }
 
     public void sendUseSkill(byte k, byte sc) {
-        sender.sendUseSkill(selectedRoom, k, sc);
+        PacketSender.sendUseSkill(selectedRoom, k, sc);
     }
 
     public void sendMoveKey(byte k, byte dir, boolean b) {
-        sender.sendMove(selectedRoom, k, dir, b);
+        PacketSender.sendMove(selectedRoom, k, dir, b);
     }
 
     public void sendLogin(final String server, byte r) {
@@ -117,12 +116,13 @@ public class LogicModule implements Runnable {
                     }
                     socket.connect(InetAddress.getByName(Globals.SERVER_ADDRESS), Globals.SERVER_PORT);
                     socket.setSoTimeout(5000);
-                    sender = new PacketSender(socket);
+                    PacketSender.setSocket(socket);
                     receiver = new PacketReceiver(socket);
                     receiver.setName("Reciever");
+                    receiver.setDaemon(true);
                     receiver.start();
                     System.out.println("Connecting to " + server);
-                    sender.sendLogin(selectedRoom, selectedChar);
+                    PacketSender.sendLogin(selectedRoom, selectedChar);
                 } catch (SocketException e) {
                     if (screen instanceof ScreenServerList) {
                         ((ScreenServerList) screen).setStatus(ScreenServerList.STATUS_SOCKETCLOSED);
@@ -189,7 +189,6 @@ public class LogicModule implements Runnable {
         if (receiver != null) {
             receiver.shutdown();
             receiver = null;
-            sender = null;
         }
         setScreen(new ScreenServerList());
         //soundModule.playBGM("theme.ogg");

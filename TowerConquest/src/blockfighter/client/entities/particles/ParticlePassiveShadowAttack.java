@@ -15,7 +15,7 @@ public class ParticlePassiveShadowAttack extends Particle {
         frame = 0;
         frameDuration = 50;
         duration = 200;
-        type = (byte) rng.nextInt(4);
+        type = (byte) Globals.rng(4);
         switch (type) {
             case 0:
                 this.x += 200;

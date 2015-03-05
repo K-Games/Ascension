@@ -5,6 +5,7 @@ import blockfighter.client.entities.player.skills.Skill;
 import java.awt.Font;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -31,6 +32,8 @@ public class Globals {
     public final static Font ARIAL_18PT = new Font("Arial", Font.PLAIN, 18);
 
     public final static byte MAX_NAME_LENGTH = 15;
+
+    private static Random rng = new Random();
 
     //Render 60 fps in microseconds
     public final static long RENDER_FPS = 60;
@@ -211,7 +214,8 @@ public class Globals {
             DATA_BOSS_SET_STATE = 0x13,
             DATA_BOSS_PARTICLE_EFFECT = 0x14,
             DATA_BOSS_SET_TYPE = 0x15,
-            DATA_BOSS_GET_STAT = 0x16;
+            DATA_BOSS_GET_STAT = 0x16,
+            DATA_PLAYER_GIVEDROP = 0x17;
 
     public final static BufferedImage[][] CHAR_SPRITE = new BufferedImage[NUM_PLAYER_STATE][];
     public final static BufferedImage[] HUD = new BufferedImage[2];
@@ -390,4 +394,7 @@ public class Globals {
         }
     }
 
+    public static final int rng(int i) {
+        return rng.nextInt(i);
+    }
 }

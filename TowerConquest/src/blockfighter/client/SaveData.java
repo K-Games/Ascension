@@ -37,7 +37,6 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
@@ -67,8 +66,7 @@ public class SaveData {
     public SaveData(String n, byte sn) {
         saveNum = sn;
         name = n;
-        Random rng = new Random();
-        uniqueID = rng.nextInt(Integer.MAX_VALUE);
+        uniqueID = Globals.rng(Integer.MAX_VALUE);
         //initalize skill list
         skills[Skill.SWORD_CINDER] = new SkillSwordCinder();
         skills[Skill.SWORD_DRIVE] = new SkillSwordDrive();
@@ -107,47 +105,24 @@ public class SaveData {
 
     public void newCharacter() {
         //Set level 1
-        baseStats[Globals.STAT_LEVEL] = 20;
+        baseStats[Globals.STAT_LEVEL] = 1;
         baseStats[Globals.STAT_POWER] = 0;
         baseStats[Globals.STAT_DEFENSE] = 0;
         baseStats[Globals.STAT_SPIRIT] = 0;
         baseStats[Globals.STAT_EXP] = 0;
         baseStats[Globals.STAT_SKILLPOINTS] = 3 * baseStats[Globals.STAT_LEVEL];
-        for (int i = 0; i < upgrades.length; i++) {
-            upgrades[i] = new ItemUpgrade(1, (int) baseStats[Globals.STAT_LEVEL] + 1);
-        }
+        //for (int i = 0; i < upgrades.length; i++) {
+        //upgrades[i] = new ItemUpgrade(1, (int) baseStats[Globals.STAT_LEVEL] + 1);
+        //}
         //Empty inventory
         for (int i = 0; i < inventory.length; i++) {
             inventory[i] = new ItemEquip[100];
         }
-        ItemEquip startEq = new ItemEquip(ItemEquip.TEMP_BOW, baseStats[Globals.STAT_LEVEL]);
-        addItem(ItemEquip.getItemType(startEq.getItemCode()), startEq);
-        startEq = new ItemEquip(ItemEquip.TEMP_SWORD, baseStats[Globals.STAT_LEVEL]);
-        addItem(ItemEquip.getItemType(startEq.getItemCode()), startEq);
-        startEq = new ItemEquip(ItemEquip.TEMP_QUIVER, baseStats[Globals.STAT_LEVEL]);
-        addItem(ItemEquip.getItemType(startEq.getItemCode()), startEq);
-        startEq = new ItemEquip(ItemEquip.TEMP_BLADE, baseStats[Globals.STAT_LEVEL]);
-        addItem(ItemEquip.getItemType(startEq.getItemCode()), startEq);
-        startEq = new ItemEquip(ItemEquip.TEMP_SHIELD, baseStats[Globals.STAT_LEVEL]);
-        addItem(ItemEquip.getItemType(startEq.getItemCode()), startEq);
-        startEq = new ItemEquip(ItemEquip.TEMP_HEAD, baseStats[Globals.STAT_LEVEL]);
-        addItem(ItemEquip.getItemType(startEq.getItemCode()), startEq);
-        startEq = new ItemEquip(ItemEquip.TEMP_SHOULDER, baseStats[Globals.STAT_LEVEL]);
-        addItem(ItemEquip.getItemType(startEq.getItemCode()), startEq);
-        startEq = new ItemEquip(ItemEquip.TEMP_CHEST, baseStats[Globals.STAT_LEVEL]);
-        addItem(ItemEquip.getItemType(startEq.getItemCode()), startEq);
-        startEq = new ItemEquip(ItemEquip.TEMP_PANTS, baseStats[Globals.STAT_LEVEL]);
-        addItem(ItemEquip.getItemType(startEq.getItemCode()), startEq);
-        startEq = new ItemEquip(ItemEquip.TEMP_GLOVE, baseStats[Globals.STAT_LEVEL]);
-        addItem(ItemEquip.getItemType(startEq.getItemCode()), startEq);
-        startEq = new ItemEquip(ItemEquip.TEMP_SHOE, baseStats[Globals.STAT_LEVEL]);
-        addItem(ItemEquip.getItemType(startEq.getItemCode()), startEq);
-        startEq = new ItemEquip(ItemEquip.TEMP_BELT, baseStats[Globals.STAT_LEVEL]);
-        addItem(ItemEquip.getItemType(startEq.getItemCode()), startEq);
-        startEq = new ItemEquip(ItemEquip.TEMP_RING, baseStats[Globals.STAT_LEVEL]);
-        addItem(ItemEquip.getItemType(startEq.getItemCode()), startEq);
-        startEq = new ItemEquip(ItemEquip.TEMP_AMULET, baseStats[Globals.STAT_LEVEL]);
-        addItem(ItemEquip.getItemType(startEq.getItemCode()), startEq);
+
+        for (int itemCode : ItemEquip.ITEM_CODES) {
+            ItemEquip startEq = new ItemEquip(itemCode, baseStats[Globals.STAT_LEVEL]);
+            addItem(startEq);
+        }
 
         keybinds[Globals.KEYBIND_SKILL1] = KeyEvent.VK_Q;
         keybinds[Globals.KEYBIND_SKILL2] = KeyEvent.VK_W;
@@ -179,26 +154,18 @@ public class SaveData {
         temp = Globals.intToByte(c.uniqueID);
         System.arraycopy(temp, 0, data, pos, temp.length);
         pos += temp.length;
+        
+        int[] statIDs = {Globals.STAT_LEVEL,
+            Globals.STAT_POWER,
+            Globals.STAT_DEFENSE,
+            Globals.STAT_SPIRIT,
+            Globals.STAT_SKILLPOINTS};
 
-        temp = Globals.intToByte((int) c.baseStats[Globals.STAT_LEVEL]);
-        System.arraycopy(temp, 0, data, pos, temp.length);
-        pos += temp.length;
-
-        temp = Globals.intToByte((int) c.baseStats[Globals.STAT_POWER]);
-        System.arraycopy(temp, 0, data, pos, temp.length);
-        pos += temp.length;
-
-        temp = Globals.intToByte((int) c.baseStats[Globals.STAT_DEFENSE]);
-        System.arraycopy(temp, 0, data, pos, temp.length);
-        pos += temp.length;
-
-        temp = Globals.intToByte((int) c.baseStats[Globals.STAT_SPIRIT]);
-        System.arraycopy(temp, 0, data, pos, temp.length);
-        pos += temp.length;
-
-        temp = Globals.intToByte((int) c.baseStats[Globals.STAT_SKILLPOINTS]);
-        System.arraycopy(temp, 0, data, pos, temp.length);
-        pos += temp.length;
+        for (int i : statIDs) {
+            temp = Globals.intToByte((int) c.baseStats[i]);
+            System.arraycopy(temp, 0, data, pos, temp.length);
+            pos += temp.length;
+        }
 
         pos = saveItems(data, c.equipment, pos);
         for (ItemEquip[] e : c.inventory) {
@@ -241,6 +208,7 @@ public class SaveData {
             temp = Globals.intToByte(item.getItemCode());
             System.arraycopy(temp, 0, data, pos, temp.length);
             pos += temp.length;
+
             temp = Globals.intToByte((int) item.getLevel());
             System.arraycopy(temp, 0, data, pos, temp.length);
             pos += temp.length;
@@ -278,33 +246,38 @@ public class SaveData {
             temp = Globals.intToByte(item.getItemCode());
             System.arraycopy(temp, 0, data, pos, temp.length);
             pos += temp.length;
-            temp = Globals.intToByte((int) item.getBaseStats()[Globals.STAT_LEVEL]);
-            System.arraycopy(temp, 0, data, pos, temp.length);
-            pos += temp.length;
-            temp = Globals.intToByte((int) item.getBaseStats()[Globals.STAT_POWER]);
-            System.arraycopy(temp, 0, data, pos, temp.length);
-            pos += temp.length;
-            temp = Globals.intToByte((int) item.getBaseStats()[Globals.STAT_DEFENSE]);
-            System.arraycopy(temp, 0, data, pos, temp.length);
-            pos += temp.length;
-            temp = Globals.intToByte((int) item.getBaseStats()[Globals.STAT_SPIRIT]);
-            System.arraycopy(temp, 0, data, pos, temp.length);
-            pos += temp.length;
-            temp = Globals.intToByte((int) item.getBaseStats()[Globals.STAT_ARMOR]);
-            System.arraycopy(temp, 0, data, pos, temp.length);
-            pos += temp.length;
-            temp = Globals.intToByte((int) (item.getBaseStats()[Globals.STAT_REGEN] * 10));
-            System.arraycopy(temp, 0, data, pos, temp.length);
-            pos += temp.length;
-            temp = Globals.intToByte((int) (item.getBaseStats()[Globals.STAT_CRITDMG] * 10000));
-            System.arraycopy(temp, 0, data, pos, temp.length);
-            pos += temp.length;
-            temp = Globals.intToByte((int) (item.getBaseStats()[Globals.STAT_CRITCHANCE] * 10000));
-            System.arraycopy(temp, 0, data, pos, temp.length);
-            pos += temp.length;
+
+            int[] statIDs = {Globals.STAT_LEVEL,
+                Globals.STAT_POWER,
+                Globals.STAT_DEFENSE,
+                Globals.STAT_SPIRIT,
+                Globals.STAT_ARMOR,
+                Globals.STAT_REGEN,
+                Globals.STAT_CRITDMG,
+                Globals.STAT_CRITCHANCE};
+
+            for (int i : statIDs) {
+                switch (i) {
+                    case Globals.STAT_REGEN:
+                        temp = Globals.intToByte((int) (item.getBaseStats()[i] * 10));
+                        break;
+                    case Globals.STAT_CRITDMG:
+                        temp = Globals.intToByte((int) (item.getBaseStats()[i] * 10000));
+                        break;
+                    case Globals.STAT_CRITCHANCE:
+                        temp = Globals.intToByte((int) (item.getBaseStats()[i] * 10000));
+                        break;
+                    default:
+                        temp = Globals.intToByte((int) item.getBaseStats()[i]);
+                }
+                System.arraycopy(temp, 0, data, pos, temp.length);
+                pos += temp.length;
+            }
+
             temp = Globals.intToByte(item.getUpgrades());
             System.arraycopy(temp, 0, data, pos, temp.length);
             pos += temp.length;
+
             temp = Globals.intToByte((int) (item.getBonusMult() * 100));
             System.arraycopy(temp, 0, data, pos, temp.length);
             pos += temp.length;
@@ -332,25 +305,17 @@ public class SaveData {
         c.uniqueID = Globals.bytesToInt(temp);
         pos += temp.length;
 
-        System.arraycopy(data, pos, temp, 0, temp.length);
-        c.baseStats[Globals.STAT_LEVEL] = Globals.bytesToInt(temp);
-        pos += temp.length;
+        int[] statIDs = {Globals.STAT_LEVEL,
+            Globals.STAT_POWER,
+            Globals.STAT_DEFENSE,
+            Globals.STAT_SPIRIT,
+            Globals.STAT_SKILLPOINTS};
 
-        System.arraycopy(data, pos, temp, 0, temp.length);
-        c.baseStats[Globals.STAT_POWER] = Globals.bytesToInt(temp);
-        pos += temp.length;
-
-        System.arraycopy(data, pos, temp, 0, temp.length);
-        c.baseStats[Globals.STAT_DEFENSE] = Globals.bytesToInt(temp);
-        pos += temp.length;
-
-        System.arraycopy(data, pos, temp, 0, temp.length);
-        c.baseStats[Globals.STAT_SPIRIT] = Globals.bytesToInt(temp);
-        pos += temp.length;
-
-        System.arraycopy(data, pos, temp, 0, temp.length);
-        c.baseStats[Globals.STAT_SKILLPOINTS] = Globals.bytesToInt(temp);
-        pos += temp.length;
+        for (int i : statIDs) {
+            System.arraycopy(data, pos, temp, 0, temp.length);
+            c.baseStats[i] = Globals.bytesToInt(temp);
+            pos += temp.length;
+        }
 
         pos = readItems(data, c.equipment, pos);
         for (ItemEquip[] e : c.inventory) {
@@ -433,37 +398,32 @@ public class SaveData {
             System.arraycopy(data, pos, temp, 0, temp.length);
             itemCode = Globals.bytesToInt(temp);
             pos += temp.length;
+            int[] statIDs = {Globals.STAT_LEVEL,
+                Globals.STAT_POWER,
+                Globals.STAT_DEFENSE,
+                Globals.STAT_SPIRIT,
+                Globals.STAT_ARMOR,
+                Globals.STAT_REGEN,
+                Globals.STAT_CRITDMG,
+                Globals.STAT_CRITCHANCE};
 
-            System.arraycopy(data, pos, temp, 0, temp.length);
-            bs[Globals.STAT_LEVEL] = Globals.bytesToInt(temp);
-            pos += temp.length;
-
-            System.arraycopy(data, pos, temp, 0, temp.length);
-            bs[Globals.STAT_POWER] = Globals.bytesToInt(temp);
-            pos += temp.length;
-
-            System.arraycopy(data, pos, temp, 0, temp.length);
-            bs[Globals.STAT_DEFENSE] = Globals.bytesToInt(temp);
-            pos += temp.length;
-
-            System.arraycopy(data, pos, temp, 0, temp.length);
-            bs[Globals.STAT_SPIRIT] = Globals.bytesToInt(temp);
-            pos += temp.length;
-
-            System.arraycopy(data, pos, temp, 0, temp.length);
-            bs[Globals.STAT_ARMOR] = Globals.bytesToInt(temp);
-            pos += temp.length;
-            System.arraycopy(data, pos, temp, 0, temp.length);
-            bs[Globals.STAT_REGEN] = Globals.bytesToInt(temp) / 10D;
-            pos += temp.length;
-
-            System.arraycopy(data, pos, temp, 0, temp.length);
-            bs[Globals.STAT_CRITDMG] = Globals.bytesToInt(temp) / 10000D;
-            pos += temp.length;
-
-            System.arraycopy(data, pos, temp, 0, temp.length);
-            bs[Globals.STAT_CRITCHANCE] = Globals.bytesToInt(temp) / 10000D;
-            pos += temp.length;
+            for (int s : statIDs) {
+                System.arraycopy(data, pos, temp, 0, temp.length);
+                switch (s) {
+                    case Globals.STAT_REGEN:
+                        bs[s] = Globals.bytesToInt(temp) / 10D;
+                        break;
+                    case Globals.STAT_CRITDMG:
+                        bs[s] = Globals.bytesToInt(temp) / 10000D;
+                        break;
+                    case Globals.STAT_CRITCHANCE:
+                        bs[s] = Globals.bytesToInt(temp) / 10000D;
+                        break;
+                    default:
+                        bs[s] = Globals.bytesToInt(temp);
+                }
+                pos += temp.length;
+            }
 
             System.arraycopy(data, pos, temp, 0, temp.length);
             upgrades = Globals.bytesToInt(temp);
@@ -505,6 +465,21 @@ public class SaveData {
 
     public int getUniqueID() {
         return uniqueID;
+    }
+
+    public void addDrops(int lvl) {
+        for (int i = 1; i <= 3; i++) {
+            if (Globals.rng(100) < 30 * i) {
+                addItem(new ItemUpgrade(1, lvl + Globals.rng(6)));
+            }
+
+        }
+        for (int itemCode : ItemEquip.ITEM_CODES) {
+            if (Globals.rng(100) < 50) {
+                ItemEquip e = new ItemEquip(itemCode, lvl, Globals.rng(100) < 20);
+                addItem(e);
+            }
+        }
     }
 
     public void addExp(double amount) {
@@ -724,7 +699,8 @@ public class SaveData {
         saveData(saveNum, this);
     }
 
-    public void addItem(int type, ItemEquip e) {
+    public void addItem(ItemEquip e) {
+        int type = ItemEquip.getItemType(e.getItemCode());
         if (type == Globals.ITEM_SHIELD || type == Globals.ITEM_QUIVER || type == Globals.ITEM_BOW) {
             type = Globals.ITEM_WEAPON;
         }

@@ -8,8 +8,8 @@ public class ParticleBowStormArrow extends Particle {
 
     public ParticleBowStormArrow(int k, int x, int y, byte f) {
         super(k, x, y, f);
-        this.x += rng.nextInt(30) * 20 - ((facing == Globals.RIGHT) ? 90 : 150);
-        this.y += rng.nextInt(25) * 15 - 100;
+        this.x += Globals.rng(30) * 20 - ((facing == Globals.RIGHT) ? 90 : 150);
+        this.y += Globals.rng(25) * 15 - 100;
         frame = 0;
         frameDuration = 25;
         duration = 500;

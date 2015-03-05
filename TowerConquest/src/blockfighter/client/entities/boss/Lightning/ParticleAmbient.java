@@ -13,7 +13,7 @@ public class ParticleAmbient extends Particle {
 
     public ParticleAmbient(int k, int x, int y) {
         super(k, x, y, Globals.RIGHT);
-        frame = rng.nextInt(12) * 6;
+        frame = Globals.rng(12) * 6;
         frameDuration = 50;
         duration = 300;
     }
@@ -37,6 +37,9 @@ public class ParticleAmbient extends Particle {
     }
 
     public static void unload() {
+        if (SPRITE == null) {
+            return;
+        }
         for (int i = 0; i < SPRITE.length; i++) {
             SPRITE[i] = null;
         }

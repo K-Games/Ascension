@@ -11,7 +11,7 @@ public class ParticleShieldChargeParticle extends Particle {
         frame = 0;
         frameDuration = 50;
         duration = 400;
-        this.y += rng.nextInt(11) * 15;
+        this.y += Globals.rng(11) * 15;
         if (facing == Globals.RIGHT) {
             x += 428;
         }

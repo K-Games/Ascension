@@ -234,7 +234,7 @@ public class ScreenInventory extends ScreenMenu {
             if (selectedTab == Globals.ITEM_WEAPON) {
                 g.setFont(Globals.ARIAL_15PT);
                 drawStringOutline(g, "Right Click to equip as Offhand", 280, 682, 1);
-                g.setColor(Color.WHITE);
+                g.setColor(new Color(255, 130, 0));
                 g.drawString("Right Click to equip as Offhand", 280, 682);
             }
         }

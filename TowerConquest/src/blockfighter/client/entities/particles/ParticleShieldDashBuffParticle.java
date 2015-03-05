@@ -8,8 +8,8 @@ public class ParticleShieldDashBuffParticle extends Particle {
 
     public ParticleShieldDashBuffParticle(int k, int x, int y, byte f) {
         super(k, x, y, f);
-        this.x += rng.nextInt(100) - 60;
-        this.y -= rng.nextInt(40) + 64;
+        this.x += Globals.rng(100) - 60;
+        this.y -= Globals.rng(40) + 64;
         frame = 0;
         frameDuration = 50;
         duration = 300;

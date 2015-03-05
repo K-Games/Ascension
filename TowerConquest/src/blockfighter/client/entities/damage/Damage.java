@@ -3,7 +3,6 @@ package blockfighter.client.entities.damage;
 import blockfighter.client.Globals;
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.util.Random;
 
 /**
  *
@@ -32,7 +31,7 @@ public class Damage extends Thread {
             speedX = 0;
         } else {
             speedY = -13;
-            speedX = (new Random().nextInt(3) - 1) * 3;
+            speedX = (Globals.rng(3) - 1) * 3;
         }
         setDaemon(true);
     }

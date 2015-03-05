@@ -10,10 +10,10 @@ public class ParticleBowVolleyBuffParticle extends Particle {
 
     public ParticleBowVolleyBuffParticle(int k, int x, int y, byte f) {
         super(k, x, y, f);
-        this.x += rng.nextInt(100) - 60;
-        this.y -= rng.nextInt(40) + 58;
+        this.x += Globals.rng(100) - 60;
+        this.y -= Globals.rng(40) + 58;
         xDouble = this.x;
-        xSpeed = rng.nextInt(10) * .75 - 3.75;
+        xSpeed = Globals.rng(10) * .75 - 3.75;
         frame = 0;
         frameDuration = 50;
         duration = 300;

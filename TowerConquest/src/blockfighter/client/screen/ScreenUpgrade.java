@@ -13,7 +13,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-import java.util.Random;
 import javax.swing.SwingUtilities;
 
 /**
@@ -90,15 +89,14 @@ public class ScreenUpgrade extends ScreenMenu {
             }
 
             if (upgrading) {
-                Random rng = new Random();
                 if (ItemUpgrade.rollUpgrade(c.getUpgrades()[selectUpgrade], c.getEquip()[selectEquip])) {
                     c.getEquip()[selectEquip].addUpgrade(1);
                     for (int i = 0; i < 20; i++) {
-                        particles.put(i + 2, new ParticleMenuUpgrade(upPart + 2, (int) upgradeBox[1].x + 30, (int) upgradeBox[1].y + 30, 3, rng.nextInt(10) - 5, -5 - rng.nextInt(3)));
+                        particles.put(i + 2, new ParticleMenuUpgrade(upPart + 2, (int) upgradeBox[1].x + 30, (int) upgradeBox[1].y + 30, 3, Globals.rng(10) - 5, -5 - Globals.rng(3)));
                     }
                 } else {
                     for (int i = 0; i < 20; i++) {
-                        particles.put(i + 2, new ParticleMenuUpgrade(upPart + 2, (int) upgradeBox[1].x + 30, (int) upgradeBox[1].y + 30, 2, rng.nextInt(10) - 5, -5 - rng.nextInt(3)));
+                        particles.put(i + 2, new ParticleMenuUpgrade(upPart + 2, (int) upgradeBox[1].x + 30, (int) upgradeBox[1].y + 30, 2, Globals.rng(10) - 5, -5 - Globals.rng(3)));
                     }
                 }
                 c.destroyItem(selectUpgrade);

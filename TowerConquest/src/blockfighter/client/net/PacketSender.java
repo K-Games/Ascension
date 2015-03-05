@@ -6,7 +6,6 @@ import blockfighter.client.entities.items.ItemEquip;
 import blockfighter.client.entities.player.skills.Skill;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.InetAddress;
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -15,15 +14,13 @@ import java.nio.charset.StandardCharsets;
  */
 public class PacketSender {
 
-    InetAddress address;
-    DatagramSocket socket = null;
+    private static DatagramSocket socket = null;
 
-    public PacketSender(DatagramSocket socket) {
-        this.socket = socket;
-        address = socket.getInetAddress();
+    public static void setSocket(DatagramSocket s) {
+        socket = s;
     }
 
-    public void sendLogin(byte room, SaveData c) {
+    public static void sendLogin(byte room, SaveData c) {
         byte[] bytes = new byte[Globals.PACKET_BYTE * 2 //Data type + room
                 + 15 //Name length
                 + Globals.PACKET_INT //uID
@@ -113,7 +110,7 @@ public class PacketSender {
         sendPacket(requestPacket);
     }
 
-    public void sendSetBossType(byte room, byte bossKey) {
+    public static void sendSetBossType(byte room, byte bossKey) {
         byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
         bytes[0] = Globals.DATA_BOSS_SET_TYPE;
         bytes[1] = room;
@@ -122,7 +119,7 @@ public class PacketSender {
         sendPacket(requestPacket);
     }
 
-    public void sendGetBossStat(byte room, byte key, byte stat) {
+    public static void sendGetBossStat(byte room, byte key, byte stat) {
         byte[] bytes = new byte[Globals.PACKET_BYTE * 4];
         bytes[0] = Globals.DATA_BOSS_GET_STAT;
         bytes[1] = room;
@@ -132,7 +129,7 @@ public class PacketSender {
         sendPacket(requestPacket);
     }
 
-    public void sendGetAll(byte room, byte myKey) {
+    public static void sendGetAll(byte room, byte myKey) {
         byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
         bytes[0] = Globals.DATA_PLAYER_GET_ALL;
         bytes[1] = room;
@@ -141,7 +138,7 @@ public class PacketSender {
         sendPacket(requestPacket);
     }
 
-    public void sendMove(byte room, byte key, byte direction, boolean move) {
+    public static void sendMove(byte room, byte key, byte direction, boolean move) {
         byte[] bytes = new byte[Globals.PACKET_BYTE * 5];
         bytes[0] = Globals.DATA_PLAYER_SET_MOVE;
         bytes[1] = room;
@@ -152,7 +149,7 @@ public class PacketSender {
         sendPacket(requestPacket);
     }
 
-    public void sendUseSkill(byte room, byte key, byte skillCode) {
+    public static void sendUseSkill(byte room, byte key, byte skillCode) {
         byte[] bytes = new byte[Globals.PACKET_BYTE * 4];
         bytes[0] = Globals.DATA_PLAYER_USESKILL;
         bytes[1] = room;
@@ -162,7 +159,7 @@ public class PacketSender {
         sendPacket(requestPacket);
     }
 
-    public void sendGetPing(byte room, byte myKey, byte pID) {
+    public static void sendGetPing(byte room, byte myKey, byte pID) {
         byte[] bytes = new byte[Globals.PACKET_BYTE * 4];
         bytes[0] = Globals.DATA_PING;
         bytes[1] = room;
@@ -172,7 +169,7 @@ public class PacketSender {
         sendPacket(requestPacket);
     }
 
-    public void sendDisconnect(byte room, byte myKey) {
+    public static void sendDisconnect(byte room, byte myKey) {
         byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
         bytes[0] = Globals.DATA_PLAYER_DISCONNECT;
         bytes[1] = room;
@@ -181,7 +178,7 @@ public class PacketSender {
         sendPacket(requestPacket);
     }
 
-    public void sendGetName(byte room, byte key) {
+    public static void sendGetName(byte room, byte key) {
         byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
         bytes[0] = Globals.DATA_PLAYER_GET_NAME;
         bytes[1] = room;
@@ -190,7 +187,7 @@ public class PacketSender {
         sendPacket(requestPacket);
     }
 
-    public void sendGetStat(byte room, byte key, byte stat) {
+    public static void sendGetStat(byte room, byte key, byte stat) {
         byte[] bytes = new byte[Globals.PACKET_BYTE * 4];
         bytes[0] = Globals.DATA_PLAYER_GET_STAT;
         bytes[1] = room;
@@ -200,7 +197,7 @@ public class PacketSender {
         sendPacket(requestPacket);
     }
 
-    public void sendGetEquip(byte room, byte key) {
+    public static void sendGetEquip(byte room, byte key) {
         byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
         bytes[0] = Globals.DATA_PLAYER_GET_EQUIP;
         bytes[1] = room;
@@ -209,7 +206,7 @@ public class PacketSender {
         sendPacket(requestPacket);
     }
 
-    private void sendPacket(DatagramPacket packet) {
+    private static void sendPacket(DatagramPacket packet) {
         try {
             socket.send(packet);
         } catch (Exception ex) {
@@ -217,7 +214,7 @@ public class PacketSender {
         }
     }
 
-    private DatagramPacket createPacket(byte[] bytes) {
+    private static DatagramPacket createPacket(byte[] bytes) {
         return new DatagramPacket(bytes, bytes.length);
     }
 }

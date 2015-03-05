@@ -35,6 +35,8 @@ public class BossLightning extends Boss {
             return;
         }
         SPRITE = new BufferedImage[8][];
+        
+        //Remove repetition later
         SPRITE[STATE_STAND] = new BufferedImage[10];
         SPRITE[STATE_WALK] = SPRITE[STATE_STAND];
         for (int i = 0; i < SPRITE[STATE_STAND].length; i++) {
@@ -54,6 +56,7 @@ public class BossLightning extends Boss {
             } catch (Exception ex) {
             }
         }
+        
         SPRITE[STATE_BALLCHARGE] = new BufferedImage[10];
         for (int i = 0; i < SPRITE[STATE_BALLCHARGE].length; i++) {
             try {
@@ -61,6 +64,7 @@ public class BossLightning extends Boss {
             } catch (Exception ex) {
             }
         }
+        
         SPRITE[STATE_ATTACK1] = new BufferedImage[10];
         for (int i = 0; i < SPRITE[STATE_ATTACK1].length; i++) {
             try {
@@ -68,6 +72,7 @@ public class BossLightning extends Boss {
             } catch (Exception ex) {
             }
         }
+        
         SPRITE[STATE_ATTACK2] = new BufferedImage[10];
         for (int i = 0; i < SPRITE[STATE_ATTACK2].length; i++) {
             try {
@@ -75,6 +80,7 @@ public class BossLightning extends Boss {
             } catch (Exception ex) {
             }
         }
+        
         SPRITE[STATE_BOLTCAST] = new BufferedImage[10];
         for (int i = 0; i < SPRITE[STATE_BOLTCAST].length; i++) {
             try {
@@ -82,6 +88,7 @@ public class BossLightning extends Boss {
             } catch (Exception ex) {
             }
         }
+        
         ParticleAmbient.load();
         ParticleBolt.load();
     }
@@ -108,7 +115,7 @@ public class BossLightning extends Boss {
         lastParticleTime -= Globals.LOGIC_UPDATE / 1000000;
         if (lastParticleTime <= 0 && state != STATE_BALLCHARGE) {
             for (int i = 0; i < 3; i++) {
-                ParticleAmbient b = new ParticleAmbient(((ScreenIngame) logic.getScreen()).getNextParticleKey(), x + (rng.nextInt(300) - 200), y - (rng.nextInt(200) + 150), true);
+                ParticleAmbient b = new ParticleAmbient(((ScreenIngame) logic.getScreen()).getNextParticleKey(), x + (Globals.rng(300) - 200), y - (Globals.rng(200) + 150), true);
                 ((ScreenIngame) logic.getScreen()).addParticle(b);
             }
             lastParticleTime = 100;
@@ -169,8 +176,15 @@ public class BossLightning extends Boss {
         int drawDscY = drawSrcY + sprite.getHeight();
         g.drawImage(sprite, drawSrcX, drawSrcY, drawDscX, drawDscY, 0, 0, sprite.getWidth(), sprite.getHeight(), null);
         g.setColor(Color.WHITE);
-        g.drawRect(x - 121, y - 361, 202, 32);
-        g.setColor(Color.RED);
+        g.drawRect(x - 121, y - 361, 201, 31);
+        if (stats[STAT_MINHP] / stats[STAT_MAXHP] > .66) {
+            g.setColor(new Color(90, 255, 0));
+        } else if (stats[STAT_MINHP] / stats[STAT_MAXHP] > .33) {
+            g.setColor(new Color(255, 165, 0));
+        } else {
+            g.setColor(new Color(255, 0, 0));
+        }
+
         g.fillRect(x - 120, y - 360, (int) (stats[STAT_MINHP] / stats[STAT_MAXHP] * 200), 30);
     }
 }

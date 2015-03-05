@@ -5,7 +5,6 @@ import blockfighter.client.LogicModule;
 import blockfighter.client.entities.boss.Lightning.BossLightning;
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.util.Random;
 
 /**
  *
@@ -27,7 +26,6 @@ public abstract class Boss extends Thread {
     protected byte key, facing, state, frame;
     protected double[] stats;
     protected static LogicModule logic;
-    protected final static Random rng = new Random();
 
     public Point getPos() {
         return new Point(x, y);

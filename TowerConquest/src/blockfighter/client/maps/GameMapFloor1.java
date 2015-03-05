@@ -1,6 +1,7 @@
 package blockfighter.client.maps;
 
 import blockfighter.client.Globals;
+import blockfighter.client.entities.boss.Lightning.BossLightning;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import javax.imageio.ImageIO;
@@ -42,6 +43,7 @@ public class GameMapFloor1 extends GameMap {
     @Override
     public void loadAssets() throws Exception {
         bg = ImageIO.read(Globals.class.getResourceAsStream("sprites/maps/0/bg.png"));
+        BossLightning.load();
     }
 
 }

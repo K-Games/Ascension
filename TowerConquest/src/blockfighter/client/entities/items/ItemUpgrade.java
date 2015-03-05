@@ -1,9 +1,9 @@
 package blockfighter.client.entities.items;
 
 import blockfighter.client.Globals;
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.HashMap;
-import java.util.Random;
 
 /**
  *
@@ -16,7 +16,6 @@ public class ItemUpgrade implements Item {
     private final static HashMap<Integer, String> ITEM_NAMES = new HashMap<>(ITEM_UPGRADES_CODES.length);
 
     protected int level;
-    protected static Random upgradeRng = new Random();
     protected int itemCode;
 
     public static void loadUpgradeItems() {
@@ -44,7 +43,7 @@ public class ItemUpgrade implements Item {
     }
 
     public static boolean rollUpgrade(ItemUpgrade i, ItemEquip e) {
-        int roll = upgradeRng.nextInt(10000) + 1;
+        int roll = Globals.rng(10000) + 1;
         return roll < (int) (upgradeChance(i, e) * 10000);
     }
 
@@ -65,6 +64,7 @@ public class ItemUpgrade implements Item {
     @Override
     public void draw(Graphics2D g, int x, int y) {
         g.setFont(Globals.ARIAL_15PT);
+        g.setColor(Color.WHITE);
         g.drawString("PH", x + 20, y + 30);
     }
 

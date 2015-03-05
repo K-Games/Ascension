@@ -8,8 +8,8 @@ public class ParticleSwordCinderParticle extends Particle {
 
     public ParticleSwordCinderParticle(int k, int x, int y, byte f) {
         super(k, x, y, f);
-        this.x += rng.nextInt(100) + ((facing == Globals.RIGHT) ? 60 : 0);
-        this.y += rng.nextInt(200) + 20;
+        this.x += Globals.rng(100) + ((facing == Globals.RIGHT) ? 60 : 0);
+        this.y += Globals.rng(200) + 20;
         frame = 0;
         frameDuration = 25;
         duration = 500;

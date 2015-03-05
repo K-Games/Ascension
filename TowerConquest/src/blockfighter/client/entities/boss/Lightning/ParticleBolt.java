@@ -1,6 +1,7 @@
 package blockfighter.client.entities.boss.Lightning;
 
 import blockfighter.client.Globals;
+import static blockfighter.client.entities.boss.Lightning.ParticleAmbient.SPRITE;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.client.screen.ScreenIngame;
 import java.awt.Graphics2D;
@@ -32,6 +33,9 @@ public class ParticleBolt extends Particle {
     }
 
     public static void unload() {
+        if (SPRITE == null) {
+            return;
+        }
         for (int i = 0; i < SPRITE.length; i++) {
             SPRITE[i] = null;
         }

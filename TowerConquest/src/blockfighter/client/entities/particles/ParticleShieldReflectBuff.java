@@ -10,12 +10,12 @@ public class ParticleShieldReflectBuff extends Particle {
 
     public ParticleShieldReflectBuff(int k, int x, int y, byte f) {
         super(k, x, y, f);
-        this.x += rng.nextInt(10) * 10 - 80;
-        this.y += -rng.nextInt(100) - 60;
+        this.x += Globals.rng(10) * 10 - 80;
+        this.y += -Globals.rng(100) - 60;
         pX = this.x;
-        speedX = (rng.nextInt(10) - 5) * 1.5D;
+        speedX = (Globals.rng(10) - 5) * 1.5D;
 
-        frame = rng.nextInt(5);
+        frame = Globals.rng(5);
         frameDuration = 25;
         duration = 400;
     }

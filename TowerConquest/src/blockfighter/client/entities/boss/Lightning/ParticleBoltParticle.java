@@ -13,8 +13,8 @@ public class ParticleBoltParticle extends Particle {
         super(k, x, y, Globals.RIGHT);
         dX = x;
         dY = y;
-        speedX = (rng.nextInt(20) - 10) * 1.5;
-        speedY = (rng.nextInt(10) + 10) * 2;
+        speedX = (Globals.rng(20) - 10) * 1.5;
+        speedY = (Globals.rng(10) + 10) * 2;
         frame = 0;
         frameDuration = 50;
         duration = 300;

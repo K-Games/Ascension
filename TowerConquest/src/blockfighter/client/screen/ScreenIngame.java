@@ -166,7 +166,7 @@ public class ScreenIngame extends Screen {
             lastRequestTime = now;
         }
         if (now - lastPingTime >= Globals.PING_UPDATE) {
-            pID = (byte) (Math.random() * 256);
+            pID = (byte) (Globals.rng(256));
             pingTime = System.currentTimeMillis();
             logic.sendGetPing(myKey, pID);
             lastPingTime = now;
@@ -438,8 +438,16 @@ public class ScreenIngame extends Screen {
                 case Globals.DATA_BOSS_SET_TYPE:
                     dataBossSetType(data);
                     break;
+                case Globals.DATA_PLAYER_GIVEDROP:
+                    dataPlayerGiveDrop(data);
+                    break;
             }
         }
+    }
+
+    private void dataPlayerGiveDrop(byte[] data) {
+        int lvl = Globals.bytesToInt(Arrays.copyOfRange(data, 1, 5));
+        c.addDrops(lvl);
     }
 
     private void dataPlayerGiveEXP(byte[] data) {
