@@ -49,6 +49,12 @@ public class LogicModule implements Runnable {
         setScreen(loading);
         try {
             loading.load(mapID);
+            synchronized (loading) {
+                try {
+                    loading.wait();
+                } catch (InterruptedException e) {
+                }
+            }
             setScreen(new ScreenIngame(key, size, loading.getLoadedMap()));
             sendGetAll(key);
         } catch (Exception e) {

@@ -19,6 +19,7 @@ public class ScreenLoading extends ScreenMenu {
 
     private GameMap map;
     private byte myKey;
+    private boolean effectsReady = false;
 
     public void load(byte mapID) throws Exception {
         Particle.loadParticles();
@@ -31,6 +32,7 @@ public class ScreenLoading extends ScreenMenu {
                 break;
         }
         map.loadAssets();
+        effectsReady = true;
     }
 
     public GameMap getLoadedMap() {
@@ -41,6 +43,20 @@ public class ScreenLoading extends ScreenMenu {
     public void draw(Graphics2D g) {
         BufferedImage bg = Globals.MENU_BG[0];
         g.drawImage(bg, 0, 0, null);
+        if (effectsReady) {
+            for (int i = 0; i < Globals.NUM_PARTICLE_EFFECTS; i++) {
+                if (Particle.getParticleSprites()[i] != null) {
+                    for (BufferedImage sprite : Particle.getParticleSprites()[i]) {
+                        g.drawImage(sprite, 0, 0, null);
+                    }
+                }
+            }
+            System.out.println("Prerendered effects");
+            effectsReady = false;
+            synchronized (this) {
+                this.notify();
+            }
+        }
 
         g.setFont(Globals.ARIAL_18PT);
         drawStringOutline(g, "Loading...", 520, 640, 2);

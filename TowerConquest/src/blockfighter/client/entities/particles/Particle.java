@@ -254,4 +254,8 @@ public abstract class Particle extends Thread {
     public void setExpire() {
         duration = 0;
     }
+
+    public static BufferedImage[][] getParticleSprites() {
+        return PARTICLE_SPRITE;
+    }
 }

@@ -1,7 +1,6 @@
 package blockfighter.client.entities.boss.Lightning;
 
 import blockfighter.client.Globals;
-import static blockfighter.client.entities.boss.Lightning.ParticleAmbient.SPRITE;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.client.screen.ScreenIngame;
 import java.awt.Graphics2D;
