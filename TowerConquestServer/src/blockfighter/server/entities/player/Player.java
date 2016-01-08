@@ -908,7 +908,7 @@ public class Player extends Thread implements GameEntity {
             ProjBowVolley proj = new ProjBowVolley(logic, logic.getNextProjKey(), this, x, y - 10 + Globals.rng(40));
             logic.queueAddProj(proj);
             sendParticle(logic.getRoom(), Globals.PARTICLE_BOW_VOLLEYARROW, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(), facing);
-            sendParticle(logic.getRoom(), Globals.PARTICLE_BOW_VOLLEYBOW, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(), facing);
+            sendParticle(logic.getRoom(), Globals.PARTICLE_BOW_VOLLEYBOW, getX(), getY(), facing);
             skillCounter++;
         }
         if (skillDuration >= 1900 || isStunned() || isKnockback()) {

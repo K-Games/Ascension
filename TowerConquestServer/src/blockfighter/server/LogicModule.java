@@ -117,6 +117,7 @@ public class LogicModule extends Thread {
         try {
             boolean fin = false;
             processQueues();
+            if (players.isEmpty()) return;
             if (bosses.isEmpty()) {
                 Boss[] newBosses = map.getBosses(this);
                 if (newBosses != null) {

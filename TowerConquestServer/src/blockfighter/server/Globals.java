@@ -40,7 +40,7 @@ public class Globals {
     public final static String SERVER_ADDRESS = "0.0.0.0";
     public final static int SERVER_PORT = 25565;
     public final static byte SERVER_MAX_PLAYERS = 10;
-    public final static byte SERVER_ROOMS = 101;
+    public final static byte SERVER_ROOMS = 50;
     public final static long SERVER_MAX_IDLE = 180000;
 
     public final static byte MAX_NAME_LENGTH = 15;
