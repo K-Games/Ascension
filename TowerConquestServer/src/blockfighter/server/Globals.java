@@ -40,7 +40,7 @@ public class Globals {
     public final static String SERVER_ADDRESS = "0.0.0.0";
     public final static int SERVER_PORT = 25565;
     public final static byte SERVER_MAX_PLAYERS = 10;
-    public final static byte SERVER_ROOMS = 50;
+    public final static byte SERVER_ROOMS = 101;
     public final static long SERVER_MAX_IDLE = 180000;
 
     public final static byte MAX_NAME_LENGTH = 15;
@@ -55,17 +55,14 @@ public class Globals {
 
     public final static double GRAVITY = 0.35, MAX_FALLSPEED = 12.5;
 
-    public final static int NUM_PLAYER_STATE = 10;
+    public final static int NUM_PLAYER_STATE = 7;
     public final static byte PLAYER_STATE_STAND = 0x00,
             PLAYER_STATE_WALK = 0x01,
             PLAYER_STATE_JUMP = 0x02,
-            PLAYER_STATE_ATTACK1 = 0x03,
-            PLAYER_STATE_ATTACK2 = 0x04,
-            PLAYER_STATE_ATTACKOFF1 = 0x05,
-            PLAYER_STATE_ATTACKOFF2 = 0x06,
-            PLAYER_STATE_ATTACKBOW = 0x07,
-            PLAYER_STATE_BUFF = 0x08,
-            PLAYER_STATE_DEAD = 0x09;
+            PLAYER_STATE_ATTACK = 0x03,
+            PLAYER_STATE_ATTACKBOW = 0x04,
+            PLAYER_STATE_BUFF = 0x05,
+            PLAYER_STATE_DEAD = 0x06;
 
     public final static int NUM_PARTICLE_EFFECTS = 39;
     public final static byte PARTICLE_SWORD_SLASH1 = 0x00,

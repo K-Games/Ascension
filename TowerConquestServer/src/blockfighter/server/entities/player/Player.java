@@ -107,7 +107,7 @@ public class Player extends Thread implements GameEntity {
         this.port = port;
         this.x = x;
         this.y = y;
-        hitbox = new Rectangle2D.Double(x - 50, y - 180, 100, 180);
+        hitbox = new Rectangle2D.Double(x - 20, y - 100, 40, 100);
         this.map = map;
         facing = Globals.RIGHT;
         playerState = PLAYER_STATE_STAND;
@@ -480,8 +480,8 @@ public class Player extends Thread implements GameEntity {
         queuePlayerState(PLAYER_STATE_STAND);
         updateFall();
         boolean movedX = updateX(xSpeed);
-        hitbox.x = x - 50;
-        hitbox.y = y - 180;
+        hitbox.x = x - 20;
+        hitbox.y = y - 100;
 
         if (isDead()) {
             //Update respawn Timer
@@ -547,6 +547,21 @@ public class Player extends Thread implements GameEntity {
         }
     }
 
+    private void castSkill(byte[] data, byte newState, byte weaponSlot) {
+        if (!skills.get(data[3]).canCast(getItemType(equip[weaponSlot]))) {
+            return;
+        }
+        queuePlayerState(newState);
+        skills.get(data[3]).setCooldown();
+        sendCooldown(data);
+
+        //Tactical Execution Passive
+        //Add after being able to cast skill
+        if (hasSkill(Skill.PASSIVE_TACTICAL) && tacticalDmgMult < 0.01 + 0.01 * getSkillLevel(Skill.PASSIVE_TACTICAL)) {
+            tacticalDmgMult += 0.01;
+        }
+    }
+
     private void updateSkillCast() {
         if (isUsingSkill()) {
             skillUseQueue.clear();
@@ -565,173 +580,59 @@ public class Player extends Thread implements GameEntity {
                     skillCounter = 0;
                     switch (data[3]) {
                         case Skill.SWORD_SLASH:
-                            if (!skills.get(data[3]).canCast(getItemType(equip[Globals.ITEM_WEAPON]))) {
-                                return;
-                            }
-                            queuePlayerState(PLAYER_STATE_SWORD_SLASH);
-                            skills.get(data[3]).setCooldown();
-                            sendCooldown(data);
-                            nextFrameTime = 40000000;
+                            castSkill(data, PLAYER_STATE_SWORD_SLASH, Globals.ITEM_WEAPON);
                             break;
                         case Skill.SWORD_VORPAL:
-                            if (!skills.get(data[3]).canCast(getItemType(equip[Globals.ITEM_WEAPON]))) {
-                                return;
-                            }
-                            queuePlayerState(PLAYER_STATE_SWORD_VORPAL);
-                            skills.get(data[3]).setCooldown();
-                            sendCooldown(data);
-                            nextFrameTime = 40000000;
+                            castSkill(data, PLAYER_STATE_SWORD_VORPAL, Globals.ITEM_WEAPON);
                             break;
                         case Skill.SWORD_DRIVE:
-                            if (!skills.get(data[3]).canCast(getItemType(equip[Globals.ITEM_WEAPON]))) {
-                                return;
-                            }
-                            queuePlayerState(PLAYER_STATE_SWORD_DRIVE);
-                            skills.get(data[3]).setCooldown();
-                            sendCooldown(data);
-                            nextFrameTime = 40000000;
+                            castSkill(data, PLAYER_STATE_SWORD_DRIVE, Globals.ITEM_WEAPON);
                             break;
                         case Skill.SWORD_MULTI:
-                            if (!skills.get(data[3]).canCast(getItemType(equip[Globals.ITEM_WEAPON]))) {
-                                return;
-                            }
-                            queuePlayerState(PLAYER_STATE_SWORD_MULTI);
-                            skills.get(data[3]).setCooldown();
-                            sendCooldown(data);
-                            nextFrameTime = 40000000;
+                            castSkill(data, PLAYER_STATE_SWORD_MULTI, Globals.ITEM_WEAPON);
                             break;
                         case Skill.SWORD_CINDER:
-                            if (!skills.get(data[3]).canCast(getItemType(equip[Globals.ITEM_WEAPON]))) {
-                                return;
-                            }
-                            queuePlayerState(PLAYER_STATE_SWORD_CINDER);
-                            skills.get(data[3]).setCooldown();
-                            sendCooldown(data);
-                            nextFrameTime = 40000000;
+                            castSkill(data, PLAYER_STATE_SWORD_CINDER, Globals.ITEM_WEAPON);
                             break;
                         case Skill.SWORD_TAUNT:
-                            if (!skills.get(data[3]).canCast(getItemType(equip[Globals.ITEM_WEAPON]))) {
-                                return;
-                            }
-                            queuePlayerState(PLAYER_STATE_SWORD_TAUNT);
-                            skills.get(data[3]).setCooldown();
-                            sendCooldown(data);
-                            nextFrameTime = 40000000;
+                            castSkill(data, PLAYER_STATE_SWORD_TAUNT, Globals.ITEM_WEAPON);
                             break;
                         case Skill.BOW_ARC:
-                            if (!skills.get(data[3]).canCast(getItemType(equip[Globals.ITEM_WEAPON]))) {
-                                return;
-                            }
-                            queuePlayerState(PLAYER_STATE_BOW_ARC);
-                            skills.get(data[3]).setCooldown();
-                            sendCooldown(data);
-                            nextFrameTime = 20000000;
+                            castSkill(data, PLAYER_STATE_BOW_ARC, Globals.ITEM_WEAPON);
                             break;
                         case Skill.BOW_POWER:
-                            if (!skills.get(data[3]).canCast(getItemType(equip[Globals.ITEM_WEAPON]))) {
-                                return;
-                            }
-                            queuePlayerState(PLAYER_STATE_BOW_POWER);
-                            skills.get(data[3]).setCooldown();
-                            sendCooldown(data);
-                            nextFrameTime = 40000000;
+                            castSkill(data, PLAYER_STATE_BOW_POWER, Globals.ITEM_WEAPON);
                             break;
                         case Skill.BOW_RAPID:
-                            if (!skills.get(data[3]).canCast(getItemType(equip[Globals.ITEM_WEAPON]))) {
-                                return;
-                            }
-                            queuePlayerState(PLAYER_STATE_BOW_RAPID);
-                            skills.get(data[3]).setCooldown();
-                            sendCooldown(data);
-                            nextFrameTime = 20000000;
+                            castSkill(data, PLAYER_STATE_BOW_RAPID, Globals.ITEM_WEAPON);
                             break;
                         case Skill.BOW_VOLLEY:
-                            if (!skills.get(data[3]).canCast(getItemType(equip[Globals.ITEM_WEAPON]))) {
-                                return;
-                            }
-                            queuePlayerState(PLAYER_STATE_BOW_VOLLEY);
-                            skills.get(data[3]).setCooldown();
-                            sendCooldown(data);
-                            nextFrameTime = 0;
+                            castSkill(data, PLAYER_STATE_BOW_VOLLEY, Globals.ITEM_WEAPON);
                             break;
                         case Skill.BOW_STORM:
-                            if (!skills.get(data[3]).canCast(getItemType(equip[Globals.ITEM_WEAPON]))) {
-                                return;
-                            }
-                            queuePlayerState(PLAYER_STATE_BOW_STORM);
-                            skills.get(data[3]).setCooldown();
-                            sendCooldown(data);
-                            nextFrameTime = 20000000;
+                            castSkill(data, PLAYER_STATE_BOW_STORM, Globals.ITEM_WEAPON);
                             break;
                         case Skill.BOW_FROST:
-                            if (!skills.get(data[3]).canCast(getItemType(equip[Globals.ITEM_WEAPON]))) {
-                                return;
-                            }
-                            queuePlayerState(PLAYER_STATE_BOW_FROST);
-                            skills.get(data[3]).setCooldown();
-                            sendCooldown(data);
-                            nextFrameTime = 40000000;
+                            castSkill(data, PLAYER_STATE_BOW_FROST, Globals.ITEM_WEAPON);
                             break;
                         case Skill.SHIELD_CHARGE:
-                            if (!skills.get(data[3]).canCast(getItemType(equip[Globals.ITEM_OFFHAND]))) {
-                                return;
-                            }
-                            queuePlayerState(PLAYER_STATE_SHIELD_CHARGE);
-                            skills.get(data[3]).setCooldown();
-                            sendCooldown(data);
-                            nextFrameTime = 20000000;
+                            castSkill(data, PLAYER_STATE_SHIELD_CHARGE, Globals.ITEM_OFFHAND);
                             break;
                         case Skill.SHIELD_DASH:
-                            if (!skills.get(data[3]).canCast(getItemType(equip[Globals.ITEM_OFFHAND]))) {
-                                return;
-                            }
-                            queuePlayerState(PLAYER_STATE_SHIELD_DASH);
-                            skills.get(data[3]).setCooldown();
-                            sendCooldown(data);
-                            nextFrameTime = 10000000;
+                            castSkill(data, PLAYER_STATE_SHIELD_DASH, Globals.ITEM_OFFHAND);
                             break;
                         case Skill.SHIELD_FORTIFY:
-                            if (!skills.get(data[3]).canCast(getItemType(equip[Globals.ITEM_OFFHAND]))) {
-                                return;
-                            }
-                            queuePlayerState(PLAYER_STATE_SHIELD_FORTIFY);
-                            skills.get(data[3]).setCooldown();
-                            sendCooldown(data);
-                            nextFrameTime = 20000000;
+                            castSkill(data, PLAYER_STATE_SHIELD_FORTIFY, Globals.ITEM_OFFHAND);
                             break;
                         case Skill.SHIELD_IRON:
-                            if (!skills.get(data[3]).canCast(getItemType(equip[Globals.ITEM_OFFHAND]))) {
-                                return;
-                            }
-                            queuePlayerState(PLAYER_STATE_SHIELD_IRON);
-                            skills.get(data[3]).setCooldown();
-                            sendCooldown(data);
-                            nextFrameTime = 20000000;
+                            castSkill(data, PLAYER_STATE_SHIELD_IRON, Globals.ITEM_OFFHAND);
                             break;
                         case Skill.SHIELD_REFLECT:
-                            if (!skills.get(data[3]).canCast(getItemType(equip[Globals.ITEM_OFFHAND]))) {
-                                return;
-                            }
-                            queuePlayerState(PLAYER_STATE_SHIELD_REFLECT);
-                            skills.get(data[3]).setCooldown();
-                            sendCooldown(data);
-                            nextFrameTime = 20000000;
+                            castSkill(data, PLAYER_STATE_SHIELD_REFLECT, Globals.ITEM_OFFHAND);
                             break;
                         case Skill.SHIELD_TOSS:
-                            if (!skills.get(data[3]).canCast(getItemType(equip[Globals.ITEM_OFFHAND]))) {
-                                return;
-                            }
-                            queuePlayerState(PLAYER_STATE_SHIELD_TOSS);
-                            skills.get(data[3]).setCooldown();
-                            sendCooldown(data);
-                            nextFrameTime = 40000000;
+                            castSkill(data, PLAYER_STATE_SHIELD_TOSS, Globals.ITEM_OFFHAND);
                             break;
-                    }
-
-                    //Tactical Execution Passive
-                    //Add after being able to cast skill
-                    if (hasSkill(Skill.PASSIVE_TACTICAL) && tacticalDmgMult < 0.01 + 0.01 * getSkillLevel(Skill.PASSIVE_TACTICAL)) {
-                        tacticalDmgMult += 0.01;
                     }
                 }
             }
@@ -1167,11 +1068,14 @@ public class Player extends Thread implements GameEntity {
                 if (amount > 0) {
                     nextHPSend = 0;
                 }
-                if (hasSkill(Skill.PASSIVE_BARRIER)) {
+                if (hasSkill(Skill.PASSIVE_BARRIER) && skills.get(Skill.PASSIVE_BARRIER).canCast()) {
                     barrierDmgTaken += amount;
                     if (barrierDmgTaken >= stats[Globals.STAT_MAXHP] * 0.5) {
                         barrierDmgTaken = 0;
                         queueBuff(new BuffPassiveBarrier(stats[Globals.STAT_MAXHP] * (0.1 + 0.005 * getSkillLevel(Skill.PASSIVE_BARRIER)), this));
+                        sendParticle(logic.getRoom(), Globals.PARTICLE_PASSIVE_BARRIER, dmg.getDmgPoint().x, dmg.getDmgPoint().y);
+                        skills.get(Skill.PASSIVE_BARRIER).setCooldown();
+                        sendCooldown(Skill.PASSIVE_BARRIER);
                     }
                 }
             }
@@ -1704,7 +1608,8 @@ public class Player extends Thread implements GameEntity {
      */
     public void setPlayerState(byte newState) {
         playerState = newState;
-        frame = 0;
+        frame = -1;
+        nextFrameTime = 0;
         updateAnimState = true;
     }
 
@@ -1715,7 +1620,7 @@ public class Player extends Thread implements GameEntity {
                 nextFrameTime -= Globals.LOGIC_UPDATE;
                 animState = Globals.PLAYER_STATE_STAND;
                 if (nextFrameTime <= 0) {
-                    if (frame == 9) {
+                    if (frame == 5) {
                         frame = 0;
                     } else {
                         frame++;
@@ -1739,12 +1644,12 @@ public class Player extends Thread implements GameEntity {
                 animState = Globals.PLAYER_STATE_WALK;
                 nextFrameTime -= Globals.LOGIC_UPDATE;
                 if (nextFrameTime <= 0) {
-                    if (frame == 18) {
+                    if (frame == 15) {
                         frame = 0;
                     } else {
                         frame++;
                     }
-                    nextFrameTime = 33000000 * .75;
+                    nextFrameTime = 40000000;
                 }
                 break;
             case PLAYER_STATE_JUMP:
@@ -1757,46 +1662,42 @@ public class Player extends Thread implements GameEntity {
                 nextFrameTime -= Globals.LOGIC_UPDATE;
                 if (nextFrameTime <= 0) {
                     if (skillDuration < 200) {
-                        animState = Globals.PLAYER_STATE_ATTACK1;
-                        if (frame < 4) {
+                        animState = Globals.PLAYER_STATE_ATTACK;
+                        if (frame < 11) {
                             frame++;
                         }
                     } else if (skillDuration < 400) {
-                        animState = Globals.PLAYER_STATE_ATTACK1;
+                        animState = Globals.PLAYER_STATE_ATTACK;
                         if (frame > 0) {
                             frame--;
                         }
                     } else {
-                        animState = Globals.PLAYER_STATE_ATTACK2;
-                        if (frame < 4) {
+                        animState = Globals.PLAYER_STATE_ATTACK;
+                        if (frame < 11) {
                             frame++;
                         }
                     }
-                    nextFrameTime = 40000000;
+                    nextFrameTime = 30000000;
                 }
                 if (skillDuration == 0 || skillDuration == 400) {
                     frame = 0;
                 } else if (skillDuration == 200) {
-                    frame = 4;
+                    frame = 11;
                 }
                 break;
             case PLAYER_STATE_SWORD_DRIVE:
                 nextFrameTime -= Globals.LOGIC_UPDATE;
-                animState = Globals.PLAYER_STATE_ATTACK2;
-                if (nextFrameTime <= 0 && frame < 4) {
+                animState = Globals.PLAYER_STATE_ATTACK;
+                if (nextFrameTime <= 0 && frame < 11) {
                     frame++;
                     nextFrameTime = 40000000;
                 }
                 break;
             case PLAYER_STATE_SWORD_VORPAL:
                 nextFrameTime -= Globals.LOGIC_UPDATE;
-                animState = Globals.PLAYER_STATE_ATTACK2;
-                if (nextFrameTime <= 0) {
-                    if (skillDuration < 800) {
-                        if (frame < 4) {
-                            frame++;
-                        }
-                    }
+                animState = Globals.PLAYER_STATE_ATTACK;
+                if (nextFrameTime <= 0 && skillDuration < 800 && frame < 11) {
+                    frame++;
                     nextFrameTime = 40000000;
                 }
                 int skillTime = 170,
@@ -1811,24 +1712,24 @@ public class Player extends Thread implements GameEntity {
                 break;
             case PLAYER_STATE_SWORD_MULTI:
                 nextFrameTime -= Globals.LOGIC_UPDATE;
-                animState = Globals.PLAYER_STATE_ATTACK1;
-                if (nextFrameTime <= 0 && frame < 4) {
+                animState = Globals.PLAYER_STATE_ATTACK;
+                if (nextFrameTime <= 0 && frame < 11) {
                     frame++;
                     nextFrameTime = 40000000;
                 }
                 break;
             case PLAYER_STATE_SWORD_CINDER:
                 nextFrameTime -= Globals.LOGIC_UPDATE;
-                animState = Globals.PLAYER_STATE_ATTACK1;
-                if (nextFrameTime <= 0 && frame < 4) {
+                animState = Globals.PLAYER_STATE_ATTACK;
+                if (nextFrameTime <= 0 && frame < 11) {
                     frame++;
                     nextFrameTime = 40000000;
                 }
                 break;
             case PLAYER_STATE_SWORD_TAUNT:
                 nextFrameTime -= Globals.LOGIC_UPDATE;
-                animState = Globals.PLAYER_STATE_ATTACK2;
-                if (nextFrameTime <= 0 && frame < 4) {
+                animState = Globals.PLAYER_STATE_ATTACK;
+                if (nextFrameTime <= 0 && frame < 11) {
                     frame++;
                     nextFrameTime = 40000000;
                 }
@@ -1836,20 +1737,20 @@ public class Player extends Thread implements GameEntity {
             case PLAYER_STATE_BOW_ARC:
                 nextFrameTime -= Globals.LOGIC_UPDATE;
                 animState = Globals.PLAYER_STATE_ATTACKBOW;
-                if (frame < 4 && nextFrameTime <= 0) {
+                if (frame < 5 && nextFrameTime <= 0) {
                     frame++;
-                    nextFrameTime = 20000000;
+                    nextFrameTime = (frame < 5) ? 20000000 : 70000000;
                 }
                 break;
             case PLAYER_STATE_BOW_RAPID:
                 nextFrameTime -= Globals.LOGIC_UPDATE;
                 animState = Globals.PLAYER_STATE_ATTACKBOW;
-                if (frame < 4 && nextFrameTime <= 0) {
+                if (frame < 5 && nextFrameTime <= 0) {
                     frame++;
-                    nextFrameTime = 30000000;
+                    nextFrameTime = (frame < 5) ? 20000000 : 70000000;
                 }
                 if (skillDuration == 150 || skillDuration == 300 || skillDuration == 450) {
-                    frame = 0;
+                    frame = 2;
                 }
                 break;
             case PLAYER_STATE_BOW_POWER:
@@ -1857,56 +1758,48 @@ public class Player extends Thread implements GameEntity {
                 animState = Globals.PLAYER_STATE_ATTACKBOW;
                 if (nextFrameTime <= 0) {
                     if (skillDuration < 800) {
-                        if (frame != 3) {
+                        if (frame != 5) {
                             frame++;
                         }
-                        nextFrameTime = 40000000;
-                    } else {
-                        if (frame != 4) {
-                            frame++;
-                        }
-                        nextFrameTime = 40000000;
                     }
+                    nextFrameTime = (frame < 5) ? 20000000 : 70000000;
                 }
                 break;
             case PLAYER_STATE_BOW_VOLLEY:
                 nextFrameTime -= Globals.LOGIC_UPDATE;
                 animState = Globals.PLAYER_STATE_ATTACKBOW;
-                if (frame != 4) {
-                    frame = 4;
+                if (frame != 5) {
+                    frame = 5;
                 }
                 break;
             case PLAYER_STATE_BOW_STORM:
                 nextFrameTime -= Globals.LOGIC_UPDATE;
                 animState = Globals.PLAYER_STATE_ATTACKBOW;
-                if (frame < 4 && nextFrameTime <= 0) {
-                    if (frame < 4) {
-                        frame++;
-                        nextFrameTime = 20000000;
-                    }
+                if (frame < 5 && nextFrameTime <= 0) {
+                    frame++;
+                    nextFrameTime = (frame < 5) ? 20000000 : 70000000;
                 }
                 break;
             case PLAYER_STATE_BOW_FROST:
                 nextFrameTime -= Globals.LOGIC_UPDATE;
                 animState = Globals.PLAYER_STATE_ATTACKBOW;
-                if (frame < 4 && nextFrameTime <= 0) {
+                if (frame < 5 && nextFrameTime <= 0) {
                     frame++;
-                    nextFrameTime = 40000000;
-
+                    nextFrameTime = (frame < 5) ? 20000000 : 70000000;
                 }
                 break;
             case PLAYER_STATE_SHIELD_DASH:
                 nextFrameTime -= Globals.LOGIC_UPDATE;
-                animState = Globals.PLAYER_STATE_ATTACKOFF2;
+                animState = Globals.PLAYER_STATE_ATTACK;
                 if (nextFrameTime <= 0 && frame < 2) {
                     frame++;
-                    nextFrameTime = 10000000;
+                    nextFrameTime = 20000000;
                 }
                 break;
             case PLAYER_STATE_SHIELD_CHARGE:
                 nextFrameTime -= Globals.LOGIC_UPDATE;
-                animState = Globals.PLAYER_STATE_ATTACKOFF2;
-                if (nextFrameTime <= 0 && frame < 4) {
+                animState = Globals.PLAYER_STATE_ATTACK;
+                if (nextFrameTime <= 0 && frame < 11) {
                     frame++;
                     nextFrameTime = 20000000;
                 }
@@ -1914,15 +1807,15 @@ public class Player extends Thread implements GameEntity {
             case PLAYER_STATE_SHIELD_FORTIFY:
                 nextFrameTime -= Globals.LOGIC_UPDATE;
                 animState = Globals.PLAYER_STATE_BUFF;
-                if (nextFrameTime <= 0 && frame < 9) {
+                if (nextFrameTime <= 0 && frame < 6) {
                     frame++;
-                    nextFrameTime = 20000000;
+                    nextFrameTime = 30000000;
                 }
                 break;
             case PLAYER_STATE_SHIELD_REFLECT:
                 nextFrameTime -= Globals.LOGIC_UPDATE;
                 animState = Globals.PLAYER_STATE_BUFF;
-                if (nextFrameTime <= 0 && frame < 9) {
+                if (nextFrameTime <= 0 && frame < 6) {
                     frame++;
                     nextFrameTime = 20000000;
                 }
@@ -1930,15 +1823,15 @@ public class Player extends Thread implements GameEntity {
             case PLAYER_STATE_SHIELD_IRON:
                 nextFrameTime -= Globals.LOGIC_UPDATE;
                 animState = Globals.PLAYER_STATE_BUFF;
-                if (nextFrameTime <= 0 && frame < 9) {
+                if (nextFrameTime <= 0 && frame < 6) {
                     frame++;
-                    nextFrameTime = 20000000;
+                    nextFrameTime = 30000000;
                 }
                 break;
             case PLAYER_STATE_SHIELD_TOSS:
                 nextFrameTime -= Globals.LOGIC_UPDATE;
-                animState = Globals.PLAYER_STATE_ATTACKOFF1;
-                if (nextFrameTime <= 0 && frame < 4) {
+                animState = Globals.PLAYER_STATE_ATTACK;
+                if (nextFrameTime <= 0 && frame < 11) {
                     frame++;
                     nextFrameTime = 40000000;
                 }

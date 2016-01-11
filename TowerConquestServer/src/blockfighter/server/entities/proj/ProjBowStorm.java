@@ -44,6 +44,7 @@ public class ProjBowStorm extends Projectile {
         super.update();
         if (duration % 200 == 0 && duration < 5000) {
             pHit.clear();
+            bHit.clear();
         }
     }
 
