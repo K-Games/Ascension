@@ -472,7 +472,6 @@ public class SaveData {
             if (Globals.rng(100) < 30 * i) {
                 addItem(new ItemUpgrade(1, lvl + Globals.rng(6)));
             }
-
         }
         for (int itemCode : ItemEquip.ITEM_CODES) {
             if (Globals.rng(100) < 50) {
@@ -700,13 +699,13 @@ public class SaveData {
     }
 
     public void addItem(ItemEquip e) {
-        int type = ItemEquip.getItemType(e.getItemCode());
-        if (type == Globals.ITEM_SHIELD || type == Globals.ITEM_QUIVER || type == Globals.ITEM_BOW) {
-            type = Globals.ITEM_WEAPON;
+        int tab = ItemEquip.getItemType(e.getItemCode());
+        if (tab == Globals.ITEM_SHIELD || tab == Globals.ITEM_QUIVER || tab == Globals.ITEM_BOW) {
+            tab = Globals.ITEM_WEAPON;
         }
-        for (int i = 0; i < inventory[type].length; i++) {
-            if (inventory[type][i] == null) {
-                inventory[type][i] = e;
+        for (int i = 0; i < inventory[tab].length; i++) {
+            if (inventory[tab][i] == null) {
+                inventory[tab][i] = e;
                 break;
             }
         }

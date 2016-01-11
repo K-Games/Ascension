@@ -264,13 +264,14 @@ public class ScreenIngame extends Screen {
             g.translate(640.0 - players.get(myKey).getX(), 500.0 - players.get(myKey).getY());
         }
         map.draw(g);
-        if (players != null) {
-            for (Map.Entry<Byte, Player> pEntry : players.entrySet()) {
+
+        if (bosses != null) {
+            for (Map.Entry<Byte, Boss> pEntry : bosses.entrySet()) {
                 pEntry.getValue().draw(g);
             }
         }
-        if (bosses != null) {
-            for (Map.Entry<Byte, Boss> pEntry : bosses.entrySet()) {
+        if (players != null) {
+            for (Map.Entry<Byte, Player> pEntry : players.entrySet()) {
                 pEntry.getValue().draw(g);
             }
         }
@@ -287,18 +288,21 @@ public class ScreenIngame extends Screen {
                 RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
         BufferedImage hud = Globals.HUD[0];
         g.drawImage(hud, Globals.WINDOW_WIDTH / 2 - hud.getWidth() / 2, Globals.WINDOW_HEIGHT - hud.getHeight(), null);
-        if (players.containsKey(myKey)) {
-            BufferedImage hpbar = Globals.HUD[1];
-            g.drawImage(hpbar,
-                    Globals.WINDOW_WIDTH / 2 - hud.getWidth() / 2 + 2, Globals.WINDOW_HEIGHT - hud.getHeight() + 2,
-                    (int) (players.get(myKey).getStat(Globals.STAT_MINHP) / players.get(myKey).getStat(Globals.STAT_MAXHP) * 802D), 38,
-                    null);
-            g.setFont(Globals.ARIAL_18PT);
-            int width = g.getFontMetrics().stringWidth((int) players.get(myKey).getStat(Globals.STAT_MINHP) + "/" + (int) players.get(myKey).getStat(Globals.STAT_MAXHP));
-            drawStringOutline(g, (int) players.get(myKey).getStat(Globals.STAT_MINHP) + "/" + (int) players.get(myKey).getStat(Globals.STAT_MAXHP), Globals.WINDOW_WIDTH / 2 - width / 2, Globals.WINDOW_HEIGHT - hud.getHeight() + 28, 1);
-            g.setColor(Color.WHITE);
-            g.drawString((int) players.get(myKey).getStat(Globals.STAT_MINHP) + "/" + (int) players.get(myKey).getStat(Globals.STAT_MAXHP), Globals.WINDOW_WIDTH / 2 - width / 2, Globals.WINDOW_HEIGHT - hud.getHeight() + 28);
+
+        drawHPbar(g, hud);
+        drawHotkeys(g);
+
+        if (drawInfoHotkey != -1) {
+            drawSkillInfo(g, hotkeySlots[drawInfoHotkey], c.getHotkeys()[drawInfoHotkey]);
         }
+        g.setColor(new Color(25, 25, 25, 150));
+        g.fillRect(1210, 5, 65, 45);
+        g.setFont(Globals.ARIAL_12PT);
+        g.setColor(Color.WHITE);
+        g.drawString("Ping: " + ping, 1220, 40);
+    }
+
+    private void drawHotkeys(Graphics2D g) {
         Skill[] hotkey = c.getHotkeys();
         for (int j = 0; j < hotkeySlots.length; j++) {
             if (hotkey[j] != null) {
@@ -323,16 +327,22 @@ public class ScreenIngame extends Screen {
             drawStringOutline(g, key, (int) hotkeySlots[j].x + 58 - width, (int) hotkeySlots[j].y + 58, 1);
             g.setColor(Color.WHITE);
             g.drawString(key, (int) hotkeySlots[j].x + 58 - width, (int) hotkeySlots[j].y + 58);
+        }
+    }
 
+    private void drawHPbar(Graphics2D g, BufferedImage hud) {
+        if (players.containsKey(myKey)) {
+            BufferedImage hpbar = Globals.HUD[1];
+            g.drawImage(hpbar,
+                    Globals.WINDOW_WIDTH / 2 - hud.getWidth() / 2 + 2, Globals.WINDOW_HEIGHT - hud.getHeight() + 2,
+                    (int) (players.get(myKey).getStat(Globals.STAT_MINHP) / players.get(myKey).getStat(Globals.STAT_MAXHP) * 802D), 38,
+                    null);
+            g.setFont(Globals.ARIAL_18PT);
+            int width = g.getFontMetrics().stringWidth((int) players.get(myKey).getStat(Globals.STAT_MINHP) + "/" + (int) players.get(myKey).getStat(Globals.STAT_MAXHP));
+            drawStringOutline(g, (int) players.get(myKey).getStat(Globals.STAT_MINHP) + "/" + (int) players.get(myKey).getStat(Globals.STAT_MAXHP), Globals.WINDOW_WIDTH / 2 - width / 2, Globals.WINDOW_HEIGHT - hud.getHeight() + 28, 1);
+            g.setColor(Color.WHITE);
+            g.drawString((int) players.get(myKey).getStat(Globals.STAT_MINHP) + "/" + (int) players.get(myKey).getStat(Globals.STAT_MAXHP), Globals.WINDOW_WIDTH / 2 - width / 2, Globals.WINDOW_HEIGHT - hud.getHeight() + 28);
         }
-        if (drawInfoHotkey != -1) {
-            drawSkillInfo(g, hotkeySlots[drawInfoHotkey], c.getHotkeys()[drawInfoHotkey]);
-        }
-        g.setColor(new Color(25, 25, 25, 150));
-        g.fillRect(1210, 5, 65, 45);
-        g.setFont(Globals.ARIAL_12PT);
-        g.setColor(Color.WHITE);
-        g.drawString("Ping: " + ping, 1220, 40);
     }
 
     private void drawSkillInfo(Graphics2D g, Rectangle2D.Double box, Skill skill) {

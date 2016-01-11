@@ -80,7 +80,7 @@ public class ScreenUpgrade extends ScreenMenu {
         if (now - lastUpdateTime >= Globals.LOGIC_UPDATE) {
             nextFrameTime -= Globals.LOGIC_UPDATE;
             if (nextFrameTime <= 0) {
-                if (charFrame >= 8) {
+                if (charFrame >= 5) {
                     charFrame = 0;
                 } else {
                     charFrame++;
@@ -183,11 +183,11 @@ public class ScreenUpgrade extends ScreenMenu {
         BufferedImage button = Globals.MENU_BUTTON[Globals.BUTTON_SLOT];
         BufferedImage character = Globals.CHAR_SPRITE[Globals.PLAYER_STATE_STAND][charFrame];
 
-        int x = 1050 + character.getWidth() / 2, y = 100 + character.getHeight();
+        int x = 1070 + character.getWidth() / 2, y = 200 + character.getHeight();
         if (c.getEquip()[Globals.ITEM_OFFHAND] != null) {
             c.getEquip()[Globals.ITEM_OFFHAND].drawIngame(g, x, y, Globals.PLAYER_STATE_STAND, charFrame, Globals.RIGHT, true);
         }
-        g.drawImage(character, 1050, 100, null);
+        g.drawImage(character, 1070, 200, null);
 
         if (c.getEquip()[Globals.ITEM_CHEST] != null) {
             c.getEquip()[Globals.ITEM_CHEST].drawIngame(g, x, y, Globals.PLAYER_STATE_STAND, charFrame, Globals.RIGHT);

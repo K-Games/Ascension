@@ -18,6 +18,11 @@ public class SkillPassiveResistance extends Skill {
     }
 
     @Override
+    public double getMaxCooldown() {
+        return maxCooldown - (1000 * level);
+    }
+
+    @Override
     public void setCooldown() {
         super.setCooldown();
         reduceCooldown(1000 * level);
