@@ -32,8 +32,6 @@ public class BossLightning extends Boss {
             STATE_AI_BOLT = 0x0A,
             STATE_AI_BALL = 0x0B;
 
-    private long touchDamageTime = 0;
-
     public BossLightning(LogicModule l, byte key, GameMap map, double x, double y) {
         super(l, key, map, x, y);
         type = BOSS_LIGHTNING;
@@ -47,6 +45,7 @@ public class BossLightning extends Boss {
         addSkill(SKILL_BALL, new SkillBall());
         addSkill(SKILL_ATT1, new SkillAttack1());
         addSkill(SKILL_ATT2, new SkillAttack2());
+        logic.queueAddProj(new ProjTouch(logic, logic.getNextProjKey(), this));
     }
 
     @Override
@@ -63,12 +62,6 @@ public class BossLightning extends Boss {
             return;
         }
         nextHPSend -= Globals.LOGIC_UPDATE / 1000000;
-        touchDamageTime -= Globals.LOGIC_UPDATE / 1000000;
-        if (touchDamageTime <= 0) {
-            ProjTouch proj = new ProjTouch(logic, logic.getNextProjKey(), this);
-            logic.queueAddProj(proj);
-            touchDamageTime = 500;
-        }
 
         if (isUsingSkill()) {
             skillDuration += Globals.LOGIC_UPDATE / 1000000;

@@ -340,73 +340,61 @@ public class LogicModule extends Thread {
             }
         }
 
-        queues[0] = new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    while (!pDirKeydownQueue.isEmpty()) {
-                        byte[] data = pDirKeydownQueue.poll();
-                        if (data != null) {
-                            byte key = data[2], dir = data[3], value = data[4];
-                            if (players.containsKey(key)) {
-                                players.get(key).setDirKeydown(dir, value == 1);
-                            }
+        queues[0] = () -> {
+            try {
+                while (!pDirKeydownQueue.isEmpty()) {
+                    byte[] data = pDirKeydownQueue.poll();
+                    if (data != null) {
+                        byte key = data[2], dir = data[3], value = data[4];
+                        if (players.containsKey(key)) {
+                            players.get(key).setDirKeydown(dir, value == 1);
                         }
                     }
-                } catch (Exception ex) {
-                    Globals.log(ex.getLocalizedMessage(), ex, true);
                 }
+            } catch (Exception ex) {
+                Globals.log(ex.getLocalizedMessage(), ex, true);
             }
         };
 
-        queues[1] = new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    while (!pUseSkillQueue.isEmpty()) {
-                        byte[] data = pUseSkillQueue.poll();
-                        if (data != null) {
-                            byte key = data[2];
-                            if (players.containsKey(key)) {
-                                players.get(key).queueSkillUse(data);
-                            }
+        queues[1] = () -> {
+            try {
+                while (!pUseSkillQueue.isEmpty()) {
+                    byte[] data = pUseSkillQueue.poll();
+                    if (data != null) {
+                        byte key = data[2];
+                        if (players.containsKey(key)) {
+                            players.get(key).queueSkillUse(data);
                         }
                     }
-                } catch (Exception ex) {
-                    Globals.log(ex.getLocalizedMessage(), ex, true);
                 }
+            } catch (Exception ex) {
+                Globals.log(ex.getLocalizedMessage(), ex, true);
             }
         };
 
-        queues[2] = new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    while (!projEffectQueue.isEmpty()) {
-                        Projectile proj = projEffectQueue.poll();
-                        if (proj != null) {
-                            proj.processQueue();
-                        }
+        queues[2] = () -> {
+            try {
+                while (!projEffectQueue.isEmpty()) {
+                    Projectile proj = projEffectQueue.poll();
+                    if (proj != null) {
+                        proj.processQueue();
                     }
-                } catch (Exception ex) {
-                    Globals.log(ex.getLocalizedMessage(), ex, true);
                 }
+            } catch (Exception ex) {
+                Globals.log(ex.getLocalizedMessage(), ex, true);
             }
         };
 
-        queues[3] = new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    while (!projAddQueue.isEmpty()) {
-                        Projectile p = projAddQueue.poll();
-                        if (p != null) {
-                            projectiles.put(p.getKey(), p);
-                        }
+        queues[3] = () -> {
+            try {
+                while (!projAddQueue.isEmpty()) {
+                    Projectile p = projAddQueue.poll();
+                    if (p != null) {
+                        projectiles.put(p.getKey(), p);
                     }
-                } catch (Exception ex) {
-                    Globals.log(ex.getLocalizedMessage(), ex, true);
                 }
+            } catch (Exception ex) {
+                Globals.log(ex.getLocalizedMessage(), ex, true);
             }
         };
 

@@ -644,7 +644,7 @@ public class Player extends Thread implements GameEntity {
             queueBuff(new BuffSwordSlash(4000, .1, this));
             sendParticle(logic.getRoom(), Globals.PARTICLE_SWORD_SLASHBUFF, key);
         }
-        if (skillDuration % 200 == 0 && skillDuration < 600) {
+        if (skillDuration % 100 == 0 && skillDuration < 300) {
             skillCounter++;
             ProjSwordSlash proj = new ProjSwordSlash(logic, logic.getNextProjKey(), this, x, y, skillCounter);
             logic.queueAddProj(proj);
@@ -657,20 +657,20 @@ public class Player extends Thread implements GameEntity {
             }
         }
 
-        if (skillDuration >= 600 || isStunned() || isKnockback()) {
+        if (skillDuration >= 350 || isStunned() || isKnockback()) {
             setPlayerState(PLAYER_STATE_STAND);
         }
     }
 
     private void updateSkillSwordDrive() {
-        if (skillDuration % 250 == 0 && skillDuration < 1000) {
+        if (skillDuration % 50 == 0 && skillDuration < 200) {
             ProjSwordDrive proj = new ProjSwordDrive(logic, logic.getNextProjKey(), this, x, y);
             logic.queueAddProj(proj);
             if (skillDuration == 0) {
                 sendParticle(logic.getRoom(), Globals.PARTICLE_SWORD_DRIVE, key, facing);
             }
         }
-        if (skillDuration >= 1000) {
+        if (skillDuration >= 450) {
             setPlayerState(PLAYER_STATE_STAND);
         }
     }
@@ -721,13 +721,13 @@ public class Player extends Thread implements GameEntity {
         if (skillCounter == numHits) {
             skillCounter++;
         }
-        if (skillDuration % 50 == 0 && skillCounter < numHits) {
-            ProjSwordMulti proj = new ProjSwordMulti(logic, logic.getNextProjKey(), this, x, y + (Globals.rng(40) - 20));
+        if (skillDuration % 30 == 0 && skillCounter < numHits) {
+            ProjSwordMulti proj = new ProjSwordMulti(logic, logic.getNextProjKey(), this, x, y);
             logic.queueAddProj(proj);
             sendParticle(logic.getRoom(), Globals.PARTICLE_SWORD_MULTI, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(), facing);
             skillCounter++;
         }
-        if (skillDuration >= numHits * 50 + 110 || (!isInvulnerable() && (isStunned() || isKnockback()))) {
+        if (skillDuration >= numHits * 30 + 110 || (!isInvulnerable() && (isStunned() || isKnockback()))) {
             setInvulnerable(false);
             setPlayerState(PLAYER_STATE_STAND);
         }
@@ -739,7 +739,7 @@ public class Player extends Thread implements GameEntity {
             logic.queueAddProj(proj);
             sendParticle(logic.getRoom(), Globals.PARTICLE_SWORD_CINDER, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(), facing);
         }
-        if (skillDuration >= 350) {
+        if (skillDuration >= 250) {
             setPlayerState(PLAYER_STATE_STAND);
         }
     }
@@ -1078,6 +1078,7 @@ public class Player extends Thread implements GameEntity {
                         sendCooldown(Skill.PASSIVE_BARRIER);
                     }
                 }
+                //System.out.println("Player Damage Raw: " + dmg.getDamage() + ", Taken: " + amount);
             }
         }
         //Empty healing queued
@@ -1661,42 +1662,37 @@ public class Player extends Thread implements GameEntity {
             case PLAYER_STATE_SWORD_SLASH:
                 nextFrameTime -= Globals.LOGIC_UPDATE;
                 if (nextFrameTime <= 0) {
-                    if (skillDuration < 200) {
-                        animState = Globals.PLAYER_STATE_ATTACK;
-                        if (frame < 11) {
-                            frame++;
-                        }
-                    } else if (skillDuration < 400) {
+                    if (skillDuration < 200 && skillDuration > 100) {
                         animState = Globals.PLAYER_STATE_ATTACK;
                         if (frame > 0) {
                             frame--;
                         }
                     } else {
                         animState = Globals.PLAYER_STATE_ATTACK;
-                        if (frame < 11) {
+                        if (frame < 10) {
                             frame++;
                         }
                     }
-                    nextFrameTime = 30000000;
+                    nextFrameTime = 20000000;
                 }
-                if (skillDuration == 0 || skillDuration == 400) {
+                if (skillDuration == 0 || skillDuration == 200) {
                     frame = 0;
-                } else if (skillDuration == 200) {
-                    frame = 11;
+                } else if (skillDuration == 100) {
+                    frame = 10;
                 }
                 break;
             case PLAYER_STATE_SWORD_DRIVE:
                 nextFrameTime -= Globals.LOGIC_UPDATE;
                 animState = Globals.PLAYER_STATE_ATTACK;
-                if (nextFrameTime <= 0 && frame < 11) {
+                if (nextFrameTime <= 0 && frame < 10) {
                     frame++;
-                    nextFrameTime = 40000000;
+                    nextFrameTime = (frame == 1) ? 150000000 : 30000000;
                 }
                 break;
             case PLAYER_STATE_SWORD_VORPAL:
                 nextFrameTime -= Globals.LOGIC_UPDATE;
                 animState = Globals.PLAYER_STATE_ATTACK;
-                if (nextFrameTime <= 0 && skillDuration < 800 && frame < 11) {
+                if (nextFrameTime <= 0 && skillDuration < 800 && frame < 10) {
                     frame++;
                     nextFrameTime = 40000000;
                 }
@@ -1713,25 +1709,29 @@ public class Player extends Thread implements GameEntity {
             case PLAYER_STATE_SWORD_MULTI:
                 nextFrameTime -= Globals.LOGIC_UPDATE;
                 animState = Globals.PLAYER_STATE_ATTACK;
-                if (nextFrameTime <= 0 && frame < 11) {
-                    frame++;
-                    nextFrameTime = 40000000;
+                if (nextFrameTime <= 0) {
+                    if (frame == 6) {
+                        frame = 3;
+                    } else {
+                        frame++;
+                    }
+                    nextFrameTime = 10000000;
                 }
                 break;
             case PLAYER_STATE_SWORD_CINDER:
                 nextFrameTime -= Globals.LOGIC_UPDATE;
                 animState = Globals.PLAYER_STATE_ATTACK;
-                if (nextFrameTime <= 0 && frame < 11) {
+                if (nextFrameTime <= 0 && frame < 10) {
                     frame++;
-                    nextFrameTime = 40000000;
+                    nextFrameTime = (frame == 1) ? 150000000 : 30000000;
                 }
                 break;
             case PLAYER_STATE_SWORD_TAUNT:
                 nextFrameTime -= Globals.LOGIC_UPDATE;
                 animState = Globals.PLAYER_STATE_ATTACK;
-                if (nextFrameTime <= 0 && frame < 11) {
+                if (nextFrameTime <= 0 && frame < 10) {
                     frame++;
-                    nextFrameTime = 40000000;
+                    nextFrameTime = (frame == 1) ? 150000000 : 30000000;
                 }
                 break;
             case PLAYER_STATE_BOW_ARC:
@@ -1799,9 +1799,9 @@ public class Player extends Thread implements GameEntity {
             case PLAYER_STATE_SHIELD_CHARGE:
                 nextFrameTime -= Globals.LOGIC_UPDATE;
                 animState = Globals.PLAYER_STATE_ATTACK;
-                if (nextFrameTime <= 0 && frame < 11) {
+                if (nextFrameTime <= 0 && frame < 10) {
                     frame++;
-                    nextFrameTime = 20000000;
+                    nextFrameTime = (frame == 1) ? 400000000 : 20000000;
                 }
                 break;
             case PLAYER_STATE_SHIELD_FORTIFY:

@@ -32,9 +32,9 @@ public class ProjSwordVorpal extends Projectile {
         this.y = y;
         hitbox = new Rectangle2D.Double[1];
         if (getOwner().getFacing() == Globals.RIGHT) {
-            hitbox[0] = new Rectangle2D.Double(x - 50, y - 150, 350, 113);
+            hitbox[0] = new Rectangle2D.Double(x - 60, y - 130, 350, 113);
         } else {
-            hitbox[0] = new Rectangle2D.Double(x - 350 + 50, y - 150, 350, 113);
+            hitbox[0] = new Rectangle2D.Double(x - 350 + 60, y - 130, 350, 113);
         }
         duration = 200;
     }

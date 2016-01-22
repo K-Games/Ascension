@@ -34,12 +34,12 @@ public class ProjSwordDrive extends Projectile {
         this.y = y;
         hitbox = new Rectangle2D.Double[1];
         if (getOwner().getFacing() == Globals.RIGHT) {
-            hitbox[0] = new Rectangle2D.Double(x - 310, y - 167, 560, 150);
+            hitbox[0] = new Rectangle2D.Double(x - 310, y - 140, 560, 150);
         } else {
-            hitbox[0] = new Rectangle2D.Double(x - 560 + 310, y - 167, 560, 150);
+            hitbox[0] = new Rectangle2D.Double(x - 560 + 310, y - 140, 560, 150);
 
         }
-        duration = 250;
+        duration = 50;
     }
 
     @Override
@@ -56,7 +56,7 @@ public class ProjSwordDrive extends Projectile {
                 p.queueBuff(new BuffKnockback(50, (owner.getFacing() == Globals.RIGHT) ? 3 : -3, -0.5, owner, p));
 
                 if (!healed && owner.isSkillMaxed(Skill.SWORD_DRIVE)) {
-                    double heal = owner.getStats()[Globals.STAT_MAXHP] * 0.005;
+                    double heal = owner.getStats()[Globals.STAT_MAXHP] * 0.0025;
                     owner.queueHeal((int) heal);
                     healed = true;
                 }
@@ -74,7 +74,7 @@ public class ProjSwordDrive extends Projectile {
                 b.queueDamage(new Damage(damage, true, owner, b, crit, hitbox[0], b.getHitbox()));
 
                 if (!healed && owner.isSkillMaxed(Skill.SWORD_DRIVE)) {
-                    double heal = owner.getStats()[Globals.STAT_MAXHP] * 0.005;
+                    double heal = owner.getStats()[Globals.STAT_MAXHP] * 0.0025;
                     owner.queueHeal((int) heal);
                     healed = true;
                 }

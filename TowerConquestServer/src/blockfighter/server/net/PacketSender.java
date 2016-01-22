@@ -45,14 +45,11 @@ public class PacketSender implements Runnable {
         while (!sendAllQueue.isEmpty()) {
             final DatagramPacket p = sendAllQueue.poll();
             if (p != null) {
-                threadPool.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            socket.send(p);
-                        } catch (IOException ex) {
-                            Globals.log(ex.getLocalizedMessage(), ex, true);
-                        }
+                threadPool.execute(() -> {
+                    try {
+                        socket.send(p);
+                    } catch (IOException ex) {
+                        Globals.log(ex.getLocalizedMessage(), ex, true);
                     }
                 });
             }
@@ -104,16 +101,13 @@ public class PacketSender implements Runnable {
      * @param port Port of destination player
      */
     public void sendPlayer(final byte[] bytes, final InetAddress address, final int port) {
-        threadPool.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    DatagramPacket packet = createPacket(bytes, address, port);
-                    socket.send(packet);
-                    //bytesSent += bytes.length;
-                } catch (IOException ex) {
-                    Globals.log(ex.getLocalizedMessage(), ex, true);
-                }
+        threadPool.execute(() -> {
+            try {
+                DatagramPacket packet = createPacket(bytes, address, port);
+                socket.send(packet);
+                //bytesSent += bytes.length;
+            } catch (IOException ex) {
+                Globals.log(ex.getLocalizedMessage(), ex, true);
             }
         });
     }
