@@ -154,7 +154,7 @@ public class SaveData {
         temp = Globals.intToByte(c.uniqueID);
         System.arraycopy(temp, 0, data, pos, temp.length);
         pos += temp.length;
-        
+
         int[] statIDs = {Globals.STAT_LEVEL,
             Globals.STAT_POWER,
             Globals.STAT_DEFENSE,

@@ -16,8 +16,7 @@ public class SkillBowPower extends Skill {
         skillCode = BOW_POWER;
         maxCooldown = 6000;
         reqWeapon = Globals.ITEM_BOW;
-        skillName = "Power Shot";
-        maxSkillName = "Obliteration";
+        skillName = "Obliteration";
     }
 
     @Override

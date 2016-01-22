@@ -17,7 +17,6 @@ public class SkillShieldReflect extends Skill {
         maxCooldown = 15000;
         reqWeapon = Globals.ITEM_SHIELD;
         skillName = "Reflect Damage";
-        maxSkillName = "Strength in Numbers";
     }
 
     @Override

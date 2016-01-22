@@ -34,18 +34,30 @@ public class Main {
         if (args.length >= 1) {
             Globals.SERVER_ADDRESS = args[0];
         }
-        System.setProperty("java.library.path", "native/windows");
+
+        if (System.getProperty("os.name").contains("Windows")) {
+            // Windows
+            System.setProperty("java.library.path", "native/windows");
+        } else if (System.getProperty("os.name").contains("Mac")) {
+            // Mac OS X
+            System.setProperty("java.library.path", "native/macosx");
+        } else if (System.getProperty("os.name").contains("Linux")) {
+            // Linux
+            System.setProperty("java.library.path", "native/linux");
+        } else if (System.getProperty("os.name").contains("Sun")) {
+            // SunOS (Solaris)
+            System.setProperty("java.library.path", "native/solaris");
+        } else {
+            throw new RuntimeException("Your OS is not supported");
+        }
 
         //set sys_paths to null so that java.library.path will be reevalueted next time it is needed
         final Field sysPathsField = ClassLoader.class.getDeclaredField("sys_paths");
         sysPathsField.setAccessible(true);
         sysPathsField.set(null, null);
 
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                createAndShowGUI();
-            }
+        javax.swing.SwingUtilities.invokeLater(() -> {
+            createAndShowGUI();
         });
     }
 

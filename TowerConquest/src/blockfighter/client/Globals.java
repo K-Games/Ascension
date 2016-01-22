@@ -130,9 +130,9 @@ public class Globals {
             ITEM_RING = 8,
             ITEM_AMULET = 9,
             ITEM_OFFHAND = 10,
-            ITEM_SHIELD = 10,   //10,11,12 only used for item type identification.
-            ITEM_BOW = 11,      //They all will be placed in weapons tab
-            ITEM_QUIVER = 12; 
+            ITEM_SHIELD = 10, //10,11,12 only used for item type identification.
+            ITEM_BOW = 11, //They all will be placed in weapons tab
+            ITEM_QUIVER = 12;
 
     public final static byte NUM_EQUIP_SLOTS = 11;
 
@@ -310,7 +310,7 @@ public class Globals {
 
     public static void loadGFX() {
         try {
-            CHAR_SPRITE[PLAYER_STATE_ATTACK] = new BufferedImage[12];
+            CHAR_SPRITE[PLAYER_STATE_ATTACK] = new BufferedImage[11];
             for (int i = 0; i < CHAR_SPRITE[PLAYER_STATE_ATTACK].length; i++) {
                 CHAR_SPRITE[PLAYER_STATE_ATTACK][i] = ImageIO.read(Globals.class.getResourceAsStream("sprites/character/attack/mainhand/" + i + ".png"));
             }

@@ -35,7 +35,7 @@ public class BossLightning extends Boss {
             return;
         }
         SPRITE = new BufferedImage[8][];
-        
+
         //Remove repetition later
         SPRITE[STATE_STAND] = new BufferedImage[10];
         SPRITE[STATE_WALK] = SPRITE[STATE_STAND];
@@ -56,7 +56,7 @@ public class BossLightning extends Boss {
             } catch (Exception ex) {
             }
         }
-        
+
         SPRITE[STATE_BALLCHARGE] = new BufferedImage[10];
         for (int i = 0; i < SPRITE[STATE_BALLCHARGE].length; i++) {
             try {
@@ -64,7 +64,7 @@ public class BossLightning extends Boss {
             } catch (Exception ex) {
             }
         }
-        
+
         SPRITE[STATE_ATTACK1] = new BufferedImage[10];
         for (int i = 0; i < SPRITE[STATE_ATTACK1].length; i++) {
             try {
@@ -72,7 +72,7 @@ public class BossLightning extends Boss {
             } catch (Exception ex) {
             }
         }
-        
+
         SPRITE[STATE_ATTACK2] = new BufferedImage[10];
         for (int i = 0; i < SPRITE[STATE_ATTACK2].length; i++) {
             try {
@@ -80,7 +80,7 @@ public class BossLightning extends Boss {
             } catch (Exception ex) {
             }
         }
-        
+
         SPRITE[STATE_BOLTCAST] = new BufferedImage[10];
         for (int i = 0; i < SPRITE[STATE_BOLTCAST].length; i++) {
             try {
@@ -88,7 +88,7 @@ public class BossLightning extends Boss {
             } catch (Exception ex) {
             }
         }
-        
+
         ParticleAmbient.load();
         ParticleBolt.load();
     }

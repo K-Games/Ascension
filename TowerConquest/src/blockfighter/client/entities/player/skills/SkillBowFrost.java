@@ -17,7 +17,6 @@ public class SkillBowFrost extends Skill {
         maxCooldown = 20000;
         reqWeapon = Globals.ITEM_BOW;
         skillName = "Frost Bind";
-        maxSkillName = "Eternal Blizzard";
     }
 
     @Override

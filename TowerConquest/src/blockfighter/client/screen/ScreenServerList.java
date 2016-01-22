@@ -56,13 +56,10 @@ public class ScreenServerList extends ScreenMenu {
         SERVER_ROOMS.setOpaque(true);
         SERVER_ROOMS.setBounds(1000, 150, 150, 40);
 
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                panel.add(SERVERADDRESS_FIELD);
-                panel.add(SERVER_ROOMS);
-                panel.revalidate();
-            }
+        javax.swing.SwingUtilities.invokeLater(() -> {
+            panel.add(SERVERADDRESS_FIELD);
+            panel.add(SERVER_ROOMS);
+            panel.revalidate();
         });
     }
 
@@ -187,13 +184,10 @@ public class ScreenServerList extends ScreenMenu {
 
     @Override
     public void unload() {
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                panel.remove(SERVERADDRESS_FIELD);
-                panel.remove(SERVER_ROOMS);
-                panel.revalidate();
-            }
+        javax.swing.SwingUtilities.invokeLater(() -> {
+            panel.remove(SERVERADDRESS_FIELD);
+            panel.remove(SERVER_ROOMS);
+            panel.revalidate();
         });
         saveServerList(SERVERADDRESS_FIELD.getText().trim());
     }

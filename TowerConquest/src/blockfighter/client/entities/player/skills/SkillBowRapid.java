@@ -17,7 +17,6 @@ public class SkillBowRapid extends Skill {
         maxCooldown = 700;
         reqWeapon = Globals.ITEM_BOW;
         skillName = "Rapid Fire";
-        maxSkillName = "RNGESUS";
     }
 
     @Override

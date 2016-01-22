@@ -15,7 +15,7 @@ import java.awt.image.BufferedImage;
 public class ScreenSpriteTest extends ScreenMenu {
 
     private byte standFrame = 0, jumpFrame = 0, walkFrame = 0, buffFrame = 0,
-            att1Frame = 0, att2Frame = 0, att3Frame = 0, att4Frame = 0, att5Frame = 0;
+            att1Frame = 0, att5Frame = 0;
 
     private double nextFrameTime = 0;
     private int itemCode = 100000;

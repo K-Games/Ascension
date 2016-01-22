@@ -17,7 +17,6 @@ public class SkillSwordTaunt extends Skill {
         maxCooldown = 12000;
         reqWeapon = Globals.ITEM_SWORD;
         skillName = "Taunt";
-        maxSkillName = "Roaring Challenge";
     }
 
     @Override

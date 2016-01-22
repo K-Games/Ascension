@@ -29,6 +29,7 @@ public class LogicModule implements Runnable {
     private Screen screen = new ScreenSelectChar();
     //private Screen screen = new ScreenSpriteTest();
     private SoundModule soundModule;
+    private boolean initBgm = false;
 
     public LogicModule(SoundModule s) {
         soundModule = s;
@@ -36,7 +37,10 @@ public class LogicModule implements Runnable {
 
     @Override
     public void run() {
-        //soundModule.playBGM("theme.ogg");
+        if (soundModule.isLoaded() && !initBgm) {
+            soundModule.playBGM("theme.ogg");
+            initBgm = true;
+        }
         try {
             screen.update();
         } catch (Exception ex) {
