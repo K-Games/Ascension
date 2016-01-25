@@ -17,7 +17,6 @@ public class SkillShieldIron extends Skill {
         maxCooldown = 15000;
         reqWeapon = Globals.ITEM_SHIELD;
         skillName = "Iron Fortress";
-        maxSkillName = "Inpenetrable Armor";
     }
 
     @Override

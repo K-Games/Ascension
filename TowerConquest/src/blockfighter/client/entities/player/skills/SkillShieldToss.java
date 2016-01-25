@@ -16,8 +16,7 @@ public class SkillShieldToss extends Skill {
         skillCode = SHIELD_TOSS;
         maxCooldown = 10000;
         reqWeapon = Globals.ITEM_SHIELD;
-        skillName = "Shield Throw";
-        maxSkillName = "Guardian's Shield";
+        skillName = "Guardian's Shield";
     }
 
     @Override

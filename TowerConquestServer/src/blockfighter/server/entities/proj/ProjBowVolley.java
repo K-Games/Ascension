@@ -35,9 +35,9 @@ public class ProjBowVolley extends Projectile {
         this.y = y;
         hitbox = new Rectangle2D.Double[1];
         if (getOwner().getFacing() == Globals.RIGHT) {
-            hitbox[0] = new Rectangle2D.Double(x + 130, y - 128, 465, 15);
+            hitbox[0] = new Rectangle2D.Double(x + 130, y - 98, 465, 15);
         } else {
-            hitbox[0] = new Rectangle2D.Double(x - 490 - 130, y - 128, 465, 15);
+            hitbox[0] = new Rectangle2D.Double(x - 490 - 130, y - 98, 465, 15);
         }
         duration = 400;
     }

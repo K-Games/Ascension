@@ -17,7 +17,6 @@ public class SkillBowArc extends Skill {
         maxCooldown = 500;
         reqWeapon = Globals.ITEM_BOW;
         skillName = "Arc Shot";
-        maxSkillName = "Vampiric Shot";
     }
 
     @Override

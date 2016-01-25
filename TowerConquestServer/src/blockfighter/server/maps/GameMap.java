@@ -54,7 +54,7 @@ public abstract class GameMap {
             return false;
         }
         for (Rectangle2D.Double platform : platforms) {
-            if (platform.intersects(x - 45, y, 90, 1)) {
+            if (platform.intersects(x - 25, y, 50, 1)) {
                 return false;
             }
         }
@@ -71,7 +71,7 @@ public abstract class GameMap {
      */
     public double getValidY(double x, double y, double fallspeed) {
         for (Rectangle2D.Double platform : platforms) {
-            if (platform.intersects(x - 45, y, 90, 1)) {
+            if (platform.intersects(x - 25, y, 50, 1)) {
                 return platform.y;
             }
         }

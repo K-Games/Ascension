@@ -14,7 +14,7 @@ public class ParticleSwordDrive extends Particle {
         super(k, 0, 0, f);
         frame = 0;
         frameDuration = 25;
-        duration = 1000;
+        duration = 300;
         owner = p;
     }
 
@@ -47,7 +47,7 @@ public class ParticleSwordDrive extends Particle {
                 x = p.x - 560 + 310;
             }
         }
-        y = p.y - 167;
+        y = p.y - 140;
         BufferedImage sprite = PARTICLE_SPRITE[Globals.PARTICLE_SWORD_DRIVE][frame];
         int drawSrcX = x + ((facing == Globals.RIGHT) ? 0 : sprite.getWidth());
         int drawSrcY = y - 70;

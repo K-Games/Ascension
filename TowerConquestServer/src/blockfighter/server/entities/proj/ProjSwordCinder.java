@@ -33,9 +33,9 @@ public class ProjSwordCinder extends Projectile {
         this.y = y;
         hitbox = new Rectangle2D.Double[1];
         if (getOwner().getFacing() == Globals.RIGHT) {
-            hitbox[0] = new Rectangle2D.Double(x - 30, y - 230, 190, 250);
+            hitbox[0] = new Rectangle2D.Double(x - 30, y - 200, 190, 250);
         } else {
-            hitbox[0] = new Rectangle2D.Double(x - 190 + 30, y - 230, 190, 250);
+            hitbox[0] = new Rectangle2D.Double(x - 190 + 30, y - 200, 190, 250);
 
         }
         duration = 300;

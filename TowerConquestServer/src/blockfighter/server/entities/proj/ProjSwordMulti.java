@@ -28,12 +28,12 @@ public class ProjSwordMulti extends Projectile {
         super(l, k);
         setOwner(o);
         this.x = x;
-        this.y = y;
+        this.y = y + (Globals.rng(40) - 20);
         hitbox = new Rectangle2D.Double[1];
         if (getOwner().getFacing() == Globals.RIGHT) {
-            hitbox[0] = new Rectangle2D.Double(x - 60, y - 220, 240, 240);
+            hitbox[0] = new Rectangle2D.Double(x + 90, this.y - 200, 240, 240);
         } else {
-            hitbox[0] = new Rectangle2D.Double(x - 240 + 60, y - 220, 240, 240);
+            hitbox[0] = new Rectangle2D.Double(x - 240 - 90, this.y - 200, 240, 240);
 
         }
         duration = 600;

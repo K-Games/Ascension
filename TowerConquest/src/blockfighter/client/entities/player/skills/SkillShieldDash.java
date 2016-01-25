@@ -16,7 +16,6 @@ public class SkillShieldDash extends Skill {
         maxCooldown = 2000;
         //reqWeapon = Globals.ITEM_SHIELD;
         skillName = "Dash";
-        maxSkillName = "Unrivaled Haste";
     }
 
     @Override

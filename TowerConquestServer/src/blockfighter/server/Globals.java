@@ -1,12 +1,16 @@
 package blockfighter.server;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import javax.swing.JTextArea;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
 /**
@@ -16,17 +20,25 @@ import org.apache.commons.lang3.concurrent.BasicThreadFactory;
  */
 public class Globals {
 
-    public final static boolean LOGGING = false;
-
-    public final static String ERRLOG_FILE = "ErrorLog.log",
+    public final static boolean LOGGING = true;
+    private final static String SERVER_ID = String.format("%1$td-%1$tm-%1$tY %1$tH-%1$tM-%1$tS", System.currentTimeMillis());
+    private final static String LOG_DIR = "logs/" + SERVER_ID,
+            ERRLOG_FILE = "ErrorLog.log",
             DATALOG_FILE = "DataLog.log";
+    private static JTextArea dataConsole, errConsole;
 
     public final static byte LOG_TYPE_ERR = 0x00,
             LOG_TYPE_DATA = 0x01;
 
-    public final static String GAME_VERSION = "ALPHA 1u1";
-    public final static String WINDOW_TITLE = "Tower Conquest " + GAME_VERSION;
-    private final static int SERVER_ID = (int) (Math.random() * 50000);
+    private final static byte GAME_MAJOR_VERSION = 0,
+            GAME_MINOR_VERSION = 15,
+            GAME_UPDATE_NUMBER = 1;
+    private final static String GAME_DEV_STATE = "ALPHA";
+
+    public final static String GAME_RELEASE_VERSION = GAME_DEV_STATE + " " + GAME_MAJOR_VERSION + "." + GAME_MINOR_VERSION + "u" + GAME_UPDATE_NUMBER;
+
+    public final static String WINDOW_TITLE = "Tower Conquest Server" + GAME_RELEASE_VERSION;
+
     private static Random rng = new Random();
 
     public final static ExecutorService LOG_THREADPOOL = Executors.newSingleThreadExecutor(
@@ -39,8 +51,8 @@ public class Globals {
 
     public final static String SERVER_ADDRESS = "0.0.0.0";
     public final static int SERVER_PORT = 25565;
-    public final static byte SERVER_MAX_PLAYERS = 10;
-    public final static byte SERVER_ROOMS = 50;
+    public static byte SERVER_MAX_PLAYERS = 10;
+    public static byte SERVER_ROOMS = 101;
     public final static long SERVER_MAX_IDLE = 180000;
 
     public final static byte MAX_NAME_LENGTH = 15;
@@ -55,17 +67,14 @@ public class Globals {
 
     public final static double GRAVITY = 0.35, MAX_FALLSPEED = 12.5;
 
-    public final static int NUM_PLAYER_STATE = 10;
+    public final static int NUM_PLAYER_STATE = 7;
     public final static byte PLAYER_STATE_STAND = 0x00,
             PLAYER_STATE_WALK = 0x01,
             PLAYER_STATE_JUMP = 0x02,
-            PLAYER_STATE_ATTACK1 = 0x03,
-            PLAYER_STATE_ATTACK2 = 0x04,
-            PLAYER_STATE_ATTACKOFF1 = 0x05,
-            PLAYER_STATE_ATTACKOFF2 = 0x06,
-            PLAYER_STATE_ATTACKBOW = 0x07,
-            PLAYER_STATE_BUFF = 0x08,
-            PLAYER_STATE_DEAD = 0x09;
+            PLAYER_STATE_ATTACK = 0x03,
+            PLAYER_STATE_ATTACKBOW = 0x04,
+            PLAYER_STATE_BUFF = 0x05,
+            PLAYER_STATE_DEAD = 0x06;
 
     public final static int NUM_PARTICLE_EFFECTS = 39;
     public final static byte PARTICLE_SWORD_SLASH1 = 0x00,
@@ -191,44 +200,70 @@ public class Globals {
             DATA_BOSS_PARTICLE_EFFECT = 0x14,
             DATA_BOSS_SET_TYPE = 0x15,
             DATA_BOSS_GET_STAT = 0x16,
-            DATA_PLAYER_GIVEDROP = 0x17;
+            DATA_PLAYER_GIVEDROP = 0x17,
+            DATA_PLAYER_CREATE = 0x18;
+
+    public final static void setGUILog(JTextArea data, JTextArea err) {
+        dataConsole = data;
+        errConsole = err;
+    }
+
+    public final static void createLogDirectory() {
+        try {
+            Files.createDirectories(Paths.get(LOG_DIR + "/" + ERRLOG_FILE).getParent());
+            Files.createFile(Paths.get(LOG_DIR + "/" + ERRLOG_FILE));
+            Files.createDirectories(Paths.get(LOG_DIR + "/" + DATALOG_FILE).getParent());
+            Files.createFile(Paths.get(LOG_DIR + "/" + DATALOG_FILE));
+        } catch (IOException e) {
+            System.err.println(e);
+        }
+    }
 
     public final static void log(final String info, final String classname, final byte logType, final boolean console) {
 
-        Runnable logging = new Runnable() {
-            @Override
-            public void run() {
-                String logFile = ERRLOG_FILE;
-                switch (logType) {
-                    case LOG_TYPE_ERR:
-                        logFile = ERRLOG_FILE;
-                        break;
-                    case LOG_TYPE_DATA:
-                        logFile = DATALOG_FILE;
-                        break;
-                }
+        Runnable logging = () -> {
+            String logFile;
+            switch (logType) {
+                case LOG_TYPE_ERR:
+                    logFile = ERRLOG_FILE;
+                    break;
+                case LOG_TYPE_DATA:
+                    logFile = DATALOG_FILE;
+                    break;
+                default:
+                    logFile = "Other.log";
+            }
 
-                String logT = "?:";
-                switch (logType) {
-                    case LOG_TYPE_ERR:
-                        logT = "ERROR:";
-                        break;
-                    case LOG_TYPE_DATA:
-                        logT = "DATA:";
-                        break;
-                }
+            String logT = "?:";
+            switch (logType) {
+                case LOG_TYPE_ERR:
+                    logT = "ERROR:";
+                    break;
+                case LOG_TYPE_DATA:
+                    logT = "DATA:";
+                    break;
+            }
 
-                if (console) {
-                    System.out.println(logT + info + "@" + classname);
-                }
+            if (console) {
+                System.out.println(logT + info + "@" + classname);
+            }
 
-                if (LOGGING) {
-                    try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(logFile, true)))) {
-                        out.println("[" + SERVER_ID + "]" + info + "@" + classname);
-                    } catch (IOException e) {
-                        System.err.println(e);
-                    }
+            if (LOGGING) {
+                try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(new File(LOG_DIR, logFile), true)))) {
+                    out.println("[" + String.format("%1$td/%1$tm/%1$tY %1$tT", System.currentTimeMillis()) + "]" + info + "@" + classname);
+                } catch (IOException e) {
+                    System.err.println(e);
                 }
+            }
+            switch (logType) {
+                case LOG_TYPE_ERR:
+                    errConsole.append("\n" + info + "@" + classname);
+                    errConsole.setCaretPosition(errConsole.getDocument().getLength());
+                    break;
+                case LOG_TYPE_DATA:
+                    dataConsole.append("\n" + info + "@" + classname);
+                    dataConsole.setCaretPosition(dataConsole.getDocument().getLength());
+                    break;
             }
         };
 
@@ -236,26 +271,23 @@ public class Globals {
     }
 
     public static final void log(final String ex, final Exception e, final boolean console) {
-        Runnable logging = new Runnable() {
-            @Override
-            public void run() {
-                String logFile = ERRLOG_FILE;
-
-                if (console) {
-                    System.out.println("ERROR:" + ex + "@" + e.getStackTrace()[1]);
-                }
-
-                if (LOGGING) {
-                    try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(logFile, true)))) {
-                        out.println("[" + SERVER_ID + "]" + ex + "@");
-                        for (StackTraceElement s : e.getStackTrace()) {
-                            out.println("[" + SERVER_ID + "]" + s.toString());
-                        }
-                    } catch (IOException e) {
-                        System.err.println(e);
+        Runnable logging = () -> {
+            String logFile = ERRLOG_FILE;
+            if (console) {
+                System.out.println("ERROR:" + ex + "@" + e.getStackTrace()[1]);
+            }
+            if (LOGGING) {
+                try (final PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(new File(LOG_DIR, logFile), true)))) {
+                    out.println("[" + String.format("%1$td/%1$tm/%1$tY %1$tT", System.currentTimeMillis()) + "]" + ex + "@");
+                    for (StackTraceElement s : e.getStackTrace()) {
+                        out.println("[" + String.format("%1$td/%1$tm/%1$tY %1$tT", System.currentTimeMillis()) + "]" + s.toString());
                     }
+                } catch (IOException e1) {
+                    System.err.println(e1);
                 }
             }
+            errConsole.append("\n" + ex + "@" + e.getStackTrace()[1]);
+            errConsole.setCaretPosition(errConsole.getDocument().getLength());
         };
         LOG_THREADPOOL.execute(logging);
     }

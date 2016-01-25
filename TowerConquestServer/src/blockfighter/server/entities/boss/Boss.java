@@ -232,7 +232,9 @@ public abstract class Boss extends Thread implements GameEntity {
                 int amount = dmg.getDamage();
                 dmg.proc();
                 addAggro(dmg.getOwner(), dmg.getDamage());
-                sendDamage(dmg);
+                if (!dmg.isHidden()) {
+                    sendDamage(dmg);
+                }
                 stats[STAT_MINHP] -= amount;
                 nextHPSend = 0;
             }

@@ -16,8 +16,7 @@ public class SkillSwordSlash extends Skill {
         skillCode = SWORD_SLASH;
         maxCooldown = 600;
         reqWeapon = Globals.ITEM_SWORD;
-        skillName = "Defensive Impact";
-        maxSkillName = "Guardian's Might";
+        skillName = "Guardian's Might";
     }
 
     @Override

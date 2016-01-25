@@ -17,7 +17,6 @@ public class SkillSwordCinder extends Skill {
         maxCooldown = 6000;
         reqWeapon = Globals.ITEM_SWORD;
         skillName = "Cinder";
-        maxSkillName = "Searing Laceration";
     }
 
     @Override

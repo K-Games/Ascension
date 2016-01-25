@@ -17,7 +17,6 @@ public class SkillBowVolley extends Skill {
         maxCooldown = 7000;
         reqWeapon = Globals.ITEM_BOW;
         skillName = "Volley";
-        maxSkillName = "Merciless Reign";
     }
 
     @Override

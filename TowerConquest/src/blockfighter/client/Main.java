@@ -18,6 +18,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import javax.swing.JFrame;
+import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
 /**
  *
@@ -34,18 +35,29 @@ public class Main {
         if (args.length >= 1) {
             Globals.SERVER_ADDRESS = args[0];
         }
-        System.setProperty("java.library.path", "native/windows");
+
+        if (System.getProperty("os.name").contains("Windows")) {
+            // Windows
+            System.setProperty("java.library.path", "native/windows");
+        } else if (System.getProperty("os.name").contains("Mac")) {
+            // Mac OS X
+            System.setProperty("java.library.path", "native/macosx");
+        } else if (System.getProperty("os.name").contains("Linux")) {
+            // Linux
+            System.setProperty("java.library.path", "native/linux");
+        } else if (System.getProperty("os.name").contains("Sun")) {
+            // SunOS (Solaris)
+            System.setProperty("java.library.path", "native/solaris");
+        } else {
+            throw new RuntimeException("Your OS is not supported");
+        }
 
         //set sys_paths to null so that java.library.path will be reevalueted next time it is needed
         final Field sysPathsField = ClassLoader.class.getDeclaredField("sys_paths");
         sysPathsField.setAccessible(true);
         sysPathsField.set(null, null);
-
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                createAndShowGUI();
-            }
+        javax.swing.SwingUtilities.invokeLater(() -> {
+            createAndShowGUI();
         });
     }
 
@@ -54,7 +66,12 @@ public class Main {
         ItemEquip.loadItemDetails();
         ItemEquip.loadItemDrawOrigin();
         ItemUpgrade.loadUpgradeItems();
-        ExecutorService threadPool = Executors.newFixedThreadPool(4);
+        ExecutorService threadPool = Executors.newFixedThreadPool(4,
+                new BasicThreadFactory.Builder()
+                .namingPattern("SharedThreads-%d")
+                .daemon(true)
+                .priority(Thread.NORM_PRIORITY)
+                .build());
 
         JFrame frame = new JFrame(Globals.WINDOW_TITLE);
         RenderPanel panel = new RenderPanel();
@@ -103,7 +120,11 @@ public class Main {
                 sounds.shutdown();
             }
         });
-        final ScheduledExecutorService service = Executors.newScheduledThreadPool(2);
+        final ScheduledExecutorService service = Executors.newScheduledThreadPool(2, new BasicThreadFactory.Builder()
+                .namingPattern("RunScheduler-%d")
+                .daemon(true)
+                .priority(Thread.NORM_PRIORITY)
+                .build());
         service.scheduleAtFixedRate(logic, 0, 5, TimeUnit.MILLISECONDS);
         service.scheduleAtFixedRate(render, 0, Globals.RENDER_UPDATE, TimeUnit.MICROSECONDS);
     }

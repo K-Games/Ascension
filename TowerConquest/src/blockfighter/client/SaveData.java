@@ -103,22 +103,26 @@ public class SaveData {
         skills[Skill.PASSIVE_12] = new SkillPassive12();
     }
 
-    public void newCharacter() {
+    public void newCharacter(boolean testMax) {
         //Set level 1
-        baseStats[Globals.STAT_LEVEL] = 1;
+        baseStats[Globals.STAT_LEVEL] = (testMax) ? 100 : 1;
         baseStats[Globals.STAT_POWER] = 0;
         baseStats[Globals.STAT_DEFENSE] = 0;
         baseStats[Globals.STAT_SPIRIT] = 0;
         baseStats[Globals.STAT_EXP] = 0;
         baseStats[Globals.STAT_SKILLPOINTS] = 3 * baseStats[Globals.STAT_LEVEL];
-        //for (int i = 0; i < upgrades.length; i++) {
-        //upgrades[i] = new ItemUpgrade(1, (int) baseStats[Globals.STAT_LEVEL] + 1);
-        //}
+
         //Empty inventory
         for (int i = 0; i < inventory.length; i++) {
             inventory[i] = new ItemEquip[100];
         }
-
+        
+        if (testMax) {
+            for (ItemUpgrade upgrade : upgrades) {
+                addItem(new ItemUpgrade(1, 300));
+            }
+        }
+        
         for (int itemCode : ItemEquip.ITEM_CODES) {
             ItemEquip startEq = new ItemEquip(itemCode, baseStats[Globals.STAT_LEVEL]);
             addItem(startEq);
@@ -154,7 +158,7 @@ public class SaveData {
         temp = Globals.intToByte(c.uniqueID);
         System.arraycopy(temp, 0, data, pos, temp.length);
         pos += temp.length;
-        
+
         int[] statIDs = {Globals.STAT_LEVEL,
             Globals.STAT_POWER,
             Globals.STAT_DEFENSE,
@@ -472,7 +476,6 @@ public class SaveData {
             if (Globals.rng(100) < 30 * i) {
                 addItem(new ItemUpgrade(1, lvl + Globals.rng(6)));
             }
-
         }
         for (int itemCode : ItemEquip.ITEM_CODES) {
             if (Globals.rng(100) < 50) {
@@ -700,13 +703,13 @@ public class SaveData {
     }
 
     public void addItem(ItemEquip e) {
-        int type = ItemEquip.getItemType(e.getItemCode());
-        if (type == Globals.ITEM_SHIELD || type == Globals.ITEM_QUIVER || type == Globals.ITEM_BOW) {
-            type = Globals.ITEM_WEAPON;
+        int tab = ItemEquip.getItemType(e.getItemCode());
+        if (tab == Globals.ITEM_SHIELD || tab == Globals.ITEM_QUIVER || tab == Globals.ITEM_BOW) {
+            tab = Globals.ITEM_WEAPON;
         }
-        for (int i = 0; i < inventory[type].length; i++) {
-            if (inventory[type][i] == null) {
-                inventory[type][i] = e;
+        for (int i = 0; i < inventory[tab].length; i++) {
+            if (inventory[tab][i] == null) {
+                inventory[tab][i] = e;
                 break;
             }
         }

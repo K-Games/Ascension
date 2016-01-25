@@ -15,7 +15,7 @@ import java.awt.image.BufferedImage;
 public class ScreenSpriteTest extends ScreenMenu {
 
     private byte standFrame = 0, jumpFrame = 0, walkFrame = 0, buffFrame = 0,
-            att1Frame = 0, att2Frame = 0, att3Frame = 0, att4Frame = 0, att5Frame = 0;
+            att1Frame = 0, att5Frame = 0;
 
     private double nextFrameTime = 0;
     private int itemCode = 100000;
@@ -44,23 +44,8 @@ public class ScreenSpriteTest extends ScreenMenu {
                 }
 
                 att1Frame++;
-                if (att1Frame == Globals.CHAR_SPRITE[Globals.PLAYER_STATE_ATTACK1].length) {
+                if (att1Frame == Globals.CHAR_SPRITE[Globals.PLAYER_STATE_ATTACK].length) {
                     att1Frame = 0;
-                }
-
-                att2Frame++;
-                if (att2Frame == Globals.CHAR_SPRITE[Globals.PLAYER_STATE_ATTACK2].length) {
-                    att2Frame = 0;
-                }
-
-                att3Frame++;
-                if (att3Frame == Globals.CHAR_SPRITE[Globals.PLAYER_STATE_ATTACKOFF1].length) {
-                    att3Frame = 0;
-                }
-
-                att4Frame++;
-                if (att4Frame == Globals.CHAR_SPRITE[Globals.PLAYER_STATE_ATTACKOFF2].length) {
-                    att4Frame = 0;
                 }
 
                 att5Frame++;
@@ -110,33 +95,12 @@ public class ScreenSpriteTest extends ScreenMenu {
         g.drawImage(character, 650, 100, null);
         e.drawIngame(g, x, y, Globals.PLAYER_STATE_BUFF, buffFrame, Globals.RIGHT);
 
-        character = Globals.CHAR_SPRITE[Globals.PLAYER_STATE_ATTACK1][att1Frame];
+        character = Globals.CHAR_SPRITE[Globals.PLAYER_STATE_ATTACK][att1Frame];
         x = 50 + character.getWidth() / 2;
         y = 400 + character.getHeight();
-        e.drawIngame(g, x, y, Globals.PLAYER_STATE_ATTACK1, att1Frame, Globals.RIGHT, true);
+        e.drawIngame(g, x, y, Globals.PLAYER_STATE_ATTACK, att1Frame, Globals.RIGHT, true);
         g.drawImage(character, 50 + 10, 400, null);
-        e.drawIngame(g, x, y, Globals.PLAYER_STATE_ATTACK1, att1Frame, Globals.RIGHT);
-
-        character = Globals.CHAR_SPRITE[Globals.PLAYER_STATE_ATTACK2][att2Frame];
-        x = 250 + character.getWidth() / 2;
-        y = 400 + character.getHeight();
-        e.drawIngame(g, x, y, Globals.PLAYER_STATE_ATTACK2, att2Frame, Globals.RIGHT, true);
-        g.drawImage(character, 250 + 25, 400, null);
-        e.drawIngame(g, x, y, Globals.PLAYER_STATE_ATTACK2, att2Frame, Globals.RIGHT);
-
-        character = Globals.CHAR_SPRITE[Globals.PLAYER_STATE_ATTACKOFF1][att3Frame];
-        x = 450 + character.getWidth() / 2;
-        y = 400 + character.getHeight();
-        e.drawIngame(g, x, y, Globals.PLAYER_STATE_ATTACKOFF1, att3Frame, Globals.RIGHT, true);
-        g.drawImage(character, 450 + 40, 400, null);
-        e.drawIngame(g, x, y, Globals.PLAYER_STATE_ATTACKOFF1, att3Frame, Globals.RIGHT);
-
-        character = Globals.CHAR_SPRITE[Globals.PLAYER_STATE_ATTACKOFF2][att4Frame];
-        x = 650 + character.getWidth() / 2;
-        y = 400 + character.getHeight();
-        e.drawIngame(g, x, y, Globals.PLAYER_STATE_ATTACKOFF2, att4Frame, Globals.RIGHT, true);
-        g.drawImage(character, 650 + 40, 400, null);
-        e.drawIngame(g, x, y, Globals.PLAYER_STATE_ATTACKOFF2, att4Frame, Globals.RIGHT);
+        e.drawIngame(g, x, y, Globals.PLAYER_STATE_ATTACK, att1Frame, Globals.RIGHT);
 
         character = Globals.CHAR_SPRITE[Globals.PLAYER_STATE_ATTACKBOW][att5Frame];
         x = 950 + character.getWidth() / 2;

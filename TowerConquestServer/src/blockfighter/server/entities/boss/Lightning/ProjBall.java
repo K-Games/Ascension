@@ -32,9 +32,9 @@ public class ProjBall extends BossProjectile {
         this.y = y;
         hitbox = new Rectangle2D.Double[1];
         if (getBossOwner().getFacing() == Globals.RIGHT) {
-            hitbox[0] = new Rectangle2D.Double(x + 200, y - 200, 2000, 100);
+            hitbox[0] = new Rectangle2D.Double(x + 200, y - 200, 2000, 200);
         } else {
-            hitbox[0] = new Rectangle2D.Double(x - 2000 - 200, y - 200, 2000, 100);
+            hitbox[0] = new Rectangle2D.Double(x - 2000 - 200, y - 200, 2000, 200);
         }
         duration = 200;
     }

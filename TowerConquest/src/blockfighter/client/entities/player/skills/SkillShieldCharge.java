@@ -16,8 +16,7 @@ public class SkillShieldCharge extends Skill {
         skillCode = SHIELD_CHARGE;
         maxCooldown = 8000;
         reqWeapon = Globals.ITEM_SHIELD;
-        skillName = "Charge";
-        maxSkillName = "Overwhelm";
+        skillName = "Overwhelm";
     }
 
     @Override

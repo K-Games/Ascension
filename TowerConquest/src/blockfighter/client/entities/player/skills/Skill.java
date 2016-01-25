@@ -18,7 +18,7 @@ public abstract class Skill {
     protected long maxCooldown = 1;
     protected BufferedImage icon = Globals.MENU_BUTTON[Globals.BUTTON_SLOT];
     protected DecimalFormat df = new DecimalFormat("###,###,##0.##");
-    protected String desc, currentLvl, nextLvl, skillName, maxSkillName;
+    protected String desc, currentLvl, nextLvl, skillName;
 
     public final static byte NUM_SKILLS = 30,
             SWORD_VORPAL = 0x00,
@@ -59,9 +59,6 @@ public abstract class Skill {
     public abstract void drawInfo(Graphics2D g, int x, int y);
 
     public String getSkillName() {
-        if (maxSkillName != null && isMaxed()) {
-            return maxSkillName;
-        }
         return skillName;
     }
 

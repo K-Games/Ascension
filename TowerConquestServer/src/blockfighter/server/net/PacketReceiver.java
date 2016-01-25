@@ -20,7 +20,7 @@ public class PacketReceiver extends Thread {
     public void run() {
         ExecutorService threadPool = Executors.newFixedThreadPool(3,
                 new BasicThreadFactory.Builder()
-                .namingPattern("PacketReceiver-%d")
+                .namingPattern("PacketHandlerExecutor-%d")
                 .daemon(true)
                 .priority(Thread.NORM_PRIORITY)
                 .build());

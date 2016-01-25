@@ -16,8 +16,7 @@ public class SkillBowStorm extends Skill {
         skillCode = BOW_STORM;
         maxCooldown = 13000;
         reqWeapon = Globals.ITEM_BOW;
-        skillName = "Arrow Storm";
-        maxSkillName = "Hailing Bombardment";
+        skillName = "Hailing Bombardment";
     }
 
     @Override

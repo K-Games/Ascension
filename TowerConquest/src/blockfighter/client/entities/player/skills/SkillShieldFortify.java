@@ -17,7 +17,6 @@ public class SkillShieldFortify extends Skill {
         maxCooldown = 15000;
         reqWeapon = Globals.ITEM_SHIELD;
         skillName = "Fortify";
-        maxSkillName = "Rekindling Soul";
     }
 
     @Override

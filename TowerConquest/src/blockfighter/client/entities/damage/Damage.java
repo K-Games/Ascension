@@ -25,14 +25,14 @@ public class Damage extends Thread {
         type = t;
         x = loc.x;
         y = loc.y;
-        if (type == DAMAGE_TYPE_EXP) {
-            duration = 1200;
-            speedY = -5;
-            speedX = 0;
-        } else {
-            speedY = -13;
-            speedX = (Globals.rng(3) - 1) * 3;
-        }
+        //if (type == DAMAGE_TYPE_EXP) {
+        //duration = 1200;
+        speedY = -5;
+        speedX = 0;
+        // } else {
+        //    speedY = -13;
+        //    speedX = (Globals.rng(3) - 1) * 3;
+        //}
         setDaemon(true);
     }
 
@@ -44,7 +44,7 @@ public class Damage extends Thread {
         }
         y += speedY;
         if (type != DAMAGE_TYPE_EXP) {
-            speedY += .5;
+            //speedY += .5;
         }
         x += speedX;
     }

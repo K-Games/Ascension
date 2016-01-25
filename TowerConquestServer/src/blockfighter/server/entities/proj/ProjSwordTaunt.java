@@ -32,9 +32,9 @@ public class ProjSwordTaunt extends Projectile {
         this.y = y;
         hitbox = new Rectangle2D.Double[1];
         if (getOwner().getFacing() == Globals.RIGHT) {
-            hitbox[0] = new Rectangle2D.Double(x - 20, y - 175, 250, 160);
+            hitbox[0] = new Rectangle2D.Double(x - 20, y - 155, 250, 160);
         } else {
-            hitbox[0] = new Rectangle2D.Double(x - 250 + 20, y - 175, 250, 160);
+            hitbox[0] = new Rectangle2D.Double(x - 250 + 20, y - 155, 250, 160);
 
         }
         duration = 200;

@@ -14,10 +14,9 @@ public class SkillSwordDrive extends Skill {
     public SkillSwordDrive() {
         icon = Globals.SKILL_ICON[SWORD_DRIVE];
         skillCode = SWORD_DRIVE;
-        maxCooldown = 1000;
+        maxCooldown = 500;
         reqWeapon = Globals.ITEM_SWORD;
-        skillName = "Drive";
-        maxSkillName = "Glaring Blow";
+        skillName = "Stab";
     }
 
     @Override
@@ -43,7 +42,7 @@ public class SkillSwordDrive extends Skill {
         g.drawString("Level: " + level + " - Requires " + ItemEquip.getItemTypeName(reqWeapon), x + 80, y + 50);
         g.drawString("Cooldown: " + maxCooldown / 1000 + " Second", x + 80, y + 70);
 
-        g.drawString("Attack 4 times over 1 second.", x + 10, y + 90);
+        g.drawString("Attack 4 times.", x + 10, y + 90);
 
         g.drawString("[Level " + level + "]", x + 10, y + 115);
         g.drawString("Deals " + (3 * level + 75) + "% damage per hit.", x + 10, y + 135);
@@ -52,10 +51,10 @@ public class SkillSwordDrive extends Skill {
             g.drawString("Deals " + (3 * (level + 1) + 75) + "% damage per hit.", x + 10, y + 180);
 
             g.drawString("[Level 30 Bonus]", x + 10, y + 205);
-            g.drawString("Restore 0.5% HP per hit(2%).", x + 10, y + 225);
+            g.drawString("Restore 0.25% HP per hit(1%).", x + 10, y + 225);
         } else {
             g.drawString("[Level 30 Bonus]", x + 10, y + 160);
-            g.drawString("Restore 0.5% HP per hit(2%).", x + 10, y + 180);
+            g.drawString("Restore 0.25% HP per hit(1%).", x + 10, y + 180);
         }
     }
 
