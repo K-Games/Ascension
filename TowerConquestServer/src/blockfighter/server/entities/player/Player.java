@@ -809,7 +809,7 @@ public class Player extends Thread implements GameEntity {
             ProjBowVolley proj = new ProjBowVolley(logic, logic.getNextProjKey(), this, x, y - 10 + Globals.rng(40));
             logic.queueAddProj(proj);
             sendParticle(logic.getRoom(), Globals.PARTICLE_BOW_VOLLEYARROW, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(), facing);
-            sendParticle(logic.getRoom(), Globals.PARTICLE_BOW_VOLLEYBOW, getX(), getY(), facing);
+            sendParticle(logic.getRoom(), Globals.PARTICLE_BOW_VOLLEYBOW, getX(), getY()+30, facing);
             skillCounter++;
         }
         if (skillDuration >= 1900 || isStunned() || isKnockback()) {
@@ -819,7 +819,7 @@ public class Player extends Thread implements GameEntity {
 
     private void updateSkillBowPower() {
         if (skillDuration <= 400 && skillDuration % 50 == 0) {
-            sendParticle(logic.getRoom(), Globals.PARTICLE_BOW_POWERCHARGE, x + ((facing == Globals.RIGHT) ? 75 : -75), y - 250, facing);
+            sendParticle(logic.getRoom(), Globals.PARTICLE_BOW_POWERCHARGE, x + ((facing == Globals.RIGHT) ? 75 : -75), y - 215, facing);
         } else if (skillDuration == 800) {
             ProjBowPower proj = new ProjBowPower(logic, logic.getNextProjKey(), this, x, y);
             logic.queueAddProj(proj);
@@ -1062,7 +1062,9 @@ public class Player extends Thread implements GameEntity {
                 }
                 tacticalDmgMult = 0;
                 //Send client damage display
-                sendDamage(dmg, amount);
+                if (!dmg.isHidden()) {
+                    sendDamage(dmg, amount);
+                }
                 //Final damage taken
                 stats[Globals.STAT_MINHP] -= amount;
                 if (amount > 0) {
@@ -1582,9 +1584,13 @@ public class Player extends Thread implements GameEntity {
                 sendCooldown(Skill.PASSIVE_SHADOWATTACK);
                 sendParticle(logic.getRoom(), Globals.PARTICLE_PASSIVE_SHADOWATTACK, dmg.getDmgPoint().x, dmg.getDmgPoint().y);
                 if (dmg.getTarget() != null) {
-                    dmg.getTarget().queueDamage(new Damage((int) (dmg.getDamage() * 0.5D), false, dmg.getOwner(), dmg.getTarget(), false, dmg.getDmgPoint()));
+                    Damage shadow = new Damage((int) (dmg.getDamage() * 0.5D), false, dmg.getOwner(), dmg.getTarget(), false, dmg.getDmgPoint());
+                    shadow.setHidden(true);
+                    dmg.getTarget().queueDamage(shadow);
                 } else if (dmg.getBossTarget() != null) {
-                    dmg.getBossTarget().queueDamage(new Damage((int) (dmg.getDamage() * 0.5D), false, dmg.getOwner(), dmg.getBossTarget(), false, dmg.getDmgPoint()));
+                    Damage shadow = new Damage((int) (dmg.getDamage() * 0.5D), false, dmg.getOwner(), dmg.getBossTarget(), false, dmg.getDmgPoint());
+                    shadow.setHidden(true);
+                    dmg.getBossTarget().queueDamage(shadow);
                 }
             }
         }

@@ -441,4 +441,13 @@ public class LogicModule extends Thread {
         }
         return false;
     }
+    
+    public byte getPlayerKey(int id){
+        for (Map.Entry<Byte, Player> player : players.entrySet()) {
+            if (player.getValue().getUniqueID() == id) {
+                return player.getKey();
+            }
+        }
+        return -1;
+    }
 }

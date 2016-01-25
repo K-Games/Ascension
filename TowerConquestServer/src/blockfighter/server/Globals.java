@@ -31,8 +31,14 @@ public class Globals {
     public final static byte LOG_TYPE_ERR = 0x00,
             LOG_TYPE_DATA = 0x01;
 
-    public final static String GAME_VERSION = "ALPHA 1u1";
-    public final static String WINDOW_TITLE = "Tower Conquest " + GAME_VERSION;
+    private final static byte GAME_MAJOR_VERSION = 0,
+            GAME_MINOR_VERSION = 15,
+            GAME_UPDATE_NUMBER = 1;
+    private final static String GAME_DEV_STATE = "ALPHA";
+
+    public final static String GAME_RELEASE_VERSION = GAME_DEV_STATE + " " + GAME_MAJOR_VERSION + "." + GAME_MINOR_VERSION + "u" + GAME_UPDATE_NUMBER;
+
+    public final static String WINDOW_TITLE = "Tower Conquest Server" + GAME_RELEASE_VERSION;
 
     private static Random rng = new Random();
 
@@ -46,8 +52,8 @@ public class Globals {
 
     public final static String SERVER_ADDRESS = "0.0.0.0";
     public final static int SERVER_PORT = 25565;
-    public final static byte SERVER_MAX_PLAYERS = 10;
-    public final static byte SERVER_ROOMS = 101;
+    public static byte SERVER_MAX_PLAYERS = 10;
+    public static byte SERVER_ROOMS = 101;
     public final static long SERVER_MAX_IDLE = 180000;
 
     public final static byte MAX_NAME_LENGTH = 15;
@@ -195,7 +201,8 @@ public class Globals {
             DATA_BOSS_PARTICLE_EFFECT = 0x14,
             DATA_BOSS_SET_TYPE = 0x15,
             DATA_BOSS_GET_STAT = 0x16,
-            DATA_PLAYER_GIVEDROP = 0x17;
+            DATA_PLAYER_GIVEDROP = 0x17,
+            DATA_PLAYER_CREATE = 0x18;
 
     public final static void setGUILog(JTextArea data, JTextArea err) {
         dataConsole = data;
@@ -281,8 +288,8 @@ public class Globals {
                     System.err.println(e1);
                 }
             }
-            errConsole.append("\n" + ex + "@" + e.getStackTrace()[1]);
-            errConsole.setCaretPosition(errConsole.getDocument().getLength());
+            //errConsole.append("\n" + ex + "@" + e.getStackTrace()[1]);
+            //errConsole.setCaretPosition(errConsole.getDocument().getLength());
         };
         LOG_THREADPOOL.execute(logging);
     }

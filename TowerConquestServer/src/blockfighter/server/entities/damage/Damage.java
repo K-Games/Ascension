@@ -20,7 +20,8 @@ public class Damage {
     private boolean canProc = false,
             isTrueDamage = false,
             isCrit = false,
-            canReflect = true;
+            canReflect = true,
+            isHidden = false;
 
     private Player owner, target;
     private Boss bossOwner, bossTarget;
@@ -149,6 +150,10 @@ public class Damage {
         return isTrueDamage;
     }
 
+    public boolean isHidden() {
+        return isHidden;
+    }
+
     public boolean canProc() {
         return canProc;
     }
@@ -169,6 +174,10 @@ public class Damage {
 
     public void setCanReflect(boolean set) {
         canReflect = set;
+    }
+
+    public void setHidden(boolean set) {
+        isHidden = set;
     }
 
     public boolean canReflect() {

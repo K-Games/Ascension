@@ -61,6 +61,9 @@ public class PacketHandler implements Runnable {
             case Globals.DATA_PLAYER_LOGIN:
                 receivePlayerLogin(data, room, address, port);
                 break;
+            case Globals.DATA_PLAYER_CREATE:
+                receivePlayerCreate(data, room, address, port);
+                break;
             case Globals.DATA_PLAYER_GET_ALL:
                 receivePlayerGetAll(data, room, address, port);
                 break;
@@ -188,7 +191,7 @@ public class PacketHandler implements Runnable {
             return;
         }
         logic[room].getPlayers().get(data[2]).disconnect();
-        Globals.log("DATA_DISCONNECT", logic[room].getPlayers().get(data[2]).getAddress() + ":" + logic[room].getPlayers().get(data[2]).getPort() + " Disconnected Key: " + data[2], Globals.LOG_TYPE_DATA, true);
+        Globals.log("DATA_PLAYER_DISCONNECT", logic[room].getPlayers().get(data[2]).getAddress() + ":" + logic[room].getPlayers().get(data[2]).getPort() + " Disconnected Key: " + data[2], Globals.LOG_TYPE_DATA, true);
     }
 
     private void receivePing(byte[] data, byte room, InetAddress address, int port) {
@@ -207,24 +210,33 @@ public class PacketHandler implements Runnable {
         logic[room].queuePlayerUseSkill(data);
     }
 
-    private void receivePlayerLogin(byte[] data, byte room, InetAddress address, int port) {
-        Globals.log("DATA_PLAYER_LOGIN", address + ":" + port + " Login Attempt Room: " + room, Globals.LOG_TYPE_DATA, true);
+    private void receivePlayerCreate(byte[] data, byte room, InetAddress address, int port) {
+        Globals.log("DATA_PLAYER_CREATE", address + ":" + port + " Attempting to create player. Room: " + room, Globals.LOG_TYPE_DATA, true);
         byte[] temp = new byte[4];
         System.arraycopy(data, 17, temp, 0, temp.length);
         int id = Globals.bytesToInt(temp);
 
         if (logic[room].containsPlayerID(id)) {
-            Globals.log("DATA_PLAYER_LOGIN", address + ":" + port + " uID Already In Room :" + id, Globals.LOG_TYPE_DATA, true);
+            LogicModule lm = logic[room];
+            if (lm.getPlayers().get(lm.getPlayerKey(id)).getAddress().equals(address)) {
+                byte[] bytes = new byte[Globals.PACKET_BYTE * 4];
+                bytes[0] = Globals.DATA_PLAYER_CREATE;
+                bytes[1] = lm.getMap().getMapID();
+                bytes[2] = lm.getPlayerKey(id);
+                bytes[3] = Globals.SERVER_MAX_PLAYERS;
+                sender.sendPlayer(bytes, address, port);
+                Globals.log("DATA_PLAYER_CREATE", address + ":" + port + " Resending player creation uid: " + id, Globals.LOG_TYPE_DATA, true);
+            }
             return;
         }
 
         byte freeKey = logic[room].getNextPlayerKey();
         if (freeKey == -1) {
-            Globals.log("DATA_PLAYER_LOGIN", address + ":" + port + " Room " + room + " at max capacity", Globals.LOG_TYPE_DATA, true);
+            Globals.log("DATA_PLAYER_CREATE", address + ":" + port + " Room " + room + " at max capacity", Globals.LOG_TYPE_DATA, true);
             return;
         }
 
-        Player newPlayer = new Player(logic[room], freeKey, address, port, logic[room].getMap(), logic[room].getMap().getBoundary()[Globals.MAP_LEFT]+50, 0);
+        Player newPlayer = new Player(logic[room], freeKey, address, port, logic[room].getMap(), logic[room].getMap().getBoundary()[Globals.MAP_LEFT] + 50, 0);
 
         temp = new byte[Globals.MAX_NAME_LENGTH];
         System.arraycopy(data, 2, temp, 0, temp.length);
@@ -265,15 +277,32 @@ public class PacketHandler implements Runnable {
         logic[room].queueAddPlayer(newPlayer);
 
         byte[] bytes = new byte[Globals.PACKET_BYTE * 4];
-        bytes[0] = Globals.DATA_PLAYER_LOGIN;
+        bytes[0] = Globals.DATA_PLAYER_CREATE;
         bytes[1] = logic[room].getMap().getMapID();
         bytes[2] = freeKey;
         bytes[3] = Globals.SERVER_MAX_PLAYERS;
         sender.sendPlayer(bytes, address, port);
-        Globals.log("DATA_PLAYER_LOGIN", address + ":" + port + " Logged in Room " + room + " Key: " + freeKey + " Name: " + newPlayer.getPlayerName(), Globals.LOG_TYPE_DATA, true);
+        Globals.log("DATA_PLAYER_CREATE", address + ":" + port + " Sent Creation Room: " + room + " Key: " + freeKey + " Name: " + newPlayer.getPlayerName(), Globals.LOG_TYPE_DATA, true);
 
         newPlayer.sendPos();
         newPlayer.sendName();
+    }
+
+    private void receivePlayerLogin(byte[] data, byte room, InetAddress address, int port) {
+        Globals.log("DATA_PLAYER_LOGIN", address + ":" + port + " Login Attempt Room: " + room, Globals.LOG_TYPE_DATA, true);
+        byte[] temp = new byte[4];
+        System.arraycopy(data, 17, temp, 0, temp.length);
+        int id = Globals.bytesToInt(temp);
+
+        if (logic[room].containsPlayerID(id)) {
+            Globals.log("DATA_PLAYER_LOGIN", address + ":" + port + " uID Already In Room uID: " + id, Globals.LOG_TYPE_DATA, true);
+            return;
+        }
+
+        byte[] bytes = new byte[Globals.PACKET_BYTE * 1];
+        bytes[0] = Globals.DATA_PLAYER_LOGIN;
+        sender.sendPlayer(bytes, address, port);
+        Globals.log("DATA_PLAYER_LOGIN", address + ":" + port + " Logged in", Globals.LOG_TYPE_DATA, true);
     }
 
     private void receivePlayerGetAll(byte[] data, byte room, InetAddress address, int port) {

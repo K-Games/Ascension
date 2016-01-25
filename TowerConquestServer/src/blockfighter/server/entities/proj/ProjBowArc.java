@@ -32,9 +32,9 @@ public class ProjBowArc extends Projectile {
         this.y = y;
         hitbox = new Rectangle2D.Double[1];
         if (getOwner().getFacing() == Globals.RIGHT) {
-            hitbox[0] = new Rectangle2D.Double(x + 80, y - 284, 490, 350);
+            hitbox[0] = new Rectangle2D.Double(x + 60, y - 254, 490, 350);
         } else {
-            hitbox[0] = new Rectangle2D.Double(x - 490 - 80, y - 284, 490, 350);
+            hitbox[0] = new Rectangle2D.Double(x - 470 - 80, y - 254, 490, 350);
 
         }
         duration = 300;
