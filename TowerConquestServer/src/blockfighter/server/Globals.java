@@ -11,7 +11,6 @@ import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import javax.swing.JTextArea;
-import javax.swing.text.DefaultCaret;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
 /**
@@ -256,7 +255,6 @@ public class Globals {
                     System.err.println(e);
                 }
             }
-            DefaultCaret caret;
             switch (logType) {
                 case LOG_TYPE_ERR:
                     errConsole.append("\n" + info + "@" + classname);
@@ -288,8 +286,8 @@ public class Globals {
                     System.err.println(e1);
                 }
             }
-            //errConsole.append("\n" + ex + "@" + e.getStackTrace()[1]);
-            //errConsole.setCaretPosition(errConsole.getDocument().getLength());
+            errConsole.append("\n" + ex + "@" + e.getStackTrace()[1]);
+            errConsole.setCaretPosition(errConsole.getDocument().getLength());
         };
         LOG_THREADPOOL.execute(logging);
     }
