@@ -20,7 +20,27 @@ public class PacketSender {
         socket = s;
     }
 
-    public static void sendLogin(byte room, SaveData c) {
+    public static void sendPlayerLogin(byte room, SaveData c) {
+        byte[] bytes = new byte[Globals.PACKET_BYTE * 2 //Data type + room
+                + 15 //Name length
+                + Globals.PACKET_INT //uID
+                ];
+        bytes[0] = Globals.DATA_PLAYER_LOGIN;
+        bytes[1] = room;
+
+        byte[] temp = c.getPlayerName().getBytes(StandardCharsets.UTF_8);
+        System.arraycopy(temp, 0, bytes, 2, temp.length);
+
+        temp = Globals.intToByte(c.getUniqueID());
+        bytes[17] = temp[0];
+        bytes[18] = temp[1];
+        bytes[19] = temp[2];
+        bytes[20] = temp[3];
+        DatagramPacket requestPacket = createPacket(bytes);
+        sendPacket(requestPacket);
+    }
+
+    public static void sendPlayerCreate(byte room, SaveData c) {
         byte[] bytes = new byte[Globals.PACKET_BYTE * 2 //Data type + room
                 + 15 //Name length
                 + Globals.PACKET_INT //uID
@@ -28,7 +48,7 @@ public class PacketSender {
                 + Globals.PACKET_INT * 11 //equipments
                 + 12 * 2 * Globals.PACKET_BYTE //Hotkey'd skills + level
                 ];
-        bytes[0] = Globals.DATA_LOGIN;
+        bytes[0] = Globals.DATA_PLAYER_CREATE;
         bytes[1] = room;
 
         byte[] temp = c.getPlayerName().getBytes(StandardCharsets.UTF_8);

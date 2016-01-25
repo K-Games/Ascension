@@ -18,8 +18,17 @@ public class Globals {
 
     public final static int SERVER_PORT = 25565;
     public static String SERVER_ADDRESS = "towerconquest.servegame.com";
-    public final static String GAME_VERSION = "ALPHA 1u1";
-    public final static String WINDOW_TITLE = "Tower Conquest " + GAME_VERSION;
+
+    public final static boolean TEST_MAX_LEVEL = true;
+    
+    private final static byte GAME_MAJOR_VERSION = 0,
+            GAME_MINOR_VERSION = 15,
+            GAME_UPDATE_NUMBER = 0;
+    private final static String GAME_DEV_STATE = "ALPHA";
+
+    public final static String GAME_RELEASE_VERSION = GAME_DEV_STATE + " " + GAME_MAJOR_VERSION + "." + GAME_MINOR_VERSION + "u" + GAME_UPDATE_NUMBER;
+
+    public final static String WINDOW_TITLE = "Tower Conquest " + GAME_RELEASE_VERSION;
     public final static int WINDOW_WIDTH = 1280;
     public final static int WINDOW_HEIGHT = 720;
 
@@ -190,7 +199,7 @@ public class Globals {
 
     //Datatypes
     public final static byte DATA_PING = 0x00,
-            DATA_LOGIN = 0x01,
+            DATA_PLAYER_LOGIN = 0x01,
             DATA_PLAYER_GET_ALL = 0x02,
             DATA_PLAYER_SET_MOVE = 0x03,
             DATA_PLAYER_SET_POS = 0x04,
@@ -212,7 +221,8 @@ public class Globals {
             DATA_BOSS_PARTICLE_EFFECT = 0x14,
             DATA_BOSS_SET_TYPE = 0x15,
             DATA_BOSS_GET_STAT = 0x16,
-            DATA_PLAYER_GIVEDROP = 0x17;
+            DATA_PLAYER_GIVEDROP = 0x17,
+            DATA_PLAYER_CREATE = 0x18;
 
     public final static BufferedImage[][] CHAR_SPRITE = new BufferedImage[NUM_PLAYER_STATE][];
     public final static BufferedImage[] HUD = new BufferedImage[2];

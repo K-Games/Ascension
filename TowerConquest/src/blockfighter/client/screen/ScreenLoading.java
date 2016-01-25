@@ -42,7 +42,6 @@ public class ScreenLoading extends ScreenMenu {
     @Override
     public void draw(Graphics2D g) {
         BufferedImage bg = Globals.MENU_BG[0];
-        g.drawImage(bg, 0, 0, null);
         if (effectsReady) {
             for (int i = 0; i < Globals.NUM_PARTICLE_EFFECTS; i++) {
                 if (Particle.getParticleSprites()[i] != null) {
@@ -57,6 +56,7 @@ public class ScreenLoading extends ScreenMenu {
                 this.notify();
             }
         }
+        g.drawImage(bg, 0, 0, null);
 
         g.setFont(Globals.ARIAL_18PT);
         drawStringOutline(g, "Loading...", 520, 640, 2);

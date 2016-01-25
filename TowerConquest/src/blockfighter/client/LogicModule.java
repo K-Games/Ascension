@@ -29,7 +29,7 @@ public class LogicModule implements Runnable {
     private Screen screen = new ScreenSelectChar();
     //private Screen screen = new ScreenSpriteTest();
     private SoundModule soundModule;
-    private boolean initBgm = false;
+    private boolean initBgm = false, loggedIn = false;
 
     public LogicModule(SoundModule s) {
         soundModule = s;
@@ -38,7 +38,7 @@ public class LogicModule implements Runnable {
     @Override
     public void run() {
         if (soundModule.isLoaded() && !initBgm) {
-            soundModule.playBGM("theme.ogg");
+            //soundModule.playBGM("theme.ogg");
             initBgm = true;
         }
         try {
@@ -48,7 +48,28 @@ public class LogicModule implements Runnable {
         }
     }
 
-    public void receiveLogin(byte mapID, byte key, byte size) {
+    public void receiveLogin() {
+        byte attemps = 0;
+        loggedIn = false;
+        while (!loggedIn && attemps < 5) {
+            PacketSender.sendPlayerCreate(selectedRoom, selectedChar);
+            attemps++;
+            synchronized (this) {
+                try {
+                    this.wait(900);
+                } catch (InterruptedException e) {
+                    break;
+                }
+            }
+        }
+    }
+
+    public void receiveCreate(byte mapID, byte key, byte size) {
+        synchronized (this) {
+            loggedIn = true;
+            this.notify();
+        }
+
         ScreenLoading loading = new ScreenLoading();
         setScreen(loading);
         try {
@@ -132,7 +153,7 @@ public class LogicModule implements Runnable {
                     receiver.setDaemon(true);
                     receiver.start();
                     System.out.println("Connecting to " + server);
-                    PacketSender.sendLogin(selectedRoom, selectedChar);
+                    PacketSender.sendPlayerLogin(selectedRoom, selectedChar);
                 } catch (SocketException e) {
                     if (screen instanceof ScreenServerList) {
                         ((ScreenServerList) screen).setStatus(ScreenServerList.STATUS_SOCKETCLOSED);

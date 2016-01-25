@@ -103,22 +103,26 @@ public class SaveData {
         skills[Skill.PASSIVE_12] = new SkillPassive12();
     }
 
-    public void newCharacter() {
+    public void newCharacter(boolean testMax) {
         //Set level 1
-        baseStats[Globals.STAT_LEVEL] = 1;
+        baseStats[Globals.STAT_LEVEL] = (testMax) ? 100 : 1;
         baseStats[Globals.STAT_POWER] = 0;
         baseStats[Globals.STAT_DEFENSE] = 0;
         baseStats[Globals.STAT_SPIRIT] = 0;
         baseStats[Globals.STAT_EXP] = 0;
         baseStats[Globals.STAT_SKILLPOINTS] = 3 * baseStats[Globals.STAT_LEVEL];
-        //for (int i = 0; i < upgrades.length; i++) {
-        //upgrades[i] = new ItemUpgrade(1, (int) baseStats[Globals.STAT_LEVEL] + 1);
-        //}
+
         //Empty inventory
         for (int i = 0; i < inventory.length; i++) {
             inventory[i] = new ItemEquip[100];
         }
-
+        
+        if (testMax) {
+            for (ItemUpgrade upgrade : upgrades) {
+                addItem(new ItemUpgrade(1, 300));
+            }
+        }
+        
         for (int itemCode : ItemEquip.ITEM_CODES) {
             ItemEquip startEq = new ItemEquip(itemCode, baseStats[Globals.STAT_LEVEL]);
             addItem(startEq);

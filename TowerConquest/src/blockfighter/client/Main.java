@@ -18,6 +18,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import javax.swing.JFrame;
+import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
 /**
  *
@@ -55,7 +56,6 @@ public class Main {
         final Field sysPathsField = ClassLoader.class.getDeclaredField("sys_paths");
         sysPathsField.setAccessible(true);
         sysPathsField.set(null, null);
-
         javax.swing.SwingUtilities.invokeLater(() -> {
             createAndShowGUI();
         });
@@ -66,7 +66,12 @@ public class Main {
         ItemEquip.loadItemDetails();
         ItemEquip.loadItemDrawOrigin();
         ItemUpgrade.loadUpgradeItems();
-        ExecutorService threadPool = Executors.newFixedThreadPool(4);
+        ExecutorService threadPool = Executors.newFixedThreadPool(4,
+                new BasicThreadFactory.Builder()
+                .namingPattern("SharedThreads-%d")
+                .daemon(true)
+                .priority(Thread.NORM_PRIORITY)
+                .build());
 
         JFrame frame = new JFrame(Globals.WINDOW_TITLE);
         RenderPanel panel = new RenderPanel();
@@ -115,7 +120,11 @@ public class Main {
                 sounds.shutdown();
             }
         });
-        final ScheduledExecutorService service = Executors.newScheduledThreadPool(2);
+        final ScheduledExecutorService service = Executors.newScheduledThreadPool(2, new BasicThreadFactory.Builder()
+                .namingPattern("RunScheduler-%d")
+                .daemon(true)
+                .priority(Thread.NORM_PRIORITY)
+                .build());
         service.scheduleAtFixedRate(logic, 0, 5, TimeUnit.MILLISECONDS);
         service.scheduleAtFixedRate(render, 0, Globals.RENDER_UPDATE, TimeUnit.MICROSECONDS);
     }
