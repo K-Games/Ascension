@@ -607,7 +607,7 @@ public class Player extends Thread implements GameEntity {
         if (!skills.get(data[3]).canCast(getItemType(equip[weaponSlot]))) {
             return;
         }
-        Globals.log("DATA_PLAYER_CASTSKILL", "Key: " + key + " Room: " + logic.getRoom() + " Player: " + getPlayerName() + " Skill: " + data[3], Globals.LOG_TYPE_DATA, true);
+        //Globals.log("DATA_PLAYER_CASTSKILL", "Key: " + key + " Room: " + logic.getRoom() + " Player: " + getPlayerName() + " Skill: " + data[3], Globals.LOG_TYPE_DATA, true);
 
         queuePlayerState(newState);
         skills.get(data[3]).setCooldown();
