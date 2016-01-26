@@ -28,7 +28,7 @@ public class LogicModule extends Thread {
     private final ConcurrentHashMap<Byte, Player> players = new ConcurrentHashMap<>(Globals.SERVER_MAX_PLAYERS, 0.9f, Math.max(Globals.SERVER_MAX_PLAYERS / 5, 3));
     private final ConcurrentHashMap<Byte, Boss> bosses = new ConcurrentHashMap<>(1, 0.9f, 1);
     private final ConcurrentHashMap<Integer, Projectile> projectiles = new ConcurrentHashMap<>(500, 0.75f, 3);
-    
+
     private GameMap map;
     private int projMaxKeys = 500;
 
@@ -40,17 +40,16 @@ public class LogicModule extends Thread {
     private final ConcurrentLinkedQueue<byte[]> pUseSkillQueue = new ConcurrentLinkedQueue<>();
     private final ConcurrentLinkedQueue<Projectile> projEffectQueue = new ConcurrentLinkedQueue<>();
     private final ConcurrentLinkedQueue<Projectile> projAddQueue = new ConcurrentLinkedQueue<>();
-    
+
     private long lastRefreshAll = 0;
     private double lastUpdateTime = 0;
-    
+
     private static ExecutorService threadPool = Executors.newFixedThreadPool(10,
             new BasicThreadFactory.Builder()
             .namingPattern("LogicModule-%d")
             .daemon(true)
             .priority(Thread.NORM_PRIORITY)
             .build());
-
 
     /**
      * Create a server logic module
@@ -117,7 +116,9 @@ public class LogicModule extends Thread {
         try {
             boolean fin = false;
             processQueues();
-            if (players.isEmpty()) return;
+            if (players.isEmpty()) {
+                return;
+            }
             if (bosses.isEmpty()) {
                 Boss[] newBosses = map.getBosses(this);
                 if (newBosses != null) {
@@ -441,8 +442,8 @@ public class LogicModule extends Thread {
         }
         return false;
     }
-    
-    public byte getPlayerKey(int id){
+
+    public byte getPlayerKey(int id) {
         for (Map.Entry<Byte, Player> player : players.entrySet()) {
             if (player.getValue().getUniqueID() == id) {
                 return player.getKey();

@@ -10,7 +10,7 @@ import blockfighter.server.entities.player.Player;
  *
  * @author Ken Kwan
  */
-public abstract class Buff implements GameEntity{
+public abstract class Buff implements GameEntity {
 
     /**
      * Owning player of buff

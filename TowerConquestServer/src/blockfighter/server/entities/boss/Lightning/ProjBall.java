@@ -44,7 +44,7 @@ public class ProjBall extends BossProjectile {
         while (!playerQueue.isEmpty()) {
             Player p = playerQueue.poll();
             if (p != null && !p.isDead()) {
-                int damage = (int) (400 * Math.pow(getBossOwner().getStats()[Boss.STAT_LEVEL],1.7));
+                int damage = (int) (400 * Math.pow(getBossOwner().getStats()[Boss.STAT_LEVEL], 1.7));
                 p.queueDamage(new Damage(damage, false, getBossOwner(), p, hitbox[0], p.getHitbox()));
 
                 p.queueBuff(new BuffKnockback(300, (getBossOwner().getFacing() == Globals.RIGHT) ? 5 : -5, -8, getBossOwner(), p));

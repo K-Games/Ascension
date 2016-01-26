@@ -206,7 +206,6 @@ public class PacketHandler implements Runnable {
     }
 
     private void receivePlayerUseSkill(byte[] data, byte room) {
-        //Globals.log("DATA_PLAYER_USESKILL", "Key: " + data[2] + " Room: " + room, Globals.LOG_TYPE_DATA, true);
         logic[room].queuePlayerUseSkill(data);
     }
 
@@ -275,6 +274,13 @@ public class PacketHandler implements Runnable {
             newPlayer.setSkill(data[i * 2 + 97], data[i * 2 + 98]);
         }
         logic[room].queueAddPlayer(newPlayer);
+        String desc = "\n";
+        desc += "Name: " + newPlayer.getPlayerName() + "\n";
+        for (byte i = 0; i < newPlayer.getStats().length; i++) {
+            desc += Globals.getStatName(i) + ": " + newPlayer.getStats()[i] + "\n";
+        }
+
+        Globals.log("DATA_PLAYER_CREATE", address + ":" + port + " Queueing new player. Room: " + room + " Key: " + freeKey + desc, Globals.LOG_TYPE_DATA, true);
 
         byte[] bytes = new byte[Globals.PACKET_BYTE * 4];
         bytes[0] = Globals.DATA_PLAYER_CREATE;
@@ -282,7 +288,7 @@ public class PacketHandler implements Runnable {
         bytes[2] = freeKey;
         bytes[3] = Globals.SERVER_MAX_PLAYERS;
         sender.sendPlayer(bytes, address, port);
-        Globals.log("DATA_PLAYER_CREATE", address + ":" + port + " Sent Creation Room: " + room + " Key: " + freeKey + " Name: " + newPlayer.getPlayerName(), Globals.LOG_TYPE_DATA, true);
+        Globals.log("DATA_PLAYER_CREATE", address + ":" + port + " Sent Creation. Room: " + room + " Key: " + freeKey + " Name: " + newPlayer.getPlayerName(), Globals.LOG_TYPE_DATA, true);
 
         newPlayer.sendPos();
         newPlayer.sendName();

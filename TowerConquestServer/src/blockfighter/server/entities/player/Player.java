@@ -547,10 +547,12 @@ public class Player extends Thread implements GameEntity {
         }
     }
 
-    private void castSkill(byte[] data, byte newState, byte weaponSlot) {
-        if (!skills.get(data[3]).canCast(getItemType(equip[weaponSlot]))) {
+    private void castSkill(byte[] data, byte newState, byte weaponSlot) {        
+       if (!skills.get(data[3]).canCast(getItemType(equip[weaponSlot]))) {
             return;
         }
+        Globals.log("DATA_PLAYER_CASTSKILL", "Key: " + key + " Room: " + logic.getRoom() + " Player: " + getPlayerName() + " Skill: " + data[3], Globals.LOG_TYPE_DATA, true);
+        
         queuePlayerState(newState);
         skills.get(data[3]).setCooldown();
         sendCooldown(data);
@@ -809,7 +811,7 @@ public class Player extends Thread implements GameEntity {
             ProjBowVolley proj = new ProjBowVolley(logic, logic.getNextProjKey(), this, x, y - 10 + Globals.rng(40));
             logic.queueAddProj(proj);
             sendParticle(logic.getRoom(), Globals.PARTICLE_BOW_VOLLEYARROW, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(), facing);
-            sendParticle(logic.getRoom(), Globals.PARTICLE_BOW_VOLLEYBOW, getX(), getY()+30, facing);
+            sendParticle(logic.getRoom(), Globals.PARTICLE_BOW_VOLLEYBOW, getX(), getY() + 30, facing);
             skillCounter++;
         }
         if (skillDuration >= 1900 || isStunned() || isKnockback()) {

@@ -49,7 +49,7 @@ public abstract class Projectile extends Thread implements GameEntity {
      * Array of players hit by this projectile
      */
     protected ArrayList<Player> pHit = new ArrayList<>();
-    
+
     /**
      * Queue of players to be hit by projectile
      */

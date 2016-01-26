@@ -43,7 +43,7 @@ public class ProjAttack extends BossProjectile {
         while (!playerQueue.isEmpty()) {
             Player p = playerQueue.poll();
             if (p != null && !p.isDead()) {
-                int damage = (int) (70 * Math.pow(getBossOwner().getStats()[Boss.STAT_LEVEL],1.7));
+                int damage = (int) (70 * Math.pow(getBossOwner().getStats()[Boss.STAT_LEVEL], 1.7));
                 p.queueDamage(new Damage(damage, false, getBossOwner(), p, hitbox[0], p.getHitbox()));
             }
         }

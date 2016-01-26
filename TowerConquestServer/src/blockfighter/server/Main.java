@@ -145,7 +145,7 @@ public class Main {
         JFrame frame = new JFrame(Globals.WINDOW_TITLE);
 
         //frame.setUndecorated(true);
-        //frame.setResizable(false);
+        frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().setPreferredSize(new Dimension(500, 600));
         JPanel panel = new JPanel();

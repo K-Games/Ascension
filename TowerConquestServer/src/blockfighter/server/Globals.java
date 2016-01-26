@@ -32,12 +32,12 @@ public class Globals {
 
     private final static byte GAME_MAJOR_VERSION = 0,
             GAME_MINOR_VERSION = 15,
-            GAME_UPDATE_NUMBER = 2;
+            GAME_UPDATE_NUMBER = 3;
     private final static String GAME_DEV_STATE = "ALPHA";
 
     public final static String GAME_RELEASE_VERSION = GAME_DEV_STATE + " " + GAME_MAJOR_VERSION + "." + GAME_MINOR_VERSION + "u" + GAME_UPDATE_NUMBER;
 
-    public final static String WINDOW_TITLE = "Tower Conquest Server" + GAME_RELEASE_VERSION;
+    public final static String WINDOW_TITLE = "Tower Conquest Server " + GAME_RELEASE_VERSION;
 
     private static Random rng = new Random();
 
@@ -290,6 +290,44 @@ public class Globals {
             errConsole.setCaretPosition(errConsole.getDocument().getLength());
         };
         LOG_THREADPOOL.execute(logging);
+    }
+
+    public static final String getStatName(byte statID) {
+        switch (statID) {
+            case STAT_POWER:
+                return "Power";
+            case STAT_DEFENSE:
+                return "Defense";
+            case STAT_SPIRIT:
+                return "Spirit";
+            case STAT_MINHP:
+                return "Current HP";
+            case STAT_MAXHP:
+                return "Max HP";
+            case STAT_MINDMG:
+                return "Minimum Damage";
+            case STAT_MAXDMG:
+                return "Maximum Damage";
+            case STAT_CRITCHANCE:
+                return "Critical Hit Chance";
+            case STAT_CRITDMG:
+                return "Critical Hit Damage";
+            case STAT_REGEN:
+                return "Regen(HP/Sec)";
+            case STAT_ARMOR:
+                return "Armor";
+            case STAT_LEVEL:
+                return "Level";
+            case STAT_POINTS:
+                return "Stat Points";
+            case STAT_EXP:
+                return "Experience";
+            case STAT_SKILLPOINTS:
+                return "Skill Points";
+            case STAT_DAMAGEREDUCT:
+                return "Damage Reduction";
+        }
+        return "INVALID STAT";
     }
 
     public static final double calcEXPtoNxtLvl(double level) {
