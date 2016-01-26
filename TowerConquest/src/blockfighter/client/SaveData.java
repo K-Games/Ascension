@@ -116,13 +116,13 @@ public class SaveData {
         for (int i = 0; i < inventory.length; i++) {
             inventory[i] = new ItemEquip[100];
         }
-        
+
         if (testMax) {
             for (ItemUpgrade upgrade : upgrades) {
                 addItem(new ItemUpgrade(1, 300));
             }
         }
-        
+
         for (int itemCode : ItemEquip.ITEM_CODES) {
             ItemEquip startEq = new ItemEquip(itemCode, baseStats[Globals.STAT_LEVEL]);
             addItem(startEq);

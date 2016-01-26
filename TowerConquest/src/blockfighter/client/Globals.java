@@ -20,10 +20,10 @@ public class Globals {
     public static String SERVER_ADDRESS = "towerconquest.servegame.com";
 
     public final static boolean TEST_MAX_LEVEL = true;
-    
+
     private final static byte GAME_MAJOR_VERSION = 0,
             GAME_MINOR_VERSION = 15,
-            GAME_UPDATE_NUMBER = 2;
+            GAME_UPDATE_NUMBER = 3;
     private final static String GAME_DEV_STATE = "ALPHA";
 
     public final static String GAME_RELEASE_VERSION = GAME_DEV_STATE + " " + GAME_MAJOR_VERSION + "." + GAME_MINOR_VERSION + "u" + GAME_UPDATE_NUMBER;
@@ -260,6 +260,44 @@ public class Globals {
 
     public final static byte WINDOW_CREATECHAR = 0,
             WINDOW_DESTROYCONFIRM = 1;
+
+    public static final String getStatName(byte statID) {
+        switch (statID) {
+            case STAT_POWER:
+                return "Power";
+            case STAT_DEFENSE:
+                return "Defense";
+            case STAT_SPIRIT:
+                return "Spirit";
+            case STAT_MINHP:
+                return "Current HP";
+            case STAT_MAXHP:
+                return "Max HP";
+            case STAT_MINDMG:
+                return "Minimum Damage";
+            case STAT_MAXDMG:
+                return "Maximum Damage";
+            case STAT_CRITCHANCE:
+                return "Critical Hit Chance";
+            case STAT_CRITDMG:
+                return "Critical Hit Damage";
+            case STAT_REGEN:
+                return "Regen(HP/Sec)";
+            case STAT_ARMOR:
+                return "Armor";
+            case STAT_LEVEL:
+                return "Level";
+            case STAT_POINTS:
+                return "Stat Points";
+            case STAT_EXP:
+                return "Experience";
+            case STAT_SKILLPOINTS:
+                return "Skill Points";
+            case STAT_DAMAGEREDUCT:
+                return "Damage Reduction";
+        }
+        return "INVALID STAT";
+    }
 
     public static final double calcArmor(double defense) {
         return defense * ARMOR_MULT;

@@ -15,7 +15,6 @@ public class SkillShieldFortify extends Skill {
         icon = Globals.SKILL_ICON[SHIELD_FORTIFY];
         skillCode = SHIELD_FORTIFY;
         maxCooldown = 15000;
-        reqWeapon = Globals.ITEM_SHIELD;
         skillName = "Fortify";
     }
 

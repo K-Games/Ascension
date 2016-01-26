@@ -441,26 +441,22 @@ public class ItemEquip implements Item {
         maxWidth = Math.max(maxWidth, g.getFontMetrics().stringWidth("Type: " + ITEM_TYPENAME.get(getItemType(itemCode))));
         maxWidth = Math.max(maxWidth, g.getFontMetrics().stringWidth("Level: " + (int) getTotalStats()[Globals.STAT_LEVEL]));
 
-        if (getTotalStats()[Globals.STAT_POWER] > 0) {
-            maxWidth = Math.max(maxWidth, g.getFontMetrics().stringWidth("Power: " + (int) getTotalStats()[Globals.STAT_POWER]));
-        }
-        if (getTotalStats()[Globals.STAT_DEFENSE] > 0) {
-            maxWidth = Math.max(maxWidth, g.getFontMetrics().stringWidth("Defense: " + (int) getTotalStats()[Globals.STAT_DEFENSE]));
-        }
-        if (getTotalStats()[Globals.STAT_SPIRIT] > 0) {
-            maxWidth = Math.max(maxWidth, g.getFontMetrics().stringWidth("Spirit: " + (int) getTotalStats()[Globals.STAT_SPIRIT]));
-        }
-        if (getTotalStats()[Globals.STAT_ARMOR] > 0) {
-            maxWidth = Math.max(maxWidth, g.getFontMetrics().stringWidth("Armor: " + (int) getTotalStats()[Globals.STAT_ARMOR]));
-        }
-        if (getTotalStats()[Globals.STAT_REGEN] > 0) {
-            maxWidth = Math.max(maxWidth, g.getFontMetrics().stringWidth("Regen: " + df.format(getTotalStats()[Globals.STAT_REGEN]) + " HP/Sec"));
-        }
-        if (getTotalStats()[Globals.STAT_CRITDMG] > 0) {
-            maxWidth = Math.max(maxWidth, g.getFontMetrics().stringWidth("Critical Damage: " + df.format(getTotalStats()[Globals.STAT_CRITDMG] * 100) + "%"));
-        }
-        if (getTotalStats()[Globals.STAT_CRITCHANCE] > 0) {
-            maxWidth = Math.max(maxWidth, g.getFontMetrics().stringWidth("Critical Chance: " + df.format(getTotalStats()[Globals.STAT_CRITCHANCE] * 100) + "%"));
+        for (byte i = 0; i < getTotalStats().length; i++) {
+            if (getTotalStats()[i] > 0) {
+                switch (i) {
+                    case Globals.STAT_CRITCHANCE:
+                    case Globals.STAT_CRITDMG:
+                        maxWidth = Math.max(maxWidth, g.getFontMetrics().stringWidth(Globals.getStatName(i) + ": " + df.format(getTotalStats()[i]) + "%"));
+                        break;
+
+                    case Globals.STAT_REGEN:
+                        maxWidth = Math.max(maxWidth, g.getFontMetrics().stringWidth(Globals.getStatName(i) + ": " + df.format(getTotalStats()[i])));
+                        break;
+                    default:
+                        maxWidth = Math.max(maxWidth, g.getFontMetrics().stringWidth(Globals.getStatName(i) + ": " + (int) getTotalStats()[i]));
+                }
+
+            }
         }
 
         g.setFont(Globals.ARIAL_15PT_ITALIC);
@@ -509,46 +505,33 @@ public class ItemEquip implements Item {
                 break;
         }
         if (getUpgrades() > 0) {
-            g.drawString(tierString + getItemName() + " +" + getUpgrades() + "(" + bonusMult + ")", x + 40, y + 20);
+            g.drawString(tierString + getItemName() + " +" + getUpgrades(), x + 40, y + 20);
         } else {
-            g.drawString(tierString + getItemName() + "(" + bonusMult + ")", x + 40, y + 20);
+            g.drawString(tierString + getItemName(), x + 40, y + 20);
         }
         g.setColor(Color.WHITE);
         int rowY = 40;
 
         g.drawString("Type: " + ITEM_TYPENAME.get(getItemType(itemCode)), x + 40, y + rowY);
         rowY += 20;
+        g.drawString(Globals.getStatName(Globals.STAT_LEVEL) + ": " + (int) getTotalStats()[Globals.STAT_LEVEL], x + 40, y + rowY);
 
-        g.drawString("Level: " + (int) getTotalStats()[Globals.STAT_LEVEL], x + 40, y + rowY);
         rowY += 20;
-        if (getTotalStats()[Globals.STAT_POWER] > 0) {
-            g.drawString("Power: " + (int) getTotalStats()[Globals.STAT_POWER], x + 40, y + rowY);
-            rowY += 20;
-        }
-        if (getTotalStats()[Globals.STAT_DEFENSE] > 0) {
-            g.drawString("Defense: " + (int) getTotalStats()[Globals.STAT_DEFENSE], x + 40, y + rowY);
-            rowY += 20;
-        }
-        if (getTotalStats()[Globals.STAT_SPIRIT] > 0) {
-            g.drawString("Spirit: " + (int) getTotalStats()[Globals.STAT_SPIRIT], x + 40, y + rowY);
-            rowY += 20;
-        }
-
-        if (getTotalStats()[Globals.STAT_ARMOR] > 0) {
-            g.drawString("Armor: " + (int) getTotalStats()[Globals.STAT_ARMOR], x + 40, y + rowY);
-            rowY += 20;
-        }
-        if (getTotalStats()[Globals.STAT_REGEN] > 0) {
-            g.drawString("Regen: " + df.format(getTotalStats()[Globals.STAT_REGEN]) + " HP/Sec", x + 40, y + rowY);
-            rowY += 20;
-        }
-        if (getTotalStats()[Globals.STAT_CRITDMG] > 0) {
-            g.drawString("Critical Damage: " + df.format(getTotalStats()[Globals.STAT_CRITDMG] * 100) + "%", x + 40, y + rowY);
-            rowY += 20;
-        }
-        if (getTotalStats()[Globals.STAT_CRITCHANCE] > 0) {
-            g.drawString("Critical Chance: " + df.format(getTotalStats()[Globals.STAT_CRITCHANCE] * 100) + "%", x + 40, y + rowY);
-            rowY += 20;
+        for (byte i = 0; i < getTotalStats().length; i++) {
+            if (getTotalStats()[i] > 0 && i != Globals.STAT_LEVEL) {
+                switch (i) {
+                    case Globals.STAT_CRITCHANCE:
+                    case Globals.STAT_CRITDMG:
+                        g.drawString(Globals.getStatName(i) + ": " + df.format(getTotalStats()[i]) + "%", x + 40, y + rowY);
+                        break;
+                    case Globals.STAT_REGEN:
+                        g.drawString(Globals.getStatName(i) + ": " + df.format(getTotalStats()[i]), x + 40, y + rowY);
+                        break;
+                    default:
+                        g.drawString(Globals.getStatName(i) + ": " + (int) getTotalStats()[i], x + 40, y + rowY);
+                }
+                rowY += 20;
+            }
         }
 
         g.setFont(Globals.ARIAL_15PT_ITALIC);
