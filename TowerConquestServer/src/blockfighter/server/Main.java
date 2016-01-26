@@ -26,35 +26,49 @@ import org.apache.commons.lang3.concurrent.BasicThreadFactory;
  */
 public class Main {
 
-    private static ScheduledExecutorService senderSch = Executors.newSingleThreadScheduledExecutor(new BasicThreadFactory.Builder()
-            .namingPattern("PacketSenderScheduler-%d")
-            .daemon(true)
-            .priority(Thread.NORM_PRIORITY)
-            .build());
-
-    private static ScheduledExecutorService threadPool = Executors.newScheduledThreadPool(Math.max(Globals.SERVER_ROOMS / 20, 1),
-            new BasicThreadFactory.Builder()
-            .namingPattern("LogicModuleScheduler-%d")
-            .daemon(false)
-            .priority(Thread.NORM_PRIORITY)
-            .build());
+    private static ScheduledExecutorService senderSch;
+    private static ScheduledExecutorService logicSchThreadPool;
 
     private static JTextArea dataLog = new JTextArea(),
             errLog = new JTextArea();
+
+    public static void init() {
+        LogicModule.init();
+        PacketSender.init();
+        senderSch = Executors.newSingleThreadScheduledExecutor(new BasicThreadFactory.Builder()
+                .namingPattern("PacketSenderScheduler-%d")
+                .daemon(true)
+                .priority(Thread.NORM_PRIORITY)
+                .build());
+        logicSchThreadPool = Executors.newScheduledThreadPool(Math.max(Globals.SERVER_ROOMS / 30, 1),
+                new BasicThreadFactory.Builder()
+                .namingPattern("LogicModuleScheduler-%d")
+                .daemon(false)
+                .priority(Thread.NORM_PRIORITY)
+                .build());
+    }
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        boolean isGUI = true, getMaxPlayer = false, getMaxRooms = false;
+        boolean isGUI = true, getMaxPlayer = false, getMaxRooms = false,
+                isDefault = false;
+
         if (args.length > 0) {
             HashSet<String> arguments = new HashSet<>();
             arguments.addAll(Arrays.asList(args));
             isGUI = !arguments.contains("--nogui");
             getMaxPlayer = arguments.contains("--players");
             getMaxRooms = arguments.contains("--rooms");
+            isDefault = arguments.contains("--default");
         }
-
+        Globals.initLogger();
+        Globals.setGUILog(dataLog, errLog);
+        if (!isDefault) {
+            Globals.setServerProp();
+        }
+        init();
         if (getMaxPlayer) {
             byte value = 0;
             while (value <= 0) {
@@ -120,18 +134,17 @@ public class Main {
             Boss.setPacketSender(packetSender);
             Projectile.setPacketSender(packetSender);
 
-            Globals.createLogDirectory();
-            Globals.setGUILog(dataLog, errLog);
             Globals.log("Server started", String.format("%1$td/%1$tm/%1$tY %1$tT", System.currentTimeMillis()), Globals.LOG_TYPE_ERR, false);
             Globals.log("Server started", String.format("%1$td/%1$tm/%1$tY %1$tT", System.currentTimeMillis()), Globals.LOG_TYPE_DATA, true);
 
             senderSch.scheduleAtFixedRate(packetSender, 0, 500, TimeUnit.MICROSECONDS);
             for (byte i = 0; i < server_rooms.length; i++) {
                 server_rooms[i] = new LogicModule(i);
-                threadPool.scheduleAtFixedRate(server_rooms[i], 0, 1, TimeUnit.MILLISECONDS);
-                Globals.log("Initialization", "Room " + i, Globals.LOG_TYPE_ERR, false);
-                Globals.log("Initialization", "Room " + i, Globals.LOG_TYPE_DATA, true);
+                logicSchThreadPool.scheduleAtFixedRate(server_rooms[i], 0, 1, TimeUnit.MILLISECONDS);
             }
+            Globals.log("Initialization", "Initialized " + server_rooms.length + " rooms", Globals.LOG_TYPE_ERR, false);
+            Globals.log("Initialization", "Initialized " + server_rooms.length + " rooms", Globals.LOG_TYPE_DATA, true);
+
             packetReceiver.setDaemon(true);
             packetReceiver.setName("PacketReceiver");
             packetReceiver.start();

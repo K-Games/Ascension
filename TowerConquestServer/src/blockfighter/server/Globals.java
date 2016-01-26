@@ -2,14 +2,20 @@ package blockfighter.server;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Properties;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JTextArea;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
@@ -32,7 +38,7 @@ public class Globals {
 
     private final static byte GAME_MAJOR_VERSION = 0,
             GAME_MINOR_VERSION = 15,
-            GAME_UPDATE_NUMBER = 3;
+            GAME_UPDATE_NUMBER = 4;
     private final static String GAME_DEV_STATE = "ALPHA";
 
     public final static String GAME_RELEASE_VERSION = GAME_DEV_STATE + " " + GAME_MAJOR_VERSION + "." + GAME_MINOR_VERSION + "u" + GAME_UPDATE_NUMBER;
@@ -41,19 +47,15 @@ public class Globals {
 
     private static Random rng = new Random();
 
-    public final static ExecutorService LOG_THREADPOOL = Executors.newSingleThreadExecutor(
-            new BasicThreadFactory.Builder()
-            .namingPattern("Logger-%d")
-            .daemon(true)
-            .priority(Thread.MIN_PRIORITY)
-            .build()
-    );
+    public static ExecutorService LOG_THREAD;
 
-    public final static String SERVER_ADDRESS = "0.0.0.0";
-    public final static int SERVER_PORT = 25565;
+    //public final static String SERVER_ADDRESS = "0.0.0.0";
+    public static int SERVER_PORT = 25565;
     public static byte SERVER_MAX_PLAYERS = 10;
     public static byte SERVER_ROOMS = 101;
-    public final static long SERVER_MAX_IDLE = 180000;
+    public static long SERVER_MAX_IDLE = 180000;
+    public static byte SERVER_LOGIC_THREADS = 5,
+            SERVER_PACKETSENDER_THREADS = 5;
 
     public final static byte MAX_NAME_LENGTH = 15;
 
@@ -203,6 +205,59 @@ public class Globals {
             DATA_PLAYER_GIVEDROP = 0x17,
             DATA_PLAYER_CREATE = 0x18;
 
+    public final static void initLogger() {
+        createLogDirectory();
+        LOG_THREAD = Executors.newSingleThreadExecutor(
+                new BasicThreadFactory.Builder()
+                .namingPattern("Logger-%d")
+                .daemon(true)
+                .priority(Thread.MIN_PRIORITY)
+                .build()
+        );
+    }
+
+    public final static void setServerProp() {
+        InputStream inputStream = null;
+        try {
+            Properties prop = new Properties();
+
+            inputStream = new FileInputStream("config.properties");
+            prop.load(inputStream);
+            if (prop.getProperty("port") != null) {
+                SERVER_PORT = Byte.parseByte(prop.getProperty("port"));
+                log("Config", "Server Port: " + SERVER_PORT, Globals.LOG_TYPE_DATA, true);
+            }
+            if (prop.getProperty("maxplayers") != null) {
+                SERVER_MAX_PLAYERS = Byte.parseByte(prop.getProperty("maxplayers"));
+                log("Config", "Max Players per Room: " + SERVER_MAX_PLAYERS, Globals.LOG_TYPE_DATA, true);
+            }
+            if (prop.getProperty("rooms") != null) {
+                SERVER_ROOMS = (byte) (1 + Byte.parseByte(prop.getProperty("rooms")));
+                log("Config", "Rooms: " + SERVER_ROOMS, Globals.LOG_TYPE_DATA, true);
+            }
+            if (prop.getProperty("logicthreads") != null) {
+                SERVER_LOGIC_THREADS = Byte.parseByte(prop.getProperty("logicthreads"));
+                log("Config", "Logic Module Threads: " + SERVER_LOGIC_THREADS, Globals.LOG_TYPE_DATA, true);
+            }
+            if (prop.getProperty("packetsenderthreads") != null) {
+                SERVER_PACKETSENDER_THREADS = Byte.parseByte(prop.getProperty("packetsenderthreads"));
+                log("Config", "Max Packet Sender Threads: " + SERVER_PACKETSENDER_THREADS, Globals.LOG_TYPE_DATA, true);
+            }
+        } catch (FileNotFoundException e) {
+            log("config.properties not found in root directory. Using default server values.", "Config", Globals.LOG_TYPE_DATA, true);
+        } catch (IOException ex) {
+            Logger.getLogger(Globals.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            if (inputStream != null) {
+                try {
+                    inputStream.close();
+                } catch (IOException ex) {
+                    Logger.getLogger(Globals.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+    }
+
     public final static void setGUILog(JTextArea data, JTextArea err) {
         dataConsole = data;
         errConsole = err;
@@ -219,7 +274,7 @@ public class Globals {
         }
     }
 
-    public final static void log(final String info, final String classname, final byte logType, final boolean console) {
+    public final static void log(final String info, final String originName, final byte logType, final boolean console) {
 
         Runnable logging = () -> {
             String logFile;
@@ -245,29 +300,29 @@ public class Globals {
             }
 
             if (console) {
-                System.out.println(logT + info + "@" + classname);
+                System.out.println(logT + info + "@" + originName);
             }
 
             if (LOGGING) {
                 try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(new File(LOG_DIR, logFile), true)))) {
-                    out.println("[" + String.format("%1$td/%1$tm/%1$tY %1$tT", System.currentTimeMillis()) + "]" + info + "@" + classname);
+                    out.println("[" + String.format("%1$td/%1$tm/%1$tY %1$tT", System.currentTimeMillis()) + "]" + info + "@" + originName);
                 } catch (IOException e) {
                     System.err.println(e);
                 }
             }
             switch (logType) {
                 case LOG_TYPE_ERR:
-                    errConsole.append("\n" + info + "@" + classname);
+                    errConsole.append("\n" + info + "@" + originName);
                     errConsole.setCaretPosition(errConsole.getDocument().getLength());
                     break;
                 case LOG_TYPE_DATA:
-                    dataConsole.append("\n" + info + "@" + classname);
+                    dataConsole.append("\n" + info + "@" + originName);
                     dataConsole.setCaretPosition(dataConsole.getDocument().getLength());
                     break;
             }
         };
 
-        LOG_THREADPOOL.execute(logging);
+        LOG_THREAD.execute(logging);
     }
 
     public static final void log(final String ex, final Exception e, final boolean console) {
@@ -289,7 +344,7 @@ public class Globals {
             errConsole.append("\n" + ex + "@" + e.getStackTrace()[1]);
             errConsole.setCaretPosition(errConsole.getDocument().getLength());
         };
-        LOG_THREADPOOL.execute(logging);
+        LOG_THREAD.execute(logging);
     }
 
     public static final String getStatName(byte statID) {

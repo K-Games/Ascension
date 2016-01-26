@@ -44,12 +44,7 @@ public class LogicModule extends Thread {
     private long lastRefreshAll = 0;
     private double lastUpdateTime = 0;
 
-    private static ExecutorService threadPool = Executors.newFixedThreadPool(10,
-            new BasicThreadFactory.Builder()
-            .namingPattern("LogicModule-%d")
-            .daemon(true)
-            .priority(Thread.NORM_PRIORITY)
-            .build());
+    private static ExecutorService logicThreadPool;
 
     /**
      * Create a server logic module
@@ -72,6 +67,15 @@ public class LogicModule extends Thread {
         for (byte i = 0; i < Globals.SERVER_MAX_PLAYERS; i++) {
             playerKeys.add(i);
         }
+    }
+
+    public static void init() {
+        logicThreadPool = Executors.newFixedThreadPool(Globals.SERVER_LOGIC_THREADS,
+                new BasicThreadFactory.Builder()
+                .namingPattern("LogicModule-%d")
+                .daemon(true)
+                .priority(Thread.NORM_PRIORITY)
+                .build());
     }
 
     /**
@@ -156,7 +160,7 @@ public class LogicModule extends Thread {
 
     private void updateBosses() {
         for (Map.Entry<Byte, Boss> boss : bosses.entrySet()) {
-            threadPool.execute(boss.getValue());
+            logicThreadPool.execute(boss.getValue());
         }
         for (Map.Entry<Byte, Boss> boss : bosses.entrySet()) {
             try {
@@ -169,7 +173,7 @@ public class LogicModule extends Thread {
 
     private void updatePlayers() {
         for (Map.Entry<Byte, Player> player : players.entrySet()) {
-            threadPool.execute(player.getValue());
+            logicThreadPool.execute(player.getValue());
         }
         LinkedList<Byte> remove = new LinkedList<>();
         for (Map.Entry<Byte, Player> player : players.entrySet()) {
@@ -199,7 +203,7 @@ public class LogicModule extends Thread {
 
     private void updateProjectiles() {
         for (Map.Entry<Integer, Projectile> p : projectiles.entrySet()) {
-            threadPool.execute(p.getValue());
+            logicThreadPool.execute(p.getValue());
         }
         LinkedList<Integer> remove = new LinkedList<>();
         for (Map.Entry<Integer, Projectile> p : projectiles.entrySet()) {
@@ -400,7 +404,7 @@ public class LogicModule extends Thread {
         };
 
         for (Runnable t : queues) {
-            threadPool.execute(t);
+            logicThreadPool.execute(t);
         }
     }
 

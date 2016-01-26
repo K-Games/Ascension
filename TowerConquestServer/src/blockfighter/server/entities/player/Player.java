@@ -3,10 +3,66 @@ package blockfighter.server.entities.player;
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.GameEntity;
+import blockfighter.server.entities.buff.Buff;
+import blockfighter.server.entities.buff.BuffDmgIncrease;
+import blockfighter.server.entities.buff.BuffDmgReduct;
+import blockfighter.server.entities.buff.BuffDmgTakenAmp;
+import blockfighter.server.entities.buff.BuffKnockback;
+import blockfighter.server.entities.buff.BuffPassiveBarrier;
+import blockfighter.server.entities.buff.BuffShieldDash;
+import blockfighter.server.entities.buff.BuffShieldFortify;
+import blockfighter.server.entities.buff.BuffShieldIron;
+import blockfighter.server.entities.buff.BuffShieldReflect;
+import blockfighter.server.entities.buff.BuffStun;
+import blockfighter.server.entities.buff.BuffSwordSlash;
+import blockfighter.server.entities.buff.BuffSwordTaunt;
 import blockfighter.server.entities.damage.Damage;
-import blockfighter.server.entities.buff.*;
-import blockfighter.server.entities.player.skills.*;
-import blockfighter.server.entities.proj.*;
+import blockfighter.server.entities.player.skills.Skill;
+import blockfighter.server.entities.player.skills.SkillBowArc;
+import blockfighter.server.entities.player.skills.SkillBowFrost;
+import blockfighter.server.entities.player.skills.SkillBowPower;
+import blockfighter.server.entities.player.skills.SkillBowRapid;
+import blockfighter.server.entities.player.skills.SkillBowStorm;
+import blockfighter.server.entities.player.skills.SkillBowVolley;
+import blockfighter.server.entities.player.skills.SkillPassive12;
+import blockfighter.server.entities.player.skills.SkillPassiveBarrier;
+import blockfighter.server.entities.player.skills.SkillPassiveBowMastery;
+import blockfighter.server.entities.player.skills.SkillPassiveDualSword;
+import blockfighter.server.entities.player.skills.SkillPassiveKeenEye;
+import blockfighter.server.entities.player.skills.SkillPassiveResistance;
+import blockfighter.server.entities.player.skills.SkillPassiveRevive;
+import blockfighter.server.entities.player.skills.SkillPassiveShadowAttack;
+import blockfighter.server.entities.player.skills.SkillPassiveShieldMastery;
+import blockfighter.server.entities.player.skills.SkillPassiveTactical;
+import blockfighter.server.entities.player.skills.SkillPassiveVitalHit;
+import blockfighter.server.entities.player.skills.SkillPassiveWillpower;
+import blockfighter.server.entities.player.skills.SkillShieldCharge;
+import blockfighter.server.entities.player.skills.SkillShieldDash;
+import blockfighter.server.entities.player.skills.SkillShieldFortify;
+import blockfighter.server.entities.player.skills.SkillShieldIron;
+import blockfighter.server.entities.player.skills.SkillShieldReflect;
+import blockfighter.server.entities.player.skills.SkillShieldToss;
+import blockfighter.server.entities.player.skills.SkillSwordCinder;
+import blockfighter.server.entities.player.skills.SkillSwordDrive;
+import blockfighter.server.entities.player.skills.SkillSwordMulti;
+import blockfighter.server.entities.player.skills.SkillSwordSlash;
+import blockfighter.server.entities.player.skills.SkillSwordTaunt;
+import blockfighter.server.entities.player.skills.SkillSwordVorpal;
+import blockfighter.server.entities.proj.ProjBowArc;
+import blockfighter.server.entities.proj.ProjBowFrost;
+import blockfighter.server.entities.proj.ProjBowPower;
+import blockfighter.server.entities.proj.ProjBowRapid;
+import blockfighter.server.entities.proj.ProjBowStorm;
+import blockfighter.server.entities.proj.ProjBowVolley;
+import blockfighter.server.entities.proj.ProjShieldCharge;
+import blockfighter.server.entities.proj.ProjShieldReflect;
+import blockfighter.server.entities.proj.ProjShieldToss;
+import blockfighter.server.entities.proj.ProjSwordCinder;
+import blockfighter.server.entities.proj.ProjSwordDrive;
+import blockfighter.server.entities.proj.ProjSwordMulti;
+import blockfighter.server.entities.proj.ProjSwordSlash;
+import blockfighter.server.entities.proj.ProjSwordTaunt;
+import blockfighter.server.entities.proj.ProjSwordVorpal;
 import blockfighter.server.maps.GameMap;
 import blockfighter.server.net.PacketSender;
 import java.awt.geom.Rectangle2D;
@@ -547,12 +603,12 @@ public class Player extends Thread implements GameEntity {
         }
     }
 
-    private void castSkill(byte[] data, byte newState, byte weaponSlot) {        
-       if (!skills.get(data[3]).canCast(getItemType(equip[weaponSlot]))) {
+    private void castSkill(byte[] data, byte newState, byte weaponSlot) {
+        if (!skills.get(data[3]).canCast(getItemType(equip[weaponSlot]))) {
             return;
         }
         Globals.log("DATA_PLAYER_CASTSKILL", "Key: " + key + " Room: " + logic.getRoom() + " Player: " + getPlayerName() + " Skill: " + data[3], Globals.LOG_TYPE_DATA, true);
-        
+
         queuePlayerState(newState);
         skills.get(data[3]).setCooldown();
         sendCooldown(data);

@@ -1,7 +1,5 @@
 package blockfighter.server.entities.player.skills;
 
-import blockfighter.server.Globals;
-
 /**
  *
  * @author Ken Kwan

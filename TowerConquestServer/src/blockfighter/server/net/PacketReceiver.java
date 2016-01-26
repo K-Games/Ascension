@@ -6,7 +6,9 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
 /**
@@ -18,7 +20,9 @@ public class PacketReceiver extends Thread {
 
     @Override
     public void run() {
-        ExecutorService threadPool = Executors.newFixedThreadPool(3,
+        ExecutorService threadPool = new ThreadPoolExecutor(1, 3,
+                10L, TimeUnit.SECONDS,
+                new LinkedBlockingQueue<>(),
                 new BasicThreadFactory.Builder()
                 .namingPattern("PacketHandlerExecutor-%d")
                 .daemon(true)

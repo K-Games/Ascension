@@ -10,7 +10,9 @@ import java.net.InetAddress;
 import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
 /**
@@ -32,20 +34,25 @@ public class PacketSender implements Runnable {
     private int bytesSent = 0;
     private ConcurrentLinkedQueue<DatagramPacket> sendAllQueue = new ConcurrentLinkedQueue<>();
 
-    private static ExecutorService threadPool = Executors.newCachedThreadPool(
-            new BasicThreadFactory.Builder()
-            .namingPattern("PacketSender-%d")
-            .daemon(true)
-            .priority(Thread.MAX_PRIORITY)
-            .build()
-    );
+    private static ExecutorService senderThreadPool;
+
+    public static void init() {
+        senderThreadPool = new ThreadPoolExecutor(0, Globals.SERVER_PACKETSENDER_THREADS,
+                10L, TimeUnit.SECONDS,
+                new LinkedBlockingQueue<>(),
+                new BasicThreadFactory.Builder()
+                .namingPattern("PacketSender-%d")
+                .daemon(true)
+                .priority(Thread.MAX_PRIORITY)
+                .build());
+    }
 
     @Override
     public void run() {
         while (!sendAllQueue.isEmpty()) {
             final DatagramPacket p = sendAllQueue.poll();
             if (p != null) {
-                threadPool.execute(() -> {
+                senderThreadPool.execute(() -> {
                     try {
                         socket.send(p);
                     } catch (IOException ex) {
@@ -101,7 +108,7 @@ public class PacketSender implements Runnable {
      * @param port Port of destination player
      */
     public void sendPlayer(final byte[] bytes, final InetAddress address, final int port) {
-        threadPool.execute(() -> {
+        senderThreadPool.execute(() -> {
             try {
                 DatagramPacket packet = createPacket(bytes, address, port);
                 socket.send(packet);
