@@ -1,48 +1,49 @@
 package blockfighter.client.entities.particles;
 
-import blockfighter.client.Globals;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
+import blockfighter.client.Globals;
+
 public class ParticleBowVolleyBuffParticle extends Particle {
 
-    double xDouble, xSpeed;
+	double xDouble, xSpeed;
 
-    public ParticleBowVolleyBuffParticle(int k, int x, int y, byte f) {
-        super(k, x, y, f);
-        this.x += Globals.rng(100) - 60;
-        this.y -= Globals.rng(40) + 58;
-        xDouble = this.x;
-        xSpeed = Globals.rng(10) * .75 - 3.75;
-        frame = 0;
-        frameDuration = 50;
-        duration = 300;
-    }
+	public ParticleBowVolleyBuffParticle(final int k, final int x, final int y, final byte f) {
+		super(k, x, y, f);
+		this.x += Globals.rng(100) - 60;
+		this.y -= Globals.rng(40) + 58;
+		this.xDouble = this.x;
+		this.xSpeed = Globals.rng(10) * .75 - 3.75;
+		this.frame = 0;
+		this.frameDuration = 50;
+		this.duration = 300;
+	}
 
-    @Override
-    public void update() {
-        super.update();
-        frameDuration -= Globals.LOGIC_UPDATE / 1000000;
-        xDouble += xSpeed;
-        x = (int) xDouble;
-        y -= 9;
-        if (frameDuration <= 0) {
-            frameDuration = 50;
-            if (frame < PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_DASHBUFF].length - 1) {
-                frame++;
-            }
-        }
-    }
+	@Override
+	public void update() {
+		super.update();
+		this.frameDuration -= Globals.LOGIC_UPDATE / 1000000;
+		this.xDouble += this.xSpeed;
+		this.x = (int) this.xDouble;
+		this.y -= 9;
+		if (this.frameDuration <= 0) {
+			this.frameDuration = 50;
+			if (this.frame < PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_DASHBUFF].length - 1) {
+				this.frame++;
+			}
+		}
+	}
 
-    @Override
-    public void draw(Graphics2D g) {
-        if (PARTICLE_SPRITE[Globals.PARTICLE_BOW_VOLLEYBUFF] == null) {
-            return;
-        }
-        if (frame >= PARTICLE_SPRITE[Globals.PARTICLE_BOW_VOLLEYBUFF].length) {
-            return;
-        }
-        BufferedImage sprite = PARTICLE_SPRITE[Globals.PARTICLE_BOW_VOLLEYBUFF][frame];
-        g.drawImage(sprite, x, y, null);
-    }
+	@Override
+	public void draw(final Graphics2D g) {
+		if (PARTICLE_SPRITE[Globals.PARTICLE_BOW_VOLLEYBUFF] == null) {
+			return;
+		}
+		if (this.frame >= PARTICLE_SPRITE[Globals.PARTICLE_BOW_VOLLEYBUFF].length) {
+			return;
+		}
+		final BufferedImage sprite = PARTICLE_SPRITE[Globals.PARTICLE_BOW_VOLLEYBUFF][this.frame];
+		g.drawImage(sprite, this.x, this.y, null);
+	}
 }

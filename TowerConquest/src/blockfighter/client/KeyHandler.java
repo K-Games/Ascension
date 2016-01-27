@@ -9,24 +9,24 @@ import java.awt.event.KeyListener;
  */
 public class KeyHandler implements KeyListener {
 
-    private static LogicModule logic = null;
+	private static LogicModule logic = null;
 
-    public static void setLogic(LogicModule l) {
-        logic = l;
-    }
+	public static void setLogic(final LogicModule l) {
+		logic = l;
+	}
 
-    @Override
-    public void keyTyped(KeyEvent e) {
-        logic.getScreen().keyTyped(e);
-    }
+	@Override
+	public void keyTyped(final KeyEvent e) {
+		logic.getScreen().keyTyped(e);
+	}
 
-    @Override
-    public void keyPressed(KeyEvent e) {
-        logic.getScreen().keyPressed(e);
-    }
+	@Override
+	public void keyPressed(final KeyEvent e) {
+		logic.getScreen().keyPressed(e);
+	}
 
-    @Override
-    public void keyReleased(KeyEvent e) {
-        logic.getScreen().keyReleased(e);
-    }
+	@Override
+	public void keyReleased(final KeyEvent e) {
+		logic.getScreen().keyReleased(e);
+	}
 }

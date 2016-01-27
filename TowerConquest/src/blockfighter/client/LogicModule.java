@@ -1,5 +1,12 @@
 package blockfighter.client;
 
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketException;
+import java.net.UnknownHostException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.client.net.PacketReceiver;
 import blockfighter.client.net.PacketSender;
@@ -8,12 +15,6 @@ import blockfighter.client.screen.ScreenIngame;
 import blockfighter.client.screen.ScreenLoading;
 import blockfighter.client.screen.ScreenSelectChar;
 import blockfighter.client.screen.ScreenServerList;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.SocketException;
-import java.net.UnknownHostException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -21,216 +22,216 @@ import java.util.logging.Logger;
  */
 public class LogicModule implements Runnable {
 
-    //Shared Data
-    private PacketReceiver receiver = null;
+	// Shared Data
+	private PacketReceiver receiver = null;
 
-    private SaveData selectedChar;
-    private byte selectedRoom = 0;
-    private Screen screen = new ScreenSelectChar();
-    //private Screen screen = new ScreenSpriteTest();
-    private SoundModule soundModule;
-    private boolean initBgm = false, loggedIn = false;
+	private SaveData selectedChar;
+	private byte selectedRoom = 0;
+	private Screen screen = new ScreenSelectChar();
+	// private Screen screen = new ScreenSpriteTest();
+	private final SoundModule soundModule;
+	private boolean initBgm = false, loggedIn = false;
 
-    public LogicModule(SoundModule s) {
-        soundModule = s;
-    }
+	public LogicModule(final SoundModule s) {
+		this.soundModule = s;
+	}
 
-    @Override
-    public void run() {
-        if (soundModule.isLoaded() && !initBgm) {
-            //soundModule.playBGM("theme.ogg");
-            initBgm = true;
-        }
-        try {
-            screen.update();
-        } catch (Exception ex) {
-            System.err.println(ex);
-        }
-    }
+	@Override
+	public void run() {
+		if (this.soundModule.isLoaded() && !this.initBgm) {
+			// soundModule.playBGM("theme.ogg");
+			this.initBgm = true;
+		}
+		try {
+			this.screen.update();
+		} catch (final Exception ex) {
+			System.err.println(ex);
+		}
+	}
 
-    public void receiveLogin() {
-        byte attemps = 0;
-        loggedIn = false;
-        while (!loggedIn && attemps < 5) {
-            PacketSender.sendPlayerCreate(selectedRoom, selectedChar);
-            attemps++;
-            synchronized (this) {
-                try {
-                    this.wait(900);
-                } catch (InterruptedException e) {
-                    break;
-                }
-            }
-        }
-    }
+	public void receiveLogin() {
+		byte attemps = 0;
+		this.loggedIn = false;
+		while (!this.loggedIn && attemps < 5) {
+			PacketSender.sendPlayerCreate(this.selectedRoom, this.selectedChar);
+			attemps++;
+			synchronized (this) {
+				try {
+					this.wait(900);
+				} catch (final InterruptedException e) {
+					break;
+				}
+			}
+		}
+	}
 
-    public void receiveCreate(byte mapID, byte key, byte size) {
-        synchronized (this) {
-            loggedIn = true;
-            this.notify();
-        }
+	public void receiveCreate(final byte mapID, final byte key, final byte size) {
+		synchronized (this) {
+			this.loggedIn = true;
+			notify();
+		}
 
-        ScreenLoading loading = new ScreenLoading();
-        setScreen(loading);
-        try {
-            loading.load(mapID);
-            synchronized (loading) {
-                try {
-                    loading.wait();
-                } catch (InterruptedException e) {
-                }
-            }
-            setScreen(new ScreenIngame(key, size, loading.getLoadedMap()));
-            sendGetAll(key);
-        } catch (Exception e) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, e);
-            Particle.unloadParticles();
-            disconnect();
-            sendDisconnect(key);
-            returnMenu();
-        }
-    }
+		final ScreenLoading loading = new ScreenLoading();
+		setScreen(loading);
+		try {
+			loading.load(mapID);
+			synchronized (loading) {
+				try {
+					loading.wait();
+				} catch (final InterruptedException e) {
+				}
+			}
+			setScreen(new ScreenIngame(key, size, loading.getLoadedMap()));
+			sendGetAll(key);
+		} catch (final Exception e) {
+			Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, e);
+			Particle.unloadParticles();
+			disconnect();
+			sendDisconnect(key);
+			returnMenu();
+		}
+	}
 
-    public void sendGetPing(byte k, byte pID) {
-        PacketSender.sendGetPing(selectedRoom, k, pID);
-    }
+	public void sendGetPing(final byte k, final byte pID) {
+		PacketSender.sendGetPing(this.selectedRoom, k, pID);
+	}
 
-    public void sendGetAll(byte k) {
-        PacketSender.sendGetAll(selectedRoom, k);
-    }
+	public void sendGetAll(final byte k) {
+		PacketSender.sendGetAll(this.selectedRoom, k);
+	}
 
-    public void sendSetBossType(byte k) {
-        PacketSender.sendSetBossType(selectedRoom, k);
-    }
+	public void sendSetBossType(final byte k) {
+		PacketSender.sendSetBossType(this.selectedRoom, k);
+	}
 
-    public void sendGetBossStat(byte k, byte s) {
-        PacketSender.sendGetBossStat(selectedRoom, k, s);
-    }
+	public void sendGetBossStat(final byte k, final byte s) {
+		PacketSender.sendGetBossStat(this.selectedRoom, k, s);
+	}
 
-    public void sendGetName(byte k) {
-        PacketSender.sendGetName(selectedRoom, k);
-    }
+	public void sendGetName(final byte k) {
+		PacketSender.sendGetName(this.selectedRoom, k);
+	}
 
-    public void sendGetStat(byte k, byte s) {
-        PacketSender.sendGetStat(selectedRoom, k, s);
-    }
+	public void sendGetStat(final byte k, final byte s) {
+		PacketSender.sendGetStat(this.selectedRoom, k, s);
+	}
 
-    public void sendGetEquip(byte k) {
-        PacketSender.sendGetEquip(selectedRoom, k);
-    }
+	public void sendGetEquip(final byte k) {
+		PacketSender.sendGetEquip(this.selectedRoom, k);
+	}
 
-    public void sendDisconnect(byte k) {
-        PacketSender.sendDisconnect(selectedRoom, k);
-    }
+	public void sendDisconnect(final byte k) {
+		PacketSender.sendDisconnect(this.selectedRoom, k);
+	}
 
-    public void sendUseSkill(byte k, byte sc) {
-        PacketSender.sendUseSkill(selectedRoom, k, sc);
-    }
+	public void sendUseSkill(final byte k, final byte sc) {
+		PacketSender.sendUseSkill(this.selectedRoom, k, sc);
+	}
 
-    public void sendMoveKey(byte k, byte dir, boolean b) {
-        PacketSender.sendMove(selectedRoom, k, dir, b);
-    }
+	public void sendMoveKey(final byte k, final byte dir, final boolean b) {
+		PacketSender.sendMove(this.selectedRoom, k, dir, b);
+	}
 
-    public void sendLogin(final String server, byte r) {
-        selectedRoom = r;
-        Thread send = new Thread() {
-            @Override
-            public void run() {
-                if (receiver != null && receiver.isConnected()) {
-                    return;
-                }
-                try {
-                    DatagramSocket socket = new DatagramSocket();
-                    Globals.SERVER_ADDRESS = server;
-                    if (screen instanceof ScreenServerList) {
-                        ((ScreenServerList) screen).setStatus(ScreenServerList.STATUS_CONNECTING);
-                    }
-                    socket.connect(InetAddress.getByName(Globals.SERVER_ADDRESS), Globals.SERVER_PORT);
-                    socket.setSoTimeout(5000);
-                    PacketSender.setSocket(socket);
-                    receiver = new PacketReceiver(socket);
-                    receiver.setName("Reciever");
-                    receiver.setDaemon(true);
-                    receiver.start();
-                    System.out.println("Connecting to " + server);
-                    PacketSender.sendPlayerLogin(selectedRoom, selectedChar);
-                } catch (SocketException e) {
-                    if (screen instanceof ScreenServerList) {
-                        ((ScreenServerList) screen).setStatus(ScreenServerList.STATUS_SOCKETCLOSED);
-                    }
-                } catch (UnknownHostException ex) {
-                    if (screen instanceof ScreenServerList) {
-                        ((ScreenServerList) screen).setStatus(ScreenServerList.STATUS_UNKNOWNHOST);
-                    }
-                }
-            }
-        };
-        send.setName("HostResolver");
-        send.setDaemon(true);
-        send.start();
-    }
+	public void sendLogin(final String server, final byte r) {
+		this.selectedRoom = r;
+		final Thread send = new Thread() {
+			@Override
+			public void run() {
+				if (LogicModule.this.receiver != null && LogicModule.this.receiver.isConnected()) {
+					return;
+				}
+				try {
+					final DatagramSocket socket = new DatagramSocket();
+					Globals.SERVER_ADDRESS = server;
+					if (LogicModule.this.screen instanceof ScreenServerList) {
+						((ScreenServerList) LogicModule.this.screen).setStatus(ScreenServerList.STATUS_CONNECTING);
+					}
+					socket.connect(InetAddress.getByName(Globals.SERVER_ADDRESS), Globals.SERVER_PORT);
+					socket.setSoTimeout(5000);
+					PacketSender.setSocket(socket);
+					LogicModule.this.receiver = new PacketReceiver(socket);
+					LogicModule.this.receiver.setName("Reciever");
+					LogicModule.this.receiver.setDaemon(true);
+					LogicModule.this.receiver.start();
+					System.out.println("Connecting to " + server);
+					PacketSender.sendPlayerLogin(LogicModule.this.selectedRoom, LogicModule.this.selectedChar);
+				} catch (final SocketException e) {
+					if (LogicModule.this.screen instanceof ScreenServerList) {
+						((ScreenServerList) LogicModule.this.screen).setStatus(ScreenServerList.STATUS_SOCKETCLOSED);
+					}
+				} catch (final UnknownHostException ex) {
+					if (LogicModule.this.screen instanceof ScreenServerList) {
+						((ScreenServerList) LogicModule.this.screen).setStatus(ScreenServerList.STATUS_UNKNOWNHOST);
+					}
+				}
+			}
+		};
+		send.setName("HostResolver");
+		send.setDaemon(true);
+		send.start();
+	}
 
-    public Screen getScreen() {
-        return screen;
-    }
+	public Screen getScreen() {
+		return this.screen;
+	}
 
-    public void setPing(byte data) {
-        if (screen instanceof ScreenIngame) {
-            ((ScreenIngame) screen).setPing(data);
-        }
-    }
+	public void setPing(final byte data) {
+		if (this.screen instanceof ScreenIngame) {
+			((ScreenIngame) this.screen).setPing(data);
+		}
+	}
 
-    public void queueData(byte[] data) {
-        if (screen instanceof ScreenIngame) {
-            ((ScreenIngame) screen).queueData(data);
-        }
-    }
+	public void queueData(final byte[] data) {
+		if (this.screen instanceof ScreenIngame) {
+			((ScreenIngame) this.screen).queueData(data);
+		}
+	}
 
-    public void disconnect() {
-        if (selectedChar != null) {
-            SaveData.saveData(selectedChar.getSaveNum(), selectedChar);
-        }
-        if (screen instanceof ScreenIngame) {
-            ((ScreenIngame) screen).disconnect();
-        }
-    }
+	public void disconnect() {
+		if (this.selectedChar != null) {
+			SaveData.saveData(this.selectedChar.getSaveNum(), this.selectedChar);
+		}
+		if (this.screen instanceof ScreenIngame) {
+			((ScreenIngame) this.screen).disconnect();
+		}
+	}
 
-    public void setSelectedChar(SaveData s) {
-        selectedChar = s;
-    }
+	public void setSelectedChar(final SaveData s) {
+		this.selectedChar = s;
+	}
 
-    public SaveData getSelectedChar() {
-        return selectedChar;
-    }
+	public SaveData getSelectedChar() {
+		return this.selectedChar;
+	}
 
-    public void setSelectedRoom(byte r) {
-        selectedRoom = r;
-    }
+	public void setSelectedRoom(final byte r) {
+		this.selectedRoom = r;
+	}
 
-    public byte getSelectedRoom() {
-        return selectedRoom;
-    }
+	public byte getSelectedRoom() {
+		return this.selectedRoom;
+	}
 
-    public void setScreen(Screen s) {
-        screen.unload();
-        screen = s;
-    }
+	public void setScreen(final Screen s) {
+		this.screen.unload();
+		this.screen = s;
+	}
 
-    public void returnMenu() {
-        if (receiver != null) {
-            receiver.shutdown();
-            receiver = null;
-        }
-        setScreen(new ScreenServerList());
-        //soundModule.playBGM("theme.ogg");
-    }
+	public void returnMenu() {
+		if (this.receiver != null) {
+			this.receiver.shutdown();
+			this.receiver = null;
+		}
+		setScreen(new ScreenServerList());
+		// soundModule.playBGM("theme.ogg");
+	}
 
-    public void playSound(String soundFile) {
-        soundModule.playSound(soundFile);
-    }
+	public void playSound(final String soundFile) {
+		this.soundModule.playSound(soundFile);
+	}
 
-    public void playBGM(String bgmFile) {
-        soundModule.playBGM(bgmFile);
-    }
+	public void playBGM(final String bgmFile) {
+		this.soundModule.playBGM(bgmFile);
+	}
 
 }

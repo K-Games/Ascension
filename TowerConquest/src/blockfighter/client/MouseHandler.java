@@ -10,45 +10,45 @@ import java.awt.event.MouseMotionListener;
  */
 public class MouseHandler implements MouseListener, MouseMotionListener {
 
-    private static LogicModule logic;
+	private static LogicModule logic;
 
-    public static void setLogic(LogicModule l) {
-        logic = l;
-    }
+	public static void setLogic(final LogicModule l) {
+		logic = l;
+	}
 
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        logic.getScreen().mouseClicked(e);
-    }
+	@Override
+	public void mouseClicked(final MouseEvent e) {
+		logic.getScreen().mouseClicked(e);
+	}
 
-    @Override
-    public void mousePressed(MouseEvent e) {
-        logic.getScreen().mousePressed(e);
-    }
+	@Override
+	public void mousePressed(final MouseEvent e) {
+		logic.getScreen().mousePressed(e);
+	}
 
-    @Override
-    public void mouseReleased(MouseEvent e) {
-        logic.getScreen().mouseReleased(e);
-    }
+	@Override
+	public void mouseReleased(final MouseEvent e) {
+		logic.getScreen().mouseReleased(e);
+	}
 
-    @Override
-    public void mouseEntered(MouseEvent e) {
-        logic.getScreen().mouseEntered(e);
-    }
+	@Override
+	public void mouseEntered(final MouseEvent e) {
+		logic.getScreen().mouseEntered(e);
+	}
 
-    @Override
-    public void mouseExited(MouseEvent e) {
-        logic.getScreen().mouseExited(e);
-    }
+	@Override
+	public void mouseExited(final MouseEvent e) {
+		logic.getScreen().mouseExited(e);
+	}
 
-    @Override
-    public void mouseDragged(MouseEvent e) {
-        logic.getScreen().mouseDragged(e);
-    }
+	@Override
+	public void mouseDragged(final MouseEvent e) {
+		logic.getScreen().mouseDragged(e);
+	}
 
-    @Override
-    public void mouseMoved(MouseEvent e) {
-        logic.getScreen().mouseMoved(e);
-    }
+	@Override
+	public void mouseMoved(final MouseEvent e) {
+		logic.getScreen().mouseMoved(e);
+	}
 
 }

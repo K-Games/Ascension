@@ -4,29 +4,29 @@ import blockfighter.server.entities.player.Player;
 
 public class BuffSwordTaunt extends Buff implements BuffDmgReduct, BuffDmgIncrease {
 
-    private final double dmgReduct, dmgTakenMult, dmgIncrease;
+	private final double dmgReduct, dmgTakenMult, dmgIncrease;
 
-    public BuffSwordTaunt(long d, double reduct, double increase, Player o) {
-        super(d);
-        setOwner(o);
-        dmgReduct = reduct;
-        dmgIncrease = increase;
-        dmgTakenMult = 1D - dmgReduct;
-    }
+	public BuffSwordTaunt(final long d, final double reduct, final double increase, final Player o) {
+		super(d);
+		setOwner(o);
+		this.dmgReduct = reduct;
+		this.dmgIncrease = increase;
+		this.dmgTakenMult = 1D - this.dmgReduct;
+	}
 
-    @Override
-    public double getDmgReduction() {
-        return dmgReduct;
-    }
+	@Override
+	public double getDmgReduction() {
+		return this.dmgReduct;
+	}
 
-    @Override
-    public double getDmgTakenMult() {
-        return dmgTakenMult;
-    }
+	@Override
+	public double getDmgTakenMult() {
+		return this.dmgTakenMult;
+	}
 
-    @Override
-    public double getDmgIncrease() {
-        return dmgIncrease;
-    }
+	@Override
+	public double getDmgIncrease() {
+		return this.dmgIncrease;
+	}
 
 }

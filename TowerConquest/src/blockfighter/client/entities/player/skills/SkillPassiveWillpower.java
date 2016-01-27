@@ -1,8 +1,9 @@
 package blockfighter.client.entities.player.skills;
 
-import blockfighter.client.Globals;
 import java.awt.Color;
 import java.awt.Graphics2D;
+
+import blockfighter.client.Globals;
 
 /**
  *
@@ -10,47 +11,48 @@ import java.awt.Graphics2D;
  */
 public class SkillPassiveWillpower extends Skill {
 
-    public SkillPassiveWillpower() {
-        skillCode = PASSIVE_WILLPOWER;
-        skillName = "Power Of Will";
-        icon = Globals.SKILL_ICON[PASSIVE_WILLPOWER];
-    }
+	public SkillPassiveWillpower() {
+		this.skillCode = PASSIVE_WILLPOWER;
+		this.skillName = "Power Of Will";
+		this.icon = Globals.SKILL_ICON[PASSIVE_WILLPOWER];
+	}
 
-    @Override
-    public void drawInfo(Graphics2D g, int x, int y) {
-        int boxHeight = (level < 30) ? 230 : 185, boxWidth = 380;
-        if (y + boxHeight > 700) {
-            y = 700 - boxHeight;
-        }
+	@Override
+	public void drawInfo(final Graphics2D g, final int x, final int y) {
+		final int boxHeight = (this.level < 30) ? 230 : 185, boxWidth = 380;
+		int drawX = x, drawY = y;
+		if (drawY + boxHeight > 700) {
+			drawY = 700 - boxHeight;
+		}
 
-        if (x + 30 + boxWidth > 1240) {
-            x = 1240 - boxWidth;
-        }
-        g.setColor(new Color(30, 30, 30, 185));
-        g.fillRect(x, y, boxWidth, boxHeight);
-        g.setColor(Color.BLACK);
-        g.drawRect(x, y, boxWidth, boxHeight);
-        g.drawRect(x + 1, y + 1, boxWidth - 2, boxHeight - 2);
-        g.drawImage(icon, x + 10, y + 10, null);
-        g.setColor(Color.WHITE);
-        g.setFont(Globals.ARIAL_18PT);
-        g.drawString(getSkillName(), x + 80, y + 30);
-        g.setFont(Globals.ARIAL_15PT);
-        g.drawString("Level: " + level, x + 80, y + 50);
+		if (drawX + 30 + boxWidth > 1240) {
+			drawX = 1240 - boxWidth;
+		}
+		g.setColor(new Color(30, 30, 30, 185));
+		g.fillRect(drawX, drawY, boxWidth, boxHeight);
+		g.setColor(Color.BLACK);
+		g.drawRect(drawX, drawY, boxWidth, boxHeight);
+		g.drawRect(drawX + 1, drawY + 1, boxWidth - 2, boxHeight - 2);
+		g.drawImage(this.icon, drawX + 10, drawY + 10, null);
+		g.setColor(Color.WHITE);
+		g.setFont(Globals.ARIAL_18PT);
+		g.drawString(getSkillName(), drawX + 80, drawY + 30);
+		g.setFont(Globals.ARIAL_15PT);
+		g.drawString("Level: " + this.level, drawX + 80, drawY + 50);
 
-        g.drawString("Increase damage dealt based on your remaining HP.", x + 10, y + 90);
-        g.drawString("More remaining HP, grants more damage increase.", x + 10, y + 110);
-        g.setColor(new Color(255, 190, 0));
-        g.drawString("Assign this passive to a hotkey to gain its effects.", x + 10, y + 130);
+		g.drawString("Increase damage dealt based on your remaining HP.", drawX + 10, drawY + 90);
+		g.drawString("More remaining HP, grants more damage increase.", drawX + 10, drawY + 110);
+		g.setColor(new Color(255, 190, 0));
+		g.drawString("Assign this passive to a hotkey to gain its effects.", drawX + 10, drawY + 130);
 
-        g.setColor(Color.WHITE);
-        g.drawString("[Level " + level + "]", x + 10, y + 155);
-        g.drawString("Increase damage dealt up to " + df.format(5 + level * 0.5) + "%.", x + 10, y + 175);
+		g.setColor(Color.WHITE);
+		g.drawString("[Level " + this.level + "]", drawX + 10, drawY + 155);
+		g.drawString("Increase damage dealt up to " + this.df.format(5 + this.level * 0.5) + "%.", drawX + 10, drawY + 175);
 
-        if (level < 30) {
-            g.drawString("[Level " + (level + 1) + "]", x + 10, y + 200);
-            g.drawString("Increase damage dealt up to " + df.format(5 + (level + 1) * 0.5) + "%.", x + 10, y + 220);
-        }
-    }
+		if (this.level < 30) {
+			g.drawString("[Level " + (this.level + 1) + "]", drawX + 10, drawY + 200);
+			g.drawString("Increase damage dealt up to " + this.df.format(5 + (this.level + 1) * 0.5) + "%.", drawX + 10, drawY + 220);
+		}
+	}
 
 }

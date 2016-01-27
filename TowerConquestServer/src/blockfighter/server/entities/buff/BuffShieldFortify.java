@@ -6,34 +6,35 @@ import blockfighter.server.entities.player.skills.Skill;
 
 public class BuffShieldFortify extends Buff implements BuffDmgReduct {
 
-    private final double dmgReduct, dmgTakenMult;
-    private final long maxDuration;
+	private final double dmgReduct, dmgTakenMult;
+	private final long maxDuration;
 
-    public BuffShieldFortify(long d, double reduct, Player o) {
-        super(d);
-        maxDuration = d;
-        dmgReduct = reduct;
-        dmgTakenMult = 1D - dmgReduct;
-        setOwner(o);
-    }
+	public BuffShieldFortify(final long d, final double reduct, final Player o) {
+		super(d);
+		this.maxDuration = d;
+		this.dmgReduct = reduct;
+		this.dmgTakenMult = 1D - this.dmgReduct;
+		setOwner(o);
+	}
 
-    @Override
-    public void update() {
-        super.update();
-        if (getOwner().isSkillMaxed(Skill.SHIELD_FORTIFY)) {
-            int amount = (int) (getOwner().getStats()[Globals.STAT_MAXHP] * 0.075 / (maxDuration * 1000000 / Globals.LOGIC_UPDATE));
-            getOwner().queueHeal(amount);
-        }
-    }
+	@Override
+	public void update() {
+		super.update();
+		if (getOwner().isSkillMaxed(Skill.SHIELD_FORTIFY)) {
+			final int amount = (int) (getOwner().getStats()[Globals.STAT_MAXHP] * 0.075
+					/ (this.maxDuration * 1000000 / Globals.LOGIC_UPDATE));
+			getOwner().queueHeal(amount);
+		}
+	}
 
-    @Override
-    public double getDmgReduction() {
-        return dmgReduct;
-    }
+	@Override
+	public double getDmgReduction() {
+		return this.dmgReduct;
+	}
 
-    @Override
-    public double getDmgTakenMult() {
-        return dmgTakenMult;
-    }
+	@Override
+	public double getDmgTakenMult() {
+		return this.dmgTakenMult;
+	}
 
 }

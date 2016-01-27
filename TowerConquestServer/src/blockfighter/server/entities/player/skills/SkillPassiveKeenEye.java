@@ -6,8 +6,8 @@ package blockfighter.server.entities.player.skills;
  */
 public class SkillPassiveKeenEye extends Skill {
 
-    public SkillPassiveKeenEye() {
-        skillCode = PASSIVE_KEENEYE;
-    }
+	public SkillPassiveKeenEye() {
+		this.skillCode = PASSIVE_KEENEYE;
+	}
 
 }

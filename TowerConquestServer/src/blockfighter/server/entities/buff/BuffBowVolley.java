@@ -8,17 +8,17 @@ import blockfighter.server.entities.player.Player;
  */
 public class BuffBowVolley extends Buff implements BuffDmgIncrease {
 
-    private final double dmgIncrease;
+	private final double dmgIncrease;
 
-    public BuffBowVolley(long d, double inc, Player o) {
-        super(d);
-        setOwner(o);
-        dmgIncrease = inc;
-    }
+	public BuffBowVolley(final long d, final double inc, final Player o) {
+		super(d);
+		setOwner(o);
+		this.dmgIncrease = inc;
+	}
 
-    @Override
-    public double getDmgIncrease() {
-        return dmgIncrease;
-    }
+	@Override
+	public double getDmgIncrease() {
+		return this.dmgIncrease;
+	}
 
 }

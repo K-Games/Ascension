@@ -1,8 +1,9 @@
 package blockfighter.client.entities.particles;
 
-import blockfighter.client.Globals;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+
+import blockfighter.client.Globals;
 
 /**
  *
@@ -10,30 +11,31 @@ import java.awt.image.BufferedImage;
  */
 public class ParticleMenuUpgrade extends Particle {
 
-    private int color, deltaX, deltaY;
+	private final int color, deltaX;
+	private int deltaY;
 
-    public ParticleMenuUpgrade(int k, int x, int y, int c, int dX, int dY) {
-        super(k, x, y);
-        duration = 1000;
-        color = c;
-        deltaX = dX;
-        deltaY = dY;
-    }
+	public ParticleMenuUpgrade(final int k, final int x, final int y, final int c, final int dX, final int dY) {
+		super(k, x, y);
+		this.duration = 1000;
+		this.color = c;
+		this.deltaX = dX;
+		this.deltaY = dY;
+	}
 
-    @Override
-    public void update() {
-        super.update();
-        x += deltaX;
-        y += deltaY;
-        if (Globals.rng(2) == 0) {
-            deltaY++;
-        }
+	@Override
+	public void update() {
+		super.update();
+		this.x += this.deltaX;
+		this.y += this.deltaY;
+		if (Globals.rng(2) == 0) {
+			this.deltaY++;
+		}
 
-    }
+	}
 
-    @Override
-    public void draw(Graphics2D g) {
-        BufferedImage sprite = Globals.MENU_UPGRADEPARTICLE[color];
-        g.drawImage(sprite, x, y, null);
-    }
+	@Override
+	public void draw(final Graphics2D g) {
+		final BufferedImage sprite = Globals.MENU_UPGRADEPARTICLE[this.color];
+		g.drawImage(sprite, this.x, this.y, null);
+	}
 }

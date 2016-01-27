@@ -6,8 +6,8 @@ package blockfighter.server.entities.player.skills;
  */
 public class SkillPassiveWillpower extends Skill {
 
-    public SkillPassiveWillpower() {
-        skillCode = PASSIVE_WILLPOWER;
-    }
+	public SkillPassiveWillpower() {
+		this.skillCode = PASSIVE_WILLPOWER;
+	}
 
 }

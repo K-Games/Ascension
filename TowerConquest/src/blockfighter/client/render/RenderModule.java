@@ -1,7 +1,6 @@
 package blockfighter.client.render;
 
 import blockfighter.client.LogicModule;
-import javax.swing.JFrame;
 
 /**
  *
@@ -9,33 +8,31 @@ import javax.swing.JFrame;
  */
 public class RenderModule implements Runnable {
 
-    private final RenderPanel panel;
-    private static LogicModule logic;
-    private int FPSCount = 0;
-    private JFrame mainFrame;
-    double lastUpdateTime; //Last time we rendered
-    double lastFPSTime; //Last time FPS count reset
+	private final RenderPanel panel;
+	private static LogicModule logic;
+	private int FPSCount = 0;
+	double lastUpdateTime; // Last time we rendered
+	double lastFPSTime; // Last time FPS count reset
 
-    public RenderModule(RenderPanel p, JFrame f) {
-        panel = p;
-        mainFrame = f;
-    }
+	public RenderModule(final RenderPanel p) {
+		this.panel = p;
+	}
 
-    public static void setLogic(LogicModule l) {
-        logic = l;
-    }
+	public static void setLogic(final LogicModule l) {
+		logic = l;
+	}
 
-    @Override
-    public void run() {
-        double now = System.nanoTime(); //Get time now
-        panel.setScreen(logic.getScreen());
-        panel.repaint();
-        FPSCount++;
+	@Override
+	public void run() {
+		final double now = System.nanoTime(); // Get time now
+		this.panel.setScreen(logic.getScreen());
+		this.panel.repaint();
+		this.FPSCount++;
 
-        if (now - lastFPSTime >= 1000000000) {
-            panel.setFPSCount(FPSCount);
-            FPSCount = 0;
-            lastFPSTime = now;
-        }
-    }
+		if (now - this.lastFPSTime >= 1000000000) {
+			this.panel.setFPSCount(this.FPSCount);
+			this.FPSCount = 0;
+			this.lastFPSTime = now;
+		}
+	}
 }

@@ -8,9 +8,9 @@ import blockfighter.server.entities.player.skills.Skill;
  */
 public class SkillBolt extends Skill {
 
-    public SkillBolt() {
-        skillCode = BossLightning.SKILL_BOLT;
-        maxCooldown = 20000;
-    }
+	public SkillBolt() {
+		this.skillCode = BossLightning.SKILL_BOLT;
+		this.maxCooldown = 20000;
+	}
 
 }

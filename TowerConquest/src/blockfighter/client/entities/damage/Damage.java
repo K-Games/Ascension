@@ -1,8 +1,9 @@
 package blockfighter.client.entities.damage;
 
-import blockfighter.client.Globals;
 import java.awt.Graphics2D;
 import java.awt.Point;
+
+import blockfighter.client.Globals;
 
 /**
  *
@@ -10,56 +11,60 @@ import java.awt.Point;
  */
 public class Damage extends Thread {
 
-    public final static byte DAMAGE_TYPE_PLAYER = 0x00,
-            DAMAGE_TYPE_PLAYERCRIT = 0x01,
-            DAMAGE_TYPE_BOSS = 0x02,
-            DAMAGE_TYPE_EXP = 0x03;
+	public final static byte DAMAGE_TYPE_PLAYER = 0x00,
+			DAMAGE_TYPE_PLAYERCRIT = 0x01,
+			DAMAGE_TYPE_BOSS = 0x02,
+			DAMAGE_TYPE_EXP = 0x03;
 
-    private byte type;
-    private double x, y, speedX, speedY;
-    private int damage;
-    private long duration = 700;
+	private final byte type;
+	private double x, y;
 
-    public Damage(int dmg, byte t, Point loc) {
-        damage = dmg;
-        type = t;
-        x = loc.x;
-        y = loc.y;
-        //if (type == DAMAGE_TYPE_EXP) {
-        //duration = 1200;
-        speedY = -5;
-        speedX = 0;
-        // } else {
-        //    speedY = -13;
-        //    speedX = (Globals.rng(3) - 1) * 3;
-        //}
-        setDaemon(true);
-    }
+	private final double speedX;
 
-    @Override
-    public void run() {
-        duration -= Globals.DMG_UPDATE / 1000000;
-        if (duration < 0) {
-            duration = 0;
-        }
-        y += speedY;
-        if (type != DAMAGE_TYPE_EXP) {
-            //speedY += .5;
-        }
-        x += speedX;
-    }
+	private final double speedY;
+	private final int damage;
+	private long duration = 700;
 
-    public boolean isExpired() {
-        return duration <= 0;
-    }
+	public Damage(final int dmg, final byte t, final Point loc) {
+		this.damage = dmg;
+		this.type = t;
+		this.x = loc.x;
+		this.y = loc.y;
+		// if (type == DAMAGE_TYPE_EXP) {
+		// duration = 1200;
+		this.speedY = -5;
+		this.speedX = 0;
+		// } else {
+		// speedY = -13;
+		// speedX = (Globals.rng(3) - 1) * 3;
+		// }
+		setDaemon(true);
+	}
 
-    public void draw(Graphics2D g) {
-        char[] dArray = Integer.toString(damage).toCharArray();
-        for (int i = 0; i < dArray.length; i++) {
-            g.drawImage(Globals.DAMAGE_FONT[type][dArray[i] - 48], (int) (x + i * 18), (int) y, null);
-        }
-        if (type == DAMAGE_TYPE_EXP) {
-            g.drawImage(Globals.EXP_WORD[0], (int) (x + 7 + dArray.length * 18), (int) y, null);
-        }
-    }
+	@Override
+	public void run() {
+		this.duration -= Globals.DMG_UPDATE / 1000000;
+		if (this.duration < 0) {
+			this.duration = 0;
+		}
+		this.y += this.speedY;
+		if (this.type != DAMAGE_TYPE_EXP) {
+			// speedY += .5;
+		}
+		this.x += this.speedX;
+	}
+
+	public boolean isExpired() {
+		return this.duration <= 0;
+	}
+
+	public void draw(final Graphics2D g) {
+		final char[] dArray = Integer.toString(this.damage).toCharArray();
+		for (int i = 0; i < dArray.length; i++) {
+			g.drawImage(Globals.DAMAGE_FONT[this.type][dArray[i] - 48], (int) (this.x + i * 18), (int) this.y, null);
+		}
+		if (this.type == DAMAGE_TYPE_EXP) {
+			g.drawImage(Globals.EXP_WORD[0], (int) (this.x + 7 + dArray.length * 18), (int) this.y, null);
+		}
+	}
 }

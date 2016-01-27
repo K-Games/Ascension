@@ -6,18 +6,19 @@ import blockfighter.client.screen.ScreenIngame;
 
 public class ParticleAttEmitter extends Particle {
 
-    public ParticleAttEmitter(int k, int x, int y) {
-        super(k, x, y, Globals.RIGHT);
-        frame = 0;
-        duration = 200;
-    }
+	public ParticleAttEmitter(final int k, final int x, final int y) {
+		super(k, x, y, Globals.RIGHT);
+		this.frame = 0;
+		this.duration = 200;
+	}
 
-    @Override
-    public void update() {
-        super.update();
-        if (duration > 0) {
-            ParticleAmbient b = new ParticleAmbient(((ScreenIngame) logic.getScreen()).getNextParticleKey(), x, y + Globals.rng(200));
-            ((ScreenIngame) logic.getScreen()).addParticle(b);
-        }
-    }
+	@Override
+	public void update() {
+		super.update();
+		if (this.duration > 0) {
+			final ParticleAmbient b = new ParticleAmbient(((ScreenIngame) logic.getScreen()).getNextParticleKey(), this.x,
+					this.y + Globals.rng(200));
+			((ScreenIngame) logic.getScreen()).addParticle(b);
+		}
+	}
 }

@@ -6,8 +6,8 @@ package blockfighter.server.entities.player.skills;
  */
 public class SkillPassiveDualSword extends Skill {
 
-    public SkillPassiveDualSword() {
-        skillCode = PASSIVE_DUALSWORD;
-    }
+	public SkillPassiveDualSword() {
+		this.skillCode = PASSIVE_DUALSWORD;
+	}
 
 }

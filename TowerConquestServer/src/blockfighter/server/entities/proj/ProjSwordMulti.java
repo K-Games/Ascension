@@ -1,12 +1,13 @@
 package blockfighter.server.entities.proj;
 
+import java.awt.geom.Rectangle2D;
+
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.boss.Boss;
 import blockfighter.server.entities.buff.BuffKnockback;
 import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.player.Player;
-import java.awt.geom.Rectangle2D;
 
 /**
  * This is the base projectile class. Create projectile classes off this.
@@ -15,57 +16,57 @@ import java.awt.geom.Rectangle2D;
  */
 public class ProjSwordMulti extends Projectile {
 
-    /**
-     * Projectile of Sword Skill Whirlwind.
-     *
-     * @param l Room/Logic Module
-     * @param k Projectile Key
-     * @param o Owning player
-     * @param x Spawn x-coordinate
-     * @param y Spawn y-coordinate
-     */
-    public ProjSwordMulti(LogicModule l, int k, Player o, double x, double y) {
-        super(l, k);
-        setOwner(o);
-        this.x = x;
-        this.y = y + (Globals.rng(40) - 20);
-        hitbox = new Rectangle2D.Double[1];
-        if (getOwner().getFacing() == Globals.RIGHT) {
-            hitbox[0] = new Rectangle2D.Double(x + 90, this.y - 200, 240, 240);
-        } else {
-            hitbox[0] = new Rectangle2D.Double(x - 240 - 90, this.y - 200, 240, 240);
+	/**
+	 * Projectile of Sword Skill Whirlwind.
+	 *
+	 * @param l Room/Logic Module
+	 * @param k Projectile Key
+	 * @param o Owning player
+	 * @param x Spawn x-coordinate
+	 * @param y Spawn y-coordinate
+	 */
+	public ProjSwordMulti(final LogicModule l, final int k, final Player o, final double x, final double y) {
+		super(l, k);
+		setOwner(o);
+		this.x = x;
+		this.y = y + (Globals.rng(40) - 20);
+		this.hitbox = new Rectangle2D.Double[1];
+		if (getOwner().getFacing() == Globals.RIGHT) {
+			this.hitbox[0] = new Rectangle2D.Double(x + 90, this.y - 200, 240, 240);
+		} else {
+			this.hitbox[0] = new Rectangle2D.Double(x - 240 - 90, this.y - 200, 240, 240);
 
-        }
-        duration = 600;
-    }
+		}
+		this.duration = 600;
+	}
 
-    @Override
-    public void processQueue() {
-        while (!playerQueue.isEmpty()) {
-            Player p = playerQueue.poll(), owner = getOwner();
-            if (p != null && !p.isDead()) {
-                int damage = (int) (owner.rollDamage());
-                boolean crit = owner.rollCrit();
-                if (crit) {
-                    damage = (int) owner.criticalDamage(damage);
-                }
-                p.queueDamage(new Damage(damage, true, owner, p, crit, hitbox[0], p.getHitbox()));
-                p.queueBuff(new BuffKnockback(60, (owner.getFacing() == Globals.RIGHT) ? .1 : -.1, -1, owner, p));
-            }
-        }
-        while (!bossQueue.isEmpty()) {
-            Boss b = bossQueue.poll();
-            Player owner = getOwner();
-            if (b != null && !b.isDead()) {
-                int damage = (int) (owner.rollDamage());
-                boolean crit = owner.rollCrit();
-                if (crit) {
-                    damage = (int) owner.criticalDamage(damage);
-                }
-                b.queueDamage(new Damage(damage, true, owner, b, crit, hitbox[0], b.getHitbox()));
-            }
-        }
-        queuedEffect = false;
-    }
+	@Override
+	public void processQueue() {
+		while (!this.playerQueue.isEmpty()) {
+			final Player p = this.playerQueue.poll(), owner = getOwner();
+			if (p != null && !p.isDead()) {
+				int damage = (int) (owner.rollDamage());
+				final boolean crit = owner.rollCrit();
+				if (crit) {
+					damage = (int) owner.criticalDamage(damage);
+				}
+				p.queueDamage(new Damage(damage, true, owner, p, crit, this.hitbox[0], p.getHitbox()));
+				p.queueBuff(new BuffKnockback(60, (owner.getFacing() == Globals.RIGHT) ? .1 : -.1, -1, owner, p));
+			}
+		}
+		while (!this.bossQueue.isEmpty()) {
+			final Boss b = this.bossQueue.poll();
+			final Player owner = getOwner();
+			if (b != null && !b.isDead()) {
+				int damage = (int) (owner.rollDamage());
+				final boolean crit = owner.rollCrit();
+				if (crit) {
+					damage = (int) owner.criticalDamage(damage);
+				}
+				b.queueDamage(new Damage(damage, true, owner, b, crit, this.hitbox[0], b.getHitbox()));
+			}
+		}
+		this.queuedEffect = false;
+	}
 
 }

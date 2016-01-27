@@ -1,32 +1,34 @@
 package blockfighter.client.entities.particles;
 
+import java.awt.Point;
+
 import blockfighter.client.Globals;
 import blockfighter.client.entities.player.Player;
 import blockfighter.client.screen.ScreenIngame;
-import java.awt.Point;
 
 public class ParticleShieldDashEmitter extends Particle {
 
-    private Player owner;
+	private final Player owner;
 
-    public ParticleShieldDashEmitter(int k, byte f, Player p) {
-        super(k, 0, 0, f);
-        frame = 0;
-        duration = 250;
-        owner = p;
-    }
+	public ParticleShieldDashEmitter(final int k, final byte f, final Player p) {
+		super(k, 0, 0, f);
+		this.frame = 0;
+		this.duration = 250;
+		this.owner = p;
+	}
 
-    @Override
-    public void update() {
-        super.update();
-        if (duration > 0) {
-            Point p = owner.getPos();
-            if (p != null) {
-                x = p.x;
-                y = p.y;
-            }
-            ParticleShieldDash b = new ParticleShieldDash(((ScreenIngame) logic.getScreen()).getNextParticleKey(), x + ((facing == Globals.RIGHT) ? -172 : -200), y - 330, facing);
-            ((ScreenIngame) logic.getScreen()).addParticle(b);
-        }
-    }
+	@Override
+	public void update() {
+		super.update();
+		if (this.duration > 0) {
+			final Point p = this.owner.getPos();
+			if (p != null) {
+				this.x = p.x;
+				this.y = p.y;
+			}
+			final ParticleShieldDash b = new ParticleShieldDash(((ScreenIngame) logic.getScreen()).getNextParticleKey(),
+					this.x + ((this.facing == Globals.RIGHT) ? -172 : -200), this.y - 330, this.facing);
+			((ScreenIngame) logic.getScreen()).addParticle(b);
+		}
+	}
 }

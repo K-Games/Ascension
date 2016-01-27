@@ -1,65 +1,67 @@
 package blockfighter.client.entities.particles;
 
-import blockfighter.client.Globals;
-import blockfighter.client.entities.player.Player;
-import blockfighter.client.screen.ScreenIngame;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 
+import blockfighter.client.Globals;
+import blockfighter.client.entities.player.Player;
+import blockfighter.client.screen.ScreenIngame;
+
 public class ParticleSwordTauntAura extends Particle {
 
-    private Player owner;
+	private final Player owner;
 
-    public ParticleSwordTauntAura(int k, Player p) {
-        super(k, 0, 0);
-        frame = 0;
-        frameDuration = 25;
-        duration = 500;
-        owner = p;
-        Point point = owner.getPos();
-        if (point != null) {
-            x = point.x;
-            y = point.y;
-        }
-    }
+	public ParticleSwordTauntAura(final int k, final Player p) {
+		super(k, 0, 0);
+		this.frame = 0;
+		this.frameDuration = 25;
+		this.duration = 500;
+		this.owner = p;
+		final Point point = this.owner.getPos();
+		if (point != null) {
+			this.x = point.x;
+			this.y = point.y;
+		}
+	}
 
-    @Override
-    public void update() {
-        super.update();
-        frameDuration -= Globals.LOGIC_UPDATE / 1000000;
-        if (duration > 100) {
-            for (int i = 0; i < 2; i++) {
-                ParticleSwordTauntAuraParticle b = new ParticleSwordTauntAuraParticle(((ScreenIngame) logic.getScreen()).getNextParticleKey(), x, y, facing);
-                ((ScreenIngame) logic.getScreen()).addParticle(b);
-            }
-        }
-        if (frameDuration <= 0) {
-            frameDuration = 25;
-            if (frame < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_TAUNTAURA1].length - 1) {
-                frame++;
-            }
-        }
-    }
+	@Override
+	public void update() {
+		super.update();
+		this.frameDuration -= Globals.LOGIC_UPDATE / 1000000;
+		if (this.duration > 100) {
+			for (int i = 0; i < 2; i++) {
+				final ParticleSwordTauntAuraParticle b = new ParticleSwordTauntAuraParticle(
+						((ScreenIngame) logic.getScreen()).getNextParticleKey(), this.x, this.y, this.facing);
+				((ScreenIngame) logic.getScreen()).addParticle(b);
+			}
+		}
+		if (this.frameDuration <= 0) {
+			this.frameDuration = 25;
+			if (this.frame < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_TAUNTAURA1].length - 1) {
+				this.frame++;
+			}
+		}
+	}
 
-    @Override
-    public void draw(Graphics2D g) {
-        if (PARTICLE_SPRITE[Globals.PARTICLE_SWORD_TAUNTAURA1] == null) {
-            return;
-        }
-        if (frame >= PARTICLE_SPRITE[Globals.PARTICLE_SWORD_TAUNTAURA1].length) {
-            return;
-        }
-        Point p = owner.getPos();
-        if (p != null) {
-            x = p.x;
-            y = p.y;
-        }
-        BufferedImage sprite = PARTICLE_SPRITE[Globals.PARTICLE_SWORD_TAUNTAURA1][frame];
-        int drawSrcX = x - sprite.getWidth() / 2;
-        int drawSrcY = y - sprite.getHeight() + 20;
-        int drawDscY = drawSrcY + sprite.getHeight();
-        int drawDscX = drawSrcX + sprite.getWidth();
-        g.drawImage(sprite, drawSrcX, drawSrcY, drawDscX, drawDscY, 0, 0, sprite.getWidth(), sprite.getHeight(), null);
-    }
+	@Override
+	public void draw(final Graphics2D g) {
+		if (PARTICLE_SPRITE[Globals.PARTICLE_SWORD_TAUNTAURA1] == null) {
+			return;
+		}
+		if (this.frame >= PARTICLE_SPRITE[Globals.PARTICLE_SWORD_TAUNTAURA1].length) {
+			return;
+		}
+		final Point p = this.owner.getPos();
+		if (p != null) {
+			this.x = p.x;
+			this.y = p.y;
+		}
+		final BufferedImage sprite = PARTICLE_SPRITE[Globals.PARTICLE_SWORD_TAUNTAURA1][this.frame];
+		final int drawSrcX = this.x - sprite.getWidth() / 2;
+		final int drawSrcY = this.y - sprite.getHeight() + 20;
+		final int drawDscY = drawSrcY + sprite.getHeight();
+		final int drawDscX = drawSrcX + sprite.getWidth();
+		g.drawImage(sprite, drawSrcX, drawSrcY, drawDscX, drawDscY, 0, 0, sprite.getWidth(), sprite.getHeight(), null);
+	}
 }

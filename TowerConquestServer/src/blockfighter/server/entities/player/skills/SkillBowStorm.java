@@ -8,13 +8,13 @@ import blockfighter.server.Globals;
  */
 public class SkillBowStorm extends Skill {
 
-    /**
-     * Constructor for Bow Skill Arrow Storm.
-     */
-    public SkillBowStorm() {
-        skillCode = BOW_STORM;
-        maxCooldown = 20000;
-        reqWeapon = Globals.ITEM_BOW;
-    }
+	/**
+	 * Constructor for Bow Skill Arrow Storm.
+	 */
+	public SkillBowStorm() {
+		this.skillCode = BOW_STORM;
+		this.maxCooldown = 20000;
+		this.reqWeapon = Globals.ITEM_BOW;
+	}
 
 }

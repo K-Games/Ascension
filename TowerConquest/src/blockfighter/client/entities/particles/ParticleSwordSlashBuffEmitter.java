@@ -1,33 +1,35 @@
 package blockfighter.client.entities.particles;
 
+import java.awt.Point;
+
 import blockfighter.client.entities.player.Player;
 import blockfighter.client.screen.ScreenIngame;
-import java.awt.Point;
 
 public class ParticleSwordSlashBuffEmitter extends Particle {
 
-    private Player owner;
+	private final Player owner;
 
-    public ParticleSwordSlashBuffEmitter(int k, Player p) {
-        super(k, 0, 0);
-        frame = 0;
-        duration = 2000;
-        owner = p;
-    }
+	public ParticleSwordSlashBuffEmitter(final int k, final Player p) {
+		super(k, 0, 0);
+		this.frame = 0;
+		this.duration = 2000;
+		this.owner = p;
+	}
 
-    @Override
-    public void update() {
-        super.update();
-        if (duration > 0 && duration % 50 == 0) {
-            Point p = owner.getPos();
-            if (p != null) {
-                x = p.x;
-                y = p.y;
-            }
-            for (int i = 0; i < 2; i++) {
-                ParticleSwordSlashBuffParticle b = new ParticleSwordSlashBuffParticle(((ScreenIngame) logic.getScreen()).getNextParticleKey(), x, y, facing);
-                ((ScreenIngame) logic.getScreen()).addParticle(b);
-            }
-        }
-    }
+	@Override
+	public void update() {
+		super.update();
+		if (this.duration > 0 && this.duration % 50 == 0) {
+			final Point p = this.owner.getPos();
+			if (p != null) {
+				this.x = p.x;
+				this.y = p.y;
+			}
+			for (int i = 0; i < 2; i++) {
+				final ParticleSwordSlashBuffParticle b = new ParticleSwordSlashBuffParticle(
+						((ScreenIngame) logic.getScreen()).getNextParticleKey(), this.x, this.y, this.facing);
+				((ScreenIngame) logic.getScreen()).addParticle(b);
+			}
+		}
+	}
 }

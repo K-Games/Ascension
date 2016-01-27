@@ -6,8 +6,8 @@ package blockfighter.server.entities.player.skills;
  */
 public class SkillPassiveVitalHit extends Skill {
 
-    public SkillPassiveVitalHit() {
-        skillCode = PASSIVE_VITALHIT;
-    }
+	public SkillPassiveVitalHit() {
+		this.skillCode = PASSIVE_VITALHIT;
+	}
 
 }

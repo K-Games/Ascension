@@ -8,13 +8,13 @@ import blockfighter.server.Globals;
  */
 public class SkillBowVolley extends Skill {
 
-    /**
-     * Constructor for Bow Skill Volley.
-     */
-    public SkillBowVolley() {
-        skillCode = BOW_VOLLEY;
-        maxCooldown = 17000;
-        reqWeapon = Globals.ITEM_BOW;
-    }
+	/**
+	 * Constructor for Bow Skill Volley.
+	 */
+	public SkillBowVolley() {
+		this.skillCode = BOW_VOLLEY;
+		this.maxCooldown = 17000;
+		this.reqWeapon = Globals.ITEM_BOW;
+	}
 
 }

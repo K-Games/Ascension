@@ -8,9 +8,9 @@ import java.awt.Graphics2D;
  */
 public interface Item {
 
-    public void draw(Graphics2D g, int x, int y);
+	public void draw(Graphics2D g, int x, int y);
 
-    public int getItemCode();
+	public int getItemCode();
 
-    public String getItemName();
+	public String getItemName();
 }

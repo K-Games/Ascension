@@ -1,38 +1,39 @@
 package blockfighter.client.entities.particles;
 
-import blockfighter.client.Globals;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
+import blockfighter.client.Globals;
+
 public class ParticleBlood extends Particle {
 
-    double xDouble, xSpeed, yDouble, ySpeed, size = 7;
+	double xDouble, xSpeed, yDouble, ySpeed, drawSize = 7;
 
-    public ParticleBlood(int k, int x, int y, byte f) {
-        super(k, x, y, f);
-        this.x = x;
-        this.y = y - 48;
-        xDouble = (double) this.x;
-        yDouble = (double) this.y;
-        xSpeed = ((f == Globals.RIGHT) ? -1 : 1) * (.15 * Globals.rng(38) + 3.5);
-        ySpeed = (.15 * Globals.rng(48) - 4);
-        frame = 0;
-        duration = 400;
-    }
+	public ParticleBlood(final int k, final int x, final int y, final byte f) {
+		super(k, x, y, f);
+		this.x = x;
+		this.y = y - 48;
+		this.xDouble = this.x;
+		this.yDouble = this.y;
+		this.xSpeed = ((f != Globals.RIGHT) ? 1 : -1) * (.15 * Globals.rng(38) + 3.5);
+		this.ySpeed = (.15 * Globals.rng(48) - 4);
+		this.frame = 0;
+		this.duration = 400;
+	}
 
-    @Override
-    public void update() {
-        super.update();
-        size -= .1;
-        xDouble += xSpeed;
-        yDouble += ySpeed;
-        x = (int) xDouble;
-        y = (int) yDouble;
-    }
+	@Override
+	public void update() {
+		super.update();
+		this.drawSize -= .1;
+		this.xDouble += this.xSpeed;
+		this.yDouble += this.ySpeed;
+		this.x = (int) this.xDouble;
+		this.y = (int) this.yDouble;
+	}
 
-    @Override
-    public void draw(Graphics2D g) {
-        g.setColor(Color.RED);
-        g.fillRect(x, y, (int) size, (int) size);
-    }
+	@Override
+	public void draw(final Graphics2D g) {
+		g.setColor(Color.RED);
+		g.fillRect(this.x, this.y, (int) this.drawSize, (int) this.drawSize);
+	}
 }

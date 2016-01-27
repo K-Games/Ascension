@@ -4,23 +4,23 @@ import blockfighter.server.entities.player.Player;
 
 public class BuffSwordSlash extends Buff implements BuffDmgReduct {
 
-    private final double dmgReduct, dmgTakenMult;
+	private final double dmgReduct, dmgTakenMult;
 
-    public BuffSwordSlash(long d, double reduct, Player o) {
-        super(d);
-        dmgReduct = reduct;
-        dmgTakenMult = 1D - dmgReduct;
-        setOwner(o);
-    }
+	public BuffSwordSlash(final long d, final double reduct, final Player o) {
+		super(d);
+		this.dmgReduct = reduct;
+		this.dmgTakenMult = 1D - this.dmgReduct;
+		setOwner(o);
+	}
 
-    @Override
-    public double getDmgReduction() {
-        return dmgReduct;
-    }
+	@Override
+	public double getDmgReduction() {
+		return this.dmgReduct;
+	}
 
-    @Override
-    public double getDmgTakenMult() {
-        return dmgTakenMult;
-    }
+	@Override
+	public double getDmgTakenMult() {
+		return this.dmgTakenMult;
+	}
 
 }

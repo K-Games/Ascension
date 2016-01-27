@@ -8,13 +8,13 @@ import blockfighter.server.Globals;
  */
 public class SkillSwordSlash extends Skill {
 
-    /**
-     * Constructor for Sword Skill Defensive Impact.
-     */
-    public SkillSwordSlash() {
-        skillCode = SWORD_SLASH;
-        maxCooldown = 400;
-        reqWeapon = Globals.ITEM_SWORD;
-    }
+	/**
+	 * Constructor for Sword Skill Defensive Impact.
+	 */
+	public SkillSwordSlash() {
+		this.skillCode = SWORD_SLASH;
+		this.maxCooldown = 400;
+		this.reqWeapon = Globals.ITEM_SWORD;
+	}
 
 }

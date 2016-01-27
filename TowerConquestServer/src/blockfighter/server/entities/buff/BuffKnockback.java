@@ -9,47 +9,47 @@ import blockfighter.server.entities.player.Player;
  */
 public class BuffKnockback extends Buff {
 
-    private double xSpeed, ySpeed;
-    private boolean applied = false;
+	private final double xSpeed, ySpeed;
+	private boolean applied = false;
 
-    /**
-     * Constructor for knockback debuff
-     *
-     * @param d duration in milliseconds
-     * @param x x speed
-     * @param y y speed
-     * @param o owning player
-     * @param t player being knocked
-     */
-    public BuffKnockback(long d, double x, double y, Player o, Player t) {
-        super(d);
-        xSpeed = x;
-        ySpeed = y;
-        setOwner(o);
-        setTarget(t);
-        setDebuff(true);
-    }
+	/**
+	 * Constructor for knockback debuff
+	 *
+	 * @param d duration in milliseconds
+	 * @param x x speed
+	 * @param y y speed
+	 * @param o owning player
+	 * @param t player being knocked
+	 */
+	public BuffKnockback(final long d, final double x, final double y, final Player o, final Player t) {
+		super(d);
+		this.xSpeed = x;
+		this.ySpeed = y;
+		setOwner(o);
+		setTarget(t);
+		setDebuff(true);
+	}
 
-    public BuffKnockback(long d, double x, double y, Boss o, Player t) {
-        super(d);
-        xSpeed = x;
-        ySpeed = y;
-        setOwner(o);
-        setTarget(t);
-        setDebuff(true);
-    }
+	public BuffKnockback(final long d, final double x, final double y, final Boss o, final Player t) {
+		super(d);
+		this.xSpeed = x;
+		this.ySpeed = y;
+		setOwner(o);
+		setTarget(t);
+		setDebuff(true);
+	}
 
-    @Override
-    public void update() {
-        super.update();
-        if (!applied) {
-            if (xSpeed != 0) {
-                getTarget().setXSpeed(xSpeed);
-            }
-            if (ySpeed != 0) {
-                getTarget().setYSpeed(ySpeed);
-            }
-            applied = true;
-        }
-    }
+	@Override
+	public void update() {
+		super.update();
+		if (!this.applied) {
+			if (this.xSpeed != 0) {
+				getTarget().setXSpeed(this.xSpeed);
+			}
+			if (this.ySpeed != 0) {
+				getTarget().setYSpeed(this.ySpeed);
+			}
+			this.applied = true;
+		}
+	}
 }

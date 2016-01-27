@@ -12,96 +12,96 @@ import blockfighter.server.entities.player.Player;
  */
 public abstract class Buff implements GameEntity {
 
-    /**
-     * Owning player of buff
-     */
-    private Player playerOwner, playerTarget;
-    private Boss bossOwner, bossTarget;
-    private boolean isDebuff = false;
-    private Byte particleID = null;
-    /**
-     * Duration of buff/debuff in milliseconds
-     */
-    protected long duration;
+	/**
+	 * Owning player of buff
+	 */
+	private Player playerOwner, playerTarget;
+	private Boss bossOwner, bossTarget;
+	private boolean isDebuff = false;
+	private final Byte particleID = null;
+	/**
+	 * Duration of buff/debuff in milliseconds
+	 */
+	protected long duration;
 
-    /**
-     * Constructor for buffs
-     *
-     * @param d duration in milliseconds
-     */
-    public Buff(long d) {
-        duration = d;
-    }
+	/**
+	 * Constructor for buffs
+	 *
+	 * @param d duration in milliseconds
+	 */
+	public Buff(final long d) {
+		this.duration = d;
+	}
 
-    public void reduceDuration(long amount) {
-        duration -= amount;
-        if (duration < 500) {
-            duration = 500;
-        }
-    }
+	public void reduceDuration(final long amount) {
+		this.duration -= amount;
+		if (this.duration < 500) {
+			this.duration = 500;
+		}
+	}
 
-    public void setOwner(Player owner) {
-        playerOwner = owner;
-    }
+	public void setOwner(final Player owner) {
+		this.playerOwner = owner;
+	}
 
-    public void setOwner(Boss owner) {
-        bossOwner = owner;
-    }
+	public void setOwner(final Boss owner) {
+		this.bossOwner = owner;
+	}
 
-    public void setBossOwner(Boss owner) {
-        bossOwner = owner;
-    }
+	public void setBossOwner(final Boss owner) {
+		this.bossOwner = owner;
+	}
 
-    public void setTarget(Player t) {
-        playerTarget = t;
-    }
+	public void setTarget(final Player t) {
+		this.playerTarget = t;
+	}
 
-    public void setTarget(Boss t) {
-        bossTarget = t;
-    }
+	public void setTarget(final Boss t) {
+		this.bossTarget = t;
+	}
 
-    public void setBossTarget(Boss t) {
-        bossTarget = t;
-    }
+	public void setBossTarget(final Boss t) {
+		this.bossTarget = t;
+	}
 
-    public Player getOwner() {
-        return playerOwner;
-    }
+	public Player getOwner() {
+		return this.playerOwner;
+	}
 
-    public Player getTarget() {
-        return playerTarget;
-    }
+	public Player getTarget() {
+		return this.playerTarget;
+	}
 
-    public Boss getBossOwner() {
-        return bossOwner;
-    }
+	public Boss getBossOwner() {
+		return this.bossOwner;
+	}
 
-    public Boss getBossTarget() {
-        return bossTarget;
-    }
+	public Boss getBossTarget() {
+		return this.bossTarget;
+	}
 
-    @Override
-    public void update() {
-        duration -= Globals.nsToMs(Globals.LOGIC_UPDATE);
-    }
+	@Override
+	public void update() {
+		this.duration -= Globals.nsToMs(Globals.LOGIC_UPDATE);
+	}
 
-    public long getDuration() {
-        return duration;
-    }
+	public long getDuration() {
+		return this.duration;
+	}
 
-    public boolean isExpired() {
-        return duration <= 0;
-    }
+	public boolean isExpired() {
+		return this.duration <= 0;
+	}
 
-    public boolean isDebuff() {
-        return isDebuff;
-    }
+	public boolean isDebuff() {
+		return this.isDebuff;
+	}
 
-    public void setDebuff(boolean set) {
-        isDebuff = set;
-    }
+	public void setDebuff(final boolean set) {
+		this.isDebuff = set;
+	}
 
-    public Byte getParticleID() {
-        return particleID;
-    }
+	public Byte getParticleID() {
+		return this.particleID;
+	}
 }

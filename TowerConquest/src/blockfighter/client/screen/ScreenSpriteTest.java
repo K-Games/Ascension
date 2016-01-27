@@ -1,12 +1,13 @@
 package blockfighter.client.screen;
 
-import blockfighter.client.Globals;
-import blockfighter.client.entities.items.ItemEquip;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+
+import blockfighter.client.Globals;
+import blockfighter.client.entities.items.ItemEquip;
 
 /**
  *
@@ -14,149 +15,168 @@ import java.awt.image.BufferedImage;
  */
 public class ScreenSpriteTest extends ScreenMenu {
 
-    private byte standFrame = 0, jumpFrame = 0, walkFrame = 0, buffFrame = 0,
-            att1Frame = 0, att5Frame = 0;
+	private byte standFrame = 0;
 
-    private double nextFrameTime = 0;
-    private int itemCode = 100000;
-    private ItemEquip e = new ItemEquip(itemCode);
+	private final byte jumpFrame = 0;
 
-    @Override
-    public void update() {
-        double now = System.nanoTime(); //Get time now
-        if (now - lastUpdateTime >= Globals.LOGIC_UPDATE) {
+	private byte walkFrame = 0;
 
-            nextFrameTime -= Globals.LOGIC_UPDATE;
-            if (nextFrameTime <= 0) {
-                standFrame++;
-                if (standFrame == Globals.CHAR_SPRITE[Globals.PLAYER_STATE_STAND].length) {
-                    standFrame = 0;
-                }
+	private byte buffFrame = 0;
 
-                walkFrame++;
-                if (walkFrame == Globals.CHAR_SPRITE[Globals.PLAYER_STATE_WALK].length) {
-                    walkFrame = 0;
-                }
+	private byte att1Frame = 0;
 
-                buffFrame++;
-                if (buffFrame == Globals.CHAR_SPRITE[Globals.PLAYER_STATE_BUFF].length) {
-                    buffFrame = 0;
-                }
+	private byte att5Frame = 0;
 
-                att1Frame++;
-                if (att1Frame == Globals.CHAR_SPRITE[Globals.PLAYER_STATE_ATTACK].length) {
-                    att1Frame = 0;
-                }
+	private double nextFrameTime = 0;
+	private final int itemCode = 100000;
+	private final ItemEquip e = new ItemEquip(this.itemCode);
 
-                att5Frame++;
-                if (att5Frame == Globals.CHAR_SPRITE[Globals.PLAYER_STATE_ATTACKBOW].length) {
-                    att5Frame = 0;
-                }
-                nextFrameTime = 100000000;
-            }
-            lastUpdateTime = now;
-        }
-    }
+	@Override
+	public void update() {
+		final double now = System.nanoTime(); // Get time now
+		if (now - this.lastUpdateTime >= Globals.LOGIC_UPDATE) {
 
-    @Override
-    public void draw(Graphics2D g) {
-        Graphics2D g2d = (Graphics2D) g;
-        g2d.setRenderingHint(
-                RenderingHints.KEY_TEXT_ANTIALIASING,
-                RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
-        drawSlots(g);
-    }
+			this.nextFrameTime -= Globals.LOGIC_UPDATE;
+			if (this.nextFrameTime <= 0) {
+				this.standFrame++;
+				if (this.standFrame == Globals.CHAR_SPRITE[Globals.PLAYER_STATE_STAND].length) {
+					this.standFrame = 0;
+				}
 
-    private void drawSlots(Graphics2D g) {
-        BufferedImage character = Globals.CHAR_SPRITE[Globals.PLAYER_STATE_STAND][standFrame];
-        int x = 50 + character.getWidth() / 2, y = 100 + character.getHeight();
-        e.drawIngame(g, x, y, Globals.PLAYER_STATE_STAND, standFrame, Globals.RIGHT, true);
-        g.drawImage(character, 50, 100, null);
-        e.drawIngame(g, x, y, Globals.PLAYER_STATE_STAND, standFrame, Globals.RIGHT);
+				this.walkFrame++;
+				if (this.walkFrame == Globals.CHAR_SPRITE[Globals.PLAYER_STATE_WALK].length) {
+					this.walkFrame = 0;
+				}
 
-        character = Globals.CHAR_SPRITE[Globals.PLAYER_STATE_WALK][walkFrame];
-        x = 250 + character.getWidth() / 2;
-        y = 100 + character.getHeight();
-        e.drawIngame(g, x, y, Globals.PLAYER_STATE_WALK, walkFrame, Globals.RIGHT, true);
-        g.drawImage(character, 250, 100, null);
-        e.drawIngame(g, x, y, Globals.PLAYER_STATE_WALK, walkFrame, Globals.RIGHT);
+				this.buffFrame++;
+				if (this.buffFrame == Globals.CHAR_SPRITE[Globals.PLAYER_STATE_BUFF].length) {
+					this.buffFrame = 0;
+				}
 
-        character = Globals.CHAR_SPRITE[Globals.PLAYER_STATE_JUMP][jumpFrame];
-        x = 450 + character.getWidth() / 2;
-        y = 100 + character.getHeight();
-        e.drawIngame(g, x, y, Globals.PLAYER_STATE_JUMP, jumpFrame, Globals.RIGHT, true);
-        g.drawImage(character, 450, 100, null);
-        e.drawIngame(g, x, y, Globals.PLAYER_STATE_JUMP, jumpFrame, Globals.RIGHT);
+				this.att1Frame++;
+				if (this.att1Frame == Globals.CHAR_SPRITE[Globals.PLAYER_STATE_ATTACK].length) {
+					this.att1Frame = 0;
+				}
 
-        character = Globals.CHAR_SPRITE[Globals.PLAYER_STATE_BUFF][buffFrame];
-        x = 650 + character.getWidth() / 2;
-        y = 100 + character.getHeight();
-        e.drawIngame(g, x, y, Globals.PLAYER_STATE_BUFF, buffFrame, Globals.RIGHT, true);
-        g.drawImage(character, 650, 100, null);
-        e.drawIngame(g, x, y, Globals.PLAYER_STATE_BUFF, buffFrame, Globals.RIGHT);
+				this.att5Frame++;
+				if (this.att5Frame == Globals.CHAR_SPRITE[Globals.PLAYER_STATE_ATTACKBOW].length) {
+					this.att5Frame = 0;
+				}
+				this.nextFrameTime = 100000000;
+			}
+			this.lastUpdateTime = now;
+		}
+	}
 
-        character = Globals.CHAR_SPRITE[Globals.PLAYER_STATE_ATTACK][att1Frame];
-        x = 50 + character.getWidth() / 2;
-        y = 400 + character.getHeight();
-        e.drawIngame(g, x, y, Globals.PLAYER_STATE_ATTACK, att1Frame, Globals.RIGHT, true);
-        g.drawImage(character, 50 + 10, 400, null);
-        e.drawIngame(g, x, y, Globals.PLAYER_STATE_ATTACK, att1Frame, Globals.RIGHT);
+	@Override
+	public void draw(final Graphics2D g) {
+		final Graphics2D g2d = g;
+		g2d.setRenderingHint(
+				RenderingHints.KEY_TEXT_ANTIALIASING,
+				RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
+		drawSlots(g);
+	}
 
-        character = Globals.CHAR_SPRITE[Globals.PLAYER_STATE_ATTACKBOW][att5Frame];
-        x = 950 + character.getWidth() / 2;
-        y = 400 + character.getHeight();
-        e.drawIngame(g, x, y, Globals.PLAYER_STATE_ATTACKBOW, att5Frame, Globals.RIGHT, true);
-        g.drawImage(character, 950, 400, null);
-        e.drawIngame(g, x, y, Globals.PLAYER_STATE_ATTACKBOW, att5Frame, Globals.RIGHT);
-    }
+	private void drawSlots(final Graphics2D g) {
+		BufferedImage character = Globals.CHAR_SPRITE[Globals.PLAYER_STATE_STAND][this.standFrame];
+		int x = 50 + character.getWidth() / 2, y = 100 + character.getHeight();
+		this.e.drawIngame(g, x, y, Globals.PLAYER_STATE_STAND, this.standFrame, Globals.RIGHT, true);
+		g.drawImage(character, 50, 100, null);
+		this.e.drawIngame(g, x, y, Globals.PLAYER_STATE_STAND, this.standFrame, Globals.RIGHT);
 
-    @Override
-    public void keyTyped(KeyEvent e) {
+		character = Globals.CHAR_SPRITE[Globals.PLAYER_STATE_WALK][this.walkFrame];
+		x = 250 + character.getWidth() / 2;
+		y = 100 + character.getHeight();
+		this.e.drawIngame(g, x, y, Globals.PLAYER_STATE_WALK, this.walkFrame, Globals.RIGHT, true);
+		g.drawImage(character, 250, 100, null);
+		this.e.drawIngame(g, x, y, Globals.PLAYER_STATE_WALK, this.walkFrame, Globals.RIGHT);
 
-    }
+		character = Globals.CHAR_SPRITE[Globals.PLAYER_STATE_JUMP][this.jumpFrame];
+		x = 450 + character.getWidth() / 2;
+		y = 100 + character.getHeight();
+		this.e.drawIngame(g, x, y, Globals.PLAYER_STATE_JUMP, this.jumpFrame, Globals.RIGHT, true);
+		g.drawImage(character, 450, 100, null);
+		this.e.drawIngame(g, x, y, Globals.PLAYER_STATE_JUMP, this.jumpFrame, Globals.RIGHT);
 
-    @Override
-    public void keyPressed(KeyEvent e) {
+		character = Globals.CHAR_SPRITE[Globals.PLAYER_STATE_BUFF][this.buffFrame];
+		x = 650 + character.getWidth() / 2;
+		y = 100 + character.getHeight();
+		this.e.drawIngame(g, x, y, Globals.PLAYER_STATE_BUFF, this.buffFrame, Globals.RIGHT, true);
+		g.drawImage(character, 650, 100, null);
+		this.e.drawIngame(g, x, y, Globals.PLAYER_STATE_BUFF, this.buffFrame, Globals.RIGHT);
 
-    }
+		character = Globals.CHAR_SPRITE[Globals.PLAYER_STATE_ATTACK][this.att1Frame];
+		x = 50 + character.getWidth() / 2;
+		y = 400 + character.getHeight();
+		this.e.drawIngame(g, x, y, Globals.PLAYER_STATE_ATTACK, this.att1Frame, Globals.RIGHT, true);
+		g.drawImage(character, 50 + 10, 400, null);
+		this.e.drawIngame(g, x, y, Globals.PLAYER_STATE_ATTACK, this.att1Frame, Globals.RIGHT);
 
-    @Override
-    public void keyReleased(KeyEvent e) {
-    }
+		character = Globals.CHAR_SPRITE[Globals.PLAYER_STATE_ATTACKBOW][this.att5Frame];
+		x = 950 + character.getWidth() / 2;
+		y = 400 + character.getHeight();
+		this.e.drawIngame(g, x, y, Globals.PLAYER_STATE_ATTACKBOW, this.att5Frame, Globals.RIGHT, true);
+		g.drawImage(character, 950, 400, null);
+		this.e.drawIngame(g, x, y, Globals.PLAYER_STATE_ATTACKBOW, this.att5Frame, Globals.RIGHT);
+	}
 
-    @Override
-    public void mouseClicked(MouseEvent e) {
+	@SuppressWarnings("hiding")
+	@Override
+	public void keyTyped(final KeyEvent e) {
 
-    }
+	}
 
-    @Override
-    public void mousePressed(MouseEvent e) {
+	@SuppressWarnings("hiding")
+	@Override
+	public void keyPressed(final KeyEvent e) {
 
-    }
+	}
 
-    @Override
-    public void mouseReleased(MouseEvent e) {
+	@SuppressWarnings("hiding")
+	@Override
+	public void keyReleased(final KeyEvent e) {
+	}
 
-    }
+	@SuppressWarnings("hiding")
+	@Override
+	public void mouseClicked(final MouseEvent e) {
 
-    @Override
-    public void unload() {
-    }
+	}
 
-    @Override
-    public void mouseEntered(MouseEvent e) {
-    }
+	@SuppressWarnings("hiding")
+	@Override
+	public void mousePressed(final MouseEvent e) {
 
-    @Override
-    public void mouseExited(MouseEvent e) {
-    }
+	}
 
-    @Override
-    public void mouseDragged(MouseEvent e) {
-    }
+	@SuppressWarnings("hiding")
+	@Override
+	public void mouseReleased(final MouseEvent e) {
 
-    @Override
-    public void mouseMoved(MouseEvent e) {
-    }
+	}
+
+	@Override
+	public void unload() {
+	}
+
+	@SuppressWarnings("hiding")
+	@Override
+	public void mouseEntered(final MouseEvent e) {
+	}
+
+	@SuppressWarnings("hiding")
+	@Override
+	public void mouseExited(final MouseEvent e) {
+	}
+
+	@SuppressWarnings("hiding")
+	@Override
+	public void mouseDragged(final MouseEvent e) {
+	}
+
+	@SuppressWarnings("hiding")
+	@Override
+	public void mouseMoved(final MouseEvent e) {
+	}
 
 }

@@ -8,13 +8,13 @@ import blockfighter.server.Globals;
  */
 public class SkillBowRapid extends Skill {
 
-    /**
-     * Constructor for Bow Skill Rapid Fire.
-     */
-    public SkillBowRapid() {
-        skillCode = BOW_RAPID;
-        maxCooldown = 700;
-        reqWeapon = Globals.ITEM_BOW;
-    }
+	/**
+	 * Constructor for Bow Skill Rapid Fire.
+	 */
+	public SkillBowRapid() {
+		this.skillCode = BOW_RAPID;
+		this.maxCooldown = 700;
+		this.reqWeapon = Globals.ITEM_BOW;
+	}
 
 }

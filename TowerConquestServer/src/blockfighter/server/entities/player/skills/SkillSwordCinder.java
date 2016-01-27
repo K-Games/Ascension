@@ -8,13 +8,13 @@ import blockfighter.server.Globals;
  */
 public class SkillSwordCinder extends Skill {
 
-    /**
-     * Constructor for Sword Skill Cinder.
-     */
-    public SkillSwordCinder() {
-        skillCode = SWORD_CINDER;
-        maxCooldown = 20000;
-        reqWeapon = Globals.ITEM_SWORD;
-    }
+	/**
+	 * Constructor for Sword Skill Cinder.
+	 */
+	public SkillSwordCinder() {
+		this.skillCode = SWORD_CINDER;
+		this.maxCooldown = 20000;
+		this.reqWeapon = Globals.ITEM_SWORD;
+	}
 
 }
