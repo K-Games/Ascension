@@ -68,7 +68,7 @@ public class Globals {
 
     public final static byte RIGHT = 0, LEFT = 1, DOWN = 2, UP = 3;
 
-    public final static int NUM_PARTICLE_EFFECTS = 39;
+    public final static int NUM_PARTICLE_EFFECTS = 40;
     public final static byte PARTICLE_SWORD_SLASH1 = 0x00,
             PARTICLE_SWORD_SLASH2 = 0x01,
             PARTICLE_SWORD_SLASH3 = 0x02,
@@ -106,7 +106,8 @@ public class Globals {
             PARTICLE_BOW_VOLLEYBUFF = 0x23,
             PARTICLE_PASSIVE_RESIST = 0x24,
             PARTICLE_PASSIVE_BARRIER = 0x25,
-            PARTICLE_PASSIVE_SHADOWATTACK = 0x26;
+            PARTICLE_PASSIVE_SHADOWATTACK = 0x26,
+            PARTICLE_BLOOD = 0x27;
 
     public final static int NUM_KEYBINDS = 16,
             KEYBIND_SKILL1 = 0,
@@ -381,7 +382,7 @@ public class Globals {
             for (int i = 0; i < CHAR_SPRITE[PLAYER_STATE_BUFF].length; i++) {
                 CHAR_SPRITE[PLAYER_STATE_BUFF][i] = ImageIO.read(Globals.class.getResourceAsStream("sprites/character/buff/" + i + ".png"));
             }
-            CHAR_SPRITE[PLAYER_STATE_DEAD] = new BufferedImage[15];
+            CHAR_SPRITE[PLAYER_STATE_DEAD] = new BufferedImage[10];
             for (int i = 0; i < CHAR_SPRITE[PLAYER_STATE_DEAD].length; i++) {
                 CHAR_SPRITE[PLAYER_STATE_DEAD][i] = ImageIO.read(Globals.class.getResourceAsStream("sprites/character/dead/" + i + ".png"));
             }

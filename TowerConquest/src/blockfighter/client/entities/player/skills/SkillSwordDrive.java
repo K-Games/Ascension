@@ -40,7 +40,7 @@ public class SkillSwordDrive extends Skill {
         g.drawString(getSkillName(), x + 80, y + 30);
         g.setFont(Globals.ARIAL_15PT);
         g.drawString("Level: " + level + " - Requires " + ItemEquip.getItemTypeName(reqWeapon), x + 80, y + 50);
-        g.drawString("Cooldown: " + maxCooldown / 1000 + " Second", x + 80, y + 70);
+        g.drawString("Cooldown: 0.5 Second", x + 80, y + 70);
 
         g.drawString("Attack 4 times.", x + 10, y + 90);
 

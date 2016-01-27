@@ -14,7 +14,7 @@ public class SkillShieldCharge extends Skill {
     public SkillShieldCharge() {
         icon = Globals.SKILL_ICON[SHIELD_CHARGE];
         skillCode = SHIELD_CHARGE;
-        maxCooldown = 8000;
+        maxCooldown = 17000;
         reqWeapon = Globals.ITEM_SHIELD;
         skillName = "Overwhelm";
     }

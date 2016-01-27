@@ -1,7 +1,6 @@
 package blockfighter.client.entities.player.skills;
 
 import blockfighter.client.Globals;
-import blockfighter.client.entities.items.ItemEquip;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
@@ -14,7 +13,7 @@ public class SkillShieldFortify extends Skill {
     public SkillShieldFortify() {
         icon = Globals.SKILL_ICON[SHIELD_FORTIFY];
         skillCode = SHIELD_FORTIFY;
-        maxCooldown = 15000;
+        maxCooldown = 24000;
         skillName = "Fortify";
     }
 
@@ -38,7 +37,7 @@ public class SkillShieldFortify extends Skill {
         g.setFont(Globals.ARIAL_18PT);
         g.drawString(getSkillName(), x + 80, y + 30);
         g.setFont(Globals.ARIAL_15PT);
-        g.drawString("Level: " + level + " - Requires " + ItemEquip.getItemTypeName(reqWeapon), x + 80, y + 50);
+        g.drawString("Level: " + level, x + 80, y + 50);
         g.drawString("Cooldown: " + maxCooldown / 1000 + " Seconds", x + 80, y + 70);
 
         g.drawString("Reduce damage taken for 5 seconds.", x + 10, y + 90);

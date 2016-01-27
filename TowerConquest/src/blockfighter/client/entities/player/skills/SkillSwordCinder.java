@@ -14,9 +14,9 @@ public class SkillSwordCinder extends Skill {
     public SkillSwordCinder() {
         icon = Globals.SKILL_ICON[SWORD_CINDER];
         skillCode = SWORD_CINDER;
-        maxCooldown = 6000;
+        maxCooldown = 20000;
         reqWeapon = Globals.ITEM_SWORD;
-        skillName = "Cinder";
+        skillName = "Firebrand";
     }
 
     @Override

@@ -14,14 +14,14 @@ public class SkillBowPower extends Skill {
     public SkillBowPower() {
         icon = Globals.SKILL_ICON[BOW_POWER];
         skillCode = BOW_POWER;
-        maxCooldown = 6000;
+        maxCooldown = 16000;
         reqWeapon = Globals.ITEM_BOW;
-        skillName = "Obliteration";
+        skillName = "Cannon Fire";
     }
 
     @Override
     public void drawInfo(Graphics2D g, int x, int y) {
-        int boxHeight = (level < 30) ? 255 : 210, boxWidth = 380;
+        int boxHeight = (level < 30) ? 255 : 210, boxWidth = 445;
         if (y + boxHeight > 700) {
             y = 700 - boxHeight;
         }
@@ -42,7 +42,7 @@ public class SkillBowPower extends Skill {
         g.drawString("Level: " + level + " - Requires " + ItemEquip.getItemTypeName(reqWeapon), x + 80, y + 50);
         g.drawString("Cooldown: " + maxCooldown / 1000 + " Seconds", x + 80, y + 70);
 
-        g.drawString("Charges a shot for 0.8 seconds. Can be interrupted.", x + 10, y + 90);
+        g.drawString("Charge a powerful shot for 0.8 seconds. Can be interrupted.", x + 10, y + 90);
 
         g.drawString("[Level " + level + "]", x + 10, y + 115);
         g.drawString("Deals " + (500 + 100 * level) + "% damage.", x + 10, y + 135);

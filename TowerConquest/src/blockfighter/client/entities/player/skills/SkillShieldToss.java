@@ -14,9 +14,9 @@ public class SkillShieldToss extends Skill {
     public SkillShieldToss() {
         icon = Globals.SKILL_ICON[SHIELD_TOSS];
         skillCode = SHIELD_TOSS;
-        maxCooldown = 10000;
+        maxCooldown = 13000;
         reqWeapon = Globals.ITEM_SHIELD;
-        skillName = "Guardian's Shield";
+        skillName = "Shield Toss";
     }
 
     @Override
@@ -49,7 +49,7 @@ public class SkillShieldToss extends Skill {
         g.drawString("Deals " + (150 + 15 * level) + "% damage + Defense multiplied by " + df.format(15 + level) + ".", x + 10, y + 155);
         if (level < 30) {
             g.drawString("[Level " + (level + 1) + "]", x + 10, y + 180);
-            g.drawString("Deals" + (150 + 15 * (level + 1)) + "% damage + Defense multiplied by " + df.format(15 + (level + 1)) + ".", x + 10, y + 200);
+            g.drawString("Deals " + (150 + 15 * (level + 1)) + "% damage + Defense multiplied by " + df.format(15 + (level + 1)) + ".", x + 10, y + 200);
 
             g.drawString("[Level 30 Bonus]", x + 10, y + 225);
             g.drawString("Throws 3 shields.", x + 10, y + 245);

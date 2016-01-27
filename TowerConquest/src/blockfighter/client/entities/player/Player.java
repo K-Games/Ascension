@@ -43,6 +43,10 @@ public class Player extends Thread {
         return name;
     }
 
+    public byte getFacing() {
+        return facing;
+    }
+
     public void disconnect() {
         disconnect = true;
     }

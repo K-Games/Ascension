@@ -52,10 +52,10 @@ public class SkillShieldReflect extends Skill {
             g.drawString("Deals " + (40 + (level + 1) * 2) + "% of damage taken.", x + 10, y + 200);
 
             g.drawString("[Level 30 Bonus]", x + 10, y + 225);
-            g.drawString("You reflect 40% of damage taken by allies.", x + 10, y + 245);
+            g.drawString("You reflect 40% of damage taken by other players.", x + 10, y + 245);
         } else {
             g.drawString("[Level 30 Bonus]", x + 10, y + 180);
-            g.drawString("You reflect 40% of damage taken by allies.", x + 10, y + 200);
+            g.drawString("You reflect 40% of damage taken by other players.", x + 10, y + 200);
         }
     }
 

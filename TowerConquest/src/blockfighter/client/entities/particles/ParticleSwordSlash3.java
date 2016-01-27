@@ -9,8 +9,8 @@ public class ParticleSwordSlash3 extends Particle {
     public ParticleSwordSlash3(int k, int x, int y, byte f) {
         super(k, x, y, f);
         frame = 0;
-        frameDuration = 25;
-        duration = 200;
+        frameDuration = 50;
+        duration = 250;
     }
 
     @Override
@@ -18,7 +18,7 @@ public class ParticleSwordSlash3 extends Particle {
         super.update();
         frameDuration -= Globals.LOGIC_UPDATE / 1000000;
         if (frameDuration <= 0) {
-            frameDuration = 25;
+            frameDuration = 50;
             if (frame < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_SLASH3].length - 1) {
                 frame++;
             }

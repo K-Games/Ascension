@@ -14,7 +14,7 @@ public class SkillBowVolley extends Skill {
     public SkillBowVolley() {
         icon = Globals.SKILL_ICON[BOW_VOLLEY];
         skillCode = BOW_VOLLEY;
-        maxCooldown = 7000;
+        maxCooldown = 17000;
         reqWeapon = Globals.ITEM_BOW;
         skillName = "Volley";
     }

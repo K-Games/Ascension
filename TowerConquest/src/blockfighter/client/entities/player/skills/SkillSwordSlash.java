@@ -14,9 +14,9 @@ public class SkillSwordSlash extends Skill {
     public SkillSwordSlash() {
         icon = Globals.SKILL_ICON[SWORD_SLASH];
         skillCode = SWORD_SLASH;
-        maxCooldown = 600;
+        maxCooldown = 400;
         reqWeapon = Globals.ITEM_SWORD;
-        skillName = "Guardian's Might";
+        skillName = "Rend";
     }
 
     @Override
@@ -40,7 +40,7 @@ public class SkillSwordSlash extends Skill {
         g.drawString(getSkillName(), x + 80, y + 30);
         g.setFont(Globals.ARIAL_15PT);
         g.drawString("Level: " + level + " - Requires " + ItemEquip.getItemTypeName(reqWeapon), x + 80, y + 50);
-        g.drawString("Cooldown: 0.6 Second", x + 80, y + 70);
+        g.drawString("Cooldown: 0.4 Second", x + 80, y + 70);
 
         g.drawString("Slash 3 times.", x + 10, y + 90);
 
@@ -51,10 +51,10 @@ public class SkillSwordSlash extends Skill {
             g.drawString("Deals " + (4 * (level + 1) + 100) + "% damage per hit.", x + 10, y + 180);
 
             g.drawString("[Level 30 Bonus]", x + 10, y + 205);
-            g.drawString("Take 10% less damage for 4 seconds.", x + 10, y + 225);
+            g.drawString("Take 10% less damage for 2 seconds.", x + 10, y + 225);
         } else {
             g.drawString("[Level 30 Bonus]", x + 10, y + 160);
-            g.drawString("Take 10% less damage for 4 seconds.", x + 10, y + 180);
+            g.drawString("Take 10% less damage for 2 seconds.", x + 10, y + 180);
         }
     }
 

@@ -42,7 +42,7 @@ public class SkillBowRapid extends Skill {
         g.drawString("Level: " + level + " - Requires " + ItemEquip.getItemTypeName(reqWeapon), x + 80, y + 50);
         g.drawString("Cooldown: 0.7 Second", x + 80, y + 70);
 
-        g.drawString("Fire 3 shots over 1 second.", x + 10, y + 90);
+        g.drawString("Fire 3 shots over 0.5 seconds.", x + 10, y + 90);
 
         g.drawString("[Level " + level + "]", x + 10, y + 115);
         g.drawString("Deals " + (75 + level * 2) + "% damage per hit.", x + 10, y + 135);

@@ -6,6 +6,7 @@ import blockfighter.client.entities.boss.Boss;
 import blockfighter.client.entities.damage.Damage;
 import blockfighter.client.entities.items.ItemEquip;
 import blockfighter.client.entities.particles.Particle;
+import blockfighter.client.entities.particles.ParticleBloodEmitter;
 import blockfighter.client.entities.particles.ParticleBowArc;
 import blockfighter.client.entities.particles.ParticleBowFrostArrow;
 import blockfighter.client.entities.particles.ParticleBowPower;
@@ -764,6 +765,12 @@ public class ScreenIngame extends Screen {
                 x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
                 y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
                 particles.put(key, new ParticlePassiveShadowAttack(key, x, y));
+                break;
+            case Globals.PARTICLE_BLOOD:
+                playerKey = data[2];
+                if (players.containsKey(playerKey)) {
+                    particles.put(key, new ParticleBloodEmitter(key, players.get(playerKey)));
+                }
                 break;
         }
     }

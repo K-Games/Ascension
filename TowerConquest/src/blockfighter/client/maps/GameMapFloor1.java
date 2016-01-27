@@ -42,7 +42,7 @@ public class GameMapFloor1 extends GameMap {
 
     @Override
     public void loadAssets() throws Exception {
-        bg = ImageIO.read(Globals.class.getResourceAsStream("sprites/maps/0/bg.png"));
+        bg = ImageIO.read(Globals.class.getResourceAsStream("sprites/maps/" + getMapID() + "/bg.png"));
         BossLightning.load();
     }
 

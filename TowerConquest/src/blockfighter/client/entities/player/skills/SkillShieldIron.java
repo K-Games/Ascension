@@ -14,14 +14,14 @@ public class SkillShieldIron extends Skill {
     public SkillShieldIron() {
         icon = Globals.SKILL_ICON[SHIELD_IRON];
         skillCode = SHIELD_IRON;
-        maxCooldown = 15000;
+        maxCooldown = 20000;
         reqWeapon = Globals.ITEM_SHIELD;
         skillName = "Iron Fortress";
     }
 
     @Override
     public void drawInfo(Graphics2D g, int x, int y) {
-        int boxHeight = (level < 30) ? 235 : 190, boxWidth = 370;
+        int boxHeight = (level < 30) ? 235 : 190, boxWidth = 400;
         if (y + boxHeight > 700) {
             y = 700 - boxHeight;
         }
@@ -45,16 +45,16 @@ public class SkillShieldIron extends Skill {
         g.drawString("Become immobile and reduce damage taken.", x + 10, y + 90);
 
         g.drawString("[Level " + level + "]", x + 10, y + 115);
-        g.drawString("Reduce damage taken by " + (level + 55) + "%.", x + 10, y + 135);
+        g.drawString("Reduce damage taken by " + (level + 55) + "% for 2 seconds.", x + 10, y + 135);
         if (level < 30) {
             g.drawString("[Level " + (level + 1) + "]", x + 10, y + 160);
-            g.drawString("Reduce damage taken by " + ((level + 1) + 55) + "%.", x + 10, y + 180);
+            g.drawString("Reduce damage taken by " + ((level + 1) + 55) + "% for 2 seconds.", x + 10, y + 180);
 
             g.drawString("[Level 30 Bonus]", x + 10, y + 205);
-            g.drawString("Allies reduce damage taken by 40% for 2 seconds.", x + 10, y + 225);
+            g.drawString("Allies also reduce damage taken by 40% for 2 seconds.", x + 10, y + 225);
         } else {
             g.drawString("[Level 30 Bonus]", x + 10, y + 160);
-            g.drawString("Allies reduce damage taken by 40% for 2 seconds.", x + 10, y + 180);
+            g.drawString("Allies also reduce damage taken by 40% for 2 seconds.", x + 10, y + 180);
         }
     }
 

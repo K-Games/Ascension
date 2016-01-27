@@ -77,6 +77,6 @@ public abstract class GameMap {
     }
 
     public void drawBg(Graphics2D g) {
-        g.drawImage(bg, 0, 0, null);
+        g.drawImage(bg, 0, 0, 1280, 720, null);
     }
 }

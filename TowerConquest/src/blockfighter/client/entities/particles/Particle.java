@@ -56,15 +56,15 @@ public abstract class Particle extends Thread {
         LOADED = true;
         //Remove repetition later
         PARTICLE_SPRITE = new BufferedImage[NUM_PARTICLE_EFFECTS][];
-        PARTICLE_SPRITE[Globals.PARTICLE_SWORD_SLASH1] = new BufferedImage[8];
+        PARTICLE_SPRITE[Globals.PARTICLE_SWORD_SLASH1] = new BufferedImage[5];
         for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_SLASH1].length; i++) {
             PARTICLE_SPRITE[Globals.PARTICLE_SWORD_SLASH1][i] = ImageIO.read(Globals.class.getResourceAsStream("sprites/particle/slash1/" + i + ".png"));
         }
-        PARTICLE_SPRITE[Globals.PARTICLE_SWORD_SLASH2] = new BufferedImage[8];
+        PARTICLE_SPRITE[Globals.PARTICLE_SWORD_SLASH2] = new BufferedImage[5];
         for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_SLASH2].length; i++) {
             PARTICLE_SPRITE[Globals.PARTICLE_SWORD_SLASH2][i] = ImageIO.read(Globals.class.getResourceAsStream("sprites/particle/slash2/" + i + ".png"));
         }
-        PARTICLE_SPRITE[Globals.PARTICLE_SWORD_SLASH3] = new BufferedImage[8];
+        PARTICLE_SPRITE[Globals.PARTICLE_SWORD_SLASH3] = new BufferedImage[5];
         for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_SLASH3].length; i++) {
             PARTICLE_SPRITE[Globals.PARTICLE_SWORD_SLASH3][i] = ImageIO.read(Globals.class.getResourceAsStream("sprites/particle/slash3/" + i + ".png"));
         }

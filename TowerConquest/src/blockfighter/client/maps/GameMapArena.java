@@ -3,6 +3,7 @@ package blockfighter.client.maps;
 import blockfighter.client.Globals;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 
 /**
@@ -12,29 +13,22 @@ import javax.imageio.ImageIO;
  */
 public class GameMapArena extends GameMap {
 
+    BufferedImage[] platforms = new BufferedImage[3];
+
     public GameMapArena() {
         setMapID(0);
     }
 
     @Override
     public void draw(Graphics2D g) {
-        g.setColor(Color.BLACK);
-        g.drawRect(0, 600, 3700, 30);
-
-        g.drawRect(200, 350, 300, 30);
-
-        g.drawRect(700, 100, 300, 30);
-
-        g.drawRect(1200, 350, 300, 30);
-
-        g.drawRect(1700, 100, 300, 30);
-
-        g.drawRect(2200, 350, 300, 30);
-
-        g.drawRect(2700, 100, 300, 30);
-
-        g.drawRect(3200, 350, 300, 30);
-
+        g.drawImage(platforms[2], 0, 600, 3700, 30, null);
+        g.drawImage(platforms[0], 200, 350, null);
+        g.drawImage(platforms[0], 700, 100, null);
+        g.drawImage(platforms[1], 1200, 350, null);
+        g.drawImage(platforms[1], 1700, 100, null);
+        g.drawImage(platforms[0], 2200, 350, null);
+        g.drawImage(platforms[1], 2700, 100, null);
+        g.drawImage(platforms[0], 3200, 350, null);
         super.draw(g);
 
     }
@@ -42,6 +36,9 @@ public class GameMapArena extends GameMap {
     @Override
     public void loadAssets() throws Exception {
         bg = ImageIO.read(Globals.class.getResourceAsStream("sprites/maps/" + getMapID() + "/bg.png"));
+        for (int i = 0; i < platforms.length; i++) {
+            platforms[i] = ImageIO.read(Globals.class.getResourceAsStream("sprites/maps/" + getMapID() + "/plat" + i + ".png"));
+        }
     }
 
 }

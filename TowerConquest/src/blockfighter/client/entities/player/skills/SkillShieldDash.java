@@ -13,7 +13,7 @@ public class SkillShieldDash extends Skill {
     public SkillShieldDash() {
         icon = Globals.SKILL_ICON[SHIELD_DASH];
         skillCode = SHIELD_DASH;
-        maxCooldown = 2000;
+        maxCooldown = 13000;
         //reqWeapon = Globals.ITEM_SHIELD;
         skillName = "Dash";
     }
