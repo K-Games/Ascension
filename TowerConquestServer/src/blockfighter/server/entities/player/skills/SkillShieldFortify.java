@@ -11,7 +11,7 @@ public class SkillShieldFortify extends Skill {
      */
     public SkillShieldFortify() {
         skillCode = SHIELD_FORTIFY;
-        maxCooldown = 15000;
+        maxCooldown = 24000;
         //reqWeapon = Globals.ITEM_SHIELD;
     }
 

@@ -13,7 +13,7 @@ public class SkillSwordTaunt extends Skill {
      */
     public SkillSwordTaunt() {
         skillCode = SWORD_TAUNT;
-        maxCooldown = 12000;
+        maxCooldown = 25000;
         reqWeapon = Globals.ITEM_SWORD;
     }
 

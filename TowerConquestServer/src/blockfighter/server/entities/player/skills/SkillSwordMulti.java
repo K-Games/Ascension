@@ -13,7 +13,7 @@ public class SkillSwordMulti extends Skill {
      */
     public SkillSwordMulti() {
         skillCode = SWORD_MULTI;
-        maxCooldown = 6000;
+        maxCooldown = 18000;
         reqWeapon = Globals.ITEM_SWORD;
     }
 

@@ -344,7 +344,21 @@ public class LogicModule extends Thread {
                 players.put(key, newPlayer);
             }
         }
-
+        if (players.isEmpty()) {
+            if (!pDirKeydownQueue.isEmpty()) {
+                pDirKeydownQueue.clear();
+            }
+            if (!pUseSkillQueue.isEmpty()) {
+                pUseSkillQueue.clear();
+            }
+            if (!projEffectQueue.isEmpty()) {
+                projEffectQueue.clear();
+            }
+            if (!projAddQueue.isEmpty()) {
+                projAddQueue.clear();
+            }
+            return;
+        }
         queues[0] = () -> {
             try {
                 while (!pDirKeydownQueue.isEmpty()) {

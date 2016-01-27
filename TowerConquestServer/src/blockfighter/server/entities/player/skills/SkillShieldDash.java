@@ -8,7 +8,7 @@ public class SkillShieldDash extends Skill {
 
     public SkillShieldDash() {
         skillCode = SHIELD_DASH;
-        maxCooldown = 2000;
+        maxCooldown = 13000;
     }
 
 }

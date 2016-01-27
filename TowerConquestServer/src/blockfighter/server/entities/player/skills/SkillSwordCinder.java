@@ -13,7 +13,7 @@ public class SkillSwordCinder extends Skill {
      */
     public SkillSwordCinder() {
         skillCode = SWORD_CINDER;
-        maxCooldown = 6000;
+        maxCooldown = 20000;
         reqWeapon = Globals.ITEM_SWORD;
     }
 

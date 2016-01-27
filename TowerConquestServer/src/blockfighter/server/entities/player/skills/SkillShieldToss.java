@@ -13,7 +13,7 @@ public class SkillShieldToss extends Skill {
      */
     public SkillShieldToss() {
         skillCode = SHIELD_TOSS;
-        maxCooldown = 10000;
+        maxCooldown = 13000;
         reqWeapon = Globals.ITEM_SHIELD;
     }
 

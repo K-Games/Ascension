@@ -13,7 +13,7 @@ public class SkillShieldCharge extends Skill {
      */
     public SkillShieldCharge() {
         skillCode = SHIELD_CHARGE;
-        maxCooldown = 8000;
+        maxCooldown = 17000;
         reqWeapon = Globals.ITEM_SHIELD;
     }
 

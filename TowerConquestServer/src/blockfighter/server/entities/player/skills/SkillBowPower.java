@@ -13,7 +13,7 @@ public class SkillBowPower extends Skill {
      */
     public SkillBowPower() {
         skillCode = BOW_POWER;
-        maxCooldown = 6000;
+        maxCooldown = 16000;
         reqWeapon = Globals.ITEM_BOW;
     }
 

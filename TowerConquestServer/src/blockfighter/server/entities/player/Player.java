@@ -587,7 +587,11 @@ public class Player extends Thread implements GameEntity {
         healQueue.clear();
         skillUseQueue.clear();
         buffQueue.clear();
-        setXSpeed(0);
+        if (respawnTimer >= 4500000000D) {
+            setXSpeed((facing == Globals.LEFT) ? 1.0 : -1.0);
+        } else {
+            setXSpeed(0);
+        }
         if (respawnTimer <= 0) {
             respawn();
         }
@@ -699,7 +703,7 @@ public class Player extends Thread implements GameEntity {
 
     private void updateSkillSwordSlash() {
         if (isSkillMaxed(Skill.SWORD_SLASH) && skillDuration == 0) {
-            queueBuff(new BuffSwordSlash(4000, .1, this));
+            queueBuff(new BuffSwordSlash(2000, .1, this));
             sendParticle(logic.getRoom(), Globals.PARTICLE_SWORD_SLASHBUFF, key);
         }
         if (skillDuration % 100 == 0 && skillDuration < 300) {
@@ -906,7 +910,7 @@ public class Player extends Thread implements GameEntity {
         if (skillDuration == 100) {
             setRemovingDebuff(true);
             queueBuff(new BuffShieldIron(2000, 0.55 + 0.01 * getSkillLevel(Skill.SHIELD_IRON)));
-            if (isSkillMaxed(Skill.SHIELD_IRON)) {
+            if (isSkillMaxed(Skill.SHIELD_IRON) && logic.getRoom() != 0) {
                 for (Map.Entry<Byte, Player> player : logic.getPlayers().entrySet()) {
                     Player p = player.getValue();
                     if (p != this) {
@@ -1262,10 +1266,10 @@ public class Player extends Thread implements GameEntity {
                 }
             }
         }
+        sendParticle(logic.getRoom(), Globals.PARTICLE_BLOOD, key);
         setInvulnerable(false);
         setRemovingDebuff(false);
         setDead(true);
-        setFacing(Globals.RIGHT);
         setPlayerState(PLAYER_STATE_DEAD);
         damageQueue.clear();
         healQueue.clear();
@@ -1697,12 +1701,10 @@ public class Player extends Thread implements GameEntity {
                 nextFrameTime -= Globals.LOGIC_UPDATE;
                 animState = Globals.PLAYER_STATE_DEAD;
                 if (nextFrameTime <= 0) {
-                    if (frame == 14) {
-                        frame = 0;
-                    } else {
+                    if (frame != 10) {
                         frame++;
                     }
-                    nextFrameTime = 30000000;
+                    nextFrameTime = 50000000;
                 }
                 break;
             case PLAYER_STATE_WALK:

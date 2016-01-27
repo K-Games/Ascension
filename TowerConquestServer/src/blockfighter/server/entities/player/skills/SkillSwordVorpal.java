@@ -13,7 +13,7 @@ public class SkillSwordVorpal extends Skill {
      */
     public SkillSwordVorpal() {
         skillCode = SWORD_VORPAL;
-        maxCooldown = 4000;
+        maxCooldown = 14000;
         reqWeapon = Globals.ITEM_SWORD;
     }
 

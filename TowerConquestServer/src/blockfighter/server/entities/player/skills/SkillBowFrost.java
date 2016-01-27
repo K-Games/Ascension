@@ -13,7 +13,7 @@ public class SkillBowFrost extends Skill {
      */
     public SkillBowFrost() {
         skillCode = BOW_FROST;
-        maxCooldown = 20000;
+        maxCooldown = 22000;
         reqWeapon = Globals.ITEM_BOW;
     }
 
