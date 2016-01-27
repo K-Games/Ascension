@@ -224,7 +224,7 @@ public class Globals {
             inputStream = new FileInputStream("config.properties");
             prop.load(inputStream);
             if (prop.getProperty("port") != null) {
-                SERVER_PORT = Byte.parseByte(prop.getProperty("port"));
+                SERVER_PORT = Integer.parseInt(prop.getProperty("port"));
                 log("Config", "Server Port: " + SERVER_PORT, Globals.LOG_TYPE_DATA, true);
             }
             if (prop.getProperty("maxplayers") != null) {
