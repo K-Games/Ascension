@@ -45,7 +45,7 @@ public class Globals {
 
 	public final static byte MAX_NAME_LENGTH = 15;
 
-	private static Random rng = new Random();
+	private final static Random RNG = new Random();
 
 	// Render 60 fps in microseconds
 	public final static long RENDER_FPS = 60;
@@ -439,6 +439,6 @@ public class Globals {
 	}
 
 	public static final int rng(final int i) {
-		return rng.nextInt(i);
+		return RNG.nextInt(i);
 	}
 }
