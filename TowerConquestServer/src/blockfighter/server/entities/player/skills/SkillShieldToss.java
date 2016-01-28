@@ -8,13 +8,13 @@ import blockfighter.server.Globals;
  */
 public class SkillShieldToss extends Skill {
 
-	/**
-	 * Constructor for Shield Skill Shield Throw.
-	 */
-	public SkillShieldToss() {
-		this.skillCode = SHIELD_TOSS;
-		this.maxCooldown = 13000;
-		this.reqWeapon = Globals.ITEM_SHIELD;
-	}
+    /**
+     * Constructor for Shield Skill Shield Throw.
+     */
+    public SkillShieldToss() {
+        this.skillCode = SHIELD_TOSS;
+        this.maxCooldown = 13000;
+        this.reqWeapon = Globals.ITEM_SHIELD;
+    }
 
 }

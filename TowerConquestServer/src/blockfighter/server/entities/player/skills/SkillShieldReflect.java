@@ -8,13 +8,13 @@ import blockfighter.server.Globals;
  */
 public class SkillShieldReflect extends Skill {
 
-	/**
-	 * Constructor for Shield Skill Reflect.
-	 */
-	public SkillShieldReflect() {
-		this.skillCode = SHIELD_REFLECT;
-		this.maxCooldown = 15000;
-		this.reqWeapon = Globals.ITEM_SHIELD;
-	}
+    /**
+     * Constructor for Shield Skill Reflect.
+     */
+    public SkillShieldReflect() {
+        this.skillCode = SHIELD_REFLECT;
+        this.maxCooldown = 15000;
+        this.reqWeapon = Globals.ITEM_SHIELD;
+    }
 
 }

@@ -1,26 +1,23 @@
 package blockfighter.server;
 
-import java.awt.Dimension;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.ScrollPaneConstants;
-
-import org.apache.commons.lang3.concurrent.BasicThreadFactory;
-
 import blockfighter.server.entities.boss.Boss;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.proj.Projectile;
 import blockfighter.server.net.PacketHandler;
 import blockfighter.server.net.PacketReceiver;
 import blockfighter.server.net.PacketSender;
+import java.awt.Dimension;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.ScrollPaneConstants;
+import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
 /**
  * Start module of server

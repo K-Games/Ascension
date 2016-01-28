@@ -8,13 +8,13 @@ import blockfighter.server.Globals;
  */
 public class SkillBowArc extends Skill {
 
-	/**
-	 * Constructor for Bow Skill Arcshot.
-	 */
-	public SkillBowArc() {
-		this.skillCode = BOW_ARC;
-		this.maxCooldown = 500;
-		this.reqWeapon = Globals.ITEM_BOW;
-	}
+    /**
+     * Constructor for Bow Skill Arcshot.
+     */
+    public SkillBowArc() {
+        this.skillCode = BOW_ARC;
+        this.maxCooldown = 500;
+        this.reqWeapon = Globals.ITEM_BOW;
+    }
 
 }

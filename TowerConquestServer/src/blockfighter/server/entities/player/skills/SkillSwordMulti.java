@@ -8,13 +8,13 @@ import blockfighter.server.Globals;
  */
 public class SkillSwordMulti extends Skill {
 
-	/**
-	 * Constructor for Sword Skill Whirlwind.
-	 */
-	public SkillSwordMulti() {
-		this.skillCode = SWORD_MULTI;
-		this.maxCooldown = 18000;
-		this.reqWeapon = Globals.ITEM_SWORD;
-	}
+    /**
+     * Constructor for Sword Skill Whirlwind.
+     */
+    public SkillSwordMulti() {
+        this.skillCode = SWORD_MULTI;
+        this.maxCooldown = 18000;
+        this.reqWeapon = Globals.ITEM_SWORD;
+    }
 
 }

@@ -8,17 +8,17 @@ import blockfighter.server.entities.player.Player;
  */
 public class BuffShieldDash extends Buff implements BuffDmgIncrease {
 
-	private final double dmgIncrease;
+    private final double dmgIncrease;
 
-	public BuffShieldDash(final long d, final double inc, final Player o) {
-		super(d);
-		setOwner(o);
-		this.dmgIncrease = inc;
-	}
+    public BuffShieldDash(final long d, final double inc, final Player o) {
+        super(d);
+        setOwner(o);
+        this.dmgIncrease = inc;
+    }
 
-	@Override
-	public double getDmgIncrease() {
-		return this.dmgIncrease;
-	}
+    @Override
+    public double getDmgIncrease() {
+        return this.dmgIncrease;
+    }
 
 }

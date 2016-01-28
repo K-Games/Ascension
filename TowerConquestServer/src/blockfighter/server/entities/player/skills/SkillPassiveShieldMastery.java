@@ -6,8 +6,8 @@ package blockfighter.server.entities.player.skills;
  */
 public class SkillPassiveShieldMastery extends Skill {
 
-	public SkillPassiveShieldMastery() {
-		this.skillCode = PASSIVE_SHIELDMASTERY;
-	}
+    public SkillPassiveShieldMastery() {
+        this.skillCode = PASSIVE_SHIELDMASTERY;
+    }
 
 }

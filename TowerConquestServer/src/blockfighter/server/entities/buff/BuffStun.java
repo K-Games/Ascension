@@ -6,14 +6,14 @@ package blockfighter.server.entities.buff;
  */
 public class BuffStun extends Buff {
 
-	/**
-	 * Construct stun debuff
-	 *
-	 * @param d duration in ms
-	 */
-	public BuffStun(final long d) {
-		super(d);
-		setDebuff(true);
-	}
+    /**
+     * Construct stun debuff
+     *
+     * @param d duration in ms
+     */
+    public BuffStun(final long d) {
+        super(d);
+        setDebuff(true);
+    }
 
 }

@@ -6,9 +6,9 @@ package blockfighter.server.entities.player.skills;
  */
 public class SkillShieldDash extends Skill {
 
-	public SkillShieldDash() {
-		this.skillCode = SHIELD_DASH;
-		this.maxCooldown = 13000;
-	}
+    public SkillShieldDash() {
+        this.skillCode = SHIELD_DASH;
+        this.maxCooldown = 13000;
+    }
 
 }

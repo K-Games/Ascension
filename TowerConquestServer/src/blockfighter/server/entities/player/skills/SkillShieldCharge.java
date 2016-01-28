@@ -8,13 +8,13 @@ import blockfighter.server.Globals;
  */
 public class SkillShieldCharge extends Skill {
 
-	/**
-	 * Constructor for Shield Skill Charge.
-	 */
-	public SkillShieldCharge() {
-		this.skillCode = SHIELD_CHARGE;
-		this.maxCooldown = 17000;
-		this.reqWeapon = Globals.ITEM_SHIELD;
-	}
+    /**
+     * Constructor for Shield Skill Charge.
+     */
+    public SkillShieldCharge() {
+        this.skillCode = SHIELD_CHARGE;
+        this.maxCooldown = 17000;
+        this.reqWeapon = Globals.ITEM_SHIELD;
+    }
 
 }

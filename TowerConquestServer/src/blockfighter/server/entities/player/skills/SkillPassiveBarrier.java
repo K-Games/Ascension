@@ -6,9 +6,9 @@ package blockfighter.server.entities.player.skills;
  */
 public class SkillPassiveBarrier extends Skill {
 
-	public SkillPassiveBarrier() {
-		this.skillCode = PASSIVE_BARRIER;
-		this.maxCooldown = 30000;
-	}
+    public SkillPassiveBarrier() {
+        this.skillCode = PASSIVE_BARRIER;
+        this.maxCooldown = 30000;
+    }
 
 }

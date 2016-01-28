@@ -6,9 +6,9 @@ package blockfighter.server.entities.player.skills;
  */
 public class SkillPassiveShadowAttack extends Skill {
 
-	public SkillPassiveShadowAttack() {
-		this.skillCode = PASSIVE_SHADOWATTACK;
-		this.maxCooldown = 200;
-	}
+    public SkillPassiveShadowAttack() {
+        this.skillCode = PASSIVE_SHADOWATTACK;
+        this.maxCooldown = 200;
+    }
 
 }
