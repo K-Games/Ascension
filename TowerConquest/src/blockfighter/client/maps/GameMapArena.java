@@ -13,9 +13,10 @@ import javax.imageio.ImageIO;
 public class GameMapArena extends GameMap {
 
     BufferedImage[] platforms = new BufferedImage[3];
+    String bgm;
 
     public GameMapArena() {
-        setMapID(0);
+        super.setMapID(0);
     }
 
     @Override
@@ -38,6 +39,11 @@ public class GameMapArena extends GameMap {
         for (int i = 0; i < this.platforms.length; i++) {
             this.platforms[i] = ImageIO.read(Globals.class.getResourceAsStream("sprites/maps/" + getMapID() + "/plat" + i + ".png"));
         }
+        this.bgm = "bgm/" + Globals.rng(3) + ".ogg";
     }
 
+    @Override
+    public String getBGM() {
+        return bgm;
+    }
 }

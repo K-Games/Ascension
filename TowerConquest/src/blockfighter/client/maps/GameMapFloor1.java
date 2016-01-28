@@ -14,7 +14,7 @@ import javax.imageio.ImageIO;
 public class GameMapFloor1 extends GameMap {
 
     public GameMapFloor1() {
-        setMapID(1);
+        super.setMapID(1);
     }
 
     @Override

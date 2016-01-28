@@ -1,5 +1,6 @@
 package blockfighter.client.screen;
 
+import blockfighter.client.FocusHandler;
 import blockfighter.client.Globals;
 import blockfighter.client.SaveData;
 import java.awt.Color;
@@ -31,6 +32,8 @@ public class ScreenSelectChar extends ScreenMenu {
     private byte selectNum = -1;
 
     public ScreenSelectChar() {
+        final FocusHandler focusHandler = new FocusHandler();
+        this.CREATE_NAMEFIELD.addFocusListener(focusHandler);
         this.CREATE_NAMEFIELD.setBounds(440, 300, 400, 50);
         this.CREATE_NAMEFIELD.setFont(Globals.ARIAL_30PT);
         this.CREATE_NAMEFIELD.setForeground(Color.WHITE);
@@ -45,7 +48,6 @@ public class ScreenSelectChar extends ScreenMenu {
 
         this.promptBox[0] = new Rectangle(401, 400, 214, 112);
         this.promptBox[1] = new Rectangle(665, 400, 214, 112);
-
     }
 
     private void loadSaveData() {

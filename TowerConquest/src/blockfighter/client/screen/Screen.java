@@ -5,6 +5,8 @@ import blockfighter.client.entities.particles.Particle;
 import blockfighter.client.render.RenderPanel;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -17,7 +19,7 @@ import java.util.concurrent.ExecutorService;
  *
  * @author Ken Kwan
  */
-public abstract class Screen implements KeyListener, MouseListener, MouseMotionListener {
+public abstract class Screen implements KeyListener, MouseListener, MouseMotionListener, FocusListener {
 
     public abstract void update();
 
@@ -73,4 +75,14 @@ public abstract class Screen implements KeyListener, MouseListener, MouseMotionL
     }
 
     public abstract void unload();
+
+    @Override
+    public void focusGained(FocusEvent e) {
+        logic.enableSound();
+    }
+
+    @Override
+    public void focusLost(FocusEvent e) {
+        logic.disableSound();
+    }
 }

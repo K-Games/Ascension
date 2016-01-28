@@ -38,7 +38,7 @@ public class LogicModule implements Runnable {
     @Override
     public void run() {
         if (this.soundModule.isLoaded() && !this.initBgm) {
-            soundModule.playBGM("theme.ogg");
+            this.soundModule.playBGM("theme.ogg");
             this.initBgm = true;
         }
         try {
@@ -81,6 +81,7 @@ public class LogicModule implements Runnable {
                 }
             }
             setScreen(new ScreenIngame(key, size, loading.getLoadedMap()));
+            playBGM(loading.getLoadedMap().getBGM());
             sendGetAll(key);
         } catch (final Exception e) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, e);
@@ -222,7 +223,7 @@ public class LogicModule implements Runnable {
             this.receiver = null;
         }
         setScreen(new ScreenServerList());
-        // soundModule.playBGM("theme.ogg");
+        this.soundModule.playBGM("theme.ogg");
     }
 
     public void playSound(final String soundFile) {
@@ -233,4 +234,11 @@ public class LogicModule implements Runnable {
         this.soundModule.playBGM(bgmFile);
     }
 
+    public void disableSound() {
+        this.soundModule.mute();
+    }
+
+    public void enableSound() {
+        this.soundModule.unmute();
+    }
 }

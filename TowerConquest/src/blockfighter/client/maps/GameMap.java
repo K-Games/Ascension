@@ -29,6 +29,10 @@ public abstract class GameMap {
         threadPool = tp;
     }
 
+    public String getBGM() {
+        return null;
+    }
+
     public void setMapID(final int i) {
         this.mapID = i;
     }

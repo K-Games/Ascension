@@ -35,12 +35,7 @@ public class Main {
         if (args.length >= 1) {
             Globals.SERVER_ADDRESS = args[0];
         }
-        System.setProperty("java.library.path", "native");
 
-        // set sys_paths to null so that java.library.path will be reevalueted next time it is needed
-        final Field sysPathsField = ClassLoader.class.getDeclaredField("sys_paths");
-        sysPathsField.setAccessible(true);
-        sysPathsField.set(null, null);
         javax.swing.SwingUtilities.invokeLater(() -> {
             createAndShowGUI();
         });
@@ -70,6 +65,7 @@ public class Main {
         Particle.setLogic(logic);
         Screen.setLogic(logic);
         RenderModule.setLogic(logic);
+        FocusHandler.setLogic(logic);
         KeyHandler.setLogic(logic);
         MouseHandler.setLogic(logic);
         Player.setLogic(logic);
@@ -82,6 +78,7 @@ public class Main {
 
         final KeyHandler keyHandler = new KeyHandler();
         final MouseHandler mouseHandler = new MouseHandler();
+        final FocusHandler focusHandler = new FocusHandler();
         // frame.setUndecorated(true);
         frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -96,6 +93,7 @@ public class Main {
         panel.addKeyListener(keyHandler);
         panel.addMouseMotionListener(mouseHandler);
         panel.addMouseListener(mouseHandler);
+        panel.addFocusListener(focusHandler);
         panel.requestFocus();
 
         Runtime.getRuntime().addShutdownHook(new Thread() {

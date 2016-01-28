@@ -1,5 +1,6 @@
 package blockfighter.client.screen;
 
+import blockfighter.client.FocusHandler;
 import blockfighter.client.Globals;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -33,6 +34,10 @@ public class ScreenServerList extends ScreenMenu {
     private boolean connecting = false;
 
     public ScreenServerList() {
+        final FocusHandler focusHandler = new FocusHandler();
+        this.SERVERADDRESS_FIELD.addFocusListener(focusHandler);
+        this.SERVER_ROOMS.addFocusListener(focusHandler);
+        
         this.SERVERADDRESS_FIELD.setBounds(550, 150, 400, 40);
         this.SERVERADDRESS_FIELD.setFont(Globals.ARIAL_24PT);
         this.SERVERADDRESS_FIELD.setForeground(Color.WHITE);
