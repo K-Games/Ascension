@@ -29,134 +29,119 @@ import blockfighter.server.net.PacketSender;
  */
 public class Main {
 
-	private static ScheduledExecutorService senderSch;
-	private static ScheduledExecutorService logicSchThreadPool;
+    private static ScheduledExecutorService senderSch;
+    private static ScheduledExecutorService logicSchThreadPool;
 
-	private static JTextArea dataLog = new JTextArea(),
-			errLog = new JTextArea();
+    private static JTextArea dataLog = new JTextArea(),
+            errLog = new JTextArea();
 
-	public static void init() {
-		LogicModule.init();
-		PacketSender.init();
-		senderSch = Executors.newSingleThreadScheduledExecutor(new BasicThreadFactory.Builder()
-				.namingPattern("PacketSenderScheduler-%d")
-				.daemon(true)
-				.priority(Thread.NORM_PRIORITY)
-				.build());
-		logicSchThreadPool = Executors.newScheduledThreadPool(Math.max(Globals.SERVER_ROOMS / 30, 1),
-				new BasicThreadFactory.Builder()
-						.namingPattern("LogicModuleScheduler-%d")
-						.daemon(false)
-						.priority(Thread.NORM_PRIORITY)
-						.build());
-	}
+    public static void init() {
+        LogicModule.init();
+        PacketSender.init();
+        senderSch = Executors.newSingleThreadScheduledExecutor(new BasicThreadFactory.Builder()
+                .namingPattern("PacketSenderScheduler-%d")
+                .daemon(true)
+                .priority(Thread.NORM_PRIORITY)
+                .build());
+        logicSchThreadPool = Executors.newScheduledThreadPool(Math.max(Globals.SERVER_ROOMS / 30, 1),
+                new BasicThreadFactory.Builder()
+                .namingPattern("LogicModuleScheduler-%d")
+                .daemon(false)
+                .priority(Thread.NORM_PRIORITY)
+                .build());
+    }
 
-	/**
-	 * @param args the command line arguments
-	 */
-	public static void main(final String[] args) {
-		System.out.println("________________         _______ _______    _______ _______ _       _______         _______  ________________");
-		System.out.println(
-				"\\__   __(  ___  )\\     /(  ____ (  ____ )  (  ____ (  ___  | (    /(  ___  )\\     /(  ____ \\(  ____ \\__   __/");
-		System.out.println(
-				"   ) (  | (   ) | )   ( | (    \\/ (    )|  | (    \\/ (   ) |  \\  ( | (   ) | )   ( | (    \\/| (    \\/  ) (   ");
-		System.out
-				.println("   | |  | |   | | | _ | | (__   | (____)|  | |     | |   | |   \\ | | |   | | |   | | (__    | (_____   | |   ");
-		System.out
-				.println("   | |  | |   | | |( )| |  __)  |     __)  | |     | |   | | (\\ \\) | |   | | |   | |  __)   (_____  )  | |   ");
-		System.out.println(
-				"   | |  | |   | | || || | (     | (\\ (     | |     | |   | | | \\   | | /\\| | |   | | (            ) |  | |   ");
-		System.out.println(
-				"   | |  | (___) | () () | (____/\\ ) \\ \\__  | (____/\\ (___) | )  \\  | (_\\ \\ | (___) | (____/\\/\\____) |  | |   ");
-		System.out.println(
-				"   )_(  (_______|_______|_______//   \\__/  (_______(_______)/    )_|____\\/_|_______|_______/\\_______)  )_(   ");
-		System.out.println("Tower Conquest Server " + Globals.GAME_RELEASE_VERSION);
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(final String[] args) {
+        System.out.println("Tower Conquest Server " + Globals.GAME_RELEASE_VERSION);
 
-		boolean isGUI = true, isDefault = false;
+        boolean isGUI = true, isDefault = false;
 
-		if (args.length > 0) {
-			final HashSet<String> arguments = new HashSet<>();
-			arguments.addAll(Arrays.asList(args));
-			isGUI = !arguments.contains("--nogui");
-			isDefault = arguments.contains("--default");
-		}
-		Globals.initLogger();
-		Globals.setGUILog(dataLog, errLog);
-		if (!isDefault) {
-			Globals.setServerProp();
-		}
-		init();
+        if (args.length > 0) {
+            final HashSet<String> arguments = new HashSet<>();
+            arguments.addAll(Arrays.asList(args));
+            isGUI = !arguments.contains("--nogui");
+            isDefault = arguments.contains("--default");
+        }
+        Globals.initLogger();
+        Globals.setGUILog(dataLog, errLog);
+        if (!isDefault) {
+            Globals.setServerProp();
+        }
+        init();
 
-		if (isGUI) {
-			javax.swing.SwingUtilities.invokeLater(() -> {
-				createAndShowGUI();
-			});
-		}
-		try {
-			final LogicModule[] server_rooms = new LogicModule[Globals.SERVER_ROOMS];
-			PacketSender.setLogic(server_rooms);
-			PacketHandler.setLogic(server_rooms);
+        if (isGUI) {
+            javax.swing.SwingUtilities.invokeLater(() -> {
+                createAndShowGUI();
+            });
+        }
+        try {
+            final LogicModule[] server_rooms = new LogicModule[Globals.SERVER_ROOMS];
+            PacketSender.setLogic(server_rooms);
+            PacketHandler.setLogic(server_rooms);
 
-			final PacketSender packetSender = new PacketSender();
-			final PacketReceiver packetReceiver = new PacketReceiver();
+            final PacketSender packetSender = new PacketSender();
+            final PacketReceiver packetReceiver = new PacketReceiver();
 
-			LogicModule.setPacketSender(packetSender);
-			PacketHandler.setPacketSender(packetSender);
+            LogicModule.setPacketSender(packetSender);
+            PacketHandler.setPacketSender(packetSender);
 
-			Player.setPacketSender(packetSender);
-			Boss.setPacketSender(packetSender);
-			Projectile.setPacketSender(packetSender);
+            Player.setPacketSender(packetSender);
+            Boss.setPacketSender(packetSender);
+            Projectile.setPacketSender(packetSender);
 
-			Globals.log("Server started", String.format("%1$td/%1$tm/%1$tY %1$tT", System.currentTimeMillis()), Globals.LOG_TYPE_ERR,
-					false);
-			Globals.log("Server started", String.format("%1$td/%1$tm/%1$tY %1$tT", System.currentTimeMillis()), Globals.LOG_TYPE_DATA,
-					true);
+            Globals.log("Server started", String.format("%1$td/%1$tm/%1$tY %1$tT", System.currentTimeMillis()), Globals.LOG_TYPE_ERR,
+                    false);
+            Globals.log("Server started", String.format("%1$td/%1$tm/%1$tY %1$tT", System.currentTimeMillis()), Globals.LOG_TYPE_DATA,
+                    true);
 
-			senderSch.scheduleAtFixedRate(packetSender, 0, 500, TimeUnit.MICROSECONDS);
-			for (byte i = 0; i < server_rooms.length; i++) {
-				server_rooms[i] = new LogicModule(i);
-				logicSchThreadPool.scheduleAtFixedRate(server_rooms[i], 0, 1, TimeUnit.MILLISECONDS);
-			}
-			Globals.log("Initialization", "Initialized " + server_rooms.length + " rooms", Globals.LOG_TYPE_ERR, false);
-			Globals.log("Initialization", "Initialized " + server_rooms.length + " rooms", Globals.LOG_TYPE_DATA, true);
+            senderSch.scheduleAtFixedRate(packetSender, 0, 500, TimeUnit.MICROSECONDS);
+            for (byte i = 0; i < server_rooms.length; i++) {
+                server_rooms[i] = new LogicModule(i);
+                logicSchThreadPool.scheduleAtFixedRate(server_rooms[i], 0, 1, TimeUnit.MILLISECONDS);
+            }
+            Globals.log("Initialization", "Initialized " + server_rooms.length + " rooms", Globals.LOG_TYPE_ERR, false);
+            Globals.log("Initialization", "Initialized " + server_rooms.length + " rooms", Globals.LOG_TYPE_DATA, true);
 
-			packetReceiver.setDaemon(true);
-			packetReceiver.setName("PacketReceiver");
-			packetReceiver.start();
+            packetReceiver.setDaemon(true);
+            packetReceiver.setName("PacketReceiver");
+            packetReceiver.start();
 
-		} catch (final Exception ex) {
-			Globals.log(ex.getLocalizedMessage(), ex, true);
-		}
-	}
+        } catch (final Exception ex) {
+            Globals.log(ex.getLocalizedMessage(), ex, true);
+        }
+    }
 
-	private static void createAndShowGUI() {
-		final JFrame frame = new JFrame(Globals.WINDOW_TITLE);
+    private static void createAndShowGUI() {
+        final JFrame frame = new JFrame(Globals.WINDOW_TITLE);
 
-		// frame.setUndecorated(true);
-		frame.setResizable(false);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setPreferredSize(new Dimension(500, 600));
-		final JPanel panel = new JPanel();
+        // frame.setUndecorated(true);
+        frame.setResizable(false);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.getContentPane().setPreferredSize(new Dimension(500, 600));
+        final JPanel panel = new JPanel();
 
-		panel.setLayout(null);
-		final JScrollPane dataLogPane = new JScrollPane(dataLog);
-		dataLogPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		dataLogPane.setBounds(0, 0, 500, 300);
-		dataLog.setEditable(false);
-		dataLog.setText("Data Log");
+        panel.setLayout(null);
+        final JScrollPane dataLogPane = new JScrollPane(dataLog);
+        dataLogPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        dataLogPane.setBounds(0, 0, 500, 300);
+        dataLog.setEditable(false);
+        dataLog.setText("Data Log");
 
-		final JScrollPane errLogPane = new JScrollPane(errLog);
-		errLogPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		errLogPane.setBounds(0, 300, 500, 300);
-		errLog.setEditable(false);
-		errLog.setText("Error Log");
+        final JScrollPane errLogPane = new JScrollPane(errLog);
+        errLogPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        errLogPane.setBounds(0, 300, 500, 300);
+        errLog.setEditable(false);
+        errLog.setText("Error Log");
 
-		panel.add(dataLogPane);
-		panel.add(errLogPane);
+        panel.add(dataLogPane);
+        panel.add(errLogPane);
 
-		frame.getContentPane().add(panel);
-		frame.pack();
-		frame.setLocationRelativeTo(null);
-		frame.setVisible(true);
-	}
+        frame.getContentPane().add(panel);
+        frame.pack();
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+    }
 }
