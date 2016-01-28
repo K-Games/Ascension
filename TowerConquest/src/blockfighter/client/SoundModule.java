@@ -15,7 +15,7 @@ public class SoundModule implements Runnable {
     @Override
     public void run() {
         this.soundModule = new SoundSystemJPCT();
-        this.soundModule.setMasterVolume(0.2f);
+        this.soundModule.setMasterVolume(0.15f);
         SoundSystemConfig.setSoundFilesPackage("blockfighter/client/sounds/");
     }
 
