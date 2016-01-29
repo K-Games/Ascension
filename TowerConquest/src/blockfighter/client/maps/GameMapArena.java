@@ -22,13 +22,24 @@ public class GameMapArena extends GameMap {
     @Override
     public void draw(final Graphics2D g) {
         g.drawImage(this.platforms[2], 0, 600, 3700, 30, null);
-        g.drawImage(this.platforms[0], 200, 350, null);
-        g.drawImage(this.platforms[0], 700, 100, null);
-        g.drawImage(this.platforms[1], 1200, 350, null);
-        g.drawImage(this.platforms[1], 1700, 100, null);
-        g.drawImage(this.platforms[0], 2200, 350, null);
-        g.drawImage(this.platforms[1], 2700, 100, null);
-        g.drawImage(this.platforms[0], 3200, 350, null);
+
+        g.drawImage(this.platforms[0], 700, 350, null);
+        g.drawImage(this.platforms[1], 1700, 350, null);
+        g.drawImage(this.platforms[1], 2700, 350, null);
+
+        g.drawImage(this.platforms[0], 200, 100, null);
+        g.drawImage(this.platforms[0], 1200, 100, null);
+        g.drawImage(this.platforms[1], 2200, 100, null);
+        g.drawImage(this.platforms[0], 3200, 100, null);
+
+        g.drawImage(this.platforms[0], 700, -150, null);
+        g.drawImage(this.platforms[0], 1700, -150, null);
+        g.drawImage(this.platforms[1], 2700, -150, null);
+
+        g.drawImage(this.platforms[1], 200, -400, null);
+        g.drawImage(this.platforms[0], 1200, -400, null);
+        g.drawImage(this.platforms[0], 2200, -400, null);
+        g.drawImage(this.platforms[1], 3200, -400, null);
         super.draw(g);
 
     }

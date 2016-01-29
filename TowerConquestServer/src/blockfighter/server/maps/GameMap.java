@@ -3,6 +3,7 @@ package blockfighter.server.maps;
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.boss.Boss;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
 /**
@@ -13,6 +14,7 @@ import java.awt.geom.Rectangle2D;
 public abstract class GameMap {
 
     Rectangle2D.Double[] platforms;
+    Point2D.Double[] spawnPoints;
     double[] boundary = new double[2];
     byte mapID = -1;
     boolean isPvP = false;
@@ -97,4 +99,11 @@ public abstract class GameMap {
     }
 
     public abstract Boss[] getBosses(LogicModule l);
+
+    public Point2D.Double getRandomSpawnPoint() {
+        if (this.spawnPoints == null) {
+            return new Point2D.Double(this.boundary[Globals.MAP_LEFT] + 50, 0);
+        }
+        return this.spawnPoints[Globals.rng(this.spawnPoints.length)];
+    }
 }

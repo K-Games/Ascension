@@ -37,7 +37,7 @@ public class ScreenServerList extends ScreenMenu {
         final FocusHandler focusHandler = new FocusHandler();
         this.SERVERADDRESS_FIELD.addFocusListener(focusHandler);
         this.SERVER_ROOMS.addFocusListener(focusHandler);
-        
+
         this.SERVERADDRESS_FIELD.setBounds(550, 150, 400, 40);
         this.SERVERADDRESS_FIELD.setFont(Globals.ARIAL_24PT);
         this.SERVERADDRESS_FIELD.setForeground(Color.WHITE);

@@ -43,8 +43,7 @@ public class FilenameURL {
     private URL url = null;
 
     /**
-     * Constructor: Saves handles to the url and identifier. The identifier should look like a filename, and it must have the correct extension so SoundSystem knows what format to use for the file
-     * referenced by the URL instance.
+     * Constructor: Saves handles to the url and identifier. The identifier should look like a filename, and it must have the correct extension so SoundSystem knows what format to use for the file referenced by the URL instance.
      *
      * @param url URL interface to a file.
      * @param identifier Identifier (filename) for the file.
@@ -58,8 +57,7 @@ public class FilenameURL {
     }
 
     /**
-     * Constructor: Saves a handle to the filename (used later to generate a URL instance). The file may either be located within the JAR or at an online location. If the file is online, filename must
-     * begin with "http://", since that is how SoundSystem recognizes URL names.
+     * Constructor: Saves a handle to the filename (used later to generate a URL instance). The file may either be located within the JAR or at an online location. If the file is online, filename must begin with "http://", since that is how SoundSystem recognizes URL names.
      *
      * @param filename Name of the file.
      */
@@ -81,8 +79,7 @@ public class FilenameURL {
     }
 
     /**
-     * Returns the URL interface to the file. If a URL was not originally specified in the constructor, then the first time this method is called it creates a URL instance using the previously
-     * specified filename.
+     * Returns the URL interface to the file. If a URL was not originally specified in the constructor, then the first time this method is called it creates a URL instance using the previously specified filename.
      *
      * @return URL interface to the file.
      */

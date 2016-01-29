@@ -27,7 +27,7 @@ public class ProjShieldCharge extends Projectile {
      * @param y Spawn y-coordinate
      */
     public ProjShieldCharge(final LogicModule l, final int k, final Player o, final double x, final double y) {
-        super(l, k,o,x,y,750);
+        super(l, k, o, x, y, 750);
         this.hitbox = new Rectangle2D.Double[1];
         if (o.getFacing() == Globals.RIGHT) {
             this.hitbox[0] = new Rectangle2D.Double(x - 200, y - 176, 428, 176);

@@ -28,7 +28,7 @@ public class ProjSwordDrive extends Projectile {
      * @param y Spawn y-coordinate
      */
     public ProjSwordDrive(final LogicModule l, final int k, final Player o, final double x, final double y) {
-        super(l, k,o,x,y,50);
+        super(l, k, o, x, y, 50);
         this.hitbox = new Rectangle2D.Double[1];
         if (o.getFacing() == Globals.RIGHT) {
             this.hitbox[0] = new Rectangle2D.Double(x - 310, y - 140, 560, 150);

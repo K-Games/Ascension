@@ -25,8 +25,7 @@ import paulscode.sound.SoundSystemLogger;
  * </b><br><br>
  * <b><i> J-Ogg License:</b></i>
  * <br><i>
- * You are free to use, modify, resdistribute or include this software in your own free or commercial software. The only restriction is, that you make it obvious that your software is based on J-Ogg
- * by including this notice in the documentation, about box or whereever you feel apropriate:
+ * You are free to use, modify, resdistribute or include this software in your own free or commercial software. The only restriction is, that you make it obvious that your software is based on J-Ogg by including this notice in the documentation, about box or whereever you feel apropriate:
  * <br>
  * "This software is based on or using the J-Ogg library available from http://www.j-ogg.de and copyrighted by Tor-Einar Jarnbjo."
  * <br><br><br></i>
@@ -133,9 +132,7 @@ public class CodecJOgg implements ICodec {
     }
 
     /**
-     * Tells this codec when it will need to reverse the byte order of the data before returning it in the read() and readAll() methods. The J-Ogg library produces audio data in a format that some
-     * external audio libraries require to be reversed. Derivatives of the Library and Source classes for audio libraries which require this type of data to be reversed will call the
-     * reverseByteOrder() method.
+     * Tells this codec when it will need to reverse the byte order of the data before returning it in the read() and readAll() methods. The J-Ogg library produces audio data in a format that some external audio libraries require to be reversed. Derivatives of the Library and Source classes for audio libraries which require this type of data to be reversed will call the reverseByteOrder() method.
      *
      * @param b True if the calling audio library requires byte-reversal.
      */
@@ -291,8 +288,7 @@ public class CodecJOgg implements ICodec {
     }
 
     /**
-     * Reads in all the audio data from the stream (up to the default "maximum file size". See {@link paulscode.sound.SoundSystemConfig SoundSystemConfig} for more information about accessing and
-     * changing default settings.
+     * Reads in all the audio data from the stream (up to the default "maximum file size". See {@link paulscode.sound.SoundSystemConfig SoundSystemConfig} for more information about accessing and changing default settings.
      *
      * @return the audio data wrapped into a SoundBuffer context.
      */

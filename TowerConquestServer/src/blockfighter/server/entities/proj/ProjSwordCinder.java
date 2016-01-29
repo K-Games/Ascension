@@ -27,7 +27,7 @@ public class ProjSwordCinder extends Projectile {
      * @param y Spawn y-coordinate
      */
     public ProjSwordCinder(final LogicModule l, final int k, final Player o, final double x, final double y) {
-        super(l, k,o,x,y,300);
+        super(l, k, o, x, y, 300);
         this.hitbox = new Rectangle2D.Double[1];
         if (o.getFacing() == Globals.RIGHT) {
             this.hitbox[0] = new Rectangle2D.Double(x - 30, y - 200, 190, 250);

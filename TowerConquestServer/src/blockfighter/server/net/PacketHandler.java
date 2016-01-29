@@ -238,8 +238,7 @@ public class PacketHandler implements Runnable {
             return;
         }
 
-        final Player newPlayer = new Player(logic[room], freeKey, address, port, logic[room].getMap(),
-                logic[room].getMap().getBoundary()[Globals.MAP_LEFT] + 50, 0);
+        final Player newPlayer = new Player(logic[room], freeKey, address, port, logic[room].getMap());
 
         temp = new byte[Globals.MAX_NAME_LENGTH];
         System.arraycopy(data, 2, temp, 0, temp.length);

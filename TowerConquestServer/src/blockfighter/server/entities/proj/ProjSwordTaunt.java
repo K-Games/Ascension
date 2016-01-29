@@ -26,7 +26,7 @@ public class ProjSwordTaunt extends Projectile {
      * @param y Spawn y-coordinate
      */
     public ProjSwordTaunt(final LogicModule l, final int k, final Player o, final double x, final double y) {
-        super(l, k,o,x,y,200);
+        super(l, k, o, x, y, 200);
         this.hitbox = new Rectangle2D.Double[1];
         if (super.getOwner().getFacing() == Globals.RIGHT) {
             this.hitbox[0] = new Rectangle2D.Double(x - 20, y - 155, 250, 160);

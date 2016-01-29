@@ -65,6 +65,7 @@ import blockfighter.server.entities.proj.ProjSwordTaunt;
 import blockfighter.server.entities.proj.ProjSwordVorpal;
 import blockfighter.server.maps.GameMap;
 import blockfighter.server.net.PacketSender;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.net.InetAddress;
 import java.nio.charset.StandardCharsets;
@@ -151,19 +152,17 @@ public class Player extends Thread implements GameEntity {
      * @param key The key of this player in the player array in logic module
      * @param address IP address of player
      * @param port Connected port
-     * @param x Spawning x location in double
-     * @param y Spawning y location in double
      * @param map Reference to server's loaded map
      * @param l Reference to Logic module
      */
-    public Player(final LogicModule l, final byte key, final InetAddress address, final int port, final GameMap map, final double x,
-            final double y) {
+    public Player(final LogicModule l, final byte key, final InetAddress address, final int port, final GameMap map) {
         this.logic = l;
         this.key = key;
         this.address = address;
         this.port = port;
-        this.x = x;
-        this.y = y;
+        Point2D.Double spawn = map.getRandomSpawnPoint();
+        this.x = spawn.x;
+        this.y = spawn.y;
         this.hitbox = new Rectangle2D.Double(x - 20, y - 100, 40, 100);
         this.map = map;
         this.facing = Globals.RIGHT;
@@ -1312,9 +1311,8 @@ public class Player extends Thread implements GameEntity {
         this.buffs.clear();
         this.stats[Globals.STAT_MINHP] = this.stats[Globals.STAT_MAXHP];
         setXSpeed(0);
-        final double xSpawnBound = this.logic.getMap().getBoundary()[Globals.MAP_RIGHT]
-                - this.logic.getMap().getBoundary()[Globals.MAP_LEFT];
-        setPos(Globals.rng((int) xSpawnBound) + this.logic.getMap().getBoundary()[Globals.MAP_LEFT], -100);
+        Point2D.Double spawn = map.getRandomSpawnPoint();
+        setPos(spawn.x, spawn.y);
         setInvulnerable(false);
         setRemovingDebuff(false);
         setDead(false);

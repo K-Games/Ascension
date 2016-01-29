@@ -26,7 +26,7 @@ public class ProjSwordVorpal extends Projectile {
      * @param y Spawn y-coordinate
      */
     public ProjSwordVorpal(final LogicModule l, final int k, final Player o, final double x, final double y) {
-        super(l, k,o,x,y,200);
+        super(l, k, o, x, y, 200);
         this.hitbox = new Rectangle2D.Double[1];
         if (super.getOwner().getFacing() == Globals.RIGHT) {
             this.hitbox[0] = new Rectangle2D.Double(x - 60, y - 130, 350, 113);
