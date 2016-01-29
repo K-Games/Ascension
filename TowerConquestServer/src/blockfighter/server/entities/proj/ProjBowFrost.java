@@ -31,20 +31,16 @@ public class ProjBowFrost extends Projectile {
      * @param isSec Is a secondary(non-freezing) shot.
      */
     public ProjBowFrost(final LogicModule l, final int k, final Player o, final double x, final double y, final boolean isSec) {
-        super(l, k);
-        setOwner(o);
-        this.x = x;
-        this.y = y;
+        super(l, k,o,x,y,500);
         this.isSecondary = isSec;
         this.hitbox = new Rectangle2D.Double[1];
-        if (getOwner().getFacing() == Globals.RIGHT) {
+        if (o.getFacing() == Globals.RIGHT) {
             this.hitbox[0] = new Rectangle2D.Double(x + 80, y - 160, 300, 148);
             this.speedX = 20;
         } else {
             this.hitbox[0] = new Rectangle2D.Double(x - 300 - 80, y - 160, 300, 148);
             this.speedX = -20;
         }
-        this.duration = 500;
     }
 
     @Override

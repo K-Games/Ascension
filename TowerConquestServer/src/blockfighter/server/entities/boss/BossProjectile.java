@@ -20,6 +20,11 @@ public abstract class BossProjectile extends Projectile {
         super(l, k, o, x, y, duration);
     }
 
+     public BossProjectile(final LogicModule l, final int k, final Boss o) {
+        super(l, k, o, 0, 0, 0);
+    }
+
+    
     @Override
     public void update() {
         this.duration -= Globals.LOGIC_UPDATE / 1000000;

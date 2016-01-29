@@ -7,9 +7,8 @@ public class BuffPassiveBarrier extends Buff {
     private double barrierAmount;
 
     public BuffPassiveBarrier(final double amt, final Player o) {
-        super(0);
+        super(0, o);
         this.barrierAmount = amt;
-        setOwner(o);
     }
 
     @Override

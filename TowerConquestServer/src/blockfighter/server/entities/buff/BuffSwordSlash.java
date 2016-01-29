@@ -7,10 +7,9 @@ public class BuffSwordSlash extends Buff implements BuffDmgReduct {
     private final double dmgReduct, dmgTakenMult;
 
     public BuffSwordSlash(final long d, final double reduct, final Player o) {
-        super(d);
+        super(d, o);
         this.dmgReduct = reduct;
         this.dmgTakenMult = 1D - this.dmgReduct;
-        setOwner(o);
     }
 
     @Override

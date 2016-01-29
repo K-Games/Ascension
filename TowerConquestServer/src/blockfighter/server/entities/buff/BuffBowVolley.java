@@ -11,8 +11,7 @@ public class BuffBowVolley extends Buff implements BuffDmgIncrease {
     private final double dmgIncrease;
 
     public BuffBowVolley(final long d, final double inc, final Player o) {
-        super(d);
-        setOwner(o);
+        super(d, o);
         this.dmgIncrease = inc;
     }
 

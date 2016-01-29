@@ -11,8 +11,7 @@ public class BuffShieldDash extends Buff implements BuffDmgIncrease {
     private final double dmgIncrease;
 
     public BuffShieldDash(final long d, final double inc, final Player o) {
-        super(d);
-        setOwner(o);
+        super(d, o);
         this.dmgIncrease = inc;
     }
 

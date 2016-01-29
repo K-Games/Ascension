@@ -41,10 +41,10 @@ public class BossLightning extends Boss {
         this.stats[STAT_MINHP] = this.stats[STAT_MAXHP];
         this.hitbox.width = 330;
         this.hitbox.height = 270;
-        addSkill(SKILL_BOLT, new SkillBolt());
-        addSkill(SKILL_BALL, new SkillBall());
-        addSkill(SKILL_ATT1, new SkillAttack1());
-        addSkill(SKILL_ATT2, new SkillAttack2());
+        super.addSkill(SKILL_BOLT, new SkillBolt());
+        super.addSkill(SKILL_BALL, new SkillBall());
+        super.addSkill(SKILL_ATT1, new SkillAttack1());
+        super.addSkill(SKILL_ATT2, new SkillAttack2());
         this.logic.queueAddProj(new ProjTouch(this.logic, this.logic.getNextProjKey(), this));
     }
 
@@ -80,12 +80,14 @@ public class BossLightning extends Boss {
             setXSpeed(0);
             queueBossState(STATE_STAND);
         } else // Update AI
-         if (this.aggroCounter.isEmpty()) {
+        {
+            if (this.aggroCounter.isEmpty()) {
                 // No aggro, just sit there.
                 queueBossState(STATE_STAND);
             } else {
                 updateAI();
             }
+        }
 
         updateBossState();
         updateHP();

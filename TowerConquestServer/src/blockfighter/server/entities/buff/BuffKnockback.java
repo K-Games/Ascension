@@ -22,21 +22,17 @@ public class BuffKnockback extends Buff {
      * @param t player being knocked
      */
     public BuffKnockback(final long d, final double x, final double y, final Player o, final Player t) {
-        super(d);
+        super(d, o, t);
         this.xSpeed = x;
         this.ySpeed = y;
-        setOwner(o);
-        setTarget(t);
-        setDebuff(true);
+        super.setDebuff(true);
     }
 
     public BuffKnockback(final long d, final double x, final double y, final Boss o, final Player t) {
-        super(d);
+        super(d, o, t);
         this.xSpeed = x;
         this.ySpeed = y;
-        setOwner(o);
-        setTarget(t);
-        setDebuff(true);
+        super.setDebuff(true);
     }
 
     @Override

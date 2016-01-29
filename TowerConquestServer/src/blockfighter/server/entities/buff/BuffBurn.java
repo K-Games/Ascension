@@ -16,17 +16,13 @@ public class BuffBurn extends Buff implements BuffDmgTakenAmp {
     private long nextDmgTime = 500;
 
     public BuffBurn(final long d, final double amp, final double dmg, final Player o, final Player t) {
-        super(d);
-        setOwner(o);
-        setTarget(t);
+        super(d, o, t);
         this.dmgAmp = amp;
         this.dmgPerSec = dmg * 3.75;
     }
 
     public BuffBurn(final long d, final double amp, final double dmg, final Player o, final Boss t) {
-        super(d);
-        setOwner(o);
-        setTarget(t);
+        super(d, o, t);
         this.dmgAmp = amp;
         this.dmgPerSec = dmg * 3.75;
     }

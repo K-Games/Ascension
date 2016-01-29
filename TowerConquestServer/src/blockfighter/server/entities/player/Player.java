@@ -713,15 +713,21 @@ public class Player extends Thread implements GameEntity {
             final ProjSwordSlash proj = new ProjSwordSlash(this.logic, this.logic.getNextProjKey(), this, this.x, this.y,
                     this.skillCounter);
             this.logic.queueAddProj(proj);
-            if (this.skillCounter == 1) {
-                sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_SLASH1, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
-                        this.facing);
-            } else if (this.skillCounter == 2) {
-                sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_SLASH2, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
-                        this.facing);
-            } else if (this.skillCounter == 3) {
-                sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_SLASH3, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
-                        this.facing);
+            switch (this.skillCounter) {
+                case 1:
+                    sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_SLASH1, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
+                            this.facing);
+                    break;
+                case 2:
+                    sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_SLASH2, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
+                            this.facing);
+                    break;
+                case 3:
+                    sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_SLASH3, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
+                            this.facing);
+                    break;
+                default:
+                    break;
             }
         }
 
@@ -1284,11 +1290,9 @@ public class Player extends Thread implements GameEntity {
 
     private void die() {
         if (this.logic.getMap().isPvP()) {
-            for (final Map.Entry<Byte, Player> player : this.logic.getPlayers().entrySet()) {
-                if (player.getValue() != this) {
-                    player.getValue().giveEXP(Globals.calcEXPtoNxtLvl(this.stats[Globals.STAT_LEVEL]) / 7);
-                }
-            }
+            this.logic.getPlayers().entrySet().stream().filter((player) -> (player.getValue() != this)).forEach((player) -> {
+                player.getValue().giveEXP(Globals.calcEXPtoNxtLvl(this.stats[Globals.STAT_LEVEL]) / 7);
+            });
         }
         sendParticle(this.logic.getRoom(), Globals.PARTICLE_BLOOD, this.key);
         setInvulnerable(false);
@@ -1391,7 +1395,6 @@ public class Player extends Thread implements GameEntity {
         if (hasSkill(Skill.PASSIVE_BOWMASTERY)
                 && getItemType(this.equip[Globals.ITEM_WEAPON]) == Globals.ITEM_BOW
                 && getItemType(this.equip[Globals.ITEM_OFFHAND]) == Globals.ITEM_QUIVER) {
-            // Check if has Dual Sword passive AND Mainhand/Offhand are both Swords.
             totalCritDmg += 0.3 + 0.04 * getSkillLevel(Skill.PASSIVE_BOWMASTERY);
         }
         // Keen Eye Passive
@@ -1930,7 +1933,7 @@ public class Player extends Thread implements GameEntity {
             case PLAYER_STATE_SHIELD_TOSS:
                 this.nextFrameTime -= Globals.LOGIC_UPDATE;
                 this.animState = Globals.PLAYER_STATE_ATTACK;
-                if (this.nextFrameTime <= 0 && this.frame < 11) {
+                if (this.nextFrameTime <= 0 && this.frame < 10) {
                     this.frame++;
                     this.nextFrameTime = 40000000;
                 }
@@ -1968,9 +1971,7 @@ public class Player extends Thread implements GameEntity {
     /**
      * Send the player's current position to every connected player
      * <p>
-     * X and y are casted and sent as integer. <br/>
-     * Uses Server PacketSender to send to all<br/>
-     * Byte sent: 0 - Data type 1 - Key 2,3,4,5 - x 6,7,8,9 - y
+     * X and y are casted and sent as integer. Uses Server PacketSender to send to all Byte sent: 0 - Data type 1 - Key 2,3,4,5 - x 6,7,8,9 - y
      * </p>
      */
     public void sendPos() {
@@ -1994,9 +1995,7 @@ public class Player extends Thread implements GameEntity {
     /**
      * Send the player's current facing direction to every connected player
      * <p>
-     * Facing uses direction constants in Globals.<br/>
-     * Uses Server PacketSender to send to all <br/>
-     * Byte sent: 0 - Data type 1 - Key 2 - Facing direction
+     * Facing uses direction constants in Globals. Uses Server PacketSender to send to all Byte sent: 0 - Data type 1 - Key 2 - Facing direction
      * </p>
      */
     public void sendFacing() {
@@ -2011,9 +2010,7 @@ public class Player extends Thread implements GameEntity {
     /**
      * Send the player's current state(for animation) and current frame of animation to every connected player
      * <p>
-     * State constants are in Globals.<br/>
-     * Uses Server PacketSender to send to all<br/>
-     * Byte sent: 0 - Data type 1 - Key 2 - Player state 3 - Current frame
+     * State constants are in Globals. Uses Server PacketSender to send to all Byte sent: 0 - Data type 1 - Key 2 - Player state 3 - Current frame
      * </p>
      */
     public void sendState() {

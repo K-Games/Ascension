@@ -33,6 +33,29 @@ public abstract class Buff implements GameEntity {
         this.duration = d;
     }
 
+    public Buff(final long d, Player o) {
+        this.duration = d;
+        this.playerOwner = o;
+    }
+
+    public Buff(final long d, Player o, Player t) {
+        this.duration = d;
+        this.playerOwner = o;
+        this.playerTarget = t;
+    }
+
+    public Buff(final long d, Player o, Boss t) {
+        this.duration = d;
+        this.playerOwner = o;
+        this.bossTarget = t;
+    }
+
+    public Buff(final long d, Boss o, Player t) {
+        this.duration = d;
+        this.bossOwner = o;
+        this.playerTarget = t;
+    }
+
     public void reduceDuration(final long amount) {
         this.duration -= amount;
         if (this.duration < 500) {

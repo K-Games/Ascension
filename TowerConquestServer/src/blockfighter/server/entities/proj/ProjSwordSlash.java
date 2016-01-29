@@ -27,12 +27,9 @@ public class ProjSwordSlash extends Projectile {
      * @param hit Hit number to determine hit box.
      */
     public ProjSwordSlash(final LogicModule l, final int k, final Player o, final double x, final double y, final int hit) {
-        super(l, k);
-        setOwner(o);
-        this.x = x;
-        this.y = y;
+        super(l, k,o,x,y,200);
         this.hitbox = new Rectangle2D.Double[1];
-        if (getOwner().getFacing() == Globals.RIGHT) {
+        if (super.getOwner().getFacing() == Globals.RIGHT) {
             switch (hit) {
                 case 1:
                     this.hitbox[0] = new Rectangle2D.Double(x + 80, y - 90, 250, 80);
@@ -57,7 +54,6 @@ public class ProjSwordSlash extends Projectile {
                     break;
             }
         }
-        this.duration = 200;
     }
 
     @Override

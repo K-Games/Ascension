@@ -28,19 +28,15 @@ public class ProjShieldToss extends Projectile {
      * @param y Spawn y-coordinate
      */
     public ProjShieldToss(final LogicModule l, final int k, final Player o, final double x, final double y) {
-        super(l, k);
-        setOwner(o);
-        this.x = x;
-        this.y = y;
+        super(l, k, o, x, y, 500);
         this.hitbox = new Rectangle2D.Double[1];
-        if (getOwner().getFacing() == Globals.RIGHT) {
-            this.hitbox[0] = new Rectangle2D.Double(x + 80, y - 190, 190, 190);
-            this.speedX = 8;
+        if (o.getFacing() == Globals.RIGHT) {
+            this.hitbox[0] = new Rectangle2D.Double(x, y - 190, 190, 150);
+            this.speedX = 12;
         } else {
-            this.hitbox[0] = new Rectangle2D.Double(x - 254 - 80, y - 190, 190, 190);
-            this.speedX = -8;
+            this.hitbox[0] = new Rectangle2D.Double(x - 254, y - 190, 190, 150);
+            this.speedX = -12;
         }
-        this.duration = 500;
     }
 
     @Override

@@ -26,17 +26,13 @@ public class ProjSwordVorpal extends Projectile {
      * @param y Spawn y-coordinate
      */
     public ProjSwordVorpal(final LogicModule l, final int k, final Player o, final double x, final double y) {
-        super(l, k);
-        setOwner(o);
-        this.x = x;
-        this.y = y;
+        super(l, k,o,x,y,200);
         this.hitbox = new Rectangle2D.Double[1];
-        if (getOwner().getFacing() == Globals.RIGHT) {
+        if (super.getOwner().getFacing() == Globals.RIGHT) {
             this.hitbox[0] = new Rectangle2D.Double(x - 60, y - 130, 350, 113);
         } else {
             this.hitbox[0] = new Rectangle2D.Double(x - 350 + 60, y - 130, 350, 113);
         }
-        this.duration = 200;
     }
 
     @Override

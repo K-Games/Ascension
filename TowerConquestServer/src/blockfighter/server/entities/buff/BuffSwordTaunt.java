@@ -7,8 +7,7 @@ public class BuffSwordTaunt extends Buff implements BuffDmgReduct, BuffDmgIncrea
     private final double dmgReduct, dmgTakenMult, dmgIncrease;
 
     public BuffSwordTaunt(final long d, final double reduct, final double increase, final Player o) {
-        super(d);
-        setOwner(o);
+        super(d, o);
         this.dmgReduct = reduct;
         this.dmgIncrease = increase;
         this.dmgTakenMult = 1D - this.dmgReduct;

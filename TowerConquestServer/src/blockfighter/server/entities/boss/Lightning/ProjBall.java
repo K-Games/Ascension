@@ -26,17 +26,13 @@ public class ProjBall extends BossProjectile {
      * @param y Spawn y-coordinate
      */
     public ProjBall(final LogicModule l, final int k, final Boss o, final double x, final double y) {
-        super(l, k);
-        setBossOwner(o);
-        this.x = x;
-        this.y = y;
+        super(l, k, o, x, y, 200);
         this.hitbox = new Rectangle2D.Double[1];
-        if (getBossOwner().getFacing() == Globals.RIGHT) {
+        if (o.getFacing() == Globals.RIGHT) {
             this.hitbox[0] = new Rectangle2D.Double(x + 200, y - 200, 2000, 200);
         } else {
             this.hitbox[0] = new Rectangle2D.Double(x - 2000 - 200, y - 200, 2000, 200);
         }
-        this.duration = 200;
     }
 
     @Override

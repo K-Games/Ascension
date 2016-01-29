@@ -25,18 +25,13 @@ public class ProjSwordMulti extends Projectile {
      * @param y Spawn y-coordinate
      */
     public ProjSwordMulti(final LogicModule l, final int k, final Player o, final double x, final double y) {
-        super(l, k);
-        setOwner(o);
-        this.x = x;
-        this.y = y + (Globals.rng(40) - 20);
+        super(l, k,o,x,y + (Globals.rng(40) - 20),600);
         this.hitbox = new Rectangle2D.Double[1];
-        if (getOwner().getFacing() == Globals.RIGHT) {
+        if (super.getOwner().getFacing() == Globals.RIGHT) {
             this.hitbox[0] = new Rectangle2D.Double(x + 90, this.y - 200, 240, 240);
         } else {
             this.hitbox[0] = new Rectangle2D.Double(x - 240 - 90, this.y - 200, 240, 240);
-
         }
-        this.duration = 600;
     }
 
     @Override

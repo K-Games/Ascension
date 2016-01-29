@@ -26,10 +26,9 @@ public class ProjTouch extends BossProjectile {
      * @param o Owning player
      */
     public ProjTouch(final LogicModule l, final int k, final Boss o) {
-        super(l, k);
-        setBossOwner(o);
+        super(l, k, o);
         this.hitbox = new Rectangle2D.Double[1];
-        this.hitbox[0] = getBossOwner().getHitbox();
+        this.hitbox[0] = o.getHitbox();
     }
 
     @Override

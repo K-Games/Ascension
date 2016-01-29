@@ -28,18 +28,13 @@ public class ProjSwordDrive extends Projectile {
      * @param y Spawn y-coordinate
      */
     public ProjSwordDrive(final LogicModule l, final int k, final Player o, final double x, final double y) {
-        super(l, k);
-        setOwner(o);
-        this.x = x;
-        this.y = y;
+        super(l, k,o,x,y,50);
         this.hitbox = new Rectangle2D.Double[1];
-        if (getOwner().getFacing() == Globals.RIGHT) {
+        if (o.getFacing() == Globals.RIGHT) {
             this.hitbox[0] = new Rectangle2D.Double(x - 310, y - 140, 560, 150);
         } else {
             this.hitbox[0] = new Rectangle2D.Double(x - 560 + 310, y - 140, 560, 150);
-
         }
-        this.duration = 50;
     }
 
     @Override

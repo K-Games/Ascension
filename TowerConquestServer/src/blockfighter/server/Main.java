@@ -29,8 +29,8 @@ public class Main {
     private static ScheduledExecutorService senderSch;
     private static ScheduledExecutorService logicSchThreadPool;
 
-    private static JTextArea dataLog = new JTextArea(),
-            errLog = new JTextArea();
+    private static final JTextArea DATA_LOG = new JTextArea(),
+            ERROR_LOG = new JTextArea();
 
     public static void init() {
         LogicModule.init();
@@ -63,7 +63,7 @@ public class Main {
             isDefault = arguments.contains("--default");
         }
         Globals.initLogger();
-        Globals.setGUILog(dataLog, errLog);
+        Globals.setGUILog(DATA_LOG, ERROR_LOG);
         if (!isDefault) {
             Globals.setServerProp();
         }
@@ -121,17 +121,17 @@ public class Main {
         final JPanel panel = new JPanel();
 
         panel.setLayout(null);
-        final JScrollPane dataLogPane = new JScrollPane(dataLog);
+        final JScrollPane dataLogPane = new JScrollPane(DATA_LOG);
         dataLogPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         dataLogPane.setBounds(0, 0, 500, 300);
-        dataLog.setEditable(false);
-        dataLog.setText("Data Log");
+        DATA_LOG.setEditable(false);
+        DATA_LOG.setText("Data Log");
 
-        final JScrollPane errLogPane = new JScrollPane(errLog);
+        final JScrollPane errLogPane = new JScrollPane(ERROR_LOG);
         errLogPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         errLogPane.setBounds(0, 300, 500, 300);
-        errLog.setEditable(false);
-        errLog.setText("Error Log");
+        ERROR_LOG.setEditable(false);
+        ERROR_LOG.setText("Error Log");
 
         panel.add(dataLogPane);
         panel.add(errLogPane);

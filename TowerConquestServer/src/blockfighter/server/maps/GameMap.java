@@ -41,8 +41,7 @@ public abstract class GameMap {
     /**
      * Check if the current y is falling
      * <p>
-     * Takes increment into account (Y+FallSpeed) <br/>
-     * Every platform is checked against the input location with a rectangle sized 90x1
+     * Takes increment into account (Y+FallSpeed) Every platform is checked against the input location with a rectangle sized 90x1
      * </p>
      *
      * @param x x coordinate of location

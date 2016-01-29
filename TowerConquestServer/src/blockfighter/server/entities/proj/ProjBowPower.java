@@ -26,18 +26,13 @@ public class ProjBowPower extends Projectile {
      * @param y Spawn y-coordinate
      */
     public ProjBowPower(final LogicModule l, final int k, final Player o, final double x, final double y) {
-        super(l, k);
-        setOwner(o);
-        this.x = x;
-        this.y = y;
+        super(l, k,o,x,y,300);
         this.hitbox = new Rectangle2D.Double[1];
-        if (getOwner().getFacing() == Globals.RIGHT) {
+        if (o.getFacing() == Globals.RIGHT) {
             this.hitbox[0] = new Rectangle2D.Double(x + 80, y - 155, 700, 150);
         } else {
             this.hitbox[0] = new Rectangle2D.Double(x - 700 - 80, y - 155, 700, 150);
-
         }
-        this.duration = 300;
     }
 
     @Override

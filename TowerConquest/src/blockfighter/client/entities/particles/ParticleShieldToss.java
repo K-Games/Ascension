@@ -9,7 +9,7 @@ public class ParticleShieldToss extends Particle {
     public ParticleShieldToss(final int k, final int x, final int y, final byte f) {
         super(k, x, y, f);
         this.frame = 0;
-        this.frameDuration = 25;
+        this.frameDuration = 15;
         this.duration = 500;
     }
 
@@ -18,17 +18,16 @@ public class ParticleShieldToss extends Particle {
         super.update();
         this.frameDuration -= Globals.LOGIC_UPDATE / 1000000;
         if (this.facing == Globals.RIGHT) {
-            this.x += 20;
+            this.x += 30;
         } else {
-            this.x -= 20;
+            this.x -= 30;
         }
-        if (this.frameDuration <= 0) {
-            this.frameDuration = 25;
-            if (this.frame < PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_TOSS].length - 1) {
-                this.frame++;
-            } else {
-                this.frame = 0;
-            }
+
+        if (this.frame < PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_TOSS].length - 1) {
+            this.frame++;
+        } else {
+            this.frame = 0;
+
         }
     }
 

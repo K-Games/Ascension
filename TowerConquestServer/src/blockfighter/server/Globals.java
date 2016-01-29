@@ -46,7 +46,7 @@ public class Globals {
 
     public final static String WINDOW_TITLE = "Tower Conquest Server " + GAME_RELEASE_VERSION;
 
-    private static Random rng = new Random();
+    private static Random RNG = new Random();
 
     public static ExecutorService LOG_THREAD;
 
@@ -444,7 +444,7 @@ public class Globals {
     }
 
     public static final int rng(final int i) {
-        return rng.nextInt(i);
+        return RNG.nextInt(i);
     }
 
 }
