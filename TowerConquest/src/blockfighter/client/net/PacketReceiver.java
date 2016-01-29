@@ -26,8 +26,8 @@ public class PacketReceiver extends Thread {
 
     private static LogicModule logic;
     private DatagramSocket socket = null;
-    private static ExecutorService threadPool = Executors.newFixedThreadPool(5);
-    private boolean isConnected = true;
+    private static final ExecutorService threadPool = Executors.newFixedThreadPool(5);
+    private boolean isConnected = true, settingStatus = true;
 
     public static void setLogic(final LogicModule l) {
         logic = l;
@@ -47,11 +47,11 @@ public class PacketReceiver extends Thread {
                 threadPool.execute(new PacketHandler(p));
             }
         } catch (final SocketTimeoutException e) {
-            if (logic.getScreen() instanceof ScreenServerList) {
+            if (this.settingStatus && logic.getScreen() instanceof ScreenServerList) {
                 ((ScreenServerList) logic.getScreen()).setStatus(ScreenServerList.STATUS_FAILEDCONNECT);
             }
         } catch (final SocketException e) {
-            if (logic.getScreen() instanceof ScreenServerList) {
+            if (this.settingStatus && logic.getScreen() instanceof ScreenServerList) {
                 ((ScreenServerList) logic.getScreen()).setStatus(ScreenServerList.STATUS_SOCKETCLOSED);
             }
         } catch (final IOException ex) {
@@ -64,6 +64,11 @@ public class PacketReceiver extends Thread {
     }
 
     public void shutdown() {
+        this.socket.close();
+    }
+
+    public void shutdown(boolean settingStatus) {
+        this.settingStatus = settingStatus;
         this.socket.close();
     }
 

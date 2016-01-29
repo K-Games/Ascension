@@ -31,4 +31,9 @@ public class ParticleSwordTauntBuffEmitter extends Particle {
             }
         }
     }
+
+    @Override
+    public boolean isExpired() {
+        return super.isExpired() || this.owner.isDead();
+    }
 }

@@ -226,7 +226,7 @@ public class PacketHandler implements Runnable {
                 bytes[2] = lm.getPlayerKey(id);
                 bytes[3] = Globals.SERVER_MAX_PLAYERS;
                 sender.sendPlayer(bytes, address, port);
-                Globals.log("DATA_PLAYER_CREATE", address + ":" + port + " Resending player creation uid: " + id, Globals.LOG_TYPE_DATA,
+                Globals.log("DATA_PLAYER_CREATE", address + ":" + port + " Resending player creation confirmation. uid: " + id, Globals.LOG_TYPE_DATA,
                         true);
             }
             return;
@@ -293,7 +293,7 @@ public class PacketHandler implements Runnable {
         bytes[3] = Globals.SERVER_MAX_PLAYERS;
         sender.sendPlayer(bytes, address, port);
         Globals.log("DATA_PLAYER_CREATE",
-                address + ":" + port + " Sent Creation. Room: " + room + " Key: " + freeKey + " Name: " + newPlayer.getPlayerName(),
+                address + ":" + port + " Sent creation confirmation. Room: " + room + " Key: " + freeKey + " Name: " + newPlayer.getPlayerName(),
                 Globals.LOG_TYPE_DATA, true);
 
         newPlayer.sendPos();
@@ -311,8 +311,10 @@ public class PacketHandler implements Runnable {
             return;
         }
 
-        final byte[] bytes = new byte[Globals.PACKET_BYTE * 1];
+        final byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
         bytes[0] = Globals.DATA_PLAYER_LOGIN;
+        bytes[1] = Globals.GAME_MAJOR_VERSION;
+        bytes[2] = Globals.GAME_MINOR_VERSION;
         sender.sendPlayer(bytes, address, port);
         Globals.log("DATA_PLAYER_LOGIN", address + ":" + port + " Logged in", Globals.LOG_TYPE_DATA, true);
     }

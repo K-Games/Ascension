@@ -21,9 +21,10 @@ public class Globals {
 
     public final static boolean TEST_MAX_LEVEL = true;
 
-    private final static byte GAME_MAJOR_VERSION = 0,
+    public final static byte GAME_MAJOR_VERSION = 0,
             GAME_MINOR_VERSION = 15,
             GAME_UPDATE_NUMBER = 4;
+    
     private final static String GAME_DEV_STATE = "ALPHA";
 
     public final static String GAME_RELEASE_VERSION = GAME_DEV_STATE + " " + GAME_MAJOR_VERSION + "." + GAME_MINOR_VERSION + "u"
@@ -71,7 +72,7 @@ public class Globals {
 
     public final static int NUM_SOUND_EFFECTS = 0;
 
-    public final static int NUM_PARTICLE_EFFECTS = 40;
+    public final static int NUM_PARTICLE_EFFECTS = 41;
     public final static byte PARTICLE_SWORD_SLASH1 = 0x00,
             PARTICLE_SWORD_SLASH2 = 0x01,
             PARTICLE_SWORD_SLASH3 = 0x02,
@@ -110,7 +111,8 @@ public class Globals {
             PARTICLE_PASSIVE_RESIST = 0x24,
             PARTICLE_PASSIVE_BARRIER = 0x25,
             PARTICLE_PASSIVE_SHADOWATTACK = 0x26,
-            PARTICLE_BLOOD = 0x27;
+            PARTICLE_BLOOD = 0x27,
+            PARTICLE_BOW_RAPID2 = 0x28;
 
     public final static int NUM_KEYBINDS = 16,
             KEYBIND_SKILL1 = 0,

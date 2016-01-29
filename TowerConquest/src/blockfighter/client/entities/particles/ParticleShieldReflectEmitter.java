@@ -33,4 +33,9 @@ public class ParticleShieldReflectEmitter extends Particle {
 
         }
     }
+
+    @Override
+    public boolean isExpired() {
+        return super.isExpired() || this.owner.isDead();
+    }
 }

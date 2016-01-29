@@ -12,6 +12,7 @@ import blockfighter.client.entities.particles.ParticleBowFrostArrow;
 import blockfighter.client.entities.particles.ParticleBowPower;
 import blockfighter.client.entities.particles.ParticleBowPowerCharge;
 import blockfighter.client.entities.particles.ParticleBowRapid;
+import blockfighter.client.entities.particles.ParticleBowRapid2;
 import blockfighter.client.entities.particles.ParticleBowStormEmitter;
 import blockfighter.client.entities.particles.ParticleBowVolleyArrow;
 import blockfighter.client.entities.particles.ParticleBowVolleyBow;
@@ -637,6 +638,12 @@ public class ScreenIngame extends Screen {
                 y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
                 facing = data[10];
                 this.particles.put(key, new ParticleBowRapid(key, x, y, facing));
+                break;
+            case Globals.PARTICLE_BOW_RAPID2:
+                x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
+                y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
+                facing = data[10];
+                this.particles.put(key, new ParticleBowRapid2(key, x, y, facing));
                 break;
             case Globals.PARTICLE_BOW_POWER:
                 x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));

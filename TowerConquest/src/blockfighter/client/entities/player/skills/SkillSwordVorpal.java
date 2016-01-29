@@ -46,11 +46,11 @@ public class SkillSwordVorpal extends Skill {
         g.drawString("Stab rapidly 3 times.", drawX + 10, drawY + 90);
 
         g.drawString("[Level " + this.level + "]", drawX + 10, drawY + 115);
-        g.drawString("Deals " + (6 * this.level + 100) + "% damage per hit.", drawX + 10, drawY + 135);
+        g.drawString("Deals " + (6 * this.level + 145) + "% damage per hit.", drawX + 10, drawY + 135);
         g.drawString("Critical Hits deal additional +" + (3 * this.level + 40) + "% Critical Damage.", drawX + 10, drawY + 155);
         if (this.level < 30) {
             g.drawString("[Level " + (this.level + 1) + "]", drawX + 10, drawY + 180);
-            g.drawString("Deals " + (6 * (this.level + 1) + 100) + "% damage per hit.", drawX + 10, drawY + 200);
+            g.drawString("Deals " + (6 * (this.level + 1) + 145) + "% damage per hit.", drawX + 10, drawY + 200);
             g.drawString("Critical Hits deal additional +" + (3 * (this.level + 1) + 40) + "% Critical Damage.", drawX + 10, drawY + 220);
 
             g.drawString("[Level 30 Bonus]", drawX + 10, drawY + 245);

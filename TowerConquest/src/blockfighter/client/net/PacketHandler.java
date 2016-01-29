@@ -27,7 +27,7 @@ public class PacketHandler implements Runnable {
         final byte dataType = data[0];
         switch (dataType) {
             case Globals.DATA_PLAYER_LOGIN:
-                receiveLogin();
+                receiveLogin(data);
                 break;
             case Globals.DATA_PLAYER_CREATE:
                 receiveCreate(data);
@@ -48,8 +48,8 @@ public class PacketHandler implements Runnable {
         logic.receiveCreate(mapID, key, size);
     }
 
-    private void receiveLogin() {
-        logic.receiveLogin();
+    private void receiveLogin(final byte[] data) {
+        logic.receiveLogin(data);
     }
 
     private void receiveGetPing(final byte[] data) {

@@ -25,7 +25,8 @@ public class ScreenServerList extends ScreenMenu {
     public static final byte STATUS_CONNECTING = 0,
             STATUS_SOCKETCLOSED = 1,
             STATUS_FAILEDCONNECT = 2,
-            STATUS_UNKNOWNHOST = 3;
+            STATUS_UNKNOWNHOST = 3,
+            STATUS_WRONGVERSION = 4;
 
     private final JTextField SERVERADDRESS_FIELD = new JTextField();
     private final JComboBox<String> SERVER_ROOMS = new JComboBox<>();
@@ -212,6 +213,10 @@ public class ScreenServerList extends ScreenMenu {
             case STATUS_UNKNOWNHOST:
                 this.connecting = false;
                 this.status = "Could not connect: Cannot resolve host.";
+                break;
+            case STATUS_WRONGVERSION:
+                this.connecting = false;
+                this.status = "Could not connect: Server is a different version.";
                 break;
             default:
                 this.connecting = false;

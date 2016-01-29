@@ -880,6 +880,8 @@ public class Player extends Thread implements GameEntity {
             this.logic.queueAddProj(proj);
             sendParticle(this.logic.getRoom(), Globals.PARTICLE_BOW_RAPID, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
                     this.facing);
+            sendParticle(this.logic.getRoom(), Globals.PARTICLE_BOW_RAPID2, (getFacing() == Globals.LEFT) ? x-20 : x - 40, proj.getHitbox()[0].getY() - 40,
+                    this.facing);
         }
         if (this.skillDuration >= 550) {
             setPlayerState(PLAYER_STATE_STAND);
@@ -1823,7 +1825,7 @@ public class Player extends Thread implements GameEntity {
                 this.animState = Globals.PLAYER_STATE_ATTACK;
                 if (this.nextFrameTime <= 0 && this.frame < 10) {
                     this.frame++;
-                    this.nextFrameTime = (this.frame == 1) ? 150000000 : 30000000;
+                    this.nextFrameTime = (this.frame == 1) ? 40000000 : 30000000;
                 }
                 break;
             case PLAYER_STATE_SWORD_TAUNT:
@@ -1901,7 +1903,7 @@ public class Player extends Thread implements GameEntity {
                 this.animState = Globals.PLAYER_STATE_ATTACK;
                 if (this.nextFrameTime <= 0 && this.frame < 10) {
                     this.frame++;
-                    this.nextFrameTime = (this.frame == 1) ? 400000000 : 20000000;
+                    this.nextFrameTime = (this.frame == 1) ? 600000000 : 20000000;
                 }
                 break;
             case PLAYER_STATE_SHIELD_FORTIFY:

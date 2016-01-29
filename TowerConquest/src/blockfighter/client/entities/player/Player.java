@@ -176,4 +176,8 @@ public class Player extends Thread {
     public boolean isDisconnected() {
         return this.disconnect || this.lastUpdateTime <= 0;
     }
+    
+    public boolean isDead(){
+        return this.state == Globals.PLAYER_STATE_DEAD;
+    }
 }

@@ -30,22 +30,22 @@ public class ProjShieldCharge extends Projectile {
         super(l, k, o, x, y, 750);
         this.hitbox = new Rectangle2D.Double[1];
         if (o.getFacing() == Globals.RIGHT) {
-            this.hitbox[0] = new Rectangle2D.Double(x - 200, y - 176, 428, 176);
+            this.hitbox[0] = new Rectangle2D.Double(x - 150, y - 170, 250, 176);
         } else {
-            this.hitbox[0] = new Rectangle2D.Double(x - 428 + 200, y - 176, 428, 176);
+            this.hitbox[0] = new Rectangle2D.Double(x - 253 + 150, y - 170, 250, 176);
         }
     }
 
     @Override
     public void update() {
-        this.y = getOwner().getY() - 176;
-        this.hitbox[0].y = getOwner().getY() - 176;
+        this.y = getOwner().getY() - 180;
+        this.hitbox[0].y = getOwner().getY() - 170;
         if (getOwner().getFacing() == Globals.RIGHT) {
-            this.x = getOwner().getX() - 200;
-            this.hitbox[0].x = getOwner().getX() - 200;
+            this.x = getOwner().getX() - 150;
+            this.hitbox[0].x = getOwner().getX() - 150;
         } else {
-            this.x = getOwner().getX() - 428 + 200;
-            this.hitbox[0].x = getOwner().getX() - 428 + 200;
+            this.x = getOwner().getX() - 253 + 150;
+            this.hitbox[0].x = getOwner().getX() - 253 + 150;
         }
         super.update();
     }

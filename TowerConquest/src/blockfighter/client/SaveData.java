@@ -63,8 +63,8 @@ public class SaveData {
     private final Skill[] skills = new Skill[Skill.NUM_SKILLS];
     private final int[] keybinds = new int[Globals.NUM_KEYBINDS];
 
-    public SaveData(final String n, final byte sn) {
-        this.saveNum = sn;
+    public SaveData(final String n, final byte saveNumber) {
+        this.saveNum = saveNumber;
         this.name = n;
         this.uniqueID = Globals.rng(Integer.MAX_VALUE);
         // initalize skill list
@@ -115,14 +115,6 @@ public class SaveData {
         // Empty inventory
         for (int i = 0; i < this.inventory.length; i++) {
             this.inventory[i] = new ItemEquip[100];
-        }
-
-        if (testMax) {
-            for (final ItemUpgrade upgrade : this.upgrades) {
-                if (upgrade == null) {
-                    addItem(new ItemUpgrade(1, 300));
-                }
-            }
         }
 
         for (final int itemCode : ItemEquip.ITEM_CODES) {

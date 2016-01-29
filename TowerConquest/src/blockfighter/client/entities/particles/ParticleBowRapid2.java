@@ -1,34 +1,26 @@
 package blockfighter.client.entities.particles;
 
 import blockfighter.client.Globals;
-import blockfighter.client.screen.ScreenIngame;
+import static blockfighter.client.entities.particles.Particle.PARTICLE_SPRITE;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
-public class ParticleSwordCinder extends Particle {
+public class ParticleBowRapid2 extends Particle {
 
-    public ParticleSwordCinder(final int k, final int x, final int y, final byte f) {
+    public ParticleBowRapid2(final int k, final int x, final int y, final byte f) {
         super(k, x, y, f);
         this.frame = 0;
         this.frameDuration = 50;
-        this.duration = 400;
+        this.duration = 150;
     }
 
     @Override
     public void update() {
         super.update();
         this.frameDuration -= Globals.LOGIC_UPDATE / 1000000;
-        if (this.duration > 100) {
-            for (int i = 0; i < 2; i++) {
-                final ParticleSwordCinderParticle b = new ParticleSwordCinderParticle(
-                        ((ScreenIngame) logic.getScreen()).getNextParticleKey(), this.x,
-                        this.y, this.facing);
-                ((ScreenIngame) logic.getScreen()).addParticle(b);
-            }
-        }
         if (this.frameDuration <= 0) {
             this.frameDuration = 50;
-            if (this.frame < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_CINDER].length - 1) {
+            if (this.frame < PARTICLE_SPRITE[Globals.PARTICLE_BOW_RAPID].length - 1) {
                 this.frame++;
             }
         }
@@ -36,13 +28,13 @@ public class ParticleSwordCinder extends Particle {
 
     @Override
     public void draw(final Graphics2D g) {
-        if (PARTICLE_SPRITE[Globals.PARTICLE_SWORD_CINDER] == null) {
+        if (PARTICLE_SPRITE[Globals.PARTICLE_BOW_RAPID2] == null) {
             return;
         }
-        if (this.frame >= PARTICLE_SPRITE[Globals.PARTICLE_SWORD_CINDER].length) {
+        if (this.frame >= PARTICLE_SPRITE[Globals.PARTICLE_BOW_RAPID2].length) {
             return;
         }
-        final BufferedImage sprite = PARTICLE_SPRITE[Globals.PARTICLE_SWORD_CINDER][this.frame];
+        final BufferedImage sprite = PARTICLE_SPRITE[Globals.PARTICLE_BOW_RAPID2][this.frame];
         final int drawSrcX = this.x + ((this.facing == Globals.RIGHT) ? 0 : sprite.getWidth());
         final int drawSrcY = this.y;
         final int drawDscY = drawSrcY + sprite.getHeight();

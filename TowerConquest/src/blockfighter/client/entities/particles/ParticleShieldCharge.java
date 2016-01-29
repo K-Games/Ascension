@@ -54,13 +54,13 @@ public class ParticleShieldCharge extends Particle {
         final Point p = this.owner.getPos();
         if (p != null) {
             if (this.facing == Globals.RIGHT) {
-                this.x = p.x - 200;
+                this.x = p.x - 150;
             } else {
-                this.x = p.x - 428 + 200;
+                this.x = p.x - 253 + 150;
             }
         }
         if (p != null) {
-            this.y = p.y - 176;
+            this.y = p.y - 170;
         }
         final BufferedImage sprite = PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_CHARGE][this.frame];
         final int drawSrcX = this.x + ((this.facing == Globals.RIGHT) ? 0 : sprite.getWidth());

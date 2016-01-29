@@ -48,12 +48,22 @@ public class LogicModule implements Runnable {
         }
     }
 
-    public void receiveLogin() {
-        byte attemps = 0;
+    public void receiveLogin(final byte[] data) {
+        byte attempts = 0;
         this.loggedIn = false;
-        while (!this.loggedIn && attemps < 5) {
+        System.out.println("Server Version: " + data[1] + "." + data[2]);
+        if (data[1] != Globals.GAME_MAJOR_VERSION || data[2] != Globals.GAME_MINOR_VERSION) {
+            System.out.println("Client Version mismatched. Client Version: " + Globals.GAME_MAJOR_VERSION + "." + Globals.GAME_MINOR_VERSION);
+            shutdownSocket();
+            if (getScreen() instanceof ScreenServerList) {
+                ((ScreenServerList) getScreen()).setStatus(ScreenServerList.STATUS_WRONGVERSION);
+            }
+            return;
+        }
+        while (!this.loggedIn && attempts < 5) {
+            System.out.println("Attempting to login with character. " + (attempts + 1) + "/5");
             PacketSender.sendPlayerCreate(this.selectedRoom, this.selectedChar);
-            attemps++;
+            attempts++;
             synchronized (this) {
                 try {
                     this.wait(900);
@@ -218,10 +228,7 @@ public class LogicModule implements Runnable {
     }
 
     public void returnMenu() {
-        if (this.receiver != null) {
-            this.receiver.shutdown();
-            this.receiver = null;
-        }
+        shutdownSocket();
         setScreen(new ScreenServerList());
         this.soundModule.playBGM("theme.ogg");
     }
@@ -240,5 +247,12 @@ public class LogicModule implements Runnable {
 
     public void enableSound() {
         this.soundModule.unmute();
+    }
+
+    private void shutdownSocket() {
+        if (this.receiver != null) {
+            this.receiver.shutdown(false);
+            this.receiver = null;
+        }
     }
 }

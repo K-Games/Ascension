@@ -32,4 +32,9 @@ public class ParticleBurnBuffEmitter extends Particle {
             }
         }
     }
+
+    @Override
+    public boolean isExpired() {
+        return super.isExpired() || this.owner.isDead();
+    }
 }

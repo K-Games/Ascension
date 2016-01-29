@@ -241,6 +241,11 @@ public abstract class Particle extends Thread {
             PARTICLE_SPRITE[Globals.PARTICLE_PASSIVE_SHADOWATTACK][i] = ImageIO
                     .read(Globals.class.getResourceAsStream("sprites/particle/shadowattack/" + i + ".png"));
         }
+        PARTICLE_SPRITE[Globals.PARTICLE_BOW_RAPID2] = new BufferedImage[3];
+        for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_BOW_RAPID2].length; i++) {
+            PARTICLE_SPRITE[Globals.PARTICLE_BOW_RAPID2][i] = ImageIO
+                    .read(Globals.class.getResourceAsStream("sprites/particle/rapid2/" + i + ".png"));
+        }
     }
 
     public void update() {

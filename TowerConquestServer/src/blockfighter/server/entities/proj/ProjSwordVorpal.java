@@ -40,7 +40,7 @@ public class ProjSwordVorpal extends Projectile {
         while (!this.playerQueue.isEmpty()) {
             final Player p = this.playerQueue.poll(), owner = getOwner();
             if (p != null && !p.isDead()) {
-                int damage = (int) (owner.rollDamage() * (1 + 0.06 * owner.getSkillLevel(Skill.SWORD_VORPAL)));
+                int damage = (int) (owner.rollDamage() * (1.45 + 0.06 * owner.getSkillLevel(Skill.SWORD_VORPAL)));
                 final boolean crit = owner.rollCrit(owner.isSkillMaxed(Skill.SWORD_VORPAL) ? 0.3 : 0);
                 if (crit) {
                     damage = (int) owner.criticalDamage(damage, 0.4 + 0.03 * owner.getSkillLevel(Skill.SWORD_VORPAL));
@@ -53,7 +53,7 @@ public class ProjSwordVorpal extends Projectile {
             final Boss b = this.bossQueue.poll();
             final Player owner = getOwner();
             if (b != null && !b.isDead()) {
-                int damage = (int) (owner.rollDamage() * (1 + 0.06 * owner.getSkillLevel(Skill.SWORD_VORPAL)));
+                int damage = (int) (owner.rollDamage() * (1.45 + 0.06 * owner.getSkillLevel(Skill.SWORD_VORPAL)));
                 final boolean crit = owner.rollCrit(owner.isSkillMaxed(Skill.SWORD_VORPAL) ? 0.3 : 0);
                 if (crit) {
                     damage = (int) owner.criticalDamage(damage, 0.4 + 0.03 * owner.getSkillLevel(Skill.SWORD_VORPAL));
