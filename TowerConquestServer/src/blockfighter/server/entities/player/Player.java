@@ -1291,7 +1291,7 @@ public class Player extends Thread implements GameEntity {
             bytes[1] = this.key;
             bytes[2] = Globals.STAT_MINHP;
             System.arraycopy(stat, 0, bytes, 3, stat.length);
-            sender.sendPlayer(bytes, this.address, this.port);
+            sender.sendPlayer(bytes, this);
             this.nextHPSend = 150;
         }
     }
@@ -1376,11 +1376,6 @@ public class Player extends Thread implements GameEntity {
     }
 
     private void die() {
-        if (this.logic.getMap().isPvP()) {
-            this.logic.getPlayers().entrySet().stream().filter((player) -> (player.getValue() != this)).forEach((player) -> {
-                player.getValue().giveEXP(Globals.calcEXPtoNxtLvl(this.stats[Globals.STAT_LEVEL]) / 7);
-            });
-        }
         sendParticle(this.logic.getRoom(), Globals.PARTICLE_BLOOD, this.key);
         setInvulnerable(false);
         setRemovingDebuff(false);
@@ -1523,7 +1518,7 @@ public class Player extends Thread implements GameEntity {
         bytes[2] = lev[1];
         bytes[3] = lev[2];
         bytes[4] = lev[3];
-        sender.sendPlayer(bytes, this.address, this.port);
+        sender.sendPlayer(bytes, this);
     }
 
     public void giveEXP(final double amount) {
@@ -1534,7 +1529,7 @@ public class Player extends Thread implements GameEntity {
         bytes[2] = exp[1];
         bytes[3] = exp[2];
         bytes[4] = exp[3];
-        sender.sendPlayer(bytes, this.address, this.port);
+        sender.sendPlayer(bytes, this);
 
         bytes = new byte[Globals.PACKET_BYTE * 2 + Globals.PACKET_INT * 3];
         bytes[0] = Globals.DATA_NUMBER;
@@ -2122,14 +2117,14 @@ public class Player extends Thread implements GameEntity {
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 2];
         bytes[0] = Globals.DATA_PLAYER_SET_COOLDOWN;
         bytes[1] = data[3];
-        sender.sendPlayer(bytes, this.address, this.port);
+        sender.sendPlayer(bytes, this);
     }
 
     public void sendCooldown(final byte skillCode) {
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 2];
         bytes[0] = Globals.DATA_PLAYER_SET_COOLDOWN;
         bytes[1] = skillCode;
-        sender.sendPlayer(bytes, this.address, this.port);
+        sender.sendPlayer(bytes, this);
     }
 
     public void sendDamage(final Damage dmg, final int dmgDealt) {
@@ -2152,11 +2147,11 @@ public class Player extends Thread implements GameEntity {
         bytes[12] = d[2];
         bytes[13] = d[3];
         if (map.isPvP()) {
-            sender.sendPlayer(bytes, dmg.getOwner().getAddress(), dmg.getOwner().getPort());
-            
+            sender.sendPlayer(bytes, dmg.getOwner());
+
             final byte[] pvpBytes = Arrays.copyOf(bytes, bytes.length);
             pvpBytes[1] = Globals.NUMBER_TYPE_BOSS;
-            sender.sendPlayer(pvpBytes, getAddress(), getPort());
+            sender.sendPlayer(pvpBytes, this);
         } else {
             sender.sendAll(bytes, this.logic.getRoom());
         }

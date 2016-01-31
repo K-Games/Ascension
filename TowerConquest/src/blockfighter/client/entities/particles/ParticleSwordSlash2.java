@@ -34,10 +34,10 @@ public class ParticleSwordSlash2 extends Particle {
             return;
         }
         final BufferedImage sprite = PARTICLE_SPRITE[Globals.PARTICLE_SWORD_SLASH2][this.frame];
-        final int drawSrcX = this.x + ((this.facing == Globals.RIGHT) ? -100 : sprite.getWidth() - 60);
-        final int drawSrcY = this.y - 35;
+        final int drawSrcX = this.x + ((this.facing == Globals.RIGHT) ? 0 : sprite.getWidth());
+        final int drawSrcY = this.y;
         final int drawDscY = drawSrcY + sprite.getHeight();
-        final int drawDscX = this.x + ((this.facing == Globals.RIGHT) ? sprite.getWidth() - 100 : -60);
+        final int drawDscX = this.x + ((this.facing == Globals.RIGHT) ? sprite.getWidth() : 0);
         g.drawImage(sprite, drawSrcX, drawSrcY, drawDscX, drawDscY, 0, 0, sprite.getWidth(), sprite.getHeight(), null);
     }
 }

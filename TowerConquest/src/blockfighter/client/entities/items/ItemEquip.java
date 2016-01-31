@@ -465,7 +465,7 @@ public class ItemEquip implements Item {
                     case Globals.STAT_CRITCHANCE:
                     case Globals.STAT_CRITDMG:
                         maxWidth = Math.max(maxWidth,
-                                g.getFontMetrics().stringWidth(Globals.getStatName(i) + ": " + df.format(getTotalStats()[i]) + "%"));
+                                g.getFontMetrics().stringWidth(Globals.getStatName(i) + ": " + df.format(getTotalStats()[i] * 100) + "%"));
                         break;
 
                     case Globals.STAT_REGEN:
@@ -543,7 +543,7 @@ public class ItemEquip implements Item {
                 switch (i) {
                     case Globals.STAT_CRITCHANCE:
                     case Globals.STAT_CRITDMG:
-                        g.drawString(Globals.getStatName(i) + ": " + df.format(getTotalStats()[i]) + "%", x + 40, y + rowY);
+                        g.drawString(Globals.getStatName(i) + ": " + df.format(getTotalStats()[i] * 100) + "%", x + 40, y + rowY);
                         break;
                     case Globals.STAT_REGEN:
                         g.drawString(Globals.getStatName(i) + ": " + df.format(getTotalStats()[i]), x + 40, y + rowY);

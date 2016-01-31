@@ -122,7 +122,7 @@ public class PacketHandler implements Runnable {
         bytes[1] = data[2];
         bytes[2] = data[3];
         System.arraycopy(stat, 0, bytes, 3, stat.length);
-        sender.sendPlayer(bytes, address, port);
+        sender.sendAddress(bytes, address, port);
     }
 
     private void receiveBossSetType(final byte[] data, final byte room, final InetAddress address, final int port) {
@@ -143,7 +143,7 @@ public class PacketHandler implements Runnable {
         bytes[8] = posYInt[1];
         bytes[9] = posYInt[2];
         bytes[10] = posYInt[3];
-        sender.sendPlayer(bytes, address, port);
+        sender.sendAddress(bytes, address, port);
     }
 
     private void receivePlayerGetEquip(final byte[] data, final byte room, final InetAddress address, final int port) {
@@ -158,7 +158,7 @@ public class PacketHandler implements Runnable {
             final byte[] itemCode = Globals.intToByte(e[i]);
             System.arraycopy(itemCode, 0, bytes, i * 4 + 2, itemCode.length);
         }
-        sender.sendPlayer(bytes, address, port);
+        sender.sendAddress(bytes, address, port);
     }
 
     private void receivePlayerGetStat(final byte[] data, final byte room, final InetAddress address, final int port) {
@@ -171,7 +171,7 @@ public class PacketHandler implements Runnable {
         bytes[1] = data[2];
         bytes[2] = data[3];
         System.arraycopy(stat, 0, bytes, 3, stat.length);
-        sender.sendPlayer(bytes, address, port);
+        sender.sendAddress(bytes, address, port);
     }
 
     private void receivePlayerGetName(final byte[] data, final byte room, final InetAddress address, final int port) {
@@ -183,7 +183,7 @@ public class PacketHandler implements Runnable {
         bytes[0] = Globals.DATA_PLAYER_GET_NAME;
         bytes[1] = data[2];
         System.arraycopy(name, 0, bytes, 2, name.length);
-        sender.sendPlayer(bytes, address, port);
+        sender.sendAddress(bytes, address, port);
     }
 
     private void receivePlayerDisconnect(final byte[] data, final byte room) {
@@ -203,7 +203,7 @@ public class PacketHandler implements Runnable {
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 2];
         bytes[0] = Globals.DATA_PING;
         bytes[1] = data[3];
-        sender.sendPlayer(bytes, address, port);
+        sender.sendAddress(bytes, address, port);
     }
 
     private void receivePlayerUseSkill(final byte[] data, final byte room) {
@@ -225,7 +225,7 @@ public class PacketHandler implements Runnable {
                 bytes[1] = lm.getMap().getMapID();
                 bytes[2] = lm.getPlayerKey(id);
                 bytes[3] = Globals.SERVER_MAX_PLAYERS;
-                sender.sendPlayer(bytes, address, port);
+                sender.sendAddress(bytes, address, port);
                 Globals.log("DATA_PLAYER_CREATE", address + ":" + port + " Resending player creation confirmation. uid: " + id, Globals.LOG_TYPE_DATA,
                         true);
             }
@@ -291,7 +291,7 @@ public class PacketHandler implements Runnable {
         bytes[1] = logic[room].getMap().getMapID();
         bytes[2] = freeKey;
         bytes[3] = Globals.SERVER_MAX_PLAYERS;
-        sender.sendPlayer(bytes, address, port);
+        sender.sendAddress(bytes, address, port);
         Globals.log("DATA_PLAYER_CREATE",
                 address + ":" + port + " Sent creation confirmation. Room: " + room + " Key: " + freeKey + " Name: " + newPlayer.getPlayerName(),
                 Globals.LOG_TYPE_DATA, true);
@@ -315,7 +315,7 @@ public class PacketHandler implements Runnable {
         bytes[0] = Globals.DATA_PLAYER_LOGIN;
         bytes[1] = Globals.GAME_MAJOR_VERSION;
         bytes[2] = Globals.GAME_MINOR_VERSION;
-        sender.sendPlayer(bytes, address, port);
+        sender.sendAddress(bytes, address, port);
         Globals.log("DATA_PLAYER_LOGIN", address + ":" + port + " Logged in", Globals.LOG_TYPE_DATA, true);
     }
 

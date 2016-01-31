@@ -56,10 +56,10 @@ public class IngameNumber extends Thread{
     public void draw(final Graphics2D g) {
         final char[] decimalArray = Integer.toString(this.damage).toCharArray();
         for (int i = 0; i < decimalArray.length; i++) {
-            g.drawImage(Globals.DAMAGE_FONT[this.type][decimalArray[i] - 48], (int) (this.x + i * 15), (int) this.y, null);
+            g.drawImage(Globals.DAMAGE_FONT[this.type][decimalArray[i] - 48], (int) (this.x + i * 17), (int) this.y, null);
         }
         if (this.type == Globals.NUMBER_TYPE_EXP) {
-            g.drawImage(Globals.EXP_WORD[0], (int) (this.x + 7 + decimalArray.length * 15), (int) this.y, null);
+            g.drawImage(Globals.EXP_WORD[0], (int) (this.x + 7 + decimalArray.length * 17), (int) this.y, null);
         }
     }
 }

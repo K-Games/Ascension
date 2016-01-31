@@ -34,26 +34,32 @@ public class PacketSender implements Runnable {
     private static LogicModule[] logic;
     private static DatagramSocket socket = null;
     private int bytesSent = 0;
-    private final ConcurrentLinkedQueue<DatagramPacket> sendAllQueue = new ConcurrentLinkedQueue<>();
+    private final ConcurrentLinkedQueue<ServerPacket> outPacketQueue = new ConcurrentLinkedQueue<>();
 
     private static ExecutorService senderThreadPool = new ThreadPoolExecutor(0, Globals.SERVER_PACKETSENDER_THREADS,
-                10L, TimeUnit.SECONDS,
-                new LinkedBlockingQueue<>(),
-                new BasicThreadFactory.Builder()
-                .namingPattern("PacketSender-%d")
-                .daemon(true)
-                .priority(Thread.MAX_PRIORITY)
-                .build());;
+            10L, TimeUnit.SECONDS,
+            new LinkedBlockingQueue<>(),
+            new BasicThreadFactory.Builder()
+            .namingPattern("PacketSender-%d")
+            .daemon(true)
+            .priority(Thread.MAX_PRIORITY)
+            .build());
+
+    ;
 
     @Override
     public void run() {
-        while (!this.sendAllQueue.isEmpty()) {
-            final DatagramPacket p = this.sendAllQueue.poll();
+        while (!this.outPacketQueue.isEmpty()) {
+            final ServerPacket p = this.outPacketQueue.poll();
             if (p != null) {
                 senderThreadPool.execute(() -> {
                     try {
-                        socket.send(p);
+                        socket.send(p.getDatagram());
                     } catch (final IOException ex) {
+                        this.outPacketQueue.clear();
+                        if (p.getPlayer() != null) {
+                            p.getPlayer().disconnect();
+                        }
                         Globals.log(ex.getLocalizedMessage(), ex, true);
                     }
                 });
@@ -105,16 +111,20 @@ public class PacketSender implements Runnable {
      * @param address IP address of destination player
      * @param port Port of destination player
      */
-    public void sendPlayer(final byte[] bytes, final InetAddress address, final int port) {
+    public void sendAddress(final byte[] bytes, final InetAddress address, final int port) {
         senderThreadPool.execute(() -> {
             try {
                 final DatagramPacket packet = createPacket(bytes, address, port);
                 socket.send(packet);
-                // bytesSent += bytes.length;
             } catch (final IOException ex) {
                 Globals.log(ex.getLocalizedMessage(), ex, true);
             }
         });
+    }
+
+    public void sendPlayer(final byte[] bytes, final Player p) {
+        final DatagramPacket packet = createPacket(bytes, p.getAddress(), p.getPort());
+        this.outPacketQueue.add(new ServerPacket(packet, p));
     }
 
     /**
@@ -126,9 +136,7 @@ public class PacketSender implements Runnable {
     public void sendAll(final byte[] bytes, final byte room) {
         for (final Map.Entry<Byte, Player> pEntry : logic[room].getPlayers().entrySet()) {
             final DatagramPacket packet = createPacket(bytes, pEntry.getValue());
-            this.sendAllQueue.add(packet);
-            // socket.send(packet);
-            // bytesSent += bytes.length;
+            this.outPacketQueue.add(new ServerPacket(packet, pEntry.getValue()));
         }
     }
 
