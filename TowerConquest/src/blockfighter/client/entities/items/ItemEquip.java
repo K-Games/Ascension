@@ -77,6 +77,11 @@ public class ItemEquip implements Item {
     protected byte tier = TIER_COMMON;
     protected int itemCode;
 
+    static {
+        loadItemDetails();
+        loadItemDrawOrigin();
+    }
+
     public static void unloadSprites() {
         ITEM_SPRITES.clear();
     }
@@ -219,7 +224,7 @@ public class ItemEquip implements Item {
         ITEM_SPRITES.put(code + "_offhand", load);
     }
 
-    public static void loadItemDetails() {
+    private static void loadItemDetails() {
         ITEM_TYPENAME.put(Globals.ITEM_AMULET, "Amulet");
         ITEM_TYPENAME.put(Globals.ITEM_BELT, "Belt");
         ITEM_TYPENAME.put(Globals.ITEM_BOW, "Bow");
@@ -256,7 +261,7 @@ public class ItemEquip implements Item {
         ITEM_NAMES.put(TEMP_QUIVER, "WindRUNNER");
     }
 
-    public static void loadItemDrawOrigin() {
+    private static void loadItemDrawOrigin() {
         ITEM_ORIGINPOINT.put(TEMP_SWORD + "_" + Globals.PLAYER_STATE_STAND, new Point(-45, -80));
         ITEM_ORIGINPOINT.put(TEMP_SWORD + "_" + Globals.PLAYER_STATE_WALK, new Point(-38, -200));
         ITEM_ORIGINPOINT.put(TEMP_SWORD + "_" + Globals.PLAYER_STATE_JUMP, new Point(-35, -180));

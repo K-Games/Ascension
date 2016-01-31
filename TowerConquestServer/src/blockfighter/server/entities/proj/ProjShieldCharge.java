@@ -30,9 +30,9 @@ public class ProjShieldCharge extends Projectile {
         super(l, k, o, x, y, 750);
         this.hitbox = new Rectangle2D.Double[1];
         if (o.getFacing() == Globals.RIGHT) {
-            this.hitbox[0] = new Rectangle2D.Double(x - 150, y - 170, 250, 176);
+            this.hitbox[0] = new Rectangle2D.Double(this.x - 150, this.y - 170, 250, 176);
         } else {
-            this.hitbox[0] = new Rectangle2D.Double(x - 253 + 150, y - 170, 250, 176);
+            this.hitbox[0] = new Rectangle2D.Double(this.x - 253 + 150, this.y - 170, 250, 176);
         }
     }
 

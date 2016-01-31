@@ -3,6 +3,7 @@ package blockfighter.client.entities.particles;
 import blockfighter.client.Globals;
 import static blockfighter.client.Globals.NUM_PARTICLE_EFFECTS;
 import blockfighter.client.LogicModule;
+import blockfighter.client.Main;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
@@ -81,11 +82,21 @@ public abstract class Particle extends Thread {
             PARTICLE_SPRITE[Globals.PARTICLE_SWORD_VORPAL][i] = ImageIO
                     .read(Globals.class.getResourceAsStream("sprites/particle/vorpal/" + i + ".png"));
         }
-        PARTICLE_SPRITE[Globals.PARTICLE_SWORD_MULTI] = new BufferedImage[24];
-        for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_MULTI].length; i++) {
-            PARTICLE_SPRITE[Globals.PARTICLE_SWORD_MULTI][i] = ImageIO
-                    .read(Globals.class.getResourceAsStream("sprites/particle/multi/" + i + ".png"));
+        PARTICLE_SPRITE[Globals.PARTICLE_SWORD_PHANTOM] = new BufferedImage[8];
+        for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_PHANTOM].length; i++) {
+            PARTICLE_SPRITE[Globals.PARTICLE_SWORD_PHANTOM][i] = ImageIO
+                    .read(Globals.class.getResourceAsStream("sprites/particle/phantom/" + i + ".png"));
         }
+        PARTICLE_SPRITE[Globals.PARTICLE_SWORD_PHANTOM2] = new BufferedImage[8];
+        for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_PHANTOM2].length; i++) {
+            PARTICLE_SPRITE[Globals.PARTICLE_SWORD_PHANTOM2][i] = ImageIO
+                    .read(Globals.class.getResourceAsStream("sprites/particle/phantomslash/" + i + ".png"));
+        }
+        //PARTICLE_SPRITE[Globals.PARTICLE_SWORD_MULTI] = new BufferedImage[24];
+        //for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_MULTI].length; i++) {
+        //    PARTICLE_SPRITE[Globals.PARTICLE_SWORD_MULTI][i] = ImageIO
+        //            .read(Globals.class.getResourceAsStream("sprites/particle/multi/" + i + ".png"));
+        //}
         PARTICLE_SPRITE[Globals.PARTICLE_SWORD_CINDER] = new BufferedImage[8];
         for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_CINDER].length; i++) {
             PARTICLE_SPRITE[Globals.PARTICLE_SWORD_CINDER][i] = ImageIO
@@ -216,7 +227,7 @@ public abstract class Particle extends Thread {
             PARTICLE_SPRITE[Globals.PARTICLE_SWORD_SLASHBUFF][i] = ImageIO
                     .read(Globals.class.getResourceAsStream("sprites/particle/slashbuff/" + i + ".png"));
         }
-        PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_DASHBUFF] = new BufferedImage[6];
+        PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_DASHBUFF] = new BufferedImage[1];
         for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_DASHBUFF].length; i++) {
             PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_DASHBUFF][i] = ImageIO
                     .read(Globals.class.getResourceAsStream("sprites/particle/dashbuff/" + i + ".png"));

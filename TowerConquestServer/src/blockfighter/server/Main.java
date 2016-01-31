@@ -26,26 +26,25 @@ import org.apache.commons.lang3.concurrent.BasicThreadFactory;
  */
 public class Main {
 
-    private static ScheduledExecutorService senderSch;
-    private static ScheduledExecutorService logicSchThreadPool;
+    private static ScheduledExecutorService senderSch = Executors.newSingleThreadScheduledExecutor(new BasicThreadFactory.Builder()
+            .namingPattern("PacketSenderScheduler-%d")
+            .daemon(true)
+            .priority(Thread.NORM_PRIORITY)
+            .build());
+    ;
+    private static ScheduledExecutorService logicSchThreadPool = Executors.newScheduledThreadPool(Math.max(Globals.SERVER_ROOMS / 30, 1),
+            new BasicThreadFactory.Builder()
+            .namingPattern("LogicModuleScheduler-%d")
+            .daemon(false)
+            .priority(Thread.NORM_PRIORITY)
+            .build());
+    ;
 
     private static final JTextArea DATA_LOG = new JTextArea(),
             ERROR_LOG = new JTextArea();
 
-    public static void init() {
-        LogicModule.init();
-        PacketSender.init();
-        senderSch = Executors.newSingleThreadScheduledExecutor(new BasicThreadFactory.Builder()
-                .namingPattern("PacketSenderScheduler-%d")
-                .daemon(true)
-                .priority(Thread.NORM_PRIORITY)
-                .build());
-        logicSchThreadPool = Executors.newScheduledThreadPool(Math.max(Globals.SERVER_ROOMS / 30, 1),
-                new BasicThreadFactory.Builder()
-                .namingPattern("LogicModuleScheduler-%d")
-                .daemon(false)
-                .priority(Thread.NORM_PRIORITY)
-                .build());
+    static {
+        Globals.setGUILog(DATA_LOG, ERROR_LOG);
     }
 
     /**
@@ -62,12 +61,10 @@ public class Main {
             isGUI = !arguments.contains("--nogui");
             isDefault = arguments.contains("--default");
         }
-        Globals.initLogger();
-        Globals.setGUILog(DATA_LOG, ERROR_LOG);
+
         if (!isDefault) {
             Globals.setServerProp();
         }
-        init();
 
         if (isGUI) {
             javax.swing.SwingUtilities.invokeLater(() -> {

@@ -1,5 +1,6 @@
 package blockfighter.server.entities.damage;
 
+import blockfighter.server.Globals;
 import blockfighter.server.entities.boss.Boss;
 import blockfighter.server.entities.player.Player;
 import java.awt.Point;
@@ -10,11 +11,7 @@ import java.awt.geom.Rectangle2D;
  * @author Ken Kwan
  */
 public class Damage {
-
-    public final static byte DAMAGE_TYPE_PLAYER = 0x00,
-            DAMAGE_TYPE_PLAYERCRIT = 0x01,
-            DAMAGE_TYPE_BOSS = 0x02,
-            DAMAGE_TYPE_EXP = 0x03;
+    
     private final byte type;
     private final int damage;
     private boolean canProc = false,
@@ -34,7 +31,7 @@ public class Damage {
         this.target = t;
         this.dmgPoint = p;
         this.isCrit = crit;
-        this.type = (this.isCrit) ? DAMAGE_TYPE_PLAYERCRIT : DAMAGE_TYPE_PLAYER;
+        this.type = (this.isCrit) ? Globals.NUMBER_TYPE_PLAYERCRIT : Globals.NUMBER_TYPE_PLAYER;
     }
 
     public Damage(final int dmg, final boolean trueDmg, final Boss o, final Player t, final Point p) {
@@ -43,7 +40,7 @@ public class Damage {
         this.bossOwner = o;
         this.target = t;
         this.dmgPoint = p;
-        this.type = DAMAGE_TYPE_BOSS;
+        this.type = Globals.NUMBER_TYPE_BOSS;
     }
 
     public Damage(final int dmg, final Boss o, final Player t, final Point p) {
@@ -51,7 +48,7 @@ public class Damage {
         this.bossOwner = o;
         this.target = t;
         this.dmgPoint = p;
-        this.type = DAMAGE_TYPE_BOSS;
+        this.type = Globals.NUMBER_TYPE_BOSS;
     }
 
     public Damage(final int dmg, final boolean proc, final Player o, final Boss t, final boolean crit, final Point p) {
@@ -61,7 +58,7 @@ public class Damage {
         this.bossTarget = t;
         this.dmgPoint = p;
         this.isCrit = crit;
-        this.type = (this.isCrit) ? DAMAGE_TYPE_PLAYERCRIT : DAMAGE_TYPE_PLAYER;
+        this.type = (this.isCrit) ? Globals.NUMBER_TYPE_PLAYERCRIT : Globals.NUMBER_TYPE_PLAYER;
     }
 
     public Damage(final int dmg, final Player o, final Boss t, final boolean crit, final Point p) {
@@ -71,7 +68,7 @@ public class Damage {
         this.bossTarget = t;
         this.dmgPoint = p;
         this.isCrit = crit;
-        this.type = (this.isCrit) ? DAMAGE_TYPE_PLAYERCRIT : DAMAGE_TYPE_PLAYER;
+        this.type = (this.isCrit) ? Globals.NUMBER_TYPE_PLAYERCRIT : Globals.NUMBER_TYPE_PLAYER;
     }
 
     public Damage(final int dmg, final boolean proc, final Player o, final Player t, final boolean crit, final Rectangle2D.Double box1,
@@ -83,7 +80,7 @@ public class Damage {
         final Rectangle2D box = box1.createIntersection(box2);
         this.dmgPoint = new Point((int) (box.getX() + box.getWidth() / 2), (int) (box.getY() + box.getHeight() / 2));
         this.isCrit = crit;
-        this.type = (this.isCrit) ? DAMAGE_TYPE_PLAYERCRIT : DAMAGE_TYPE_PLAYER;
+        this.type = (this.isCrit) ? Globals.NUMBER_TYPE_PLAYERCRIT : Globals.NUMBER_TYPE_PLAYER;
     }
 
     public Damage(final int dmg, final boolean trueDmg, final Boss o, final Player t, final Rectangle2D.Double box1,
@@ -94,7 +91,7 @@ public class Damage {
         this.target = t;
         final Rectangle2D box = box1.createIntersection(box2);
         this.dmgPoint = new Point((int) (box.getX() + box.getWidth() / 2), (int) (box.getY() + box.getHeight() / 2));
-        this.type = DAMAGE_TYPE_BOSS;
+        this.type = Globals.NUMBER_TYPE_BOSS;
     }
 
     public Damage(final int dmg, final Boss o, final Player t, final Rectangle2D.Double box1, final Rectangle2D.Double box2) {
@@ -103,7 +100,7 @@ public class Damage {
         this.target = t;
         final Rectangle2D box = box1.createIntersection(box2);
         this.dmgPoint = new Point((int) (box.getX() + box.getWidth() / 2), (int) (box.getY() + box.getHeight() / 2));
-        this.type = DAMAGE_TYPE_BOSS;
+        this.type = Globals.NUMBER_TYPE_BOSS;
     }
 
     public Damage(final int dmg, final boolean proc, final Player o, final Boss t, final boolean crit, final Rectangle2D.Double box1,
@@ -115,7 +112,7 @@ public class Damage {
         final Rectangle2D box = box1.createIntersection(box2);
         this.dmgPoint = new Point((int) (box.getX() + box.getWidth() / 2), (int) (box.getY() + box.getHeight() / 2));
         this.isCrit = crit;
-        this.type = (this.isCrit) ? DAMAGE_TYPE_PLAYERCRIT : DAMAGE_TYPE_PLAYER;
+        this.type = (this.isCrit) ? Globals.NUMBER_TYPE_PLAYERCRIT : Globals.NUMBER_TYPE_PLAYER;
     }
 
     public Damage(final int dmg, final Player o, final Boss t, final boolean crit, final Rectangle2D.Double box1,
@@ -127,7 +124,7 @@ public class Damage {
         final Rectangle2D box = box1.createIntersection(box2);
         this.dmgPoint = new Point((int) (box.getX() + box.getWidth() / 2), (int) (box.getY() + box.getHeight() / 2));
         this.isCrit = crit;
-        this.type = (this.isCrit) ? DAMAGE_TYPE_PLAYERCRIT : DAMAGE_TYPE_PLAYER;
+        this.type = (this.isCrit) ? Globals.NUMBER_TYPE_PLAYERCRIT : Globals.NUMBER_TYPE_PLAYER;
     }
 
     public int getDamage() {

@@ -9,7 +9,7 @@ import blockfighter.server.entities.player.Player;
 import java.awt.geom.Rectangle2D;
 
 /**
- * This is the base projectile class. Create projectile classes off this.
+ * Unused skill SWORD_MULTI(Whirlwind)
  *
  * @author Ken Kwan
  */
@@ -27,10 +27,10 @@ public class ProjSwordMulti extends Projectile {
     public ProjSwordMulti(final LogicModule l, final int k, final Player o, final double x, final double y) {
         super(l, k, o, x, y + (Globals.rng(40) - 20), 600);
         this.hitbox = new Rectangle2D.Double[1];
-        if (super.getOwner().getFacing() == Globals.RIGHT) {
-            this.hitbox[0] = new Rectangle2D.Double(x + 90, this.y - 200, 240, 240);
+        if (o.getFacing() == Globals.RIGHT) {
+            this.hitbox[0] = new Rectangle2D.Double(this.x + 90, this.y - 200, 240, 240);
         } else {
-            this.hitbox[0] = new Rectangle2D.Double(x - 240 - 90, this.y - 200, 240, 240);
+            this.hitbox[0] = new Rectangle2D.Double(this.x - 240 - 90, this.y - 200, 240, 240);
         }
     }
 

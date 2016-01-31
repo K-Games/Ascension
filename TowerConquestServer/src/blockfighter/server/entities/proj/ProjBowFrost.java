@@ -35,10 +35,10 @@ public class ProjBowFrost extends Projectile {
         this.isSecondary = isSec;
         this.hitbox = new Rectangle2D.Double[1];
         if (o.getFacing() == Globals.RIGHT) {
-            this.hitbox[0] = new Rectangle2D.Double(x + 80, y - 160, 300, 148);
+            this.hitbox[0] = new Rectangle2D.Double(this.x + 80, this.y - 160, 300, 148);
             this.speedX = 20;
         } else {
-            this.hitbox[0] = new Rectangle2D.Double(x - 300 - 80, y - 160, 300, 148);
+            this.hitbox[0] = new Rectangle2D.Double(this.x - 300 - 80, this.y - 160, 300, 148);
             this.speedX = -20;
         }
     }

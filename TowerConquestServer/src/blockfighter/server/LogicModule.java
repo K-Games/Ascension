@@ -45,7 +45,12 @@ public class LogicModule extends Thread {
     private long lastRefreshAll = 0;
     private double lastUpdateTime = 0;
 
-    private static ExecutorService logicThreadPool;
+    private static ExecutorService logicThreadPool = Executors.newFixedThreadPool(Globals.SERVER_LOGIC_THREADS,
+            new BasicThreadFactory.Builder()
+            .namingPattern("LogicModule-%d")
+            .daemon(true)
+            .priority(Thread.NORM_PRIORITY)
+            .build());
 
     /**
      * Create a server logic module
@@ -68,15 +73,6 @@ public class LogicModule extends Thread {
         for (byte i = 0; i < Globals.SERVER_MAX_PLAYERS; i++) {
             this.playerKeys.add(i);
         }
-    }
-
-    public static void init() {
-        logicThreadPool = Executors.newFixedThreadPool(Globals.SERVER_LOGIC_THREADS,
-                new BasicThreadFactory.Builder()
-                .namingPattern("LogicModule-%d")
-                .daemon(true)
-                .priority(Thread.NORM_PRIORITY)
-                .build());
     }
 
     /**

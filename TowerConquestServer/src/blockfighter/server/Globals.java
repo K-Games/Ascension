@@ -38,7 +38,7 @@ public class Globals {
 
     public final static byte GAME_MAJOR_VERSION = 0,
             GAME_MINOR_VERSION = 15,
-            GAME_UPDATE_NUMBER = 4;
+            GAME_UPDATE_NUMBER = 6;
     private final static String GAME_DEV_STATE = "ALPHA";
 
     public final static String GAME_RELEASE_VERSION = GAME_DEV_STATE + " " + GAME_MAJOR_VERSION + "." + GAME_MINOR_VERSION + "u"
@@ -48,7 +48,13 @@ public class Globals {
 
     private static final Random RNG = new Random();
 
-    public static ExecutorService LOG_THREAD;
+    public static ExecutorService LOG_THREAD = Executors.newSingleThreadExecutor(
+            new BasicThreadFactory.Builder()
+            .namingPattern("Logger-%d")
+            .daemon(true)
+            .priority(Thread.MIN_PRIORITY)
+            .build());
+    ;
 
     // public final static String SERVER_ADDRESS = "0.0.0.0";
     public static int SERVER_PORT = 25565;
@@ -70,16 +76,17 @@ public class Globals {
 
     public final static double GRAVITY = 0.35, MAX_FALLSPEED = 12.5;
 
-    public final static int NUM_PLAYER_STATE = 7;
+    public final static int NUM_PLAYER_STATE = 8;
     public final static byte PLAYER_STATE_STAND = 0x00,
             PLAYER_STATE_WALK = 0x01,
             PLAYER_STATE_JUMP = 0x02,
             PLAYER_STATE_ATTACK = 0x03,
             PLAYER_STATE_ATTACKBOW = 0x04,
             PLAYER_STATE_BUFF = 0x05,
-            PLAYER_STATE_DEAD = 0x06;
+            PLAYER_STATE_DEAD = 0x06,
+            PLAYER_STATE_INVIS = 0x07;
 
-    public final static int NUM_PARTICLE_EFFECTS = 41;
+    public final static int NUM_PARTICLE_EFFECTS = 43;
     public final static byte PARTICLE_SWORD_SLASH1 = 0x00,
             PARTICLE_SWORD_SLASH2 = 0x01,
             PARTICLE_SWORD_SLASH3 = 0x02,
@@ -119,7 +126,9 @@ public class Globals {
             PARTICLE_PASSIVE_BARRIER = 0x25,
             PARTICLE_PASSIVE_SHADOWATTACK = 0x26,
             PARTICLE_BLOOD = 0x27,
-            PARTICLE_BOW_RAPID2 = 0x28;
+            PARTICLE_BOW_RAPID2 = 0x28,
+            PARTICLE_SWORD_PHANTOM = 0x29,
+            PARTICLE_SWORD_PHANTOM2 = 0x2A;
 
     public final static byte NUM_ITEM_TABS = 10,
             ITEM_WEAPON = 0, // ITEM_WEAPON is the equipment slot
@@ -197,7 +206,7 @@ public class Globals {
             DATA_PLAYER_GET_STAT = 0x0C,
             DATA_PLAYER_GET_EQUIP = 0x0D,
             DATA_PLAYER_SET_COOLDOWN = 0x0E,
-            DATA_DAMAGE = 0x0F,
+            DATA_NUMBER = 0x0F,
             DATA_PLAYER_GIVEEXP = 0x10,
             DATA_BOSS_SET_POS = 0x11,
             DATA_BOSS_SET_FACING = 0x12,
@@ -208,14 +217,13 @@ public class Globals {
             DATA_PLAYER_GIVEDROP = 0x17,
             DATA_PLAYER_CREATE = 0x18;
 
-    public final static void initLogger() {
+    public static final byte NUMBER_TYPE_PLAYER = 0,
+            NUMBER_TYPE_PLAYERCRIT = 1,
+            NUMBER_TYPE_BOSS = 2,
+            NUMBER_TYPE_EXP = 3;
+
+    static {
         createLogDirectory();
-        LOG_THREAD = Executors.newSingleThreadExecutor(
-                new BasicThreadFactory.Builder()
-                .namingPattern("Logger-%d")
-                .daemon(true)
-                .priority(Thread.MIN_PRIORITY)
-                .build());
     }
 
     public final static void setServerProp() {
@@ -445,7 +453,10 @@ public class Globals {
     }
 
     public static final int rng(final int i) {
-        return RNG.nextInt(i);
+        if (i > 0) {
+            return RNG.nextInt(i);
+        }
+        return -1;
     }
 
 }

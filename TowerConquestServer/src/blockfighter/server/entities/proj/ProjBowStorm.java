@@ -28,9 +28,9 @@ public class ProjBowStorm extends Projectile {
         super(l, k, o, x, y, 5000);
         this.hitbox = new Rectangle2D.Double[1];
         if (o.getFacing() == Globals.RIGHT) {
-            this.hitbox[0] = new Rectangle2D.Double(x + 80, y - 450, 700, 450);
+            this.hitbox[0] = new Rectangle2D.Double(this.x + 80, this.y - 450, 700, 450);
         } else {
-            this.hitbox[0] = new Rectangle2D.Double(x - 700 - 80, y - 450, 700, 450);
+            this.hitbox[0] = new Rectangle2D.Double(this.x - 700 - 80, this.y - 450, 700, 450);
 
         }
     }

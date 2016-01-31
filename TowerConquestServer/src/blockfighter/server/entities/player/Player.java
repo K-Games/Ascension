@@ -3,6 +3,7 @@ package blockfighter.server.entities.player;
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.GameEntity;
+import blockfighter.server.entities.boss.Boss;
 import blockfighter.server.entities.buff.Buff;
 import blockfighter.server.entities.buff.BuffDmgIncrease;
 import blockfighter.server.entities.buff.BuffDmgReduct;
@@ -44,7 +45,7 @@ import blockfighter.server.entities.player.skills.SkillShieldReflect;
 import blockfighter.server.entities.player.skills.SkillShieldToss;
 import blockfighter.server.entities.player.skills.SkillSwordCinder;
 import blockfighter.server.entities.player.skills.SkillSwordDrive;
-import blockfighter.server.entities.player.skills.SkillSwordMulti;
+import blockfighter.server.entities.player.skills.SkillSwordPhantom;
 import blockfighter.server.entities.player.skills.SkillSwordSlash;
 import blockfighter.server.entities.player.skills.SkillSwordTaunt;
 import blockfighter.server.entities.player.skills.SkillSwordVorpal;
@@ -60,6 +61,7 @@ import blockfighter.server.entities.proj.ProjShieldToss;
 import blockfighter.server.entities.proj.ProjSwordCinder;
 import blockfighter.server.entities.proj.ProjSwordDrive;
 import blockfighter.server.entities.proj.ProjSwordMulti;
+import blockfighter.server.entities.proj.ProjSwordPhantom;
 import blockfighter.server.entities.proj.ProjSwordSlash;
 import blockfighter.server.entities.proj.ProjSwordTaunt;
 import blockfighter.server.entities.proj.ProjSwordVorpal;
@@ -70,6 +72,7 @@ import java.awt.geom.Rectangle2D;
 import java.net.InetAddress;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -103,7 +106,8 @@ public class Player extends Thread implements GameEntity {
             PLAYER_STATE_SHIELD_IRON = 0x12,
             PLAYER_STATE_SHIELD_REFLECT = 0x13,
             PLAYER_STATE_SHIELD_TOSS = 0x14,
-            PLAYER_STATE_DEAD = 0x15;
+            PLAYER_STATE_DEAD = 0x15,
+            PLAYER_STATE_SWORD_PHANTOM = 0x16;
 
     private final byte key;
     private final LogicModule logic;
@@ -413,8 +417,11 @@ public class Player extends Thread implements GameEntity {
             case Skill.SWORD_DRIVE:
                 newSkill = new SkillSwordDrive();
                 break;
-            case Skill.SWORD_MULTI:
-                newSkill = new SkillSwordMulti();
+            //case Skill.SWORD_MULTI:
+            //    newSkill = new SkillSwordMulti();
+            //    break;
+            case Skill.SWORD_PHANTOM:
+                newSkill = new SkillSwordPhantom();
                 break;
             case Skill.SWORD_SLASH:
                 newSkill = new SkillSwordSlash();
@@ -651,8 +658,11 @@ public class Player extends Thread implements GameEntity {
                         case Skill.SWORD_DRIVE:
                             castSkill(data, PLAYER_STATE_SWORD_DRIVE, Globals.ITEM_WEAPON);
                             break;
-                        case Skill.SWORD_MULTI:
-                            castSkill(data, PLAYER_STATE_SWORD_MULTI, Globals.ITEM_WEAPON);
+                        //case Skill.SWORD_MULTI:
+                        //    castSkill(data, PLAYER_STATE_SWORD_MULTI, Globals.ITEM_WEAPON);
+                        //    break;
+                        case Skill.SWORD_PHANTOM:
+                            castSkill(data, PLAYER_STATE_SWORD_PHANTOM, Globals.ITEM_WEAPON);
                             break;
                         case Skill.SWORD_CINDER:
                             castSkill(data, PLAYER_STATE_SWORD_CINDER, Globals.ITEM_WEAPON);
@@ -788,6 +798,79 @@ public class Player extends Thread implements GameEntity {
         }
     }
 
+    private void updateSkillSwordPhantom() {
+        final int numHits = this.skills.get(Skill.SWORD_PHANTOM).getLevel() / 2 + 5;
+        boolean endPhantom = false;
+        setInvulnerable(true);
+        setYSpeed(0);
+
+        //Send initial phase effect
+        if (this.skillDuration == 0) {
+            sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_PHANTOM, getX(), getY(), this.facing);
+        }
+
+        if (this.skillDuration > 0 && this.skillDuration % 150 == 0 && this.skillCounter < numHits) {
+            if (map.isPvP()) {
+                Player target;
+                ArrayList<Player> playersInRange = new ArrayList<>(Globals.SERVER_MAX_PLAYERS);
+                for (final Map.Entry<Byte, Player> player : this.logic.getPlayers().entrySet()) {
+                    final Player p = player.getValue();
+                    if (p != this && !p.isDead() && !p.isInvulnerable()) {
+                        double distance = Math.sqrt(Math.pow((this.x - p.x), 2) + Math.pow((this.y - p.y), 2));
+                        if (distance <= 300) {
+                            playersInRange.add(p);
+                        }
+                    }
+                }
+                if (!playersInRange.isEmpty()) {
+                    target = playersInRange.get(Globals.rng(playersInRange.size()));
+                    double teleX = (Globals.rng(2) == 0) ? target.getHitbox().x + target.getHitbox().width + 100 : target.getHitbox().x - 100;
+                    this.setPos(teleX, target.getY());
+                    if (target.x < this.x) {
+                        this.setFacing(Globals.LEFT);
+                    } else if (target.x > this.x) {
+                        this.setFacing(Globals.RIGHT);
+                    }
+                } else {
+                    endPhantom = true;
+                }
+            } else {
+                Boss target;
+                ArrayList<Boss> enemyInRange = new ArrayList<>(Globals.SERVER_MAX_PLAYERS);
+                for (final Map.Entry<Byte, Boss> bEntry : this.logic.getBosses().entrySet()) {
+                    final Boss b = bEntry.getValue();
+                    double distance = Math.sqrt(Math.pow((this.x - b.getX()), 2) + Math.pow((this.y - b.getY()), 2));
+                    if (distance <= 300) {
+                        enemyInRange.add(b);
+                    }
+                }
+                if (!enemyInRange.isEmpty()) {
+                    target = enemyInRange.get(Globals.rng(enemyInRange.size()));
+                    double teleX = (Globals.rng(2) == 0) ? target.getHitbox().x + target.getHitbox().width + 100 : target.getHitbox().x - 100;
+                    this.setPos(teleX, target.getY());
+                    if (target.getX() < this.x) {
+                        this.setFacing(Globals.LEFT);
+                    } else if (target.getX() > this.x) {
+                        this.setFacing(Globals.RIGHT);
+                    }
+                } else {
+                    endPhantom = true;
+                }
+            }
+            if (!endPhantom) {
+                final ProjSwordPhantom proj = new ProjSwordPhantom(this.logic, this.logic.getNextProjKey(), this, this.x, this.y);
+                this.logic.queueAddProj(proj);
+                sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_PHANTOM, getX(), getY(), this.facing);
+                sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_PHANTOM2, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(), this.facing);
+                this.skillCounter++;
+            }
+        }
+        if (endPhantom || this.skillCounter >= numHits) {
+            setInvulnerable(false);
+            setPlayerState(PLAYER_STATE_STAND);
+        }
+    }
+
     private void updateSkillSwordMulti() {
         final int numHits = this.skills.get(Skill.SWORD_MULTI).getLevel() + 6;
         if (isSkillMaxed(Skill.SWORD_MULTI) && !isInvulnerable()) {
@@ -880,7 +963,7 @@ public class Player extends Thread implements GameEntity {
             this.logic.queueAddProj(proj);
             sendParticle(this.logic.getRoom(), Globals.PARTICLE_BOW_RAPID, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
                     this.facing);
-            sendParticle(this.logic.getRoom(), Globals.PARTICLE_BOW_RAPID2, (getFacing() == Globals.LEFT) ? x-20 : x - 40, proj.getHitbox()[0].getY() - 40,
+            sendParticle(this.logic.getRoom(), Globals.PARTICLE_BOW_RAPID2, (getFacing() == Globals.LEFT) ? x - 20 : x - 40, proj.getHitbox()[0].getY() - 40,
                     this.facing);
         }
         if (this.skillDuration >= 550) {
@@ -891,7 +974,7 @@ public class Player extends Thread implements GameEntity {
     private void updateSkillBowVolley() {
         if (this.skillDuration % 100 == 0 && this.skillCounter < 20) {
             final ProjBowVolley proj = new ProjBowVolley(this.logic, this.logic.getNextProjKey(), this, this.x,
-                    this.y - 10 + Globals.rng(40));
+                    this.y);
             this.logic.queueAddProj(proj);
             sendParticle(this.logic.getRoom(), Globals.PARTICLE_BOW_VOLLEYARROW, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
                     this.facing);
@@ -936,7 +1019,7 @@ public class Player extends Thread implements GameEntity {
         if (this.skillDuration == 100) {
             setRemovingDebuff(true);
             queueBuff(new BuffShieldIron(2000, 0.55 + 0.01 * getSkillLevel(Skill.SHIELD_IRON)));
-            if (isSkillMaxed(Skill.SHIELD_IRON) && this.logic.getRoom() != 0) {
+            if (isSkillMaxed(Skill.SHIELD_IRON) && !map.isPvP()) {
                 for (final Map.Entry<Byte, Player> player : this.logic.getPlayers().entrySet()) {
                     final Player p = player.getValue();
                     if (p != this) {
@@ -1037,6 +1120,9 @@ public class Player extends Thread implements GameEntity {
                 break;
             case PLAYER_STATE_SWORD_VORPAL:
                 updateSkillSwordVorpal();
+                break;
+            case PLAYER_STATE_SWORD_PHANTOM:
+                updateSkillSwordPhantom();
                 break;
             case PLAYER_STATE_SWORD_MULTI:
                 updateSkillSwordMulti();
@@ -1451,8 +1537,8 @@ public class Player extends Thread implements GameEntity {
         sender.sendPlayer(bytes, this.address, this.port);
 
         bytes = new byte[Globals.PACKET_BYTE * 2 + Globals.PACKET_INT * 3];
-        bytes[0] = Globals.DATA_DAMAGE;
-        bytes[1] = Damage.DAMAGE_TYPE_EXP;
+        bytes[0] = Globals.DATA_NUMBER;
+        bytes[1] = Globals.NUMBER_TYPE_EXP;
         final byte[] posXInt = Globals.intToByte((int) this.x - 20);
         bytes[2] = posXInt[0];
         bytes[3] = posXInt[1];
@@ -1526,7 +1612,8 @@ public class Player extends Thread implements GameEntity {
                 || this.playerState == PLAYER_STATE_SHIELD_FORTIFY
                 || this.playerState == PLAYER_STATE_SHIELD_IRON
                 || this.playerState == PLAYER_STATE_SHIELD_REFLECT
-                || this.playerState == PLAYER_STATE_SHIELD_TOSS;
+                || this.playerState == PLAYER_STATE_SHIELD_TOSS
+                || this.playerState == PLAYER_STATE_SWORD_PHANTOM;
     }
 
     /**
@@ -1791,6 +1878,9 @@ public class Player extends Thread implements GameEntity {
                     this.nextFrameTime = (this.frame == 1) ? 150000000 : 30000000;
                 }
                 break;
+            case PLAYER_STATE_SWORD_PHANTOM:
+                this.animState = Globals.PLAYER_STATE_INVIS;
+                break;
             case PLAYER_STATE_SWORD_VORPAL:
                 this.nextFrameTime -= Globals.LOGIC_UPDATE;
                 this.animState = Globals.PLAYER_STATE_ATTACK;
@@ -2044,7 +2134,7 @@ public class Player extends Thread implements GameEntity {
 
     public void sendDamage(final Damage dmg, final int dmgDealt) {
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 2 + Globals.PACKET_INT * 3];
-        bytes[0] = Globals.DATA_DAMAGE;
+        bytes[0] = Globals.DATA_NUMBER;
         bytes[1] = dmg.getDamageType();
         final byte[] posXInt = Globals.intToByte(dmg.getDmgPoint().x);
         bytes[2] = posXInt[0];
@@ -2061,7 +2151,15 @@ public class Player extends Thread implements GameEntity {
         bytes[11] = d[1];
         bytes[12] = d[2];
         bytes[13] = d[3];
-        sender.sendAll(bytes, this.logic.getRoom());
+        if (map.isPvP()) {
+            sender.sendPlayer(bytes, dmg.getOwner().getAddress(), dmg.getOwner().getPort());
+            
+            final byte[] pvpBytes = Arrays.copyOf(bytes, bytes.length);
+            pvpBytes[1] = Globals.NUMBER_TYPE_BOSS;
+            sender.sendPlayer(pvpBytes, getAddress(), getPort());
+        } else {
+            sender.sendAll(bytes, this.logic.getRoom());
+        }
     }
 
     /**

@@ -18,7 +18,7 @@ public class ParticleBowVolleyBuffEmitter extends Particle {
     @Override
     public void update() {
         super.update();
-        if (this.duration > 0 && this.duration % 50 == 0) {
+        if (this.duration > 0 && this.duration % 100 == 0) {
             final Point p = this.owner.getPos();
             if (p != null) {
                 this.x = p.x;

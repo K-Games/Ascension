@@ -3,7 +3,7 @@ package blockfighter.client.screen;
 import blockfighter.client.Globals;
 import blockfighter.client.SaveData;
 import blockfighter.client.entities.boss.Boss;
-import blockfighter.client.entities.damage.Damage;
+import blockfighter.client.entities.ingamenumber.IngameNumber;
 import blockfighter.client.entities.items.ItemEquip;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.client.entities.particles.ParticleBloodEmitter;
@@ -35,6 +35,8 @@ import blockfighter.client.entities.particles.ParticleShieldToss;
 import blockfighter.client.entities.particles.ParticleSwordCinder;
 import blockfighter.client.entities.particles.ParticleSwordDrive;
 import blockfighter.client.entities.particles.ParticleSwordMulti;
+import blockfighter.client.entities.particles.ParticleSwordPhantom;
+import blockfighter.client.entities.particles.ParticleSwordPhantom2;
 import blockfighter.client.entities.particles.ParticleSwordSlash1;
 import blockfighter.client.entities.particles.ParticleSwordSlash2;
 import blockfighter.client.entities.particles.ParticleSwordSlash3;
@@ -76,7 +78,7 @@ public class ScreenIngame extends Screen {
     private final ConcurrentHashMap<Byte, Player> players;
     private final ConcurrentHashMap<Byte, Boss> bosses = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Integer, Particle> particles = new ConcurrentHashMap<>(500, 0.9f, 1);
-    private final ConcurrentHashMap<Integer, Damage> dmgNum = new ConcurrentHashMap<>(500, 0.9f, 1);
+    private final ConcurrentHashMap<Integer, IngameNumber> dmgNum = new ConcurrentHashMap<>(500, 0.9f, 1);
 
     private final ConcurrentLinkedQueue<Integer> dmgKeys = new ConcurrentLinkedQueue<>();
     private int numDmgKeys = 500;
@@ -177,11 +179,11 @@ public class ScreenIngame extends Screen {
     }
 
     private void updateDmgNum() {
-        for (final Map.Entry<Integer, Damage> pEntry : this.dmgNum.entrySet()) {
+        for (final Map.Entry<Integer, IngameNumber> pEntry : this.dmgNum.entrySet()) {
             threadPool.execute(pEntry.getValue());
         }
         final LinkedList<Integer> remove = new LinkedList<>();
-        for (final Map.Entry<Integer, Damage> pEntry : this.dmgNum.entrySet()) {
+        for (final Map.Entry<Integer, IngameNumber> pEntry : this.dmgNum.entrySet()) {
             try {
                 pEntry.getValue().join();
                 if (pEntry.getValue().isExpired()) {
@@ -281,7 +283,7 @@ public class ScreenIngame extends Screen {
         for (final Map.Entry<Integer, Particle> pEntry : this.particles.entrySet()) {
             pEntry.getValue().draw(g);
         }
-        for (final Map.Entry<Integer, Damage> pEntry : this.dmgNum.entrySet()) {
+        for (final Map.Entry<Integer, IngameNumber> pEntry : this.dmgNum.entrySet()) {
             pEntry.getValue().draw(g);
         }
 
@@ -440,7 +442,7 @@ public class ScreenIngame extends Screen {
                 case Globals.DATA_PLAYER_SET_COOLDOWN:
                     dataPlayerSetCooldown(data);
                     break;
-                case Globals.DATA_DAMAGE:
+                case Globals.DATA_NUMBER:
                     dataDamage(data);
                     break;
                 case Globals.DATA_PLAYER_GIVEEXP:
@@ -562,7 +564,7 @@ public class ScreenIngame extends Screen {
         final int y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
         final int dmg = Globals.bytesToInt(Arrays.copyOfRange(data, 10, 14));
         final int key = getNextDmgKey();
-        this.dmgNum.put(key, new Damage(dmg, type, new Point(x, y)));
+        this.dmgNum.put(key, new IngameNumber(dmg, type, new Point(x, y)));
     }
 
     private void dataParticleEffect(final byte[] data) {
@@ -602,6 +604,18 @@ public class ScreenIngame extends Screen {
                 y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
                 facing = data[10];
                 this.particles.put(key, new ParticleSwordVorpal(key, x, y, facing));
+                break;
+            case Globals.PARTICLE_SWORD_PHANTOM:
+                x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
+                y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
+                facing = data[10];
+                this.particles.put(key, new ParticleSwordPhantom(key, x, y, facing));
+                break;
+            case Globals.PARTICLE_SWORD_PHANTOM2:
+                x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
+                y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
+                facing = data[10];
+                this.particles.put(key, new ParticleSwordPhantom2(key, x, y, facing));
                 break;
             case Globals.PARTICLE_SWORD_MULTI:
                 x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
@@ -865,7 +879,7 @@ public class ScreenIngame extends Screen {
         }
     }
 
-    public void addDmgNum(final Damage d) {
+    public void addDmgNum(final IngameNumber d) {
         this.dmgNum.put(getNextDmgKey(), d);
     }
 

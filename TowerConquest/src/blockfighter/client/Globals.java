@@ -1,6 +1,6 @@
 package blockfighter.client;
 
-import blockfighter.client.entities.damage.Damage;
+import blockfighter.client.entities.ingamenumber.IngameNumber;
 import blockfighter.client.entities.player.skills.Skill;
 import java.awt.Font;
 import java.awt.image.BufferedImage;
@@ -23,8 +23,8 @@ public class Globals {
 
     public final static byte GAME_MAJOR_VERSION = 0,
             GAME_MINOR_VERSION = 15,
-            GAME_UPDATE_NUMBER = 4;
-    
+            GAME_UPDATE_NUMBER = 6;
+
     private final static String GAME_DEV_STATE = "ALPHA";
 
     public final static String GAME_RELEASE_VERSION = GAME_DEV_STATE + " " + GAME_MAJOR_VERSION + "." + GAME_MINOR_VERSION + "u"
@@ -72,7 +72,7 @@ public class Globals {
 
     public final static int NUM_SOUND_EFFECTS = 0;
 
-    public final static int NUM_PARTICLE_EFFECTS = 41;
+    public final static int NUM_PARTICLE_EFFECTS = 43;
     public final static byte PARTICLE_SWORD_SLASH1 = 0x00,
             PARTICLE_SWORD_SLASH2 = 0x01,
             PARTICLE_SWORD_SLASH3 = 0x02,
@@ -112,7 +112,9 @@ public class Globals {
             PARTICLE_PASSIVE_BARRIER = 0x25,
             PARTICLE_PASSIVE_SHADOWATTACK = 0x26,
             PARTICLE_BLOOD = 0x27,
-            PARTICLE_BOW_RAPID2 = 0x28;
+            PARTICLE_BOW_RAPID2 = 0x28,
+            PARTICLE_SWORD_PHANTOM = 0x29,
+            PARTICLE_SWORD_PHANTOM2 = 0x2A;
 
     public final static int NUM_KEYBINDS = 16,
             KEYBIND_SKILL1 = 0,
@@ -188,14 +190,15 @@ public class Globals {
             STAT_PER_LEVEL = 7,
             SP_PER_LEVEL = 3;
 
-    public final static int NUM_PLAYER_STATE = 7;
+    public final static int NUM_PLAYER_STATE = 8;
     public final static byte PLAYER_STATE_STAND = 0x00,
             PLAYER_STATE_WALK = 0x01,
             PLAYER_STATE_JUMP = 0x02,
             PLAYER_STATE_ATTACK = 0x03,
             PLAYER_STATE_ATTACKBOW = 0x04,
             PLAYER_STATE_BUFF = 0x05,
-            PLAYER_STATE_DEAD = 0x06;
+            PLAYER_STATE_DEAD = 0x06,
+            PLAYER_STATE_INVIS = 0x07;
 
     // Packet globals
     public final static int PACKET_MAX_SIZE = 512;
@@ -219,7 +222,7 @@ public class Globals {
             DATA_PLAYER_GET_STAT = 0x0C,
             DATA_PLAYER_GET_EQUIP = 0x0D,
             DATA_PLAYER_SET_COOLDOWN = 0x0E,
-            DATA_DAMAGE = 0x0F,
+            DATA_NUMBER = 0x0F,
             DATA_PLAYER_GIVEEXP = 0x10,
             DATA_BOSS_SET_POS = 0x11,
             DATA_BOSS_SET_FACING = 0x12,
@@ -267,6 +270,11 @@ public class Globals {
     public final static byte WINDOW_CREATECHAR = 0,
             WINDOW_DESTROYCONFIRM = 1;
 
+    public static final byte NUMBER_TYPE_PLAYER = 0,
+            NUMBER_TYPE_PLAYERCRIT = 1,
+            NUMBER_TYPE_BOSS = 2,
+            NUMBER_TYPE_EXP = 3;
+
     public static final String getStatName(final byte statID) {
         switch (statID) {
             case STAT_POWER:
@@ -303,6 +311,10 @@ public class Globals {
                 return "Damage Reduction";
         }
         return "INVALID STAT";
+    }
+
+    static {
+        loadGFX();
     }
 
     public static final double calcArmor(final double defense) {
@@ -362,7 +374,7 @@ public class Globals {
         return (input[0] & 0xff | (input[1] & 0xff) << 8 | (input[2] & 0xff) << 16 | (input[3] & 0xff) << 24);
     }
 
-    public static void loadGFX() {
+    private static void loadGFX() {
         try {
             CHAR_SPRITE[PLAYER_STATE_ATTACK] = new BufferedImage[11];
             for (int i = 0; i < CHAR_SPRITE[PLAYER_STATE_ATTACK].length; i++) {
@@ -424,16 +436,16 @@ public class Globals {
             }
 
             for (byte i = 0; i < 10; i++) {
-                DAMAGE_FONT[Damage.DAMAGE_TYPE_BOSS][i] = ImageIO
-                        .read(Globals.class.getResourceAsStream("sprites/damage/boss/" + i + ".png"));
-                DAMAGE_FONT[Damage.DAMAGE_TYPE_PLAYER][i] = ImageIO
-                        .read(Globals.class.getResourceAsStream("sprites/damage/player/" + i + ".png"));
-                DAMAGE_FONT[Damage.DAMAGE_TYPE_PLAYERCRIT][i] = ImageIO
-                        .read(Globals.class.getResourceAsStream("sprites/damage/playercrit/" + i + ".png"));
-                DAMAGE_FONT[Damage.DAMAGE_TYPE_EXP][i] = ImageIO
-                        .read(Globals.class.getResourceAsStream("sprites/damage/exp/" + i + ".png"));
+                DAMAGE_FONT[NUMBER_TYPE_BOSS][i] = ImageIO
+                        .read(Globals.class.getResourceAsStream("sprites/number/boss/" + i + ".png"));
+                DAMAGE_FONT[NUMBER_TYPE_PLAYER][i] = ImageIO
+                        .read(Globals.class.getResourceAsStream("sprites/number/player/" + i + ".png"));
+                DAMAGE_FONT[NUMBER_TYPE_PLAYERCRIT][i] = ImageIO
+                        .read(Globals.class.getResourceAsStream("sprites/number/playercrit/" + i + ".png"));
+                DAMAGE_FONT[NUMBER_TYPE_EXP][i] = ImageIO
+                        .read(Globals.class.getResourceAsStream("sprites/number/exp/" + i + ".png"));
             }
-            EXP_WORD[0] = ImageIO.read(Globals.class.getResourceAsStream("sprites/damage/exp/exp.png"));
+            EXP_WORD[0] = ImageIO.read(Globals.class.getResourceAsStream("sprites/number/exp/exp.png"));
 
         } catch (final IOException ex) {
             Logger.getLogger(Globals.class.getName()).log(Level.SEVERE, null, ex);

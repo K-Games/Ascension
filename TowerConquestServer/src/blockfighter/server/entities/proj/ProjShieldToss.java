@@ -31,10 +31,10 @@ public class ProjShieldToss extends Projectile {
         super(l, k, o, x, y, 500);
         this.hitbox = new Rectangle2D.Double[1];
         if (o.getFacing() == Globals.RIGHT) {
-            this.hitbox[0] = new Rectangle2D.Double(x, y - 190, 190, 150);
+            this.hitbox[0] = new Rectangle2D.Double(this.x, this.y - 190, 190, 150);
             this.speedX = 12;
         } else {
-            this.hitbox[0] = new Rectangle2D.Double(x - 254, y - 190, 190, 150);
+            this.hitbox[0] = new Rectangle2D.Double(this.x - 254, this.y - 190, 190, 150);
             this.speedX = -12;
         }
     }

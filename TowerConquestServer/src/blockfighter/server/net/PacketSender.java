@@ -36,18 +36,14 @@ public class PacketSender implements Runnable {
     private int bytesSent = 0;
     private final ConcurrentLinkedQueue<DatagramPacket> sendAllQueue = new ConcurrentLinkedQueue<>();
 
-    private static ExecutorService senderThreadPool;
-
-    public static void init() {
-        senderThreadPool = new ThreadPoolExecutor(0, Globals.SERVER_PACKETSENDER_THREADS,
+    private static ExecutorService senderThreadPool = new ThreadPoolExecutor(0, Globals.SERVER_PACKETSENDER_THREADS,
                 10L, TimeUnit.SECONDS,
                 new LinkedBlockingQueue<>(),
                 new BasicThreadFactory.Builder()
                 .namingPattern("PacketSender-%d")
                 .daemon(true)
                 .priority(Thread.MAX_PRIORITY)
-                .build());
-    }
+                .build());;
 
     @Override
     public void run() {

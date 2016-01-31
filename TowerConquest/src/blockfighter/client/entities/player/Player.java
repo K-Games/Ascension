@@ -106,7 +106,7 @@ public class Player extends Thread {
 
     public void draw(final Graphics2D g) {
         final byte s = this.state, f = this.frame;
-        if (f >= Globals.CHAR_SPRITE[s].length) {
+        if (s > Globals.NUM_PLAYER_STATE || s < 0 || s == Globals.PLAYER_STATE_INVIS || f >= Globals.CHAR_SPRITE[s].length) {
             return;
         }
         final BufferedImage sprite = Globals.CHAR_SPRITE[s][f];

@@ -31,9 +31,9 @@ public class ProjSwordDrive extends Projectile {
         super(l, k, o, x, y, 50);
         this.hitbox = new Rectangle2D.Double[1];
         if (o.getFacing() == Globals.RIGHT) {
-            this.hitbox[0] = new Rectangle2D.Double(x - 310, y - 140, 560, 150);
+            this.hitbox[0] = new Rectangle2D.Double(this.x - 310, this.y - 140, 560, 150);
         } else {
-            this.hitbox[0] = new Rectangle2D.Double(x - 560 + 310, y - 140, 560, 150);
+            this.hitbox[0] = new Rectangle2D.Double(this.x - 560 + 310, this.y - 140, 560, 150);
         }
     }
 

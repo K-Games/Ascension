@@ -10,13 +10,13 @@ public class ParticleBowVolleyBuffParticle extends Particle {
 
     public ParticleBowVolleyBuffParticle(final int k, final int x, final int y, final byte f) {
         super(k, x, y, f);
-        this.x += Globals.rng(100) - 60;
-        this.y -= Globals.rng(40) + 58;
+        this.x += Globals.rng(50) - 35;
+        this.y -= Globals.rng(40)+29;
         this.xDouble = this.x;
         this.xSpeed = Globals.rng(10) * .75 - 3.75;
         this.frame = 0;
         this.frameDuration = 50;
-        this.duration = 300;
+        this.duration = 200;
     }
 
     @Override

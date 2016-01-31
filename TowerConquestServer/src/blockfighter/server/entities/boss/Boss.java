@@ -441,7 +441,7 @@ public abstract class Boss extends Thread implements GameEntity {
 
     public void sendDamage(final Damage dmg) {
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 2 + Globals.PACKET_INT * 3];
-        bytes[0] = Globals.DATA_DAMAGE;
+        bytes[0] = Globals.DATA_NUMBER;
         bytes[1] = dmg.getDamageType();
         final byte[] posXInt = Globals.intToByte(dmg.getDmgPoint().x);
         bytes[2] = posXInt[0];

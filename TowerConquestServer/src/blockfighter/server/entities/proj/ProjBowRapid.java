@@ -29,9 +29,9 @@ public class ProjBowRapid extends Projectile {
         super(l, k, o, x, y, 300);
         this.hitbox = new Rectangle2D.Double[1];
         if (o.getFacing() == Globals.RIGHT) {
-            this.hitbox[0] = new Rectangle2D.Double(x + 40, y - 80, 449, 20);
+            this.hitbox[0] = new Rectangle2D.Double(this.x + 40, this.y - 80, 449, 20);
         } else {
-            this.hitbox[0] = new Rectangle2D.Double(x - 449 - 40, y - 80, 449, 20);
+            this.hitbox[0] = new Rectangle2D.Double(this.x - 449 - 40, this.y - 80, 449, 20);
         }
     }
 

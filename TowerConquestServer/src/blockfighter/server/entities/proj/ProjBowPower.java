@@ -29,9 +29,9 @@ public class ProjBowPower extends Projectile {
         super(l, k, o, x, y, 300);
         this.hitbox = new Rectangle2D.Double[1];
         if (o.getFacing() == Globals.RIGHT) {
-            this.hitbox[0] = new Rectangle2D.Double(x + 80, y - 155, 700, 150);
+            this.hitbox[0] = new Rectangle2D.Double(this.x + 80, this.y - 155, 700, 150);
         } else {
-            this.hitbox[0] = new Rectangle2D.Double(x - 700 - 80, y - 155, 700, 150);
+            this.hitbox[0] = new Rectangle2D.Double(this.x - 700 - 80, this.y - 155, 700, 150);
         }
     }
 

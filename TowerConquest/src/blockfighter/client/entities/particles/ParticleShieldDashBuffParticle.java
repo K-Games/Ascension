@@ -8,11 +8,11 @@ public class ParticleShieldDashBuffParticle extends Particle {
 
     public ParticleShieldDashBuffParticle(final int k, final int x, final int y, final byte f) {
         super(k, x, y, f);
-        this.x += Globals.rng(100) - 60;
-        this.y -= Globals.rng(40) + 64;
+        this.x += Globals.rng(50) - 35;
+        this.y -= Globals.rng(40) + 30;
         this.frame = 0;
-        this.frameDuration = 50;
-        this.duration = 300;
+        this.frameDuration = 0;
+        this.duration = 250;
     }
 
     @Override
@@ -20,12 +20,6 @@ public class ParticleShieldDashBuffParticle extends Particle {
         super.update();
         this.frameDuration -= Globals.LOGIC_UPDATE / 1000000;
         this.y -= 9;
-        if (this.frameDuration <= 0) {
-            this.frameDuration = 50;
-            if (this.frame < PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_DASHBUFF].length - 1) {
-                this.frame++;
-            }
-        }
     }
 
     @Override

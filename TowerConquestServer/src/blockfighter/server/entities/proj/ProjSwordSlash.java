@@ -29,28 +29,28 @@ public class ProjSwordSlash extends Projectile {
     public ProjSwordSlash(final LogicModule l, final int k, final Player o, final double x, final double y, final int hit) {
         super(l, k, o, x, y, 200);
         this.hitbox = new Rectangle2D.Double[1];
-        if (super.getOwner().getFacing() == Globals.RIGHT) {
+        if (o.getFacing() == Globals.RIGHT) {
             switch (hit) {
                 case 1:
-                    this.hitbox[0] = new Rectangle2D.Double(x + 80, y - 90, 250, 80);
+                    this.hitbox[0] = new Rectangle2D.Double(this.x + 80, this.y - 90, 250, 80);
                     break;
                 case 2:
-                    this.hitbox[0] = new Rectangle2D.Double(x + 80, y - 50, 250, 80);
+                    this.hitbox[0] = new Rectangle2D.Double(this.x + 80, this.y - 50, 250, 80);
                     break;
                 case 3:
-                    this.hitbox[0] = new Rectangle2D.Double(x + 20, y - 100, 270, 60);
+                    this.hitbox[0] = new Rectangle2D.Double(this.x + 20, this.y - 100, 270, 60);
                     break;
             }
         } else {
             switch (hit) {
                 case 1:
-                    this.hitbox[0] = new Rectangle2D.Double(x - 274 + 80, y - 90, 250, 80);
+                    this.hitbox[0] = new Rectangle2D.Double(this.x - 274 + 80, this.y - 90, 250, 80);
                     break;
                 case 2:
-                    this.hitbox[0] = new Rectangle2D.Double(x - 274 + 80, y - 50, 250, 80);
+                    this.hitbox[0] = new Rectangle2D.Double(this.x - 274 + 80, this.y - 50, 250, 80);
                     break;
                 case 3:
-                    this.hitbox[0] = new Rectangle2D.Double(x - 274 + 20, y - 100, 270, 60);
+                    this.hitbox[0] = new Rectangle2D.Double(this.x - 274 + 20, this.y - 100, 270, 60);
                     break;
             }
         }

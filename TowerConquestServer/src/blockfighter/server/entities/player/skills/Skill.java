@@ -15,6 +15,7 @@ public abstract class Skill {
     public final static byte NUM_SKILLS = 30,
             SWORD_VORPAL = 0x00,
             SWORD_MULTI = 0x01,
+            SWORD_PHANTOM = 0x01,
             SWORD_CINDER = 0x02,
             SWORD_DRIVE = 0x03,
             SWORD_SLASH = 0x04,

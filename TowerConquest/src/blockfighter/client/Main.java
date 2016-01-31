@@ -1,8 +1,6 @@
 package blockfighter.client;
 
 import blockfighter.client.entities.boss.Boss;
-import blockfighter.client.entities.items.ItemEquip;
-import blockfighter.client.entities.items.ItemUpgrade;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.client.entities.player.Player;
 import blockfighter.client.maps.GameMap;
@@ -25,6 +23,20 @@ import org.apache.commons.lang3.concurrent.BasicThreadFactory;
  */
 public class Main {
 
+    private static final SoundModule SOUND_MODULE = new SoundModule();
+
+    private static final LogicModule LOGIC_MODULE = new LogicModule(SOUND_MODULE);
+    private static final ExecutorService SHARED_THREADPOOL = Executors.newFixedThreadPool(4,
+            new BasicThreadFactory.Builder()
+            .namingPattern("SharedThreads-%d")
+            .daemon(true)
+            .priority(Thread.NORM_PRIORITY)
+            .build());
+
+    static {
+        SHARED_THREADPOOL.execute(SOUND_MODULE);
+    }
+
     /**
      * @param args the command line arguments
      * @throws java.lang.NoSuchFieldException
@@ -41,39 +53,26 @@ public class Main {
     }
 
     private static void createAndShowGUI() {
-        Globals.loadGFX();
-        ItemEquip.loadItemDetails();
-        ItemEquip.loadItemDrawOrigin();
-        ItemUpgrade.loadUpgradeItems();
-        final ExecutorService threadPool = Executors.newFixedThreadPool(4,
-                new BasicThreadFactory.Builder()
-                .namingPattern("SharedThreads-%d")
-                .daemon(true)
-                .priority(Thread.NORM_PRIORITY)
-                .build());
 
         final JFrame frame = new JFrame(Globals.WINDOW_TITLE);
         final RenderPanel panel = new RenderPanel();
-        final SoundModule sounds = new SoundModule();
-        threadPool.execute(sounds);
 
-        final LogicModule logic = new LogicModule(sounds);
         final RenderModule render = new RenderModule(panel);
 
         Screen.setRenderPanel(panel);
-        Particle.setLogic(logic);
-        Screen.setLogic(logic);
-        RenderModule.setLogic(logic);
-        FocusHandler.setLogic(logic);
-        KeyHandler.setLogic(logic);
-        MouseHandler.setLogic(logic);
-        Player.setLogic(logic);
-        Boss.setLogic(logic);
-        PacketHandler.setLogic(logic);
-        PacketReceiver.setLogic(logic);
+        Particle.setLogic(LOGIC_MODULE);
+        Screen.setLogic(LOGIC_MODULE);
+        RenderModule.setLogic(LOGIC_MODULE);
+        FocusHandler.setLogic(LOGIC_MODULE);
+        KeyHandler.setLogic(LOGIC_MODULE);
+        MouseHandler.setLogic(LOGIC_MODULE);
+        Player.setLogic(LOGIC_MODULE);
+        Boss.setLogic(LOGIC_MODULE);
+        PacketHandler.setLogic(LOGIC_MODULE);
+        PacketReceiver.setLogic(LOGIC_MODULE);
 
-        Screen.setThreadPool(threadPool);
-        GameMap.setThreadPool(threadPool);
+        Screen.setThreadPool(SHARED_THREADPOOL);
+        GameMap.setThreadPool(SHARED_THREADPOOL);
 
         final KeyHandler keyHandler = new KeyHandler();
         final MouseHandler mouseHandler = new MouseHandler();
@@ -98,8 +97,8 @@ public class Main {
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
             public void run() {
-                logic.disconnect();
-                sounds.shutdown();
+                LOGIC_MODULE.disconnect();
+                SOUND_MODULE.shutdown();
             }
         });
         final ScheduledExecutorService service = Executors.newScheduledThreadPool(2, new BasicThreadFactory.Builder()
@@ -107,7 +106,7 @@ public class Main {
                 .daemon(true)
                 .priority(Thread.NORM_PRIORITY)
                 .build());
-        service.scheduleAtFixedRate(logic, 0, 5, TimeUnit.MILLISECONDS);
+        service.scheduleAtFixedRate(LOGIC_MODULE, 0, 5, TimeUnit.MILLISECONDS);
         service.scheduleAtFixedRate(render, 0, Globals.RENDER_UPDATE, TimeUnit.MICROSECONDS);
     }
 }

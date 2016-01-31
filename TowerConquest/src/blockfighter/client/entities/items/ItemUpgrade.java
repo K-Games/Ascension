@@ -18,7 +18,11 @@ public class ItemUpgrade implements Item {
     protected int level;
     protected int itemCode;
 
-    public static void loadUpgradeItems() {
+    static {
+        loadUpgradeItems();
+    }
+
+    private static void loadUpgradeItems() {
         ITEM_NAMES.put(ITEM_TOME, "Tome of Enhancement");
     }
 

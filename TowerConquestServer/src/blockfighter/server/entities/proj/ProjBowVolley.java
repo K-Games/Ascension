@@ -29,12 +29,12 @@ public class ProjBowVolley extends Projectile {
      * @param y Spawn y-coordinate
      */
     public ProjBowVolley(final LogicModule l, final int k, final Player o, final double x, final double y) {
-        super(l, k, o, x, y, 400);
+        super(l, k, o, x, y - 10 + Globals.rng(40), 400);
         this.hitbox = new Rectangle2D.Double[1];
         if (o.getFacing() == Globals.RIGHT) {
-            this.hitbox[0] = new Rectangle2D.Double(x + 130, y - 98, 465, 15);
+            this.hitbox[0] = new Rectangle2D.Double(this.x + 130, this.y - 98, 465, 15);
         } else {
-            this.hitbox[0] = new Rectangle2D.Double(x - 490 - 130, y - 98, 465, 15);
+            this.hitbox[0] = new Rectangle2D.Double(this.x - 465 - 130, this.y - 98, 465, 15);
         }
     }
 
