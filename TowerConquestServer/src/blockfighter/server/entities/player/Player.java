@@ -1653,14 +1653,14 @@ public class Player extends Thread implements GameEntity {
 
     private void updateWalk(final boolean moved) {
         if (this.dirKeydown[Globals.RIGHT] && !this.dirKeydown[Globals.LEFT]) {
-            setXSpeed(4);
+            setXSpeed(4.5);
             if (moved) {
                 if (this.ySpeed == 0) {
                     queuePlayerState(PLAYER_STATE_WALK);
                 }
             }
         } else if (this.dirKeydown[Globals.LEFT] && !this.dirKeydown[Globals.RIGHT]) {
-            setXSpeed(-4);
+            setXSpeed(-4.5);
             if (moved) {
                 if (this.ySpeed == 0) {
                     queuePlayerState(PLAYER_STATE_WALK);
