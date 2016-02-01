@@ -32,25 +32,25 @@ public class ProjSwordSlash extends Projectile {
         if (o.getFacing() == Globals.RIGHT) {
             switch (hit) {
                 case 1:
-                    this.hitbox[0] = new Rectangle2D.Double(this.x-20, this.y - 120, 250, 80);
+                    this.hitbox[0] = new Rectangle2D.Double(this.x-20, this.y - 130, 250, 80);
                     break;
                 case 2:
-                    this.hitbox[0] = new Rectangle2D.Double(this.x-20, this.y - 70, 250, 80);
+                    this.hitbox[0] = new Rectangle2D.Double(this.x-20, this.y - 90, 250, 80);
                     break;
                 case 3:
-                    this.hitbox[0] = new Rectangle2D.Double(this.x-20, this.y - 95, 270, 60);
+                    this.hitbox[0] = new Rectangle2D.Double(this.x-20, this.y - 100, 270, 60);
                     break;
             }
         } else {
             switch (hit) {
                 case 1:
-                    this.hitbox[0] = new Rectangle2D.Double(this.x - 274+20, this.y - 120, 250, 80);
+                    this.hitbox[0] = new Rectangle2D.Double(this.x - 274+20, this.y - 130, 250, 80);
                     break;
                 case 2:
-                    this.hitbox[0] = new Rectangle2D.Double(this.x - 274+20, this.y - 70, 250, 80);
+                    this.hitbox[0] = new Rectangle2D.Double(this.x - 274+20, this.y - 90, 250, 80);
                     break;
                 case 3:
-                    this.hitbox[0] = new Rectangle2D.Double(this.x - 274+20, this.y - 95, 270, 60);
+                    this.hitbox[0] = new Rectangle2D.Double(this.x - 274+20, this.y - 100, 270, 60);
                     break;
             }
         }

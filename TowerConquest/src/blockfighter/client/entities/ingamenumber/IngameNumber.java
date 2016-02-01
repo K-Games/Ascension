@@ -8,8 +8,7 @@ import java.awt.Point;
  *
  * @author Ken Kwan
  */
-public class IngameNumber extends Thread{
-
+public class IngameNumber extends Thread {
 
     private final byte type;
     private double x, y;
@@ -23,7 +22,7 @@ public class IngameNumber extends Thread{
     public IngameNumber(final int dmg, final byte t, final Point loc) {
         this.damage = dmg;
         this.type = t;
-        this.x = loc.x;
+        this.x = loc.x + (Globals.rng(10) * 4 - 20);
         this.y = loc.y;
         // if (type == NUMBER_TYPE_EXP) {
         // duration = 1200;

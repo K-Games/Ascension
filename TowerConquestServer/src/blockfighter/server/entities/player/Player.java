@@ -594,9 +594,9 @@ public class Player extends Thread implements GameEntity {
         this.healQueue.clear();
         this.skillUseQueue.clear();
         this.buffQueue.clear();
-        if (this.respawnTimer >= 4500000000D) {
-            setXSpeed((this.facing == Globals.LEFT) ? 1.0 : -1.0);
-        } else {
+        if (this.respawnTimer >= 4500000000D && this.xSpeed == 0) {
+            setXSpeed((this.facing == Globals.LEFT) ? 1.5 : -1.5);
+        } else if (this.respawnTimer < 4500000000D) {
             setXSpeed(0);
         }
         if (this.respawnTimer <= 0) {
@@ -2045,7 +2045,11 @@ public class Player extends Thread implements GameEntity {
         bytes[9] = posYInt[3];
         bytes[10] = this.facing;
         bytes[11] = this.animState;
-        bytes[12] = this.frame;
+        if (this.frame < 0) {
+            bytes[12] = 0;
+        } else {
+            bytes[12] = this.frame;
+        }
 
         sender.sendAll(bytes, this.logic.getRoom());
         this.updatePos = false;
@@ -2103,7 +2107,11 @@ public class Player extends Thread implements GameEntity {
         bytes[0] = Globals.DATA_PLAYER_SET_STATE;
         bytes[1] = this.key;
         bytes[2] = this.animState;
-        bytes[3] = this.frame;
+        if (this.frame < 0) {
+            bytes[3] = 0;
+        } else {
+            bytes[3] = this.frame;
+        }
         sender.sendAll(bytes, this.logic.getRoom());
         this.updateAnimState = false;
     }
