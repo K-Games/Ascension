@@ -1022,7 +1022,7 @@ public class Player extends Thread implements GameEntity {
             if (isSkillMaxed(Skill.SHIELD_IRON) && !map.isPvP()) {
                 for (final Map.Entry<Byte, Player> player : this.logic.getPlayers().entrySet()) {
                     final Player p = player.getValue();
-                    if (p != this) {
+                    if (p != this && !p.isDead()) {
                         p.queueBuff(new BuffShieldIron(2000, 0.4));
                         sendParticle(this.logic.getRoom(), Globals.PARTICLE_SHIELD_IRONALLY, p.getKey());
                     }
@@ -1050,9 +1050,11 @@ public class Player extends Thread implements GameEntity {
             if (isSkillMaxed(Skill.SHIELD_REFLECT)) {
                 for (final Map.Entry<Byte, Player> player : this.logic.getPlayers().entrySet()) {
                     final Player p = player.getValue();
-                    if (p != this) {
+                    if (p != this && !p.isDead()) {
                         p.queueBuff(new BuffShieldReflect(3000, 0.4, this, p));
-                        sendParticle(this.logic.getRoom(), Globals.PARTICLE_SHIELD_REFLECTCAST, p.getKey());
+                        if (!map.isPvP()) {
+                            sendParticle(this.logic.getRoom(), Globals.PARTICLE_SHIELD_REFLECTCAST, p.getKey());
+                        }
                     }
                 }
             }
@@ -1651,14 +1653,14 @@ public class Player extends Thread implements GameEntity {
 
     private void updateWalk(final boolean moved) {
         if (this.dirKeydown[Globals.RIGHT] && !this.dirKeydown[Globals.LEFT]) {
-            setXSpeed(4.5);
+            setXSpeed(4);
             if (moved) {
                 if (this.ySpeed == 0) {
                     queuePlayerState(PLAYER_STATE_WALK);
                 }
             }
         } else if (this.dirKeydown[Globals.LEFT] && !this.dirKeydown[Globals.RIGHT]) {
-            setXSpeed(-4.5);
+            setXSpeed(-4);
             if (moved) {
                 if (this.ySpeed == 0) {
                     queuePlayerState(PLAYER_STATE_WALK);
