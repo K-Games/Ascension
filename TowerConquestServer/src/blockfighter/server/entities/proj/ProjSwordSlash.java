@@ -67,7 +67,7 @@ public class ProjSwordSlash extends Projectile {
                     damage = (int) owner.criticalDamage(damage);
                 }
                 p.queueDamage(new Damage(damage, true, owner, p, crit, this.hitbox[0], p.getHitbox()));
-                p.queueBuff(new BuffKnockback(150, (owner.getFacing() == Globals.RIGHT) ? 0.5 : -0.5, -3, owner, p));
+                //p.queueBuff(new BuffKnockback(50, (owner.getFacing() == Globals.RIGHT) ? 0.5 : -0.5, -3, owner, p));
             }
         }
         while (!this.bossQueue.isEmpty()) {

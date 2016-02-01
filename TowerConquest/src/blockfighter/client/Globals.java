@@ -1,6 +1,5 @@
 package blockfighter.client;
 
-import blockfighter.client.entities.ingamenumber.IngameNumber;
 import blockfighter.client.entities.player.skills.Skill;
 import java.awt.Font;
 import java.awt.image.BufferedImage;
@@ -23,7 +22,7 @@ public class Globals {
 
     public final static byte GAME_MAJOR_VERSION = 0,
             GAME_MINOR_VERSION = 15,
-            GAME_UPDATE_NUMBER = 7;
+            GAME_UPDATE_NUMBER = 8;
 
     private final static String GAME_DEV_STATE = "ALPHA";
 
@@ -54,7 +53,7 @@ public class Globals {
     public final static double LOGIC_UPDATE = 1000000000D / LOGIC_TICKS_PER_SEC;
 
     // public final static double DMG_TICKS_PER_SEC = 60D;
-    public final static double DMG_UPDATE = 15000000D;
+    public final static double INGAME_NUMBER_UPDATE = 15000000D;
 
     // public final static double SEND_KEYDOWN_PER_SEC = 10D;
     public final static double SEND_KEYDOWN_UPDATE = 100000000D;

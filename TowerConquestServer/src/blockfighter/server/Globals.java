@@ -38,7 +38,7 @@ public class Globals {
 
     public final static byte GAME_MAJOR_VERSION = 0,
             GAME_MINOR_VERSION = 15,
-            GAME_UPDATE_NUMBER = 7;
+            GAME_UPDATE_NUMBER = 8;
     private final static String GAME_DEV_STATE = "ALPHA";
 
     public final static String GAME_RELEASE_VERSION = GAME_DEV_STATE + " " + GAME_MAJOR_VERSION + "." + GAME_MINOR_VERSION + "u"
@@ -284,7 +284,7 @@ public class Globals {
         }
     }
 
-    public final static void log(final String info, final String originName, final byte logType, final boolean console) {
+    public final static void log(final String origin, final String info, final byte logType, final boolean console) {
 
         final Runnable logging = () -> {
             String logFile;
@@ -310,23 +310,23 @@ public class Globals {
             }
 
             if (console) {
-                System.out.println(logT + info + "@" + originName);
+                System.out.println(logT + origin + ": " + info);
             }
 
             if (LOGGING) {
                 try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(new File(LOG_DIR, logFile), true)))) {
-                    out.println("[" + String.format("%1$td/%1$tm/%1$tY %1$tT", System.currentTimeMillis()) + "]" + info + "@" + originName);
+                    out.println("[" + String.format("%1$td/%1$tm/%1$tY %1$tT", System.currentTimeMillis()) + "]" + origin + "@" + info);
                 } catch (final IOException e) {
                     System.err.println(e);
                 }
             }
             switch (logType) {
                 case LOG_TYPE_ERR:
-                    errConsole.append("\n" + info + "@" + originName);
+                    errConsole.append("\n" + origin + "@" + info);
                     errConsole.setCaretPosition(errConsole.getDocument().getLength());
                     break;
                 case LOG_TYPE_DATA:
-                    dataConsole.append("\n" + info + "@" + originName);
+                    dataConsole.append("\n" + origin + "@" + info);
                     dataConsole.setCaretPosition(dataConsole.getDocument().getLength());
                     break;
             }

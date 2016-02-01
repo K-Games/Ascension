@@ -92,7 +92,7 @@ public class ScreenIngame extends Screen {
     private int ping = 0;
     private byte pID = 0;
 
-    private double lastUpdateTime = 0, lastDmgUpdateTime = 0;
+    private double lastUpdateTime = 0, lastNumberUpdateTime = 0;
     private double lastRequestTime = 50;
     private double lastQueueTime = 0;
     private double lastPingTime = 0;
@@ -148,9 +148,9 @@ public class ScreenIngame extends Screen {
             this.lastSendKeyTime = now;
         }
 
-        if (now - this.lastDmgUpdateTime >= Globals.DMG_UPDATE) {
-            updateDmgNum();
-            this.lastDmgUpdateTime = now;
+        if (now - this.lastNumberUpdateTime >= Globals.INGAME_NUMBER_UPDATE) {
+            updateIngameNumber();
+            this.lastNumberUpdateTime = now;
         }
 
         if (now - this.lastUpdateTime >= Globals.LOGIC_UPDATE) {
@@ -178,7 +178,7 @@ public class ScreenIngame extends Screen {
         }
     }
 
-    private void updateDmgNum() {
+    private void updateIngameNumber() {
         for (final Map.Entry<Integer, IngameNumber> pEntry : this.dmgNum.entrySet()) {
             threadPool.execute(pEntry.getValue());
         }

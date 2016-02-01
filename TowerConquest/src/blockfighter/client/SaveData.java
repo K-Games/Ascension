@@ -618,16 +618,13 @@ public class SaveData {
     }
 
     public void addSkill(final byte skillCode) {
+        if (this.baseStats[Globals.STAT_SKILLPOINTS] <= 0 || this.skills[skillCode].getLevel() >= 30) {
+            return;
+        }
         if (!Globals.TEST_MAX_LEVEL) {
-            if (this.baseStats[Globals.STAT_SKILLPOINTS] <= 0 || this.skills[skillCode].getLevel() >= 30) {
-                return;
-            }
             this.baseStats[Globals.STAT_SKILLPOINTS]--;
             this.skills[skillCode].addLevel((byte) 1);
         } else {
-            if (this.baseStats[Globals.STAT_SKILLPOINTS] <= 0 || this.skills[skillCode].getLevel() >= 30) {
-                return;
-            }
             final byte amount = (byte) (30 - this.skills[skillCode].getLevel());
             this.baseStats[Globals.STAT_SKILLPOINTS] -= amount;
             this.skills[skillCode].addLevel(amount);

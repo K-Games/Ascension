@@ -38,7 +38,7 @@ public class IngameNumber extends Thread{
 
     @Override
     public void run() {
-        this.duration -= Globals.DMG_UPDATE / 1000000;
+        this.duration -= Globals.INGAME_NUMBER_UPDATE / 1000000;
         if (this.duration < 0) {
             this.duration = 0;
         }

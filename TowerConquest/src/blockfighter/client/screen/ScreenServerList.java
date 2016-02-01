@@ -48,7 +48,7 @@ public class ScreenServerList extends ScreenMenu {
         this.SERVERADDRESS_FIELD.setText(loadServerList());
 
         try {
-            this.SERVER_ROOMS.addItem("PVP");
+            this.SERVER_ROOMS.addItem("Arena");
             for (int i = 0; i < 100; i++) {
                 this.SERVER_ROOMS.addItem("Level " + (i + 1));
             }

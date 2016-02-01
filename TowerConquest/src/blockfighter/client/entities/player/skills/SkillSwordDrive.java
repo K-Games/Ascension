@@ -16,7 +16,7 @@ public class SkillSwordDrive extends Skill {
         this.skillCode = SWORD_DRIVE;
         this.maxCooldown = 500;
         this.reqWeapon = Globals.ITEM_SWORD;
-        this.skillName = "Stab";
+        this.skillName = "Gash";
     }
 
     @Override
@@ -43,7 +43,7 @@ public class SkillSwordDrive extends Skill {
         g.drawString("Level: " + this.level + " - Requires " + ItemEquip.getItemTypeName(this.reqWeapon), drawX + 80, drawY + 50);
         g.drawString("Cooldown: 0.5 Second", drawX + 80, drawY + 70);
 
-        g.drawString("Attack 4 times.", drawX + 10, drawY + 90);
+        g.drawString("Swing your blade 4 times.", drawX + 10, drawY + 90);
 
         g.drawString("[Level " + this.level + "]", drawX + 10, drawY + 115);
         g.drawString("Deals " + (3 * this.level + 75) + "% damage per hit.", drawX + 10, drawY + 135);

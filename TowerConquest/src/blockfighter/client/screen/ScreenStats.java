@@ -18,7 +18,7 @@ public class ScreenStats extends ScreenMenu {
 
     private final SaveData c;
     private final double[] stats, bs;
-    Rectangle2D.Double[] addBox = new Rectangle2D.Double[6];
+    Rectangle2D.Double[] addBox = new Rectangle2D.Double[9];
     Rectangle2D.Double resetBox;
 
     public ScreenStats() {
@@ -28,6 +28,9 @@ public class ScreenStats extends ScreenMenu {
         this.addBox[3] = new Rectangle2D.Double(453, 148, 30, 23);
         this.addBox[4] = new Rectangle2D.Double(453, 173, 30, 23);
         this.addBox[5] = new Rectangle2D.Double(453, 198, 30, 23);
+        this.addBox[6] = new Rectangle2D.Double(493, 148, 30, 23);
+        this.addBox[7] = new Rectangle2D.Double(493, 173, 30, 23);
+        this.addBox[8] = new Rectangle2D.Double(493, 198, 30, 23);
         this.resetBox = new Rectangle2D.Double(255, 570, 180, 30);
         this.c = logic.getSelectedChar();
         this.stats = this.c.getTotalStats();
@@ -62,6 +65,12 @@ public class ScreenStats extends ScreenMenu {
             g.drawImage(button, 453, mainStat + 50 - 17, null);
         }
 
+        if (this.bs[Globals.STAT_POINTS] >= 50) {
+            g.drawImage(button, 493, mainStat - 17, null);
+            g.drawImage(button, 493, mainStat + 25 - 17, null);
+            g.drawImage(button, 493, mainStat + 50 - 17, null);
+        }
+
         g.setFont(Globals.ARIAL_15PT);
         if (this.bs[Globals.STAT_POINTS] >= 1) {
             drawStringOutline(g, "+1", 425, mainStat, 1);
@@ -73,7 +82,11 @@ public class ScreenStats extends ScreenMenu {
             drawStringOutline(g, "+5", 460, mainStat + 25, 1);
             drawStringOutline(g, "+5", 460, mainStat + 50, 1);
         }
-
+        if (this.bs[Globals.STAT_POINTS] >= 50) {
+            drawStringOutline(g, "+50", 495, mainStat, 2);
+            drawStringOutline(g, "+50", 495, mainStat + 25, 1);
+            drawStringOutline(g, "+50", 495, mainStat + 50, 1);
+        }
         g.setColor(Color.WHITE);
         if (this.bs[Globals.STAT_POINTS] >= 1) {
             g.drawString("+1", 425, mainStat);
@@ -84,6 +97,11 @@ public class ScreenStats extends ScreenMenu {
             g.drawString("+5", 460, mainStat);
             g.drawString("+5", 460, mainStat + 25);
             g.drawString("+5", 460, mainStat + 50);
+        }
+        if (this.bs[Globals.STAT_POINTS] >= 50) {
+            g.drawString("+50", 495, mainStat);
+            g.drawString("+50", 495, mainStat + 25);
+            g.drawString("+50", 495, mainStat + 50);
         }
 
         g.setFont(Globals.ARIAL_18PT);
@@ -213,6 +231,23 @@ public class ScreenStats extends ScreenMenu {
                             break;
                         case 5:
                             this.c.addStat(Globals.STAT_SPIRIT, 5);
+                            break;
+                    }
+                }
+            }
+        }
+        if (this.bs[Globals.STAT_POINTS] >= 50) {
+            for (int i = 6; i < 9; i++) {
+                if (this.addBox[i].contains(e.getPoint())) {
+                    switch (i) {
+                        case 6:
+                            this.c.addStat(Globals.STAT_POWER, 50);
+                            break;
+                        case 7:
+                            this.c.addStat(Globals.STAT_DEFENSE, 50);
+                            break;
+                        case 8:
+                            this.c.addStat(Globals.STAT_SPIRIT, 50);
                             break;
                     }
                 }
