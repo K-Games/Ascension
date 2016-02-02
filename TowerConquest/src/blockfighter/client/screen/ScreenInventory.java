@@ -150,6 +150,7 @@ public class ScreenInventory extends ScreenMenu {
         }
         // Tab pointer
         g.drawImage(Globals.MENU_TABPOINTER[0], 260, (int) this.tabs[this.selectedTab].y, null);
+        g.drawImage(Globals.MENU_TABPOINTER[1], (int) this.tabs[this.selectedTab].x, (int) this.tabs[this.selectedTab].y, null);
 
     }
 

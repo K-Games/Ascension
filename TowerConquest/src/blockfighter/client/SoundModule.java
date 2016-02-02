@@ -1,5 +1,6 @@
 package blockfighter.client;
 
+import com.threed.jpct.SimpleVector;
 import paulscode.sound.SoundSystemConfig;
 import paulscode.sound.SoundSystemJPCT;
 
@@ -19,21 +20,25 @@ public class SoundModule implements Runnable {
         SoundSystemConfig.setSoundFilesPackage("blockfighter/client/sounds/");
     }
 
+    public void setListenerPos(final int x, final int y) {
+        soundModule.setListenerPosition(new SimpleVector(x, y, 0));
+    }
+
     public void shutdown() {
         this.soundModule.cleanup();
     }
 
-    public void playSound(final String soundFile) {
+    public void playSound(final byte soundID, final int x, final int y) {
         if (isLoaded()) {
-            this.soundModule.quickPlay(soundFile, false);
+            this.soundModule.quickPlay(Globals.SOUND_SFX[soundID], false, new SimpleVector(x, y, 0));
         }
     }
 
-    public void playBGM(final String bgmFile) {
-        if (isLoaded() && bgmFile != null) {
+    public void playBGM(final byte bgmID) {
+        if (isLoaded() && bgmID > -1) {
             this.soundModule.stop("bgm");
-            this.soundModule.backgroundMusic("bgm", bgmFile);
-            System.out.println("Play " + bgmFile);
+            this.soundModule.backgroundMusic("bgm", Globals.SOUND_BGM[bgmID]);
+            System.out.println("Play " + Globals.SOUND_BGM[bgmID]);
         }
     }
 

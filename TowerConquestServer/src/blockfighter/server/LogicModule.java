@@ -291,7 +291,7 @@ public class LogicModule extends Thread {
     /**
      * Queue move update to be applied for a player.
      * <p>
-     * Data is only referenced here.<br/>
+     * Data is only referenced here.
      * Data to be processed in the queue later.
      * </p>
      *

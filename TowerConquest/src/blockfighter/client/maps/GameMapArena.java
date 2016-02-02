@@ -13,7 +13,7 @@ import javax.imageio.ImageIO;
 public class GameMapArena extends GameMap {
 
     BufferedImage[] platforms = new BufferedImage[3];
-    String bgm;
+    byte bgm;
 
     public GameMapArena() {
         super.setMapID(0);
@@ -50,11 +50,22 @@ public class GameMapArena extends GameMap {
         for (int i = 0; i < this.platforms.length; i++) {
             this.platforms[i] = ImageIO.read(Globals.class.getResourceAsStream("sprites/maps/" + getMapID() + "/plat" + i + ".png"));
         }
-        this.bgm = "bgm/" + Globals.rng(3) + ".ogg";
+        int random = Globals.rng(3);
+        switch (random) {
+            case 0:
+                this.bgm = Globals.BGM_ARENA1;
+                break;
+            case 1:
+                this.bgm = Globals.BGM_ARENA2;
+                break;
+            case 2:
+                this.bgm = Globals.BGM_ARENA3;
+                break;
+        }
     }
 
     @Override
-    public String getBGM() {
+    public byte getBGM() {
         return bgm;
     }
 }

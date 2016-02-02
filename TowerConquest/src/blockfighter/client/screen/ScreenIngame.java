@@ -163,6 +163,7 @@ public class ScreenIngame extends Screen {
             updateParticles(this.particles);
             updatePlayers();
             updateBosses();
+            logic.setSoundLisenterPos(this.players.get(this.myKey).getX(), this.players.get(this.myKey).getY());
             this.lastUpdateTime = now;
         }
 
@@ -469,8 +470,18 @@ public class ScreenIngame extends Screen {
                 case Globals.DATA_PLAYER_GIVEDROP:
                     dataPlayerGiveDrop(data);
                     break;
+                case Globals.DATA_SOUND_EFFECT:
+                    dataSoundEffect(data);
+                    break;
             }
         }
+    }
+
+    private void dataSoundEffect(final byte[] data) {
+        final byte sfxID = data[1];
+        final int x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
+        final int y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
+        logic.playSound(sfxID, x, y);
     }
 
     private void dataPlayerGiveDrop(final byte[] data) {

@@ -38,7 +38,7 @@ public class LogicModule implements Runnable {
     @Override
     public void run() {
         if (this.soundModule.isLoaded() && !this.initBgm) {
-            this.soundModule.playBGM("theme.ogg");
+            this.soundModule.playBGM(Globals.BGM_MENU);
             this.initBgm = true;
         }
         try {
@@ -230,15 +230,15 @@ public class LogicModule implements Runnable {
     public void returnMenu() {
         shutdownSocket();
         setScreen(new ScreenServerList());
-        this.soundModule.playBGM("theme.ogg");
+        this.soundModule.playBGM(Globals.BGM_MENU);
     }
 
-    public void playSound(final String soundFile) {
-        this.soundModule.playSound(soundFile);
+    public void playSound(final byte sfxID, final int x, final int y) {
+        this.soundModule.playSound(sfxID, x, y);
     }
 
-    public void playBGM(final String bgmFile) {
-        this.soundModule.playBGM(bgmFile);
+    public void playBGM(final byte bgmID) {
+        this.soundModule.playBGM(bgmID);
     }
 
     public void disableSound() {
@@ -248,7 +248,9 @@ public class LogicModule implements Runnable {
     public void enableSound() {
         this.soundModule.unmute();
     }
-
+    public void setSoundLisenterPos(final int x, final int y){
+        this.soundModule.setListenerPos(x, y);
+    }
     private void shutdownSocket() {
         if (this.receiver != null) {
             this.receiver.shutdown(false);

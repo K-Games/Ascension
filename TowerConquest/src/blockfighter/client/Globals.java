@@ -240,7 +240,7 @@ public class Globals {
     public final static BufferedImage[] MENU_UPGRADEPARTICLE = new BufferedImage[4];
     public final static BufferedImage[] MENU_BUTTON = new BufferedImage[16];
     public final static BufferedImage[] MENU_WINDOW = new BufferedImage[2];
-    public final static BufferedImage[] MENU_TABPOINTER = new BufferedImage[1];
+    public final static BufferedImage[] MENU_TABPOINTER = new BufferedImage[2];
     public final static BufferedImage[] MENU_ITEMDELETE = new BufferedImage[1];
 
     // Use Cooper Std Black size 25
@@ -248,6 +248,24 @@ public class Globals {
     public final static BufferedImage[] EXP_WORD = new BufferedImage[1];
 
     public final static BufferedImage[] SKILL_ICON = new BufferedImage[Skill.NUM_SKILLS];
+
+    public final static byte NUM_BGM = 4,
+            BGM_MENU = 0x00,
+            BGM_ARENA1 = 0x01,
+            BGM_ARENA2 = 0x02,
+            BGM_ARENA3 = 0x03;
+
+    public final static byte NUM_SFX = 7,
+            SFX_SLASH1 = 0x00,
+            SFX_VOLLEY = 0x01,
+            SFX_RAPID = 0x02,
+            SFX_POWER = 0x03,
+            SFX_FORTIFY = 0x04,
+            SFX_IRON = 0x05,
+            SFX_ARC = 0x06;
+
+    public final static String[] SOUND_BGM = new String[NUM_BGM];
+    public final static String[] SOUND_SFX = new String[NUM_SFX];
 
     public final static byte BUTTON_BIGRECT = 0,
             BUTTON_SELECTCHAR = 1,
@@ -273,6 +291,26 @@ public class Globals {
             NUMBER_TYPE_PLAYERCRIT = 1,
             NUMBER_TYPE_BOSS = 2,
             NUMBER_TYPE_EXP = 3;
+
+    static {
+        loadSound();
+        loadGFX();
+    }
+
+    private static void loadSound() {
+        SOUND_BGM[BGM_MENU] = "theme.ogg";
+        SOUND_BGM[BGM_ARENA1] = "bgm/0.ogg";
+        SOUND_BGM[BGM_ARENA2] = "bgm/1.ogg";
+        SOUND_BGM[BGM_ARENA3] = "bgm/2.ogg";
+
+        SOUND_SFX[SFX_SLASH1] = "sfx/slash/0.wav";
+        SOUND_SFX[SFX_VOLLEY] = "sfx/bow/0.wav";
+        SOUND_SFX[SFX_RAPID] = "sfx/bow/1.wav";
+        SOUND_SFX[SFX_ARC] = "sfx/bow/2.wav";
+        SOUND_SFX[SFX_POWER] = "sfx/bow/3.wav";
+        SOUND_SFX[SFX_FORTIFY] = "sfx/fortify.wav";
+        SOUND_SFX[SFX_IRON] = "sfx/iron.wav";
+    }
 
     public static final String getStatName(final byte statID) {
         switch (statID) {
@@ -310,10 +348,6 @@ public class Globals {
                 return "Damage Reduction";
         }
         return "INVALID STAT";
-    }
-
-    static {
-        loadGFX();
     }
 
     public static final double calcArmor(final double defense) {
@@ -428,6 +462,7 @@ public class Globals {
             }
 
             MENU_TABPOINTER[0] = ImageIO.read(Globals.class.getResourceAsStream("sprites/ui/menu/pointer.png"));
+            MENU_TABPOINTER[1] = ImageIO.read(Globals.class.getResourceAsStream("sprites/ui/menu/pointer2.png"));
             MENU_ITEMDELETE[0] = ImageIO.read(Globals.class.getResourceAsStream("sprites/ui/menu/delete.png"));
             MENU_SMOKE[0] = ImageIO.read(Globals.class.getResourceAsStream("sprites/ui/menu/smoke.png"));
             for (byte i = 0; i < 29; i++) {
