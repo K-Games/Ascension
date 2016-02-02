@@ -641,7 +641,11 @@ public class Player extends Thread implements GameEntity {
             return;
         }
 
-        final byte[] data = this.skillUseQueue.poll();
+        byte[] data = this.skillUseQueue.poll();
+        while (!this.skillUseQueue.isEmpty() && this.skills.get(data[3]).getCooldown() > 0) {
+            data = this.skillUseQueue.poll();
+        }
+        
         this.skillUseQueue.clear();
         if (data != null) {
             if (data[3] == Skill.SHIELD_IRON || (!isStunned() && !isKnockback())) {
@@ -1699,7 +1703,6 @@ public class Player extends Thread implements GameEntity {
      */
     public void queueSkillUse(final byte[] data) {
         this.lastActionTime = Globals.SERVER_MAX_IDLE;
-        this.skillUseQueue.clear();
         if (!isDead()) {
             this.skillUseQueue.add(data);
         }
