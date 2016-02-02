@@ -38,7 +38,7 @@ public class Globals {
 
     public final static byte GAME_MAJOR_VERSION = 0,
             GAME_MINOR_VERSION = 15,
-            GAME_UPDATE_NUMBER = 8;
+            GAME_UPDATE_NUMBER = 10;
     private final static String GAME_DEV_STATE = "ALPHA";
 
     public final static String GAME_RELEASE_VERSION = GAME_DEV_STATE + " " + GAME_MAJOR_VERSION + "." + GAME_MINOR_VERSION + "u"
@@ -131,7 +131,7 @@ public class Globals {
             PARTICLE_SWORD_PHANTOM2 = 0x2A;
     
     public final static byte NUM_SFX = 6,
-            SFX_SLASH1 = 0x00,
+            SFX_SLASH = 0x00,
             SFX_VOLLEY = 0x01,
             SFX_RAPID = 0x02,
             SFX_POWER = 0x03,

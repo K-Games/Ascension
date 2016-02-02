@@ -22,7 +22,7 @@ public class Globals {
 
     public final static byte GAME_MAJOR_VERSION = 0,
             GAME_MINOR_VERSION = 15,
-            GAME_UPDATE_NUMBER = 8;
+            GAME_UPDATE_NUMBER = 10;
 
     private final static String GAME_DEV_STATE = "ALPHA";
 
@@ -256,7 +256,7 @@ public class Globals {
             BGM_ARENA3 = 0x03;
 
     public final static byte NUM_SFX = 7,
-            SFX_SLASH1 = 0x00,
+            SFX_SLASH = 0x00,
             SFX_VOLLEY = 0x01,
             SFX_RAPID = 0x02,
             SFX_POWER = 0x03,
@@ -303,13 +303,13 @@ public class Globals {
         SOUND_BGM[BGM_ARENA2] = "bgm/1.ogg";
         SOUND_BGM[BGM_ARENA3] = "bgm/2.ogg";
 
-        SOUND_SFX[SFX_SLASH1] = "sfx/slash/0.wav";
-        SOUND_SFX[SFX_VOLLEY] = "sfx/bow/0.wav";
-        SOUND_SFX[SFX_RAPID] = "sfx/bow/1.wav";
-        SOUND_SFX[SFX_ARC] = "sfx/bow/2.wav";
-        SOUND_SFX[SFX_POWER] = "sfx/bow/3.wav";
-        SOUND_SFX[SFX_FORTIFY] = "sfx/fortify.wav";
-        SOUND_SFX[SFX_IRON] = "sfx/iron.wav";
+        SOUND_SFX[SFX_SLASH] = "sfx/sword/slash/0.wav";
+        SOUND_SFX[SFX_VOLLEY] = "sfx/bow/volley/0.wav";
+        SOUND_SFX[SFX_RAPID] = "sfx/bow/rapid/0.wav";
+        SOUND_SFX[SFX_ARC] = "sfx/bow/arc/0.wav";
+        SOUND_SFX[SFX_POWER] = "sfx/bow/power/0.wav";
+        SOUND_SFX[SFX_FORTIFY] = "sfx/shield/fortify/0.wav";
+        SOUND_SFX[SFX_IRON] = "sfx/shield/iron/0.wav";
     }
 
     public static final String getStatName(final byte statID) {

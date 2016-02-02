@@ -726,17 +726,17 @@ public class Player extends Thread implements GameEntity {
                 case 1:
                     sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_SLASH1, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
                             this.facing);
-                    sendSFX(Globals.SFX_SLASH1, getX(), getY());
+                    sendSFX(Globals.SFX_SLASH, getX(), getY());
                     break;
                 case 2:
                     sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_SLASH2, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
                             this.facing);
-                    sendSFX(Globals.SFX_SLASH1, getX(), getY());
+                    sendSFX(Globals.SFX_SLASH, getX(), getY());
                     break;
                 case 3:
                     sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_SLASH3, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
                             this.facing);
-                    sendSFX(Globals.SFX_SLASH1, getX(), getY());
+                    sendSFX(Globals.SFX_SLASH, getX(), getY());
                     break;
                 default:
                     break;
