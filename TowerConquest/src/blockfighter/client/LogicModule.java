@@ -44,7 +44,7 @@ public class LogicModule implements Runnable {
         try {
             this.screen.update();
         } catch (final Exception ex) {
-            System.err.println(ex);
+            System.err.println(this.getClass().getCanonicalName() + ": " + ex.getLocalizedMessage() + "@" + ex.getStackTrace()[0]);
         }
     }
 
@@ -248,9 +248,11 @@ public class LogicModule implements Runnable {
     public void enableSound() {
         this.soundModule.unmute();
     }
-    public void setSoundLisenterPos(final int x, final int y){
+
+    public void setSoundLisenterPos(final int x, final int y) {
         this.soundModule.setListenerPos(x, y);
     }
+
     private void shutdownSocket() {
         if (this.receiver != null) {
             this.receiver.shutdown(false);

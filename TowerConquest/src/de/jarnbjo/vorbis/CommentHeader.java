@@ -47,7 +47,7 @@ public class CommentHeader {
     public static final String ISRC = "ISRC";
 
     private String vendor;
-    private HashMap comments = new HashMap();
+    private final HashMap<String, ArrayList<String>> comments = new HashMap<>();
     private boolean framingBit;
 
     private static final long HEADER = 0x736962726f76L; // 'vorbis'
@@ -74,9 +74,9 @@ public class CommentHeader {
     }
 
     private void addComment(String key, String value) {
-        ArrayList al = (ArrayList) comments.get(key);
+        ArrayList<String> al = comments.get(key);
         if (al == null) {
-            al = new ArrayList();
+            al = new ArrayList<>();
             comments.put(key, al);
         }
         al.add(value);
@@ -92,7 +92,7 @@ public class CommentHeader {
     }
 
     public String[] getComments(String key) {
-        ArrayList al = (ArrayList) comments.get(key);
+        ArrayList<String> al = comments.get(key);
         return al == null ? new String[0] : (String[]) al.toArray(new String[al.size()]);
     }
 

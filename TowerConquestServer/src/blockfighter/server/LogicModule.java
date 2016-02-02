@@ -45,7 +45,7 @@ public class LogicModule extends Thread {
     private long lastRefreshAll = 0;
     private double lastUpdateTime = 0;
 
-    private static ExecutorService logicThreadPool = Executors.newFixedThreadPool(Globals.SERVER_LOGIC_THREADS,
+    private static final ExecutorService LOGIC_THREAD_POOL = Executors.newFixedThreadPool(Globals.SERVER_LOGIC_THREADS,
             new BasicThreadFactory.Builder()
             .namingPattern("LogicModule-%d")
             .daemon(true)
@@ -157,7 +157,7 @@ public class LogicModule extends Thread {
 
     private void updateBosses() {
         for (final Map.Entry<Byte, Boss> boss : this.bosses.entrySet()) {
-            logicThreadPool.execute(boss.getValue());
+            LOGIC_THREAD_POOL.execute(boss.getValue());
         }
         for (final Map.Entry<Byte, Boss> boss : this.bosses.entrySet()) {
             try {
@@ -170,7 +170,7 @@ public class LogicModule extends Thread {
 
     private void updatePlayers() {
         for (final Map.Entry<Byte, Player> player : this.players.entrySet()) {
-            logicThreadPool.execute(player.getValue());
+            LOGIC_THREAD_POOL.execute(player.getValue());
         }
         final LinkedList<Byte> remove = new LinkedList<>();
         for (final Map.Entry<Byte, Player> player : this.players.entrySet()) {
@@ -200,7 +200,7 @@ public class LogicModule extends Thread {
 
     private void updateProjectiles() {
         for (final Map.Entry<Integer, Projectile> p : this.projectiles.entrySet()) {
-            logicThreadPool.execute(p.getValue());
+            LOGIC_THREAD_POOL.execute(p.getValue());
         }
         final LinkedList<Integer> remove = new LinkedList<>();
         for (final Map.Entry<Integer, Projectile> p : this.projectiles.entrySet()) {
@@ -291,8 +291,7 @@ public class LogicModule extends Thread {
     /**
      * Queue move update to be applied for a player.
      * <p>
-     * Data is only referenced here.
-     * Data to be processed in the queue later.
+     * Data is only referenced here. Data to be processed in the queue later.
      * </p>
      *
      * @param data Bytes to be processed - 1:Key, 2:direction, 3:1 = true, 0 = false
@@ -415,7 +414,7 @@ public class LogicModule extends Thread {
         };
 
         for (final Runnable t : queues) {
-            logicThreadPool.execute(t);
+            LOGIC_THREAD_POOL.execute(t);
         }
     }
 

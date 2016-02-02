@@ -35,7 +35,7 @@ public class FileStream implements PhysicalOggStream {
     private long[] pageOffsets;
     private long numberOfSamples = -1;
 
-    private HashMap logicalStreams = new HashMap();
+    private HashMap<Integer, LogicalOggStreamImpl> logicalStreams = new HashMap<>();
 
     /**
      * Creates access to the specified file through the <code>PhysicalOggStream</code> interface. The specified source file must have been opened for reading.
@@ -48,7 +48,7 @@ public class FileStream implements PhysicalOggStream {
     public FileStream(RandomAccessFile source) throws OggFormatException, IOException {
         this.source = source;
 
-        ArrayList po = new ArrayList();
+        ArrayList<Long> po = new ArrayList<>();
         int pageNumber = 0;
         try {
             while (true) {

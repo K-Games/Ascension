@@ -9,8 +9,8 @@ import java.net.DatagramPacket;
  */
 public class ServerPacket {
 
-    private DatagramPacket packet;
-    private Player destPlayer;
+    private final DatagramPacket packet;
+    private final Player destPlayer;
 
     public ServerPacket(final DatagramPacket data, final Player p) {
         this.packet = data;
@@ -20,8 +20,8 @@ public class ServerPacket {
     public DatagramPacket getDatagram() {
         return this.packet;
     }
-    
-    public Player getPlayer(){
+
+    public Player getPlayer() {
         return destPlayer;
     }
 }

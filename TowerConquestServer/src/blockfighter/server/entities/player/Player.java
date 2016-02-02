@@ -969,7 +969,7 @@ public class Player extends Thread implements GameEntity {
                     this.facing);
             sendParticle(this.logic.getRoom(), Globals.PARTICLE_BOW_RAPID2, (getFacing() == Globals.LEFT) ? x - 20 : x - 40, proj.getHitbox()[0].getY() - 40,
                     this.facing);
-            sendSFX(Globals.SFX_RAPID, getX(),getY());
+            sendSFX(Globals.SFX_RAPID, getX(), getY());
         }
         if (this.skillDuration >= 550) {
             setPlayerState(PLAYER_STATE_STAND);
@@ -985,7 +985,7 @@ public class Player extends Thread implements GameEntity {
                     this.facing);
             sendParticle(this.logic.getRoom(), Globals.PARTICLE_BOW_VOLLEYBOW, getX(), getY() + 30, this.facing);
             this.skillCounter++;
-            sendSFX(Globals.SFX_VOLLEY, getX(),getY());
+            sendSFX(Globals.SFX_VOLLEY, getX(), getY());
         }
         if (this.skillDuration >= 1900 || isStunned() || isKnockback()) {
             setPlayerState(PLAYER_STATE_STAND);
@@ -1001,7 +1001,7 @@ public class Player extends Thread implements GameEntity {
             this.logic.queueAddProj(proj);
             sendParticle(this.logic.getRoom(), Globals.PARTICLE_BOW_POWER, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
                     this.facing);
-            sendSFX(Globals.SFX_POWER, getX(),getY());
+            sendSFX(Globals.SFX_POWER, getX(), getY());
         }
         if (this.skillDuration >= 1400 || (!isSkillMaxed(Skill.BOW_POWER) && this.skillDuration < 800 && (isStunned() || isKnockback()))) {
             setPlayerState(PLAYER_STATE_STAND);
@@ -1011,7 +1011,7 @@ public class Player extends Thread implements GameEntity {
     private void updateSkillShieldFortify() {
         if (this.skillDuration == 0) {
             sendParticle(this.logic.getRoom(), Globals.PARTICLE_SHIELD_FORTIFY, this.key);
-            sendSFX(Globals.SFX_FORTIFY, getX(),getY());
+            sendSFX(Globals.SFX_FORTIFY, getX(), getY());
         }
         if (this.skillDuration >= 350) {
             queueBuff(new BuffShieldFortify(5000, 0.01 + 0.005 * getSkillLevel(Skill.SHIELD_FORTIFY), this));
@@ -1023,7 +1023,7 @@ public class Player extends Thread implements GameEntity {
     private void updateSkillShieldIron() {
         if (this.skillDuration == 0) {
             sendParticle(this.logic.getRoom(), Globals.PARTICLE_SHIELD_IRON, this.key);
-            sendSFX(Globals.SFX_IRON, getX(),getY());
+            sendSFX(Globals.SFX_IRON, getX(), getY());
         }
         if (this.skillDuration == 100) {
             setRemovingDebuff(true);

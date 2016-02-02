@@ -36,7 +36,7 @@ public class PacketSender implements Runnable {
     private int bytesSent = 0;
     private final ConcurrentLinkedQueue<ServerPacket> outPacketQueue = new ConcurrentLinkedQueue<>();
 
-    private static ExecutorService senderThreadPool = new ThreadPoolExecutor(0, Globals.SERVER_PACKETSENDER_THREADS,
+    private static final ExecutorService SENDER_THREAD_POOL = new ThreadPoolExecutor(0, Globals.SERVER_PACKETSENDER_THREADS,
             10L, TimeUnit.SECONDS,
             new LinkedBlockingQueue<>(),
             new BasicThreadFactory.Builder()
@@ -52,7 +52,7 @@ public class PacketSender implements Runnable {
         while (!this.outPacketQueue.isEmpty()) {
             final ServerPacket p = this.outPacketQueue.poll();
             if (p != null) {
-                senderThreadPool.execute(() -> {
+                SENDER_THREAD_POOL.execute(() -> {
                     try {
                         if (p.getPlayer().isConnected()) {
                             socket.send(p.getDatagram());
@@ -115,7 +115,7 @@ public class PacketSender implements Runnable {
      * @param port Port of destination player
      */
     public void sendAddress(final byte[] bytes, final InetAddress address, final int port) {
-        senderThreadPool.execute(() -> {
+        SENDER_THREAD_POOL.execute(() -> {
             try {
                 final DatagramPacket packet = createPacket(bytes, address, port);
                 socket.send(packet);

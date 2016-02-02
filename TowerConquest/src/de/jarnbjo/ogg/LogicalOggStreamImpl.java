@@ -35,8 +35,8 @@ public class LogicalOggStreamImpl implements LogicalOggStream {
     private PhysicalOggStream source;
     private int serialNumber;
 
-    private ArrayList pageNumberMapping = new ArrayList();
-    private ArrayList granulePositions = new ArrayList();
+    private ArrayList<Integer> pageNumberMapping = new ArrayList<>();
+    private ArrayList<Long> granulePositions = new ArrayList<>();
 
     private int pageIndex = 0;
     private OggPage currentPage;
@@ -59,24 +59,27 @@ public class LogicalOggStreamImpl implements LogicalOggStream {
         granulePositions.add(granulePosition);
     }
 
+    @Override
     public synchronized void reset() throws OggFormatException, IOException {
         currentPage = null;
         currentSegmentIndex = 0;
         pageIndex = 0;
     }
 
+    @Override
     public synchronized OggPage getNextOggPage() throws EndOfOggStreamException, OggFormatException, IOException {
         if (source.isSeekable()) {
-            currentPage = source.getOggPage(((Integer) pageNumberMapping.get(pageIndex++)));
+            currentPage = source.getOggPage((pageNumberMapping.get(pageIndex++)));
         } else {
             currentPage = source.getOggPage(-1);
         }
         return currentPage;
     }
 
+    @Override
     public synchronized byte[] getNextOggPacket() throws EndOfOggStreamException, OggFormatException, IOException {
         ByteArrayOutputStream res = new ByteArrayOutputStream();
-        int segmentLength = 0;
+        int segmentLength;
 
         if (currentPage == null) {
             currentPage = getNextOggPage();
@@ -104,7 +107,7 @@ public class LogicalOggStreamImpl implements LogicalOggStream {
                                 done = true;
                             }
                             if (currentSegmentIndex > currentPage.getSegmentTable().length) {
-                                currentPage = source.getOggPage(((Integer) pageNumberMapping.get(pageIndex++)));
+                                currentPage = source.getOggPage((pageNumberMapping.get(pageIndex++)));
                             }
                         }
                     }
@@ -120,44 +123,49 @@ public class LogicalOggStreamImpl implements LogicalOggStream {
         return res.toByteArray();
     }
 
+    @Override
     public boolean isOpen() {
         return open;
     }
 
+    @Override
     public void close() throws IOException {
         open = false;
     }
 
+    @Override
     public long getMaximumGranulePosition() {
-        Long mgp = (Long) granulePositions.get(granulePositions.size() - 1);
+        Long mgp = granulePositions.get(granulePositions.size() - 1);
         return mgp;
     }
 
+    @Override
     public synchronized long getTime() {
         return currentPage != null ? currentPage.getAbsoluteGranulePosition() : -1;
     }
 
+    @Override
     public synchronized void setTime(long granulePosition) throws IOException {
 
-        int page = 0;
+        int page;
         for (page = 0; page < granulePositions.size(); page++) {
-            Long gp = (Long) granulePositions.get(page);
+            Long gp = granulePositions.get(page);
             if (gp > granulePosition) {
                 break;
             }
         }
 
         pageIndex = page;
-        currentPage = source.getOggPage(((Integer) pageNumberMapping.get(pageIndex++)));
+        currentPage = source.getOggPage((pageNumberMapping.get(pageIndex++)));
         currentSegmentIndex = 0;
-        int segmentLength = 0;
+        int segmentLength;
         do {
             if (currentSegmentIndex >= currentPage.getSegmentOffsets().length) {
                 currentSegmentIndex = 0;
                 if (pageIndex >= pageNumberMapping.size()) {
                     throw new EndOfOggStreamException();
                 }
-                currentPage = source.getOggPage(((Integer) pageNumberMapping.get(pageIndex++)));
+                currentPage = source.getOggPage((pageNumberMapping.get(pageIndex++)));
             }
             segmentLength = currentPage.getSegmentLengths()[currentSegmentIndex];
             currentSegmentIndex++;
@@ -195,6 +203,7 @@ public class LogicalOggStreamImpl implements LogicalOggStream {
         }
     }
 
+    @Override
     public String getFormat() {
         return format;
     }

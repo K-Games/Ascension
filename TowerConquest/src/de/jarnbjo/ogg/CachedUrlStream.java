@@ -37,17 +37,19 @@ public class CachedUrlStream implements PhysicalOggStream {
     private Object drainLock = new Object();
     private RandomAccessFile drain;
     private byte[] memoryCache;
-    private ArrayList pageOffsets = new ArrayList();
-    private ArrayList pageLengths = new ArrayList();
+    private ArrayList<Long> pageOffsets = new ArrayList<>();
+    private ArrayList<Long> pageLengths = new ArrayList<>();
     private long numberOfSamples = -1;
     private long cacheLength;
 
-    private HashMap logicalStreams = new HashMap();
+    private HashMap<Integer, LogicalOggStreamImpl> logicalStreams = new HashMap<>();
 
     private LoaderThread loaderThread;
 
     /**
      * Creates an instance of this class, using a memory cache.
+     *
+     * @param source
      */
     public CachedUrlStream(URL source) throws OggFormatException, IOException {
         this(source, null);

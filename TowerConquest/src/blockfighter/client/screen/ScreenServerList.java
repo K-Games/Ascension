@@ -29,12 +29,19 @@ public class ScreenServerList extends ScreenMenu {
             STATUS_WRONGVERSION = 4;
 
     private final JTextField SERVERADDRESS_FIELD = new JTextField();
-    private final JComboBox<String> SERVER_ROOMS = new JComboBox<>();
+    private final JComboBox<String> SERVER_ROOMS;
     private final Rectangle connect = new Rectangle(650, 230, 200, 70);
     private String status = "Waiting to connect...";
     private boolean connecting = false;
 
     public ScreenServerList() {
+
+        String[] listItems = new String[101];
+        listItems[0] = "Arena";
+        for (int i = 0; i < 100; i++) {
+            listItems[i + 1] = "Level " + (i + 1);
+        }
+        SERVER_ROOMS = new JComboBox<>(listItems);
         final FocusHandler focusHandler = new FocusHandler();
         this.SERVERADDRESS_FIELD.addFocusListener(focusHandler);
         this.SERVER_ROOMS.addFocusListener(focusHandler);
@@ -47,14 +54,6 @@ public class ScreenServerList extends ScreenMenu {
         this.SERVERADDRESS_FIELD.setOpaque(true);
         this.SERVERADDRESS_FIELD.setText(loadServerList());
 
-        try {
-            this.SERVER_ROOMS.addItem("Arena");
-            for (int i = 0; i < 100; i++) {
-                this.SERVER_ROOMS.addItem("Level " + (i + 1));
-            }
-        } catch (final Exception e) {
-
-        }
         this.SERVER_ROOMS.setFont(Globals.ARIAL_24PT);
         this.SERVER_ROOMS.setForeground(Color.WHITE);
         this.SERVER_ROOMS.setBackground(Color.BLACK);
@@ -160,6 +159,7 @@ public class ScreenServerList extends ScreenMenu {
                 // Connect
                 if (this.SERVERADDRESS_FIELD.getText().trim().length() > 0) {
                     this.connecting = true;
+                    this.SERVER_ROOMS.setEnabled(false);
                     saveServerList(this.SERVERADDRESS_FIELD.getText().trim());
                     logic.sendLogin(this.SERVERADDRESS_FIELD.getText().trim(), (byte) this.SERVER_ROOMS.getSelectedIndex());
                 }
@@ -204,22 +204,27 @@ public class ScreenServerList extends ScreenMenu {
                 break;
             case STATUS_SOCKETCLOSED:
                 this.connecting = false;
+                this.SERVER_ROOMS.setEnabled(true);
                 this.status = "Could not connect: Socket closed.";
                 break;
             case STATUS_FAILEDCONNECT:
                 this.connecting = false;
+                this.SERVER_ROOMS.setEnabled(true);
                 this.status = "Could not connect: Cannot reach server.";
                 break;
             case STATUS_UNKNOWNHOST:
                 this.connecting = false;
+                this.SERVER_ROOMS.setEnabled(true);
                 this.status = "Could not connect: Cannot resolve host.";
                 break;
             case STATUS_WRONGVERSION:
                 this.connecting = false;
+                this.SERVER_ROOMS.setEnabled(true);
                 this.status = "Could not connect: Server is a different version.";
                 break;
             default:
                 this.connecting = false;
+                this.SERVER_ROOMS.setEnabled(true);
                 this.status = "Unkown Status";
         }
     }

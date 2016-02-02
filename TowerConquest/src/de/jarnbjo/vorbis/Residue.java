@@ -37,7 +37,7 @@ abstract class Residue {
     protected int classBook; // groupbook
     protected int[] cascade; // secondstages
     protected int[][] books;
-    protected HashMap looks = new HashMap();
+    protected HashMap<Mode, Look> looks = new HashMap<>();
 
     protected Residue() {
     }
@@ -54,7 +54,7 @@ abstract class Residue {
         int acc = 0;
 
         for (int i = 0; i < classifications; i++) {
-            int highBits = 0, lowBits = 0;
+            int highBits = 0, lowBits;
             lowBits = source.getInt(3);
             if (source.getBit()) {
                 highBits = source.getInt(5);
@@ -140,7 +140,7 @@ abstract class Residue {
 
     protected Look getLook(VorbisStream source, Mode key) {
         //return new Look(source, key);
-        Look look = (Look) looks.get(key);
+        Look look = looks.get(key);
         if (look == null) {
             look = new Look(source, key);
             looks.put(key, look);

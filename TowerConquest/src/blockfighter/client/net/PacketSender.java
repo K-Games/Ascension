@@ -230,7 +230,7 @@ public class PacketSender {
         try {
             socket.send(packet);
         } catch (final Exception ex) {
-            System.err.println("sendPacket:" + ex.getMessage());
+            System.err.println(PacketSender.class.getCanonicalName() + ": " + ex.getLocalizedMessage() + "@" + ex.getStackTrace()[0]);
         }
     }
 

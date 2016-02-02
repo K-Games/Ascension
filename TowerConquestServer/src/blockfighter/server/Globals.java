@@ -129,7 +129,7 @@ public class Globals {
             PARTICLE_BOW_RAPID2 = 0x28,
             PARTICLE_SWORD_PHANTOM = 0x29,
             PARTICLE_SWORD_PHANTOM2 = 0x2A;
-    
+
     public final static byte NUM_SFX = 6,
             SFX_SLASH = 0x00,
             SFX_VOLLEY = 0x01,
@@ -138,7 +138,7 @@ public class Globals {
             SFX_FORTIFY = 0x04,
             SFX_IRON = 0x05,
             SFX_ARC = 0x06;
-    
+
     public final static byte NUM_ITEM_TABS = 10,
             ITEM_WEAPON = 0, // ITEM_WEAPON is the equipment slot
             ITEM_SWORD = 0, // ITEM_SWORD is the item type.

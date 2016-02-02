@@ -11,7 +11,7 @@ import java.awt.geom.Rectangle2D;
  * @author Ken Kwan
  */
 public class Damage {
-    
+
     private final byte type;
     private final int damage;
     private boolean canProc = false,

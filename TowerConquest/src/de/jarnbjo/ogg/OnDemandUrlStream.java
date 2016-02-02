@@ -34,15 +34,15 @@ import java.util.*;
 public class OnDemandUrlStream implements PhysicalOggStream {
 
     private boolean closed = false;
-    private URLConnection source;
-    private InputStream sourceStream;
-    private Object drainLock = new Object();
-    private LinkedList pageCache = new LinkedList();
-    private long numberOfSamples = -1;
+    private final URLConnection source;
+    private final InputStream sourceStream;
+    private final Object drainLock = new Object();
+    private final LinkedList pageCache = new LinkedList();
+    private final long numberOfSamples = -1;
     private int contentLength = 0;
     private int position = 0;
 
-    private HashMap logicalStreams = new HashMap();
+    private final HashMap<Integer, LogicalOggStreamImpl> logicalStreams = new HashMap<>();
     private OggPage firstPage;
 
     private static final int PAGECACHE_SIZE = 20;
@@ -60,14 +60,17 @@ public class OnDemandUrlStream implements PhysicalOggStream {
         los.checkFormat(firstPage);
     }
 
+    @Override
     public Collection getLogicalStreams() {
         return logicalStreams.values();
     }
 
+    @Override
     public boolean isOpen() {
         return !closed;
     }
 
+    @Override
     public void close() throws IOException {
         closed = true;
         sourceStream.close();
@@ -83,6 +86,7 @@ public class OnDemandUrlStream implements PhysicalOggStream {
 
     int pageNumber = 2;
 
+    @Override
     public OggPage getOggPage(int index) throws IOException {
         if (firstPage != null) {
             OggPage tmp = firstPage;
@@ -99,6 +103,7 @@ public class OnDemandUrlStream implements PhysicalOggStream {
         return (LogicalOggStream) logicalStreams.get(serialNumber);
     }
 
+    @Override
     public void setTime(long granulePosition) throws IOException {
         throw new UnsupportedOperationException("Method not supported by this class");
     }
@@ -106,6 +111,7 @@ public class OnDemandUrlStream implements PhysicalOggStream {
     /**
      * @return always <code>false</code>
      */
+    @Override
     public boolean isSeekable() {
         return false;
     }

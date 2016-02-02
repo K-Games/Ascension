@@ -34,10 +34,10 @@ public class UncachedUrlStream implements PhysicalOggStream {
     private URLConnection source;
     private InputStream sourceStream;
     private Object drainLock = new Object();
-    private LinkedList pageCache = new LinkedList();
+    private LinkedList<OggPage> pageCache = new LinkedList<>();
     private long numberOfSamples = -1;
 
-    private HashMap logicalStreams = new HashMap();
+    private HashMap<Integer, LogicalOggStreamImpl> logicalStreams = new HashMap<>();
 
     private LoaderThread loaderThread;
 
@@ -64,14 +64,17 @@ public class UncachedUrlStream implements PhysicalOggStream {
         //System.out.println();
     }
 
+    @Override
     public Collection getLogicalStreams() {
         return logicalStreams.values();
     }
 
+    @Override
     public boolean isOpen() {
         return !closed;
     }
 
+    @Override
     public void close() throws IOException {
         closed = true;
         sourceStream.close();
@@ -92,8 +95,9 @@ public class UncachedUrlStream implements PhysicalOggStream {
       return OggPage.create(sourceStream, skipData);
    }
      */
+    @Override
     public OggPage getOggPage(int index) throws IOException {
-        while (pageCache.size() == 0) {
+        while (pageCache.isEmpty()) {
             try {
                 Thread.sleep(100);
             } catch (InterruptedException ex) {
@@ -111,6 +115,7 @@ public class UncachedUrlStream implements PhysicalOggStream {
         return (LogicalOggStream) logicalStreams.get(serialNumber);
     }
 
+    @Override
     public void setTime(long granulePosition) throws IOException {
         throw new UnsupportedOperationException("Method not supported by this class");
     }
@@ -118,7 +123,7 @@ public class UncachedUrlStream implements PhysicalOggStream {
     public class LoaderThread implements Runnable {
 
         private InputStream source;
-        private LinkedList pageCache;
+        private LinkedList<OggPage> pageCache;
         private RandomAccessFile drain;
         private byte[] memoryCache;
 
@@ -126,11 +131,12 @@ public class UncachedUrlStream implements PhysicalOggStream {
 
         private int pageNumber;
 
-        public LoaderThread(InputStream source, LinkedList pageCache) {
+        public LoaderThread(InputStream source, LinkedList<OggPage> pageCache) {
             this.source = source;
             this.pageCache = pageCache;
         }
 
+        @Override
         public void run() {
             try {
                 boolean eos = false;
@@ -169,7 +175,7 @@ public class UncachedUrlStream implements PhysicalOggStream {
             } catch (EndOfOggStreamException e) {
                 // ok
             } catch (IOException e) {
-                e.printStackTrace();
+                System.err.println(this.getClass().getCanonicalName() + ": " + e.getLocalizedMessage() + "@" + e.getStackTrace()[0]);
             }
         }
 
@@ -181,6 +187,7 @@ public class UncachedUrlStream implements PhysicalOggStream {
     /**
      * @return always <code>false</code>
      */
+    @Override
     public boolean isSeekable() {
         return false;
     }

@@ -962,8 +962,7 @@ public class MidiChannel implements MetaEventListener {
                     }
                 }
             } else //non-looping
-            {
-                if (!checkFadeOut()) {
+             if (!checkFadeOut()) {
                     if (!incrementSequence()) {
                         try {
                             // stop playback:
@@ -986,7 +985,6 @@ public class MidiChannel implements MetaEventListener {
                     } catch (Exception e) {
                     }
                 }
-            }
         }
     }
 
@@ -1229,8 +1227,7 @@ public class MidiChannel implements MetaEventListener {
                             + "with MIDI device receiver");
                 }
             } else // Bug-fix for multiple-receivers playing simultaneously
-            {
-                if (synthesizer.getDefaultSoundbank() == null) {
+             if (synthesizer.getDefaultSoundbank() == null) {
                     // Link the sequencer to the default receiver:
                     try {
                         sequencer.getTransmitter().setReceiver(
@@ -1249,7 +1246,6 @@ public class MidiChannel implements MetaEventListener {
                                 + "with synthesizer receiver");
                     }
                 } // End bug-fix
-            }
         }
     }
 
