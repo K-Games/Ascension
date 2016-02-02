@@ -120,7 +120,7 @@ public class SaveData {
         }
 
         for (final int itemCode : ItemEquip.ITEM_CODES) {
-            final ItemEquip startEq = new ItemEquip(itemCode, this.baseStats[Globals.STAT_LEVEL]);
+            final ItemEquip startEq = new ItemEquip(itemCode, this.baseStats[Globals.STAT_LEVEL], Globals.TEST_MAX_LEVEL);
             addItem(startEq);
         }
 

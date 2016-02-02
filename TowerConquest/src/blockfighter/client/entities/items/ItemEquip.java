@@ -306,20 +306,16 @@ public class ItemEquip implements Item {
     }
 
     public ItemEquip(final int ic, final double level) {
-        this.itemCode = ic;
-        this.baseStats = newEquipStat(ic, level);
-        this.bonusMult = Globals.rng(101) / 100D;
-        this.upgrades = 0;
-        update();
+        this(ic, level, false);
     }
 
     public ItemEquip(final int ic, final double level, final boolean legendary) {
         this.itemCode = ic;
         this.baseStats = newEquipStat(ic, level);
         if (legendary) {
-            this.bonusMult = (Globals.rng(20) + 81) / 100D;
+            this.bonusMult = (Globals.rng(10) + 90) / 100D;
         } else {
-            this.bonusMult = Globals.rng(80) / 100D;
+            this.bonusMult = Globals.rng(101) / 100D;
         }
         this.upgrades = 0;
         update();
@@ -331,49 +327,49 @@ public class ItemEquip implements Item {
 
         switch (getItemType(ic)) {
             case Globals.ITEM_WEAPON:
-                newStats[Globals.STAT_POWER] = level + (Globals.rng(26) / 100D) * level;
+                newStats[Globals.STAT_POWER] = level + 0.25D * level + Globals.rng(6);
                 break;
             case Globals.ITEM_BOW:
-                newStats[Globals.STAT_POWER] = level + (Globals.rng(26) / 100D) * level;
+                newStats[Globals.STAT_POWER] = level + 0.25D * level + Globals.rng(6);
                 break;
             case Globals.ITEM_SHIELD:
-                newStats[Globals.STAT_DEFENSE] = level + (Globals.rng(26) / 100D) * level;
+                newStats[Globals.STAT_DEFENSE] = level + 0.25D * level + Globals.rng(6);
                 break;
             case Globals.ITEM_QUIVER:
-                newStats[Globals.STAT_POWER] = level + (Globals.rng(26) / 100D) * level;
-                newStats[Globals.STAT_CRITCHANCE] = Math.round(Globals.rng(26) / 100D * level + level * 0.75) * 0.001;
+                newStats[Globals.STAT_POWER] = level + 0.25D * level + Globals.rng(6);
+                newStats[Globals.STAT_CRITCHANCE] = level * 0.001 + Globals.rng(11) * 0.001;
                 break;
             case Globals.ITEM_CHEST:
-                newStats[Globals.STAT_DEFENSE] = level + (Globals.rng(26) / 100D) * level;
+                newStats[Globals.STAT_DEFENSE] = level + 0.25D * level + Globals.rng(6);
                 break;
             case Globals.ITEM_PANTS:
-                newStats[Globals.STAT_DEFENSE] = level + (Globals.rng(26) / 100D) * level;
+                newStats[Globals.STAT_DEFENSE] = level + 0.25D * level + Globals.rng(6);
                 break;
             case Globals.ITEM_HEAD:
-                newStats[Globals.STAT_DEFENSE] = level + (Globals.rng(26) / 100D) * level;
-                newStats[Globals.STAT_SPIRIT] = level + (Globals.rng(26) / 100D) * level;
+                newStats[Globals.STAT_DEFENSE] = level + 0.25D * level + Globals.rng(6);
+                newStats[Globals.STAT_SPIRIT] = level + 0.25D * level + Globals.rng(6);
                 break;
             case Globals.ITEM_SHOE:
-                newStats[Globals.STAT_SPIRIT] = level + (Globals.rng(26) / 100D) * level;
+                newStats[Globals.STAT_SPIRIT] = level + 0.25D * level + Globals.rng(6);
                 break;
             case Globals.ITEM_BELT:
-                newStats[Globals.STAT_SPIRIT] = level + (Globals.rng(26) / 100D) * level;
+                newStats[Globals.STAT_SPIRIT] = level + 0.25D * level + Globals.rng(6);
                 break;
             case Globals.ITEM_SHOULDER:
-                newStats[Globals.STAT_DEFENSE] = level + (Globals.rng(26) / 100D) * level;
-                newStats[Globals.STAT_POWER] = level + (Globals.rng(26) / 100D) * level;
+                newStats[Globals.STAT_DEFENSE] = level + 0.25D * level + Globals.rng(6);
+                newStats[Globals.STAT_POWER] = level + 0.25D * level + Globals.rng(6);
                 break;
             case Globals.ITEM_GLOVE:
-                newStats[Globals.STAT_SPIRIT] = level + (Globals.rng(26) / 100D) * level;
-                newStats[Globals.STAT_POWER] = level + (Globals.rng(26) / 100D) * level;
+                newStats[Globals.STAT_SPIRIT] = level + 0.25D * level + Globals.rng(6);
+                newStats[Globals.STAT_POWER] = level + 0.25D * level + Globals.rng(6);
                 break;
             case Globals.ITEM_AMULET:
-                newStats[Globals.STAT_CRITDMG] = Math.round(Globals.rng(26) / 100D * level + level * 0.75) * 0.02;
-                newStats[Globals.STAT_REGEN] = Globals.rng((int) level + 1) * 5;
+                newStats[Globals.STAT_CRITDMG] = level * 0.02 + Globals.rng(20) * 0.01;
+                newStats[Globals.STAT_REGEN] = level * 5 + Globals.rng(10) * 5;
                 break;
             case Globals.ITEM_RING:
-                newStats[Globals.STAT_CRITCHANCE] = Math.round(Globals.rng(26) / 100D * level + level * 0.75) * 0.001;
-                newStats[Globals.STAT_ARMOR] = Math.round(Globals.rng(26) / 100D * level + level * 0.75) * 18;
+                newStats[Globals.STAT_CRITCHANCE] = level * 0.001 + Globals.rng(11) * 0.001;
+                newStats[Globals.STAT_ARMOR] = level * 18 + Globals.rng(10) * 18;
                 break;
         }
         newStats[Globals.STAT_POWER] = Math.round(newStats[Globals.STAT_POWER]);
@@ -634,18 +630,15 @@ public class ItemEquip implements Item {
         }
         if (this.bonusMult + this.upgrades * UPGRADE_MULT >= 1.1) {
             this.tier = TIER_DIVINE;
-        } else if (this.bonusMult + this.upgrades * UPGRADE_MULT >= 0.96) {
+        } else if (this.bonusMult + this.upgrades * UPGRADE_MULT >= .95) {
             this.tier = TIER_ARCHAIC;
-        } else if (this.bonusMult + this.upgrades * UPGRADE_MULT >= 0.81) {
+        } else if (this.bonusMult + this.upgrades * UPGRADE_MULT >= 0.9) {
             this.tier = TIER_LEGENDARY;
-        } else if (this.bonusMult + this.upgrades * UPGRADE_MULT >= 0.51) {
+        } else if (this.bonusMult + this.upgrades * UPGRADE_MULT >= 0.85) {
             this.tier = TIER_RUNIC;
-        } else if (this.bonusMult + this.upgrades * UPGRADE_MULT >= 0.15) {
+        } else if (this.bonusMult + this.upgrades * UPGRADE_MULT >= 0.7) {
             this.tier = TIER_RARE;
-        } else if (this.totalStats[Globals.STAT_CRITCHANCE] > 0
-                || this.totalStats[Globals.STAT_CRITDMG] > 0
-                || this.totalStats[Globals.STAT_ARMOR] > 0
-                || this.totalStats[Globals.STAT_REGEN] > 0) {
+        } else if (this.bonusMult + this.upgrades * UPGRADE_MULT >= 0.5) {
             this.tier = TIER_UNCOMMON;
         } else {
             this.tier = TIER_COMMON;
