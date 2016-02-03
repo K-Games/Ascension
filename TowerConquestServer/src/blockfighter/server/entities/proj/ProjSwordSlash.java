@@ -3,7 +3,6 @@ package blockfighter.server.entities.proj;
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.boss.Boss;
-import blockfighter.server.entities.buff.BuffKnockback;
 import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.player.skills.Skill;

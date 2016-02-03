@@ -106,7 +106,7 @@ public class Main {
                 .daemon(true)
                 .priority(Thread.NORM_PRIORITY)
                 .build());
-        service.scheduleAtFixedRate(LOGIC_MODULE, 0, 5, TimeUnit.MILLISECONDS);
+        service.scheduleAtFixedRate(LOGIC_MODULE, 0,20, TimeUnit.MICROSECONDS);
         service.scheduleAtFixedRate(render, 0, Globals.RENDER_UPDATE, TimeUnit.MICROSECONDS);
     }
 }

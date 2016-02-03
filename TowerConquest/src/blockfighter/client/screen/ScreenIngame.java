@@ -163,7 +163,7 @@ public class ScreenIngame extends Screen {
             updateParticles(this.particles);
             updatePlayers();
             updateBosses();
-            if (this.players.contains(this.myKey)) {
+            if (this.players.containsKey(this.myKey)) {
                 logic.setSoundLisenterPos(this.players.get(this.myKey).getX(), this.players.get(this.myKey).getY());
             }
             this.lastUpdateTime = now;

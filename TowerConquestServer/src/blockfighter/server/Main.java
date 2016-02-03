@@ -94,7 +94,7 @@ public class Main {
             senderSch.scheduleAtFixedRate(packetSender, 0, 500, TimeUnit.MICROSECONDS);
             for (byte i = 0; i < server_rooms.length; i++) {
                 server_rooms[i] = new LogicModule(i);
-                logicSchThreadPool.scheduleAtFixedRate(server_rooms[i], 0, 1, TimeUnit.MILLISECONDS);
+                logicSchThreadPool.scheduleAtFixedRate(server_rooms[i], 0, 20, TimeUnit.MICROSECONDS);
             }
             Globals.log("Initialization", "Initialized " + server_rooms.length + " rooms", Globals.LOG_TYPE_ERR, false);
             Globals.log("Initialization", "Initialized " + server_rooms.length + " rooms", Globals.LOG_TYPE_DATA, true);

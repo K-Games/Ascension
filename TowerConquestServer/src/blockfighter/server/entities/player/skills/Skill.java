@@ -62,7 +62,8 @@ public abstract class Skill {
     public void reduceCooldown(final long ms) {
         if (this.cooldown > 0) {
             this.cooldown -= ms;
-        } else {
+        }
+        if (this.cooldown < 0) {
             this.cooldown = 0;
         }
     }

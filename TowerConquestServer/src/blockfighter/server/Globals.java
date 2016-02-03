@@ -65,6 +65,9 @@ public class Globals {
             SERVER_PACKETSENDER_THREADS = 5;
 
     public final static byte MAX_NAME_LENGTH = 15;
+    
+    public final static double PROCESS_QUEUE_TICKS_PER_SEC = 100.0;
+    public final static double PROCESS_QUEUE = 1000000000 / PROCESS_QUEUE_TICKS_PER_SEC;
 
     public final static double LOGIC_TICKS_PER_SEC = 100.0;
     public final static double LOGIC_UPDATE = 1000000000 / LOGIC_TICKS_PER_SEC;
@@ -130,14 +133,15 @@ public class Globals {
             PARTICLE_SWORD_PHANTOM = 0x29,
             PARTICLE_SWORD_PHANTOM2 = 0x2A;
 
-    public final static byte NUM_SFX = 6,
+    public final static byte NUM_SFX = 8,
             SFX_SLASH = 0x00,
             SFX_VOLLEY = 0x01,
             SFX_RAPID = 0x02,
             SFX_POWER = 0x03,
             SFX_FORTIFY = 0x04,
             SFX_IRON = 0x05,
-            SFX_ARC = 0x06;
+            SFX_ARC = 0x06,
+            SFX_POWER2 = 0x07;
 
     public final static byte NUM_ITEM_TABS = 10,
             ITEM_WEAPON = 0, // ITEM_WEAPON is the equipment slot

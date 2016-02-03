@@ -43,7 +43,7 @@ public class LogicModule extends Thread {
     private final ConcurrentLinkedQueue<Projectile> projAddQueue = new ConcurrentLinkedQueue<>();
 
     private long lastRefreshAll = 0;
-    private double lastUpdateTime = 0;
+    private double lastUpdateTime = 0, lastProcessQueue = 0;
 
     private static final ExecutorService LOGIC_THREAD_POOL = Executors.newFixedThreadPool(Globals.SERVER_LOGIC_THREADS,
             new BasicThreadFactory.Builder()
@@ -116,7 +116,11 @@ public class LogicModule extends Thread {
     public void run() {
         try {
             boolean fin = false;
-            processQueues();
+            final double now = System.nanoTime();
+            if (now - this.lastProcessQueue >= Globals.PROCESS_QUEUE) {
+                processQueues();
+                this.lastProcessQueue = now;
+            }
             if (this.players.isEmpty()) {
                 return;
             }
@@ -128,8 +132,8 @@ public class LogicModule extends Thread {
                     }
                 }
             }
-            final double now = System.nanoTime();
             final long nowMs = System.currentTimeMillis();
+
             if (now - this.lastUpdateTime >= Globals.LOGIC_UPDATE) {
                 updatePlayers();
                 updateBosses();

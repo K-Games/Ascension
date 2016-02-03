@@ -60,7 +60,7 @@ public class ProjTouch extends BossProjectile {
             if (p != null && !p.isDead()) {
                 final int damage = (int) (70 * Math.pow(getBossOwner().getStats()[Boss.STAT_LEVEL], 1.7));
                 p.queueDamage(new Damage(damage, false, getBossOwner(), p, this.hitbox[0], p.getHitbox()));
-                p.queueBuff(new BuffKnockback(100, (getBossOwner().getFacing() == Globals.RIGHT) ? 5 : -5, -6, getBossOwner(), p));
+                p.queueBuff(new BuffKnockback(100, (p.getFacing() == Globals.RIGHT) ? -5 : 5, -6, getBossOwner(), p));
             }
         }
         this.queuedEffect = false;

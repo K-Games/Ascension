@@ -255,14 +255,15 @@ public class Globals {
             BGM_ARENA2 = 0x02,
             BGM_ARENA3 = 0x03;
 
-    public final static byte NUM_SFX = 7,
+    public final static byte NUM_SFX = 8,
             SFX_SLASH = 0x00,
             SFX_VOLLEY = 0x01,
             SFX_RAPID = 0x02,
             SFX_POWER = 0x03,
             SFX_FORTIFY = 0x04,
             SFX_IRON = 0x05,
-            SFX_ARC = 0x06;
+            SFX_ARC = 0x06,
+            SFX_POWER2 = 0x07;
 
     public final static String[] SOUND_BGM = new String[NUM_BGM];
     public final static String[] SOUND_SFX = new String[NUM_SFX];
@@ -308,6 +309,7 @@ public class Globals {
         SOUND_SFX[SFX_RAPID] = "sfx/bow/rapid/0.wav";
         SOUND_SFX[SFX_ARC] = "sfx/bow/arc/0.wav";
         SOUND_SFX[SFX_POWER] = "sfx/bow/power/0.wav";
+        SOUND_SFX[SFX_POWER2] = "sfx/bow/power/1.wav";
         SOUND_SFX[SFX_FORTIFY] = "sfx/shield/fortify/0.wav";
         SOUND_SFX[SFX_IRON] = "sfx/shield/iron/0.wav";
     }
