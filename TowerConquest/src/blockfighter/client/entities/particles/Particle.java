@@ -3,7 +3,6 @@ package blockfighter.client.entities.particles;
 import blockfighter.client.Globals;
 import static blockfighter.client.Globals.NUM_PARTICLE_EFFECTS;
 import blockfighter.client.LogicModule;
-import blockfighter.client.Main;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
@@ -72,10 +71,25 @@ public abstract class Particle extends Thread {
             PARTICLE_SPRITE[Globals.PARTICLE_SWORD_SLASH3][i] = ImageIO
                     .read(Globals.class.getResourceAsStream("sprites/particle/slash3/" + i + ".png"));
         }
-        PARTICLE_SPRITE[Globals.PARTICLE_SWORD_DRIVE] = new BufferedImage[8];
-        for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_DRIVE].length; i++) {
-            PARTICLE_SPRITE[Globals.PARTICLE_SWORD_DRIVE][i] = ImageIO
-                    .read(Globals.class.getResourceAsStream("sprites/particle/drive/" + i + ".png"));
+        PARTICLE_SPRITE[Globals.PARTICLE_SWORD_GASH1] = new BufferedImage[4];
+        for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_GASH1].length; i++) {
+            PARTICLE_SPRITE[Globals.PARTICLE_SWORD_GASH1][i] = ImageIO
+                    .read(Globals.class.getResourceAsStream("sprites/particle/gash1/" + i + ".png"));
+        }
+        PARTICLE_SPRITE[Globals.PARTICLE_SWORD_GASH2] = new BufferedImage[4];
+        for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_GASH2].length; i++) {
+            PARTICLE_SPRITE[Globals.PARTICLE_SWORD_GASH2][i] = ImageIO
+                    .read(Globals.class.getResourceAsStream("sprites/particle/gash2/" + i + ".png"));
+        }
+        PARTICLE_SPRITE[Globals.PARTICLE_SWORD_GASH3] = new BufferedImage[4];
+        for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_GASH3].length; i++) {
+            PARTICLE_SPRITE[Globals.PARTICLE_SWORD_GASH3][i] = ImageIO
+                    .read(Globals.class.getResourceAsStream("sprites/particle/gash3/" + i + ".png"));
+        }
+        PARTICLE_SPRITE[Globals.PARTICLE_SWORD_GASH4] = new BufferedImage[4];
+        for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_GASH4].length; i++) {
+            PARTICLE_SPRITE[Globals.PARTICLE_SWORD_GASH4][i] = ImageIO
+                    .read(Globals.class.getResourceAsStream("sprites/particle/gash4/" + i + ".png"));
         }
         PARTICLE_SPRITE[Globals.PARTICLE_SWORD_VORPAL] = new BufferedImage[8];
         for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_VORPAL].length; i++) {

@@ -40,7 +40,7 @@ public class ScreenSkills extends ScreenMenu {
         this.hotkeyList = this.c.getHotkeys();
         this.skillList = this.c.getSkills();
 
-        this.skillSlots[Skill.SWORD_DRIVE] = new Rectangle2D.Double(241, 55, 60, 60);
+        this.skillSlots[Skill.SWORD_GASH] = new Rectangle2D.Double(241, 55, 60, 60);
         this.skillSlots[Skill.SWORD_SLASH] = new Rectangle2D.Double(241, 145, 60, 60);
         //this.skillSlots[Skill.SWORD_MULTI] = new Rectangle2D.Double(241, 235, 60, 60);
         this.skillSlots[Skill.SWORD_PHANTOM] = new Rectangle2D.Double(241, 235, 60, 60);

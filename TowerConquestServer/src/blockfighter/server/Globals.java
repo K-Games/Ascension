@@ -38,7 +38,7 @@ public class Globals {
 
     public final static byte GAME_MAJOR_VERSION = 0,
             GAME_MINOR_VERSION = 15,
-            GAME_UPDATE_NUMBER = 10;
+            GAME_UPDATE_NUMBER = 12;
     private final static String GAME_DEV_STATE = "ALPHA";
 
     public final static String GAME_RELEASE_VERSION = GAME_DEV_STATE + " " + GAME_MAJOR_VERSION + "." + GAME_MINOR_VERSION + "u"
@@ -89,11 +89,11 @@ public class Globals {
             PLAYER_STATE_DEAD = 0x06,
             PLAYER_STATE_INVIS = 0x07;
 
-    public final static int NUM_PARTICLE_EFFECTS = 43;
+    public final static int NUM_PARTICLE_EFFECTS = 46;
     public final static byte PARTICLE_SWORD_SLASH1 = 0x00,
             PARTICLE_SWORD_SLASH2 = 0x01,
             PARTICLE_SWORD_SLASH3 = 0x02,
-            PARTICLE_SWORD_DRIVE = 0x03,
+            PARTICLE_SWORD_GASH1 = 0x03,
             PARTICLE_SWORD_VORPAL = 0x04,
             PARTICLE_SWORD_MULTI = 0x05,
             PARTICLE_SWORD_CINDER = 0x06,
@@ -131,9 +131,12 @@ public class Globals {
             PARTICLE_BLOOD = 0x27,
             PARTICLE_BOW_RAPID2 = 0x28,
             PARTICLE_SWORD_PHANTOM = 0x29,
-            PARTICLE_SWORD_PHANTOM2 = 0x2A;
+            PARTICLE_SWORD_PHANTOM2 = 0x2A,
+            PARTICLE_SWORD_GASH2 = 0x2B,
+            PARTICLE_SWORD_GASH3 = 0x2C,
+            PARTICLE_SWORD_GASH4 = 0x2D;
 
-    public final static byte NUM_SFX = 8,
+    public final static byte NUM_SFX = 9,
             SFX_SLASH = 0x00,
             SFX_VOLLEY = 0x01,
             SFX_RAPID = 0x02,
@@ -141,7 +144,8 @@ public class Globals {
             SFX_FORTIFY = 0x04,
             SFX_IRON = 0x05,
             SFX_ARC = 0x06,
-            SFX_POWER2 = 0x07;
+            SFX_POWER2 = 0x07,
+            SFX_GASH = 0x08;
 
     public final static byte NUM_ITEM_TABS = 10,
             ITEM_WEAPON = 0, // ITEM_WEAPON is the equipment slot

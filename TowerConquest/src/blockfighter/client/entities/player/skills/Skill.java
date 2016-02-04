@@ -25,7 +25,7 @@ public abstract class Skill {
             SWORD_MULTI = 0x01,
             SWORD_PHANTOM = 0x01,
             SWORD_CINDER = 0x02,
-            SWORD_DRIVE = 0x03,
+            SWORD_GASH = 0x03,
             SWORD_SLASH = 0x04,
             SWORD_TAUNT = 0x05,
             BOW_ARC = 0x06,

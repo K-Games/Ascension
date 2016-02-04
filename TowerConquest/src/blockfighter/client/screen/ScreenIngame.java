@@ -33,7 +33,10 @@ import blockfighter.client.entities.particles.ParticleShieldReflectEmitter;
 import blockfighter.client.entities.particles.ParticleShieldReflectHit;
 import blockfighter.client.entities.particles.ParticleShieldToss;
 import blockfighter.client.entities.particles.ParticleSwordCinder;
-import blockfighter.client.entities.particles.ParticleSwordDrive;
+import blockfighter.client.entities.particles.ParticleSwordGash;
+import blockfighter.client.entities.particles.ParticleSwordGash2;
+import blockfighter.client.entities.particles.ParticleSwordGash3;
+import blockfighter.client.entities.particles.ParticleSwordGash4;
 import blockfighter.client.entities.particles.ParticleSwordMulti;
 import blockfighter.client.entities.particles.ParticleSwordPhantom;
 import blockfighter.client.entities.particles.ParticleSwordPhantom2;
@@ -605,12 +608,29 @@ public class ScreenIngame extends Screen {
                 facing = data[10];
                 this.particles.put(key, new ParticleSwordSlash3(key, x, y, facing));
                 break;
-            case Globals.PARTICLE_SWORD_DRIVE:
-                facing = data[2];
-                playerKey = data[3];
-                if (this.players.containsKey(playerKey)) {
-                    this.particles.put(key, new ParticleSwordDrive(key, facing, this.players.get(playerKey)));
-                }
+            case Globals.PARTICLE_SWORD_GASH1:
+                x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
+                y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
+                facing = data[10];
+                this.particles.put(key, new ParticleSwordGash(key, x, y, facing));
+                break;
+            case Globals.PARTICLE_SWORD_GASH2:
+                x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
+                y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
+                facing = data[10];
+                this.particles.put(key, new ParticleSwordGash2(key, x, y, facing));
+                break;
+            case Globals.PARTICLE_SWORD_GASH3:
+                x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
+                y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
+                facing = data[10];
+                this.particles.put(key, new ParticleSwordGash3(key, x, y, facing));
+                break;
+            case Globals.PARTICLE_SWORD_GASH4:
+                x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
+                y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
+                facing = data[10];
+                this.particles.put(key, new ParticleSwordGash4(key, x, y, facing));
                 break;
             case Globals.PARTICLE_SWORD_VORPAL:
                 x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));

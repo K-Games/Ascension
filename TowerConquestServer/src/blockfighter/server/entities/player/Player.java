@@ -44,7 +44,7 @@ import blockfighter.server.entities.player.skills.SkillShieldIron;
 import blockfighter.server.entities.player.skills.SkillShieldReflect;
 import blockfighter.server.entities.player.skills.SkillShieldToss;
 import blockfighter.server.entities.player.skills.SkillSwordCinder;
-import blockfighter.server.entities.player.skills.SkillSwordDrive;
+import blockfighter.server.entities.player.skills.SkillSwordGash;
 import blockfighter.server.entities.player.skills.SkillSwordPhantom;
 import blockfighter.server.entities.player.skills.SkillSwordSlash;
 import blockfighter.server.entities.player.skills.SkillSwordTaunt;
@@ -59,7 +59,7 @@ import blockfighter.server.entities.proj.ProjShieldCharge;
 import blockfighter.server.entities.proj.ProjShieldReflect;
 import blockfighter.server.entities.proj.ProjShieldToss;
 import blockfighter.server.entities.proj.ProjSwordCinder;
-import blockfighter.server.entities.proj.ProjSwordDrive;
+import blockfighter.server.entities.proj.ProjSwordGash;
 import blockfighter.server.entities.proj.ProjSwordMulti;
 import blockfighter.server.entities.proj.ProjSwordPhantom;
 import blockfighter.server.entities.proj.ProjSwordSlash;
@@ -92,7 +92,7 @@ public class Player extends Thread implements GameEntity {
             PLAYER_STATE_SWORD_VORPAL = 0x03,
             PLAYER_STATE_SWORD_MULTI = 0x04,
             PLAYER_STATE_SWORD_CINDER = 0x05,
-            PLAYER_STATE_SWORD_DRIVE = 0x06,
+            PLAYER_STATE_SWORD_GASH = 0x06,
             PLAYER_STATE_SWORD_SLASH = 0x07,
             PLAYER_STATE_SWORD_TAUNT = 0x08,
             PLAYER_STATE_BOW_ARC = 0x09,
@@ -415,8 +415,8 @@ public class Player extends Thread implements GameEntity {
             case Skill.SWORD_CINDER:
                 newSkill = new SkillSwordCinder();
                 break;
-            case Skill.SWORD_DRIVE:
-                newSkill = new SkillSwordDrive();
+            case Skill.SWORD_GASH:
+                newSkill = new SkillSwordGash();
                 break;
             //case Skill.SWORD_MULTI:
             //    newSkill = new SkillSwordMulti();
@@ -616,7 +616,7 @@ public class Player extends Thread implements GameEntity {
     }
 
     private void castSkill(final byte[] data, final byte newState, final byte weaponSlot) {
-        
+
         if (!this.skills.get(data[3]).canCast(getItemType(this.equip[weaponSlot]))) {
             return;
         }
@@ -661,8 +661,8 @@ public class Player extends Thread implements GameEntity {
                         case Skill.SWORD_VORPAL:
                             castSkill(data, PLAYER_STATE_SWORD_VORPAL, Globals.ITEM_WEAPON);
                             break;
-                        case Skill.SWORD_DRIVE:
-                            castSkill(data, PLAYER_STATE_SWORD_DRIVE, Globals.ITEM_WEAPON);
+                        case Skill.SWORD_GASH:
+                            castSkill(data, PLAYER_STATE_SWORD_GASH, Globals.ITEM_WEAPON);
                             break;
                         //case Skill.SWORD_MULTI:
                         //    castSkill(data, PLAYER_STATE_SWORD_MULTI, Globals.ITEM_WEAPON);
@@ -754,12 +754,30 @@ public class Player extends Thread implements GameEntity {
         }
     }
 
-    private void updateSkillSwordDrive() {
-        if (this.skillDuration % 50 == 0 && this.skillDuration < 200) {
-            final ProjSwordDrive proj = new ProjSwordDrive(this.logic, this.logic.getNextProjKey(), this, this.x, this.y);
+    private void updateSkillSwordGash() {
+        final byte numHits = 4;
+        if (this.skillDuration % 50 == 0 && this.skillCounter < numHits) {
+            this.skillCounter++;
+            final ProjSwordGash proj = new ProjSwordGash(this.logic, this.logic.getNextProjKey(), this, this.x, this.y, (byte) this.skillCounter);
             this.logic.queueAddProj(proj);
-            if (this.skillDuration == 0) {
-                sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_DRIVE, this.key, this.facing);
+            sendSFX(this.logic.getRoom(), Globals.SFX_GASH, getX(), getY());
+            switch (this.skillCounter) {
+                case 1:
+                    sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_GASH1, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
+                            this.facing);
+                    break;
+                case 2:
+                    sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_GASH2, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
+                            this.facing);
+                    break;
+                case 3:
+                    sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_GASH3, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
+                            this.facing);
+                    break;
+                case 4:
+                    sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_GASH4, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
+                            this.facing);
+                    break;
             }
         }
         if (this.skillDuration >= 450) {
@@ -1136,8 +1154,8 @@ public class Player extends Thread implements GameEntity {
             case PLAYER_STATE_SWORD_SLASH:
                 updateSkillSwordSlash();
                 break;
-            case PLAYER_STATE_SWORD_DRIVE:
-                updateSkillSwordDrive();
+            case PLAYER_STATE_SWORD_GASH:
+                updateSkillSwordGash();
                 break;
             case PLAYER_STATE_SWORD_VORPAL:
                 updateSkillSwordVorpal();
@@ -1613,7 +1631,7 @@ public class Player extends Thread implements GameEntity {
     public boolean isUsingSkill() {
         return this.playerState == PLAYER_STATE_SWORD_SLASH
                 || this.playerState == PLAYER_STATE_SWORD_VORPAL
-                || this.playerState == PLAYER_STATE_SWORD_DRIVE
+                || this.playerState == PLAYER_STATE_SWORD_GASH
                 || this.playerState == PLAYER_STATE_SWORD_MULTI
                 || this.playerState == PLAYER_STATE_SWORD_TAUNT
                 || this.playerState == PLAYER_STATE_SWORD_CINDER
@@ -1885,7 +1903,7 @@ public class Player extends Thread implements GameEntity {
                     this.frame = 10;
                 }
                 break;
-            case PLAYER_STATE_SWORD_DRIVE:
+            case PLAYER_STATE_SWORD_GASH:
                 this.nextFrameTime -= Globals.LOGIC_UPDATE;
                 this.animState = Globals.PLAYER_STATE_ATTACK;
                 if (this.nextFrameTime <= 0 && this.frame < 10) {

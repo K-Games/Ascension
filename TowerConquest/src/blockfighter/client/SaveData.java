@@ -28,8 +28,7 @@ import blockfighter.client.entities.player.skills.SkillShieldIron;
 import blockfighter.client.entities.player.skills.SkillShieldReflect;
 import blockfighter.client.entities.player.skills.SkillShieldToss;
 import blockfighter.client.entities.player.skills.SkillSwordCinder;
-import blockfighter.client.entities.player.skills.SkillSwordDrive;
-import blockfighter.client.entities.player.skills.SkillSwordMulti;
+import blockfighter.client.entities.player.skills.SkillSwordGash;
 import blockfighter.client.entities.player.skills.SkillSwordPhantom;
 import blockfighter.client.entities.player.skills.SkillSwordSlash;
 import blockfighter.client.entities.player.skills.SkillSwordTaunt;
@@ -70,7 +69,7 @@ public class SaveData {
         this.uniqueID = Globals.rng(Integer.MAX_VALUE);
         // initalize skill list
         this.skills[Skill.SWORD_CINDER] = new SkillSwordCinder();
-        this.skills[Skill.SWORD_DRIVE] = new SkillSwordDrive();
+        this.skills[Skill.SWORD_GASH] = new SkillSwordGash();
         //this.skills[Skill.SWORD_MULTI] = new SkillSwordMulti();
         this.skills[Skill.SWORD_PHANTOM] = new SkillSwordPhantom();
         this.skills[Skill.SWORD_SLASH] = new SkillSwordSlash();

@@ -18,7 +18,7 @@ import java.awt.geom.Rectangle2D;
 public class ProjShieldCharge extends Projectile {
 
     /**
-     * Projectile of Sword Skill Drive.
+     * Projectile of Shield Skill Charge.
      *
      * @param l Room/Logic Module
      * @param k Projectile Key

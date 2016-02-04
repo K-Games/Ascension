@@ -9,11 +9,11 @@ import java.awt.Graphics2D;
  *
  * @author Ken Kwan
  */
-public class SkillSwordDrive extends Skill {
+public class SkillSwordGash extends Skill {
 
-    public SkillSwordDrive() {
-        this.icon = Globals.SKILL_ICON[SWORD_DRIVE];
-        this.skillCode = SWORD_DRIVE;
+    public SkillSwordGash() {
+        this.icon = Globals.SKILL_ICON[SWORD_GASH];
+        this.skillCode = SWORD_GASH;
         this.maxCooldown = 500;
         this.reqWeapon = Globals.ITEM_SWORD;
         this.skillName = "Gash";

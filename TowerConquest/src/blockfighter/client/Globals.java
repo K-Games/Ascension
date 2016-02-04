@@ -22,7 +22,7 @@ public class Globals {
 
     public final static byte GAME_MAJOR_VERSION = 0,
             GAME_MINOR_VERSION = 15,
-            GAME_UPDATE_NUMBER = 10;
+            GAME_UPDATE_NUMBER = 12;
 
     private final static String GAME_DEV_STATE = "ALPHA";
 
@@ -71,11 +71,11 @@ public class Globals {
 
     public final static int NUM_SOUND_EFFECTS = 0;
 
-    public final static int NUM_PARTICLE_EFFECTS = 43;
+    public final static int NUM_PARTICLE_EFFECTS = 46;
     public final static byte PARTICLE_SWORD_SLASH1 = 0x00,
             PARTICLE_SWORD_SLASH2 = 0x01,
             PARTICLE_SWORD_SLASH3 = 0x02,
-            PARTICLE_SWORD_DRIVE = 0x03,
+            PARTICLE_SWORD_GASH1 = 0x03,
             PARTICLE_SWORD_VORPAL = 0x04,
             PARTICLE_SWORD_MULTI = 0x05,
             PARTICLE_SWORD_CINDER = 0x06,
@@ -113,7 +113,10 @@ public class Globals {
             PARTICLE_BLOOD = 0x27,
             PARTICLE_BOW_RAPID2 = 0x28,
             PARTICLE_SWORD_PHANTOM = 0x29,
-            PARTICLE_SWORD_PHANTOM2 = 0x2A;
+            PARTICLE_SWORD_PHANTOM2 = 0x2A,
+            PARTICLE_SWORD_GASH2 = 0x2B,
+            PARTICLE_SWORD_GASH3 = 0x2C,
+            PARTICLE_SWORD_GASH4 = 0x2D;
 
     public final static int NUM_KEYBINDS = 16,
             KEYBIND_SKILL1 = 0,
@@ -255,7 +258,7 @@ public class Globals {
             BGM_ARENA2 = 0x02,
             BGM_ARENA3 = 0x03;
 
-    public final static byte NUM_SFX = 8,
+    public final static byte NUM_SFX = 9,
             SFX_SLASH = 0x00,
             SFX_VOLLEY = 0x01,
             SFX_RAPID = 0x02,
@@ -263,7 +266,8 @@ public class Globals {
             SFX_FORTIFY = 0x04,
             SFX_IRON = 0x05,
             SFX_ARC = 0x06,
-            SFX_POWER2 = 0x07;
+            SFX_POWER2 = 0x07,
+            SFX_GASH = 0x08;
 
     public final static String[] SOUND_BGM = new String[NUM_BGM];
     public final static String[] SOUND_SFX = new String[NUM_SFX];
@@ -305,6 +309,7 @@ public class Globals {
         SOUND_BGM[BGM_ARENA3] = "bgm/2.ogg";
 
         SOUND_SFX[SFX_SLASH] = "sfx/sword/slash/0.wav";
+        SOUND_SFX[SFX_GASH] = "sfx/sword/gash/0.wav";
         SOUND_SFX[SFX_VOLLEY] = "sfx/bow/volley/0.wav";
         SOUND_SFX[SFX_RAPID] = "sfx/bow/rapid/0.wav";
         SOUND_SFX[SFX_ARC] = "sfx/bow/arc/0.wav";

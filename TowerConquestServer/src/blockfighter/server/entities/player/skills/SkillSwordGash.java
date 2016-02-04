@@ -6,13 +6,13 @@ import blockfighter.server.Globals;
  *
  * @author Ken Kwan
  */
-public class SkillSwordDrive extends Skill {
+public class SkillSwordGash extends Skill {
 
     /**
-     * Constructor for Sword Skill Drive.
+     * Constructor for Sword Skill Gash.
      */
-    public SkillSwordDrive() {
-        this.skillCode = SWORD_DRIVE;
+    public SkillSwordGash() {
+        this.skillCode = SWORD_GASH;
         this.maxCooldown = 500;
         this.reqWeapon = Globals.ITEM_SWORD;
     }
