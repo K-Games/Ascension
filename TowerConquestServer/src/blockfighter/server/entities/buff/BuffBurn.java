@@ -1,6 +1,7 @@
 package blockfighter.server.entities.buff;
 
 import blockfighter.server.Globals;
+import blockfighter.server.LogicModule;
 import blockfighter.server.entities.boss.Boss;
 import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.player.Player;
@@ -13,17 +14,19 @@ import java.awt.Point;
 public class BuffBurn extends Buff implements BuffDmgTakenAmp {
 
     private final double dmgAmp, dmgPerSec;
-    private long nextDmgTime = 500;
+    private long lastDmgTime;
 
-    public BuffBurn(final long d, final double amp, final double dmg, final Player o, final Player t) {
-        super(d, o, t);
+    public BuffBurn(final LogicModule l, final int d, final double amp, final double dmg, final Player o, final Player t) {
+        super(l, d, o, t);
         this.dmgAmp = amp;
+        this.lastDmgTime = l.getTime();
         this.dmgPerSec = dmg * 3.75;
     }
 
-    public BuffBurn(final long d, final double amp, final double dmg, final Player o, final Boss t) {
-        super(d, o, t);
+    public BuffBurn(final LogicModule l, final int d, final double amp, final double dmg, final Player o, final Boss t) {
+        super(l, d, o, t);
         this.dmgAmp = amp;
+        this.lastDmgTime = l.getTime();
         this.dmgPerSec = dmg * 3.75;
     }
 
@@ -35,9 +38,9 @@ public class BuffBurn extends Buff implements BuffDmgTakenAmp {
     @Override
     public void update() {
         super.update();
-        this.nextDmgTime -= Globals.LOGIC_UPDATE / 1000000;
-        if (this.dmgPerSec > 0 && this.nextDmgTime <= 0) {
-            this.nextDmgTime = 500;
+        int sinceLastDamage = Globals.nsToMs(this.logic.getTime() - this.lastDmgTime);
+        if (this.dmgPerSec > 0 && sinceLastDamage >= 500) {
+            this.lastDmgTime = this.logic.getTime();
             if (getTarget() != null) {
                 final Point dmgPoint = new Point((int) (getTarget().getHitbox().x),
                         (int) (getTarget().getHitbox().y + getTarget().getHitbox().height / 2));

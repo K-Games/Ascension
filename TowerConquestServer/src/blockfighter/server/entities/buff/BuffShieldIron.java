@@ -1,11 +1,13 @@
 package blockfighter.server.entities.buff;
 
+import blockfighter.server.LogicModule;
+
 public class BuffShieldIron extends Buff implements BuffDmgReduct {
 
     private final double dmgReduct, dmgTakenMult;
 
-    public BuffShieldIron(final long d, final double reduct) {
-        super(d);
+    public BuffShieldIron(final LogicModule l, final int d, final double reduct) {
+        super(l, d);
         this.dmgReduct = reduct;
         this.dmgTakenMult = 1D - this.dmgReduct;
     }

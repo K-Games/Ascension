@@ -1,6 +1,7 @@
 package blockfighter.server.entities.buff;
 
 import blockfighter.server.Globals;
+import blockfighter.server.LogicModule;
 import blockfighter.server.entities.GameEntity;
 import blockfighter.server.entities.boss.Boss;
 import blockfighter.server.entities.player.Player;
@@ -19,44 +20,49 @@ public abstract class Buff implements GameEntity {
     private Boss bossOwner, bossTarget;
     private boolean isDebuff = false;
     private final Byte particleID = null;
+    protected LogicModule logic;
     /**
      * Duration of buff/debuff in milliseconds
      */
-    protected long duration;
+    protected int duration;
+    private long buffStartTime;
 
     /**
      * Constructor for buffs
      *
-     * @param d duration in milliseconds
+     * @param l logic(room) buffs belong to.
+     * @param d duration of buff
      */
-    public Buff(final long d) {
+    public Buff(final LogicModule l, final int d) {
+        this.logic = l;
         this.duration = d;
+        this.buffStartTime = l.getTime();
     }
 
-    public Buff(final long d, Player o) {
-        this.duration = d;
+    public Buff(final LogicModule l, final int d, Player o) {
+        this(l, d);
         this.playerOwner = o;
     }
 
-    public Buff(final long d, Player o, Player t) {
-        this.duration = d;
+    public Buff(final LogicModule l, final int d, Player o, Player t) {
+        this(l, d);
         this.playerOwner = o;
         this.playerTarget = t;
     }
 
-    public Buff(final long d, Player o, Boss t) {
-        this.duration = d;
+    public Buff(final LogicModule l, final int d, Player o, Boss t) {
+        this(l, d);
         this.playerOwner = o;
         this.bossTarget = t;
     }
 
-    public Buff(final long d, Boss o, Player t) {
-        this.duration = d;
+    public Buff(final LogicModule l, final int d, Boss o, Player t) {
+        this(l, d);
         this.bossOwner = o;
         this.playerTarget = t;
     }
 
-    public void reduceDuration(final long amount) {
+    public void reduceDuration(final int amount) {
         this.duration -= amount;
         if (this.duration < 500) {
             this.duration = 500;
@@ -105,15 +111,14 @@ public abstract class Buff implements GameEntity {
 
     @Override
     public void update() {
-        this.duration -= Globals.nsToMs(Globals.LOGIC_UPDATE);
     }
 
-    public long getDuration() {
+    public int getDuration() {
         return this.duration;
     }
 
     public boolean isExpired() {
-        return this.duration <= 0;
+        return Globals.nsToMs(this.logic.getTime() - this.buffStartTime) >= this.duration;
     }
 
     public boolean isDebuff() {

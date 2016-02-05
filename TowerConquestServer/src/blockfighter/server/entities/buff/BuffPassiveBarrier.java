@@ -1,13 +1,14 @@
 package blockfighter.server.entities.buff;
 
+import blockfighter.server.LogicModule;
 import blockfighter.server.entities.player.Player;
 
 public class BuffPassiveBarrier extends Buff {
 
     private double barrierAmount;
 
-    public BuffPassiveBarrier(final double amt, final Player o) {
-        super(0, o);
+    public BuffPassiveBarrier(final LogicModule l, final double amt, final Player o) {
+        super(l, 0, o);
         this.barrierAmount = amt;
     }
 

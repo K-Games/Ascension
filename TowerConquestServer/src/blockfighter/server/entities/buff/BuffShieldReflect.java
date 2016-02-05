@@ -1,5 +1,6 @@
 package blockfighter.server.entities.buff;
 
+import blockfighter.server.LogicModule;
 import blockfighter.server.entities.player.Player;
 
 /**
@@ -18,8 +19,8 @@ public class BuffShieldReflect extends Buff {
      * @param o
      * @param t
      */
-    public BuffShieldReflect(final long d, final double m, final Player o, final Player t) {
-        super(d, o, t);
+    public BuffShieldReflect(final LogicModule l, final int d, final double m, final Player o, final Player t) {
+        super(l, d, o, t);
         this.multiplier = m;
     }
 

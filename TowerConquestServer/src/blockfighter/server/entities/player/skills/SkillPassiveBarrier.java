@@ -1,12 +1,15 @@
 package blockfighter.server.entities.player.skills;
 
+import blockfighter.server.LogicModule;
+
 /**
  *
  * @author Ken Kwan
  */
 public class SkillPassiveBarrier extends Skill {
 
-    public SkillPassiveBarrier() {
+    public SkillPassiveBarrier(final LogicModule l) {
+        super(l);
         this.skillCode = PASSIVE_BARRIER;
         this.maxCooldown = 30000;
     }

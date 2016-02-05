@@ -160,7 +160,7 @@ public class ScreenIngame extends Screen {
             final Skill[] skills = this.c.getSkills();
             for (final Skill skill : skills) {
                 if (skill != null) {
-                    skill.reduceCooldown((long) (Globals.LOGIC_UPDATE / 1000000));
+                    skill.reduceCooldown((int) (Globals.LOGIC_UPDATE / 1000000));
                 }
             }
             updateParticles(this.particles);

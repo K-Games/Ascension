@@ -17,19 +17,19 @@ public class ParticleBowPower extends Particle {
     @Override
     public void update() {
         super.update();
-        this.frameDuration -= Globals.LOGIC_UPDATE / 1000000;
-        if (this.duration > 50) {
+        if (Globals.nsToMs(logic.getTime() - this.particleStartTime) >= 50) {
             for (int i = 0; i < 2; i++) {
                 final ParticleBowPowerParticle b = new ParticleBowPowerParticle(((ScreenIngame) logic.getScreen()).getNextParticleKey(),
                         this.x + ((this.facing == Globals.RIGHT) ? 0 : 700), this.y, this.facing);
                 ((ScreenIngame) logic.getScreen()).addParticle(b);
             }
         }
-        if (this.frameDuration <= 0) {
+        if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
             this.frameDuration = 25;
             if (this.frame < PARTICLE_SPRITE[Globals.PARTICLE_BOW_POWER].length - 1) {
                 this.frame++;
             }
+            this.lastFrameTime = logic.getTime();
         }
     }
 

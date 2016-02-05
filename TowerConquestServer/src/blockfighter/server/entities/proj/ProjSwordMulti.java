@@ -45,7 +45,7 @@ public class ProjSwordMulti extends Projectile {
                     damage = (int) owner.criticalDamage(damage);
                 }
                 p.queueDamage(new Damage(damage, true, owner, p, crit, this.hitbox[0], p.getHitbox()));
-                p.queueBuff(new BuffKnockback(60, (owner.getFacing() == Globals.RIGHT) ? .1 : -.1, -1, owner, p));
+                p.queueBuff(new BuffKnockback(this.logic, 60, (owner.getFacing() == Globals.RIGHT) ? .1 : -.1, -1, owner, p));
             }
         }
         while (!this.bossQueue.isEmpty()) {

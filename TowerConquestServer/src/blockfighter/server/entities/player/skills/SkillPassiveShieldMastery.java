@@ -1,12 +1,15 @@
 package blockfighter.server.entities.player.skills;
 
+import blockfighter.server.LogicModule;
+
 /**
  *
  * @author Ken Kwan
  */
 public class SkillPassiveShieldMastery extends Skill {
 
-    public SkillPassiveShieldMastery() {
+    public SkillPassiveShieldMastery(final LogicModule l) {
+        super(l);
         this.skillCode = PASSIVE_SHIELDMASTERY;
     }
 

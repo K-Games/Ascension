@@ -85,7 +85,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 public class Player extends Thread implements GameEntity {
 
-    private long time = 0;
     public final static byte PLAYER_STATE_STAND = 0x00,
             PLAYER_STATE_WALK = 0x01,
             PLAYER_STATE_JUMP = 0x02,
@@ -119,7 +118,7 @@ public class Player extends Thread implements GameEntity {
     private boolean isFalling = false, isJumping = false, isInvulnerable = false, isDead = false, isRemoveDebuff = false;
     private boolean updatePos = false, updateFacing = false, updateAnimState = false;
     private byte playerState, animState, facing, frame;
-    private double nextFrameTime = 0, respawnTimer = 0;
+
     private final Rectangle2D.Double hitbox;
 
     private final ConcurrentHashMap<Integer, Buff> buffs = new ConcurrentHashMap<>(150, 0.9f, 1);
@@ -146,10 +145,13 @@ public class Player extends Thread implements GameEntity {
     private final ConcurrentLinkedQueue<Integer> buffKeys = new ConcurrentLinkedQueue<>();
     private int maxBuffKeys = 0;
     private Byte nextState;
-    private long lastActionTime = Globals.SERVER_MAX_IDLE;
-    private long skillDuration = 0;
+
+    private long lastActionTime = 0;
+    private long skillCastTime = 0,
+            deathTime = 0,
+            lastHPSendTime = 0,
+            lastFrameTime = 0;
     private int skillCounter = 0;
-    private long nextHPSend = 0;
 
     /**
      * Create a new player entity in the server.
@@ -162,6 +164,7 @@ public class Player extends Thread implements GameEntity {
      */
     public Player(final LogicModule l, final byte key, final InetAddress address, final int port, final GameMap map) {
         this.logic = l;
+        this.lastActionTime = l.getTime();
         this.key = key;
         this.address = address;
         this.port = port;
@@ -174,6 +177,13 @@ public class Player extends Thread implements GameEntity {
         this.playerState = PLAYER_STATE_STAND;
         this.frame = 0;
         extendBuffKeys();
+    }
+
+    private static boolean hasPastDuration(int currentDuration, int durationToPast) {
+        if (durationToPast <= 0) {
+            return true;
+        }
+        return currentDuration / durationToPast >= 1;
     }
 
     /**
@@ -362,7 +372,7 @@ public class Player extends Thread implements GameEntity {
      */
     public void setDirKeydown(final int direction, final boolean move) {
         if (move) {
-            this.lastActionTime = Globals.SERVER_MAX_IDLE;
+            this.lastActionTime = this.logic.getTime();
         }
         this.dirKeydown[direction] = move;
     }
@@ -413,97 +423,97 @@ public class Player extends Thread implements GameEntity {
         Skill newSkill = null;
         switch (skillCode) {
             case Skill.SWORD_CINDER:
-                newSkill = new SkillSwordCinder();
+                newSkill = new SkillSwordCinder(this.logic);
                 break;
             case Skill.SWORD_GASH:
-                newSkill = new SkillSwordGash();
+                newSkill = new SkillSwordGash(this.logic);
                 break;
             //case Skill.SWORD_MULTI:
             //    newSkill = new SkillSwordMulti();
             //    break;
             case Skill.SWORD_PHANTOM:
-                newSkill = new SkillSwordPhantom();
+                newSkill = new SkillSwordPhantom(this.logic);
                 break;
             case Skill.SWORD_SLASH:
-                newSkill = new SkillSwordSlash();
+                newSkill = new SkillSwordSlash(this.logic);
                 break;
             case Skill.SWORD_TAUNT:
-                newSkill = new SkillSwordTaunt();
+                newSkill = new SkillSwordTaunt(this.logic);
                 break;
             case Skill.SWORD_VORPAL:
-                newSkill = new SkillSwordVorpal();
+                newSkill = new SkillSwordVorpal(this.logic);
                 break;
             case Skill.BOW_ARC:
-                newSkill = new SkillBowArc();
+                newSkill = new SkillBowArc(this.logic);
                 break;
             case Skill.BOW_FROST:
-                newSkill = new SkillBowFrost();
+                newSkill = new SkillBowFrost(this.logic);
                 break;
             case Skill.BOW_POWER:
-                newSkill = new SkillBowPower();
+                newSkill = new SkillBowPower(this.logic);
                 break;
             case Skill.BOW_RAPID:
-                newSkill = new SkillBowRapid();
+                newSkill = new SkillBowRapid(this.logic);
                 break;
             case Skill.BOW_STORM:
-                newSkill = new SkillBowStorm();
+                newSkill = new SkillBowStorm(this.logic);
                 break;
             case Skill.BOW_VOLLEY:
-                newSkill = new SkillBowVolley();
+                newSkill = new SkillBowVolley(this.logic);
                 break;
             case Skill.SHIELD_FORTIFY:
-                newSkill = new SkillShieldFortify();
+                newSkill = new SkillShieldFortify(this.logic);
                 break;
             case Skill.SHIELD_IRON:
-                newSkill = new SkillShieldIron();
+                newSkill = new SkillShieldIron(this.logic);
                 break;
             case Skill.SHIELD_CHARGE:
-                newSkill = new SkillShieldCharge();
+                newSkill = new SkillShieldCharge(this.logic);
                 break;
             case Skill.SHIELD_REFLECT:
-                newSkill = new SkillShieldReflect();
+                newSkill = new SkillShieldReflect(this.logic);
                 break;
             case Skill.SHIELD_TOSS:
-                newSkill = new SkillShieldToss();
+                newSkill = new SkillShieldToss(this.logic);
                 break;
             case Skill.SHIELD_DASH:
-                newSkill = new SkillShieldDash();
+                newSkill = new SkillShieldDash(this.logic);
                 break;
             case Skill.PASSIVE_DUALSWORD:
-                newSkill = new SkillPassiveDualSword();
+                newSkill = new SkillPassiveDualSword(this.logic);
                 break;
             case Skill.PASSIVE_KEENEYE:
-                newSkill = new SkillPassiveKeenEye();
+                newSkill = new SkillPassiveKeenEye(this.logic);
                 break;
             case Skill.PASSIVE_VITALHIT:
-                newSkill = new SkillPassiveVitalHit();
+                newSkill = new SkillPassiveVitalHit(this.logic);
                 break;
             case Skill.PASSIVE_SHIELDMASTERY:
-                newSkill = new SkillPassiveShieldMastery();
+                newSkill = new SkillPassiveShieldMastery(this.logic);
                 break;
             case Skill.PASSIVE_BARRIER:
-                newSkill = new SkillPassiveBarrier();
+                newSkill = new SkillPassiveBarrier(this.logic);
                 break;
             case Skill.PASSIVE_RESIST:
-                newSkill = new SkillPassiveResistance();
+                newSkill = new SkillPassiveResistance(this.logic);
                 break;
             case Skill.PASSIVE_BOWMASTERY:
-                newSkill = new SkillPassiveBowMastery();
+                newSkill = new SkillPassiveBowMastery(this.logic);
                 break;
             case Skill.PASSIVE_WILLPOWER:
-                newSkill = new SkillPassiveWillpower();
+                newSkill = new SkillPassiveWillpower(this.logic);
                 break;
             case Skill.PASSIVE_TACTICAL:
-                newSkill = new SkillPassiveTactical();
+                newSkill = new SkillPassiveTactical(this.logic);
                 break;
             case Skill.PASSIVE_REVIVE:
-                newSkill = new SkillPassiveRevive();
+                newSkill = new SkillPassiveRevive(this.logic);
                 break;
             case Skill.PASSIVE_SHADOWATTACK:
-                newSkill = new SkillPassiveShadowAttack();
+                newSkill = new SkillPassiveShadowAttack(this.logic);
                 break;
             case Skill.PASSIVE_12:
-                newSkill = new SkillPassive12();
+                newSkill = new SkillPassive12(this.logic);
                 break;
         }
         if (newSkill != null) {
@@ -532,13 +542,8 @@ public class Player extends Thread implements GameEntity {
         if (!isConnected()) {
             return;
         }
-        this.lastActionTime -= Globals.LOGIC_UPDATE / 1000000;
-        this.nextHPSend -= Globals.LOGIC_UPDATE / 1000000;
-        if (isUsingSkill()) {
-            this.skillDuration += Globals.LOGIC_UPDATE / 1000000;
-        }
+
         // Update Timers/Game principles(Gravity)
-        updateSkillCd();
         updateBuffs();
 
         queuePlayerState(PLAYER_STATE_STAND);
@@ -583,24 +588,24 @@ public class Player extends Thread implements GameEntity {
             sendState();
         }
 
-        if (this.connected && this.lastActionTime <= 0) {
+        if (this.connected && Globals.nsToMs(this.logic.getTime() - this.lastActionTime) >= Globals.SERVER_MAX_IDLE) {
             Globals.log("Player", this.address + ":" + this.port + " Idle disconnected Key: " + this.key, Globals.LOG_TYPE_DATA, true);
             disconnect();
         }
     }
 
     private void updateDead() {
-        this.respawnTimer -= Globals.LOGIC_UPDATE;
+        final int deathDuration = Globals.nsToMs(this.logic.getTime() - this.deathTime);
         this.damageQueue.clear();
         this.healQueue.clear();
         this.skillUseQueue.clear();
         this.buffQueue.clear();
-        if (this.respawnTimer >= 4500000000D && this.xSpeed == 0) {
+        if (deathDuration < 500 && this.xSpeed == 0) {
             setXSpeed((this.facing == Globals.LEFT) ? 1.5 : -1.5);
-        } else if (this.respawnTimer < 4500000000D) {
+        } else if (deathDuration >= 500) {
             setXSpeed(0);
         }
-        if (this.respawnTimer <= 0) {
+        if (deathDuration >= 5000) {
             respawn();
         }
     }
@@ -616,10 +621,11 @@ public class Player extends Thread implements GameEntity {
     }
 
     private void castSkill(final byte[] data, final byte newState, final byte weaponSlot) {
-
         if (!this.skills.get(data[3]).canCast(getItemType(this.equip[weaponSlot]))) {
             return;
         }
+        this.skillCounter = 0;
+        this.skillCastTime = this.logic.getTime();
         // Globals.log("DATA_PLAYER_CASTSKILL", "Key: " + key + " Room: " + logic.getRoom() + " Player: " + getPlayerName() + " Skill: " +
         // data[3], Globals.LOG_TYPE_DATA, true);
 
@@ -652,8 +658,6 @@ public class Player extends Thread implements GameEntity {
         if (data != null) {
             if (data[3] == Skill.SHIELD_IRON || (!isStunned() && !isKnockback())) {
                 if (hasSkill(data[3])) {
-                    this.skillDuration = 0;
-                    this.skillCounter = 0;
                     switch (data[3]) {
                         case Skill.SWORD_SLASH:
                             castSkill(data, PLAYER_STATE_SWORD_SLASH, Globals.ITEM_WEAPON);
@@ -719,11 +723,13 @@ public class Player extends Thread implements GameEntity {
     }
 
     private void updateSkillSwordSlash() {
-        if (isSkillMaxed(Skill.SWORD_SLASH) && this.skillDuration == 0) {
-            queueBuff(new BuffSwordSlash(2000, .1, this));
+        final int numHits = 3;
+        final int duration = Globals.nsToMs(this.logic.getTime() - this.skillCastTime);
+        if (isSkillMaxed(Skill.SWORD_SLASH) && duration == 0) {
+            queueBuff(new BuffSwordSlash(this.logic, 2000, .1, this));
             sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_SLASHBUFF, this.key);
         }
-        if (this.skillDuration % 100 == 0 && this.skillDuration < 300) {
+        if (hasPastDuration(duration, (100 + 100 * this.skillCounter)) && this.skillCounter < numHits) {
             this.skillCounter++;
             final ProjSwordSlash proj = new ProjSwordSlash(this.logic, this.logic.getNextProjKey(), this, this.x, this.y,
                     this.skillCounter);
@@ -749,14 +755,15 @@ public class Player extends Thread implements GameEntity {
             }
         }
 
-        if (this.skillDuration >= 350 || isStunned() || isKnockback()) {
+        if (duration >= 350 || isStunned() || isKnockback()) {
             setPlayerState(PLAYER_STATE_STAND);
         }
     }
 
     private void updateSkillSwordGash() {
+        final int duration = Globals.nsToMs(this.logic.getTime() - this.skillCastTime);
         final byte numHits = 4;
-        if (this.skillDuration % 50 == 0 && this.skillCounter < numHits) {
+        if (hasPastDuration(duration, (80 * this.skillCounter)) && this.skillCounter < numHits) {
             this.skillCounter++;
             final ProjSwordGash proj = new ProjSwordGash(this.logic, this.logic.getNextProjKey(), this, this.x, this.y, (byte) this.skillCounter);
             this.logic.queueAddProj(proj);
@@ -780,63 +787,63 @@ public class Player extends Thread implements GameEntity {
                     break;
             }
         }
-        if (this.skillDuration >= 450) {
+        if (duration >= 450) {
             setPlayerState(PLAYER_STATE_STAND);
         }
     }
 
     private void updateSkillSwordVorpal() {
-        int skillTime = 170, numHits = 3;
-        if (this.skills.get(Skill.SWORD_VORPAL).getLevel() == 30) {
-            skillTime = 150;
-            numHits = 5;
-        }
-        if (this.skillCounter == numHits) {
-            this.skillCounter++;
-        }
-        if (this.skillDuration % skillTime == 0 && this.skillCounter < numHits) {
+        final int duration = Globals.nsToMs(this.logic.getTime() - this.skillCastTime);
+        int skillTime = isSkillMaxed(Skill.SWORD_VORPAL) ? 150 : 170,
+                numHits = isSkillMaxed(Skill.SWORD_VORPAL) ? 5 : 3;
+        if (hasPastDuration(duration, skillTime * this.skillCounter) && this.skillCounter < numHits) {
             final ProjSwordVorpal proj = new ProjSwordVorpal(this.logic, this.logic.getNextProjKey(), this, this.x, this.y);
             this.logic.queueAddProj(proj);
+            this.frame = 0;
             sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_VORPAL, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
                     this.facing);
             this.skillCounter++;
         }
 
-        if (this.skillDuration >= 800) {
+        if (duration >= 800) {
             setPlayerState(PLAYER_STATE_STAND);
         }
     }
 
     private void updateSkillSwordTaunt() {
-        if (this.skillDuration == 0) {
+        final int duration = Globals.nsToMs(this.logic.getTime() - this.skillCastTime);
+        if (duration == 0) {
             if (isSkillMaxed(Skill.SWORD_TAUNT)) {
-                queueBuff(new BuffSwordTaunt(10000, 0.2, 0.2, this));
+                queueBuff(new BuffSwordTaunt(this.logic, 10000, 0.2, 0.2, this));
                 sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_TAUNTBUFF, this.key);
             }
             sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_TAUNTAURA1, this.key);
-        } else if (this.skillDuration == 50) {
+        }
+        if (hasPastDuration(duration, 50) && this.skillCounter < 1) {
+            this.skillCounter++;
             final ProjSwordTaunt proj = new ProjSwordTaunt(this.logic, this.logic.getNextProjKey(), this, this.x, this.y);
             this.logic.queueAddProj(proj);
             sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_TAUNT, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
                     this.facing);
         }
-        if (this.skillDuration >= 350) {
+        if (duration >= 350) {
             setPlayerState(PLAYER_STATE_STAND);
         }
     }
 
     private void updateSkillSwordPhantom() {
+        final int duration = Globals.nsToMs(this.logic.getTime() - this.skillCastTime);
         final int numHits = this.skills.get(Skill.SWORD_PHANTOM).getLevel() / 2 + 5;
         boolean endPhantom = false;
         setInvulnerable(true);
         setYSpeed(0);
 
         //Send initial phase effect
-        if (this.skillDuration == 0) {
+        if (duration == 0) {
             sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_PHANTOM, getX(), getY(), this.facing);
         }
 
-        if (this.skillDuration > 0 && this.skillDuration % 150 == 0 && this.skillCounter < numHits) {
+        if (hasPastDuration(duration, 150 + 150 * this.skillCounter) && this.skillCounter < numHits) {
             if (map.isPvP()) {
                 Player target;
                 ArrayList<Player> playersInRange = new ArrayList<>(Globals.SERVER_MAX_PLAYERS);
@@ -899,6 +906,7 @@ public class Player extends Thread implements GameEntity {
     }
 
     private void updateSkillSwordMulti() {
+        final int duration = Globals.nsToMs(this.logic.getTime() - this.skillCastTime);
         final int numHits = this.skills.get(Skill.SWORD_MULTI).getLevel() + 6;
         if (isSkillMaxed(Skill.SWORD_MULTI) && !isInvulnerable()) {
             setInvulnerable(true);
@@ -906,85 +914,93 @@ public class Player extends Thread implements GameEntity {
         if (this.skillCounter == numHits) {
             this.skillCounter++;
         }
-        if (this.skillDuration % 30 == 0 && this.skillCounter < numHits) {
+        if (duration % 30 == 0 && this.skillCounter < numHits) {
             final ProjSwordMulti proj = new ProjSwordMulti(this.logic, this.logic.getNextProjKey(), this, this.x, this.y);
             this.logic.queueAddProj(proj);
             sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_MULTI, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
                     this.facing);
             this.skillCounter++;
         }
-        if (this.skillDuration >= numHits * 30 + 110 || (!isInvulnerable() && (isStunned() || isKnockback()))) {
+        if (duration >= numHits * 30 + 110 || (!isInvulnerable() && (isStunned() || isKnockback()))) {
             setInvulnerable(false);
             setPlayerState(PLAYER_STATE_STAND);
         }
     }
 
     private void updateSkillSwordCinder() {
-        if (this.skillDuration == 50) {
+        final int duration = Globals.nsToMs(this.logic.getTime() - this.skillCastTime);
+        if (hasPastDuration(duration, 50) && this.skillCounter < 1) {
+            this.skillCounter++;
             final ProjSwordCinder proj = new ProjSwordCinder(this.logic, this.logic.getNextProjKey(), this, this.x, this.y);
             this.logic.queueAddProj(proj);
             sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_CINDER, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
                     this.facing);
         }
-        if (this.skillDuration >= 250) {
+        if (duration >= 250) {
             setPlayerState(PLAYER_STATE_STAND);
         }
     }
 
     private void updateSkillBowArc() {
-        if (this.skillDuration == 100) {
+        final int duration = Globals.nsToMs(this.logic.getTime() - this.skillCastTime);
+        final int numHits = 3;
+        if (this.skillCounter < numHits && hasPastDuration(duration, 100 + this.skillCounter * 50)) {
+            this.skillCounter++;
             final ProjBowArc proj = new ProjBowArc(this.logic, this.logic.getNextProjKey(), this, this.x, this.y);
             this.logic.queueAddProj(proj);
-            sendParticle(this.logic.getRoom(), Globals.PARTICLE_BOW_ARC, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
-                    this.facing);
-            sendSFX(this.logic.getRoom(), Globals.SFX_ARC, getX(), getY());
+            if (this.skillCounter == 1) {
+                sendParticle(this.logic.getRoom(), Globals.PARTICLE_BOW_ARC, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
+                        this.facing);
+                sendSFX(this.logic.getRoom(), Globals.SFX_ARC, getX(), getY());
+            }
         }
-        if (this.skillDuration == 150 || this.skillDuration == 200) {
-            final ProjBowArc proj = new ProjBowArc(this.logic, this.logic.getNextProjKey(), this, this.x, this.y);
-            this.logic.queueAddProj(proj);
-        }
-        if (this.skillDuration >= 300) {
+        if (duration >= 300) {
             setPlayerState(PLAYER_STATE_STAND);
         }
     }
 
     private void updateSkillBowFrost() {
-        if (this.skillDuration == 160) {
+        final int duration = Globals.nsToMs(this.logic.getTime() - this.skillCastTime);
+        final int numHits = isSkillMaxed(Skill.BOW_FROST) ? 3 : 1;
+        if (hasPastDuration(duration, 160 + this.skillCounter * 90) && this.skillCounter < numHits) {
+            this.skillCounter++;
             final ProjBowFrost proj = new ProjBowFrost(this.logic, this.logic.getNextProjKey(), this, this.x, this.y, false);
             this.logic.queueAddProj(proj);
             sendParticle(this.logic.getRoom(), Globals.PARTICLE_BOW_FROSTARROW, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
                     this.facing);
         }
-
-        if (isSkillMaxed(Skill.BOW_FROST) && (this.skillDuration == 250 || this.skillDuration == 340)) {
-            final ProjBowFrost proj = new ProjBowFrost(this.logic, this.logic.getNextProjKey(), this, this.x, this.y, true);
-            this.logic.queueAddProj(proj);
-            sendParticle(this.logic.getRoom(), Globals.PARTICLE_BOW_FROSTARROW, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
-                    this.facing);
-        }
-        if (this.skillDuration >= 380) {
+        if (duration >= 380) {
             setPlayerState(PLAYER_STATE_STAND);
         }
     }
 
     private void updateSkillBowStorm() {
-        if (this.skillDuration == 100) {
+        final int duration = Globals.nsToMs(this.logic.getTime() - this.skillCastTime);
+        if (hasPastDuration(duration, 100) && this.skillCounter < 1) {
+            this.skillCounter++;
             final ProjBowStorm proj = new ProjBowStorm(this.logic, this.logic.getNextProjKey(), this, this.x, this.y);
             this.logic.queueAddProj(proj);
             sendParticle(this.logic.getRoom(), Globals.PARTICLE_BOW_STORM, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
                     this.facing);
         }
-        if (this.skillDuration >= 200) {
+        if (duration >= 200) {
             setPlayerState(PLAYER_STATE_STAND);
         }
     }
 
     private void updateSkillBowRapid() {
-        if (this.skillDuration == 150 || this.skillDuration == 300 || this.skillDuration == 450) {
+        final int duration = Globals.nsToMs(this.logic.getTime() - this.skillCastTime);
+        final int numHits = 3;
+
+        if (hasPastDuration(duration, 150 + this.skillCounter * 150) && this.skillCounter < numHits) {
+            if (skillCounter != 0) {
+                this.frame = 2;
+            }
+            this.skillCounter++;
             double projY = this.y;
-            if (this.skillDuration == 150) {
+            if (skillCounter == 1) {
                 projY = this.y - 20;
-            } else if (this.skillDuration == 450) {
+            } else if (skillCounter == 3) {
                 projY = this.y + 20;
             }
             final ProjBowRapid proj = new ProjBowRapid(this.logic, this.logic.getNextProjKey(), this, this.x, projY);
@@ -995,13 +1011,15 @@ public class Player extends Thread implements GameEntity {
                     this.facing);
             sendSFX(this.logic.getRoom(), Globals.SFX_RAPID, getX(), getY());
         }
-        if (this.skillDuration >= 550) {
+        if (duration >= 550) {
             setPlayerState(PLAYER_STATE_STAND);
         }
     }
 
     private void updateSkillBowVolley() {
-        if (this.skillDuration % 100 == 0 && this.skillCounter < 20) {
+        final int duration = Globals.nsToMs(this.logic.getTime() - this.skillCastTime);
+        final int numHits = 20;
+        if (hasPastDuration(duration, this.skillCounter * 100) && this.skillCounter < numHits) {
             final ProjBowVolley proj = new ProjBowVolley(this.logic, this.logic.getNextProjKey(), this, this.x,
                     this.y);
             this.logic.queueAddProj(proj);
@@ -1011,62 +1029,69 @@ public class Player extends Thread implements GameEntity {
             this.skillCounter++;
             sendSFX(this.logic.getRoom(), Globals.SFX_VOLLEY, getX(), getY());
         }
-        if (this.skillDuration >= 1900 || isStunned() || isKnockback()) {
+        if (duration >= 1900 || isStunned() || isKnockback()) {
             setPlayerState(PLAYER_STATE_STAND);
         }
     }
 
     private void updateSkillBowPower() {
-        if (this.skillDuration == 0) {
+        final int duration = Globals.nsToMs(this.logic.getTime() - this.skillCastTime);
+        if (duration == 0) {
             sendSFX(this.logic.getRoom(), Globals.SFX_POWER2, getX(), getY());
         }
-        if (this.skillDuration <= 400 && this.skillDuration % 50 == 0) {
+        if (duration <= 400 && hasPastDuration(duration, this.skillCounter * 50) && this.skillCounter < 6) {
             sendParticle(this.logic.getRoom(), Globals.PARTICLE_BOW_POWERCHARGE, this.x + ((this.facing == Globals.RIGHT) ? 75 : -75),
                     this.y - 215, this.facing);
             //sendSFX(this.logic.getRoom(), Globals.SFX_POWER2, getX(), getY());
-        } else if (this.skillDuration == 800) {
+            this.skillCounter++;
+        } else if (hasPastDuration(duration, 800) && this.skillCounter < 7) {
+            this.skillCounter++;
             final ProjBowPower proj = new ProjBowPower(this.logic, this.logic.getNextProjKey(), this, this.x, this.y);
             this.logic.queueAddProj(proj);
             sendParticle(this.logic.getRoom(), Globals.PARTICLE_BOW_POWER, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
                     this.facing);
             sendSFX(this.logic.getRoom(), Globals.SFX_POWER, getX(), getY());
         }
-        if (this.skillDuration >= 1400 || (!isSkillMaxed(Skill.BOW_POWER) && this.skillDuration < 800 && (isStunned() || isKnockback()))) {
+        if (duration >= 1400 || (!isSkillMaxed(Skill.BOW_POWER) && duration < 800 && (isStunned() || isKnockback()))) {
             setPlayerState(PLAYER_STATE_STAND);
         }
     }
 
     private void updateSkillShieldFortify() {
-        if (this.skillDuration == 0) {
+        final int duration = Globals.nsToMs(this.logic.getTime() - this.skillCastTime);
+        if (duration == 0) {
             sendParticle(this.logic.getRoom(), Globals.PARTICLE_SHIELD_FORTIFY, this.key);
             sendSFX(this.logic.getRoom(), Globals.SFX_FORTIFY, getX(), getY());
         }
-        if (this.skillDuration >= 350) {
-            queueBuff(new BuffShieldFortify(5000, 0.01 + 0.005 * getSkillLevel(Skill.SHIELD_FORTIFY), this));
+        if (hasPastDuration(duration, 350) && this.skillCounter < 1) {
+            this.skillCounter++;
+            queueBuff(new BuffShieldFortify(this.logic, 5000, 0.01 + 0.005 * getSkillLevel(Skill.SHIELD_FORTIFY), this));
             sendParticle(this.logic.getRoom(), Globals.PARTICLE_SHIELD_FORTIFYBUFF, this.key);
             setPlayerState(PLAYER_STATE_STAND);
         }
     }
 
     private void updateSkillShieldIron() {
-        if (this.skillDuration == 0) {
+        final int duration = Globals.nsToMs(this.logic.getTime() - this.skillCastTime);
+        if (duration == 0) {
             sendParticle(this.logic.getRoom(), Globals.PARTICLE_SHIELD_IRON, this.key);
             sendSFX(this.logic.getRoom(), Globals.SFX_IRON, getX(), getY());
         }
-        if (this.skillDuration == 100) {
+        if (hasPastDuration(duration, 100) && this.skillCounter < 1) {
+            this.skillCounter++;
             setRemovingDebuff(true);
-            queueBuff(new BuffShieldIron(2000, 0.55 + 0.01 * getSkillLevel(Skill.SHIELD_IRON)));
+            queueBuff(new BuffShieldIron(this.logic, 2000, 0.55 + 0.01 * getSkillLevel(Skill.SHIELD_IRON)));
             if (isSkillMaxed(Skill.SHIELD_IRON) && !map.isPvP()) {
                 for (final Map.Entry<Byte, Player> player : this.logic.getPlayers().entrySet()) {
                     final Player p = player.getValue();
                     if (p != this && !p.isDead()) {
-                        p.queueBuff(new BuffShieldIron(2000, 0.4));
+                        p.queueBuff(new BuffShieldIron(this.logic, 2000, 0.4));
                         sendParticle(this.logic.getRoom(), Globals.PARTICLE_SHIELD_IRONALLY, p.getKey());
                     }
                 }
             }
         }
-        if (this.skillDuration >= 2100) {
+        if (duration >= 2100) {
             setRemovingDebuff(false);
             setPlayerState(PLAYER_STATE_STAND);
         }
@@ -1080,15 +1105,16 @@ public class Player extends Thread implements GameEntity {
     }
 
     private void updateSkillShieldReflectCast() {
-        if (this.skillDuration == 0) {
-            queueBuff(new BuffShieldReflect(3000, .4 + 0.02 * getSkillLevel(Skill.SHIELD_REFLECT), this, this));
+        final int duration = Globals.nsToMs(this.logic.getTime() - this.skillCastTime);
+        if (duration == 0) {
+            queueBuff(new BuffShieldReflect(this.logic, 3000, .4 + 0.02 * getSkillLevel(Skill.SHIELD_REFLECT), this, this));
             sendParticle(this.logic.getRoom(), Globals.PARTICLE_SHIELD_REFLECTCAST, this.key);
             sendParticle(this.logic.getRoom(), Globals.PARTICLE_SHIELD_REFLECTBUFF, this.key);
             if (isSkillMaxed(Skill.SHIELD_REFLECT)) {
                 for (final Map.Entry<Byte, Player> player : this.logic.getPlayers().entrySet()) {
                     final Player p = player.getValue();
                     if (p != this && !p.isDead()) {
-                        p.queueBuff(new BuffShieldReflect(3000, 0.4, this, p));
+                        p.queueBuff(new BuffShieldReflect(this.logic, 3000, 0.4, this, p));
                         if (!map.isPvP()) {
                             sendParticle(this.logic.getRoom(), Globals.PARTICLE_SHIELD_REFLECTCAST, p.getKey());
                         }
@@ -1096,36 +1122,42 @@ public class Player extends Thread implements GameEntity {
                 }
             }
         }
-        if (this.skillDuration >= 250) {
+        if (duration >= 250) {
             setPlayerState(PLAYER_STATE_STAND);
         }
     }
 
     private void updateSkillShieldToss() {
-        if (this.skillDuration == 100 || (isSkillMaxed(Skill.SHIELD_TOSS) && (this.skillDuration == 300 || this.skillDuration == 500))) {
+        final int duration = Globals.nsToMs(this.logic.getTime() - this.skillCastTime);
+        final int numHits = isSkillMaxed(Skill.SHIELD_TOSS) ? 3 : 1;
+
+        if (hasPastDuration(duration, 100 + this.skillCounter * 200) && this.skillCounter < numHits) {
+            this.skillCounter++;
             final ProjShieldToss proj = new ProjShieldToss(this.logic, this.logic.getNextProjKey(), this, this.x, this.y);
             this.logic.queueAddProj(proj);
             sendParticle(this.logic.getRoom(), Globals.PARTICLE_SHIELD_TOSS, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
                     this.facing);
         }
-        if (this.skillDuration >= 700) {
+        if (duration >= 700) {
             setPlayerState(PLAYER_STATE_STAND);
         }
     }
 
     private void updateSkillShieldCharge() {
+        final int duration = Globals.nsToMs(this.logic.getTime() - this.skillCastTime);
         setXSpeed((this.facing == Globals.RIGHT) ? 18 : -18);
-        if (this.skillDuration == 0) {
+        if (duration == 0) {
             final ProjShieldCharge proj = new ProjShieldCharge(this.logic, this.logic.getNextProjKey(), this, this.x, this.y);
             this.logic.queueAddProj(proj);
             sendParticle(this.logic.getRoom(), Globals.PARTICLE_SHIELD_CHARGE, this.key, this.facing);
         }
-        if (this.skillDuration >= 750) {
+        if (duration >= 750) {
             setPlayerState(PLAYER_STATE_STAND);
         }
     }
 
     private void updateSkillShieldDash() {
+        final int duration = Globals.nsToMs(this.logic.getTime() - this.skillCastTime);
         if (!isStunned() && !isKnockback()) {
             setXSpeed((this.facing == Globals.RIGHT) ? 15 : -15);
         }
@@ -1133,14 +1165,14 @@ public class Player extends Thread implements GameEntity {
             setInvulnerable(true);
         }
 
-        if (this.skillDuration == 0) {
-            queueBuff(new BuffShieldDash(5000, 0.01 + 0.003 * getSkillLevel(Skill.SHIELD_DASH), this));
+        if (duration == 0) {
+            queueBuff(new BuffShieldDash(this.logic, 5000, 0.01 + 0.003 * getSkillLevel(Skill.SHIELD_DASH), this));
             sendParticle(this.logic.getRoom(), Globals.PARTICLE_SHIELD_DASHBUFF, this.key);
             sendParticle(this.logic.getRoom(), Globals.PARTICLE_SHIELD_DASH, this.key, this.facing);
             setYSpeed(-4);
         }
 
-        if (this.skillDuration >= 250 || isStunned() || isKnockback()) {
+        if (duration >= 250 || isStunned() || isKnockback()) {
             setInvulnerable(false);
             setPlayerState(PLAYER_STATE_STAND);
         }
@@ -1211,13 +1243,8 @@ public class Player extends Thread implements GameEntity {
         }
     }
 
-    private void updateSkillCd() {
-        for (final Map.Entry<Byte, Skill> s : this.skills.entrySet()) {
-            s.getValue().reduceCooldown((long) (Globals.LOGIC_UPDATE / 1000000));
-        }
-    }
-
     private void updateHP() {
+        int sinceLastHPSend = Globals.nsToMs(this.logic.getTime() - this.lastHPSendTime);
         // Empty damage queued
         if (isInvulnerable()) {
             // Take no damage
@@ -1284,13 +1311,13 @@ public class Player extends Thread implements GameEntity {
                 // Final damage taken
                 this.stats[Globals.STAT_MINHP] -= amount;
                 if (amount > 0) {
-                    this.nextHPSend = 0;
+                    sinceLastHPSend = 150;
                 }
                 if (hasSkill(Skill.PASSIVE_BARRIER) && this.skills.get(Skill.PASSIVE_BARRIER).canCast()) {
                     this.barrierDmgTaken += amount;
                     if (this.barrierDmgTaken >= this.stats[Globals.STAT_MAXHP] * 0.5) {
                         this.barrierDmgTaken = 0;
-                        queueBuff(new BuffPassiveBarrier(
+                        queueBuff(new BuffPassiveBarrier(this.logic,
                                 this.stats[Globals.STAT_MAXHP] * (0.1 + 0.005 * getSkillLevel(Skill.PASSIVE_BARRIER)),
                                 this));
                         sendParticle(this.logic.getRoom(), Globals.PARTICLE_PASSIVE_BARRIER, dmg.getDmgPoint().x, dmg.getDmgPoint().y);
@@ -1306,7 +1333,7 @@ public class Player extends Thread implements GameEntity {
             final Integer heal = this.healQueue.poll();
             if (heal != null) {
                 this.stats[Globals.STAT_MINHP] += heal;
-                this.nextHPSend = 0;
+                sinceLastHPSend = 150;
             }
         }
         // Add regenerated HP(1% of REGEN per 10ms tick)
@@ -1323,7 +1350,7 @@ public class Player extends Thread implements GameEntity {
         }
 
         // Update client hp every 150ms or if damaged/healed(excluding regen).
-        if (this.nextHPSend <= 0) {
+        if (sinceLastHPSend >= 150) {
             final byte[] stat = Globals.intToByte((int) this.stats[Globals.STAT_MINHP]);
             final byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT];
             bytes[0] = Globals.DATA_PLAYER_GET_STAT;
@@ -1331,7 +1358,8 @@ public class Player extends Thread implements GameEntity {
             bytes[2] = Globals.STAT_MINHP;
             System.arraycopy(stat, 0, bytes, 3, stat.length);
             sender.sendPlayer(bytes, this);
-            this.nextHPSend = 150;
+            //this.nextHPSend = 150;
+            this.lastHPSendTime = this.logic.getTime();
         }
     }
 
@@ -1425,11 +1453,10 @@ public class Player extends Thread implements GameEntity {
         this.skillUseQueue.clear();
         this.buffQueue.clear();
         this.barrierDmgTaken = 0;
-        this.respawnTimer = 5000000000D;
+        this.deathTime = this.logic.getTime();
     }
 
     private void respawn() {
-        this.respawnTimer = 0;
         this.buffs.clear();
         this.stats[Globals.STAT_MINHP] = this.stats[Globals.STAT_MAXHP];
         setXSpeed(0);
@@ -1726,7 +1753,7 @@ public class Player extends Thread implements GameEntity {
      * @param data
      */
     public void queueSkillUse(final byte[] data) {
-        this.lastActionTime = Globals.SERVER_MAX_IDLE;
+        this.lastActionTime = this.logic.getTime();
         if (!isDead()) {
             this.skillUseQueue.add(data);
         }
@@ -1834,45 +1861,44 @@ public class Player extends Thread implements GameEntity {
     public void setPlayerState(final byte newState) {
         this.playerState = newState;
         this.frame = -1;
-        this.nextFrameTime = 0;
+        this.lastFrameTime = 0;
         this.updateAnimState = true;
     }
 
     private void updateAnimState() {
         final byte prevAnimState = this.animState, prevFrame = this.frame;
+        final int duration = Globals.nsToMs(this.logic.getTime() - this.skillCastTime);
+        final int frameDuration = Globals.nsToMs(this.logic.getTime() - this.lastFrameTime);
         switch (this.playerState) {
             case PLAYER_STATE_STAND:
-                this.nextFrameTime -= Globals.LOGIC_UPDATE;
                 this.animState = Globals.PLAYER_STATE_STAND;
-                if (this.nextFrameTime <= 0) {
+                if (frameDuration >= 150) {
                     if (this.frame == 5) {
                         this.frame = 0;
                     } else {
                         this.frame++;
                     }
-                    this.nextFrameTime = 150000000;
+                    this.lastFrameTime = this.logic.getTime();
                 }
                 break;
             case PLAYER_STATE_DEAD:
-                this.nextFrameTime -= Globals.LOGIC_UPDATE;
                 this.animState = Globals.PLAYER_STATE_DEAD;
-                if (this.nextFrameTime <= 0) {
-                    if (this.frame != 10) {
+                if (frameDuration >= 50) {
+                    if (this.frame < 10) {
                         this.frame++;
                     }
-                    this.nextFrameTime = 50000000;
+                    this.lastFrameTime = this.logic.getTime();
                 }
                 break;
             case PLAYER_STATE_WALK:
                 this.animState = Globals.PLAYER_STATE_WALK;
-                this.nextFrameTime -= Globals.LOGIC_UPDATE;
-                if (this.nextFrameTime <= 0) {
+                if (frameDuration >= 40) {
                     if (this.frame == 15) {
                         this.frame = 0;
                     } else {
                         this.frame++;
                     }
-                    this.nextFrameTime = 40000000;
+                    this.lastFrameTime = this.logic.getTime();
                 }
                 break;
             case PLAYER_STATE_JUMP:
@@ -1882,9 +1908,8 @@ public class Player extends Thread implements GameEntity {
                 }
                 break;
             case PLAYER_STATE_SWORD_SLASH:
-                this.nextFrameTime -= Globals.LOGIC_UPDATE;
-                if (this.nextFrameTime <= 0) {
-                    if (this.skillDuration < 200 && this.skillDuration > 100) {
+                if (frameDuration >= 10) {
+                    if (duration < 200 && duration > 100) {
                         this.animState = Globals.PLAYER_STATE_ATTACK;
                         if (this.frame > 0) {
                             this.frame--;
@@ -1895,170 +1920,135 @@ public class Player extends Thread implements GameEntity {
                             this.frame++;
                         }
                     }
-                    this.nextFrameTime = 20000000;
-                }
-                if (this.skillDuration == 0 || this.skillDuration == 200) {
-                    this.frame = 0;
-                } else if (this.skillDuration == 100) {
-                    this.frame = 10;
+                    this.lastFrameTime = this.logic.getTime();
                 }
                 break;
             case PLAYER_STATE_SWORD_GASH:
-                this.nextFrameTime -= Globals.LOGIC_UPDATE;
                 this.animState = Globals.PLAYER_STATE_ATTACK;
-                if (this.nextFrameTime <= 0 && this.frame < 10) {
+                if (frameDuration >= ((this.frame == 1) ? 150 : 40) && this.frame < 10) {
                     this.frame++;
-                    this.nextFrameTime = (this.frame == 1) ? 150000000 : 30000000;
+
+                    this.lastFrameTime = this.logic.getTime();
                 }
                 break;
             case PLAYER_STATE_SWORD_PHANTOM:
                 this.animState = Globals.PLAYER_STATE_INVIS;
                 break;
             case PLAYER_STATE_SWORD_VORPAL:
-                this.nextFrameTime -= Globals.LOGIC_UPDATE;
                 this.animState = Globals.PLAYER_STATE_ATTACK;
-                if (this.nextFrameTime <= 0 && this.skillDuration < 800 && this.frame < 10) {
+                if (frameDuration >= 40 && this.frame < 10) {
                     this.frame++;
-                    this.nextFrameTime = 40000000;
-                }
-                int skillTime = 170,
-                 numHits = 3;
-                if (this.skills.get(Skill.SWORD_VORPAL).getLevel() == 30) {
-                    skillTime = 150;
-                    numHits = 5;
-                }
-                if (this.skillDuration % skillTime == 0 && this.skillCounter <= numHits) {
-                    this.frame = 0;
+                    this.lastFrameTime = this.logic.getTime();
                 }
                 break;
             case PLAYER_STATE_SWORD_MULTI:
-                this.nextFrameTime -= Globals.LOGIC_UPDATE;
                 this.animState = Globals.PLAYER_STATE_ATTACK;
-                if (this.nextFrameTime <= 0) {
+                if (frameDuration >= 10) {
                     if (this.frame == 6) {
                         this.frame = 3;
                     } else {
                         this.frame++;
                     }
-                    this.nextFrameTime = 10000000;
+                    this.lastFrameTime = this.logic.getTime();
                 }
                 break;
             case PLAYER_STATE_SWORD_CINDER:
-                this.nextFrameTime -= Globals.LOGIC_UPDATE;
                 this.animState = Globals.PLAYER_STATE_ATTACK;
-                if (this.nextFrameTime <= 0 && this.frame < 10) {
+                if (frameDuration >= ((this.frame == 1) ? 40 : 30) && this.frame < 10) {
                     this.frame++;
-                    this.nextFrameTime = (this.frame == 1) ? 40000000 : 30000000;
+                    this.lastFrameTime = this.logic.getTime();
                 }
                 break;
             case PLAYER_STATE_SWORD_TAUNT:
-                this.nextFrameTime -= Globals.LOGIC_UPDATE;
                 this.animState = Globals.PLAYER_STATE_ATTACK;
-                if (this.nextFrameTime <= 0 && this.frame < 10) {
+                if (frameDuration >= ((this.frame == 1) ? 150 : 30) && this.frame < 10) {
                     this.frame++;
-                    this.nextFrameTime = (this.frame == 1) ? 150000000 : 30000000;
+                    this.lastFrameTime = this.logic.getTime();
                 }
                 break;
             case PLAYER_STATE_BOW_ARC:
-                this.nextFrameTime -= Globals.LOGIC_UPDATE;
                 this.animState = Globals.PLAYER_STATE_ATTACKBOW;
-                if (this.frame < 5 && this.nextFrameTime <= 0) {
+                if (this.frame < 5 && frameDuration >= ((this.frame < 5) ? 20 : 70)) {
                     this.frame++;
-                    this.nextFrameTime = (this.frame < 5) ? 20000000 : 70000000;
+                    this.lastFrameTime = this.logic.getTime();
                 }
                 break;
             case PLAYER_STATE_BOW_RAPID:
-                this.nextFrameTime -= Globals.LOGIC_UPDATE;
                 this.animState = Globals.PLAYER_STATE_ATTACKBOW;
-                if (this.frame < 5 && this.nextFrameTime <= 0) {
+                if (this.frame < 5 && frameDuration >= 20) {
                     this.frame++;
-                    this.nextFrameTime = (this.frame < 5) ? 20000000 : 70000000;
-                }
-                if (this.skillDuration == 150 || this.skillDuration == 300 || this.skillDuration == 450) {
-                    this.frame = 2;
+                    this.lastFrameTime = this.logic.getTime();
                 }
                 break;
             case PLAYER_STATE_BOW_POWER:
-                this.nextFrameTime -= Globals.LOGIC_UPDATE;
                 this.animState = Globals.PLAYER_STATE_ATTACKBOW;
-                if (this.nextFrameTime <= 0) {
-                    if (this.skillDuration < 800) {
+                if (frameDuration >= ((this.frame < 5) ? 20 : 70)) {
+                    if (duration < 800) {
                         if (this.frame != 5) {
                             this.frame++;
                         }
                     }
-                    this.nextFrameTime = (this.frame < 5) ? 20000000 : 70000000;
+                    this.lastFrameTime = this.logic.getTime();
                 }
                 break;
             case PLAYER_STATE_BOW_VOLLEY:
-                this.nextFrameTime -= Globals.LOGIC_UPDATE;
                 this.animState = Globals.PLAYER_STATE_ATTACKBOW;
                 if (this.frame != 5) {
                     this.frame = 5;
                 }
                 break;
             case PLAYER_STATE_BOW_STORM:
-                this.nextFrameTime -= Globals.LOGIC_UPDATE;
                 this.animState = Globals.PLAYER_STATE_ATTACKBOW;
-                if (this.frame < 5 && this.nextFrameTime <= 0) {
+                if (this.frame < 5 && frameDuration >= ((this.frame < 5) ? 20 : 70)) {
                     this.frame++;
-                    this.nextFrameTime = (this.frame < 5) ? 20000000 : 70000000;
+                    this.lastFrameTime = this.logic.getTime();
                 }
                 break;
             case PLAYER_STATE_BOW_FROST:
-                this.nextFrameTime -= Globals.LOGIC_UPDATE;
                 this.animState = Globals.PLAYER_STATE_ATTACKBOW;
-                if (this.frame < 5 && this.nextFrameTime <= 0) {
+                if (this.frame < 5 && frameDuration >= ((this.frame < 5) ? 20 : 70)) {
                     this.frame++;
-                    this.nextFrameTime = (this.frame < 5) ? 20000000 : 70000000;
+                    this.lastFrameTime = this.logic.getTime();
                 }
                 break;
             case PLAYER_STATE_SHIELD_DASH:
-                this.nextFrameTime -= Globals.LOGIC_UPDATE;
                 this.animState = Globals.PLAYER_STATE_ATTACK;
-                if (this.nextFrameTime <= 0 && this.frame < 2) {
+                if (frameDuration >= 20 && this.frame < 2) {
                     this.frame++;
-                    this.nextFrameTime = 20000000;
                 }
                 break;
             case PLAYER_STATE_SHIELD_CHARGE:
-                this.nextFrameTime -= Globals.LOGIC_UPDATE;
                 this.animState = Globals.PLAYER_STATE_ATTACK;
-                if (this.nextFrameTime <= 0 && this.frame < 10) {
+                if (frameDuration >= ((this.frame == 1) ? 600 : 20) && this.frame < 10) {
                     this.frame++;
-                    this.nextFrameTime = (this.frame == 1) ? 600000000 : 20000000;
+                    this.lastFrameTime = this.logic.getTime();
                 }
                 break;
             case PLAYER_STATE_SHIELD_FORTIFY:
-                this.nextFrameTime -= Globals.LOGIC_UPDATE;
                 this.animState = Globals.PLAYER_STATE_BUFF;
-                if (this.nextFrameTime <= 0 && this.frame < 6) {
+                if (frameDuration >= 30 && this.frame < 6) {
                     this.frame++;
-                    this.nextFrameTime = 30000000;
+                    this.lastFrameTime = this.logic.getTime();
                 }
                 break;
             case PLAYER_STATE_SHIELD_REFLECT:
-                this.nextFrameTime -= Globals.LOGIC_UPDATE;
                 this.animState = Globals.PLAYER_STATE_BUFF;
-                if (this.nextFrameTime <= 0 && this.frame < 6) {
+                if (frameDuration >= 20 && this.frame < 6) {
                     this.frame++;
-                    this.nextFrameTime = 20000000;
                 }
                 break;
             case PLAYER_STATE_SHIELD_IRON:
-                this.nextFrameTime -= Globals.LOGIC_UPDATE;
                 this.animState = Globals.PLAYER_STATE_BUFF;
-                if (this.nextFrameTime <= 0 && this.frame < 6) {
+                if (frameDuration >= 30 && this.frame < 6) {
                     this.frame++;
-                    this.nextFrameTime = 30000000;
+                    this.lastFrameTime = this.logic.getTime();
                 }
                 break;
             case PLAYER_STATE_SHIELD_TOSS:
-                this.nextFrameTime -= Globals.LOGIC_UPDATE;
                 this.animState = Globals.PLAYER_STATE_ATTACK;
-                if (this.nextFrameTime <= 0 && this.frame < 10) {
+                if (frameDuration >= 40 && this.frame < 10) {
                     this.frame++;
-                    this.nextFrameTime = 40000000;
+                    this.lastFrameTime = this.logic.getTime();
                 }
                 break;
         }

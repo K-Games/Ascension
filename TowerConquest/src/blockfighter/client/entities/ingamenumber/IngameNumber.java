@@ -1,6 +1,7 @@
 package blockfighter.client.entities.ingamenumber;
 
 import blockfighter.client.Globals;
+import blockfighter.client.LogicModule;
 import java.awt.Graphics2D;
 import java.awt.Point;
 
@@ -10,6 +11,7 @@ import java.awt.Point;
  */
 public class IngameNumber extends Thread {
 
+    private static LogicModule logic;
     private final byte type;
     private double x, y;
 
@@ -17,9 +19,11 @@ public class IngameNumber extends Thread {
 
     private final double speedY;
     private final int damage;
-    private long duration = 700;
+    private long startTime = 0;
+    private int duration = 700;
 
     public IngameNumber(final int dmg, final byte t, final Point loc) {
+        this.startTime = logic.getTime();
         this.damage = dmg;
         this.type = t;
         this.x = loc.x + (Globals.rng(10) * 4 - 20);
@@ -33,6 +37,10 @@ public class IngameNumber extends Thread {
         // speedX = (Globals.rng(3) - 1) * 3;
         // }
         setDaemon(true);
+    }
+
+    public static void setLogic(final LogicModule l) {
+        logic = l;
     }
 
     @Override

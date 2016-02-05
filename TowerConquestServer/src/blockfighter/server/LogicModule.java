@@ -22,6 +22,7 @@ import org.apache.commons.lang3.concurrent.BasicThreadFactory;
  */
 public class LogicModule extends Thread {
 
+    private long currentTime = 0;
     private static PacketSender sender;
     private byte room = -1;
 
@@ -84,6 +85,10 @@ public class LogicModule extends Thread {
         sender = ps;
     }
 
+    public long getTime() {
+        return this.currentTime;
+    }
+
     public void reset() {
         this.players.clear();
         this.bosses.clear();
@@ -116,10 +121,10 @@ public class LogicModule extends Thread {
     public void run() {
         try {
             boolean fin = false;
-            final double now = System.nanoTime();
-            if (now - this.lastProcessQueue >= Globals.PROCESS_QUEUE) {
+            currentTime = System.nanoTime();
+            if (currentTime - this.lastProcessQueue >= Globals.PROCESS_QUEUE) {
                 processQueues();
-                this.lastProcessQueue = now;
+                this.lastProcessQueue = currentTime;
             }
             if (this.players.isEmpty()) {
                 return;
@@ -134,11 +139,11 @@ public class LogicModule extends Thread {
             }
             final long nowMs = System.currentTimeMillis();
 
-            if (now - this.lastUpdateTime >= Globals.LOGIC_UPDATE) {
+            if (currentTime - this.lastUpdateTime >= Globals.LOGIC_UPDATE) {
                 updatePlayers();
                 updateBosses();
                 updateProjectiles();
-                this.lastUpdateTime = now;
+                this.lastUpdateTime = currentTime;
             }
 
             if (nowMs - this.lastRefreshAll >= 30000) {

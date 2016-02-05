@@ -57,9 +57,9 @@ public abstract class Projectile extends Thread implements GameEntity {
     protected ArrayList<Boss> bHit = new ArrayList<>();
     protected final LinkedList<Boss> bossQueue = new LinkedList<>();
     /**
-     * The duration of this projectile in nanoseconds.
+     * The duration of this projectile in milliseconds.
      */
-    protected long duration;
+    protected int duration;
 
     /**
      * Hit boxes of this projectile
@@ -76,6 +76,8 @@ public abstract class Projectile extends Thread implements GameEntity {
      */
     protected boolean queuedEffect = false;
 
+    protected long projStartTime = 0;
+
     /**
      * Constructor called by subclasses to reference sender and logic.
      *
@@ -85,6 +87,7 @@ public abstract class Projectile extends Thread implements GameEntity {
     public Projectile(final LogicModule l, final int k) {
         this.logic = l;
         this.key = k;
+        projStartTime = this.logic.getTime();
     }
 
     /**
@@ -97,7 +100,7 @@ public abstract class Projectile extends Thread implements GameEntity {
      * @param y Spawning y
      * @param duration
      */
-    public Projectile(final LogicModule l, final int k, final Player o, final double x, final double y, final long duration) {
+    public Projectile(final LogicModule l, final int k, final Player o, final double x, final double y, final int duration) {
         this(l, k);
         this.owner = o;
         this.x = x;
@@ -107,7 +110,7 @@ public abstract class Projectile extends Thread implements GameEntity {
         this.duration = duration;
     }
 
-    public Projectile(final LogicModule l, final int k, final Boss o, final double x, final double y, final long duration) {
+    public Projectile(final LogicModule l, final int k, final Boss o, final double x, final double y, final int duration) {
         this(l, k);
         this.bossOwner = o;
         this.x = x;
@@ -118,7 +121,6 @@ public abstract class Projectile extends Thread implements GameEntity {
 
     @Override
     public void update() {
-        this.duration -= Globals.LOGIC_UPDATE / 1000000;
         if (this.hitbox[0] == null) {
             return;
         }
@@ -186,7 +188,7 @@ public abstract class Projectile extends Thread implements GameEntity {
     }
 
     public boolean isExpired() {
-        return this.duration <= 0;
+        return Globals.nsToMs(this.logic.getTime() - this.projStartTime) >= this.duration;
     }
 
     public boolean isQueued() {

@@ -16,7 +16,7 @@ import java.util.Map;
  */
 public class ProjTouch extends BossProjectile {
 
-    private long touchDamageTime = 0;
+    private long lastTouchDamage = 0;
 
     /**
      * Projectile of on boss contact damage
@@ -37,10 +37,10 @@ public class ProjTouch extends BossProjectile {
             return;
         }
 
-        this.touchDamageTime -= Globals.LOGIC_UPDATE / 1000000;
-        if (this.touchDamageTime <= 0) {
+        int sinceLastDamage = Globals.nsToMs(this.logic.getTime() - this.lastTouchDamage);
+        if (sinceLastDamage >= 500) {
             this.pHit.clear();
-            this.touchDamageTime = 500;
+            this.lastTouchDamage = this.logic.getTime();
         }
 
         for (final Map.Entry<Byte, Player> pEntry : this.logic.getPlayers().entrySet()) {
@@ -60,7 +60,7 @@ public class ProjTouch extends BossProjectile {
             if (p != null && !p.isDead()) {
                 final int damage = (int) (70 * Math.pow(getBossOwner().getStats()[Boss.STAT_LEVEL], 1.7));
                 p.queueDamage(new Damage(damage, false, getBossOwner(), p, this.hitbox[0], p.getHitbox()));
-                p.queueBuff(new BuffKnockback(100, (p.getFacing() == Globals.RIGHT) ? -5 : 5, -6, getBossOwner(), p));
+                p.queueBuff(new BuffKnockback(this.logic, 100, (p.getFacing() == Globals.RIGHT) ? -5 : 5, -6, getBossOwner(), p));
             }
         }
         this.queuedEffect = false;

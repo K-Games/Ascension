@@ -1,6 +1,7 @@
 package blockfighter.client;
 
 import blockfighter.client.entities.boss.Boss;
+import blockfighter.client.entities.ingamenumber.IngameNumber;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.client.entities.player.Player;
 import blockfighter.client.maps.GameMap;
@@ -35,6 +36,17 @@ public class Main {
 
     static {
         SHARED_THREADPOOL.execute(SOUND_MODULE);
+        Particle.setLogic(LOGIC_MODULE);
+        Screen.setLogic(LOGIC_MODULE);
+        RenderModule.setLogic(LOGIC_MODULE);
+        FocusHandler.setLogic(LOGIC_MODULE);
+        KeyHandler.setLogic(LOGIC_MODULE);
+        MouseHandler.setLogic(LOGIC_MODULE);
+        Player.setLogic(LOGIC_MODULE);
+        Boss.setLogic(LOGIC_MODULE);
+        PacketHandler.setLogic(LOGIC_MODULE);
+        PacketReceiver.setLogic(LOGIC_MODULE);
+        IngameNumber.setLogic(LOGIC_MODULE);
     }
 
     /**
@@ -60,16 +72,6 @@ public class Main {
         final RenderModule render = new RenderModule(panel);
 
         Screen.setRenderPanel(panel);
-        Particle.setLogic(LOGIC_MODULE);
-        Screen.setLogic(LOGIC_MODULE);
-        RenderModule.setLogic(LOGIC_MODULE);
-        FocusHandler.setLogic(LOGIC_MODULE);
-        KeyHandler.setLogic(LOGIC_MODULE);
-        MouseHandler.setLogic(LOGIC_MODULE);
-        Player.setLogic(LOGIC_MODULE);
-        Boss.setLogic(LOGIC_MODULE);
-        PacketHandler.setLogic(LOGIC_MODULE);
-        PacketReceiver.setLogic(LOGIC_MODULE);
 
         Screen.setThreadPool(SHARED_THREADPOOL);
         GameMap.setThreadPool(SHARED_THREADPOOL);
@@ -106,7 +108,7 @@ public class Main {
                 .daemon(true)
                 .priority(Thread.NORM_PRIORITY)
                 .build());
-        service.scheduleAtFixedRate(LOGIC_MODULE, 0,20, TimeUnit.MICROSECONDS);
+        service.scheduleAtFixedRate(LOGIC_MODULE, 0, 150, TimeUnit.MICROSECONDS);
         service.scheduleAtFixedRate(render, 0, Globals.RENDER_UPDATE, TimeUnit.MICROSECONDS);
     }
 }

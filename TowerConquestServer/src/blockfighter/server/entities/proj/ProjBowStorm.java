@@ -15,6 +15,8 @@ import java.awt.geom.Rectangle2D;
  */
 public class ProjBowStorm extends Projectile {
 
+    private long lastDamageTime;
+
     /**
      * Projectile of Bow Skill Arrow Storm.
      *
@@ -26,6 +28,7 @@ public class ProjBowStorm extends Projectile {
      */
     public ProjBowStorm(final LogicModule l, final int k, final Player o, final double x, final double y) {
         super(l, k, o, x, y, 5000);
+        lastDamageTime = this.logic.getTime();
         this.hitbox = new Rectangle2D.Double[1];
         if (o.getFacing() == Globals.RIGHT) {
             this.hitbox[0] = new Rectangle2D.Double(this.x + 80, this.y - 450, 700, 450);
@@ -38,7 +41,8 @@ public class ProjBowStorm extends Projectile {
     @Override
     public void update() {
         super.update();
-        if (this.duration % 200 == 0 && this.duration < 5000) {
+        if (Globals.nsToMs(this.logic.getTime() - lastDamageTime) >= 200) {
+            lastDamageTime = this.logic.getTime();
             this.pHit.clear();
             this.bHit.clear();
         }

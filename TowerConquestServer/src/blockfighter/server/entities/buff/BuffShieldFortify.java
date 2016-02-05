@@ -1,16 +1,17 @@
 package blockfighter.server.entities.buff;
 
 import blockfighter.server.Globals;
+import blockfighter.server.LogicModule;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.player.skills.Skill;
 
 public class BuffShieldFortify extends Buff implements BuffDmgReduct {
 
     private final double dmgReduct, dmgTakenMult;
-    private final long maxDuration;
+    private final int maxDuration;
 
-    public BuffShieldFortify(final long d, final double reduct, final Player o) {
-        super(d, o);
+    public BuffShieldFortify(final LogicModule l, final int d, final double reduct, final Player o) {
+        super(l, d, o);
         this.maxDuration = d;
         this.dmgReduct = reduct;
         this.dmgTakenMult = 1D - this.dmgReduct;

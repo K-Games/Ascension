@@ -22,7 +22,7 @@ public class Player extends Thread {
     private final double[] stats = new double[Globals.NUM_STATS];
     private String name;
     private final ItemEquip[] equipment = new ItemEquip[Globals.NUM_EQUIP_SLOTS];
-    private long lastUpdateTime = 5000;
+    private int lastUpdateTime = 5000;
     private static LogicModule logic;
     private boolean disconnect = false;
 

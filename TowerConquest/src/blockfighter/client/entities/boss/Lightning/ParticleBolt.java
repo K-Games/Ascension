@@ -44,14 +44,13 @@ public class ParticleBolt extends Particle {
     @Override
     public void update() {
         super.update();
-        this.frameDuration -= Globals.LOGIC_UPDATE / 1000000;
-        if (this.frameDuration <= 0) {
-            this.frameDuration = 50;
+        if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
             if (this.frame < SPRITE.length) {
                 this.frame++;
             }
+            this.lastFrameTime = logic.getTime();
         }
-        if (this.duration == 250) {
+        if (Globals.nsToMs(logic.getTime() - this.particleStartTime) >= 150) {
             for (int i = 0; i < 30; i++) {
                 final ParticleBoltParticle b = new ParticleBoltParticle(((ScreenIngame) logic.getScreen()).getNextParticleKey(),
                         this.x + 150,

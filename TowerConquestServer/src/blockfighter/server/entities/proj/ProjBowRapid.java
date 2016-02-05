@@ -49,7 +49,7 @@ public class ProjBowRapid extends Projectile {
                     damage *= 2;
                 }
                 p.queueDamage(new Damage(damage, true, owner, p, crit, this.hitbox[0], p.getHitbox()));
-                p.queueBuff(new BuffKnockback(50, (owner.getFacing() == Globals.RIGHT) ? 3 : -3, -2, owner, p));
+                p.queueBuff(new BuffKnockback(this.logic, 50, (owner.getFacing() == Globals.RIGHT) ? 3 : -3, -2, owner, p));
             }
         }
 

@@ -14,8 +14,8 @@ public abstract class Skill {
     protected byte reqWeapon = -1;
     protected byte skillCode;
     protected byte level;
-    protected long cooldown;
-    protected long maxCooldown = 1;
+    protected int cooldown;
+    protected int maxCooldown = 1;
     protected BufferedImage icon = Globals.MENU_BUTTON[Globals.BUTTON_SLOT];
     protected DecimalFormat df = new DecimalFormat("###,###,##0.##");
     protected String skillName = "NO_NAME";
@@ -71,7 +71,7 @@ public abstract class Skill {
         this.cooldown = 0;
     }
 
-    public void reduceCooldown(final long ms) {
+    public void reduceCooldown(final int ms) {
         if (this.cooldown > 0) {
             this.cooldown -= ms;
         } else {
@@ -83,7 +83,7 @@ public abstract class Skill {
         this.cooldown = this.maxCooldown;
     }
 
-    public long getCooldown() {
+    public int getCooldown() {
         return this.cooldown;
     }
 

@@ -46,7 +46,7 @@ public class ProjSwordVorpal extends Projectile {
                     damage = (int) owner.criticalDamage(damage, 0.4 + 0.03 * owner.getSkillLevel(Skill.SWORD_VORPAL));
                 }
                 p.queueDamage(new Damage(damage, true, owner, p, crit, this.hitbox[0], p.getHitbox()));
-                p.queueBuff(new BuffKnockback(200, (owner.getFacing() == Globals.RIGHT) ? 1 : -1, -3, owner, p));
+                p.queueBuff(new BuffKnockback(this.logic, 200, (owner.getFacing() == Globals.RIGHT) ? 1 : -1, -3, owner, p));
             }
         }
         while (!this.bossQueue.isEmpty()) {

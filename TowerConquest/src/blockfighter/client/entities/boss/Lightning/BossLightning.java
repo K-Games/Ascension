@@ -115,14 +115,13 @@ public class BossLightning extends Boss {
 
     @Override
     public void update() {
-        this.lastParticleTime -= Globals.LOGIC_UPDATE / 1000000;
-        if (this.lastParticleTime <= 0 && this.state != STATE_BALLCHARGE) {
+        if ( Globals.nsToMs(logic.getTime() - lastParticleTime)>=100&& this.state != STATE_BALLCHARGE) {
             for (int i = 0; i < 3; i++) {
                 final ParticleAmbient b = new ParticleAmbient(((ScreenIngame) logic.getScreen()).getNextParticleKey(),
                         this.x + (Globals.rng(300) - 200), this.y - (Globals.rng(200) + 150), true);
                 ((ScreenIngame) logic.getScreen()).addParticle(b);
             }
-            this.lastParticleTime = 100;
+            this.lastParticleTime = logic.getTime();
         }
     }
 

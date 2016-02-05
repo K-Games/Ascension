@@ -59,7 +59,7 @@ public class ProjShieldToss extends Projectile {
                     damage = (int) owner.criticalDamage(damage);
                 }
                 p.queueDamage(new Damage(damage, true, owner, p, crit, this.hitbox[0], p.getHitbox()));
-                p.queueBuff(new BuffKnockback(100, (owner.getFacing() == Globals.RIGHT) ? 3 : -3, -4, owner, p));
+                p.queueBuff(new BuffKnockback(this.logic, 100, (owner.getFacing() == Globals.RIGHT) ? 3 : -3, -4, owner, p));
             }
         }
         while (!this.bossQueue.isEmpty()) {

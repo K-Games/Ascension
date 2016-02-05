@@ -23,7 +23,7 @@ public class LogicModule implements Runnable {
 
     // Shared Data
     private PacketReceiver receiver = null;
-
+    private long currentTime = 0;
     private SaveData selectedChar;
     private byte selectedRoom = 0;
     private Screen screen = new ScreenSelectChar();
@@ -42,10 +42,15 @@ public class LogicModule implements Runnable {
             this.initBgm = true;
         }
         try {
+            this.currentTime = System.nanoTime();
             this.screen.update();
         } catch (final Exception ex) {
             System.err.println(this.getClass().getCanonicalName() + ": " + ex.getLocalizedMessage() + "@" + ex.getStackTrace()[0]);
         }
+    }
+
+    public long getTime() {
+        return this.currentTime;
     }
 
     public void receiveLogin(final byte[] data) {

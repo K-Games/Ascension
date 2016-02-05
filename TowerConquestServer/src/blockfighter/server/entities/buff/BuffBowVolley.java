@@ -1,5 +1,6 @@
 package blockfighter.server.entities.buff;
 
+import blockfighter.server.LogicModule;
 import blockfighter.server.entities.player.Player;
 
 /**
@@ -10,8 +11,8 @@ public class BuffBowVolley extends Buff implements BuffDmgIncrease {
 
     private final double dmgIncrease;
 
-    public BuffBowVolley(final long d, final double inc, final Player o) {
-        super(d, o);
+    public BuffBowVolley(final LogicModule l, final int d, final double inc, final Player o) {
+        super(l, d, o);
         this.dmgIncrease = inc;
     }
 

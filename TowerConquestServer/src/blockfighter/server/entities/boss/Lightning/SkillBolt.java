@@ -1,5 +1,6 @@
 package blockfighter.server.entities.boss.Lightning;
 
+import blockfighter.server.LogicModule;
 import blockfighter.server.entities.player.skills.Skill;
 
 /**
@@ -8,7 +9,8 @@ import blockfighter.server.entities.player.skills.Skill;
  */
 public class SkillBolt extends Skill {
 
-    public SkillBolt() {
+    public SkillBolt(final LogicModule l) {
+        super(l);
         this.skillCode = BossLightning.SKILL_BOLT;
         this.maxCooldown = 20000;
     }

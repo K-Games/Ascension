@@ -15,7 +15,7 @@ public class ParticleAttEmitter extends Particle {
     @Override
     public void update() {
         super.update();
-        if (this.duration > 0) {
+        if (Globals.nsToMs(logic.getTime() - this.particleStartTime) < this.duration) {
             final ParticleAmbient b = new ParticleAmbient(((ScreenIngame) logic.getScreen()).getNextParticleKey(), this.x,
                     this.y + Globals.rng(200));
             ((ScreenIngame) logic.getScreen()).addParticle(b);

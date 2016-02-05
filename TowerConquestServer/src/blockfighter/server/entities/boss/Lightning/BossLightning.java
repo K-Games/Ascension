@@ -41,10 +41,10 @@ public class BossLightning extends Boss {
         this.stats[STAT_MINHP] = this.stats[STAT_MAXHP];
         this.hitbox.width = 330;
         this.hitbox.height = 270;
-        super.addSkill(SKILL_BOLT, new SkillBolt());
-        super.addSkill(SKILL_BALL, new SkillBall());
-        super.addSkill(SKILL_ATT1, new SkillAttack1());
-        super.addSkill(SKILL_ATT2, new SkillAttack2());
+        super.addSkill(SKILL_BOLT, new SkillBolt(this.logic));
+        super.addSkill(SKILL_BALL, new SkillBall(this.logic));
+        super.addSkill(SKILL_ATT1, new SkillAttack1(this.logic));
+        super.addSkill(SKILL_ATT2, new SkillAttack2(this.logic));
         this.logic.queueAddProj(new ProjTouch(this.logic, this.logic.getNextProjKey(), this));
     }
 
@@ -61,13 +61,8 @@ public class BossLightning extends Boss {
         if (this.isDead) {
             return;
         }
-        this.nextHPSend -= Globals.LOGIC_UPDATE / 1000000;
 
-        if (isUsingSkill()) {
-            this.skillDuration += Globals.LOGIC_UPDATE / 1000000;
-        }
         // Update Timers/Game principles(Gravity)
-        updateSkillCd();
         updateBuffs();
 
         updateFall();
@@ -80,14 +75,12 @@ public class BossLightning extends Boss {
             setXSpeed(0);
             queueBossState(STATE_STAND);
         } else // Update AI
-        {
-            if (this.aggroCounter.isEmpty()) {
+         if (this.aggroCounter.isEmpty()) {
                 // No aggro, just sit there.
                 queueBossState(STATE_STAND);
             } else {
                 updateAI();
             }
-        }
 
         updateBossState();
         updateHP();
@@ -139,21 +132,25 @@ public class BossLightning extends Boss {
         if (canCast(SKILL_BOLT)) {
             queueBossState(STATE_AI_BOLT);
             setCooldown(SKILL_BOLT);
-            this.skillDuration = 0;
+            this.skillCounter = 0;
+            this.skillCastTime = this.logic.getTime();
         } else if (canCast(SKILL_BALL)) {
             queueBossState(STATE_AI_BALL);
             setCooldown(SKILL_BALL);
-            this.skillDuration = 0;
+            this.skillCounter = 0;
+            this.skillCastTime = this.logic.getTime();
         } else if (Math.abs(this.x - t.getX()) > 450) {
             queueBossState(STATE_WALK);
         } else if (canCast(SKILL_ATT1)) {
             queueBossState(STATE_AI_ATTACK1);
             setCooldown(SKILL_ATT1);
-            this.skillDuration = 0;
+            this.skillCounter = 0;
+            this.skillCastTime = this.logic.getTime();
         } else if (canCast(SKILL_ATT2)) {
             queueBossState(STATE_AI_ATTACK2);
             setCooldown(SKILL_ATT2);
-            this.skillDuration = 0;
+            this.skillCounter = 0;
+            this.skillCastTime = this.logic.getTime();
         } else {
             queueBossState(STATE_STAND);
         }
@@ -168,6 +165,8 @@ public class BossLightning extends Boss {
         } else if (hp < 0.66) {
             phase = 1;
         }
+
+        int duration = Globals.nsToMs(this.logic.getTime() - this.skillCastTime);
         switch (this.bossState) {
             case STATE_STAND:
                 nextAIstate(t);
@@ -182,7 +181,10 @@ public class BossLightning extends Boss {
                 break;
             case STATE_AI_BOLT:
                 setXSpeed(0);
-                if (this.skillDuration == 1100) {
+                if (hasPastDuration(duration, 1100) && this.skillCounter == 0) {
+                    this.animState = STATE_BOLTCAST;
+                    this.frame = 0;
+                    this.skillCounter++;
                     ProjBolt proj;
                     byte count;
                     switch (phase) {
@@ -203,6 +205,7 @@ public class BossLightning extends Boss {
                                 this.logic.queueAddProj(proj);
                                 sendBossParticle(this.key, this.logic.getRoom(), PARTICLE_BOLT, proj.getHitbox()[0].getX(),
                                         proj.getHitbox()[0].getY());
+                                count++;
                             }
                             break;
                         case 2:
@@ -217,39 +220,45 @@ public class BossLightning extends Boss {
                             break;
                     }
                 }
-                if (this.skillDuration == 2000) {
+                if (hasPastDuration(duration, 2000)) {
                     queueBossState(STATE_STAND);
                 }
                 break;
             case STATE_AI_BALL:
                 setXSpeed(0);
-                if (this.skillDuration == 1100) {
+                if (hasPastDuration(duration, 1100) && this.skillCounter == 0) {
+                    this.animState = STATE_ATTACK2;
+                    this.frame = 0;
+                    this.skillCounter++;
                     final ProjBall proj = new ProjBall(this.logic, this.logic.getNextProjKey(), this, this.x, this.y);
                     this.logic.queueAddProj(proj);
                     sendBossParticle(this.key, this.logic.getRoom(), PARTICLE_BALL1, proj.getHitbox()[0].getX(),
                             proj.getHitbox()[0].getY());
                 }
-                if ((phase == 1 || phase == 2) && this.skillDuration == 1550) {
+                if ((phase == 1 || phase == 2) && hasPastDuration(duration, 1550) && this.skillCounter == 1) {
+                    this.skillCounter++;
                     final ProjBall proj = new ProjBall(this.logic, this.logic.getNextProjKey(), this, this.x, this.y);
                     this.logic.queueAddProj(proj);
                     sendBossParticle(this.key, this.logic.getRoom(), PARTICLE_BALL1, proj.getHitbox()[0].getX(),
                             proj.getHitbox()[0].getY());
                     reduceCooldown(SKILL_BALL, 2000);
                 }
-                if (phase == 2 && this.skillDuration == 2000) {
+                if (phase == 2 && hasPastDuration(duration, 2000) && this.skillCounter == 2) {
+                    this.skillCounter++;
                     final ProjBall proj = new ProjBall(this.logic, this.logic.getNextProjKey(), this, this.x, this.y);
                     this.logic.queueAddProj(proj);
                     sendBossParticle(this.key, this.logic.getRoom(), PARTICLE_BALL1, proj.getHitbox()[0].getX(),
                             proj.getHitbox()[0].getY());
                     reduceCooldown(SKILL_BALL, 1000);
                 }
-                if (this.skillDuration == 2300) {
+                if (hasPastDuration(duration, 2300)) {
                     queueBossState(STATE_STAND);
                 }
                 break;
             case STATE_AI_ATTACK1:
                 setXSpeed(0);
-                if (this.skillDuration == 50) {
+                if (hasPastDuration(duration, 50) && this.skillCounter == 0) {
+                    this.skillCounter++;
                     final ProjAttack proj = new ProjAttack(this.logic, this.logic.getNextProjKey(), this, this.x, this.y);
                     this.logic.queueAddProj(proj);
                     sendBossParticle(this.key, this.logic.getRoom(), PARTICLE_ATT1, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY());
@@ -259,13 +268,14 @@ public class BossLightning extends Boss {
                         reduceCooldown(SKILL_ATT1, 1000);
                     }
                 }
-                if (this.skillDuration == 400) {
+                if (hasPastDuration(duration, 400)) {
                     queueBossState(STATE_STAND);
                 }
                 break;
             case STATE_AI_ATTACK2:
                 setXSpeed(0);
-                if (this.skillDuration == 50) {
+                if (hasPastDuration(duration, 50) && this.skillCounter == 0) {
+                    this.skillCounter++;
                     final ProjAttack proj = new ProjAttack(this.logic, this.logic.getNextProjKey(), this, this.x, this.y);
                     this.logic.queueAddProj(proj);
                     sendBossParticle(this.key, this.logic.getRoom(), PARTICLE_ATT1, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY());
@@ -275,7 +285,7 @@ public class BossLightning extends Boss {
                         reduceCooldown(SKILL_ATT2, 1000);
                     }
                 }
-                if (this.skillDuration == 400) {
+                if (hasPastDuration(duration, 400)) {
                     queueBossState(STATE_STAND);
                 }
                 break;
@@ -284,89 +294,74 @@ public class BossLightning extends Boss {
 
     private void updateAnimState() {
         final byte prevAnimState = this.animState, prevFrame = this.frame;
+
+        final int duration = Globals.nsToMs(this.logic.getTime() - this.skillCastTime);
+        final int frameDuration = Globals.nsToMs(this.logic.getTime() - this.lastFrameTime);
         switch (this.bossState) {
             case STATE_STAND:
-                this.nextFrameTime -= Globals.LOGIC_UPDATE;
                 this.animState = STATE_STAND;
-                if (this.nextFrameTime <= 0) {
+                if (frameDuration >= 40) {
                     this.frame++;
                     if (this.frame == 10) {
                         this.frame = 0;
                     }
-                    this.nextFrameTime = 40000000;
+                    this.lastFrameTime = this.logic.getTime();
                 }
                 break;
             case STATE_WALK:
-                this.nextFrameTime -= Globals.LOGIC_UPDATE;
                 this.animState = STATE_STAND;
-                if (this.nextFrameTime <= 0) {
+                if (frameDuration >= 40) {
                     this.frame++;
                     if (this.frame == 10) {
                         this.frame = 0;
                     }
-                    this.nextFrameTime = 40000000;
+                    this.lastFrameTime = this.logic.getTime();
                 }
                 break;
             case STATE_AI_BOLT:
-                this.nextFrameTime -= Globals.LOGIC_UPDATE;
-                if (this.nextFrameTime <= 0) {
-                    if (this.skillDuration < 1000) {
+                if (frameDuration >= 30) {
+                    if (duration < 1000) {
                         this.animState = STATE_BOLTCHARGE;
                         this.frame++;
                         if (this.frame == 10) {
                             this.frame = 0;
                         }
-                    } else {
-                        this.animState = STATE_BOLTCAST;
-                        if (this.frame != 9) {
-                            this.frame++;
-                        }
+                    } else if (this.frame != 9) {
+                        this.frame++;
                     }
-                    if (this.skillDuration == 1000) {
-                        this.frame = 0;
-                    }
-                    this.nextFrameTime = 30000000;
+                    this.lastFrameTime = this.logic.getTime();
                 }
                 break;
             case STATE_AI_BALL:
-                this.nextFrameTime -= Globals.LOGIC_UPDATE;
-                if (this.nextFrameTime <= 0) {
-                    if (this.skillDuration < 1000) {
+                if (frameDuration >= 30) {
+                    if (duration < 1000) {
                         this.animState = STATE_BALLCHARGE;
                         this.frame++;
                         if (this.frame == 10) {
                             this.frame = 0;
                         }
-                    } else {
-                        this.animState = STATE_ATTACK2;
-                        if (this.frame < 9) {
-                            this.frame++;
-                        }
+                    } else if (this.frame < 9) {
+                        this.frame++;
                     }
-                    if (this.skillDuration == 1000) {
-                        this.frame = 0;
-                    }
-                    this.nextFrameTime = 30000000;
+                    this.lastFrameTime = this.logic.getTime();
                 }
                 break;
             case STATE_AI_ATTACK1:
-                this.nextFrameTime -= Globals.LOGIC_UPDATE;
                 this.animState = STATE_ATTACK1;
-                if (this.nextFrameTime <= 0) {
+                if (frameDuration >= 20) {
                     if (this.frame < 9) {
                         this.frame++;
                     }
-                    this.nextFrameTime = 20000000;
+                    this.lastFrameTime = this.logic.getTime();
                 }
                 break;
             case STATE_AI_ATTACK2:
-                this.nextFrameTime -= Globals.LOGIC_UPDATE;
                 this.animState = STATE_ATTACK2;
-                if (this.nextFrameTime <= 0) {
+                if (frameDuration >= 20) {
                     if (this.frame < 9) {
                         this.frame++;
                     }
-                    this.nextFrameTime = 20000000;
+                    this.lastFrameTime = this.logic.getTime();
                 }
                 break;
         }

@@ -1,5 +1,8 @@
 package blockfighter.server.entities.player.skills;
 
+import blockfighter.server.Globals;
+import blockfighter.server.LogicModule;
+
 /**
  *
  * @author Ken Kwan
@@ -9,8 +12,9 @@ public abstract class Skill {
     protected byte reqWeapon = -1;
     protected byte skillCode;
     protected byte level;
-    protected long cooldown;
-    protected long maxCooldown;
+    protected long skillCastTime;
+    protected int maxCooldown;
+    protected LogicModule logic;
 
     public final static byte NUM_SKILLS = 30,
             SWORD_VORPAL = 0x00,
@@ -45,6 +49,10 @@ public abstract class Skill {
             PASSIVE_SHADOWATTACK = 0x1C,
             PASSIVE_12 = 0x1D;
 
+    public Skill(final LogicModule l) {
+        this.logic = l;
+    }
+
     /**
      * Get this skill code of this skill.
      *
@@ -59,20 +67,15 @@ public abstract class Skill {
      *
      * @param ms Amount of milliseconds to reduce.
      */
-    public void reduceCooldown(final long ms) {
-        if (this.cooldown > 0) {
-            this.cooldown -= ms;
-        }
-        if (this.cooldown < 0) {
-            this.cooldown = 0;
-        }
+    public void reduceCooldown(final int ms) {
+        this.skillCastTime += Globals.msToNs(ms);
     }
 
     /**
      * Set the cooldown of this skill to it's maximum.
      */
     public void setCooldown() {
-        this.cooldown = this.maxCooldown;
+        this.skillCastTime = this.logic.getTime();
     }
 
     /**
@@ -80,8 +83,8 @@ public abstract class Skill {
      *
      * @return Cooldown in milliseconds
      */
-    public long getCooldown() {
-        return this.cooldown;
+    public int getCooldown() {
+        return Globals.nsToMs(this.logic.getTime() - this.skillCastTime);
     }
 
     /**
@@ -89,7 +92,7 @@ public abstract class Skill {
      *
      * @return Maximum cooldown in milliseconds.
      */
-    public long getMaxCooldown() {
+    public int getMaxCooldown() {
         return this.maxCooldown;
     }
 
@@ -127,10 +130,10 @@ public abstract class Skill {
      * @return True if weapon is same as required weapon and cooldown is <= 0
      */
     public boolean canCast(final byte weaponType) {
-        return (weaponType == this.reqWeapon || this.reqWeapon == -1) && this.cooldown <= 0;
+        return (weaponType == this.reqWeapon || this.reqWeapon == -1) && this.getCooldown() >= this.getMaxCooldown();
     }
 
     public boolean canCast() {
-        return this.reqWeapon == -1 && this.cooldown <= 0;
+        return this.getCooldown() >= this.getMaxCooldown();
     }
 }

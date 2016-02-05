@@ -61,9 +61,9 @@ public class ProjShieldCharge extends Projectile {
                     damage = (int) owner.criticalDamage(damage);
                 }
                 p.queueDamage(new Damage(damage, true, owner, p, crit, this.hitbox[0], p.getHitbox()));
-                p.queueBuff(new BuffKnockback(300, (owner.getFacing() == Globals.RIGHT) ? 4 : -4, -5, owner, p));
+                p.queueBuff(new BuffKnockback(this.logic, 300, (owner.getFacing() == Globals.RIGHT) ? 4 : -4, -5, owner, p));
                 if (owner.isSkillMaxed(Skill.SHIELD_CHARGE)) {
-                    p.queueBuff(new BuffStun(1000));
+                    p.queueBuff(new BuffStun(this.logic, 1000));
                 }
             }
         }
@@ -78,7 +78,7 @@ public class ProjShieldCharge extends Projectile {
                 }
                 b.queueDamage(new Damage(damage, true, owner, b, crit, this.hitbox[0], b.getHitbox()));
                 if (owner.isSkillMaxed(Skill.SHIELD_CHARGE)) {
-                    b.queueBuff(new BuffStun(1000));
+                    b.queueBuff(new BuffStun(this.logic, 1000));
                 }
             }
         }

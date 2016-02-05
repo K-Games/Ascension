@@ -14,6 +14,7 @@ import java.util.Properties;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JTextArea;
@@ -56,21 +57,20 @@ public class Globals {
             .build());
     ;
 
-    // public final static String SERVER_ADDRESS = "0.0.0.0";
     public static int SERVER_PORT = 25565;
     public static byte SERVER_MAX_PLAYERS = 10;
     public static byte SERVER_ROOMS = 101;
-    public static long SERVER_MAX_IDLE = 180000;
+    public static int SERVER_MAX_IDLE = 180000;
     public static byte SERVER_LOGIC_THREADS = 5,
             SERVER_PACKETSENDER_THREADS = 5;
 
     public final static byte MAX_NAME_LENGTH = 15;
-    
-    public final static double PROCESS_QUEUE_TICKS_PER_SEC = 100.0;
-    public final static double PROCESS_QUEUE = 1000000000 / PROCESS_QUEUE_TICKS_PER_SEC;
 
-    public final static double LOGIC_TICKS_PER_SEC = 100.0;
-    public final static double LOGIC_UPDATE = 1000000000 / LOGIC_TICKS_PER_SEC;
+    public final static long PROCESS_QUEUE_TICKS_PER_SEC = 100;
+    public final static long PROCESS_QUEUE = 1000000000 / PROCESS_QUEUE_TICKS_PER_SEC;
+
+    public final static long LOGIC_TICKS_PER_SEC = 100;
+    public final static long LOGIC_UPDATE = 1000000000 / LOGIC_TICKS_PER_SEC;
 
     public final static long REFRESH_ALL_UPDATE = 100;
 
@@ -465,8 +465,12 @@ public class Globals {
         return (input[0] & 0xff | (input[1] & 0xff) << 8 | (input[2] & 0xff) << 16 | (input[3] & 0xff) << 24);
     }
 
-    public static final long nsToMs(final double time) {
-        return (long) (time / 1000000);
+    public static final int nsToMs(final long time) {
+        return (int) TimeUnit.MILLISECONDS.convert(time, TimeUnit.NANOSECONDS);
+    }
+
+    public static final long msToNs(final long time) {
+        return TimeUnit.NANOSECONDS.convert(time, TimeUnit.MILLISECONDS);
     }
 
     public static final int rng(final int i) {

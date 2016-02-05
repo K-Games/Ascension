@@ -15,7 +15,9 @@ public abstract class Particle extends Thread {
 
     protected int x, y;
     protected double size = 10.0;
-    protected long frameDuration;
+    protected int frameDuration;
+    protected long lastFrameTime = 0,
+            particleStartTime = 0;
     protected int frame = 0;
     protected byte facing = Globals.RIGHT;
 
@@ -30,7 +32,7 @@ public abstract class Particle extends Thread {
     /**
      * The duration of this particle in ms.
      */
-    protected long duration;
+    protected int duration;
 
     public static void setLogic(final LogicModule l) {
         logic = l;
@@ -274,7 +276,6 @@ public abstract class Particle extends Thread {
     }
 
     public void update() {
-        this.duration -= Globals.LOGIC_UPDATE / 1000000;
     }
 
     public double getX() {
@@ -295,10 +296,15 @@ public abstract class Particle extends Thread {
     }
 
     public boolean isExpired() {
-        return this.duration <= 0;
+        return Globals.nsToMs(logic.getTime() - this.particleStartTime) >= this.duration;
     }
 
     public Particle(final int k, final int x, final int y) {
+        if (logic != null) {
+            particleStartTime = logic.getTime();
+        } else {
+            particleStartTime = System.nanoTime();
+        }
         this.key = k;
         this.x = x;
         this.y = y;
@@ -307,12 +313,8 @@ public abstract class Particle extends Thread {
     }
 
     public Particle(final int k, final int x, final int y, final byte f) {
-        this.key = k;
-        this.x = x;
-        this.y = y;
+        this(k, x, y);
         this.facing = f;
-        this.duration = 200;
-        setDaemon(true);
     }
 
     @SuppressWarnings("unused")

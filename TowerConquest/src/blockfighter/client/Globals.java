@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -46,7 +47,7 @@ public class Globals {
     private final static Random RNG = new Random();
 
     // Render 60 fps in microseconds
-    public final static long RENDER_FPS = 60;
+    public final static int RENDER_FPS = 60;
     public final static long RENDER_UPDATE = 1000000 / RENDER_FPS;
 
     public final static double LOGIC_TICKS_PER_SEC = 40D;
@@ -493,7 +494,18 @@ public class Globals {
         }
     }
 
+    public static final int nsToMs(final long time) {
+        return (int) TimeUnit.MILLISECONDS.convert(time, TimeUnit.NANOSECONDS);
+    }
+
+    public static final long msToNs(final long time) {
+        return TimeUnit.NANOSECONDS.convert(time, TimeUnit.MILLISECONDS);
+    }
+
     public static final int rng(final int i) {
-        return RNG.nextInt(i);
+        if (i > 0) {
+            return RNG.nextInt(i);
+        }
+        return -1;
     }
 }

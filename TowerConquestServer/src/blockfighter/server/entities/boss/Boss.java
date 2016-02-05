@@ -40,14 +40,13 @@ public abstract class Boss extends Thread implements GameEntity {
     protected boolean isFalling = false, isDead = false;
     protected boolean updatePos = false, updateFacing = false, updateAnimState = false;
     protected byte bossState, animState, facing, frame;
-    protected double nextFrameTime = 0;
     protected Rectangle2D.Double hitbox;
     protected double[] stats = new double[NUM_STATS];
 
     protected ConcurrentHashMap<Byte, Buff> buffs = new ConcurrentHashMap<>(10, 0.9f, 1);
     protected Buff isStun, isKnockback;
     protected Byte nextState;
-    protected long stunReduction = 0;
+    protected int stunReduction = 0;
 
     protected static PacketSender sender;
     protected final GameMap map;
@@ -59,8 +58,8 @@ public abstract class Boss extends Thread implements GameEntity {
 
     protected ConcurrentHashMap<Player, Double> aggroCounter = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Byte, Skill> skills = new ConcurrentHashMap<>(2, 0.9f, 1);
-    protected long nextHPSend = 0;
-    protected long skillDuration = 0;
+    protected long skillCastTime = 0, lastHPSend = 0, lastFrameTime = 0;
+    protected int skillCounter = 0;
     protected byte type;
 
     public Boss(final LogicModule l, final byte key, final GameMap map, final double x, final double y) {
@@ -76,6 +75,13 @@ public abstract class Boss extends Thread implements GameEntity {
         for (byte i = -128; i < 127; i++) {
             this.buffKeys.add(i);
         }
+    }
+
+    protected static boolean hasPastDuration(int currentDuration, int durationToPast) {
+        if (durationToPast <= 0) {
+            return true;
+        }
+        return currentDuration / durationToPast >= 1;
     }
 
     /**
@@ -99,7 +105,7 @@ public abstract class Boss extends Thread implements GameEntity {
         this.skills.get(sc).setCooldown();
     }
 
-    public void reduceCooldown(final byte sc, final long amount) {
+    public void reduceCooldown(final byte sc, final int amount) {
         this.skills.get(sc).reduceCooldown(amount);
     }
 
@@ -236,7 +242,7 @@ public abstract class Boss extends Thread implements GameEntity {
                     sendDamage(dmg);
                 }
                 this.stats[STAT_MINHP] -= amount;
-                this.nextHPSend = 0;
+                this.lastHPSend = 0;
             }
         }
 
@@ -244,7 +250,7 @@ public abstract class Boss extends Thread implements GameEntity {
             final Integer heal = this.healQueue.poll();
             if (heal != null) {
                 this.stats[STAT_MINHP] += heal;
-                this.nextHPSend = 0;
+                this.lastHPSend = 0;
             }
         }
 
@@ -258,7 +264,7 @@ public abstract class Boss extends Thread implements GameEntity {
             die();
         }
 
-        if (this.nextHPSend <= 0) {
+        if (Globals.nsToMs(this.logic.getTime() - this.lastHPSend) >= 150) {
             final byte[] minHP = Globals.intToByte((int) (this.stats[STAT_MINHP] / this.stats[STAT_MAXHP] * 10000));
             final byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT];
             bytes[0] = Globals.DATA_BOSS_GET_STAT;
@@ -266,7 +272,7 @@ public abstract class Boss extends Thread implements GameEntity {
             bytes[2] = STAT_MINHP;
             System.arraycopy(minHP, 0, bytes, 3, minHP.length);
             sender.sendAll(bytes, this.logic.getRoom());
-            this.nextHPSend = 150;
+            this.lastHPSend = this.logic.getTime();
         }
     }
 
@@ -358,12 +364,6 @@ public abstract class Boss extends Thread implements GameEntity {
     public void setFacing(final byte f) {
         this.facing = f;
         this.updateFacing = true;
-    }
-
-    public void updateSkillCd() {
-        for (final Map.Entry<Byte, Skill> s : this.skills.entrySet()) {
-            s.getValue().reduceCooldown((long) (Globals.LOGIC_UPDATE / 1000000));
-        }
     }
 
     public boolean updateX(final double change) {
