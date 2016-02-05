@@ -1,5 +1,6 @@
 package blockfighter.client.entities.particles;
 
+import blockfighter.client.Globals;
 import blockfighter.client.entities.player.Player;
 import blockfighter.client.screen.ScreenIngame;
 import java.awt.Point;
@@ -7,6 +8,7 @@ import java.awt.Point;
 public class ParticleBloodEmitter extends Particle {
 
     private final Player owner;
+    private long lastParticleTime = 0;
 
     public ParticleBloodEmitter(final int k, final Player p) {
         super(k, 0, 0);
@@ -18,7 +20,7 @@ public class ParticleBloodEmitter extends Particle {
     @Override
     public void update() {
         super.update();
-        if (this.duration > 0 && this.duration % 15 == 0) {
+        if (!isExpired() && Globals.nsToMs(logic.getTime() - lastParticleTime) >= 50) {
             final Point p = this.owner.getPos();
             if (p != null) {
                 this.x = p.x;
@@ -29,6 +31,7 @@ public class ParticleBloodEmitter extends Particle {
                         this.owner.getFacing());
                 ((ScreenIngame) logic.getScreen()).addParticle(b);
             }
+            lastParticleTime = logic.getTime();
         }
     }
 }

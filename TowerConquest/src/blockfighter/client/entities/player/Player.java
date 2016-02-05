@@ -22,7 +22,7 @@ public class Player extends Thread {
     private final double[] stats = new double[Globals.NUM_STATS];
     private String name;
     private final ItemEquip[] equipment = new ItemEquip[Globals.NUM_EQUIP_SLOTS];
-    private int lastUpdateTime = 5000;
+    private long lastUpdateTime;
     private static LogicModule logic;
     private boolean disconnect = false;
 
@@ -57,22 +57,22 @@ public class Player extends Thread {
     public void setPos(final int x, final int y) {
         this.x = x;
         this.y = y;
-        this.lastUpdateTime = 5000;
+        this.lastUpdateTime = logic.getTime();
     }
 
     public void setFacing(final byte dir) {
         this.facing = dir;
-        this.lastUpdateTime = 5000;
+        this.lastUpdateTime = logic.getTime();
     }
 
     public void setState(final byte s) {
         this.state = s;
-        this.lastUpdateTime = 5000;
+        this.lastUpdateTime = logic.getTime();
     }
 
     public void setFrame(final byte f) {
         this.frame = f;
-        this.lastUpdateTime = 5000;
+        this.lastUpdateTime = logic.getTime();
     }
 
     public void setEquip(final byte slot, final int itemCode) {
@@ -81,12 +81,12 @@ public class Player extends Thread {
 
     public void setStat(final byte statType, final double stat) {
         this.stats[statType] = stat;
-        this.lastUpdateTime = 5000;
+        this.lastUpdateTime = logic.getTime();
     }
 
     public void setPlayerName(final String n) {
         this.name = n;
-        this.lastUpdateTime = 5000;
+        this.lastUpdateTime = logic.getTime();
     }
 
     public static void setLogic(final LogicModule l) {
@@ -101,6 +101,7 @@ public class Player extends Thread {
         this.state = Globals.PLAYER_STATE_STAND;
         this.name = "";
         this.frame = 0;
+        this.lastUpdateTime = logic.getTime();
         setDaemon(true);
     }
 
@@ -158,7 +159,6 @@ public class Player extends Thread {
 
     @Override
     public void run() {
-        this.lastUpdateTime -= Globals.LOGIC_UPDATE / 1000000;
         if (this.name.length() <= 0) {
             logic.sendGetName(this.key);
         }
@@ -174,7 +174,7 @@ public class Player extends Thread {
     }
 
     public boolean isDisconnected() {
-        return this.disconnect || this.lastUpdateTime <= 0;
+        return this.disconnect || Globals.nsToMs(logic.getTime() - this.lastUpdateTime) >= 5000;
     }
 
     public boolean isDead() {

@@ -45,7 +45,8 @@ public interface PhysicalOggStream {
     public Collection getLogicalStreams();
 
     /**
-     * Return the Ogg page with the absolute index <code>index</code>, independent from the logical structure of this stream or if the index parameter is -1, the next Ogg page is returned. This method should only be used by implementations of <code>LogicalOggStream</code> to access the raw pages.
+     * Return the Ogg page with the absolute index <code>index</code>, independent from the logical structure of this stream or if the index parameter is -1, the next Ogg page is returned. This method
+     * should only be used by implementations of <code>LogicalOggStream</code> to access the raw pages.
      *
      * @param index the absolute index starting from 0 at the beginning of the file or stream or -1 to get the next page in a non-seekable stream
      *
@@ -71,9 +72,12 @@ public interface PhysicalOggStream {
     public void close() throws IOException;
 
     /**
-     * Sets this stream's (and its logical stream's) position to the granule position. The next packet read from any logical stream will be the first packet beginning on the first page with a granule position higher than the argument.<br><br>
+     * Sets this stream's (and its logical stream's) position to the granule position. The next packet read from any logical stream will be the first packet beginning on the first page with a granule
+     * position higher than the argument.<br><br>
      *
-     * At the moment, this method only works correctly for Ogg files with a single logical Vorbis stream, and due to the different interpretations of the granule position, depending on mixed content, this method will never be able to work for mixed streams. Chained and interleaved streams are also not yet supported. Actually, this method is only a hack to support seeking from JMF, but may of course be abused otherwise too :)
+     * At the moment, this method only works correctly for Ogg files with a single logical Vorbis stream, and due to the different interpretations of the granule position, depending on mixed content,
+     * this method will never be able to work for mixed streams. Chained and interleaved streams are also not yet supported. Actually, this method is only a hack to support seeking from JMF, but may
+     * of course be abused otherwise too :)
      *
      * @param granulePosition
      *

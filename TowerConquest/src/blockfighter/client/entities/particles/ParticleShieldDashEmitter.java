@@ -19,7 +19,7 @@ public class ParticleShieldDashEmitter extends Particle {
     @Override
     public void update() {
         super.update();
-        if (this.duration > 0) {
+        if (!isExpired()) {
             final Point p = this.owner.getPos();
             if (p != null) {
                 this.x = p.x;

@@ -201,7 +201,8 @@ public class CodecWav implements ICodec {
     }
 
     /**
-     * Reads in all the audio data from the stream (up to the default "maximum file size". See {@link paulscode.sound.SoundSystemConfig SoundSystemConfig} for more information about accessing and changing default settings.
+     * Reads in all the audio data from the stream (up to the default "maximum file size". See {@link paulscode.sound.SoundSystemConfig SoundSystemConfig} for more information about accessing and
+     * changing default settings.
      *
      * @return the audio data wrapped into a SoundBuffer context.
      */

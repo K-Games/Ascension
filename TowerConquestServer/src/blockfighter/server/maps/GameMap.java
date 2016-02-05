@@ -32,11 +32,9 @@ public abstract class GameMap {
      * Check if a location is out of bounds.
      *
      * @param x X in double to be checked
-     * @param y Y in double to be checked
      * @return True if out of bounds
      */
-    @SuppressWarnings("unused")
-    public boolean isOutOfBounds(final double x, final double y) {
+    public boolean isOutOfBounds(final double x) {
         return x < this.boundary[Globals.MAP_LEFT] || x > this.boundary[Globals.MAP_RIGHT];
     }
 
@@ -71,7 +69,6 @@ public abstract class GameMap {
      * @param fallspeed The distance to be increased in Y in double
      * @return A Y value of the nearest platform below the x,y. 0 if none found.
      */
-    @SuppressWarnings("unused")
     public double getValidY(final double x, final double y, final double fallspeed) {
         for (final Rectangle2D.Double platform : this.platforms) {
             if (platform.intersects(x - 25, y, 50, 1)) {
@@ -79,6 +76,16 @@ public abstract class GameMap {
             }
         }
         return 0;
+    }
+
+    public double getValidX(final double x) {
+        if (x < boundary[Globals.MAP_LEFT]) {
+            return boundary[Globals.MAP_LEFT];
+        }
+        if (x > boundary[Globals.MAP_RIGHT]) {
+            return boundary[Globals.MAP_RIGHT];
+        }
+        return x;
     }
 
     /**

@@ -54,7 +54,7 @@ public class Globals {
     public final static double LOGIC_UPDATE = 1000000000D / LOGIC_TICKS_PER_SEC;
 
     // public final static double DMG_TICKS_PER_SEC = 60D;
-    public final static double INGAME_NUMBER_UPDATE = 15000000D;
+    public final static int INGAME_NUMBER_UPDATE = 20;
 
     // public final static double SEND_KEYDOWN_PER_SEC = 10D;
     public final static double SEND_KEYDOWN_UPDATE = 100000000D;

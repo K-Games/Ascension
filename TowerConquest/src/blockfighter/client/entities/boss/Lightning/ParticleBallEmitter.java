@@ -15,7 +15,7 @@ public class ParticleBallEmitter extends Particle {
     @Override
     public void update() {
         super.update();
-        if (Globals.nsToMs(logic.getTime() - this.particleStartTime) < this.duration) {
+        if (!isExpired()) {
             for (int i = 0; i < 20; i++) {
                 final ParticleAmbient b = new ParticleAmbient(((ScreenIngame) logic.getScreen()).getNextParticleKey(),
                         this.x + Globals.rng(1950), this.y,

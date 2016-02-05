@@ -1,6 +1,7 @@
 package blockfighter.client.entities.player.skills;
 
 import blockfighter.client.Globals;
+import blockfighter.client.LogicModule;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.text.DecimalFormat;
@@ -11,10 +12,11 @@ import java.text.DecimalFormat;
  */
 public abstract class Skill {
 
+    protected static LogicModule logic;
     protected byte reqWeapon = -1;
     protected byte skillCode;
     protected byte level;
-    protected int cooldown;
+    protected long skillCastTime;
     protected int maxCooldown = 1;
     protected BufferedImage icon = Globals.MENU_BUTTON[Globals.BUTTON_SLOT];
     protected DecimalFormat df = new DecimalFormat("###,###,##0.##");
@@ -53,6 +55,10 @@ public abstract class Skill {
             PASSIVE_SHADOWATTACK = 0x1C,
             PASSIVE_12 = 0x1D;
 
+    public static void setLogic(final LogicModule l) {
+        logic = l;
+    }
+
     public void draw(final Graphics2D g, final int x, final int y) {
         g.drawImage(this.icon, x, y, null);
     }
@@ -68,23 +74,21 @@ public abstract class Skill {
     }
 
     public void resetCooldown() {
-        this.cooldown = 0;
+        this.skillCastTime = 0;
     }
 
     public void reduceCooldown(final int ms) {
-        if (this.cooldown > 0) {
-            this.cooldown -= ms;
-        } else {
-            this.cooldown = 0;
-        }
+        this.skillCastTime -= Globals.msToNs(ms);
     }
 
     public void setCooldown() {
-        this.cooldown = this.maxCooldown;
+        this.skillCastTime = logic.getTime();
     }
 
     public int getCooldown() {
-        return this.cooldown;
+        int elapsed = Globals.nsToMs(logic.getTime() - this.skillCastTime);
+        int cd = this.maxCooldown - elapsed;
+        return (cd > 0) ? cd : 0;
     }
 
     public void setLevel(final byte lvl) {

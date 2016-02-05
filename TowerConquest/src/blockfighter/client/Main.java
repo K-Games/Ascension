@@ -4,6 +4,7 @@ import blockfighter.client.entities.boss.Boss;
 import blockfighter.client.entities.ingamenumber.IngameNumber;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.client.entities.player.Player;
+import blockfighter.client.entities.player.skills.Skill;
 import blockfighter.client.maps.GameMap;
 import blockfighter.client.net.PacketHandler;
 import blockfighter.client.net.PacketReceiver;
@@ -47,6 +48,7 @@ public class Main {
         PacketHandler.setLogic(LOGIC_MODULE);
         PacketReceiver.setLogic(LOGIC_MODULE);
         IngameNumber.setLogic(LOGIC_MODULE);
+        Skill.setLogic(LOGIC_MODULE);
     }
 
     /**
@@ -108,7 +110,7 @@ public class Main {
                 .daemon(true)
                 .priority(Thread.NORM_PRIORITY)
                 .build());
-        service.scheduleAtFixedRate(LOGIC_MODULE, 0, 150, TimeUnit.MICROSECONDS);
+        service.scheduleAtFixedRate(LOGIC_MODULE, 0, 1, TimeUnit.MILLISECONDS);
         service.scheduleAtFixedRate(render, 0, Globals.RENDER_UPDATE, TimeUnit.MICROSECONDS);
     }
 }

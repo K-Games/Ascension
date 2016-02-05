@@ -387,7 +387,11 @@ public class Player extends Thread implements GameEntity {
      * @param y New y location in double
      */
     public void setPos(final double x, final double y) {
-        this.x = x;
+        if (this.map.isOutOfBounds(x)) {
+            this.x = this.map.getValidX(x);
+        } else {
+            this.x = x;
+        }
         this.y = y;
         this.updatePos = true;
     }
@@ -1372,7 +1376,6 @@ public class Player extends Thread implements GameEntity {
         this.dmgReduct = 1;
         this.dmgAmp = 1;
         final LinkedList<Integer> remove = new LinkedList<>();
-
         for (final Map.Entry<Integer, Buff> bEntry : this.buffs.entrySet()) {
             final Buff b = bEntry.getValue();
             b.update();
@@ -1799,7 +1802,7 @@ public class Player extends Thread implements GameEntity {
             return false;
         }
 
-        if (this.map.isOutOfBounds(this.x + change, this.y)) {
+        if (this.map.isOutOfBounds(this.x + change)) {
             return false;
         }
         this.x = this.x + change;
@@ -1809,10 +1812,6 @@ public class Player extends Thread implements GameEntity {
 
     private boolean updateY(final double change) {
         if (change == 0) {
-            return false;
-        }
-
-        if (this.map.isOutOfBounds(this.x, this.y + change)) {
             return false;
         }
         this.y = this.y + change;

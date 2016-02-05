@@ -17,7 +17,7 @@ public class ParticleSwordCinder extends Particle {
     @Override
     public void update() {
         super.update();
-        this.frameDuration -= Globals.LOGIC_UPDATE / 1000000;
+
         if (this.duration > 100) {
             for (int i = 0; i < 2; i++) {
                 final ParticleSwordCinderParticle b = new ParticleSwordCinderParticle(
@@ -26,11 +26,11 @@ public class ParticleSwordCinder extends Particle {
                 ((ScreenIngame) logic.getScreen()).addParticle(b);
             }
         }
-        if (this.frameDuration <= 0) {
-            this.frameDuration = 50;
+        if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
             if (this.frame < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_CINDER].length - 1) {
                 this.frame++;
             }
+            this.lastFrameTime = logic.getTime();
         }
     }
 

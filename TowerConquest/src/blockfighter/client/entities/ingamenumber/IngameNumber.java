@@ -20,6 +20,7 @@ public class IngameNumber extends Thread {
     private final double speedY;
     private final int damage;
     private long startTime = 0;
+    private long lastUpdateTime = 0;
     private int duration = 700;
 
     public IngameNumber(final int dmg, final byte t, final Point loc) {
@@ -28,14 +29,8 @@ public class IngameNumber extends Thread {
         this.type = t;
         this.x = loc.x + (Globals.rng(10) * 4 - 20);
         this.y = loc.y;
-        // if (type == NUMBER_TYPE_EXP) {
-        // duration = 1200;
         this.speedY = -5;
         this.speedX = 0;
-        // } else {
-        // speedY = -13;
-        // speedX = (Globals.rng(3) - 1) * 3;
-        // }
         setDaemon(true);
     }
 
@@ -45,19 +40,15 @@ public class IngameNumber extends Thread {
 
     @Override
     public void run() {
-        this.duration -= Globals.INGAME_NUMBER_UPDATE / 1000000;
-        if (this.duration < 0) {
-            this.duration = 0;
+        if (Globals.nsToMs(logic.getTime() - lastUpdateTime) >= Globals.INGAME_NUMBER_UPDATE) {
+            this.y += this.speedY;
+            this.x += this.speedX;
+            lastUpdateTime = logic.getTime();
         }
-        this.y += this.speedY;
-        if (this.type != Globals.NUMBER_TYPE_EXP) {
-            // speedY += .5;
-        }
-        this.x += this.speedX;
     }
 
     public boolean isExpired() {
-        return this.duration <= 0;
+        return Globals.nsToMs(logic.getTime() - this.startTime) >= this.duration;
     }
 
     public void draw(final Graphics2D g) {

@@ -21,7 +21,7 @@ import javax.swing.SwingUtilities;
  */
 public abstract class ScreenMenu extends Screen {
 
-    protected double lastUpdateTime = System.nanoTime();
+    protected long lastUpdateTime = 0;
     protected static ConcurrentHashMap<Integer, Particle> particles = new ConcurrentHashMap<>(20);
     private final Rectangle2D.Double[] menuBox = new Rectangle2D.Double[7];
 
@@ -44,7 +44,7 @@ public abstract class ScreenMenu extends Screen {
 
     @Override
     public void update() {
-        final double now = System.nanoTime(); // Get time now
+        final long now = logic.getTime(); // Get time now
         if (now - this.lastUpdateTime >= Globals.LOGIC_UPDATE) {
             updateParticles(particles);
             this.lastUpdateTime = now;

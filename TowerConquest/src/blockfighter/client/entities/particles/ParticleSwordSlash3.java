@@ -9,19 +9,20 @@ public class ParticleSwordSlash3 extends Particle {
     public ParticleSwordSlash3(final int k, final int x, final int y, final byte f) {
         super(k, x, y, f);
         this.frame = 0;
-        this.frameDuration = 50;
+        this.frameDuration = 30;
         this.duration = 250;
     }
 
     @Override
     public void update() {
         super.update();
-        this.frameDuration -= Globals.LOGIC_UPDATE / 1000000;
-        if (this.frameDuration <= 0) {
-            this.frameDuration = 50;
+
+        if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
+            this.frameDuration = 30;
             if (this.frame < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_SLASH3].length - 1) {
                 this.frame++;
             }
+            this.lastFrameTime = logic.getTime();
         }
     }
 

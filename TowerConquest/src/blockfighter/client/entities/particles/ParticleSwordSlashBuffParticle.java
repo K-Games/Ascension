@@ -18,13 +18,14 @@ public class ParticleSwordSlashBuffParticle extends Particle {
     @Override
     public void update() {
         super.update();
-        this.frameDuration -= Globals.LOGIC_UPDATE / 1000000;
+
         this.y -= 9;
-        if (this.frameDuration <= 0) {
+        if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
             this.frameDuration = 50;
             if (this.frame < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_SLASHBUFF].length - 1) {
                 this.frame++;
             }
+            this.lastFrameTime = logic.getTime();
         }
     }
 

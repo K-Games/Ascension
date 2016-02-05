@@ -21,12 +21,12 @@ public class ParticleShieldReflectCast extends Particle {
     @Override
     public void update() {
         super.update();
-        this.frameDuration -= Globals.LOGIC_UPDATE / 1000000;
-        if (this.frameDuration <= 0) {
+        if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
             this.frameDuration = 25;
             if (this.frame < PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_REFLECTCAST].length - 1) {
                 this.frame++;
             }
+            this.lastFrameTime = logic.getTime();
         }
     }
 

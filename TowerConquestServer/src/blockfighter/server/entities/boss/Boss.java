@@ -371,7 +371,7 @@ public abstract class Boss extends Thread implements GameEntity {
             return false;
         }
 
-        if (this.map.isOutOfBounds(this.x + change, this.y)) {
+        if (this.map.isOutOfBounds(this.x + change)) {
             return false;
         }
         this.x = this.x + change;
@@ -384,9 +384,6 @@ public abstract class Boss extends Thread implements GameEntity {
             return false;
         }
 
-        if (this.map.isOutOfBounds(this.x, this.y + change)) {
-            return false;
-        }
         this.y = this.y + change;
         this.updatePos = true;
         return true;

@@ -24,7 +24,7 @@ public class RenderModule implements Runnable {
 
     @Override
     public void run() {
-        final double now = System.nanoTime(); // Get time now
+        final long now = logic.getTime(); // Get time now
         this.panel.setScreen(logic.getScreen());
         this.panel.repaint();
         this.FPSCount++;

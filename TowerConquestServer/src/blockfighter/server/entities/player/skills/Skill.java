@@ -68,7 +68,7 @@ public abstract class Skill {
      * @param ms Amount of milliseconds to reduce.
      */
     public void reduceCooldown(final int ms) {
-        this.skillCastTime += Globals.msToNs(ms);
+        this.skillCastTime -= Globals.msToNs(ms);
     }
 
     /**

@@ -9,14 +9,12 @@ public class ParticleShieldToss extends Particle {
     public ParticleShieldToss(final int k, final int x, final int y, final byte f) {
         super(k, x, y, f);
         this.frame = 0;
-        this.frameDuration = 15;
         this.duration = 500;
     }
 
     @Override
     public void update() {
         super.update();
-        this.frameDuration -= Globals.LOGIC_UPDATE / 1000000;
         if (this.facing == Globals.RIGHT) {
             this.x += 30;
         } else {

@@ -17,12 +17,13 @@ public class ParticleSwordPhantom extends Particle {
     @Override
     public void update() {
         super.update();
-        this.frameDuration -= Globals.LOGIC_UPDATE / 1000000;
-        if (this.frameDuration <= 0) {
+
+        if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
             this.frameDuration = 50;
             if (this.frame < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_PHANTOM].length) {
                 this.frame++;
             }
+            this.lastFrameTime = logic.getTime();
         }
     }
 

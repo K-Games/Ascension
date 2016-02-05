@@ -49,16 +49,16 @@ public class ParticlePassiveShadowAttack extends Particle {
     @Override
     public void update() {
         super.update();
-        this.frameDuration -= Globals.LOGIC_UPDATE / 1000000;
+
         this.dX += this.speedX;
         this.dY += this.speedY;
         this.x = (int) this.dX;
         this.y = (int) this.dY;
-        if (this.frameDuration <= 0) {
-            this.frameDuration = 50;
+        if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
             if (this.frame < this.type * 3 + 3) {
                 this.frame++;
             }
+            this.lastFrameTime = logic.getTime();
         }
     }
 

@@ -6,7 +6,8 @@ import java.util.ListIterator;
 import javax.sound.sampled.AudioFormat;
 
 /**
- * The Source class is used to store information about a source. Source objects are stored in a map in the Library class. The information they contain is used to create library-specific sources. This is the template class which is extended for each specific library. This class is also used by the "No Sound" library to represent a mute source.
+ * The Source class is used to store information about a source. Source objects are stored in a map in the Library class. The information they contain is used to create library-specific sources. This
+ * is the template class which is extended for each specific library. This class is also used by the "No Sound" library to represent a mute source.
  * <br><br>
  * <b><i> SoundSystem License:</b></i><br><b><br>
  * You are free to use this library for any purpose, commercial or otherwise. You may modify this library or source code, and distribute it any way you like, provided the following conditions are met:
@@ -403,7 +404,9 @@ public class Source {
     }
 
     /**
-     * Fades out the volume of whatever this source is currently playing, then begins playing the specified filename at the source's previously assigned volume level. If the filename parameter is null or empty, the source will simply fade out and stop. The miliseconds parameter must be non-negative or zero. This method will remove anything that is currently in the list of queued sounds that would have played next when the current sound finished playing. This method has no effect on non-streaming sources.
+     * Fades out the volume of whatever this source is currently playing, then begins playing the specified filename at the source's previously assigned volume level. If the filename parameter is null
+     * or empty, the source will simply fade out and stop. The miliseconds parameter must be non-negative or zero. This method will remove anything that is currently in the list of queued sounds that
+     * would have played next when the current sound finished playing. This method has no effect on non-streaming sources.
      *
      * @param filenameURL Filename/URL of the sound file to play next, or null for none.
      * @param milis Number of miliseconds the fadeout should take.
@@ -440,7 +443,9 @@ public class Source {
     }
 
     /**
-     * Fades out the volume of whatever this source is currently playing, then fades the volume back in playing the specified file. Final volume after fade-in completes will be equal to the source's previously assigned volume level. The filenameURL parameter may not be null or empty. The miliseconds parameters must be non-negative or zero. This method will remove anything that is currently in the list of queued sounds that would have played next when the current sound finished playing. This method has no effect on non-streaming sources.
+     * Fades out the volume of whatever this source is currently playing, then fades the volume back in playing the specified file. Final volume after fade-in completes will be equal to the source's
+     * previously assigned volume level. The filenameURL parameter may not be null or empty. The miliseconds parameters must be non-negative or zero. This method will remove anything that is currently
+     * in the list of queued sounds that would have played next when the current sound finished playing. This method has no effect on non-streaming sources.
      *
      * @param filenameURL Filename/URL of the sound file to play next, or null for none.
      * @param milisOut Number of miliseconds the fadeout should take.
@@ -478,7 +483,8 @@ public class Source {
     }
 
     /**
-     * Resets this source's volume if it is fading out or in. Returns true if this source is currently in the process of fading out. When fade-out completes, this method transitions the source to the next sound in the sound sequence queue if there is one. This method has no effect on non-streaming sources.
+     * Resets this source's volume if it is fading out or in. Returns true if this source is currently in the process of fading out. When fade-out completes, this method transitions the source to the
+     * next sound in the sound sequence queue if there is one. This method has no effect on non-streaming sources.
      *
      * @return True if this source is in the process of fading out.
      */
@@ -543,7 +549,8 @@ public class Source {
     }
 
     /**
-     * Removes the next filename/URL from the sound sequence queue and assigns it to this source. This method has no effect on non-streaming sources. This method is used internally by SoundSystem, and it is unlikely that the user will ever need to use it.
+     * Removes the next filename/URL from the sound sequence queue and assigns it to this source. This method has no effect on non-streaming sources. This method is used internally by SoundSystem, and
+     * it is unlikely that the user will ever need to use it.
      *
      * @return True if there was something in the queue.
      */
@@ -568,7 +575,8 @@ public class Source {
     }
 
     /**
-     * Reads in initial buffers of data from the next sound in the sound sequence queue, to reduce lag when the transition occurrs. This method has no effect on non-streaming sources. This method is used internally by SoundSystem, and it is unlikely that the user will ever need to use it.
+     * Reads in initial buffers of data from the next sound in the sound sequence queue, to reduce lag when the transition occurrs. This method has no effect on non-streaming sources. This method is
+     * used internally by SoundSystem, and it is unlikely that the user will ever need to use it.
      *
      * @return False if there is nothing in the queue to read from.
      */

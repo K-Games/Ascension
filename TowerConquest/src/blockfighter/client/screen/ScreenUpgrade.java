@@ -28,6 +28,8 @@ public class ScreenUpgrade extends ScreenMenu {
     private int selectUpgrade = -1;
     private int dragItem = -1;
 
+    private long lastFrameTime = 0;
+
     private final Rectangle2D.Double[] inventSlots = new Rectangle2D.Double[100],
             equipSlots = new Rectangle2D.Double[Globals.NUM_EQUIP_SLOTS],
             destroyBox = new Rectangle2D.Double[2],
@@ -40,7 +42,7 @@ public class ScreenUpgrade extends ScreenMenu {
     private int drawItem = -1, drawEquip = -1, drawSelect = -1;
 
     private byte charFrame = 0;
-    private double nextFrameTime = 0;
+    private long nextFrameTime = 0;
     private boolean upgrading = false;
     private int upPart = 0;
 
@@ -76,18 +78,8 @@ public class ScreenUpgrade extends ScreenMenu {
 
     @Override
     public void update() {
-        final double now = System.nanoTime(); // Get time now
+        final long now = logic.getTime(); // Get time now
         if (now - this.lastUpdateTime >= Globals.LOGIC_UPDATE) {
-            this.nextFrameTime -= Globals.LOGIC_UPDATE;
-            if (this.nextFrameTime <= 0) {
-                if (this.charFrame >= 5) {
-                    this.charFrame = 0;
-                } else {
-                    this.charFrame++;
-                }
-                this.nextFrameTime = 150000000;
-            }
-
             if (this.upgrading) {
                 if (ItemUpgrade.rollUpgrade(this.c.getUpgrades()[this.selectUpgrade], this.c.getEquip()[this.selectEquip])) {
                     this.c.getEquip()[this.selectEquip].addUpgrade(1);
@@ -112,6 +104,15 @@ public class ScreenUpgrade extends ScreenMenu {
 
             updateParticles(particles);
             this.lastUpdateTime = now;
+        }
+        if (now - this.lastFrameTime >= this.nextFrameTime) {
+            if (this.charFrame >= Globals.CHAR_SPRITE[Globals.PLAYER_STATE_STAND].length - 1) {
+                this.charFrame = 0;
+            } else {
+                this.charFrame++;
+            }
+            this.nextFrameTime = 150000000;
+            this.lastFrameTime = now;
         }
     }
 

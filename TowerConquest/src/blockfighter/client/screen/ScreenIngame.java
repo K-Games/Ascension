@@ -95,11 +95,11 @@ public class ScreenIngame extends Screen {
     private int ping = 0;
     private byte pID = 0;
 
-    private double lastUpdateTime = 0, lastNumberUpdateTime = 0;
-    private double lastRequestTime = 50;
-    private double lastQueueTime = 0;
-    private double lastPingTime = 0;
-    private double lastSendKeyTime = 0;
+    private long lastUpdateTime = 0, lastNumberUpdateTime = 0;
+    private long lastRequestTime = 50;
+    private long lastQueueTime = 0;
+    private long lastPingTime = 0;
+    private long lastSendKeyTime = 0;
 
     private final boolean[] moveKeyDown = {false, false, false, false};
     private final boolean[] skillKeyDown = new boolean[12];
@@ -131,8 +131,7 @@ public class ScreenIngame extends Screen {
 
     @Override
     public void update() {
-        final double now = System.nanoTime(); // Get time now
-
+        final long now = logic.getTime(); // Get time now
         this.map.update();
         if (now - this.lastQueueTime >= Globals.QUEUES_UPDATE) {
             processDataQueue();
@@ -157,12 +156,6 @@ public class ScreenIngame extends Screen {
         }
 
         if (now - this.lastUpdateTime >= Globals.LOGIC_UPDATE) {
-            final Skill[] skills = this.c.getSkills();
-            for (final Skill skill : skills) {
-                if (skill != null) {
-                    skill.reduceCooldown((int) (Globals.LOGIC_UPDATE / 1000000));
-                }
-            }
             updateParticles(this.particles);
             updatePlayers();
             updateBosses();

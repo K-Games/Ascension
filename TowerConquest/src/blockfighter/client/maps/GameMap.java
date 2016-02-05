@@ -16,7 +16,7 @@ import java.util.concurrent.ExecutorService;
 public abstract class GameMap {
 
     protected static ConcurrentHashMap<Integer, Particle> particles = new ConcurrentHashMap<>(20);
-    protected double lastUpdateTime = System.nanoTime();
+    protected long lastUpdateTime = 0;
     protected static ExecutorService threadPool;
     private int mapID = -1;
     BufferedImage bg;
@@ -44,7 +44,7 @@ public abstract class GameMap {
     public abstract void loadAssets() throws Exception;
 
     public void update() {
-        final double now = System.nanoTime(); // Get time now
+        final long now = System.nanoTime(); // Get time now
         if (now - this.lastUpdateTime >= Globals.LOGIC_UPDATE) {
             updateParticles();
             this.lastUpdateTime = now;

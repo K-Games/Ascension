@@ -91,7 +91,7 @@ public class Main {
             Globals.log("Server started", String.format("%1$td/%1$tm/%1$tY %1$tT", System.currentTimeMillis()), Globals.LOG_TYPE_DATA,
                     true);
 
-            senderSch.scheduleAtFixedRate(packetSender, 0, 500, TimeUnit.MICROSECONDS);
+            senderSch.scheduleAtFixedRate(packetSender, 0, 1, TimeUnit.MILLISECONDS);
             for (byte i = 0; i < server_rooms.length; i++) {
                 server_rooms[i] = new LogicModule(i);
                 logicSchThreadPool.scheduleAtFixedRate(server_rooms[i], 0, 1, TimeUnit.MILLISECONDS);

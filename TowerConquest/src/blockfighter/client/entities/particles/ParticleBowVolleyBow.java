@@ -9,14 +9,7 @@ public class ParticleBowVolleyBow extends Particle {
     public ParticleBowVolleyBow(final int k, final int x, final int y, final byte f) {
         super(k, x, y, f);
         this.frame = 0;
-        this.frameDuration = 25;
         this.duration = 125;
-    }
-
-    @Override
-    public void update() {
-        super.update();
-        this.frameDuration -= Globals.LOGIC_UPDATE / 1000000;
     }
 
     @Override

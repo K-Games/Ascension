@@ -26,13 +26,13 @@ public class ScreenSpriteTest extends ScreenMenu {
 
     private byte att5Frame = 0;
 
-    private double nextFrameTime = 0;
+    private long nextFrameTime = 0;
     private final int itemCode = 100000;
     private final ItemEquip e = new ItemEquip(this.itemCode);
 
     @Override
     public void update() {
-        final double now = System.nanoTime(); // Get time now
+        final long now = logic.getTime(); // Get time now
         if (now - this.lastUpdateTime >= Globals.LOGIC_UPDATE) {
 
             this.nextFrameTime -= Globals.LOGIC_UPDATE;

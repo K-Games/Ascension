@@ -18,7 +18,6 @@ public class ParticleShieldDashBuffParticle extends Particle {
     @Override
     public void update() {
         super.update();
-        this.frameDuration -= Globals.LOGIC_UPDATE / 1000000;
         this.y -= 9;
     }
 

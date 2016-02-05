@@ -21,7 +21,7 @@ public class SoundModule implements Runnable {
     }
 
     public void setListenerPos(final int x, final int y) {
-        soundModule.setListenerPosition(new SimpleVector(x * .3, y * .3, 0));
+        soundModule.setListenerPosition(new SimpleVector(x * .2, y * .2, 0));
     }
 
     public void shutdown() {
@@ -30,7 +30,7 @@ public class SoundModule implements Runnable {
 
     public void playSound(final byte soundID, final int x, final int y) {
         if (isLoaded()) {
-            this.soundModule.quickPlay(Globals.SOUND_SFX[soundID], false, new SimpleVector(x * .3, y * .3, 0));
+            this.soundModule.quickPlay(Globals.SOUND_SFX[soundID], false, new SimpleVector(x * .2, y * .2, 0));
         }
     }
 

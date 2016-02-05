@@ -34,7 +34,8 @@ public class ScreenInventory extends ScreenMenu {
     private byte charFrame = 0;
 
     private int dragItem = -1, dragEquip = -1;
-    private double nextFrameTime = 0;
+    private int nextFrameTime = 0;
+    private long lastFrameTime = 0;
 
     public ScreenInventory() {
         this.c = logic.getSelectedChar();
@@ -67,19 +68,19 @@ public class ScreenInventory extends ScreenMenu {
 
     @Override
     public void update() {
-        final double now = System.nanoTime(); // Get time now
+        final long now = logic.getTime(); // Get time now
         if (now - this.lastUpdateTime >= Globals.LOGIC_UPDATE) {
             updateParticles(particles);
-            this.nextFrameTime -= Globals.LOGIC_UPDATE;
-            if (this.nextFrameTime <= 0) {
-                if (this.charFrame >= Globals.CHAR_SPRITE[Globals.PLAYER_STATE_STAND].length - 1) {
-                    this.charFrame = 0;
-                } else {
-                    this.charFrame++;
-                }
-                this.nextFrameTime = 150000000;
-            }
             this.lastUpdateTime = now;
+        }
+        if (now - this.lastFrameTime >= this.nextFrameTime) {
+            if (this.charFrame >= Globals.CHAR_SPRITE[Globals.PLAYER_STATE_STAND].length - 1) {
+                this.charFrame = 0;
+            } else {
+                this.charFrame++;
+            }
+            this.nextFrameTime = 150000000;
+            this.lastFrameTime = now;
         }
     }
 

@@ -18,13 +18,13 @@ public class ParticleBurnBuffParticle extends Particle {
     @Override
     public void update() {
         super.update();
-        this.frameDuration -= Globals.LOGIC_UPDATE / 1000000;
+
         this.y -= 3;
-        if (this.frameDuration <= 0) {
-            this.frameDuration = 25;
+        if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
             if (this.frame < PARTICLE_SPRITE[Globals.PARTICLE_BURN].length - 1) {
                 this.frame++;
             }
+            this.lastFrameTime = logic.getTime();
         }
     }
 
