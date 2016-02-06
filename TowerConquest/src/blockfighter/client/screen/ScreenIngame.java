@@ -535,10 +535,12 @@ public class ScreenIngame extends Screen {
         final byte key = data[1];
         final int x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
         final int y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
+        final byte facing = data[10];
         if (this.players.containsKey(key)) {
             this.players.get(key).setPos(x, y);
+            this.players.get(key).setFacing(facing);
         } else {
-            this.players.put(key, new Player(x, y, key));
+            this.players.put(key, new Player(x, y, key, facing));
         }
     }
 

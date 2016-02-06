@@ -584,6 +584,7 @@ public class Player extends Thread implements GameEntity {
         updateAnimState();
         if (this.updatePos) {
             sendPos();
+            this.updateFacing = false;
         }
         if (this.updateFacing) {
             sendFacing();
@@ -2108,7 +2109,7 @@ public class Player extends Thread implements GameEntity {
      * </p>
      */
     public void sendPos() {
-        final byte[] bytes = new byte[Globals.PACKET_BYTE * 2 + Globals.PACKET_INT * 2];
+        final byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT * 2];
         bytes[0] = Globals.DATA_PLAYER_SET_POS;
         bytes[1] = this.key;
         final byte[] posXInt = Globals.intToByte((int) this.x);
@@ -2121,6 +2122,7 @@ public class Player extends Thread implements GameEntity {
         bytes[7] = posYInt[1];
         bytes[8] = posYInt[2];
         bytes[9] = posYInt[3];
+        bytes[10] = this.facing;
         sender.sendAll(bytes, this.logic.getRoom());
         this.updatePos = false;
     }

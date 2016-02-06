@@ -89,7 +89,7 @@ public class ItemEquip implements Item {
     public static void loadItemIcon(final int code) {
         BufferedImage icon = null;
         try {
-            icon = ImageIO.read(Globals.class.getResourceAsStream("sprites/character/equip/" + code + "/attack/mainhand1/icon.png"));
+            icon = ImageIO.read(Globals.class.getResourceAsStream("sprites/equip/" + code + "/icon.png"));
         } catch (final Exception ex) {
         }
         ITEM_ICONS.put(code, icon);
@@ -102,7 +102,7 @@ public class ItemEquip implements Item {
         for (int i = 0; i < load[PLAYER_STATE_ATTACK].length; i++) {
             try {
                 load[PLAYER_STATE_ATTACK][i] = ImageIO
-                        .read(Globals.class.getResourceAsStream("sprites/character/equip/" + code + "/attack/mainhand1/" + i + ".png"));
+                        .read(Globals.class.getResourceAsStream("sprites/equip/" + code + "/attack/mainhand1/" + i + ".png"));
             } catch (final Exception ex) {
             }
         }
@@ -111,7 +111,7 @@ public class ItemEquip implements Item {
         for (int i = 0; i < load[PLAYER_STATE_ATTACKBOW].length; i++) {
             try {
                 load[PLAYER_STATE_ATTACKBOW][i] = ImageIO
-                        .read(Globals.class.getResourceAsStream("sprites/character/equip/" + code + "/attack/bow/" + i + ".png"));
+                        .read(Globals.class.getResourceAsStream("sprites/equip/" + code + "/attack/bow/" + i + ".png"));
             } catch (final Exception ex) {
             }
         }
@@ -120,7 +120,7 @@ public class ItemEquip implements Item {
         for (int i = 0; i < load[PLAYER_STATE_STAND].length; i++) {
             try {
                 load[PLAYER_STATE_STAND][i] = ImageIO
-                        .read(Globals.class.getResourceAsStream("sprites/character/equip/" + code + "/stand/" + i + ".png"));
+                        .read(Globals.class.getResourceAsStream("sprites/equip/" + code + "/stand/" + i + ".png"));
             } catch (final Exception ex) {
             }
         }
@@ -129,21 +129,21 @@ public class ItemEquip implements Item {
         for (int i = 0; i < load[PLAYER_STATE_WALK].length; i++) {
             try {
                 load[PLAYER_STATE_WALK][i] = ImageIO
-                        .read(Globals.class.getResourceAsStream("sprites/character/equip/" + code + "/walk/" + i + ".png"));
+                        .read(Globals.class.getResourceAsStream("sprites/equip/" + code + "/walk/" + i + ".png"));
             } catch (final Exception ex) {
             }
         }
 
         load[PLAYER_STATE_JUMP] = new BufferedImage[1];
         try {
-            load[PLAYER_STATE_JUMP][0] = ImageIO.read(Globals.class.getResourceAsStream("sprites/character/equip/" + code + "/jump/0.png"));
+            load[PLAYER_STATE_JUMP][0] = ImageIO.read(Globals.class.getResourceAsStream("sprites/equip/" + code + "/jump/0.png"));
         } catch (final Exception ex) {
         }
         load[PLAYER_STATE_BUFF] = new BufferedImage[10];
         for (int i = 0; i < load[PLAYER_STATE_BUFF].length; i++) {
             try {
                 load[PLAYER_STATE_BUFF][i] = ImageIO
-                        .read(Globals.class.getResourceAsStream("sprites/character/equip/" + code + "/buff/" + i + ".png"));
+                        .read(Globals.class.getResourceAsStream("sprites/equip/" + code + "/buff/" + i + ".png"));
             } catch (final Exception ex) {
             }
         }
@@ -151,7 +151,7 @@ public class ItemEquip implements Item {
         for (int i = 0; i < load[PLAYER_STATE_DEAD].length; i++) {
             try {
                 load[PLAYER_STATE_DEAD][i] = ImageIO
-                        .read(Globals.class.getResourceAsStream("sprites/character/equip/" + code + "/dead/" + i + ".png"));
+                        .read(Globals.class.getResourceAsStream("sprites/equip/" + code + "/dead/" + i + ".png"));
             } catch (final Exception ex) {
             }
         }
@@ -165,7 +165,7 @@ public class ItemEquip implements Item {
         for (int i = 0; i < load[PLAYER_STATE_ATTACK].length; i++) {
             try {
                 load[PLAYER_STATE_ATTACK][i] = ImageIO.read(
-                        Globals.class.getResourceAsStream("sprites/character/equip/" + code + "/offhand/attack/mainhand1/" + i + ".png"));
+                        Globals.class.getResourceAsStream("sprites/equip/" + code + "/offhand/attack/mainhand1/" + i + ".png"));
             } catch (final Exception ex) {
             }
         }
@@ -174,7 +174,7 @@ public class ItemEquip implements Item {
         for (int i = 0; i < load[PLAYER_STATE_ATTACKBOW].length; i++) {
             try {
                 load[PLAYER_STATE_ATTACKBOW][i] = ImageIO
-                        .read(Globals.class.getResourceAsStream("sprites/character/equip/" + code + "/offhand/attack/bow/" + i + ".png"));
+                        .read(Globals.class.getResourceAsStream("sprites/equip/" + code + "/offhand/attack/bow/" + i + ".png"));
             } catch (final Exception ex) {
             }
         }
@@ -183,7 +183,7 @@ public class ItemEquip implements Item {
         for (int i = 0; i < load[PLAYER_STATE_STAND].length; i++) {
             try {
                 load[PLAYER_STATE_STAND][i] = ImageIO
-                        .read(Globals.class.getResourceAsStream("sprites/character/equip/" + code + "/offhand/stand/" + i + ".png"));
+                        .read(Globals.class.getResourceAsStream("sprites/equip/" + code + "/offhand/stand/" + i + ".png"));
             } catch (final Exception ex) {
             }
         }
@@ -192,7 +192,7 @@ public class ItemEquip implements Item {
         for (int i = 0; i < load[PLAYER_STATE_WALK].length; i++) {
             try {
                 load[PLAYER_STATE_WALK][i] = ImageIO
-                        .read(Globals.class.getResourceAsStream("sprites/character/equip/" + code + "/offhand/walk/" + i + ".png"));
+                        .read(Globals.class.getResourceAsStream("sprites/equip/" + code + "/offhand/walk/" + i + ".png"));
             } catch (final Exception ex) {
             }
         }
@@ -200,7 +200,7 @@ public class ItemEquip implements Item {
         load[PLAYER_STATE_JUMP] = new BufferedImage[1];
         try {
             load[PLAYER_STATE_JUMP][0] = ImageIO
-                    .read(Globals.class.getResourceAsStream("sprites/character/equip/" + code + "/offhand/jump/0.png"));
+                    .read(Globals.class.getResourceAsStream("sprites/equip/" + code + "/offhand/jump/0.png"));
         } catch (final Exception ex) {
         }
 
@@ -208,7 +208,7 @@ public class ItemEquip implements Item {
         for (int i = 0; i < load[PLAYER_STATE_BUFF].length; i++) {
             try {
                 load[PLAYER_STATE_BUFF][i] = ImageIO
-                        .read(Globals.class.getResourceAsStream("sprites/character/equip/" + code + "/offhand/buff/" + i + ".png"));
+                        .read(Globals.class.getResourceAsStream("sprites/equip/" + code + "/offhand/buff/" + i + ".png"));
             } catch (final Exception ex) {
             }
         }
@@ -217,7 +217,7 @@ public class ItemEquip implements Item {
         for (int i = 0; i < load[PLAYER_STATE_DEAD].length; i++) {
             try {
                 load[PLAYER_STATE_DEAD][i] = ImageIO
-                        .read(Globals.class.getResourceAsStream("sprites/character/equip/" + code + "/offhand/dead/" + i + ".png"));
+                        .read(Globals.class.getResourceAsStream("sprites/equip/" + code + "/offhand/dead/" + i + ".png"));
             } catch (final Exception ex) {
             }
         }
@@ -243,12 +243,12 @@ public class ItemEquip implements Item {
         ITEM_DESC.put(TEMP_SWORD, "SPPIIIIIINNNNN!");
 
         ITEM_NAMES.put(TEMP_HEAD, "Wards");
-        ITEM_DESC.put(TEMP_HEAD, "Ward's plz CM.");
+        ITEM_DESC.put(TEMP_HEAD, "Eyes see all.");
 
-        ITEM_NAMES.put(TEMP_CHEST, "THAT CHEST");
-        ITEM_DESC.put(TEMP_CHEST, "Lifting brah.");
+        ITEM_NAMES.put(TEMP_CHEST, "Heart of Terrasque");
+        ITEM_DESC.put(TEMP_CHEST, "Regenrating for life!");
 
-        ITEM_NAMES.put(TEMP_PANTS, "Pants, BABY!");
+        ITEM_NAMES.put(TEMP_PANTS, "Robe of the Magi");
         ITEM_NAMES.put(TEMP_SHOULDER, "Carry Shoulders");
         ITEM_NAMES.put(TEMP_GLOVE, "MIDAS!?");
         ITEM_NAMES.put(TEMP_SHOE, "Boots of Travel");

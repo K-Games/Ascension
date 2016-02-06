@@ -38,8 +38,8 @@ public class Globals {
             LOG_TYPE_DATA = 0x01;
 
     public final static byte GAME_MAJOR_VERSION = 0,
-            GAME_MINOR_VERSION = 15,
-            GAME_UPDATE_NUMBER = 13;
+            GAME_MINOR_VERSION = 16,
+            GAME_UPDATE_NUMBER = 14;
     private final static String GAME_DEV_STATE = "ALPHA";
 
     public final static String GAME_RELEASE_VERSION = GAME_DEV_STATE + " " + GAME_MAJOR_VERSION + "." + GAME_MINOR_VERSION + "u"
