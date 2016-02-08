@@ -44,7 +44,7 @@ public class SkillSwordPhantom extends Skill {
         g.drawString("Cooldown: " + this.maxCooldown / 1000 + " Seconds", drawX + 80, drawY + 70);
 
         g.drawString("Teleport multiple times to a random enemy", drawX + 10, drawY + 90);
-        g.drawString("within a 300 radius and strike in their direction.", drawX + 10, drawY + 110);
+        g.drawString("within a 350 radius and strike in their direction.", drawX + 10, drawY + 110);
         g.drawString("Invulnerable during the skill duration.", drawX + 10, drawY + 130);
 
         g.drawString("[Level " + this.level + "]", drawX + 10, drawY + 155);

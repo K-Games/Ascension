@@ -655,7 +655,7 @@ public class Player extends Thread implements GameEntity {
         }
 
         byte[] data = this.skillUseQueue.poll();
-        while (!this.skillUseQueue.isEmpty() && this.skills.get(data[3]).getCooldown() > 0) {
+        while (!this.skillUseQueue.isEmpty() && this.skills.get(data[3]).getCooldown() < this.skills.get(data[3]).getMaxCooldown()) {
             data = this.skillUseQueue.poll();
         }
 
@@ -734,7 +734,7 @@ public class Player extends Thread implements GameEntity {
             queueBuff(new BuffSwordSlash(this.logic, 2000, .1, this));
             sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_SLASHBUFF, this.key);
         }
-        if (hasPastDuration(duration, (100 + 100 * this.skillCounter)) && this.skillCounter < numHits) {
+        if (hasPastDuration(duration, (30 + 110 * this.skillCounter)) && this.skillCounter < numHits) {
             this.skillCounter++;
             final ProjSwordSlash proj = new ProjSwordSlash(this.logic, this.logic.getNextProjKey(), this, this.x, this.y,
                     this.skillCounter);
@@ -760,9 +760,7 @@ public class Player extends Thread implements GameEntity {
             }
         }
 
-        if (duration >= 350 || isStunned() || isKnockback()) {
-            setPlayerState(PLAYER_STATE_STAND);
-        }
+        updateSkillEnd(duration, 350, true, false);
     }
 
     private void updateSkillSwordGash() {
@@ -792,9 +790,7 @@ public class Player extends Thread implements GameEntity {
                     break;
             }
         }
-        if (duration >= 450) {
-            setPlayerState(PLAYER_STATE_STAND);
-        }
+        updateSkillEnd(duration, 450, true, false);
     }
 
     private void updateSkillSwordVorpal() {
@@ -810,9 +806,7 @@ public class Player extends Thread implements GameEntity {
             this.skillCounter++;
         }
 
-        if (duration >= 800) {
-            setPlayerState(PLAYER_STATE_STAND);
-        }
+        updateSkillEnd(duration, 800, true, false);
     }
 
     private void updateSkillSwordTaunt() {
@@ -831,14 +825,13 @@ public class Player extends Thread implements GameEntity {
             sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_TAUNT, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
                     this.facing);
         }
-        if (duration >= 350) {
-            setPlayerState(PLAYER_STATE_STAND);
-        }
+        updateSkillEnd(duration, 350, false, false);
     }
 
     private void updateSkillSwordPhantom() {
         final int duration = Globals.nsToMs(this.logic.getTime() - this.skillCastTime);
         final int numHits = this.skills.get(Skill.SWORD_PHANTOM).getLevel() / 2 + 5;
+        final int radius = 350;
         boolean endPhantom = false;
         setInvulnerable(true);
         setYSpeed(0);
@@ -856,7 +849,7 @@ public class Player extends Thread implements GameEntity {
                     final Player p = player.getValue();
                     if (p != this && !p.isDead() && !p.isInvulnerable()) {
                         double distance = Math.sqrt(Math.pow((this.x - p.x), 2) + Math.pow((this.y - p.y), 2));
-                        if (distance <= 300) {
+                        if (distance <= radius) {
                             playersInRange.add(p);
                         }
                     }
@@ -879,7 +872,7 @@ public class Player extends Thread implements GameEntity {
                 for (final Map.Entry<Byte, Boss> bEntry : this.logic.getBosses().entrySet()) {
                     final Boss b = bEntry.getValue();
                     double distance = Math.sqrt(Math.pow((this.x - b.getX()), 2) + Math.pow((this.y - b.getY()), 2));
-                    if (distance <= 300) {
+                    if (distance <= radius) {
                         enemyInRange.add(b);
                     }
                 }
@@ -910,28 +903,6 @@ public class Player extends Thread implements GameEntity {
         }
     }
 
-    private void updateSkillSwordMulti() {
-        final int duration = Globals.nsToMs(this.logic.getTime() - this.skillCastTime);
-        final int numHits = this.skills.get(Skill.SWORD_MULTI).getLevel() + 6;
-        if (isSkillMaxed(Skill.SWORD_MULTI) && !isInvulnerable()) {
-            setInvulnerable(true);
-        }
-        if (this.skillCounter == numHits) {
-            this.skillCounter++;
-        }
-        if (duration % 30 == 0 && this.skillCounter < numHits) {
-            final ProjSwordMulti proj = new ProjSwordMulti(this.logic, this.logic.getNextProjKey(), this, this.x, this.y);
-            this.logic.queueAddProj(proj);
-            sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_MULTI, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
-                    this.facing);
-            this.skillCounter++;
-        }
-        if (duration >= numHits * 30 + 110 || (!isInvulnerable() && (isStunned() || isKnockback()))) {
-            setInvulnerable(false);
-            setPlayerState(PLAYER_STATE_STAND);
-        }
-    }
-
     private void updateSkillSwordCinder() {
         final int duration = Globals.nsToMs(this.logic.getTime() - this.skillCastTime);
         if (hasPastDuration(duration, 50) && this.skillCounter < 1) {
@@ -941,9 +912,7 @@ public class Player extends Thread implements GameEntity {
             sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_CINDER, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
                     this.facing);
         }
-        if (duration >= 250) {
-            setPlayerState(PLAYER_STATE_STAND);
-        }
+        updateSkillEnd(duration, 250, true, false);
     }
 
     private void updateSkillBowArc() {
@@ -959,9 +928,7 @@ public class Player extends Thread implements GameEntity {
                 sendSFX(this.logic.getRoom(), Globals.SFX_ARC, getX(), getY());
             }
         }
-        if (duration >= 300) {
-            setPlayerState(PLAYER_STATE_STAND);
-        }
+        updateSkillEnd(duration, 300, false, false);
     }
 
     private void updateSkillBowFrost() {
@@ -974,9 +941,8 @@ public class Player extends Thread implements GameEntity {
             sendParticle(this.logic.getRoom(), Globals.PARTICLE_BOW_FROSTARROW, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
                     this.facing);
         }
-        if (duration >= 380) {
-            setPlayerState(PLAYER_STATE_STAND);
-        }
+
+        updateSkillEnd(duration, 380, false, false);
     }
 
     private void updateSkillBowStorm() {
@@ -988,9 +954,7 @@ public class Player extends Thread implements GameEntity {
             sendParticle(this.logic.getRoom(), Globals.PARTICLE_BOW_STORM, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
                     this.facing);
         }
-        if (duration >= 200) {
-            setPlayerState(PLAYER_STATE_STAND);
-        }
+        updateSkillEnd(duration, 200, false, false);
     }
 
     private void updateSkillBowRapid() {
@@ -1016,9 +980,7 @@ public class Player extends Thread implements GameEntity {
                     this.facing);
             sendSFX(this.logic.getRoom(), Globals.SFX_RAPID, getX(), getY());
         }
-        if (duration >= 550) {
-            setPlayerState(PLAYER_STATE_STAND);
-        }
+        updateSkillEnd(duration, 550, true, false);
     }
 
     private void updateSkillBowVolley() {
@@ -1034,9 +996,7 @@ public class Player extends Thread implements GameEntity {
             this.skillCounter++;
             sendSFX(this.logic.getRoom(), Globals.SFX_VOLLEY, getX(), getY());
         }
-        if (duration >= 1900 || isStunned() || isKnockback()) {
-            setPlayerState(PLAYER_STATE_STAND);
-        }
+        updateSkillEnd(duration, 1900, true, true);
     }
 
     private void updateSkillBowPower() {
@@ -1047,7 +1007,6 @@ public class Player extends Thread implements GameEntity {
         if (duration <= 400 && hasPastDuration(duration, this.skillCounter * 50) && this.skillCounter < 6) {
             sendParticle(this.logic.getRoom(), Globals.PARTICLE_BOW_POWERCHARGE, this.x + ((this.facing == Globals.RIGHT) ? 75 : -75),
                     this.y - 215, this.facing);
-            //sendSFX(this.logic.getRoom(), Globals.SFX_POWER2, getX(), getY());
             this.skillCounter++;
         } else if (hasPastDuration(duration, 800) && this.skillCounter < 7) {
             this.skillCounter++;
@@ -1127,9 +1086,7 @@ public class Player extends Thread implements GameEntity {
                 }
             }
         }
-        if (duration >= 250) {
-            setPlayerState(PLAYER_STATE_STAND);
-        }
+        updateSkillEnd(duration, 250, false, false);
     }
 
     private void updateSkillShieldToss() {
@@ -1143,9 +1100,7 @@ public class Player extends Thread implements GameEntity {
             sendParticle(this.logic.getRoom(), Globals.PARTICLE_SHIELD_TOSS, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
                     this.facing);
         }
-        if (duration >= 700) {
-            setPlayerState(PLAYER_STATE_STAND);
-        }
+        updateSkillEnd(duration, 700, true, false);
     }
 
     private void updateSkillShieldCharge() {
@@ -1156,9 +1111,7 @@ public class Player extends Thread implements GameEntity {
             this.logic.queueAddProj(proj);
             sendParticle(this.logic.getRoom(), Globals.PARTICLE_SHIELD_CHARGE, this.key, this.facing);
         }
-        if (duration >= 750) {
-            setPlayerState(PLAYER_STATE_STAND);
-        }
+        updateSkillEnd(duration, 750, false, false);
     }
 
     private void updateSkillShieldDash() {
@@ -1199,9 +1152,6 @@ public class Player extends Thread implements GameEntity {
                 break;
             case PLAYER_STATE_SWORD_PHANTOM:
                 updateSkillSwordPhantom();
-                break;
-            case PLAYER_STATE_SWORD_MULTI:
-                updateSkillSwordMulti();
                 break;
             case PLAYER_STATE_SWORD_CINDER:
                 updateSkillSwordCinder();
@@ -1245,6 +1195,12 @@ public class Player extends Thread implements GameEntity {
             case PLAYER_STATE_SHIELD_TOSS:
                 updateSkillShieldToss();
                 break;
+        }
+    }
+
+    private void updateSkillEnd(final int duration, final int endTime, final boolean stunCancel, final boolean kbCancel) {
+        if (duration >= endTime || (stunCancel && isStunned() || (kbCancel && isKnockback()))) {
+            setPlayerState(PLAYER_STATE_STAND);
         }
     }
 
@@ -1527,7 +1483,7 @@ public class Player extends Thread implements GameEntity {
                 && getItemType(this.equip[Globals.ITEM_WEAPON]) == Globals.ITEM_SWORD
                 && getItemType(this.equip[Globals.ITEM_OFFHAND]) == Globals.ITEM_SWORD) {
             // Check if has Dual Sword passive AND Mainhand/Offhand are both Swords.
-            totalCritChance += 0.06 + 0.003 * getSkillLevel(Skill.PASSIVE_DUALSWORD);
+            totalCritChance += 0.04 + 0.002 * getSkillLevel(Skill.PASSIVE_DUALSWORD);
         }
         // Keen Eye Passive
         if (hasSkill(Skill.PASSIVE_KEENEYE)) {

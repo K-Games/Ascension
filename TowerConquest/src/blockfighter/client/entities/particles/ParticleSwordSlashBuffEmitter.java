@@ -27,7 +27,7 @@ public class ParticleSwordSlashBuffEmitter extends Particle {
                 this.x = p.x;
                 this.y = p.y;
             }
-            for (int i = 0; i < 2; i++) {
+            for (int i = 0; i < 1; i++) {
                 final ParticleSwordSlashBuffParticle b = new ParticleSwordSlashBuffParticle(
                         ((ScreenIngame) logic.getScreen()).getNextParticleKey(), this.x, this.y, this.facing);
                 ((ScreenIngame) logic.getScreen()).addParticle(b);

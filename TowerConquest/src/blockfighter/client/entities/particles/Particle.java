@@ -1,7 +1,6 @@
 package blockfighter.client.entities.particles;
 
 import blockfighter.client.Globals;
-import static blockfighter.client.Globals.NUM_PARTICLE_EFFECTS;
 import blockfighter.client.LogicModule;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -57,7 +56,7 @@ public abstract class Particle extends Thread {
         unloadParticles();
         LOADED = true;
         // Remove repetition later
-        PARTICLE_SPRITE = new BufferedImage[NUM_PARTICLE_EFFECTS][];
+        PARTICLE_SPRITE = new BufferedImage[Globals.NUM_PARTICLE_EFFECTS][];
         PARTICLE_SPRITE[Globals.PARTICLE_SWORD_SLASH1] = new BufferedImage[5];
         for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_SLASH1].length; i++) {
             PARTICLE_SPRITE[Globals.PARTICLE_SWORD_SLASH1][i] = ImageIO
@@ -272,6 +271,12 @@ public abstract class Particle extends Thread {
         for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_BOW_RAPID2].length; i++) {
             PARTICLE_SPRITE[Globals.PARTICLE_BOW_RAPID2][i] = ImageIO
                     .read(Globals.class.getResourceAsStream("sprites/particle/rapid2/" + i + ".png"));
+        }
+        
+        PARTICLE_SPRITE[Globals.PARTICLE_BLOOD] = new BufferedImage[1];
+        for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_BLOOD].length; i++) {
+            PARTICLE_SPRITE[Globals.PARTICLE_BLOOD][i] = ImageIO
+                    .read(Globals.class.getResourceAsStream("sprites/particle/blood/" + i + ".png"));
         }
     }
 

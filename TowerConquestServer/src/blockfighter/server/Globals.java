@@ -28,7 +28,7 @@ import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 public class Globals {
 
     public final static boolean LOGGING = true;
-    private final static String SERVER_ID = String.format("%1$td-%1$tm-%1$tY %1$tH-%1$tM-%1$tS", System.currentTimeMillis());
+    private final static String SERVER_ID = String.format("%1$td-%1$tb-%1$tY %1$tH-%1$tM-%1$tS", System.currentTimeMillis());
     private final static String LOG_DIR = "logs/" + SERVER_ID,
             ERRLOG_FILE = "ErrorLog.log",
             DATALOG_FILE = "DataLog.log";
@@ -39,7 +39,7 @@ public class Globals {
 
     public final static byte GAME_MAJOR_VERSION = 0,
             GAME_MINOR_VERSION = 16,
-            GAME_UPDATE_NUMBER = 14;
+            GAME_UPDATE_NUMBER = 15;
     private final static String GAME_DEV_STATE = "ALPHA";
 
     public final static String GAME_RELEASE_VERSION = GAME_DEV_STATE + " " + GAME_MAJOR_VERSION + "." + GAME_MINOR_VERSION + "u"
@@ -189,15 +189,15 @@ public class Globals {
             REDUCT_CONST = 150,
             ARMOR_MULT = 6,
             REGEN_MULT = 1.5,
-            CRITCHC_BASE = 0.1,
+            CRITCHC_BASE = 0,
             CRITCHC_FACT = 10,
             CRITCHC_MULT = 0.01,
-            CRITCHC_CONST = 400,
+            CRITCHC_CONST = 2500,
             CRITDMG_BASE = 0.5,
             CRITDMG_FACT = 5.5,
             CRITDMG_MULT = 0.01,
-            MINDMG_MULT = 11,
-            MAXDMG_MULT = 21,
+            MINDMG_MULT = 15,
+            MAXDMG_MULT = 17,
             MINDMG_BASE = 20,
             MAXDMG_BASE = 40;
 
@@ -437,11 +437,7 @@ public class Globals {
     }
 
     public static final double calcCritChance(final double spirit) {
-        double chc = spirit / CRITCHC_FACT * CRITCHC_MULT + CRITCHC_BASE;
-        if (chc > 0.5) {
-            chc = spirit / (spirit + CRITCHC_CONST);
-        }
-        return chc;
+        return spirit / (spirit + CRITCHC_CONST) + CRITCHC_BASE;
     }
 
     public static final double calcCritDmg(final double spirit) {

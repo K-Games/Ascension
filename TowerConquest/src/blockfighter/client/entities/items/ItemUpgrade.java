@@ -3,7 +3,9 @@ package blockfighter.client.entities.items;
 import blockfighter.client.Globals;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import java.util.HashMap;
+import javax.imageio.ImageIO;
 
 /**
  *
@@ -11,9 +13,10 @@ import java.util.HashMap;
  */
 public class ItemUpgrade implements Item {
 
-    protected final static int ITEM_TOME = 1;
+    public final static int ITEM_TOME = 1;
     private final static int[] ITEM_UPGRADES_CODES = {ITEM_TOME};
     private final static HashMap<Integer, String> ITEM_NAMES = new HashMap<>(ITEM_UPGRADES_CODES.length);
+    private final static HashMap<Integer, BufferedImage> ITEM_ICONS = new HashMap<>(ITEM_UPGRADES_CODES.length);
 
     protected int level;
     protected int itemCode;
@@ -24,6 +27,15 @@ public class ItemUpgrade implements Item {
 
     private static void loadUpgradeItems() {
         ITEM_NAMES.put(ITEM_TOME, "Tome of Enhancement");
+    }
+
+    public static void loadItemIcon(final int code) {
+        BufferedImage icon = null;
+        try {
+            icon = ImageIO.read(Globals.class.getResourceAsStream("sprites/upgrade/" + code + ".png"));
+        } catch (final Exception ex) {
+        }
+        ITEM_ICONS.put(code, icon);
     }
 
     public ItemUpgrade(final int code, final int l) {
@@ -67,9 +79,18 @@ public class ItemUpgrade implements Item {
 
     @Override
     public void draw(final Graphics2D g, final int x, final int y) {
-        g.setFont(Globals.ARIAL_15PT);
-        g.setColor(Color.WHITE);
-        g.drawString("PH", x + 20, y + 30);
+        if (ITEM_ICONS.containsKey(this.itemCode)) {
+            final BufferedImage sprite = ITEM_ICONS.get(this.itemCode);
+            if (sprite != null) {
+                g.drawImage(sprite, x, y, null);
+            } else {
+                g.setFont(Globals.ARIAL_15PT);
+                g.setColor(Color.WHITE);
+                g.drawString("PH", x + 20, y + 30);
+            }
+        } else {
+            loadItemIcon(this.itemCode);
+        }
     }
 
     @Override

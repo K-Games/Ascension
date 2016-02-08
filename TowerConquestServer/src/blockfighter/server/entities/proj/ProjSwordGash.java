@@ -3,7 +3,6 @@ package blockfighter.server.entities.proj;
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.boss.Boss;
-import blockfighter.server.entities.buff.BuffKnockback;
 import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.player.skills.Skill;
@@ -26,6 +25,7 @@ public class ProjSwordGash extends Projectile {
      * @param o Owning player
      * @param x Spawn x-coordinate
      * @param y Spawn y-coordinate
+     * @param hit
      */
     public ProjSwordGash(final LogicModule l, final int k, final Player o, final double x, final double y, final byte hit) {
         super(l, k, o, x, y, 50);
@@ -66,7 +66,7 @@ public class ProjSwordGash extends Projectile {
                     damage = (int) owner.criticalDamage(damage);
                 }
                 p.queueDamage(new Damage(damage, true, owner, p, crit, this.hitbox[0], p.getHitbox()));
-                p.queueBuff(new BuffKnockback(this.logic, 10, (owner.getFacing() == Globals.RIGHT) ? 3 : -3, -0.5, owner, p));
+                //p.queueBuff(new BuffKnockback(this.logic, 10, (owner.getFacing() == Globals.RIGHT) ? 3 : -3, -0.5, owner, p));
 
                 if (!this.healed && owner.isSkillMaxed(Skill.SWORD_GASH)) {
                     final double heal = owner.getStats()[Globals.STAT_MAXHP] * 0.0025;

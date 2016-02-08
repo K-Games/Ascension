@@ -1,6 +1,7 @@
 package blockfighter.client;
 
 import blockfighter.client.entities.items.ItemEquip;
+import static blockfighter.client.entities.items.ItemEquip.ITEM_CODES;
 import blockfighter.client.entities.items.ItemUpgrade;
 import blockfighter.client.entities.player.skills.Skill;
 import blockfighter.client.entities.player.skills.SkillBowArc;
@@ -37,6 +38,7 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
@@ -118,7 +120,12 @@ public class SaveData {
             this.inventory[i] = new ItemEquip[100];
         }
 
-        for (final int itemCode : ItemEquip.ITEM_CODES) {
+        for (int i = 0; i < 5; i++) {
+            addItem(new ItemUpgrade(ItemUpgrade.ITEM_TOME, (int) this.baseStats[Globals.STAT_LEVEL]));
+        }
+
+        for (final Map.Entry<Integer, Integer> itemEntry : ITEM_CODES.entrySet()) {
+            final int itemCode = itemEntry.getValue();
             final ItemEquip startEq = new ItemEquip(itemCode, this.baseStats[Globals.STAT_LEVEL], Globals.TEST_MAX_LEVEL);
             addItem(startEq);
         }
@@ -482,7 +489,9 @@ public class SaveData {
                 addItem(new ItemUpgrade(1, lvl + Globals.rng(6)));
             }
         }
-        for (final int itemCode : ItemEquip.ITEM_CODES) {
+
+        for (final Map.Entry<Integer, Integer> itemEntry : ITEM_CODES.entrySet()) {
+            final int itemCode = itemEntry.getValue();
             if (Globals.rng(100) < 50) {
                 final ItemEquip e = new ItemEquip(itemCode, lvl, Globals.rng(100) < 20);
                 addItem(e);

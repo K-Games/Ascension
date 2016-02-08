@@ -47,11 +47,11 @@ public class SkillPassiveDualSword extends Skill {
 
         g.setColor(Color.WHITE);
         g.drawString("[Level " + this.level + "]", drawX + 10, drawY + 155);
-        g.drawString("Additional " + this.df.format(6 + this.level * 0.3) + "% Critical Hit Chance.", drawX + 10, drawY + 175);
+        g.drawString("Additional " + this.df.format(4 + this.level * 0.2) + "% Critical Hit Chance.", drawX + 10, drawY + 175);
         g.drawString("Take " + this.df.format(this.level) + "% reduced damage.", drawX + 10, drawY + 195);
         if (this.level < 30) {
             g.drawString("[Level " + (this.level + 1) + "]", drawX + 10, drawY + 220);
-            g.drawString("Additional " + this.df.format(6 + (this.level + 1) * 0.3) + "% Critical Hit Chance.", drawX + 10, drawY + 240);
+            g.drawString("Additional " + this.df.format(4 + (this.level + 1) * 0.2) + "% Critical Hit Chance.", drawX + 10, drawY + 240);
             g.drawString("Take " + this.df.format(this.level + 1) + "% reduced damage.", drawX + 10, drawY + 260);
         }
     }

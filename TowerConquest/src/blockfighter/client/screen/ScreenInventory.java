@@ -185,7 +185,7 @@ public class ScreenInventory extends ScreenMenu {
                 statX, statY + 180, 1);
         drawStringOutline(g, "Critical Hit Chance: " + this.df.format(bs[Globals.STAT_CRITCHANCE] * 100) + " + "
                 + this.df.format(bonus[Globals.STAT_CRITCHANCE] * 100) + "%", statX, statY + 205, 1);
-        drawStringOutline(g, "Critical Hit Damage: " + this.df.format(bs[Globals.STAT_CRITDMG] * 100) + " + "
+        drawStringOutline(g, "Critical Hit Damage: " + this.df.format((1 + bs[Globals.STAT_CRITDMG]) * 100) + " + "
                 + this.df.format(bonus[Globals.STAT_CRITDMG] * 100) + "%", statX, statY + 230, 1);
 
         g.setColor(Color.WHITE);
@@ -202,7 +202,7 @@ public class ScreenInventory extends ScreenMenu {
                 statY + 180);
         g.drawString("Critical Hit Chance: " + this.df.format(bs[Globals.STAT_CRITCHANCE] * 100) + " + "
                 + this.df.format(bonus[Globals.STAT_CRITCHANCE] * 100) + "%", statX, statY + 205);
-        g.drawString("Critical Hit Damage: " + this.df.format(bs[Globals.STAT_CRITDMG] * 100) + " + "
+        g.drawString("Critical Hit Damage: " + this.df.format((1 + bs[Globals.STAT_CRITDMG]) * 100) + " + "
                 + this.df.format(bonus[Globals.STAT_CRITDMG] * 100) + "%", statX, statY + 230);
 
     }
@@ -215,7 +215,7 @@ public class ScreenInventory extends ScreenMenu {
         if (this.c.getEquip()[Globals.ITEM_OFFHAND] != null) {
             this.c.getEquip()[Globals.ITEM_OFFHAND].drawIngame(g, x, y, Globals.PLAYER_STATE_STAND, this.charFrame, Globals.RIGHT, true);
         }
-        g.drawImage(character, 1070, 200, null);
+        g.drawImage(character, 1070, 170, null);
 
         if (this.c.getEquip()[Globals.ITEM_CHEST] != null) {
             this.c.getEquip()[Globals.ITEM_CHEST].drawIngame(g, x, y, Globals.PLAYER_STATE_STAND, this.charFrame, Globals.RIGHT);

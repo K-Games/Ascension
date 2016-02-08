@@ -75,12 +75,14 @@ public class BossLightning extends Boss {
             setXSpeed(0);
             queueBossState(STATE_STAND);
         } else // Update AI
-         if (this.aggroCounter.isEmpty()) {
+        {
+            if (this.aggroCounter.isEmpty()) {
                 // No aggro, just sit there.
                 queueBossState(STATE_STAND);
             } else {
                 updateAI();
             }
+        }
 
         updateBossState();
         updateHP();

@@ -44,7 +44,7 @@ public class LogicModule extends Thread {
     private final ConcurrentLinkedQueue<Projectile> projAddQueue = new ConcurrentLinkedQueue<>();
 
     private long lastRefreshAll = 0;
-    private double lastUpdateTime = 0, lastProcessQueue = 0;
+    private long lastUpdateTime = 0, lastProcessQueue = 0;
 
     private static final ExecutorService LOGIC_THREAD_POOL = Executors.newFixedThreadPool(Globals.SERVER_LOGIC_THREADS,
             new BasicThreadFactory.Builder()

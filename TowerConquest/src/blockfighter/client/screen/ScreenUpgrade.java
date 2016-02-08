@@ -102,6 +102,10 @@ public class ScreenUpgrade extends ScreenMenu {
                 this.upgrading = false;
             }
 
+            if (this.selectUpgrade > -1 && this.c.getUpgrades()[this.selectUpgrade] == null) {
+                selectUpgrade = -1;
+            }
+
             updateParticles(particles);
             this.lastUpdateTime = now;
         }
@@ -196,7 +200,7 @@ public class ScreenUpgrade extends ScreenMenu {
         if (this.c.getEquip()[Globals.ITEM_OFFHAND] != null) {
             this.c.getEquip()[Globals.ITEM_OFFHAND].drawIngame(g, x, y, Globals.PLAYER_STATE_STAND, this.charFrame, Globals.RIGHT, true);
         }
-        g.drawImage(character, 1070, 200, null);
+        g.drawImage(character, 1070, 170, null);
 
         if (this.c.getEquip()[Globals.ITEM_CHEST] != null) {
             this.c.getEquip()[Globals.ITEM_CHEST].drawIngame(g, x, y, Globals.PLAYER_STATE_STAND, this.charFrame, Globals.RIGHT);
@@ -396,6 +400,11 @@ public class ScreenUpgrade extends ScreenMenu {
                 if (this.inventSlots[i].contains(e.getPoint())) {
                     if (!this.destroy) {
                         if (drItem != -1) {
+                            if (drItem == selectUpgrade) {
+                                selectUpgrade = i;
+                            } else if (i == selectUpgrade) {
+                                selectUpgrade = drItem;
+                            }
                             final ItemUpgrade temp = this.c.getUpgrades()[i];
                             this.c.getUpgrades()[i] = this.c.getUpgrades()[drItem];
                             this.c.getUpgrades()[drItem] = temp;
@@ -413,6 +422,14 @@ public class ScreenUpgrade extends ScreenMenu {
                             // drawSelect = -1;
                         }
                         this.c.destroyItem(i);
+                        return;
+                    }
+                }
+            }
+            if (this.upgradeBox[0].contains(e.getPoint())) {
+                if (!this.destroy) {
+                    if (drItem != -1) {
+                        this.selectUpgrade = drItem;
                         return;
                     }
                 }

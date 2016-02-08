@@ -104,10 +104,12 @@ public class Player extends Thread {
         this.lastUpdateTime = logic.getTime();
         setDaemon(true);
     }
-public Player(final int x, final int y, final byte k, final byte f) {
-        this(x,y,k);
+
+    public Player(final int x, final int y, final byte k, final byte f) {
+        this(x, y, k);
         this.facing = f;
     }
+
     public void draw(final Graphics2D g) {
         final byte s = this.state, f = this.frame;
         if (s > Globals.NUM_PLAYER_STATE || s < 0 || s == Globals.PLAYER_STATE_INVIS || f >= Globals.CHAR_SPRITE[s].length) {

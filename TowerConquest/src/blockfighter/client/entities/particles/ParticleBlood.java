@@ -10,7 +10,7 @@ public class ParticleBlood extends Particle {
 
     public ParticleBlood(final int k, final int x, final int y, final byte f) {
         super(k, x, y, f);
-        this.x = x;
+        this.x = x - 5 + Globals.rng(10);
         this.y = y - 75 + Globals.rng(60);
         this.xDouble = this.x;
         this.yDouble = this.y;

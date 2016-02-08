@@ -78,12 +78,12 @@ public class ScreenStats extends ScreenMenu {
             drawStringOutline(g, "+1", 425, mainStat + 50, 1);
         }
         if (this.bs[Globals.STAT_POINTS] >= 5) {
-            drawStringOutline(g, "+5", 460, mainStat, 2);
+            drawStringOutline(g, "+5", 460, mainStat, 1);
             drawStringOutline(g, "+5", 460, mainStat + 25, 1);
             drawStringOutline(g, "+5", 460, mainStat + 50, 1);
         }
         if (this.bs[Globals.STAT_POINTS] >= 50) {
-            drawStringOutline(g, "+50", 495, mainStat, 2);
+            drawStringOutline(g, "+50", 495, mainStat, 1);
             drawStringOutline(g, "+50", 495, mainStat + 25, 1);
             drawStringOutline(g, "+50", 495, mainStat + 50, 1);
         }

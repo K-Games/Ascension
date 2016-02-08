@@ -9,6 +9,7 @@ public class BuffShieldFortify extends Buff implements BuffDmgReduct {
 
     private final double dmgReduct, dmgTakenMult;
     private final int maxDuration;
+    private long lastHPHeal = 0;
 
     public BuffShieldFortify(final LogicModule l, final int d, final double reduct, final Player o) {
         super(l, d, o);
@@ -21,9 +22,11 @@ public class BuffShieldFortify extends Buff implements BuffDmgReduct {
     public void update() {
         super.update();
         if (getOwner().isSkillMaxed(Skill.SHIELD_FORTIFY)) {
-            final int amount = (int) (getOwner().getStats()[Globals.STAT_MAXHP] * 0.075
-                    / (this.maxDuration * 1000000 / Globals.LOGIC_UPDATE));
-            getOwner().queueHeal(amount);
+            if (Globals.nsToMs(logic.getTime() - lastHPHeal) >= Globals.nsToMs(Globals.LOGIC_UPDATE)) {
+                final int amount = (int) Math.ceil(getOwner().getStats()[Globals.STAT_MAXHP] * 0.075 / (this.maxDuration / Globals.nsToMs(Globals.LOGIC_UPDATE)));
+                getOwner().queueHeal(amount);
+                lastHPHeal = logic.getTime();
+            }
         }
     }
 

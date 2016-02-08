@@ -31,14 +31,13 @@ public class Main {
             .daemon(true)
             .priority(Thread.NORM_PRIORITY)
             .build());
-    ;
+
     private static ScheduledExecutorService logicSchThreadPool = Executors.newScheduledThreadPool(Math.max(Globals.SERVER_ROOMS / 30, 1),
             new BasicThreadFactory.Builder()
             .namingPattern("LogicModuleScheduler-%d")
             .daemon(false)
             .priority(Thread.NORM_PRIORITY)
             .build());
-    ;
 
     private static final JTextArea DATA_LOG = new JTextArea(),
             ERROR_LOG = new JTextArea();
@@ -91,10 +90,10 @@ public class Main {
             Globals.log("Server started", String.format("%1$td/%1$tm/%1$tY %1$tT", System.currentTimeMillis()), Globals.LOG_TYPE_DATA,
                     true);
 
-            senderSch.scheduleAtFixedRate(packetSender, 0, 1, TimeUnit.MILLISECONDS);
+            senderSch.scheduleAtFixedRate(packetSender, 0, 5, TimeUnit.MILLISECONDS);
             for (byte i = 0; i < server_rooms.length; i++) {
                 server_rooms[i] = new LogicModule(i);
-                logicSchThreadPool.scheduleAtFixedRate(server_rooms[i], 0, 1, TimeUnit.MILLISECONDS);
+                logicSchThreadPool.scheduleAtFixedRate(server_rooms[i], 0, 750, TimeUnit.MICROSECONDS);
             }
             Globals.log("Initialization", "Initialized " + server_rooms.length + " rooms", Globals.LOG_TYPE_ERR, false);
             Globals.log("Initialization", "Initialized " + server_rooms.length + " rooms", Globals.LOG_TYPE_DATA, true);

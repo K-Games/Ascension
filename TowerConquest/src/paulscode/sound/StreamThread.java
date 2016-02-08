@@ -134,8 +134,7 @@ public class StreamThread extends SimpleThread {
                                             }
                                         }
                                     } else // wait for stream to finish playing
-                                    {
-                                        if (!src.playing()) {
+                                     if (!src.playing()) {
                                             // Generate an EOS event:
                                             SoundSystemConfig.notifyEOS(
                                                     src.sourcename,
@@ -154,7 +153,6 @@ public class StreamThread extends SimpleThread {
                                                 }
                                             }
                                         }
-                                    }
                                 }
                             }
                         }

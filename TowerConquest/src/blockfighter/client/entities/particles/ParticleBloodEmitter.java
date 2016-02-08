@@ -20,13 +20,13 @@ public class ParticleBloodEmitter extends Particle {
     @Override
     public void update() {
         super.update();
-        if (!isExpired() && Globals.nsToMs(logic.getTime() - lastParticleTime) >= 50) {
+        if (!isExpired() && Globals.nsToMs(logic.getTime() - lastParticleTime) >= 10) {
             final Point p = this.owner.getPos();
             if (p != null) {
                 this.x = p.x;
                 this.y = p.y;
             }
-            for (int i = 0; i < 15; i++) {
+            for (int i = 0; i < 5; i++) {
                 final ParticleBlood b = new ParticleBlood(((ScreenIngame) logic.getScreen()).getNextParticleKey(), this.x, this.y,
                         this.owner.getFacing());
                 ((ScreenIngame) logic.getScreen()).addParticle(b);

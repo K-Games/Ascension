@@ -21,7 +21,7 @@ public class SkillSwordGash extends Skill {
 
     @Override
     public void drawInfo(final Graphics2D g, final int x, final int y) {
-        final int boxHeight = (this.level < 30) ? 235 : 190, boxWidth = 270;
+        final int boxHeight = (this.level < 30) ? 235 : 190, boxWidth = 280;
         int drawX = x, drawY = y;
         if (drawY + boxHeight > 700) {
             drawY = 700 - boxHeight;

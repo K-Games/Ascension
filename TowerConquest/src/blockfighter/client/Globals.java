@@ -23,7 +23,7 @@ public class Globals {
 
     public final static byte GAME_MAJOR_VERSION = 0,
             GAME_MINOR_VERSION = 16,
-            GAME_UPDATE_NUMBER = 13;
+            GAME_UPDATE_NUMBER = 15;
 
     private final static String GAME_DEV_STATE = "ALPHA";
 
@@ -38,7 +38,7 @@ public class Globals {
     public final static Font ARIAL_30PT = new Font("Arial", Font.PLAIN, 30);
     public final static Font ARIAL_12PT = new Font("Arial", Font.PLAIN, 12);
     public final static Font ARIAL_15PT = new Font("Arial", Font.BOLD, 15);
-    public final static Font ARIAL_15PT_ITALIC = new Font("Arial", Font.ITALIC, 15);
+    public final static Font ARIAL_15PTITALIC = new Font("Arial", Font.ITALIC, 15);
     public final static Font ARIAL_24PT = new Font("Arial", Font.PLAIN, 24);
     public final static Font ARIAL_18PT = new Font("Arial", Font.PLAIN, 18);
 
@@ -179,15 +179,15 @@ public class Globals {
             REDUCT_CONST = 150,
             ARMOR_MULT = 6,
             REGEN_MULT = 1.5,
-            CRITCHC_BASE = 0.1,
+            CRITCHC_BASE = 0,
             CRITCHC_FACT = 10,
             CRITCHC_MULT = 0.01,
-            CRITCHC_CONST = 400,
+            CRITCHC_CONST = 2500,
             CRITDMG_BASE = 0.5,
             CRITDMG_FACT = 5.5,
             CRITDMG_MULT = 0.01,
-            MINDMG_MULT = 11,
-            MAXDMG_MULT = 21,
+            MINDMG_MULT = 15,
+            MAXDMG_MULT = 17,
             MINDMG_BASE = 20,
             MAXDMG_BASE = 40,
             STAT_PER_LEVEL = 7,
@@ -273,6 +273,14 @@ public class Globals {
     public final static String[] SOUND_BGM = new String[NUM_BGM];
     public final static String[] SOUND_SFX = new String[NUM_SFX];
 
+    public final static int ATTACK_FRAMES = 11,
+            ATTACKBOW_FRAMES = 6,
+            STAND_FRAMES = 6,
+            WALK_FRAMES = 16,
+            BUFF_FRAMES = 7,
+            DEAD_FRAMES = 10,
+            JUMP_FRAMES = 1;
+    
     public final static byte BUTTON_BIGRECT = 0,
             BUTTON_SELECTCHAR = 1,
             BUTTON_ADDSTAT = 2,
@@ -379,11 +387,7 @@ public class Globals {
     }
 
     public static final double calcCritChance(final double spirit) {
-        double chc = spirit / CRITCHC_FACT * CRITCHC_MULT + CRITCHC_BASE;
-        if (chc > 0.5) {
-            chc = spirit / (spirit + CRITCHC_CONST);
-        }
-        return chc;
+        return spirit / (spirit + CRITCHC_CONST) + CRITCHC_BASE;
     }
 
     public static final double calcCritDmg(final double spirit) {
@@ -417,37 +421,37 @@ public class Globals {
 
     private static void loadGFX() {
         try {
-            CHAR_SPRITE[PLAYER_STATE_ATTACK] = new BufferedImage[11];
+            CHAR_SPRITE[PLAYER_STATE_ATTACK] = new BufferedImage[ATTACK_FRAMES];
             for (int i = 0; i < CHAR_SPRITE[PLAYER_STATE_ATTACK].length; i++) {
                 CHAR_SPRITE[PLAYER_STATE_ATTACK][i] = ImageIO
                         .read(Globals.class.getResourceAsStream("sprites/character/attack/mainhand/" + i + ".png"));
             }
-            CHAR_SPRITE[PLAYER_STATE_ATTACKBOW] = new BufferedImage[6];
+            CHAR_SPRITE[PLAYER_STATE_ATTACKBOW] = new BufferedImage[ATTACKBOW_FRAMES];
             for (int i = 0; i < CHAR_SPRITE[PLAYER_STATE_ATTACKBOW].length; i++) {
                 CHAR_SPRITE[PLAYER_STATE_ATTACKBOW][i] = ImageIO
                         .read(Globals.class.getResourceAsStream("sprites/character/attack/bow/" + i + ".png"));
             }
 
-            CHAR_SPRITE[PLAYER_STATE_STAND] = new BufferedImage[6];
+            CHAR_SPRITE[PLAYER_STATE_STAND] = new BufferedImage[STAND_FRAMES];
             for (int i = 0; i < CHAR_SPRITE[PLAYER_STATE_STAND].length; i++) {
                 CHAR_SPRITE[PLAYER_STATE_STAND][i] = ImageIO
                         .read(Globals.class.getResourceAsStream("sprites/character/stand/" + i + ".png"));
             }
 
-            CHAR_SPRITE[PLAYER_STATE_WALK] = new BufferedImage[16];
+            CHAR_SPRITE[PLAYER_STATE_WALK] = new BufferedImage[WALK_FRAMES];
             for (int i = 0; i < CHAR_SPRITE[PLAYER_STATE_WALK].length; i++) {
                 CHAR_SPRITE[PLAYER_STATE_WALK][i] = ImageIO.read(Globals.class.getResourceAsStream("sprites/character/walk/" + i + ".png"));
             }
 
-            CHAR_SPRITE[PLAYER_STATE_BUFF] = new BufferedImage[7];
+            CHAR_SPRITE[PLAYER_STATE_BUFF] = new BufferedImage[BUFF_FRAMES];
             for (int i = 0; i < CHAR_SPRITE[PLAYER_STATE_BUFF].length; i++) {
                 CHAR_SPRITE[PLAYER_STATE_BUFF][i] = ImageIO.read(Globals.class.getResourceAsStream("sprites/character/buff/" + i + ".png"));
             }
-            CHAR_SPRITE[PLAYER_STATE_DEAD] = new BufferedImage[10];
+            CHAR_SPRITE[PLAYER_STATE_DEAD] = new BufferedImage[DEAD_FRAMES];
             for (int i = 0; i < CHAR_SPRITE[PLAYER_STATE_DEAD].length; i++) {
                 CHAR_SPRITE[PLAYER_STATE_DEAD][i] = ImageIO.read(Globals.class.getResourceAsStream("sprites/character/dead/" + i + ".png"));
             }
-            CHAR_SPRITE[PLAYER_STATE_JUMP] = new BufferedImage[1];
+            CHAR_SPRITE[PLAYER_STATE_JUMP] = new BufferedImage[JUMP_FRAMES];
             CHAR_SPRITE[PLAYER_STATE_JUMP][0] = ImageIO.read(Globals.class.getResourceAsStream("sprites/character/jump/0.png"));
 
             HUD[0] = ImageIO.read(Globals.class.getResourceAsStream("sprites/ui/ingame/ui.png"));
