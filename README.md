@@ -1,4 +1,4 @@
-# TowerConquest
+# Tower Conquest
 An multiplayer action 2D sidescrolling platformer coded in pure Java.
 ## v0.16 Update 16
 ### Client Changes
