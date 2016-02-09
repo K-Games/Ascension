@@ -273,11 +273,6 @@ public abstract class Particle extends Thread {
                     .read(Globals.class.getResourceAsStream("sprites/particle/rapid2/" + i + ".png"));
         }
         
-        PARTICLE_SPRITE[Globals.PARTICLE_BLOOD] = new BufferedImage[1];
-        for (int i = 0; i < PARTICLE_SPRITE[Globals.PARTICLE_BLOOD].length; i++) {
-            PARTICLE_SPRITE[Globals.PARTICLE_BLOOD][i] = ImageIO
-                    .read(Globals.class.getResourceAsStream("sprites/particle/blood/" + i + ".png"));
-        }
     }
 
     public void update() {
@@ -306,9 +301,11 @@ public abstract class Particle extends Thread {
 
     public Particle(final int k, final int x, final int y) {
         if (logic != null) {
-            particleStartTime = logic.getTime();
+            this.particleStartTime = logic.getTime();
+            this.lastFrameTime = logic.getTime();
         } else {
-            particleStartTime = System.nanoTime();
+            this.particleStartTime = System.nanoTime();
+            this.lastFrameTime = particleStartTime;
         }
         this.key = k;
         this.x = x;
