@@ -35,12 +35,12 @@ public class ProjSwordPhantom extends Projectile {
     }
 
     @Override
-    public void update(){
-        if (Globals.nsToMs(logic.getTime() - this.projStartTime) >= 100){
+    public void update() {
+        if (Globals.nsToMs(logic.getTime() - this.projStartTime) >= 100) {
             super.update();
         }
     }
-    
+
     @Override
     public void processQueue() {
         while (!this.playerQueue.isEmpty()) {
