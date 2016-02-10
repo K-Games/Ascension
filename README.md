@@ -9,16 +9,11 @@
 # Description
 An multiplayer action 2D sidescrolling platformer coded in pure Java.
 
-## v0.16 Client Update 17
+## v0.16 Client Update 18
 ### Client Changes
-* Abstracted Particle Loading.
-* Particles now properly unload when leaving a game.
-* Packets are no longer sent when socket is closed.
-* Classes that require LogicModule references get the reference with a static initialization.
-* Sound Module can play a WAV sfx without a location.
-* Maps now prerender any required assets.
-* Corrected final constants names for convention.
+* Renamed Global PLAYER_STATE constants to PLAYER_ANIM_STATE
 
-## v0.16 Server Update 17
+## v0.16 Server Update 18
 ### Server Changes
-* Corrected final constants names for convention.
+* Renamed Global PLAYER_STATE constants to PLAYER_ANIM_STATE
+
