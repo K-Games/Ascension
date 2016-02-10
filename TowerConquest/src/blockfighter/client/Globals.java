@@ -193,15 +193,15 @@ public class Globals {
             STAT_PER_LEVEL = 7,
             SP_PER_LEVEL = 3;
 
-    public final static int NUM_PLAYER_STATE = 8;
-    public final static byte PLAYER_STATE_STAND = 0x00,
-            PLAYER_STATE_WALK = 0x01,
-            PLAYER_STATE_JUMP = 0x02,
-            PLAYER_STATE_ATTACK = 0x03,
-            PLAYER_STATE_ATTACKBOW = 0x04,
-            PLAYER_STATE_BUFF = 0x05,
-            PLAYER_STATE_DEAD = 0x06,
-            PLAYER_STATE_INVIS = 0x07;
+    public final static int NUM_PLAYER_ANIM_STATE = 8;
+    public final static byte PLAYER_ANIM_STATE_STAND = 0x00,
+            PLAYER_ANIM_STATE_WALK = 0x01,
+            PLAYER_ANIM_STATE_JUMP = 0x02,
+            PLAYER_ANIM_STATE_ATTACK = 0x03,
+            PLAYER_ANIM_STATE_ATTACKBOW = 0x04,
+            PLAYER_ANIM_STATE_BUFF = 0x05,
+            PLAYER_ANIM_STATE_DEAD = 0x06,
+            PLAYER_ANIM_STATE_INVIS = 0x07;
 
     // Packet globals
     public final static int PACKET_MAX_SIZE = 512;
@@ -236,7 +236,7 @@ public class Globals {
             DATA_PLAYER_GIVEDROP = 0x17,
             DATA_PLAYER_CREATE = 0x18;
 
-    public final static BufferedImage[][] CHAR_SPRITE = new BufferedImage[NUM_PLAYER_STATE][];
+    public final static BufferedImage[][] CHAR_SPRITE = new BufferedImage[NUM_PLAYER_ANIM_STATE][];
     public final static BufferedImage[] HUD = new BufferedImage[2];
 
     public final static BufferedImage[] MENU_BG = new BufferedImage[5];
@@ -421,38 +421,38 @@ public class Globals {
 
     private static void loadGFX() {
         try {
-            CHAR_SPRITE[PLAYER_STATE_ATTACK] = new BufferedImage[ATTACK_FRAMES];
-            for (int i = 0; i < CHAR_SPRITE[PLAYER_STATE_ATTACK].length; i++) {
-                CHAR_SPRITE[PLAYER_STATE_ATTACK][i] = ImageIO
+            CHAR_SPRITE[PLAYER_ANIM_STATE_ATTACK] = new BufferedImage[ATTACK_FRAMES];
+            for (int i = 0; i < CHAR_SPRITE[PLAYER_ANIM_STATE_ATTACK].length; i++) {
+                CHAR_SPRITE[PLAYER_ANIM_STATE_ATTACK][i] = ImageIO
                         .read(Globals.class.getResourceAsStream("sprites/character/attack/mainhand/" + i + ".png"));
             }
-            CHAR_SPRITE[PLAYER_STATE_ATTACKBOW] = new BufferedImage[ATTACKBOW_FRAMES];
-            for (int i = 0; i < CHAR_SPRITE[PLAYER_STATE_ATTACKBOW].length; i++) {
-                CHAR_SPRITE[PLAYER_STATE_ATTACKBOW][i] = ImageIO
+            CHAR_SPRITE[PLAYER_ANIM_STATE_ATTACKBOW] = new BufferedImage[ATTACKBOW_FRAMES];
+            for (int i = 0; i < CHAR_SPRITE[PLAYER_ANIM_STATE_ATTACKBOW].length; i++) {
+                CHAR_SPRITE[PLAYER_ANIM_STATE_ATTACKBOW][i] = ImageIO
                         .read(Globals.class.getResourceAsStream("sprites/character/attack/bow/" + i + ".png"));
             }
 
-            CHAR_SPRITE[PLAYER_STATE_STAND] = new BufferedImage[STAND_FRAMES];
-            for (int i = 0; i < CHAR_SPRITE[PLAYER_STATE_STAND].length; i++) {
-                CHAR_SPRITE[PLAYER_STATE_STAND][i] = ImageIO
+            CHAR_SPRITE[PLAYER_ANIM_STATE_STAND] = new BufferedImage[STAND_FRAMES];
+            for (int i = 0; i < CHAR_SPRITE[PLAYER_ANIM_STATE_STAND].length; i++) {
+                CHAR_SPRITE[PLAYER_ANIM_STATE_STAND][i] = ImageIO
                         .read(Globals.class.getResourceAsStream("sprites/character/stand/" + i + ".png"));
             }
 
-            CHAR_SPRITE[PLAYER_STATE_WALK] = new BufferedImage[WALK_FRAMES];
-            for (int i = 0; i < CHAR_SPRITE[PLAYER_STATE_WALK].length; i++) {
-                CHAR_SPRITE[PLAYER_STATE_WALK][i] = ImageIO.read(Globals.class.getResourceAsStream("sprites/character/walk/" + i + ".png"));
+            CHAR_SPRITE[PLAYER_ANIM_STATE_WALK] = new BufferedImage[WALK_FRAMES];
+            for (int i = 0; i < CHAR_SPRITE[PLAYER_ANIM_STATE_WALK].length; i++) {
+                CHAR_SPRITE[PLAYER_ANIM_STATE_WALK][i] = ImageIO.read(Globals.class.getResourceAsStream("sprites/character/walk/" + i + ".png"));
             }
 
-            CHAR_SPRITE[PLAYER_STATE_BUFF] = new BufferedImage[BUFF_FRAMES];
-            for (int i = 0; i < CHAR_SPRITE[PLAYER_STATE_BUFF].length; i++) {
-                CHAR_SPRITE[PLAYER_STATE_BUFF][i] = ImageIO.read(Globals.class.getResourceAsStream("sprites/character/buff/" + i + ".png"));
+            CHAR_SPRITE[PLAYER_ANIM_STATE_BUFF] = new BufferedImage[BUFF_FRAMES];
+            for (int i = 0; i < CHAR_SPRITE[PLAYER_ANIM_STATE_BUFF].length; i++) {
+                CHAR_SPRITE[PLAYER_ANIM_STATE_BUFF][i] = ImageIO.read(Globals.class.getResourceAsStream("sprites/character/buff/" + i + ".png"));
             }
-            CHAR_SPRITE[PLAYER_STATE_DEAD] = new BufferedImage[DEAD_FRAMES];
-            for (int i = 0; i < CHAR_SPRITE[PLAYER_STATE_DEAD].length; i++) {
-                CHAR_SPRITE[PLAYER_STATE_DEAD][i] = ImageIO.read(Globals.class.getResourceAsStream("sprites/character/dead/" + i + ".png"));
+            CHAR_SPRITE[PLAYER_ANIM_STATE_DEAD] = new BufferedImage[DEAD_FRAMES];
+            for (int i = 0; i < CHAR_SPRITE[PLAYER_ANIM_STATE_DEAD].length; i++) {
+                CHAR_SPRITE[PLAYER_ANIM_STATE_DEAD][i] = ImageIO.read(Globals.class.getResourceAsStream("sprites/character/dead/" + i + ".png"));
             }
-            CHAR_SPRITE[PLAYER_STATE_JUMP] = new BufferedImage[JUMP_FRAMES];
-            CHAR_SPRITE[PLAYER_STATE_JUMP][0] = ImageIO.read(Globals.class.getResourceAsStream("sprites/character/jump/0.png"));
+            CHAR_SPRITE[PLAYER_ANIM_STATE_JUMP] = new BufferedImage[JUMP_FRAMES];
+            CHAR_SPRITE[PLAYER_ANIM_STATE_JUMP][0] = ImageIO.read(Globals.class.getResourceAsStream("sprites/character/jump/0.png"));
 
             HUD[0] = ImageIO.read(Globals.class.getResourceAsStream("sprites/ui/ingame/ui.png"));
             HUD[1] = ImageIO.read(Globals.class.getResourceAsStream("sprites/ui/ingame/hp.png"));

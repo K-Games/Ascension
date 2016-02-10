@@ -1,14 +1,6 @@
 package blockfighter.client.entities.items;
 
 import blockfighter.client.Globals;
-import static blockfighter.client.Globals.NUM_PLAYER_STATE;
-import static blockfighter.client.Globals.PLAYER_STATE_ATTACK;
-import static blockfighter.client.Globals.PLAYER_STATE_ATTACKBOW;
-import static blockfighter.client.Globals.PLAYER_STATE_BUFF;
-import static blockfighter.client.Globals.PLAYER_STATE_DEAD;
-import static blockfighter.client.Globals.PLAYER_STATE_JUMP;
-import static blockfighter.client.Globals.PLAYER_STATE_STAND;
-import static blockfighter.client.Globals.PLAYER_STATE_WALK;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -23,6 +15,14 @@ import javax.imageio.ImageIO;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.LineIterator;
 import org.apache.commons.lang3.StringUtils;
+import static blockfighter.client.Globals.NUM_PLAYER_ANIM_STATE;
+import static blockfighter.client.Globals.PLAYER_ANIM_STATE_STAND;
+import static blockfighter.client.Globals.PLAYER_ANIM_STATE_WALK;
+import static blockfighter.client.Globals.PLAYER_ANIM_STATE_JUMP;
+import static blockfighter.client.Globals.PLAYER_ANIM_STATE_ATTACK;
+import static blockfighter.client.Globals.PLAYER_ANIM_STATE_ATTACKBOW;
+import static blockfighter.client.Globals.PLAYER_ANIM_STATE_DEAD;
+import static blockfighter.client.Globals.PLAYER_ANIM_STATE_BUFF;
 
 /**
  *
@@ -84,7 +84,7 @@ public class ItemEquip implements Item {
         ITEM_DESC = new HashMap<>(ITEM_CODES.size());
         loadItemDetails();
 
-        ITEM_ORIGINPOINT = new HashMap<>(ITEM_CODES.size() * Globals.NUM_PLAYER_STATE);
+        ITEM_ORIGINPOINT = new HashMap<>(ITEM_CODES.size() * Globals.NUM_PLAYER_ANIM_STATE);
         loadItemDrawOrigin();
     }
 
@@ -162,63 +162,63 @@ public class ItemEquip implements Item {
     }
 
     public static void loadItemSprite(final int code) {
-        final BufferedImage[][] load = new BufferedImage[NUM_PLAYER_STATE][];
+        final BufferedImage[][] load = new BufferedImage[NUM_PLAYER_ANIM_STATE][];
 
-        load[PLAYER_STATE_ATTACK] = new BufferedImage[Globals.ATTACK_FRAMES];
-        for (int i = 0; i < load[PLAYER_STATE_ATTACK].length; i++) {
+        load[PLAYER_ANIM_STATE_ATTACK] = new BufferedImage[Globals.ATTACK_FRAMES];
+        for (int i = 0; i < load[PLAYER_ANIM_STATE_ATTACK].length; i++) {
             try {
-                load[PLAYER_STATE_ATTACK][i] = ImageIO
+                load[PLAYER_ANIM_STATE_ATTACK][i] = ImageIO
                         .read(Globals.class.getResourceAsStream("sprites/equip/" + code + "/attack/mainhand1/" + i + ".png"));
             } catch (final Exception ex) {
             }
         }
 
-        load[PLAYER_STATE_ATTACKBOW] = new BufferedImage[Globals.ATTACKBOW_FRAMES];
-        for (int i = 0; i < load[PLAYER_STATE_ATTACKBOW].length; i++) {
+        load[PLAYER_ANIM_STATE_ATTACKBOW] = new BufferedImage[Globals.ATTACKBOW_FRAMES];
+        for (int i = 0; i < load[PLAYER_ANIM_STATE_ATTACKBOW].length; i++) {
             try {
-                load[PLAYER_STATE_ATTACKBOW][i] = ImageIO
+                load[PLAYER_ANIM_STATE_ATTACKBOW][i] = ImageIO
                         .read(Globals.class.getResourceAsStream("sprites/equip/" + code + "/attack/bow/" + i + ".png"));
             } catch (final Exception ex) {
             }
         }
 
-        load[PLAYER_STATE_STAND] = new BufferedImage[Globals.STAND_FRAMES];
-        for (int i = 0; i < load[PLAYER_STATE_STAND].length; i++) {
+        load[PLAYER_ANIM_STATE_STAND] = new BufferedImage[Globals.STAND_FRAMES];
+        for (int i = 0; i < load[PLAYER_ANIM_STATE_STAND].length; i++) {
             try {
-                load[PLAYER_STATE_STAND][i] = ImageIO
+                load[PLAYER_ANIM_STATE_STAND][i] = ImageIO
                         .read(Globals.class.getResourceAsStream("sprites/equip/" + code + "/stand/" + i + ".png"));
             } catch (final Exception ex) {
             }
         }
 
-        load[PLAYER_STATE_WALK] = new BufferedImage[Globals.WALK_FRAMES];
-        for (int i = 0; i < load[PLAYER_STATE_WALK].length; i++) {
+        load[PLAYER_ANIM_STATE_WALK] = new BufferedImage[Globals.WALK_FRAMES];
+        for (int i = 0; i < load[PLAYER_ANIM_STATE_WALK].length; i++) {
             try {
-                load[PLAYER_STATE_WALK][i] = ImageIO
+                load[PLAYER_ANIM_STATE_WALK][i] = ImageIO
                         .read(Globals.class.getResourceAsStream("sprites/equip/" + code + "/walk/" + i + ".png"));
             } catch (final Exception ex) {
             }
         }
 
-        load[PLAYER_STATE_JUMP] = new BufferedImage[Globals.JUMP_FRAMES];
+        load[PLAYER_ANIM_STATE_JUMP] = new BufferedImage[Globals.JUMP_FRAMES];
         try {
-            load[PLAYER_STATE_JUMP][0] = ImageIO.read(Globals.class.getResourceAsStream("sprites/equip/" + code + "/jump/0.png"));
+            load[PLAYER_ANIM_STATE_JUMP][0] = ImageIO.read(Globals.class.getResourceAsStream("sprites/equip/" + code + "/jump/0.png"));
         } catch (final Exception ex) {
         }
 
-        load[PLAYER_STATE_BUFF] = new BufferedImage[Globals.BUFF_FRAMES];
-        for (int i = 0; i < load[PLAYER_STATE_BUFF].length; i++) {
+        load[PLAYER_ANIM_STATE_BUFF] = new BufferedImage[Globals.BUFF_FRAMES];
+        for (int i = 0; i < load[PLAYER_ANIM_STATE_BUFF].length; i++) {
             try {
-                load[PLAYER_STATE_BUFF][i] = ImageIO
+                load[PLAYER_ANIM_STATE_BUFF][i] = ImageIO
                         .read(Globals.class.getResourceAsStream("sprites/equip/" + code + "/buff/" + i + ".png"));
             } catch (final Exception ex) {
             }
         }
 
-        load[PLAYER_STATE_DEAD] = new BufferedImage[Globals.DEAD_FRAMES];
-        for (int i = 0; i < load[PLAYER_STATE_DEAD].length; i++) {
+        load[PLAYER_ANIM_STATE_DEAD] = new BufferedImage[Globals.DEAD_FRAMES];
+        for (int i = 0; i < load[PLAYER_ANIM_STATE_DEAD].length; i++) {
             try {
-                load[PLAYER_STATE_DEAD][i] = ImageIO
+                load[PLAYER_ANIM_STATE_DEAD][i] = ImageIO
                         .read(Globals.class.getResourceAsStream("sprites/equip/" + code + "/dead/" + i + ".png"));
             } catch (final Exception ex) {
             }
@@ -227,64 +227,64 @@ public class ItemEquip implements Item {
     }
 
     public static void loadOffhandSprite(final int code) {
-        final BufferedImage[][] load = new BufferedImage[NUM_PLAYER_STATE][];
+        final BufferedImage[][] load = new BufferedImage[NUM_PLAYER_ANIM_STATE][];
 
-        load[PLAYER_STATE_ATTACK] = new BufferedImage[Globals.ATTACK_FRAMES];
-        for (int i = 0; i < load[PLAYER_STATE_ATTACK].length; i++) {
+        load[PLAYER_ANIM_STATE_ATTACK] = new BufferedImage[Globals.ATTACK_FRAMES];
+        for (int i = 0; i < load[PLAYER_ANIM_STATE_ATTACK].length; i++) {
             try {
-                load[PLAYER_STATE_ATTACK][i] = ImageIO.read(
+                load[PLAYER_ANIM_STATE_ATTACK][i] = ImageIO.read(
                         Globals.class.getResourceAsStream("sprites/equip/" + code + "/offhand/attack/mainhand1/" + i + ".png"));
             } catch (final Exception ex) {
             }
         }
 
-        load[PLAYER_STATE_ATTACKBOW] = new BufferedImage[Globals.ATTACKBOW_FRAMES];
-        for (int i = 0; i < load[PLAYER_STATE_ATTACKBOW].length; i++) {
+        load[PLAYER_ANIM_STATE_ATTACKBOW] = new BufferedImage[Globals.ATTACKBOW_FRAMES];
+        for (int i = 0; i < load[PLAYER_ANIM_STATE_ATTACKBOW].length; i++) {
             try {
-                load[PLAYER_STATE_ATTACKBOW][i] = ImageIO
+                load[PLAYER_ANIM_STATE_ATTACKBOW][i] = ImageIO
                         .read(Globals.class.getResourceAsStream("sprites/equip/" + code + "/offhand/attack/bow/" + i + ".png"));
             } catch (final Exception ex) {
             }
         }
 
-        load[PLAYER_STATE_STAND] = new BufferedImage[Globals.STAND_FRAMES];
-        for (int i = 0; i < load[PLAYER_STATE_STAND].length; i++) {
+        load[PLAYER_ANIM_STATE_STAND] = new BufferedImage[Globals.STAND_FRAMES];
+        for (int i = 0; i < load[PLAYER_ANIM_STATE_STAND].length; i++) {
             try {
-                load[PLAYER_STATE_STAND][i] = ImageIO
+                load[PLAYER_ANIM_STATE_STAND][i] = ImageIO
                         .read(Globals.class.getResourceAsStream("sprites/equip/" + code + "/offhand/stand/" + i + ".png"));
             } catch (final Exception ex) {
             }
         }
 
-        load[PLAYER_STATE_WALK] = new BufferedImage[Globals.WALK_FRAMES];
-        for (int i = 0; i < load[PLAYER_STATE_WALK].length; i++) {
+        load[PLAYER_ANIM_STATE_WALK] = new BufferedImage[Globals.WALK_FRAMES];
+        for (int i = 0; i < load[PLAYER_ANIM_STATE_WALK].length; i++) {
             try {
-                load[PLAYER_STATE_WALK][i] = ImageIO
+                load[PLAYER_ANIM_STATE_WALK][i] = ImageIO
                         .read(Globals.class.getResourceAsStream("sprites/equip/" + code + "/offhand/walk/" + i + ".png"));
             } catch (final Exception ex) {
             }
         }
 
-        load[PLAYER_STATE_JUMP] = new BufferedImage[Globals.JUMP_FRAMES];
+        load[PLAYER_ANIM_STATE_JUMP] = new BufferedImage[Globals.JUMP_FRAMES];
         try {
-            load[PLAYER_STATE_JUMP][0] = ImageIO
+            load[PLAYER_ANIM_STATE_JUMP][0] = ImageIO
                     .read(Globals.class.getResourceAsStream("sprites/equip/" + code + "/offhand/jump/0.png"));
         } catch (final Exception ex) {
         }
 
-        load[PLAYER_STATE_BUFF] = new BufferedImage[Globals.BUFF_FRAMES];
-        for (int i = 0; i < load[PLAYER_STATE_BUFF].length; i++) {
+        load[PLAYER_ANIM_STATE_BUFF] = new BufferedImage[Globals.BUFF_FRAMES];
+        for (int i = 0; i < load[PLAYER_ANIM_STATE_BUFF].length; i++) {
             try {
-                load[PLAYER_STATE_BUFF][i] = ImageIO
+                load[PLAYER_ANIM_STATE_BUFF][i] = ImageIO
                         .read(Globals.class.getResourceAsStream("sprites/equip/" + code + "/offhand/buff/" + i + ".png"));
             } catch (final Exception ex) {
             }
         }
 
-        load[PLAYER_STATE_DEAD] = new BufferedImage[Globals.DEAD_FRAMES];
-        for (int i = 0; i < load[PLAYER_STATE_DEAD].length; i++) {
+        load[PLAYER_ANIM_STATE_DEAD] = new BufferedImage[Globals.DEAD_FRAMES];
+        for (int i = 0; i < load[PLAYER_ANIM_STATE_DEAD].length; i++) {
             try {
-                load[PLAYER_STATE_DEAD][i] = ImageIO
+                load[PLAYER_ANIM_STATE_DEAD][i] = ImageIO
                         .read(Globals.class.getResourceAsStream("sprites/equip/" + code + "/offhand/dead/" + i + ".png"));
             } catch (final Exception ex) {
             }

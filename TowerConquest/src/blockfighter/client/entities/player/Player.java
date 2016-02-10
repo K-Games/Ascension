@@ -32,7 +32,7 @@ public class Player extends Thread {
         this.y = y;
         this.key = k;
         this.facing = Globals.RIGHT;
-        this.state = Globals.PLAYER_STATE_STAND;
+        this.state = Globals.PLAYER_ANIM_STATE_STAND;
         this.name = "";
         this.frame = 0;
         this.lastUpdateTime = logic.getTime();
@@ -113,7 +113,7 @@ public class Player extends Thread {
 
     public void draw(final Graphics2D g) {
         final byte s = this.state, f = this.frame;
-        if (s > Globals.NUM_PLAYER_STATE || s < 0 || s == Globals.PLAYER_STATE_INVIS || f >= Globals.CHAR_SPRITE[s].length) {
+        if (s > Globals.NUM_PLAYER_ANIM_STATE || s < 0 || s == Globals.PLAYER_ANIM_STATE_INVIS || f >= Globals.CHAR_SPRITE[s].length) {
             return;
         }
         final BufferedImage sprite = Globals.CHAR_SPRITE[s][f];
@@ -121,7 +121,7 @@ public class Player extends Thread {
         final int drawSrcY = this.y - sprite.getHeight();
         final int drawDscY = drawSrcY + sprite.getHeight();
         /*
-		 * switch (s) { case Globals.PLAYER_STATE_ATTACK: drawSrcX += ((facing == Globals.RIGHT) ? 1 : -1) * 10; break; case
+		 * switch (s) { case Globals.PLAYER_ANIM_STATE_ATTACK: drawSrcX += ((facing == Globals.RIGHT) ? 1 : -1) * 10; break; case
 		 * Globals.PLAYER_STATE_ATTACK2: drawSrcX += ((facing == Globals.RIGHT) ? 1 : -1) * 25; break; case Globals.PLAYER_STATE_ATTACKOFF1:
 		 * drawSrcX += ((facing == Globals.RIGHT) ? 1 : -1) * 40; break; case Globals.PLAYER_STATE_ATTACKOFF2: drawSrcX += ((facing ==
 		 * Globals.RIGHT) ? 1 : -1) * 40; break; }
@@ -184,6 +184,6 @@ public class Player extends Thread {
     }
 
     public boolean isDead() {
-        return this.state == Globals.PLAYER_STATE_DEAD;
+        return this.state == Globals.PLAYER_ANIM_STATE_DEAD;
     }
 }

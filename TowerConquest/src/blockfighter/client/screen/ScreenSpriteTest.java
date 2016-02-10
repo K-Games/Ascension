@@ -38,27 +38,27 @@ public class ScreenSpriteTest extends ScreenMenu {
             this.nextFrameTime -= Globals.LOGIC_UPDATE;
             if (this.nextFrameTime <= 0) {
                 this.standFrame++;
-                if (this.standFrame == Globals.CHAR_SPRITE[Globals.PLAYER_STATE_STAND].length) {
+                if (this.standFrame == Globals.CHAR_SPRITE[Globals.PLAYER_ANIM_STATE_STAND].length) {
                     this.standFrame = 0;
                 }
 
                 this.walkFrame++;
-                if (this.walkFrame == Globals.CHAR_SPRITE[Globals.PLAYER_STATE_WALK].length) {
+                if (this.walkFrame == Globals.CHAR_SPRITE[Globals.PLAYER_ANIM_STATE_WALK].length) {
                     this.walkFrame = 0;
                 }
 
                 this.buffFrame++;
-                if (this.buffFrame == Globals.CHAR_SPRITE[Globals.PLAYER_STATE_BUFF].length) {
+                if (this.buffFrame == Globals.CHAR_SPRITE[Globals.PLAYER_ANIM_STATE_BUFF].length) {
                     this.buffFrame = 0;
                 }
 
                 this.att1Frame++;
-                if (this.att1Frame == Globals.CHAR_SPRITE[Globals.PLAYER_STATE_ATTACK].length) {
+                if (this.att1Frame == Globals.CHAR_SPRITE[Globals.PLAYER_ANIM_STATE_ATTACK].length) {
                     this.att1Frame = 0;
                 }
 
                 this.att5Frame++;
-                if (this.att5Frame == Globals.CHAR_SPRITE[Globals.PLAYER_STATE_ATTACKBOW].length) {
+                if (this.att5Frame == Globals.CHAR_SPRITE[Globals.PLAYER_ANIM_STATE_ATTACKBOW].length) {
                     this.att5Frame = 0;
                 }
                 this.nextFrameTime = 100000000;
@@ -77,46 +77,46 @@ public class ScreenSpriteTest extends ScreenMenu {
     }
 
     private void drawSlots(final Graphics2D g) {
-        BufferedImage character = Globals.CHAR_SPRITE[Globals.PLAYER_STATE_STAND][this.standFrame];
+        BufferedImage character = Globals.CHAR_SPRITE[Globals.PLAYER_ANIM_STATE_STAND][this.standFrame];
         int x = 50 + character.getWidth() / 2, y = 100 + character.getHeight();
-        this.e.drawIngame(g, x, y, Globals.PLAYER_STATE_STAND, this.standFrame, Globals.RIGHT, true);
+        this.e.drawIngame(g, x, y, Globals.PLAYER_ANIM_STATE_STAND, this.standFrame, Globals.RIGHT, true);
         g.drawImage(character, 50, 100, null);
-        this.e.drawIngame(g, x, y, Globals.PLAYER_STATE_STAND, this.standFrame, Globals.RIGHT);
+        this.e.drawIngame(g, x, y, Globals.PLAYER_ANIM_STATE_STAND, this.standFrame, Globals.RIGHT);
 
-        character = Globals.CHAR_SPRITE[Globals.PLAYER_STATE_WALK][this.walkFrame];
+        character = Globals.CHAR_SPRITE[Globals.PLAYER_ANIM_STATE_WALK][this.walkFrame];
         x = 250 + character.getWidth() / 2;
         y = 100 + character.getHeight();
-        this.e.drawIngame(g, x, y, Globals.PLAYER_STATE_WALK, this.walkFrame, Globals.RIGHT, true);
+        this.e.drawIngame(g, x, y, Globals.PLAYER_ANIM_STATE_WALK, this.walkFrame, Globals.RIGHT, true);
         g.drawImage(character, 250, 100, null);
-        this.e.drawIngame(g, x, y, Globals.PLAYER_STATE_WALK, this.walkFrame, Globals.RIGHT);
+        this.e.drawIngame(g, x, y, Globals.PLAYER_ANIM_STATE_WALK, this.walkFrame, Globals.RIGHT);
 
-        character = Globals.CHAR_SPRITE[Globals.PLAYER_STATE_JUMP][this.jumpFrame];
+        character = Globals.CHAR_SPRITE[Globals.PLAYER_ANIM_STATE_JUMP][this.jumpFrame];
         x = 450 + character.getWidth() / 2;
         y = 100 + character.getHeight();
-        this.e.drawIngame(g, x, y, Globals.PLAYER_STATE_JUMP, this.jumpFrame, Globals.RIGHT, true);
+        this.e.drawIngame(g, x, y, Globals.PLAYER_ANIM_STATE_JUMP, this.jumpFrame, Globals.RIGHT, true);
         g.drawImage(character, 450, 100, null);
-        this.e.drawIngame(g, x, y, Globals.PLAYER_STATE_JUMP, this.jumpFrame, Globals.RIGHT);
+        this.e.drawIngame(g, x, y, Globals.PLAYER_ANIM_STATE_JUMP, this.jumpFrame, Globals.RIGHT);
 
-        character = Globals.CHAR_SPRITE[Globals.PLAYER_STATE_BUFF][this.buffFrame];
+        character = Globals.CHAR_SPRITE[Globals.PLAYER_ANIM_STATE_BUFF][this.buffFrame];
         x = 650 + character.getWidth() / 2;
         y = 100 + character.getHeight();
-        this.e.drawIngame(g, x, y, Globals.PLAYER_STATE_BUFF, this.buffFrame, Globals.RIGHT, true);
+        this.e.drawIngame(g, x, y, Globals.PLAYER_ANIM_STATE_BUFF, this.buffFrame, Globals.RIGHT, true);
         g.drawImage(character, 650, 100, null);
-        this.e.drawIngame(g, x, y, Globals.PLAYER_STATE_BUFF, this.buffFrame, Globals.RIGHT);
+        this.e.drawIngame(g, x, y, Globals.PLAYER_ANIM_STATE_BUFF, this.buffFrame, Globals.RIGHT);
 
-        character = Globals.CHAR_SPRITE[Globals.PLAYER_STATE_ATTACK][this.att1Frame];
+        character = Globals.CHAR_SPRITE[Globals.PLAYER_ANIM_STATE_ATTACK][this.att1Frame];
         x = 50 + character.getWidth() / 2;
         y = 400 + character.getHeight();
-        this.e.drawIngame(g, x, y, Globals.PLAYER_STATE_ATTACK, this.att1Frame, Globals.RIGHT, true);
+        this.e.drawIngame(g, x, y, Globals.PLAYER_ANIM_STATE_ATTACK, this.att1Frame, Globals.RIGHT, true);
         g.drawImage(character, 50 + 10, 400, null);
-        this.e.drawIngame(g, x, y, Globals.PLAYER_STATE_ATTACK, this.att1Frame, Globals.RIGHT);
+        this.e.drawIngame(g, x, y, Globals.PLAYER_ANIM_STATE_ATTACK, this.att1Frame, Globals.RIGHT);
 
-        character = Globals.CHAR_SPRITE[Globals.PLAYER_STATE_ATTACKBOW][this.att5Frame];
+        character = Globals.CHAR_SPRITE[Globals.PLAYER_ANIM_STATE_ATTACKBOW][this.att5Frame];
         x = 950 + character.getWidth() / 2;
         y = 400 + character.getHeight();
-        this.e.drawIngame(g, x, y, Globals.PLAYER_STATE_ATTACKBOW, this.att5Frame, Globals.RIGHT, true);
+        this.e.drawIngame(g, x, y, Globals.PLAYER_ANIM_STATE_ATTACKBOW, this.att5Frame, Globals.RIGHT, true);
         g.drawImage(character, 950, 400, null);
-        this.e.drawIngame(g, x, y, Globals.PLAYER_STATE_ATTACKBOW, this.att5Frame, Globals.RIGHT);
+        this.e.drawIngame(g, x, y, Globals.PLAYER_ANIM_STATE_ATTACKBOW, this.att5Frame, Globals.RIGHT);
     }
 
     @SuppressWarnings("hiding")
