@@ -22,7 +22,6 @@ public class RenderPanel extends JPanel {
 
     public RenderPanel() {
         super();
-        setBackground(Color.WHITE);
     }
 
     @Override
