@@ -2,6 +2,8 @@ package blockfighter.client.maps;
 
 import blockfighter.client.Globals;
 import blockfighter.client.entities.boss.Lightning.BossLightning;
+import blockfighter.client.entities.boss.Lightning.ParticleAmbient;
+import blockfighter.client.entities.boss.Lightning.ParticleBolt;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import javax.imageio.ImageIO;
@@ -46,4 +48,13 @@ public class GameMapFloor1 extends GameMap {
         BossLightning.load();
     }
 
+    @Override
+    public void prerender(final Graphics2D g) {
+        System.out.println("Prerendering Floor 1 Particles");
+        ParticleAmbient.prerender(g);
+        ParticleBolt.prerender(g);
+        System.out.println("Prerendering Boss Assets");
+        BossLightning.prerender(g);
+    }
+    
 }

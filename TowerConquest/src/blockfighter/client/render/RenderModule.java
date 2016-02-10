@@ -1,6 +1,7 @@
 package blockfighter.client.render;
 
 import blockfighter.client.LogicModule;
+import blockfighter.client.Main;
 
 /**
  *
@@ -18,8 +19,8 @@ public class RenderModule implements Runnable {
         this.panel = p;
     }
 
-    public static void setLogic(final LogicModule l) {
-        logic = l;
+    public static void init() {
+        logic = Main.getLogicModule();
     }
 
     @Override

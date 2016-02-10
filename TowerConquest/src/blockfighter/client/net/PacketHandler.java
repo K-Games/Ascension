@@ -2,6 +2,7 @@ package blockfighter.client.net;
 
 import blockfighter.client.Globals;
 import blockfighter.client.LogicModule;
+import blockfighter.client.Main;
 import java.net.DatagramPacket;
 
 /**
@@ -13,12 +14,12 @@ public class PacketHandler implements Runnable {
     private DatagramPacket r = null;
     private static LogicModule logic;
 
-    public static void setLogic(final LogicModule l) {
-        logic = l;
-    }
-
     public PacketHandler(final DatagramPacket response) {
         this.r = response;
+    }
+
+    public static void init() {
+        logic = Main.getLogicModule();
     }
 
     @Override

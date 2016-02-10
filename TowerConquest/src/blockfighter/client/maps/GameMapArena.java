@@ -68,4 +68,8 @@ public class GameMapArena extends GameMap {
     public byte getBGM() {
         return bgm;
     }
+
+    @Override
+    public void prerender(Graphics2D g) {
+    }
 }

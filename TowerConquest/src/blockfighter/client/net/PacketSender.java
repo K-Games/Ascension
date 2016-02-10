@@ -228,7 +228,9 @@ public class PacketSender {
 
     private static void sendPacket(final DatagramPacket packet) {
         try {
-            socket.send(packet);
+            if (!socket.isClosed()) {
+                socket.send(packet);
+            }
         } catch (final Exception ex) {
             System.err.println(PacketSender.class.getCanonicalName() + ": " + ex.getLocalizedMessage() + "@" + ex.getStackTrace()[0]);
         }

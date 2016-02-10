@@ -7,6 +7,7 @@ package blockfighter.client.net;
 
 import blockfighter.client.Globals;
 import blockfighter.client.LogicModule;
+import blockfighter.client.Main;
 import blockfighter.client.screen.ScreenIngame;
 import blockfighter.client.screen.ScreenLoading;
 import blockfighter.client.screen.ScreenServerList;
@@ -26,15 +27,15 @@ public class PacketReceiver extends Thread {
 
     private static LogicModule logic;
     private DatagramSocket socket = null;
-    private static final ExecutorService threadPool = Executors.newFixedThreadPool(5);
+    private static final ExecutorService THREAD_POOL = Executors.newFixedThreadPool(5);
     private boolean isConnected = true, settingStatus = true;
-
-    public static void setLogic(final LogicModule l) {
-        logic = l;
-    }
 
     public PacketReceiver(final DatagramSocket s) {
         this.socket = s;
+    }
+
+    public static void init() {
+        logic = Main.getLogicModule();
     }
 
     @Override
@@ -44,7 +45,7 @@ public class PacketReceiver extends Thread {
                 final byte[] request = new byte[Globals.PACKET_MAX_SIZE];
                 final DatagramPacket p = new DatagramPacket(request, request.length);
                 this.socket.receive(p);
-                threadPool.execute(new PacketHandler(p));
+                THREAD_POOL.execute(new PacketHandler(p));
             }
         } catch (final SocketTimeoutException e) {
             if (this.settingStatus && logic.getScreen() instanceof ScreenServerList) {

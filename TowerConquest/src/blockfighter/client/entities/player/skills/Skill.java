@@ -2,6 +2,7 @@ package blockfighter.client.entities.player.skills;
 
 import blockfighter.client.Globals;
 import blockfighter.client.LogicModule;
+import blockfighter.client.Main;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.text.DecimalFormat;
@@ -55,8 +56,8 @@ public abstract class Skill {
             PASSIVE_SHADOWATTACK = 0x1C,
             PASSIVE_12 = 0x1D;
 
-    public static void setLogic(final LogicModule l) {
-        logic = l;
+    public static void init() {
+        logic = Main.getLogicModule();
     }
 
     public void draw(final Graphics2D g, final int x, final int y) {

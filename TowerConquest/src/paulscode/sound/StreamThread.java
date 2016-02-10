@@ -133,26 +133,25 @@ public class StreamThread extends SimpleThread {
                                                 src.preLoad = true; // replay
                                             }
                                         }
-                                    } else // wait for stream to finish playing
-                                     if (!src.playing()) {
-                                            // Generate an EOS event:
-                                            SoundSystemConfig.notifyEOS(
-                                                    src.sourcename,
-                                                    src.getSoundSequenceQueueSize()
-                                            );
-                                            // Check if the source is currently
-                                            // in the process of fading out
-                                            if (!src.checkFadeOut()) {
-                                                // Source is not fading out.
-                                                // Play anything else that is
-                                                // in the sound sequence queue.
-                                                if (src.incrementSoundSequence()) {
-                                                    src.preLoad = true;
-                                                } else {
-                                                    iter.remove();  // finished
-                                                }
+                                    } else if (!src.playing()) {
+                                        // Generate an EOS event:
+                                        SoundSystemConfig.notifyEOS(
+                                                src.sourcename,
+                                                src.getSoundSequenceQueueSize()
+                                        );
+                                        // Check if the source is currently
+                                        // in the process of fading out
+                                        if (!src.checkFadeOut()) {
+                                            // Source is not fading out.
+                                            // Play anything else that is
+                                            // in the sound sequence queue.
+                                            if (src.incrementSoundSequence()) {
+                                                src.preLoad = true;
+                                            } else {
+                                                iter.remove();  // finished
                                             }
                                         }
+                                    }
                                 }
                             }
                         }

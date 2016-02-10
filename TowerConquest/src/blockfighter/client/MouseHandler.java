@@ -12,8 +12,8 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
 
     private static LogicModule logic;
 
-    public static void setLogic(final LogicModule l) {
-        logic = l;
+    public static void init() {
+        logic = Main.getLogicModule();
     }
 
     @Override

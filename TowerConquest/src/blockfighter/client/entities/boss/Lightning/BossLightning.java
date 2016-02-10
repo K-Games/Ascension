@@ -36,7 +36,6 @@ public class BossLightning extends Boss {
         }
         SPRITE = new BufferedImage[8][];
 
-        // Remove repetition later
         SPRITE[STATE_STAND] = new BufferedImage[10];
         SPRITE[STATE_WALK] = SPRITE[STATE_STAND];
         for (int i = 0; i < SPRITE[STATE_STAND].length; i++) {
@@ -96,12 +95,20 @@ public class BossLightning extends Boss {
         ParticleBolt.load();
     }
 
+    public static void prerender(final Graphics2D g) {
+        for (BufferedImage[] state : SPRITE) {
+            for (BufferedImage frame : state) {
+                g.drawImage(frame, 0, 0, null);
+            }
+        }
+    }
+
     @Override
     public void unload() {
         if (SPRITE == null) {
             return;
         }
-        System.out.println("Unloaded Lightning Assets");
+        System.out.println("Unloaded Lightning Assets...");
         ParticleAmbient.unload();
         ParticleBolt.unload();
         for (int i = 0; i < SPRITE.length; i++) {
@@ -125,30 +132,29 @@ public class BossLightning extends Boss {
         }
     }
 
-    @SuppressWarnings("hiding")
     @Override
     public void addParticle(final byte[] data) {
         final byte particleID = data[2];
-        int x, y;
+        int particleX, particleY;
         Particle b;
-        final int pKey = ((ScreenIngame) logic.getScreen()).getNextParticleKey();
+        final int particleKey = ((ScreenIngame) logic.getScreen()).getNextParticleKey();
         switch (particleID) {
             case PARTICLE_ATT1:
-                x = Globals.bytesToInt(Arrays.copyOfRange(data, 3, 7));
-                y = Globals.bytesToInt(Arrays.copyOfRange(data, 7, 11));
-                b = new ParticleAttEmitter(pKey, x, y);
+                particleX = Globals.bytesToInt(Arrays.copyOfRange(data, 3, 7));
+                particleY = Globals.bytesToInt(Arrays.copyOfRange(data, 7, 11));
+                b = new ParticleAttEmitter(particleKey, particleX, particleY);
                 ((ScreenIngame) logic.getScreen()).addParticle(b);
                 break;
             case PARTICLE_BALL1:
-                x = Globals.bytesToInt(Arrays.copyOfRange(data, 3, 7));
-                y = Globals.bytesToInt(Arrays.copyOfRange(data, 7, 11));
-                b = new ParticleBallEmitter(pKey, x, y);
+                particleX = Globals.bytesToInt(Arrays.copyOfRange(data, 3, 7));
+                particleY = Globals.bytesToInt(Arrays.copyOfRange(data, 7, 11));
+                b = new ParticleBallEmitter(particleKey, particleX, particleY);
                 ((ScreenIngame) logic.getScreen()).addParticle(b);
                 break;
             case PARTICLE_BOLT:
-                x = Globals.bytesToInt(Arrays.copyOfRange(data, 3, 7));
-                y = Globals.bytesToInt(Arrays.copyOfRange(data, 7, 11));
-                b = new ParticleBolt(pKey, x, y);
+                particleX = Globals.bytesToInt(Arrays.copyOfRange(data, 3, 7));
+                particleY = Globals.bytesToInt(Arrays.copyOfRange(data, 7, 11));
+                b = new ParticleBolt(particleKey, particleX, particleY);
                 ((ScreenIngame) logic.getScreen()).addParticle(b);
                 break;
         }

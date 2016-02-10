@@ -2,6 +2,7 @@ package blockfighter.client.entities.boss;
 
 import blockfighter.client.Globals;
 import blockfighter.client.LogicModule;
+import blockfighter.client.Main;
 import blockfighter.client.entities.boss.Lightning.BossLightning;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -26,6 +27,20 @@ public abstract class Boss extends Thread {
     protected byte key, facing, state, frame;
     protected double[] stats;
     protected static LogicModule logic;
+
+    public Boss(final int x, final int y, final byte k) {
+        this.x = x;
+        this.y = y;
+        this.key = k;
+        this.facing = Globals.RIGHT;
+        this.state = STATE_STAND;
+        this.frame = 0;
+        setDaemon(true);
+    }
+
+    public static void init() {
+        logic = Main.getLogicModule();
+    }
 
     public Point getPos() {
         return new Point(this.x, this.y);
@@ -64,20 +79,6 @@ public abstract class Boss extends Thread {
         this.stats[statType] = stat;
     }
 
-    public static void setLogic(final LogicModule l) {
-        logic = l;
-    }
-
-    public Boss(final int x, final int y, final byte k) {
-        this.x = x;
-        this.y = y;
-        this.key = k;
-        this.facing = Globals.RIGHT;
-        this.state = STATE_STAND;
-        this.frame = 0;
-        setDaemon(true);
-    }
-
     public abstract void addParticle(byte[] data);
 
     public void draw(final Graphics2D g) {
@@ -111,6 +112,6 @@ public abstract class Boss extends Thread {
         }
         return b;
     }
-
+    
     public abstract void unload();
 }

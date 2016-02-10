@@ -398,10 +398,10 @@ public class ScreenIngame extends Screen {
 
     public int getNextParticleKey() {
         if (this.particleKeys.isEmpty()) {
-            for (int i = this.numParticleKeys; i < this.numParticleKeys + 500; i++) {
+            for (int i = this.numParticleKeys; i < this.numParticleKeys + 100; i++) {
                 this.particleKeys.add(i);
             }
-            this.numParticleKeys += 500;
+            this.numParticleKeys += 100;
         }
         return this.particleKeys.remove();
     }
@@ -1131,10 +1131,10 @@ public class ScreenIngame extends Screen {
 
     @Override
     public void unload() {
-        // Particle.unloadParticles();
+        Particle.unloadParticles();
         ItemEquip.unloadSprites();
-        for (final Map.Entry<Byte, Boss> pEntry : this.bosses.entrySet()) {
-            pEntry.getValue().unload();
+        for (final Map.Entry<Byte, Boss> bossEntry : this.bosses.entrySet()) {
+            bossEntry.getValue().unload();
         }
     }
 

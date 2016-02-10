@@ -26,15 +26,15 @@ import org.apache.commons.lang3.concurrent.BasicThreadFactory;
  */
 public class Main {
 
-    private static ScheduledExecutorService senderSch = Executors.newSingleThreadScheduledExecutor(new BasicThreadFactory.Builder()
-            .namingPattern("PacketSenderScheduler-%d")
+    private final static ScheduledExecutorService PACKETSENDER_SCHEDULER = Executors.newSingleThreadScheduledExecutor(new BasicThreadFactory.Builder()
+            .namingPattern("PACKETSENDER_SCHEDULER-%d")
             .daemon(true)
             .priority(Thread.NORM_PRIORITY)
             .build());
 
-    private static ScheduledExecutorService logicSchThreadPool = Executors.newScheduledThreadPool(Math.max(Globals.SERVER_ROOMS / 30, 1),
+    private final static ScheduledExecutorService LOGIC_SCHEDULER = Executors.newScheduledThreadPool(Math.max(Globals.SERVER_ROOMS / 30, 1),
             new BasicThreadFactory.Builder()
-            .namingPattern("LogicModuleScheduler-%d")
+            .namingPattern("LOGIC_SCHEDULER-%d")
             .daemon(false)
             .priority(Thread.NORM_PRIORITY)
             .build());
@@ -90,10 +90,10 @@ public class Main {
             Globals.log("Server started", String.format("%1$td/%1$tm/%1$tY %1$tT", System.currentTimeMillis()), Globals.LOG_TYPE_DATA,
                     true);
 
-            senderSch.scheduleAtFixedRate(packetSender, 0, 5, TimeUnit.MILLISECONDS);
+            PACKETSENDER_SCHEDULER.scheduleAtFixedRate(packetSender, 0, 5, TimeUnit.MILLISECONDS);
             for (byte i = 0; i < server_rooms.length; i++) {
                 server_rooms[i] = new LogicModule(i);
-                logicSchThreadPool.scheduleAtFixedRate(server_rooms[i], 0, 750, TimeUnit.MICROSECONDS);
+                LOGIC_SCHEDULER.scheduleAtFixedRate(server_rooms[i], 0, 750, TimeUnit.MICROSECONDS);
             }
             Globals.log("Initialization", "Initialized " + server_rooms.length + " rooms", Globals.LOG_TYPE_ERR, false);
             Globals.log("Initialization", "Initialized " + server_rooms.length + " rooms", Globals.LOG_TYPE_DATA, true);

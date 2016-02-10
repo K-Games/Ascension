@@ -28,6 +28,12 @@ public class SoundModule implements Runnable {
         this.soundModule.cleanup();
     }
 
+    public void playSound(final byte soundID) {
+        if (isLoaded()) {
+            this.soundModule.quickPlay(Globals.SOUND_SFX[soundID], false);
+        }
+    }
+
     public void playSound(final byte soundID, final int x, final int y) {
         if (isLoaded()) {
             this.soundModule.quickPlay(Globals.SOUND_SFX[soundID], false, new SimpleVector(x * .2, y * .2, 0));

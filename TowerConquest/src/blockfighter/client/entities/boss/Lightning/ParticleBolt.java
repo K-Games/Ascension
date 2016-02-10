@@ -18,6 +18,12 @@ public class ParticleBolt extends Particle {
         this.duration = 400;
     }
 
+    public static void prerender(final Graphics2D g) {
+        for (BufferedImage frame : SPRITE) {
+            g.drawImage(frame, 0, 0, null);
+        }
+    }
+
     public static void load() {
         if (SPRITE != null) {
             return;

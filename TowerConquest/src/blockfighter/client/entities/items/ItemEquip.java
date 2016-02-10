@@ -14,14 +14,13 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
+import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 import javax.imageio.ImageIO;
-import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.LineIterator;
 import org.apache.commons.lang3.StringUtils;
 
@@ -89,9 +88,13 @@ public class ItemEquip implements Item {
         loadItemDrawOrigin();
     }
 
-    public static void loadItemCodes() {
+    public static void init() {
+    }
+
+    private static void loadItemCodes() {
         try {
-            LineIterator it = FileUtils.lineIterator(new File(Globals.class.getResource("itemdata/equip/itemcodes.txt").toURI()), "UTF-8");
+            InputStream itemFile = Globals.class.getResourceAsStream("itemdata/equip/itemcodes.txt");
+            LineIterator it = IOUtils.lineIterator(itemFile, "UTF-8");
             try {
                 while (it.hasNext()) {
                     String line = it.nextLine();
@@ -104,19 +107,22 @@ public class ItemEquip implements Item {
             } finally {
                 LineIterator.closeQuietly(it);
             }
-        } catch (IOException | URISyntaxException e) {
+        } catch (IOException e) {
             System.err.println("Could not load item codes from data");
             System.exit(1);
         }
     }
 
     private static void loadItemDetails() {
+        System.out.println("Loading Item Data...");
+        System.out.print("[");
         for (final Map.Entry<Integer, Integer> itemEntry : ITEM_CODES.entrySet()) {
             final int itemCode = itemEntry.getValue();
             try {
-                File itemFile = new File(Globals.class.getResource("itemdata/equip/" + itemCode + ".txt").toURI());
-                LineIterator it = FileUtils.lineIterator(itemFile, "UTF-8");
+                InputStream itemFile = Globals.class.getResourceAsStream("itemdata/equip/" + itemCode + ".txt");
+                LineIterator it = IOUtils.lineIterator(itemFile, "UTF-8");
                 try {
+                    System.out.print(itemCode + ",");
                     if (it.hasNext()) {
                         final String name = it.nextLine();
                         ITEM_NAMES.put(itemCode, name);
@@ -130,11 +136,11 @@ public class ItemEquip implements Item {
                 } finally {
                     LineIterator.closeQuietly(it);
                 }
-            } catch (IOException | URISyntaxException | NullPointerException e) {
+            } catch (IOException | NullPointerException e) {
                 System.err.println("Could not load item #" + itemCode + " details.");
             }
-
         }
+        System.out.println("]");
     }
 
     private static void loadItemDrawOrigin() {
@@ -199,7 +205,7 @@ public class ItemEquip implements Item {
             load[PLAYER_STATE_JUMP][0] = ImageIO.read(Globals.class.getResourceAsStream("sprites/equip/" + code + "/jump/0.png"));
         } catch (final Exception ex) {
         }
-        
+
         load[PLAYER_STATE_BUFF] = new BufferedImage[Globals.BUFF_FRAMES];
         for (int i = 0; i < load[PLAYER_STATE_BUFF].length; i++) {
             try {
@@ -208,7 +214,7 @@ public class ItemEquip implements Item {
             } catch (final Exception ex) {
             }
         }
-        
+
         load[PLAYER_STATE_DEAD] = new BufferedImage[Globals.DEAD_FRAMES];
         for (int i = 0; i < load[PLAYER_STATE_DEAD].length; i++) {
             try {
@@ -217,9 +223,7 @@ public class ItemEquip implements Item {
             } catch (final Exception ex) {
             }
         }
-        
         ITEM_SPRITES.put(Integer.toString(code), load);
-        System.out.println("Loaded " + code + " ingame sprite");
     }
 
     public static void loadOffhandSprite(final int code) {
@@ -285,9 +289,7 @@ public class ItemEquip implements Item {
             } catch (final Exception ex) {
             }
         }
-        
         ITEM_SPRITES.put(code + "_offhand", load);
-        System.out.println("Loaded " + code + " offhand ingame sprite");
     }
 
     public double[] getTotalStats() {

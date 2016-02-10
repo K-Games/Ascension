@@ -11,8 +11,8 @@ public class FocusHandler implements FocusListener {
 
     private static LogicModule logic = null;
 
-    public static void setLogic(final LogicModule l) {
-        logic = l;
+    public static void init() {
+        logic = Main.getLogicModule();
     }
 
     @Override

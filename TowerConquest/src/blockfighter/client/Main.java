@@ -2,6 +2,7 @@ package blockfighter.client;
 
 import blockfighter.client.entities.boss.Boss;
 import blockfighter.client.entities.ingamenumber.IngameNumber;
+import blockfighter.client.entities.items.ItemEquip;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.client.entities.player.Player;
 import blockfighter.client.entities.player.skills.Skill;
@@ -30,25 +31,26 @@ public class Main {
     private static final LogicModule LOGIC_MODULE = new LogicModule(SOUND_MODULE);
     private static final ExecutorService SHARED_THREADPOOL = Executors.newFixedThreadPool(4,
             new BasicThreadFactory.Builder()
-            .namingPattern("SharedThreads-%d")
+            .namingPattern("SHARED_THREADPOOL-%d")
             .daemon(true)
             .priority(Thread.NORM_PRIORITY)
             .build());
 
     static {
         SHARED_THREADPOOL.execute(SOUND_MODULE);
-        Particle.setLogic(LOGIC_MODULE);
-        Screen.setLogic(LOGIC_MODULE);
-        RenderModule.setLogic(LOGIC_MODULE);
-        FocusHandler.setLogic(LOGIC_MODULE);
-        KeyHandler.setLogic(LOGIC_MODULE);
-        MouseHandler.setLogic(LOGIC_MODULE);
-        Player.setLogic(LOGIC_MODULE);
-        Boss.setLogic(LOGIC_MODULE);
-        PacketHandler.setLogic(LOGIC_MODULE);
-        PacketReceiver.setLogic(LOGIC_MODULE);
-        IngameNumber.setLogic(LOGIC_MODULE);
-        Skill.setLogic(LOGIC_MODULE);
+        Particle.init();
+        Screen.init();
+        RenderModule.init();
+        FocusHandler.init();
+        KeyHandler.init();
+        MouseHandler.init();
+        Player.init();
+        Boss.init();
+        PacketHandler.init();
+        PacketReceiver.init();
+        IngameNumber.init();
+        Skill.init();
+        ItemEquip.init();
     }
 
     /**
@@ -112,5 +114,9 @@ public class Main {
                 .build());
         service.scheduleAtFixedRate(LOGIC_MODULE, 0, 1, TimeUnit.MILLISECONDS);
         service.scheduleAtFixedRate(render, 0, Globals.RENDER_UPDATE, TimeUnit.MICROSECONDS);
+    }
+
+    public static LogicModule getLogicModule() {
+        return LOGIC_MODULE;
     }
 }

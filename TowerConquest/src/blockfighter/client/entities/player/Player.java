@@ -2,6 +2,7 @@ package blockfighter.client.entities.player;
 
 import blockfighter.client.Globals;
 import blockfighter.client.LogicModule;
+import blockfighter.client.Main;
 import blockfighter.client.entities.items.ItemEquip;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -25,6 +26,27 @@ public class Player extends Thread {
     private long lastUpdateTime;
     private static LogicModule logic;
     private boolean disconnect = false;
+
+    public Player(final int x, final int y, final byte k) {
+        this.x = x;
+        this.y = y;
+        this.key = k;
+        this.facing = Globals.RIGHT;
+        this.state = Globals.PLAYER_STATE_STAND;
+        this.name = "";
+        this.frame = 0;
+        this.lastUpdateTime = logic.getTime();
+        setDaemon(true);
+    }
+
+    public Player(final int x, final int y, final byte k, final byte f) {
+        this(x, y, k);
+        this.facing = f;
+    }
+
+    public static void init() {
+        logic = Main.getLogicModule();
+    }
 
     public Point getPos() {
         return new Point(this.x, this.y);
@@ -87,27 +109,6 @@ public class Player extends Thread {
     public void setPlayerName(final String n) {
         this.name = n;
         this.lastUpdateTime = logic.getTime();
-    }
-
-    public static void setLogic(final LogicModule l) {
-        logic = l;
-    }
-
-    public Player(final int x, final int y, final byte k) {
-        this.x = x;
-        this.y = y;
-        this.key = k;
-        this.facing = Globals.RIGHT;
-        this.state = Globals.PLAYER_STATE_STAND;
-        this.name = "";
-        this.frame = 0;
-        this.lastUpdateTime = logic.getTime();
-        setDaemon(true);
-    }
-
-    public Player(final int x, final int y, final byte k, final byte f) {
-        this(x, y, k);
-        this.facing = f;
     }
 
     public void draw(final Graphics2D g) {

@@ -967,20 +967,8 @@ public class MidiChannel implements MetaEventListener {
                     } catch (Exception e) {
                     }
                 }
-            } else //non-looping
-             if (!checkFadeOut()) {
-                    if (!incrementSequence()) {
-                        try {
-                            // stop playback:
-                            sequencer.stop();
-                            // rewind to the beginning:
-                            sequencer.setMicrosecondPosition(0);
-                            // stop looping:
-                            sequencer.removeMetaEventListener(this);
-                        } catch (Exception e) {
-                        }
-                    }
-                } else {
+            } else if (!checkFadeOut()) {
+                if (!incrementSequence()) {
                     try {
                         // stop playback:
                         sequencer.stop();
@@ -991,6 +979,17 @@ public class MidiChannel implements MetaEventListener {
                     } catch (Exception e) {
                     }
                 }
+            } else {
+                try {
+                    // stop playback:
+                    sequencer.stop();
+                    // rewind to the beginning:
+                    sequencer.setMicrosecondPosition(0);
+                    // stop looping:
+                    sequencer.removeMetaEventListener(this);
+                } catch (Exception e) {
+                }
+            }
         }
     }
 
@@ -1234,7 +1233,8 @@ public class MidiChannel implements MetaEventListener {
                             + "with MIDI device receiver");
                 }
             } else // Bug-fix for multiple-receivers playing simultaneously
-             if (synthesizer.getDefaultSoundbank() == null) {
+            {
+                if (synthesizer.getDefaultSoundbank() == null) {
                     // Link the sequencer to the default receiver:
                     try {
                         sequencer.getTransmitter().setReceiver(
@@ -1253,6 +1253,7 @@ public class MidiChannel implements MetaEventListener {
                                 + "with synthesizer receiver");
                     }
                 } // End bug-fix
+            }
         }
     }
 

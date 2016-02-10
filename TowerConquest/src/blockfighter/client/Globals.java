@@ -280,7 +280,7 @@ public class Globals {
             BUFF_FRAMES = 7,
             DEAD_FRAMES = 10,
             JUMP_FRAMES = 1;
-    
+
     public final static byte BUTTON_BIGRECT = 0,
             BUTTON_SELECTCHAR = 1,
             BUTTON_ADDSTAT = 2,

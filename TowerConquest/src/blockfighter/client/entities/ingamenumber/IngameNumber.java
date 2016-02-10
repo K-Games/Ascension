@@ -2,6 +2,7 @@ package blockfighter.client.entities.ingamenumber;
 
 import blockfighter.client.Globals;
 import blockfighter.client.LogicModule;
+import blockfighter.client.Main;
 import java.awt.Graphics2D;
 import java.awt.Point;
 
@@ -34,8 +35,8 @@ public class IngameNumber extends Thread {
         setDaemon(true);
     }
 
-    public static void setLogic(final LogicModule l) {
-        logic = l;
+    public static void init() {
+        logic = Main.getLogicModule();
     }
 
     @Override
