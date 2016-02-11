@@ -686,7 +686,7 @@ public class SaveData {
                 case Globals.ITEM_BOW:
                     equipSlot = Globals.ITEM_WEAPON;
                     break;
-                case Globals.ITEM_QUIVER:
+                case Globals.ITEM_ARROW:
                     equipSlot = Globals.ITEM_OFFHAND;
                     break;
             }
@@ -723,7 +723,7 @@ public class SaveData {
 
     public void addItem(final ItemEquip e) {
         int tab = ItemEquip.getItemType(e.getItemCode());
-        if (tab == Globals.ITEM_SHIELD || tab == Globals.ITEM_QUIVER || tab == Globals.ITEM_BOW) {
+        if (tab == Globals.ITEM_SHIELD || tab == Globals.ITEM_ARROW || tab == Globals.ITEM_BOW) {
             tab = Globals.ITEM_WEAPON;
         }
         for (int i = 0; i < this.inventory[tab].length; i++) {

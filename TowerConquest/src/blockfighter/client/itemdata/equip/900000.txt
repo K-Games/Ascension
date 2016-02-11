@@ -1,2 +1,4 @@
+[name]
 Lucky Ring
+[Desc]
 Hold on to this ring for some good luck!

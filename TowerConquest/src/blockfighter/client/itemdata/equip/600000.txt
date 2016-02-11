@@ -1,2 +1,4 @@
+[name]
 Hand of Midas
+[Desc]
 Gold with every touch.

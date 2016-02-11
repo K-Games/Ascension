@@ -162,7 +162,7 @@ public class Globals {
             ITEM_OFFHAND = 10, // OFFHAND = slot
             ITEM_SHIELD = 10, // SHIELD = item type
             ITEM_BOW = 11,
-            ITEM_QUIVER = 12; // 10,11,12 Only used for equipment slot index. Its the same as weapons.
+            ITEM_ARROW = 12; // 10,11,12 Only used for equipment slot index. Its the same as weapons.
 
     public final static byte NUM_EQUIP_SLOTS = 11;
 

@@ -17,7 +17,7 @@ import javax.imageio.ImageIO;
 public class Globals {
 
     public final static int SERVER_PORT = 25565;
-    public static String SERVER_ADDRESS = "towerconquest.servegame.com";
+    public static String SERVER_ADDRESS;
 
     public final static boolean TEST_MAX_LEVEL = true;
 
@@ -152,7 +152,7 @@ public class Globals {
             ITEM_OFFHAND = 10,
             ITEM_SHIELD = 10, // 10,11,12 only used for item type identification.
             ITEM_BOW = 11, // They all will be placed in weapons tab
-            ITEM_QUIVER = 12;
+            ITEM_ARROW = 12;
 
     public final static byte NUM_EQUIP_SLOTS = 11;
 
@@ -273,13 +273,7 @@ public class Globals {
     public final static String[] SOUND_BGM = new String[NUM_BGM];
     public final static String[] SOUND_SFX = new String[NUM_SFX];
 
-    public final static int ATTACK_FRAMES = 11,
-            ATTACKBOW_FRAMES = 6,
-            STAND_FRAMES = 6,
-            WALK_FRAMES = 16,
-            BUFF_FRAMES = 7,
-            DEAD_FRAMES = 10,
-            JUMP_FRAMES = 1;
+    public final static int[] PLAYER_ANIM_FRAMES = new int[NUM_PLAYER_ANIM_STATE];
 
     public final static byte BUTTON_BIGRECT = 0,
             BUTTON_SELECTCHAR = 1,
@@ -307,6 +301,13 @@ public class Globals {
             NUMBER_TYPE_EXP = 3;
 
     static {
+        PLAYER_ANIM_FRAMES[PLAYER_ANIM_STATE_ATTACK] = 11;
+        PLAYER_ANIM_FRAMES[PLAYER_ANIM_STATE_ATTACKBOW] = 6;
+        PLAYER_ANIM_FRAMES[PLAYER_ANIM_STATE_STAND] = 6;
+        PLAYER_ANIM_FRAMES[PLAYER_ANIM_STATE_WALK] = 16;
+        PLAYER_ANIM_FRAMES[PLAYER_ANIM_STATE_BUFF] = 7;
+        PLAYER_ANIM_FRAMES[PLAYER_ANIM_STATE_DEAD] = 10;
+        PLAYER_ANIM_FRAMES[PLAYER_ANIM_STATE_JUMP] = 1;
         loadSound();
         loadGFX();
     }
@@ -421,39 +422,38 @@ public class Globals {
 
     private static void loadGFX() {
         try {
-            CHAR_SPRITE[PLAYER_ANIM_STATE_ATTACK] = new BufferedImage[ATTACK_FRAMES];
-            for (int i = 0; i < CHAR_SPRITE[PLAYER_ANIM_STATE_ATTACK].length; i++) {
-                CHAR_SPRITE[PLAYER_ANIM_STATE_ATTACK][i] = ImageIO
-                        .read(Globals.class.getResourceAsStream("sprites/character/attack/mainhand/" + i + ".png"));
+            for (int state = 0; state < CHAR_SPRITE.length; state++) {
+                if (PLAYER_ANIM_FRAMES[state] > 0) {
+                    CHAR_SPRITE[state] = new BufferedImage[PLAYER_ANIM_FRAMES[state]];
+                    for (int frames = 0; frames < CHAR_SPRITE[state].length; frames++) {
+                        String folder = "";
+                        switch (state) {
+                            case PLAYER_ANIM_STATE_ATTACK:
+                                folder = "attack/mainhand";
+                                break;
+                            case PLAYER_ANIM_STATE_ATTACKBOW:
+                                folder = "attack/bow";
+                                break;
+                            case PLAYER_ANIM_STATE_STAND:
+                                folder = "stand";
+                                break;
+                            case PLAYER_ANIM_STATE_WALK:
+                                folder = "walk";
+                                break;
+                            case PLAYER_ANIM_STATE_BUFF:
+                                folder = "buff";
+                                break;
+                            case PLAYER_ANIM_STATE_DEAD:
+                                folder = "dead";
+                                break;
+                            case PLAYER_ANIM_STATE_JUMP:
+                                folder = "jump";
+                                break;
+                        }
+                        CHAR_SPRITE[state][frames] = ImageIO.read(Globals.class.getResourceAsStream("sprites/character/" + folder + "/" + frames + ".png"));
+                    }
+                }
             }
-            CHAR_SPRITE[PLAYER_ANIM_STATE_ATTACKBOW] = new BufferedImage[ATTACKBOW_FRAMES];
-            for (int i = 0; i < CHAR_SPRITE[PLAYER_ANIM_STATE_ATTACKBOW].length; i++) {
-                CHAR_SPRITE[PLAYER_ANIM_STATE_ATTACKBOW][i] = ImageIO
-                        .read(Globals.class.getResourceAsStream("sprites/character/attack/bow/" + i + ".png"));
-            }
-
-            CHAR_SPRITE[PLAYER_ANIM_STATE_STAND] = new BufferedImage[STAND_FRAMES];
-            for (int i = 0; i < CHAR_SPRITE[PLAYER_ANIM_STATE_STAND].length; i++) {
-                CHAR_SPRITE[PLAYER_ANIM_STATE_STAND][i] = ImageIO
-                        .read(Globals.class.getResourceAsStream("sprites/character/stand/" + i + ".png"));
-            }
-
-            CHAR_SPRITE[PLAYER_ANIM_STATE_WALK] = new BufferedImage[WALK_FRAMES];
-            for (int i = 0; i < CHAR_SPRITE[PLAYER_ANIM_STATE_WALK].length; i++) {
-                CHAR_SPRITE[PLAYER_ANIM_STATE_WALK][i] = ImageIO.read(Globals.class.getResourceAsStream("sprites/character/walk/" + i + ".png"));
-            }
-
-            CHAR_SPRITE[PLAYER_ANIM_STATE_BUFF] = new BufferedImage[BUFF_FRAMES];
-            for (int i = 0; i < CHAR_SPRITE[PLAYER_ANIM_STATE_BUFF].length; i++) {
-                CHAR_SPRITE[PLAYER_ANIM_STATE_BUFF][i] = ImageIO.read(Globals.class.getResourceAsStream("sprites/character/buff/" + i + ".png"));
-            }
-            CHAR_SPRITE[PLAYER_ANIM_STATE_DEAD] = new BufferedImage[DEAD_FRAMES];
-            for (int i = 0; i < CHAR_SPRITE[PLAYER_ANIM_STATE_DEAD].length; i++) {
-                CHAR_SPRITE[PLAYER_ANIM_STATE_DEAD][i] = ImageIO.read(Globals.class.getResourceAsStream("sprites/character/dead/" + i + ".png"));
-            }
-            CHAR_SPRITE[PLAYER_ANIM_STATE_JUMP] = new BufferedImage[JUMP_FRAMES];
-            CHAR_SPRITE[PLAYER_ANIM_STATE_JUMP][0] = ImageIO.read(Globals.class.getResourceAsStream("sprites/character/jump/0.png"));
-
             HUD[0] = ImageIO.read(Globals.class.getResourceAsStream("sprites/ui/ingame/ui.png"));
             HUD[1] = ImageIO.read(Globals.class.getResourceAsStream("sprites/ui/ingame/hp.png"));
 

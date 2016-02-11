@@ -60,7 +60,6 @@ import blockfighter.server.entities.proj.ProjShieldReflect;
 import blockfighter.server.entities.proj.ProjShieldToss;
 import blockfighter.server.entities.proj.ProjSwordCinder;
 import blockfighter.server.entities.proj.ProjSwordGash;
-import blockfighter.server.entities.proj.ProjSwordMulti;
 import blockfighter.server.entities.proj.ProjSwordPhantom;
 import blockfighter.server.entities.proj.ProjSwordSlash;
 import blockfighter.server.entities.proj.ProjSwordTaunt;
@@ -1501,7 +1500,7 @@ public class Player extends Thread implements GameEntity {
         // Bow Mastery Passive
         if (hasSkill(Skill.PASSIVE_BOWMASTERY)
                 && getItemType(this.equip[Globals.ITEM_WEAPON]) == Globals.ITEM_BOW
-                && getItemType(this.equip[Globals.ITEM_OFFHAND]) == Globals.ITEM_QUIVER) {
+                && getItemType(this.equip[Globals.ITEM_OFFHAND]) == Globals.ITEM_ARROW) {
             totalCritDmg += 0.3 + 0.04 * getSkillLevel(Skill.PASSIVE_BOWMASTERY);
         }
         // Keen Eye Passive
@@ -2314,8 +2313,8 @@ public class Player extends Thread implements GameEntity {
             return Globals.ITEM_SHIELD;
         } else if (i >= 120000 && i <= 129999) { // Bows
             return Globals.ITEM_BOW;
-        } else if (i >= 130000 && i <= 199999) { // Quivers
-            return Globals.ITEM_QUIVER;
+        } else if (i >= 130000 && i <= 199999) {
+            return Globals.ITEM_ARROW;
         } else if (i >= 200000 && i <= 209999) {
             return Globals.ITEM_HEAD;
         } else if (i >= 300000 && i <= 309999) {

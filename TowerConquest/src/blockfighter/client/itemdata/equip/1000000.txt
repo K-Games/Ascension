@@ -1,2 +1,4 @@
+[name]
 Charmed Charm
+[Desc]
 A charming charm that has been charmed by a charmer.
