@@ -282,7 +282,11 @@ public class PacketHandler implements Runnable {
         for (byte i = 0; i < newPlayer.getStats().length; i++) {
             desc += Globals.getStatName(i) + ": " + newPlayer.getStats()[i] + "\n";
         }
-
+        desc += "Equips=[";
+        for (byte i = 0; i < newPlayer.getEquip().length; i++) {
+            desc += newPlayer.getEquip()[i]+",";
+        }
+        desc += "]\n";
         Globals.log("DATA_PLAYER_CREATE", address + ":" + port + " Queueing new player. Room: " + room + " Key: " + freeKey + desc,
                 Globals.LOG_TYPE_DATA, true);
 
