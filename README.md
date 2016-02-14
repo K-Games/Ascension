@@ -18,6 +18,10 @@ An multiplayer action 2D sidescrolling platformer coded in pure Java.
 * Item data files now has formatting.
 * Quiver renamed to Arrow Enchantment.
 * Constant renamed from ITEM_QUIVER to ITEM_ARROW.
+* Critical Hit Chance bonus per upgrade reduced from 0.2% to 0.1%
+* Minor adjustments to stat generation for new equipments.
+* Method name changes for ItemEquip for readability.
+* Renamed Gash -> Blade Flurry, Echoing Fury -> Vorpal Strike.
 
 ## v0.16 Server Update 18
 ### Server Changes

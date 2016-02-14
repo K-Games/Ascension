@@ -16,7 +16,7 @@ public class SkillSwordVorpal extends Skill {
         this.skillCode = SWORD_VORPAL;
         this.maxCooldown = 14000;
         this.reqWeapon = Globals.ITEM_SWORD;
-        this.skillName = "Echoing Fury";
+        this.skillName = "Vorpal Strike";
     }
 
     @Override

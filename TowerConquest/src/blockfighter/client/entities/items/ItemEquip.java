@@ -25,7 +25,7 @@ public class ItemEquip implements Item {
 
     private static DecimalFormat df = new DecimalFormat("###,###,##0.##");
 
-    public final static double UPGRADE_CRITCHANCE = 0.002, // 0.2%
+    public final static double UPGRADE_CRITCHANCE = 0.001, // 0.1%
             UPGRADE_CRITDMG = 0.02, // 2%
             UPGRADE_REGEN = 8,
             UPGRADE_ARMOR = 24,
@@ -304,7 +304,7 @@ public class ItemEquip implements Item {
             this.bonusMult = Globals.rng(90) / 100D;
         }
         this.upgrades = 0;
-        update();
+        updateStats();
     }
 
     public static double[] newEquipStat(final int ic, final double level) {
@@ -351,11 +351,11 @@ public class ItemEquip implements Item {
                 break;
             case Globals.ITEM_AMULET:
                 newStats[Globals.STAT_CRITDMG] = level * 0.02 + Globals.rng(20) * 0.01;
-                newStats[Globals.STAT_REGEN] = level * 5 + Globals.rng(10) * 5;
+                newStats[Globals.STAT_REGEN] = level * 5 + Globals.rng(11) * 5;
                 break;
             case Globals.ITEM_RING:
                 newStats[Globals.STAT_CRITCHANCE] = level * 0.001 + Globals.rng(11) * 0.001;
-                newStats[Globals.STAT_ARMOR] = level * 18 + Globals.rng(10) * 18;
+                newStats[Globals.STAT_ARMOR] = level * 18 + Globals.rng(11) * 18;
                 break;
         }
         newStats[Globals.STAT_POWER] = Math.round(newStats[Globals.STAT_POWER]);
@@ -369,7 +369,7 @@ public class ItemEquip implements Item {
         this.baseStats = bs;
         this.upgrades = u;
         this.bonusMult = mult;
-        update();
+        updateStats();
     }
 
     @Override
@@ -608,7 +608,7 @@ public class ItemEquip implements Item {
         return this.upgrades;
     }
 
-    private void update() {
+    private void updateStats() {
         System.arraycopy(this.baseStats, 0, this.totalStats, 0, this.baseStats.length);
         this.totalStats[Globals.STAT_POWER] = Math
                 .round(this.baseStats[Globals.STAT_POWER] * (1 + this.bonusMult + this.upgrades * UPGRADE_MULT));
@@ -626,7 +626,7 @@ public class ItemEquip implements Item {
         }
         if (this.baseStats[Globals.STAT_ARMOR] > 0) {
             this.totalStats[Globals.STAT_ARMOR] = Math
-                    .round(this.baseStats[Globals.STAT_ARMOR] * (1 + this.bonusMult / 2) + this.upgrades * UPGRADE_ARMOR);
+                    .round(this.baseStats[Globals.STAT_ARMOR] * (1 + this.bonusMult / 2D) + this.upgrades * UPGRADE_ARMOR);
         }
         if (this.baseStats[Globals.STAT_REGEN] > 0) {
             this.totalStats[Globals.STAT_REGEN] = Math
@@ -676,7 +676,7 @@ public class ItemEquip implements Item {
 
     public void addUpgrade(final int amount) {
         this.upgrades += amount;
-        update();
+        updateStats();
     }
 
     public static byte getItemType(final int i) {
