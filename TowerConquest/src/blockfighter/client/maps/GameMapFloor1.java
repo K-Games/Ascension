@@ -56,5 +56,5 @@ public class GameMapFloor1 extends GameMap {
         System.out.println("Prerendering Boss Assets");
         BossLightning.prerender(g);
     }
-    
+
 }

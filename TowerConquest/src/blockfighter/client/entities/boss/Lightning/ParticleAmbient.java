@@ -22,7 +22,7 @@ public class ParticleAmbient extends Particle {
         this(k, x, y);
         this.small = set;
     }
-    
+
     public static void prerender(final Graphics2D g) {
         for (BufferedImage frame : SPRITE) {
             g.drawImage(frame, 0, 0, null);

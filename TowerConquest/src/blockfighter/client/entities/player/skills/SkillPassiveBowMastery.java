@@ -18,7 +18,7 @@ public class SkillPassiveBowMastery extends Skill {
 
     @Override
     public void drawInfo(final Graphics2D g, final int x, final int y) {
-        final int boxHeight = (this.level < 30) ? 230 : 185, boxWidth = 365;
+        final int boxHeight = (this.level < 30) ? 230 : 185, boxWidth = 395;
         int drawX = x, drawY = y;
         if (drawY + boxHeight > 700) {
             drawY = 700 - boxHeight;
@@ -39,8 +39,8 @@ public class SkillPassiveBowMastery extends Skill {
         g.setFont(Globals.ARIAL_15PT);
         g.drawString("Level: " + this.level, drawX + 80, drawY + 50);
 
-        g.drawString("When equipped with an Bow and Quiver you gain", drawX + 10, drawY + 90);
-        g.drawString("additional Critical Hit Damage.", drawX + 10, drawY + 110);
+        g.drawString("When equipped with an Bow and Arrow Enchantment", drawX + 10, drawY + 90);
+        g.drawString("you gain additional Critical Hit Damage.", drawX + 10, drawY + 110);
 
         g.setColor(new Color(255, 190, 0));
         g.drawString("Assign this passive to a hotkey to gain its effects.", drawX + 10, drawY + 130);

@@ -39,7 +39,7 @@ public class Globals {
 
     public final static byte GAME_MAJOR_VERSION = 0,
             GAME_MINOR_VERSION = 16,
-            GAME_UPDATE_NUMBER = 17;
+            GAME_UPDATE_NUMBER = 18;
     private final static String GAME_DEV_STATE = "ALPHA";
 
     public final static String GAME_RELEASE_VERSION = GAME_DEV_STATE + " " + GAME_MAJOR_VERSION + "." + GAME_MINOR_VERSION + "u"
@@ -79,15 +79,15 @@ public class Globals {
 
     public final static double GRAVITY = 0.35, MAX_FALLSPEED = 12.5;
 
-    public final static int NUM_PLAYER_STATE = 8;
-    public final static byte PLAYER_STATE_STAND = 0x00,
-            PLAYER_STATE_WALK = 0x01,
-            PLAYER_STATE_JUMP = 0x02,
-            PLAYER_STATE_ATTACK = 0x03,
-            PLAYER_STATE_ATTACKBOW = 0x04,
-            PLAYER_STATE_BUFF = 0x05,
-            PLAYER_STATE_DEAD = 0x06,
-            PLAYER_STATE_INVIS = 0x07;
+    public final static int NUM_PLAYER_ANIM_STATE = 8;
+    public final static byte PLAYER_ANIM_STATE_STAND = 0x00,
+            PLAYER_ANIM_STATE_WALK = 0x01,
+            PLAYER_ANIM_STATE_JUMP = 0x02,
+            PLAYER_ANIM_STATE_ATTACK = 0x03,
+            PLAYER_ANIM_STATE_ATTACKBOW = 0x04,
+            PLAYER_ANIM_STATE_BUFF = 0x05,
+            PLAYER_ANIM_STATE_DEAD = 0x06,
+            PLAYER_ANIM_STATE_INVIS = 0x07;
 
     public final static int NUM_PARTICLE_EFFECTS = 46;
     public final static byte PARTICLE_SWORD_SLASH1 = 0x00,
@@ -162,7 +162,7 @@ public class Globals {
             ITEM_OFFHAND = 10, // OFFHAND = slot
             ITEM_SHIELD = 10, // SHIELD = item type
             ITEM_BOW = 11,
-            ITEM_QUIVER = 12; // 10,11,12 Only used for equipment slot index. Its the same as weapons.
+            ITEM_ARROW = 12; // 10,11,12 Only used for equipment slot index. Its the same as weapons.
 
     public final static byte NUM_EQUIP_SLOTS = 11;
 

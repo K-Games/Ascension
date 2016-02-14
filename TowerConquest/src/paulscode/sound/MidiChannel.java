@@ -1232,28 +1232,25 @@ public class MidiChannel implements MetaEventListener {
                     errorMessage("Unable to link sequencer transmitter "
                             + "with MIDI device receiver");
                 }
-            } else // Bug-fix for multiple-receivers playing simultaneously
-            {
-                if (synthesizer.getDefaultSoundbank() == null) {
-                    // Link the sequencer to the default receiver:
-                    try {
-                        sequencer.getTransmitter().setReceiver(
-                                MidiSystem.getReceiver());
-                    } catch (MidiUnavailableException mue) {
-                        errorMessage("Unable to link sequencer transmitter "
-                                + "with default receiver");
-                    }
-                } else {
-                    // Link the sequencer to the default synthesizer:
-                    try {
-                        sequencer.getTransmitter().setReceiver(
-                                synthesizer.getReceiver());
-                    } catch (MidiUnavailableException mue) {
-                        errorMessage("Unable to link sequencer transmitter "
-                                + "with synthesizer receiver");
-                    }
-                } // End bug-fix
-            }
+            } else if (synthesizer.getDefaultSoundbank() == null) {
+                // Link the sequencer to the default receiver:
+                try {
+                    sequencer.getTransmitter().setReceiver(
+                            MidiSystem.getReceiver());
+                } catch (MidiUnavailableException mue) {
+                    errorMessage("Unable to link sequencer transmitter "
+                            + "with default receiver");
+                }
+            } else {
+                // Link the sequencer to the default synthesizer:
+                try {
+                    sequencer.getTransmitter().setReceiver(
+                            synthesizer.getReceiver());
+                } catch (MidiUnavailableException mue) {
+                    errorMessage("Unable to link sequencer transmitter "
+                            + "with synthesizer receiver");
+                }
+            } // End bug-fix
         }
     }
 

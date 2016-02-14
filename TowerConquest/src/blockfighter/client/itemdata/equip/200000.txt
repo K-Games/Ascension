@@ -1,2 +1,4 @@
+[name]
 Seekers
+[Desc]
 As far as the eyes can see.

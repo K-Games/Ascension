@@ -16,7 +16,7 @@ public class SkillSwordGash extends Skill {
         this.skillCode = SWORD_GASH;
         this.maxCooldown = 500;
         this.reqWeapon = Globals.ITEM_SWORD;
-        this.skillName = "Gash";
+        this.skillName = "Blade Flurry";
     }
 
     @Override

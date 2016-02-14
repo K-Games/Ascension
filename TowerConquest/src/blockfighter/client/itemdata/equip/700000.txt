@@ -1,2 +1,4 @@
+[name]
 Leather Boots
+[Desc]
 Sturdy and reliable. Just a bit worn though.

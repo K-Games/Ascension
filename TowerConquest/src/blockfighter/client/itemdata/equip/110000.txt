@@ -1,2 +1,4 @@
+[name]
 Poor Man's Shield
+[Desc]
 A poor man once needed a shield and thus this was born.

@@ -1,2 +1,4 @@
+[name]
 Eaglehorn
+[Desc]
 A legendary bow that cannot miss.

@@ -110,7 +110,7 @@ public class ScreenUpgrade extends ScreenMenu {
             this.lastUpdateTime = now;
         }
         if (now - this.lastFrameTime >= this.nextFrameTime) {
-            if (this.charFrame >= Globals.CHAR_SPRITE[Globals.PLAYER_STATE_STAND].length - 1) {
+            if (this.charFrame >= Globals.CHAR_SPRITE[Globals.PLAYER_ANIM_STATE_STAND].length - 1) {
                 this.charFrame = 0;
             } else {
                 this.charFrame++;
@@ -194,32 +194,32 @@ public class ScreenUpgrade extends ScreenMenu {
 
     private void drawSlots(final Graphics2D g) {
         final BufferedImage button = Globals.MENU_BUTTON[Globals.BUTTON_SLOT];
-        final BufferedImage character = Globals.CHAR_SPRITE[Globals.PLAYER_STATE_STAND][this.charFrame];
+        final BufferedImage character = Globals.CHAR_SPRITE[Globals.PLAYER_ANIM_STATE_STAND][this.charFrame];
 
         final int x = 1070 + character.getWidth() / 2, y = 200 + character.getHeight();
         if (this.c.getEquip()[Globals.ITEM_OFFHAND] != null) {
-            this.c.getEquip()[Globals.ITEM_OFFHAND].drawIngame(g, x, y, Globals.PLAYER_STATE_STAND, this.charFrame, Globals.RIGHT, true);
+            this.c.getEquip()[Globals.ITEM_OFFHAND].drawIngame(g, x, y, Globals.PLAYER_ANIM_STATE_STAND, this.charFrame, Globals.RIGHT, true);
         }
         g.drawImage(character, 1070, 170, null);
 
         if (this.c.getEquip()[Globals.ITEM_CHEST] != null) {
-            this.c.getEquip()[Globals.ITEM_CHEST].drawIngame(g, x, y, Globals.PLAYER_STATE_STAND, this.charFrame, Globals.RIGHT);
+            this.c.getEquip()[Globals.ITEM_CHEST].drawIngame(g, x, y, Globals.PLAYER_ANIM_STATE_STAND, this.charFrame, Globals.RIGHT);
         }
         if (this.c.getEquip()[Globals.ITEM_SHOULDER] != null) {
-            this.c.getEquip()[Globals.ITEM_SHOULDER].drawIngame(g, x, y, Globals.PLAYER_STATE_STAND, this.charFrame, Globals.RIGHT);
+            this.c.getEquip()[Globals.ITEM_SHOULDER].drawIngame(g, x, y, Globals.PLAYER_ANIM_STATE_STAND, this.charFrame, Globals.RIGHT);
         }
 
         if (this.c.getEquip()[Globals.ITEM_PANTS] != null) {
-            this.c.getEquip()[Globals.ITEM_PANTS].drawIngame(g, x, y, Globals.PLAYER_STATE_STAND, this.charFrame, Globals.RIGHT);
+            this.c.getEquip()[Globals.ITEM_PANTS].drawIngame(g, x, y, Globals.PLAYER_ANIM_STATE_STAND, this.charFrame, Globals.RIGHT);
         }
         if (this.c.getEquip()[Globals.ITEM_SHOE] != null) {
-            this.c.getEquip()[Globals.ITEM_SHOE].drawIngame(g, x, y, Globals.PLAYER_STATE_STAND, this.charFrame, Globals.RIGHT);
+            this.c.getEquip()[Globals.ITEM_SHOE].drawIngame(g, x, y, Globals.PLAYER_ANIM_STATE_STAND, this.charFrame, Globals.RIGHT);
         }
         if (this.c.getEquip()[Globals.ITEM_WEAPON] != null) {
-            this.c.getEquip()[Globals.ITEM_WEAPON].drawIngame(g, x, y, Globals.PLAYER_STATE_STAND, this.charFrame, Globals.RIGHT);
+            this.c.getEquip()[Globals.ITEM_WEAPON].drawIngame(g, x, y, Globals.PLAYER_ANIM_STATE_STAND, this.charFrame, Globals.RIGHT);
         }
         if (this.c.getEquip()[Globals.ITEM_GLOVE] != null) {
-            this.c.getEquip()[Globals.ITEM_GLOVE].drawIngame(g, x, y, Globals.PLAYER_STATE_STAND, this.charFrame, Globals.RIGHT);
+            this.c.getEquip()[Globals.ITEM_GLOVE].drawIngame(g, x, y, Globals.PLAYER_ANIM_STATE_STAND, this.charFrame, Globals.RIGHT);
         }
 
         // Inventory

@@ -112,6 +112,6 @@ public abstract class Boss extends Thread {
         }
         return b;
     }
-    
+
     public abstract void unload();
 }

@@ -9,16 +9,21 @@
 # Description
 An multiplayer action 2D sidescrolling platformer coded in pure Java.
 
-## v0.16 Client Update 17
+## v0.16 Client Update 18
 ### Client Changes
-* Abstracted Particle Loading.
-* Particles now properly unload when leaving a game.
-* Packets are no longer sent when socket is closed.
-* Classes that require LogicModule references get the reference with a static initialization.
-* Sound Module can play a WAV sfx without a location.
-* Maps now prerender any required assets.
-* Corrected final constants names for convention.
+* Renamed Global PLAYER_STATE constants to PLAYER_ANIM_STATE
+* Rendering now uses hardware acceleration.
+* Abstracted item sprite and data loading.
+* Abstracted player sprite loading.
+* Item data files now has formatting.
+* Quiver renamed to Arrow Enchantment.
+* Constant renamed from ITEM_QUIVER to ITEM_ARROW.
+* Critical Hit Chance bonus per upgrade reduced from 0.2% to 0.1%
+* Minor adjustments to stat generation for new equipments.
+* Method name changes for ItemEquip for readability.
+* Renamed Gash -> Blade Flurry, Echoing Fury -> Vorpal Strike.
 
-## v0.16 Server Update 17
+## v0.16 Server Update 18
 ### Server Changes
-* Corrected final constants names for convention.
+* Renamed Global PLAYER_STATE constants to PLAYER_ANIM_STATE
+* Constant renamed from ITEM_QUIVER to ITEM_ARROW.

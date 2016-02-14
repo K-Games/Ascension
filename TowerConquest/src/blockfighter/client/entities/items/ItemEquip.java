@@ -1,14 +1,6 @@
 package blockfighter.client.entities.items;
 
 import blockfighter.client.Globals;
-import static blockfighter.client.Globals.NUM_PLAYER_STATE;
-import static blockfighter.client.Globals.PLAYER_STATE_ATTACK;
-import static blockfighter.client.Globals.PLAYER_STATE_ATTACKBOW;
-import static blockfighter.client.Globals.PLAYER_STATE_BUFF;
-import static blockfighter.client.Globals.PLAYER_STATE_DEAD;
-import static blockfighter.client.Globals.PLAYER_STATE_JUMP;
-import static blockfighter.client.Globals.PLAYER_STATE_STAND;
-import static blockfighter.client.Globals.PLAYER_STATE_WALK;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -23,6 +15,7 @@ import javax.imageio.ImageIO;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.LineIterator;
 import org.apache.commons.lang3.StringUtils;
+import java.util.List;
 
 /**
  *
@@ -32,7 +25,7 @@ public class ItemEquip implements Item {
 
     private static DecimalFormat df = new DecimalFormat("###,###,##0.##");
 
-    public final static double UPGRADE_CRITCHANCE = 0.002, // 0.2%
+    public final static double UPGRADE_CRITCHANCE = 0.001, // 0.1%
             UPGRADE_CRITDMG = 0.02, // 2%
             UPGRADE_REGEN = 8,
             UPGRADE_ARMOR = 24,
@@ -45,7 +38,7 @@ public class ItemEquip implements Item {
     private final static HashMap<Integer, BufferedImage> ITEM_ICONS;
     private final static HashMap<String, BufferedImage[][]> ITEM_SPRITES = new HashMap<>();
     private final static HashMap<Integer, String> ITEM_DESC;
-    private final static HashMap<String, Point> ITEM_ORIGINPOINT;
+    private final static HashMap<String, Point> ITEM_DRAWOFFSET = new HashMap<>();
 
     public final static byte TIER_COMMON = 0,
             TIER_UNCOMMON = 1,
@@ -71,7 +64,7 @@ public class ItemEquip implements Item {
         ITEM_TYPENAME.put(Globals.ITEM_HEAD, "Head");
         ITEM_TYPENAME.put(Globals.ITEM_SHIELD, "Shield");
         ITEM_TYPENAME.put(Globals.ITEM_PANTS, "Pants");
-        ITEM_TYPENAME.put(Globals.ITEM_QUIVER, "Quiver");
+        ITEM_TYPENAME.put(Globals.ITEM_ARROW, "Arrow Enchantment");
         ITEM_TYPENAME.put(Globals.ITEM_RING, "Ring");
         ITEM_TYPENAME.put(Globals.ITEM_SHOE, "Shoe");
         ITEM_TYPENAME.put(Globals.ITEM_SHOULDER, "Shoulder");
@@ -84,8 +77,7 @@ public class ItemEquip implements Item {
         ITEM_DESC = new HashMap<>(ITEM_CODES.size());
         loadItemDetails();
 
-        ITEM_ORIGINPOINT = new HashMap<>(ITEM_CODES.size() * Globals.NUM_PLAYER_STATE);
-        loadItemDrawOrigin();
+        loadItemDrawOffset();
     }
 
     public static void init() {
@@ -118,23 +110,63 @@ public class ItemEquip implements Item {
         System.out.print("[");
         for (final Map.Entry<Integer, Integer> itemEntry : ITEM_CODES.entrySet()) {
             final int itemCode = itemEntry.getValue();
+            System.out.print(itemCode + ",");
             try {
                 InputStream itemFile = Globals.class.getResourceAsStream("itemdata/equip/" + itemCode + ".txt");
-                LineIterator it = IOUtils.lineIterator(itemFile, "UTF-8");
-                try {
-                    System.out.print(itemCode + ",");
-                    if (it.hasNext()) {
-                        final String name = it.nextLine();
-                        ITEM_NAMES.put(itemCode, name);
-
+                List<String> fileLines = IOUtils.readLines(itemFile);
+                String[] data = fileLines.toArray(new String[fileLines.size()]);
+                for (int i = 0; i < data.length; i++) {
+                    if (i + 1 < data.length && data[i + 1] != null) {
+                        if (data[i].trim().equalsIgnoreCase("[name]")) {
+                            final String name = data[i + 1];
+                            ITEM_NAMES.put(itemCode, name);
+                        } else if (data[i].trim().equalsIgnoreCase("[desc]")) {
+                            final String desc = data[i + 1];
+                            ITEM_DESC.put(itemCode, desc);
+                        } else if (data[i].trim().equalsIgnoreCase("[attackoffset]")) {
+                            final String[] offsetData = data[i + 1].split(" ", 2);
+                            final int x = Integer.parseInt(offsetData[0]),
+                                    y = Integer.parseInt(offsetData[1]);
+                            final Point offset = new Point(x, y);
+                            ITEM_DRAWOFFSET.put(itemCode + "_" + Globals.PLAYER_ANIM_STATE_ATTACK, offset);
+                        } else if (data[i].trim().equalsIgnoreCase("[standoffset]")) {
+                            final String[] offsetData = data[i + 1].split(" ", 2);
+                            final int x = Integer.parseInt(offsetData[0]),
+                                    y = Integer.parseInt(offsetData[1]);
+                            final Point offset = new Point(x, y);
+                            ITEM_DRAWOFFSET.put(itemCode + "_" + Globals.PLAYER_ANIM_STATE_STAND, offset);
+                        } else if (data[i].trim().equalsIgnoreCase("[attackbowoffset]")) {
+                            final String[] offsetData = data[i + 1].split(" ", 2);
+                            final int x = Integer.parseInt(offsetData[0]),
+                                    y = Integer.parseInt(offsetData[1]);
+                            final Point offset = new Point(x, y);
+                            ITEM_DRAWOFFSET.put(itemCode + "_" + Globals.PLAYER_ANIM_STATE_ATTACKBOW, offset);
+                        } else if (data[i].trim().equalsIgnoreCase("[walkoffset]")) {
+                            final String[] offsetData = data[i + 1].split(" ", 2);
+                            final int x = Integer.parseInt(offsetData[0]),
+                                    y = Integer.parseInt(offsetData[1]);
+                            final Point offset = new Point(x, y);
+                            ITEM_DRAWOFFSET.put(itemCode + "_" + Globals.PLAYER_ANIM_STATE_WALK, offset);
+                        } else if (data[i].trim().equalsIgnoreCase("[buffoffset]")) {
+                            final String[] offsetData = data[i + 1].split(" ", 2);
+                            final int x = Integer.parseInt(offsetData[0]),
+                                    y = Integer.parseInt(offsetData[1]);
+                            final Point offset = new Point(x, y);
+                            ITEM_DRAWOFFSET.put(itemCode + "_" + Globals.PLAYER_ANIM_STATE_BUFF, offset);
+                        } else if (data[i].trim().equalsIgnoreCase("[deadoffset]")) {
+                            final String[] offsetData = data[i + 1].split(" ", 2);
+                            final int x = Integer.parseInt(offsetData[0]),
+                                    y = Integer.parseInt(offsetData[1]);
+                            final Point offset = new Point(x, y);
+                            ITEM_DRAWOFFSET.put(itemCode + "_" + Globals.PLAYER_ANIM_STATE_DEAD, offset);
+                        } else if (data[i].trim().equalsIgnoreCase("[jumpoffset]")) {
+                            final String[] offsetData = data[i + 1].split(" ", 2);
+                            final int x = Integer.parseInt(offsetData[0]),
+                                    y = Integer.parseInt(offsetData[1]);
+                            final Point offset = new Point(x, y);
+                            ITEM_DRAWOFFSET.put(itemCode + "_" + Globals.PLAYER_ANIM_STATE_JUMP, offset);
+                        }
                     }
-                    if (it.hasNext()) {
-                        final String desc = it.nextLine();
-                        ITEM_DESC.put(itemCode, desc);
-
-                    }
-                } finally {
-                    LineIterator.closeQuietly(it);
                 }
             } catch (IOException | NullPointerException e) {
                 System.err.println("Could not load item #" + itemCode + " details.");
@@ -143,7 +175,7 @@ public class ItemEquip implements Item {
         System.out.println("]");
     }
 
-    private static void loadItemDrawOrigin() {
+    private static void loadItemDrawOffset() {
         //Standard for naming item offset
         //Key = CODE_STATECODE, or CODE_offhand_STATECODE
     }
@@ -162,131 +194,82 @@ public class ItemEquip implements Item {
     }
 
     public static void loadItemSprite(final int code) {
-        final BufferedImage[][] load = new BufferedImage[NUM_PLAYER_STATE][];
-
-        load[PLAYER_STATE_ATTACK] = new BufferedImage[Globals.ATTACK_FRAMES];
-        for (int i = 0; i < load[PLAYER_STATE_ATTACK].length; i++) {
-            try {
-                load[PLAYER_STATE_ATTACK][i] = ImageIO
-                        .read(Globals.class.getResourceAsStream("sprites/equip/" + code + "/attack/mainhand1/" + i + ".png"));
-            } catch (final Exception ex) {
-            }
-        }
-
-        load[PLAYER_STATE_ATTACKBOW] = new BufferedImage[Globals.ATTACKBOW_FRAMES];
-        for (int i = 0; i < load[PLAYER_STATE_ATTACKBOW].length; i++) {
-            try {
-                load[PLAYER_STATE_ATTACKBOW][i] = ImageIO
-                        .read(Globals.class.getResourceAsStream("sprites/equip/" + code + "/attack/bow/" + i + ".png"));
-            } catch (final Exception ex) {
-            }
-        }
-
-        load[PLAYER_STATE_STAND] = new BufferedImage[Globals.STAND_FRAMES];
-        for (int i = 0; i < load[PLAYER_STATE_STAND].length; i++) {
-            try {
-                load[PLAYER_STATE_STAND][i] = ImageIO
-                        .read(Globals.class.getResourceAsStream("sprites/equip/" + code + "/stand/" + i + ".png"));
-            } catch (final Exception ex) {
-            }
-        }
-
-        load[PLAYER_STATE_WALK] = new BufferedImage[Globals.WALK_FRAMES];
-        for (int i = 0; i < load[PLAYER_STATE_WALK].length; i++) {
-            try {
-                load[PLAYER_STATE_WALK][i] = ImageIO
-                        .read(Globals.class.getResourceAsStream("sprites/equip/" + code + "/walk/" + i + ".png"));
-            } catch (final Exception ex) {
-            }
-        }
-
-        load[PLAYER_STATE_JUMP] = new BufferedImage[Globals.JUMP_FRAMES];
-        try {
-            load[PLAYER_STATE_JUMP][0] = ImageIO.read(Globals.class.getResourceAsStream("sprites/equip/" + code + "/jump/0.png"));
-        } catch (final Exception ex) {
-        }
-
-        load[PLAYER_STATE_BUFF] = new BufferedImage[Globals.BUFF_FRAMES];
-        for (int i = 0; i < load[PLAYER_STATE_BUFF].length; i++) {
-            try {
-                load[PLAYER_STATE_BUFF][i] = ImageIO
-                        .read(Globals.class.getResourceAsStream("sprites/equip/" + code + "/buff/" + i + ".png"));
-            } catch (final Exception ex) {
-            }
-        }
-
-        load[PLAYER_STATE_DEAD] = new BufferedImage[Globals.DEAD_FRAMES];
-        for (int i = 0; i < load[PLAYER_STATE_DEAD].length; i++) {
-            try {
-                load[PLAYER_STATE_DEAD][i] = ImageIO
-                        .read(Globals.class.getResourceAsStream("sprites/equip/" + code + "/dead/" + i + ".png"));
-            } catch (final Exception ex) {
+        final BufferedImage[][] load = new BufferedImage[Globals.NUM_PLAYER_ANIM_STATE][];
+        for (int state = 0; state < load.length; state++) {
+            if (Globals.PLAYER_ANIM_FRAMES[state] > 0) {
+                load[state] = new BufferedImage[Globals.PLAYER_ANIM_FRAMES[state]];
+                for (int frames = 0; frames < load[state].length; frames++) {
+                    String folder = "";
+                    switch (state) {
+                        case Globals.PLAYER_ANIM_STATE_ATTACK:
+                            folder = "attack/mainhand";
+                            break;
+                        case Globals.PLAYER_ANIM_STATE_ATTACKBOW:
+                            folder = "attack/bow";
+                            break;
+                        case Globals.PLAYER_ANIM_STATE_STAND:
+                            folder = "stand";
+                            break;
+                        case Globals.PLAYER_ANIM_STATE_WALK:
+                            folder = "walk";
+                            break;
+                        case Globals.PLAYER_ANIM_STATE_BUFF:
+                            folder = "buff";
+                            break;
+                        case Globals.PLAYER_ANIM_STATE_DEAD:
+                            folder = "dead";
+                            break;
+                        case Globals.PLAYER_ANIM_STATE_JUMP:
+                            folder = "jump";
+                            break;
+                    }
+                    try {
+                        load[state][frames] = ImageIO
+                                .read(Globals.class.getResourceAsStream("sprites/equip/" + code + "/mainhand/" + folder + "/" + frames + ".png"));
+                    } catch (final Exception ex) {
+                    }
+                }
             }
         }
         ITEM_SPRITES.put(Integer.toString(code), load);
     }
 
     public static void loadOffhandSprite(final int code) {
-        final BufferedImage[][] load = new BufferedImage[NUM_PLAYER_STATE][];
-
-        load[PLAYER_STATE_ATTACK] = new BufferedImage[Globals.ATTACK_FRAMES];
-        for (int i = 0; i < load[PLAYER_STATE_ATTACK].length; i++) {
-            try {
-                load[PLAYER_STATE_ATTACK][i] = ImageIO.read(
-                        Globals.class.getResourceAsStream("sprites/equip/" + code + "/offhand/attack/mainhand1/" + i + ".png"));
-            } catch (final Exception ex) {
-            }
-        }
-
-        load[PLAYER_STATE_ATTACKBOW] = new BufferedImage[Globals.ATTACKBOW_FRAMES];
-        for (int i = 0; i < load[PLAYER_STATE_ATTACKBOW].length; i++) {
-            try {
-                load[PLAYER_STATE_ATTACKBOW][i] = ImageIO
-                        .read(Globals.class.getResourceAsStream("sprites/equip/" + code + "/offhand/attack/bow/" + i + ".png"));
-            } catch (final Exception ex) {
-            }
-        }
-
-        load[PLAYER_STATE_STAND] = new BufferedImage[Globals.STAND_FRAMES];
-        for (int i = 0; i < load[PLAYER_STATE_STAND].length; i++) {
-            try {
-                load[PLAYER_STATE_STAND][i] = ImageIO
-                        .read(Globals.class.getResourceAsStream("sprites/equip/" + code + "/offhand/stand/" + i + ".png"));
-            } catch (final Exception ex) {
-            }
-        }
-
-        load[PLAYER_STATE_WALK] = new BufferedImage[Globals.WALK_FRAMES];
-        for (int i = 0; i < load[PLAYER_STATE_WALK].length; i++) {
-            try {
-                load[PLAYER_STATE_WALK][i] = ImageIO
-                        .read(Globals.class.getResourceAsStream("sprites/equip/" + code + "/offhand/walk/" + i + ".png"));
-            } catch (final Exception ex) {
-            }
-        }
-
-        load[PLAYER_STATE_JUMP] = new BufferedImage[Globals.JUMP_FRAMES];
-        try {
-            load[PLAYER_STATE_JUMP][0] = ImageIO
-                    .read(Globals.class.getResourceAsStream("sprites/equip/" + code + "/offhand/jump/0.png"));
-        } catch (final Exception ex) {
-        }
-
-        load[PLAYER_STATE_BUFF] = new BufferedImage[Globals.BUFF_FRAMES];
-        for (int i = 0; i < load[PLAYER_STATE_BUFF].length; i++) {
-            try {
-                load[PLAYER_STATE_BUFF][i] = ImageIO
-                        .read(Globals.class.getResourceAsStream("sprites/equip/" + code + "/offhand/buff/" + i + ".png"));
-            } catch (final Exception ex) {
-            }
-        }
-
-        load[PLAYER_STATE_DEAD] = new BufferedImage[Globals.DEAD_FRAMES];
-        for (int i = 0; i < load[PLAYER_STATE_DEAD].length; i++) {
-            try {
-                load[PLAYER_STATE_DEAD][i] = ImageIO
-                        .read(Globals.class.getResourceAsStream("sprites/equip/" + code + "/offhand/dead/" + i + ".png"));
-            } catch (final Exception ex) {
+        final BufferedImage[][] load = new BufferedImage[Globals.NUM_PLAYER_ANIM_STATE][];
+        for (int state = 0; state < load.length; state++) {
+            if (Globals.PLAYER_ANIM_FRAMES[state] > 0) {
+                load[state] = new BufferedImage[Globals.PLAYER_ANIM_FRAMES[state]];
+                for (int frames = 0; frames < load[state].length; frames++) {
+                    String folder = "";
+                    switch (state) {
+                        case Globals.PLAYER_ANIM_STATE_ATTACK:
+                            folder = "attack/mainhand";
+                            break;
+                        case Globals.PLAYER_ANIM_STATE_ATTACKBOW:
+                            folder = "attack/bow";
+                            break;
+                        case Globals.PLAYER_ANIM_STATE_STAND:
+                            folder = "stand";
+                            break;
+                        case Globals.PLAYER_ANIM_STATE_WALK:
+                            folder = "walk";
+                            break;
+                        case Globals.PLAYER_ANIM_STATE_BUFF:
+                            folder = "buff";
+                            break;
+                        case Globals.PLAYER_ANIM_STATE_DEAD:
+                            folder = "dead";
+                            break;
+                        case Globals.PLAYER_ANIM_STATE_JUMP:
+                            folder = "jump";
+                            break;
+                    }
+                    try {
+                        load[state][frames] = ImageIO
+                                .read(Globals.class.getResourceAsStream("sprites/equip/" + code + "/offhand/" + folder + "/" + frames + ".png"));
+                    } catch (final Exception ex) {
+                    }
+                }
             }
         }
         ITEM_SPRITES.put(code + "_offhand", load);
@@ -321,7 +304,7 @@ public class ItemEquip implements Item {
             this.bonusMult = Globals.rng(90) / 100D;
         }
         this.upgrades = 0;
-        update();
+        updateStats();
     }
 
     public static double[] newEquipStat(final int ic, final double level) {
@@ -338,7 +321,7 @@ public class ItemEquip implements Item {
             case Globals.ITEM_SHIELD:
                 newStats[Globals.STAT_DEFENSE] = level + 0.25D * level + Globals.rng(6);
                 break;
-            case Globals.ITEM_QUIVER:
+            case Globals.ITEM_ARROW:
                 newStats[Globals.STAT_POWER] = level + 0.25D * level + Globals.rng(6);
                 newStats[Globals.STAT_CRITCHANCE] = level * 0.001 + Globals.rng(11) * 0.001;
                 break;
@@ -368,11 +351,11 @@ public class ItemEquip implements Item {
                 break;
             case Globals.ITEM_AMULET:
                 newStats[Globals.STAT_CRITDMG] = level * 0.02 + Globals.rng(20) * 0.01;
-                newStats[Globals.STAT_REGEN] = level * 5 + Globals.rng(10) * 5;
+                newStats[Globals.STAT_REGEN] = level * 5 + Globals.rng(11) * 5;
                 break;
             case Globals.ITEM_RING:
                 newStats[Globals.STAT_CRITCHANCE] = level * 0.001 + Globals.rng(11) * 0.001;
-                newStats[Globals.STAT_ARMOR] = level * 18 + Globals.rng(10) * 18;
+                newStats[Globals.STAT_ARMOR] = level * 18 + Globals.rng(11) * 18;
                 break;
         }
         newStats[Globals.STAT_POWER] = Math.round(newStats[Globals.STAT_POWER]);
@@ -386,7 +369,7 @@ public class ItemEquip implements Item {
         this.baseStats = bs;
         this.upgrades = u;
         this.bonusMult = mult;
-        update();
+        updateStats();
     }
 
     @Override
@@ -585,8 +568,8 @@ public class ItemEquip implements Item {
         if (ITEM_SPRITES.containsKey(Integer.toString(this.itemCode))) {
             BufferedImage sprite = ITEM_SPRITES.get(Integer.toString(this.itemCode))[state][frame];
             if (sprite != null) {
-                int sX = x + ((facing == Globals.RIGHT) ? 1 : -1) * ITEM_ORIGINPOINT.get(this.itemCode + "_" + state).x;
-                int sY = y + ITEM_ORIGINPOINT.get(this.itemCode + "_" + state).y;
+                int sX = x + ((facing == Globals.RIGHT) ? 1 : -1) * ITEM_DRAWOFFSET.get(this.itemCode + "_" + state).x;
+                int sY = y + ITEM_DRAWOFFSET.get(this.itemCode + "_" + state).y;
                 int dX = sX + ((facing == Globals.RIGHT) ? 1 : -1) * sprite.getWidth();
                 int dY = sY + sprite.getHeight();
                 g.drawImage(sprite, sX, sY, dX, dY, 0, 0, sprite.getWidth(), sprite.getHeight(), null);
@@ -608,8 +591,8 @@ public class ItemEquip implements Item {
             if (ITEM_SPRITES.containsKey(this.itemCode + "_offhand")) {
                 BufferedImage sprite = ITEM_SPRITES.get(this.itemCode + "_offhand")[state][frame];
                 if (sprite != null) {
-                    int sX = x + ((facing == Globals.RIGHT) ? 1 : -1) * ITEM_ORIGINPOINT.get(this.itemCode + "_offhand_" + state).x;
-                    int sY = y + ITEM_ORIGINPOINT.get(this.itemCode + "_offhand_" + state).y;
+                    int sX = x + ((facing == Globals.RIGHT) ? 1 : -1) * ITEM_DRAWOFFSET.get(this.itemCode + "_offhand_" + state).x;
+                    int sY = y + ITEM_DRAWOFFSET.get(this.itemCode + "_offhand_" + state).y;
                     int dX = sX + ((facing == Globals.RIGHT) ? 1 : -1) * sprite.getWidth();
                     int dY = sY + sprite.getHeight();
                     g.drawImage(sprite, sX, sY, dX, dY, 0, 0, sprite.getWidth(), sprite.getHeight(), null);
@@ -625,7 +608,7 @@ public class ItemEquip implements Item {
         return this.upgrades;
     }
 
-    private void update() {
+    private void updateStats() {
         System.arraycopy(this.baseStats, 0, this.totalStats, 0, this.baseStats.length);
         this.totalStats[Globals.STAT_POWER] = Math
                 .round(this.baseStats[Globals.STAT_POWER] * (1 + this.bonusMult + this.upgrades * UPGRADE_MULT));
@@ -643,7 +626,7 @@ public class ItemEquip implements Item {
         }
         if (this.baseStats[Globals.STAT_ARMOR] > 0) {
             this.totalStats[Globals.STAT_ARMOR] = Math
-                    .round(this.baseStats[Globals.STAT_ARMOR] * (1 + this.bonusMult / 2) + this.upgrades * UPGRADE_ARMOR);
+                    .round(this.baseStats[Globals.STAT_ARMOR] * (1 + this.bonusMult / 2D) + this.upgrades * UPGRADE_ARMOR);
         }
         if (this.baseStats[Globals.STAT_REGEN] > 0) {
             this.totalStats[Globals.STAT_REGEN] = Math
@@ -693,7 +676,7 @@ public class ItemEquip implements Item {
 
     public void addUpgrade(final int amount) {
         this.upgrades += amount;
-        update();
+        updateStats();
     }
 
     public static byte getItemType(final int i) {
@@ -703,8 +686,8 @@ public class ItemEquip implements Item {
             return Globals.ITEM_SHIELD;
         } else if (i >= 120000 && i <= 129999) { // Bows
             return Globals.ITEM_BOW;
-        } else if (i >= 130000 && i <= 199999) { // Quivers
-            return Globals.ITEM_QUIVER;
+        } else if (i >= 130000 && i <= 199999) { // Arrow Enchantments
+            return Globals.ITEM_ARROW;
         } else if (i >= 200000 && i <= 209999) {
             return Globals.ITEM_HEAD;
         } else if (i >= 300000 && i <= 309999) {
