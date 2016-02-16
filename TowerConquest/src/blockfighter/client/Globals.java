@@ -19,11 +19,12 @@ public class Globals {
     public final static int SERVER_PORT = 25565;
     public static String SERVER_ADDRESS;
 
-    public final static boolean TEST_MAX_LEVEL = true;
+    public final static boolean TEST_MAX_LEVEL = true,
+            DEBUG_MODE = true;
 
     public final static byte GAME_MAJOR_VERSION = 0,
             GAME_MINOR_VERSION = 16,
-            GAME_UPDATE_NUMBER = 18;
+            GAME_UPDATE_NUMBER = 19;
 
     private final static String GAME_DEV_STATE = "ALPHA";
 

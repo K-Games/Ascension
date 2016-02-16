@@ -107,7 +107,9 @@ public class ScreenSelectChar extends ScreenMenu {
                 g.drawString("Defense: " + (int) stats[Globals.STAT_DEFENSE] + " + " + (int) bonus[Globals.STAT_DEFENSE], 120 + 420 * j,
                         475);
                 g.drawString("Spirit: " + (int) stats[Globals.STAT_SPIRIT] + " + " + (int) bonus[Globals.STAT_SPIRIT], 120 + 420 * j, 505);
-                g.drawString("ID: " + this.charsData[j].getUniqueID(), 120 + 420 * j, 535);
+                if (Globals.DEBUG_MODE) {
+                    g.drawString("ID: " + this.charsData[j].getUniqueID(), 120 + 420 * j, 535);
+                }
             }
         }
 
