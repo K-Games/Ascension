@@ -160,7 +160,7 @@ public class LogicModule extends Thread {
                 reset();
             }
         } catch (final Exception ex) {
-            Globals.log(ex.getLocalizedMessage(), ex, true);
+            Globals.logError(ex.getLocalizedMessage(), ex, true);
         }
     }
 
@@ -172,7 +172,7 @@ public class LogicModule extends Thread {
             try {
                 boss.getValue().join();
             } catch (final InterruptedException ex) {
-                Globals.log(ex.getLocalizedMessage(), ex, true);
+                Globals.logError(ex.getLocalizedMessage(), ex, true);
             }
         }
     }
@@ -193,7 +193,7 @@ public class LogicModule extends Thread {
                     sender.sendAll(bytes, this.room);
                 }
             } catch (final InterruptedException ex) {
-                Globals.log(ex.getLocalizedMessage(), ex, true);
+                Globals.logError(ex.getLocalizedMessage(), ex, true);
             }
         }
         removeDisconnectedPlayers(remove);
@@ -219,7 +219,7 @@ public class LogicModule extends Thread {
                     remove.add(p.getValue().getKey());
                 }
             } catch (final InterruptedException ex) {
-                Globals.log(ex.getLocalizedMessage(), ex, true);
+                Globals.logError(ex.getLocalizedMessage(), ex, true);
             }
         }
         removeProjectiles(remove);
@@ -376,7 +376,7 @@ public class LogicModule extends Thread {
                     }
                 }
             } catch (final Exception ex) {
-                Globals.log(ex.getLocalizedMessage(), ex, true);
+                Globals.logError(ex.getLocalizedMessage(), ex, true);
             }
         };
 
@@ -392,7 +392,7 @@ public class LogicModule extends Thread {
                     }
                 }
             } catch (final Exception ex) {
-                Globals.log(ex.getLocalizedMessage(), ex, true);
+                Globals.logError(ex.getLocalizedMessage(), ex, true);
             }
         };
 
@@ -405,7 +405,7 @@ public class LogicModule extends Thread {
                     }
                 }
             } catch (final Exception ex) {
-                Globals.log(ex.getLocalizedMessage(), ex, true);
+                Globals.logError(ex.getLocalizedMessage(), ex, true);
             }
         };
 
@@ -418,7 +418,7 @@ public class LogicModule extends Thread {
                     }
                 }
             } catch (final Exception ex) {
-                Globals.log(ex.getLocalizedMessage(), ex, true);
+                Globals.logError(ex.getLocalizedMessage(), ex, true);
             }
         };
 

@@ -39,9 +39,9 @@ public class PacketReceiver extends Thread {
                 threadPool.execute(new PacketHandler(packet));
             }
         } catch (final SocketException ex) {
-            Globals.log(ex.getLocalizedMessage(), ex, true);
+            Globals.logError(ex.getLocalizedMessage(), ex, true);
         } catch (final IOException ex) {
-            Globals.log(ex.getLocalizedMessage(), ex, true);
+            Globals.logError(ex.getLocalizedMessage(), ex, true);
         }
     }
 }

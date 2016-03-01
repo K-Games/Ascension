@@ -103,7 +103,7 @@ public class Main {
             packetReceiver.start();
 
         } catch (final Exception ex) {
-            Globals.log(ex.getLocalizedMessage(), ex, true);
+            Globals.logError(ex.getLocalizedMessage(), ex, true);
         }
     }
 

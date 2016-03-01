@@ -297,7 +297,7 @@ public class Globals {
             Files.createDirectories(Paths.get(LOG_DIR + "/" + DATALOG_FILE).getParent());
             Files.createFile(Paths.get(LOG_DIR + "/" + DATALOG_FILE));
         } catch (final IOException e) {
-            System.err.println(e);
+            Logger.getLogger(Globals.class.getName()).log(Level.SEVERE, null, e);
         }
     }
 
@@ -352,7 +352,7 @@ public class Globals {
         LOG_THREAD.execute(logging);
     }
 
-    public static final void log(final String ex, final Exception e, final boolean console) {
+    public static final void logError(final String ex, final Exception e, final boolean console) {
         final Runnable logging = () -> {
             final String logFile = ERRLOG_FILE;
             if (console) {
