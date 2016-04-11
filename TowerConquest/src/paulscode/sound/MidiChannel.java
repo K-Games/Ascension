@@ -362,9 +362,7 @@ public class MidiChannel implements MetaEventListener {
     }
 
     /**
-     * Fades out the volume of whatever sequence is currently playing, then begins playing the specified MIDI file at the previously assigned volume level. If the filenameURL parameter is null or
-     * empty, playback will simply fade out and stop. The miliseconds parameter must be non-negative or zero. This method will remove anything that is currently in the list of queued MIDI sequences
-     * that would have played next when current playback finished.
+     * Fades out the volume of whatever sequence is currently playing, then begins playing the specified MIDI file at the previously assigned volume level. If the filenameURL parameter is null or empty, playback will simply fade out and stop. The miliseconds parameter must be non-negative or zero. This method will remove anything that is currently in the list of queued MIDI sequences that would have played next when current playback finished.
      *
      * @param filenameURL MIDI file to play next, or null for none.
      * @param milis Number of miliseconds the fadeout should take.
@@ -401,9 +399,7 @@ public class MidiChannel implements MetaEventListener {
     }
 
     /**
-     * Fades out the volume of whatever sequence is currently playing, then fades the volume back in playing the specified MIDI file. Final volume after fade-in completes will be equal to the
-     * previously assigned volume level. The filenameURL parameter may not be null or empty. The miliseconds parameters must be non-negative or zero. This method will remove anything that is currently
-     * in the list of queued MIDI sequences that would have played next when current playback finished.
+     * Fades out the volume of whatever sequence is currently playing, then fades the volume back in playing the specified MIDI file. Final volume after fade-in completes will be equal to the previously assigned volume level. The filenameURL parameter may not be null or empty. The miliseconds parameters must be non-negative or zero. This method will remove anything that is currently in the list of queued MIDI sequences that would have played next when current playback finished.
      *
      * @param filenameURL MIDI file to play next, or null for none.
      * @param milisOut Number of miliseconds the fadeout should take.
@@ -441,8 +437,7 @@ public class MidiChannel implements MetaEventListener {
     }
 
     /**
-     * Resets this source's volume if it is fading out or in. Returns true if this source is currently in the process of fading out. When fade-out completes, this method transitions the source to the
-     * next sound in the sound sequence queue if there is one. This method has no effect on non-streaming sources.
+     * Resets this source's volume if it is fading out or in. Returns true if this source is currently in the process of fading out. When fade-out completes, this method transitions the source to the next sound in the sound sequence queue if there is one. This method has no effect on non-streaming sources.
      *
      * @return True if this source is in the process of fading out.
      */
@@ -710,8 +705,7 @@ public class MidiChannel implements MetaEventListener {
     }
 
     /**
-     * Changes the basic information about the MIDI source. This method removes any queued filenames/URLs from the list of MIDI sequences that would have played after the current sequence ended. The
-     * fourth parameter, 'identifier' should look like a filename, and it must have the correct extension (.mid or .midi).
+     * Changes the basic information about the MIDI source. This method removes any queued filenames/URLs from the list of MIDI sequences that would have played after the current sequence ended. The fourth parameter, 'identifier' should look like a filename, and it must have the correct extension (.mid or .midi).
      *
      * @param toLoop Should playback loop or play only once?
      * @param sourcename Unique identifier for this source.
@@ -1155,8 +1149,7 @@ public class MidiChannel implements MetaEventListener {
     }
 
     /**
-     * First attempts to load the specified "override MIDI synthesizer" if one was defined. If none was defined or unable to use it, then attempts to load the default synthesizer. If that fails, then
-     * other common synthesizers are attempted. If none can be loaded, then MIDI is not possible on this system.
+     * First attempts to load the specified "override MIDI synthesizer" if one was defined. If none was defined or unable to use it, then attempts to load the default synthesizer. If that fails, then other common synthesizers are attempted. If none can be loaded, then MIDI is not possible on this system.
      */
     private void getSynthesizer() {
         if (sequencer == null) {

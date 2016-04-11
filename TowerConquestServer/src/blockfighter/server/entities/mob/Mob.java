@@ -1,4 +1,4 @@
-package blockfighter.server.entities.boss;
+package blockfighter.server.entities.mob;
 
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
@@ -21,7 +21,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  *
  * @author Ken Kwan
  */
-public abstract class Boss extends Thread implements GameEntity {
+public abstract class Mob extends Thread implements GameEntity {
 
     public final static int NUM_STATS = 3;
     public final static byte STAT_LEVEL = 0,
@@ -32,14 +32,14 @@ public abstract class Boss extends Thread implements GameEntity {
             STATE_WALK = 0x01,
             STATE_JUMP = 0x02;
 
-    public final static byte BOSS_LIGHTNING = 0x00;
+    public final static byte MOB_BOSS_LIGHTNING = 0x00;
 
     protected final byte key;
     protected final LogicModule logic;
     protected double x, y, ySpeed, xSpeed;
     protected boolean isFalling = false, isDead = false;
     protected boolean updatePos = false, updateFacing = false, updateAnimState = false;
-    protected byte bossState, animState, facing, frame;
+    protected byte mobState, animState, facing, frame;
     protected Rectangle2D.Double hitbox;
     protected double[] stats = new double[NUM_STATS];
 
@@ -62,7 +62,7 @@ public abstract class Boss extends Thread implements GameEntity {
     protected int skillCounter = 0;
     protected byte type;
 
-    public Boss(final LogicModule l, final byte key, final GameMap map, final double x, final double y) {
+    public Mob(final LogicModule l, final byte key, final GameMap map, final double x, final double y) {
         this.logic = l;
         this.key = key;
         this.x = x;
@@ -70,7 +70,7 @@ public abstract class Boss extends Thread implements GameEntity {
         this.hitbox = new Rectangle2D.Double(x - 50, y - 180, 100, 180);
         this.map = map;
         this.facing = Globals.RIGHT;
-        this.bossState = STATE_STAND;
+        this.mobState = STATE_STAND;
         this.frame = 0;
         for (byte i = -128; i < 127; i++) {
             this.buffKeys.add(i);
@@ -218,9 +218,9 @@ public abstract class Boss extends Thread implements GameEntity {
     @Override
     public abstract void update();
 
-    public void updateBossState() {
-        if (this.nextState != null && this.bossState != this.nextState) {
-            setBossState(this.nextState);
+    public void updateMobState() {
+        if (this.nextState != null && this.mobState != this.nextState) {
+            setMobState(this.nextState);
             this.nextState = null;
         }
     }
@@ -267,7 +267,7 @@ public abstract class Boss extends Thread implements GameEntity {
         if (Globals.nsToMs(this.logic.getTime() - this.lastHPSend) >= 150) {
             final byte[] minHP = Globals.intToByte((int) (this.stats[STAT_MINHP] / this.stats[STAT_MAXHP] * 10000));
             final byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT];
-            bytes[0] = Globals.DATA_BOSS_GET_STAT;
+            bytes[0] = Globals.DATA_MOB_GET_STAT;
             bytes[1] = this.key;
             bytes[2] = STAT_MINHP;
             System.arraycopy(minHP, 0, bytes, 3, minHP.length);
@@ -389,19 +389,19 @@ public abstract class Boss extends Thread implements GameEntity {
         return true;
     }
 
-    public void queueBossState(final byte newState) {
+    public void queueMobState(final byte newState) {
         this.nextState = newState;
     }
 
-    public void setBossState(final byte newState) {
-        this.bossState = newState;
+    public void setMobState(final byte newState) {
+        this.mobState = newState;
         this.frame = 0;
         this.updateAnimState = true;
     }
 
     public void sendPos() {
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 2 + Globals.PACKET_INT * 2];
-        bytes[0] = Globals.DATA_BOSS_SET_POS;
+        bytes[0] = Globals.DATA_MOB_SET_POS;
         bytes[1] = this.key;
         final byte[] posXInt = Globals.intToByte((int) this.x);
         bytes[2] = posXInt[0];
@@ -419,7 +419,7 @@ public abstract class Boss extends Thread implements GameEntity {
 
     public void sendFacing() {
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
-        bytes[0] = Globals.DATA_BOSS_SET_FACING;
+        bytes[0] = Globals.DATA_MOB_SET_FACING;
         bytes[1] = this.key;
         bytes[2] = this.facing;
         sender.sendAll(bytes, this.logic.getRoom());
@@ -428,7 +428,7 @@ public abstract class Boss extends Thread implements GameEntity {
 
     public void sendState() {
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 4];
-        bytes[0] = Globals.DATA_BOSS_SET_STATE;
+        bytes[0] = Globals.DATA_MOB_SET_STATE;
         bytes[1] = this.key;
         bytes[2] = this.animState;
         bytes[3] = this.frame;
@@ -458,9 +458,9 @@ public abstract class Boss extends Thread implements GameEntity {
         sender.sendAll(bytes, this.logic.getRoom());
     }
 
-    public static void sendBossParticle(final byte key, final byte room, final byte particleID, final double x, final double y) {
+    public static void sendMobParticle(final byte key, final byte room, final byte particleID, final double x, final double y) {
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT * 2];
-        bytes[0] = Globals.DATA_BOSS_PARTICLE_EFFECT;
+        bytes[0] = Globals.DATA_MOB_PARTICLE_EFFECT;
         bytes[1] = key;
         bytes[2] = particleID;
         final byte[] posXInt = Globals.intToByte((int) x);

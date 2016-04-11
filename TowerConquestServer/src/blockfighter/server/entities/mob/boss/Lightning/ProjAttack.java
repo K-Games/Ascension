@@ -1,9 +1,9 @@
-package blockfighter.server.entities.boss.Lightning;
+package blockfighter.server.entities.mob.boss.Lightning;
 
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
-import blockfighter.server.entities.boss.Boss;
-import blockfighter.server.entities.boss.BossProjectile;
+import blockfighter.server.entities.mob.Mob;
+import blockfighter.server.entities.mob.MobProjectile;
 import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.player.Player;
 import java.awt.geom.Rectangle2D;
@@ -13,7 +13,7 @@ import java.awt.geom.Rectangle2D;
  *
  * @author Ken Kwan
  */
-public class ProjAttack extends BossProjectile {
+public class ProjAttack extends MobProjectile {
 
     /**
      * Projectile of Sword Skill Defensive Impact.
@@ -24,7 +24,7 @@ public class ProjAttack extends BossProjectile {
      * @param x Spawn x-coordinate
      * @param y Spawn y-coordinate
      */
-    public ProjAttack(final LogicModule l, final int k, final Boss o, final double x, final double y) {
+    public ProjAttack(final LogicModule l, final int k, final Mob o, final double x, final double y) {
         super(l, k, o, x, y, 200);
         this.hitbox = new Rectangle2D.Double[1];
         if (o.getFacing() == Globals.RIGHT) {
@@ -39,8 +39,8 @@ public class ProjAttack extends BossProjectile {
         while (!this.playerQueue.isEmpty()) {
             final Player p = this.playerQueue.poll();
             if (p != null && !p.isDead()) {
-                final int damage = (int) (70 * Math.pow(getBossOwner().getStats()[Boss.STAT_LEVEL], 1.7));
-                p.queueDamage(new Damage(damage, false, getBossOwner(), p, this.hitbox[0], p.getHitbox()));
+                final int damage = (int) (70 * Math.pow(getMobOwner().getStats()[Mob.STAT_LEVEL], 1.7));
+                p.queueDamage(new Damage(damage, false, getMobOwner(), p, this.hitbox[0], p.getHitbox()));
             }
         }
         this.queuedEffect = false;

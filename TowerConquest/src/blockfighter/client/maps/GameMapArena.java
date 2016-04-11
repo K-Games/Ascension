@@ -3,7 +3,6 @@ package blockfighter.client.maps;
 import blockfighter.client.Globals;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
 
 /**
  * PvP map
@@ -46,9 +45,15 @@ public class GameMapArena extends GameMap {
 
     @Override
     public void loadAssets() throws Exception {
-        this.bg = ImageIO.read(Globals.class.getResourceAsStream("sprites/maps/" + getMapID() + "/bg.png"));
+        this.bg = Globals.loadTextureResource("sprites/maps/" + getMapID() + "/bg.png");
+        if (this.bg == null) {
+            throw new NullPointerException("Failed to load map " + getMapID() + " bg.");
+        }
         for (int i = 0; i < this.platforms.length; i++) {
-            this.platforms[i] = ImageIO.read(Globals.class.getResourceAsStream("sprites/maps/" + getMapID() + "/plat" + i + ".png"));
+            this.platforms[i] = Globals.loadTextureResource("sprites/maps/" + getMapID() + "/plat" + i + ".png");
+            if (this.platforms[i] == null) {
+                throw new NullPointerException("Failed to load platform texture. Map " + getMapID() + " Plat " + i + ".");
+            }
         }
         int random = Globals.rng(3);
         switch (random) {

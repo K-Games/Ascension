@@ -1,4 +1,4 @@
-package blockfighter.client.entities.boss.Lightning;
+package blockfighter.client.entities.mob.boss.Lightning;
 
 import blockfighter.client.Globals;
 import blockfighter.client.entities.particles.Particle;

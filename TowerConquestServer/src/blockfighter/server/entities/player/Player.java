@@ -3,7 +3,7 @@ package blockfighter.server.entities.player;
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.GameEntity;
-import blockfighter.server.entities.boss.Boss;
+import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.buff.Buff;
 import blockfighter.server.entities.buff.BuffDmgIncrease;
 import blockfighter.server.entities.buff.BuffDmgReduct;
@@ -840,7 +840,7 @@ public class Player extends Thread implements GameEntity {
             sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_PHANTOM, getX(), getY(), this.facing);
         }
 
-        if (hasPastDuration(duration, 150 + 150 * this.skillCounter) && this.skillCounter < numHits) {
+        if (hasPastDuration(duration, 80 + 80 * this.skillCounter) && this.skillCounter < numHits) {
             if (map.isPvP()) {
                 Player target;
                 ArrayList<Player> playersInRange = new ArrayList<>(Globals.SERVER_MAX_PLAYERS);
@@ -866,10 +866,10 @@ public class Player extends Thread implements GameEntity {
                     endPhantom = true;
                 }
             } else {
-                Boss target;
-                ArrayList<Boss> enemyInRange = new ArrayList<>(Globals.SERVER_MAX_PLAYERS);
-                for (final Map.Entry<Byte, Boss> bEntry : this.logic.getBosses().entrySet()) {
-                    final Boss b = bEntry.getValue();
+                Mob target;
+                ArrayList<Mob> enemyInRange = new ArrayList<>(Globals.SERVER_MAX_PLAYERS);
+                for (final Map.Entry<Byte, Mob> bEntry : this.logic.getMobs().entrySet()) {
+                    final Mob b = bEntry.getValue();
                     double distance = Math.sqrt(Math.pow((this.x - b.getX()), 2) + Math.pow((this.y - b.getY()), 2));
                     if (distance <= radius) {
                         enemyInRange.add(b);
@@ -1197,8 +1197,8 @@ public class Player extends Thread implements GameEntity {
         }
     }
 
-    private void updateSkillEnd(final int duration, final int endTime, final boolean stunCancel, final boolean kbCancel) {
-        if (duration >= endTime || (stunCancel && isStunned() || (kbCancel && isKnockback()))) {
+    private void updateSkillEnd(final int currentSkillDuration, final int skillEndDuration, final boolean isCanceledByStun, final boolean isCanceledByKnockback) {
+        if (currentSkillDuration >= skillEndDuration || (isCanceledByStun && isStunned() || (isCanceledByKnockback && isKnockback()))) {
             setPlayerState(PLAYER_STATE_STAND);
         }
     }
@@ -1786,11 +1786,11 @@ public class Player extends Thread implements GameEntity {
                             dmg.getDmgPoint());
                     shadow.setHidden(true);
                     dmg.getTarget().queueDamage(shadow);
-                } else if (dmg.getBossTarget() != null) {
-                    final Damage shadow = new Damage((int) (dmg.getDamage() * 0.5D), false, dmg.getOwner(), dmg.getBossTarget(), false,
+                } else if (dmg.getMobTarget() != null) {
+                    final Damage shadow = new Damage((int) (dmg.getDamage() * 0.5D), false, dmg.getOwner(), dmg.getMobTarget(), false,
                             dmg.getDmgPoint());
                     shadow.setHidden(true);
-                    dmg.getBossTarget().queueDamage(shadow);
+                    dmg.getMobTarget().queueDamage(shadow);
                 }
             }
         }
@@ -2159,7 +2159,7 @@ public class Player extends Thread implements GameEntity {
             sender.sendPlayer(bytes, dmg.getOwner());
 
             final byte[] pvpBytes = Arrays.copyOf(bytes, bytes.length);
-            pvpBytes[1] = Globals.NUMBER_TYPE_BOSS;
+            pvpBytes[1] = Globals.NUMBER_TYPE_MOB;
             sender.sendPlayer(pvpBytes, this);
         } else {
             sender.sendAll(bytes, this.logic.getRoom());

@@ -2,7 +2,7 @@ package blockfighter.server.entities.proj;
 
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
-import blockfighter.server.entities.boss.Boss;
+import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.buff.BuffKnockback;
 import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.player.Player;
@@ -50,8 +50,8 @@ public class ProjSwordTaunt extends Projectile {
                 p.queueBuff(new BuffKnockback(this.logic, 300, (owner.getFacing() == Globals.RIGHT) ? 1 : -1, -4, owner, p));
             }
         }
-        while (!this.bossQueue.isEmpty()) {
-            final Boss b = this.bossQueue.poll();
+        while (!this.mobQueue.isEmpty()) {
+            final Mob b = this.mobQueue.poll();
             final Player owner = getOwner();
             if (b != null && !b.isDead()) {
                 int damage = (int) (owner.rollDamage() * (6 + 0.2 * owner.getSkillLevel(Skill.SWORD_TAUNT)));

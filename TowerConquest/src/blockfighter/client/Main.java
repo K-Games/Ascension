@@ -1,6 +1,6 @@
 package blockfighter.client;
 
-import blockfighter.client.entities.boss.Boss;
+import blockfighter.client.entities.mob.Mob;
 import blockfighter.client.entities.ingamenumber.IngameNumber;
 import blockfighter.client.entities.items.ItemEquip;
 import blockfighter.client.entities.particles.Particle;
@@ -45,7 +45,7 @@ public class Main {
         KeyHandler.init();
         MouseHandler.init();
         Player.init();
-        Boss.init();
+        Mob.init();
         PacketHandler.init();
         PacketReceiver.init();
         IngameNumber.init();

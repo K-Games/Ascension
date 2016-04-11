@@ -2,7 +2,7 @@ package blockfighter.server.maps;
 
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
-import blockfighter.server.entities.boss.Boss;
+import blockfighter.server.entities.mob.Mob;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
@@ -105,7 +105,7 @@ public abstract class GameMap {
         return this.isPvP;
     }
 
-    public abstract Boss[] getBosses(LogicModule l);
+    public abstract Mob[] getMobs(LogicModule l);
 
     public Point2D.Double getRandomSpawnPoint() {
         if (this.spawnPoints == null) {

@@ -5,7 +5,6 @@ import blockfighter.client.LogicModule;
 import blockfighter.client.Main;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
 
 /**
  *
@@ -150,8 +149,7 @@ public abstract class Particle extends Thread {
             if (PARTICLE_SPRITE_FOLDER[spriteID] != null && PARTICLE_FRAMES[spriteID] > 0) {
                 PARTICLE_SPRITE[spriteID] = new BufferedImage[PARTICLE_FRAMES[spriteID]];
                 for (int frame = 0; frame < PARTICLE_SPRITE[spriteID].length; frame++) {
-                    PARTICLE_SPRITE[spriteID][frame] = ImageIO
-                            .read(Globals.class.getResourceAsStream("sprites/particle/" + PARTICLE_SPRITE_FOLDER[spriteID] + "/" + frame + ".png"));
+                    PARTICLE_SPRITE[spriteID][frame] = Globals.loadTextureResource("sprites/particle/" + PARTICLE_SPRITE_FOLDER[spriteID] + "/" + frame + ".png");
                 }
             }
         }

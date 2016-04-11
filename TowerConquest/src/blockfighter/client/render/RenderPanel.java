@@ -42,7 +42,7 @@ public class RenderPanel extends JPanel {
         } else {
             g2d = (Graphics2D) g;
         }
-        
+
         super.paintComponent(g2d);
         if (this.screen != null) {
             this.screen.draw(g2d);

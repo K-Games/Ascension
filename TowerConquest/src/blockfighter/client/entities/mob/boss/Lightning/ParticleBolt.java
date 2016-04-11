@@ -1,11 +1,10 @@
-package blockfighter.client.entities.boss.Lightning;
+package blockfighter.client.entities.mob.boss.Lightning;
 
 import blockfighter.client.Globals;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.client.screen.ScreenIngame;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
 
 public class ParticleBolt extends Particle {
 
@@ -30,10 +29,7 @@ public class ParticleBolt extends Particle {
         }
         SPRITE = new BufferedImage[8];
         for (int i = 0; i < SPRITE.length; i++) {
-            try {
-                SPRITE[i] = ImageIO.read(Globals.class.getResourceAsStream("sprites/boss/lightning/particle/bolt/" + i + ".png"));
-            } catch (final Exception ex) {
-            }
+            SPRITE[i] = Globals.loadTextureResource("sprites/mob/bosslightning/particle/bolt/" + i + ".png");
         }
     }
 

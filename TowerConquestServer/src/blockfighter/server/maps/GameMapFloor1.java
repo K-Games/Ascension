@@ -2,8 +2,8 @@ package blockfighter.server.maps;
 
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
-import blockfighter.server.entities.boss.Boss;
-import blockfighter.server.entities.boss.Lightning.BossLightning;
+import blockfighter.server.entities.mob.Mob;
+import blockfighter.server.entities.mob.boss.Lightning.BossLightning;
 import java.awt.geom.Rectangle2D;
 
 public class GameMapFloor1 extends GameMap {
@@ -25,9 +25,9 @@ public class GameMapFloor1 extends GameMap {
     }
 
     @Override
-    public Boss[] getBosses(final LogicModule l) {
-        final Boss[] bosses = new Boss[1];
-        bosses[0] = new BossLightning(l, (byte) 0, this, 1500, 500);
-        return bosses;
+    public Mob[] getMobs(final LogicModule l) {
+        final Mob[] mobs = new Mob[1];
+        mobs[0] = new BossLightning(l, (byte) 0, this, 1500, 500);
+        return mobs;
     }
 }

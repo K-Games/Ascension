@@ -5,7 +5,6 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
-import javax.imageio.ImageIO;
 
 /**
  *
@@ -30,11 +29,7 @@ public class ItemUpgrade implements Item {
     }
 
     public static void loadItemIcon(final int code) {
-        BufferedImage icon = null;
-        try {
-            icon = ImageIO.read(Globals.class.getResourceAsStream("sprites/upgrade/" + code + ".png"));
-        } catch (final Exception ex) {
-        }
+        BufferedImage icon = Globals.loadTextureResource("sprites/upgrade/" + code + ".png");
         ITEM_ICONS.put(code, icon);
     }
 

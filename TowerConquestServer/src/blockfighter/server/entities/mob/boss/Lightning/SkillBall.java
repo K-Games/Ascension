@@ -1,4 +1,4 @@
-package blockfighter.server.entities.boss.Lightning;
+package blockfighter.server.entities.mob.boss.Lightning;
 
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.player.skills.Skill;

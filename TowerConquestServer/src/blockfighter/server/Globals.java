@@ -42,7 +42,7 @@ public class Globals {
             GAME_UPDATE_NUMBER = 19;
     private final static String GAME_DEV_STATE = "ALPHA";
 
-    public final static String GAME_RELEASE_VERSION = GAME_DEV_STATE + " " + GAME_MAJOR_VERSION + "." + GAME_MINOR_VERSION + "u"
+    public final static String GAME_RELEASE_VERSION = GAME_DEV_STATE + " " + GAME_MAJOR_VERSION + "." + GAME_MINOR_VERSION + "."
             + GAME_UPDATE_NUMBER;
 
     public final static String WINDOW_TITLE = "Tower Conquest Server " + GAME_RELEASE_VERSION;
@@ -225,18 +225,18 @@ public class Globals {
             DATA_PLAYER_SET_COOLDOWN = 0x0E,
             DATA_NUMBER = 0x0F,
             DATA_PLAYER_GIVEEXP = 0x10,
-            DATA_BOSS_SET_POS = 0x11,
-            DATA_BOSS_SET_FACING = 0x12,
-            DATA_BOSS_SET_STATE = 0x13,
-            DATA_BOSS_PARTICLE_EFFECT = 0x14,
-            DATA_BOSS_SET_TYPE = 0x15,
-            DATA_BOSS_GET_STAT = 0x16,
+            DATA_MOB_SET_POS = 0x11,
+            DATA_MOB_SET_FACING = 0x12,
+            DATA_MOB_SET_STATE = 0x13,
+            DATA_MOB_PARTICLE_EFFECT = 0x14,
+            DATA_MOB_SET_TYPE = 0x15,
+            DATA_MOB_GET_STAT = 0x16,
             DATA_PLAYER_GIVEDROP = 0x17,
             DATA_PLAYER_CREATE = 0x18;
 
     public static final byte NUMBER_TYPE_PLAYER = 0,
             NUMBER_TYPE_PLAYERCRIT = 1,
-            NUMBER_TYPE_BOSS = 2,
+            NUMBER_TYPE_MOB = 2,
             NUMBER_TYPE_EXP = 3;
 
     static {

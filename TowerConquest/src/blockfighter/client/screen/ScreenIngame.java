@@ -2,7 +2,7 @@ package blockfighter.client.screen;
 
 import blockfighter.client.Globals;
 import blockfighter.client.SaveData;
-import blockfighter.client.entities.boss.Boss;
+import blockfighter.client.entities.mob.Mob;
 import blockfighter.client.entities.ingamenumber.IngameNumber;
 import blockfighter.client.entities.items.ItemEquip;
 import blockfighter.client.entities.particles.Particle;
@@ -79,7 +79,7 @@ public class ScreenIngame extends Screen {
     private final ConcurrentLinkedQueue<byte[]> dataQueue = new ConcurrentLinkedQueue<>();
     private final DecimalFormat df = new DecimalFormat("0.0");
     private final ConcurrentHashMap<Byte, Player> players;
-    private final ConcurrentHashMap<Byte, Boss> bosses = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Byte, Mob> mobs = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Integer, Particle> particles = new ConcurrentHashMap<>(500, 0.9f, 1);
     private final ConcurrentHashMap<Integer, IngameNumber> dmgNum = new ConcurrentHashMap<>(500, 0.9f, 1);
 
@@ -158,7 +158,7 @@ public class ScreenIngame extends Screen {
         if (now - this.lastUpdateTime >= Globals.LOGIC_UPDATE) {
             updateParticles(this.particles);
             updatePlayers();
-            updateBosses();
+            updateMobs();
             if (this.players.containsKey(this.myKey)) {
                 logic.setSoundLisenterPos(this.players.get(this.myKey).getX(), this.players.get(this.myKey).getY());
             }
@@ -228,11 +228,11 @@ public class ScreenIngame extends Screen {
         }
     }
 
-    private void updateBosses() {
-        for (final Map.Entry<Byte, Boss> pEntry : this.bosses.entrySet()) {
+    private void updateMobs() {
+        for (final Map.Entry<Byte, Mob> pEntry : this.mobs.entrySet()) {
             threadPool.execute(pEntry.getValue());
         }
-        for (final Map.Entry<Byte, Boss> pEntry : this.bosses.entrySet()) {
+        for (final Map.Entry<Byte, Mob> pEntry : this.mobs.entrySet()) {
             try {
                 pEntry.getValue().join();
             } catch (final InterruptedException ex) {
@@ -269,8 +269,8 @@ public class ScreenIngame extends Screen {
         }
         this.map.draw(g);
 
-        if (this.bosses != null) {
-            for (final Map.Entry<Byte, Boss> pEntry : this.bosses.entrySet()) {
+        if (this.mobs != null) {
+            for (final Map.Entry<Byte, Mob> pEntry : this.mobs.entrySet()) {
                 pEntry.getValue().draw(g);
             }
         }
@@ -447,23 +447,23 @@ public class ScreenIngame extends Screen {
                 case Globals.DATA_PLAYER_GIVEEXP:
                     dataPlayerGiveEXP(data);
                     break;
-                case Globals.DATA_BOSS_GET_STAT:
-                    dataBossGetStat(data);
+                case Globals.DATA_MOB_GET_STAT:
+                    dataMobGetStat(data);
                     break;
-                case Globals.DATA_BOSS_PARTICLE_EFFECT:
-                    dataBossParticleEffect(data);
+                case Globals.DATA_MOB_PARTICLE_EFFECT:
+                    dataMobParticleEffect(data);
                     break;
-                case Globals.DATA_BOSS_SET_POS:
-                    dataBossSetPos(data);
+                case Globals.DATA_MOB_SET_POS:
+                    dataMobSetPos(data);
                     break;
-                case Globals.DATA_BOSS_SET_FACING:
-                    dataBossSetFacing(data);
+                case Globals.DATA_MOB_SET_FACING:
+                    dataMobSetFacing(data);
                     break;
-                case Globals.DATA_BOSS_SET_STATE:
-                    dataBossSetState(data);
+                case Globals.DATA_MOB_SET_STATE:
+                    dataMobSetState(data);
                     break;
-                case Globals.DATA_BOSS_SET_TYPE:
-                    dataBossSetType(data);
+                case Globals.DATA_MOB_SET_TYPE:
+                    dataMobSetType(data);
                     break;
                 case Globals.DATA_PLAYER_GIVEDROP:
                     dataPlayerGiveDrop(data);
@@ -847,63 +847,63 @@ public class ScreenIngame extends Screen {
         }
     }
 
-    private void dataBossParticleEffect(final byte[] data) {
+    private void dataMobParticleEffect(final byte[] data) {
         final byte key = data[1];
-        if (this.bosses.containsKey(key)) {
-            this.bosses.get(key).addParticle(data);
+        if (this.mobs.containsKey(key)) {
+            this.mobs.get(key).addParticle(data);
         }
     }
 
-    private void dataBossSetType(final byte[] data) {
+    private void dataMobSetType(final byte[] data) {
         final byte key = data[1], type = data[2];
-        if (!this.bosses.containsKey(key)) {
+        if (!this.mobs.containsKey(key)) {
             final int x = Globals.bytesToInt(Arrays.copyOfRange(data, 3, 7));
             final int y = Globals.bytesToInt(Arrays.copyOfRange(data, 7, 11));
-            this.bosses.put(key, Boss.spawnBoss(type, key, x, y));
+            this.mobs.put(key, Mob.spawnMob(type, key, x, y));
         }
     }
 
-    private void dataBossSetPos(final byte[] data) {
+    private void dataMobSetPos(final byte[] data) {
         final byte key = data[1];
-        if (this.bosses.containsKey(key)) {
+        if (this.mobs.containsKey(key)) {
             final int x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
             final int y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
-            this.bosses.get(key).setPos(x, y);
+            this.mobs.get(key).setPos(x, y);
         } else {
-            logic.sendSetBossType(key);
+            logic.sendSetMobType(key);
         }
     }
 
-    private void dataBossSetFacing(final byte[] data) {
+    private void dataMobSetFacing(final byte[] data) {
         final byte key = data[1];
-        if (this.bosses.containsKey(key)) {
+        if (this.mobs.containsKey(key)) {
             final byte facing = data[2];
-            this.bosses.get(key).setFacing(facing);
+            this.mobs.get(key).setFacing(facing);
         } else {
-            logic.sendSetBossType(key);
+            logic.sendSetMobType(key);
         }
     }
 
-    private void dataBossSetState(final byte[] data) {
+    private void dataMobSetState(final byte[] data) {
         final byte key = data[1];
-        if (this.bosses.containsKey(key)) {
+        if (this.mobs.containsKey(key)) {
             final byte state = data[2];
             final byte frame = data[3];
-            this.bosses.get(key).setState(state);
-            this.bosses.get(key).setFrame(frame);
+            this.mobs.get(key).setState(state);
+            this.mobs.get(key).setFrame(frame);
         } else {
-            logic.sendSetBossType(key);
+            logic.sendSetMobType(key);
         }
     }
 
-    private void dataBossGetStat(final byte[] data) {
+    private void dataMobGetStat(final byte[] data) {
         final byte key = data[1];
-        if (this.bosses.containsKey(key)) {
+        if (this.mobs.containsKey(key)) {
             final byte stat = data[2];
             final int amount = Globals.bytesToInt(Arrays.copyOfRange(data, 3, 7));
-            this.bosses.get(key).setStat(stat, amount);
+            this.mobs.get(key).setStat(stat, amount);
         } else {
-            logic.sendSetBossType(key);
+            logic.sendSetMobType(key);
         }
     }
 
@@ -1133,8 +1133,8 @@ public class ScreenIngame extends Screen {
     public void unload() {
         Particle.unloadParticles();
         ItemEquip.unloadSprites();
-        for (final Map.Entry<Byte, Boss> bossEntry : this.bosses.entrySet()) {
-            bossEntry.getValue().unload();
+        for (final Map.Entry<Byte, Mob> mobEntry : this.mobs.entrySet()) {
+            mobEntry.getValue().unload();
         }
     }
 

@@ -10,12 +10,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import javax.imageio.ImageIO;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.LineIterator;
 import org.apache.commons.lang3.StringUtils;
-import java.util.List;
 
 /**
  *
@@ -64,7 +63,7 @@ public class ItemEquip implements Item {
         ITEM_NAMES = new HashMap<>(ITEM_CODES.size());
         ITEM_ICONS = new HashMap<>(ITEM_CODES.size());
         ITEM_DESC = new HashMap<>(ITEM_CODES.size());
-        loadItemDetails();
+        loadItemData();
         loadItemDrawOffset();
     }
 
@@ -100,7 +99,7 @@ public class ItemEquip implements Item {
 
     private static void loadItemCodes() {
         try {
-            InputStream itemFile = Globals.class.getResourceAsStream("itemdata/equip/itemcodes.txt");
+            InputStream itemFile = Globals.loadResourceAsStream("itemdata/equip/itemcodes.txt");
             LineIterator it = IOUtils.lineIterator(itemFile, "UTF-8");
             try {
                 while (it.hasNext()) {
@@ -120,14 +119,14 @@ public class ItemEquip implements Item {
         }
     }
 
-    private static void loadItemDetails() {
+    private static void loadItemData() {
         System.out.println("Loading Item Data...");
         System.out.print("[");
         for (final Map.Entry<Integer, Integer> itemEntry : ITEM_CODES.entrySet()) {
             final int itemCode = itemEntry.getValue();
             System.out.print(itemCode + ",");
             try {
-                InputStream itemFile = Globals.class.getResourceAsStream("itemdata/equip/" + itemCode + ".txt");
+                InputStream itemFile = Globals.loadResourceAsStream("itemdata/equip/" + itemCode + ".txt");
                 List<String> fileLines = IOUtils.readLines(itemFile);
                 String[] data = fileLines.toArray(new String[fileLines.size()]);
                 for (int i = 0; i < data.length; i++) {
@@ -200,11 +199,7 @@ public class ItemEquip implements Item {
     }
 
     public static void loadItemIcon(final int code) {
-        BufferedImage icon = null;
-        try {
-            icon = ImageIO.read(Globals.class.getResourceAsStream("sprites/equip/" + code + "/icon.png"));
-        } catch (final Exception ex) {
-        }
+        BufferedImage icon = Globals.loadTextureResource("sprites/equip/" + code + "/icon.png");
         ITEM_ICONS.put(code, icon);
     }
 
@@ -238,11 +233,7 @@ public class ItemEquip implements Item {
                             folder = "jump";
                             break;
                     }
-                    try {
-                        load[state][frames] = ImageIO
-                                .read(Globals.class.getResourceAsStream("sprites/equip/" + code + "/mainhand/" + folder + "/" + frames + ".png"));
-                    } catch (final Exception ex) {
-                    }
+                    load[state][frames] = Globals.loadTextureResource("sprites/equip/" + code + "/mainhand/" + folder + "/" + frames + ".png");
                 }
             }
         }
@@ -279,11 +270,7 @@ public class ItemEquip implements Item {
                             folder = "jump";
                             break;
                     }
-                    try {
-                        load[state][frames] = ImageIO
-                                .read(Globals.class.getResourceAsStream("sprites/equip/" + code + "/offhand/" + folder + "/" + frames + ".png"));
-                    } catch (final Exception ex) {
-                    }
+                    load[state][frames] = Globals.loadTextureResource("sprites/equip/" + code + "/offhand/" + folder + "/" + frames + ".png");
                 }
             }
         }

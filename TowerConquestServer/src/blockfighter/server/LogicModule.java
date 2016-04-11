@@ -1,6 +1,6 @@
 package blockfighter.server;
 
-import blockfighter.server.entities.boss.Boss;
+import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.proj.Projectile;
 import blockfighter.server.maps.GameMap;
@@ -28,7 +28,7 @@ public class LogicModule extends Thread {
 
     private final ConcurrentHashMap<Byte, Player> players = new ConcurrentHashMap<>(Globals.SERVER_MAX_PLAYERS, 0.9f,
             Math.max(Globals.SERVER_MAX_PLAYERS / 5, 3));
-    private final ConcurrentHashMap<Byte, Boss> bosses = new ConcurrentHashMap<>(1, 0.9f, 1);
+    private final ConcurrentHashMap<Byte, Mob> mobs = new ConcurrentHashMap<>(1, 0.9f, 1);
     private final ConcurrentHashMap<Integer, Projectile> projectiles = new ConcurrentHashMap<>(500, 0.75f, 3);
 
     private GameMap map;
@@ -91,7 +91,7 @@ public class LogicModule extends Thread {
 
     public void reset() {
         this.players.clear();
-        this.bosses.clear();
+        this.mobs.clear();
         this.projectiles.clear();
         this.projKeys.clear();
         this.playerKeys.clear();
@@ -129,11 +129,11 @@ public class LogicModule extends Thread {
             if (this.players.isEmpty()) {
                 return;
             }
-            if (this.bosses.isEmpty()) {
-                final Boss[] newBosses = this.map.getBosses(this);
-                if (newBosses != null) {
-                    for (final Boss b : newBosses) {
-                        this.bosses.put(b.getKey(), b);
+            if (this.mobs.isEmpty()) {
+                final Mob[] newMobs = this.map.getMobs(this);
+                if (newMobs != null) {
+                    for (final Mob b : newMobs) {
+                        this.mobs.put(b.getKey(), b);
                     }
                 }
             }
@@ -141,7 +141,7 @@ public class LogicModule extends Thread {
 
             if (currentTime - this.lastUpdateTime >= Globals.LOGIC_UPDATE) {
                 updatePlayers();
-                updateBosses();
+                updateMobs();
                 updateProjectiles();
                 this.lastUpdateTime = currentTime;
             }
@@ -153,8 +153,8 @@ public class LogicModule extends Thread {
                 this.lastRefreshAll = nowMs;
             }
 
-            for (final Map.Entry<Byte, Boss> boss : this.bosses.entrySet()) {
-                fin = boss.getValue().isDead();
+            for (final Map.Entry<Byte, Mob> mob : this.mobs.entrySet()) {
+                fin = mob.getValue().isDead();
             }
             if (fin) {
                 reset();
@@ -164,13 +164,13 @@ public class LogicModule extends Thread {
         }
     }
 
-    private void updateBosses() {
-        for (final Map.Entry<Byte, Boss> boss : this.bosses.entrySet()) {
-            LOGIC_THREAD_POOL.execute(boss.getValue());
+    private void updateMobs() {
+        for (final Map.Entry<Byte, Mob> mob : this.mobs.entrySet()) {
+            LOGIC_THREAD_POOL.execute(mob.getValue());
         }
-        for (final Map.Entry<Byte, Boss> boss : this.bosses.entrySet()) {
+        for (final Map.Entry<Byte, Mob> mob : this.mobs.entrySet()) {
             try {
-                boss.getValue().join();
+                mob.getValue().join();
             } catch (final InterruptedException ex) {
                 Globals.logError(ex.getLocalizedMessage(), ex, true);
             }
@@ -242,8 +242,8 @@ public class LogicModule extends Thread {
         return this.players;
     }
 
-    public ConcurrentHashMap<Byte, Boss> getBosses() {
-        return this.bosses;
+    public ConcurrentHashMap<Byte, Mob> getMobs() {
+        return this.mobs;
     }
 
     /**

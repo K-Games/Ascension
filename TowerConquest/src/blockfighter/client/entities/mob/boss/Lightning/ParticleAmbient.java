@@ -1,10 +1,9 @@
-package blockfighter.client.entities.boss.Lightning;
+package blockfighter.client.entities.mob.boss.Lightning;
 
 import blockfighter.client.Globals;
 import blockfighter.client.entities.particles.Particle;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
 
 public class ParticleAmbient extends Particle {
 
@@ -35,10 +34,7 @@ public class ParticleAmbient extends Particle {
         }
         SPRITE = new BufferedImage[72];
         for (int i = 0; i < SPRITE.length; i++) {
-            try {
-                SPRITE[i] = ImageIO.read(Globals.class.getResourceAsStream("sprites/boss/lightning/particle/ambient/" + i + ".png"));
-            } catch (final Exception ex) {
-            }
+            SPRITE[i] = Globals.loadTextureResource("sprites/mob/bosslightning/particle/ambient/" + i + ".png");
         }
     }
 
