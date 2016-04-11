@@ -11,6 +11,7 @@ public class SkillPassiveTactical extends Skill {
     public SkillPassiveTactical(final LogicModule l) {
         super(l);
         this.skillCode = PASSIVE_TACTICAL;
+        this.isPassive = true;
     }
 
 }

@@ -12,6 +12,7 @@ public class SkillPassiveResistance extends Skill {
         super(l);
         this.skillCode = PASSIVE_RESIST;
         this.maxCooldown = 35000;
+        this.isPassive = true;
     }
 
     @Override

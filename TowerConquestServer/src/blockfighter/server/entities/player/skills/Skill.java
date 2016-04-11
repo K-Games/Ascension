@@ -17,7 +17,8 @@ public abstract class Skill {
     protected long skillCastTime;
     protected int maxCooldown;
     protected LogicModule logic;
-
+    protected boolean isPassive = false;
+    
     public final static byte NUM_SKILLS = 30,
             SWORD_VORPAL = 0x00,
             SWORD_PHANTOM = 0x01,
@@ -181,8 +182,8 @@ public abstract class Skill {
      * @return True if weapon is same as required weapon and cooldown is <= 0
      */
     public boolean canCast(final Player player) {
-        return (this.reqWeapon == -1 || Player.getItemType(player.getEquips()[SKILL_REQSLOT.get(this.skillCode)]) == this.reqWeapon)
-                && this.getCooldown() >= this.getMaxCooldown();
+        return !isPassive && (this.reqWeapon == -1 || Player.getItemType(player.getEquips()[SKILL_REQSLOT.get(this.skillCode)]) == this.reqWeapon)
+                && canCast();
     }
 
     public boolean canCast() {

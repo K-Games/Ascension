@@ -12,6 +12,7 @@ public class SkillPassiveBarrier extends Skill {
         super(l);
         this.skillCode = PASSIVE_BARRIER;
         this.maxCooldown = 30000;
+        this.isPassive = true;
     }
 
 }
