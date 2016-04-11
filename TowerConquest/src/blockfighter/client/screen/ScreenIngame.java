@@ -89,6 +89,9 @@ public class ScreenIngame extends Screen {
     private final ConcurrentLinkedQueue<Integer> particleKeys = new ConcurrentLinkedQueue<>();
     private int numParticleKeys = 500;
 
+    private double screenShakeX = 0, screenShakeY = 0;
+    private boolean screenShake = false;
+
     private byte myKey = -1;
 
     private long pingTime = 0;
@@ -265,7 +268,13 @@ public class ScreenIngame extends Screen {
         final AffineTransform resetForm = g.getTransform();
         this.map.drawBg(g);
         if (this.players != null && this.myKey != -1 && this.players.containsKey(this.myKey)) {
-            g.translate(640.0 - this.players.get(this.myKey).getX(), 500.0 - this.players.get(this.myKey).getY());
+            double scale = 1;
+            g.scale(scale, scale);
+            g.translate(640.0 / scale - this.players.get(this.myKey).getX(), 500.0 / scale - this.players.get(this.myKey).getY());
+            if (screenShake) {
+                g.translate(screenShakeX, screenShakeY);
+            }
+
         }
         this.map.draw(g);
 
