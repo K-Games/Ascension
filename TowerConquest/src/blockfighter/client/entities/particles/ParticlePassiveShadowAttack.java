@@ -10,8 +10,8 @@ public class ParticlePassiveShadowAttack extends Particle {
     private final byte type;
     private double speedX, speedY, dX, dY;
 
-    public ParticlePassiveShadowAttack(final int k, final int x, final int y) {
-        super(k, x, y, Globals.RIGHT);
+    public ParticlePassiveShadowAttack(final int x, final int y) {
+        super(x, y, Globals.RIGHT);
         this.frame = 0;
         this.frameDuration = 50;
         this.duration = 200;

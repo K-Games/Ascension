@@ -2,6 +2,8 @@ package blockfighter.server.entities.player.skills;
 
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
+import blockfighter.server.entities.player.Player;
+import java.util.HashMap;
 
 /**
  *
@@ -18,7 +20,6 @@ public abstract class Skill {
 
     public final static byte NUM_SKILLS = 30,
             SWORD_VORPAL = 0x00,
-            SWORD_MULTI = 0x01,
             SWORD_PHANTOM = 0x01,
             SWORD_CINDER = 0x02,
             SWORD_GASH = 0x03,
@@ -48,6 +49,56 @@ public abstract class Skill {
             PASSIVE_REVIVE = 0x1B,
             PASSIVE_SHADOWATTACK = 0x1C,
             PASSIVE_12 = 0x1D;
+
+    public static final HashMap<Byte, Byte> SKILL_REQSLOT = new HashMap<>(NUM_SKILLS);
+    public static final HashMap<Byte, Byte> SKILL_PLAYER_STATE = new HashMap<>(NUM_SKILLS);
+
+    static {
+        initializeSkillReq();
+        initializeSkillPlayerState();
+    }
+
+    public static void initializeSkillReq() {
+        SKILL_REQSLOT.put(SWORD_VORPAL, Globals.ITEM_WEAPON);
+        SKILL_REQSLOT.put(SWORD_PHANTOM, Globals.ITEM_WEAPON);
+        SKILL_REQSLOT.put(SWORD_CINDER, Globals.ITEM_WEAPON);
+        SKILL_REQSLOT.put(SWORD_GASH, Globals.ITEM_WEAPON);
+        SKILL_REQSLOT.put(SWORD_SLASH, Globals.ITEM_WEAPON);
+        SKILL_REQSLOT.put(SWORD_TAUNT, Globals.ITEM_WEAPON);
+        SKILL_REQSLOT.put(BOW_ARC, Globals.ITEM_WEAPON);
+        SKILL_REQSLOT.put(BOW_POWER, Globals.ITEM_WEAPON);
+        SKILL_REQSLOT.put(BOW_RAPID, Globals.ITEM_WEAPON);
+        SKILL_REQSLOT.put(BOW_FROST, Globals.ITEM_WEAPON);
+        SKILL_REQSLOT.put(BOW_STORM, Globals.ITEM_WEAPON);
+        SKILL_REQSLOT.put(BOW_VOLLEY, Globals.ITEM_WEAPON);
+        SKILL_REQSLOT.put(SHIELD_FORTIFY, Globals.ITEM_OFFHAND);
+        SKILL_REQSLOT.put(SHIELD_IRON, Globals.ITEM_OFFHAND);
+        SKILL_REQSLOT.put(SHIELD_CHARGE, Globals.ITEM_OFFHAND);
+        SKILL_REQSLOT.put(SHIELD_REFLECT, Globals.ITEM_OFFHAND);
+        SKILL_REQSLOT.put(SHIELD_TOSS, Globals.ITEM_OFFHAND);
+    }
+
+    public static void initializeSkillPlayerState() {
+        SKILL_PLAYER_STATE.put(SWORD_VORPAL, Player.PLAYER_STATE_SWORD_VORPAL);
+        SKILL_PLAYER_STATE.put(SWORD_PHANTOM, Player.PLAYER_STATE_SWORD_PHANTOM);
+        SKILL_PLAYER_STATE.put(SWORD_CINDER, Player.PLAYER_STATE_SWORD_CINDER);
+        SKILL_PLAYER_STATE.put(SWORD_GASH, Player.PLAYER_STATE_SWORD_GASH);
+        SKILL_PLAYER_STATE.put(SWORD_SLASH, Player.PLAYER_STATE_SWORD_SLASH);
+        SKILL_PLAYER_STATE.put(SWORD_TAUNT, Player.PLAYER_STATE_SWORD_TAUNT);
+        SKILL_PLAYER_STATE.put(BOW_ARC, Player.PLAYER_STATE_BOW_ARC);
+        SKILL_PLAYER_STATE.put(BOW_POWER, Player.PLAYER_STATE_BOW_POWER);
+        SKILL_PLAYER_STATE.put(BOW_RAPID, Player.PLAYER_STATE_BOW_RAPID);
+        SKILL_PLAYER_STATE.put(BOW_FROST, Player.PLAYER_STATE_BOW_FROST);
+        SKILL_PLAYER_STATE.put(BOW_STORM, Player.PLAYER_STATE_BOW_STORM);
+        SKILL_PLAYER_STATE.put(BOW_VOLLEY, Player.PLAYER_STATE_BOW_VOLLEY);
+        SKILL_PLAYER_STATE.put(SHIELD_FORTIFY, Player.PLAYER_STATE_SHIELD_FORTIFY);
+        SKILL_PLAYER_STATE.put(SHIELD_IRON, Player.PLAYER_STATE_SHIELD_IRON);
+        SKILL_PLAYER_STATE.put(SHIELD_CHARGE, Player.PLAYER_STATE_SHIELD_CHARGE);
+        SKILL_PLAYER_STATE.put(SHIELD_REFLECT, Player.PLAYER_STATE_SHIELD_REFLECT);
+        SKILL_PLAYER_STATE.put(SHIELD_TOSS, Player.PLAYER_STATE_SHIELD_TOSS);
+        SKILL_PLAYER_STATE.put(SHIELD_DASH, Player.PLAYER_STATE_SHIELD_DASH);
+
+    }
 
     public Skill(final LogicModule l) {
         this.logic = l;
@@ -126,14 +177,23 @@ public abstract class Skill {
     /**
      * Check if this skill can be cast with this weapon type and is off cooldown.
      *
-     * @param weaponType Weapon Type(Item Type)
+     * @param player The casting player.
      * @return True if weapon is same as required weapon and cooldown is <= 0
      */
-    public boolean canCast(final byte weaponType) {
-        return (weaponType == this.reqWeapon || this.reqWeapon == -1) && this.getCooldown() >= this.getMaxCooldown();
+    public boolean canCast(final Player player) {
+        return (this.reqWeapon == -1 || Player.getItemType(player.getEquips()[SKILL_REQSLOT.get(this.skillCode)]) == this.reqWeapon)
+                && this.getCooldown() >= this.getMaxCooldown();
     }
 
     public boolean canCast() {
         return this.getCooldown() >= this.getMaxCooldown();
+    }
+
+    public byte castPlayerState() {
+        return SKILL_PLAYER_STATE.get(this.skillCode);
+    }
+    
+    public void updateCasting(Player player) {
+        
     }
 }

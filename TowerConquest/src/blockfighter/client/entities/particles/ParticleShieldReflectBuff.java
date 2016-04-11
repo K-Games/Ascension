@@ -8,8 +8,8 @@ public class ParticleShieldReflectBuff extends Particle {
 
     double pX, speedX;
 
-    public ParticleShieldReflectBuff(final int k, final int x, final int y, final byte f) {
-        super(k, x, y, f);
+    public ParticleShieldReflectBuff(final int x, final int y, final byte f) {
+        super(x, y, f);
         this.x += Globals.rng(10) * 10 - 80;
         this.y += -Globals.rng(100) - 60;
         this.pX = this.x;
@@ -27,7 +27,7 @@ public class ParticleShieldReflectBuff extends Particle {
         this.pX += this.speedX;
         this.x = (int) this.pX;
         if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
-            if (this.frame < PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_REFLECTBUFF].length) {
+            if (PARTICLE_SPRITE != null && this.frame < PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_REFLECTBUFF].length) {
                 this.frame++;
             }
             this.lastFrameTime = logic.getTime();

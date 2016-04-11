@@ -23,7 +23,8 @@ import java.io.*;
 import java.util.*;
 
 /**
- * Implementation of the <code>PhysicalOggStream</code> interface for reading an Ogg stream from a URL. This class performs no internal caching, and will not read data from the network before requested to do so. It is intended to be used in non-realtime applications like file download managers or similar.
+ * Implementation of the <code>PhysicalOggStream</code> interface for reading an Ogg stream from a URL. This class performs no internal caching, and will not read data from the network before
+ * requested to do so. It is intended to be used in non-realtime applications like file download managers or similar.
  */
 public class BasicStream implements PhysicalOggStream {
 

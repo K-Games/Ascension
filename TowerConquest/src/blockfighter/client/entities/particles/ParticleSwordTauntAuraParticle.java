@@ -6,8 +6,8 @@ import java.awt.image.BufferedImage;
 
 public class ParticleSwordTauntAuraParticle extends Particle {
 
-    public ParticleSwordTauntAuraParticle(final int k, final int x, final int y, final byte f) {
-        super(k, x, y, f);
+    public ParticleSwordTauntAuraParticle(final int x, final int y, final byte f) {
+        super(x, y, f);
         this.x += Globals.rng(100) - 60;
         this.y -= Globals.rng(40);
         this.frame = 0;
@@ -22,7 +22,7 @@ public class ParticleSwordTauntAuraParticle extends Particle {
         this.y -= 9;
         if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
             this.frameDuration = 50;
-            if (this.frame < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_TAUNTAURA2].length - 1) {
+            if (PARTICLE_SPRITE != null && this.frame < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_TAUNTAURA2].length - 1) {
                 this.frame++;
             }
             this.lastFrameTime = logic.getTime();

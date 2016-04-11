@@ -10,8 +10,8 @@ public class ParticleShieldReflectCast extends Particle {
 
     private final Player owner;
 
-    public ParticleShieldReflectCast(final int k, final Player p) {
-        super(k, 0, 0);
+    public ParticleShieldReflectCast(final Player p) {
+        super(0, 0);
         this.frame = 0;
         this.frameDuration = 25;
         this.duration = 400;
@@ -23,7 +23,7 @@ public class ParticleShieldReflectCast extends Particle {
         super.update();
         if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
             this.frameDuration = 25;
-            if (this.frame < PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_REFLECTCAST].length - 1) {
+            if (PARTICLE_SPRITE != null && this.frame < PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_REFLECTCAST].length - 1) {
                 this.frame++;
             }
             this.lastFrameTime = logic.getTime();

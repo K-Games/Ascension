@@ -14,6 +14,7 @@ import java.awt.event.MouseMotionListener;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 
 /**
@@ -32,8 +33,14 @@ public abstract class Screen implements KeyListener, MouseListener, MouseMotionL
     protected static RenderPanel panel;
     protected static LogicModule logic;
 
+    private static final ConcurrentLinkedQueue<Integer> PARTICLE_KEYS = new ConcurrentLinkedQueue<>();
+    private static int numParticleKeys = 500;
+
     public static void init() {
         logic = Main.getLogicModule();
+        for (int key = 0; key < numParticleKeys; key++) {
+            PARTICLE_KEYS.add(key);
+        }
     }
 
     public static void setThreadPool(final ExecutorService tp) {
@@ -86,4 +93,22 @@ public abstract class Screen implements KeyListener, MouseListener, MouseMotionL
     public void focusLost(FocusEvent e) {
         logic.disableSound();
     }
+
+    public int getNextParticleKey() {
+        if (PARTICLE_KEYS.isEmpty()) {
+            for (int i = numParticleKeys; i < numParticleKeys + 100; i++) {
+                PARTICLE_KEYS.add(i);
+            }
+            numParticleKeys += 100;
+        }
+        return PARTICLE_KEYS.remove();
+    }
+
+    public void returnParticleKey(final int key) {
+        PARTICLE_KEYS.add(key);
+    }
+
+    public void addParticle(final Particle newParticle) {
+    }
+
 }

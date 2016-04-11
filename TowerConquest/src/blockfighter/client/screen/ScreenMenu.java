@@ -22,7 +22,7 @@ import javax.swing.SwingUtilities;
 public abstract class ScreenMenu extends Screen {
 
     protected long lastUpdateTime = 0;
-    protected static ConcurrentHashMap<Integer, Particle> particles = new ConcurrentHashMap<>(20);
+    protected static ConcurrentHashMap<Integer, Particle> particles = new ConcurrentHashMap<>(3);
     private final Rectangle2D.Double[] menuBox = new Rectangle2D.Double[7];
 
     protected DecimalFormat df = new DecimalFormat("###,###,##0.##");

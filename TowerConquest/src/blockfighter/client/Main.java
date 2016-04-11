@@ -1,8 +1,8 @@
 package blockfighter.client;
 
-import blockfighter.client.entities.mob.Mob;
 import blockfighter.client.entities.ingamenumber.IngameNumber;
 import blockfighter.client.entities.items.ItemEquip;
+import blockfighter.client.entities.mob.Mob;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.client.entities.player.Player;
 import blockfighter.client.entities.player.skills.Skill;

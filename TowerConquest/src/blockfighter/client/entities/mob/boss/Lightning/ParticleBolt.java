@@ -2,7 +2,6 @@ package blockfighter.client.entities.mob.boss.Lightning;
 
 import blockfighter.client.Globals;
 import blockfighter.client.entities.particles.Particle;
-import blockfighter.client.screen.ScreenIngame;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
@@ -10,8 +9,8 @@ public class ParticleBolt extends Particle {
 
     public static BufferedImage[] SPRITE;
 
-    public ParticleBolt(final int k, final int x, final int y) {
-        super(k, x, y, Globals.RIGHT);
+    public ParticleBolt(final int x, final int y) {
+        super(x, y, Globals.RIGHT);
         this.frame = 0;
         this.frameDuration = 50;
         this.duration = 400;
@@ -54,10 +53,9 @@ public class ParticleBolt extends Particle {
         }
         if (Globals.nsToMs(logic.getTime() - this.particleStartTime) >= 150) {
             for (int i = 0; i < 30; i++) {
-                final ParticleBoltParticle b = new ParticleBoltParticle(((ScreenIngame) logic.getScreen()).getNextParticleKey(),
-                        this.x + 150,
+                final ParticleBoltParticle b = new ParticleBoltParticle(this.x + 150,
                         this.y + 1100);
-                ((ScreenIngame) logic.getScreen()).addParticle(b);
+                logic.getScreen().addParticle(b);
             }
         }
     }

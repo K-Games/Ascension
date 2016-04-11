@@ -7,8 +7,8 @@ import java.awt.image.BufferedImage;
 
 public class ParticleSwordPhantom extends Particle {
 
-    public ParticleSwordPhantom(final int k, final int x, final int y, final byte f) {
-        super(k, x, y, f);
+    public ParticleSwordPhantom(final int x, final int y, final byte f) {
+        super(x, y, f);
         this.frame = 0;
         this.frameDuration = 50;
         this.duration = 400;
@@ -20,7 +20,7 @@ public class ParticleSwordPhantom extends Particle {
 
         if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
             this.frameDuration = 50;
-            if (this.frame < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_PHANTOM].length) {
+            if (PARTICLE_SPRITE != null && this.frame < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_PHANTOM].length) {
                 this.frame++;
             }
             this.lastFrameTime = logic.getTime();

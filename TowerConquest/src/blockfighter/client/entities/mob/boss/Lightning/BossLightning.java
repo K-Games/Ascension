@@ -3,7 +3,6 @@ package blockfighter.client.entities.mob.boss.Lightning;
 import blockfighter.client.Globals;
 import blockfighter.client.entities.mob.Mob;
 import blockfighter.client.entities.particles.Particle;
-import blockfighter.client.screen.ScreenIngame;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -105,9 +104,8 @@ public class BossLightning extends Mob {
     public void update() {
         if (Globals.nsToMs(logic.getTime() - lastParticleTime) >= 100 && this.state != STATE_BALLCHARGE) {
             for (int i = 0; i < 3; i++) {
-                final ParticleAmbient b = new ParticleAmbient(((ScreenIngame) logic.getScreen()).getNextParticleKey(),
-                        this.x + (Globals.rng(300) - 200), this.y - (Globals.rng(200) + 150), true);
-                ((ScreenIngame) logic.getScreen()).addParticle(b);
+                final ParticleAmbient b = new ParticleAmbient(this.x + (Globals.rng(300) - 200), this.y - (Globals.rng(200) + 150), true);
+                logic.getScreen().addParticle(b);
             }
             this.lastParticleTime = logic.getTime();
         }
@@ -118,25 +116,24 @@ public class BossLightning extends Mob {
         final byte particleID = data[2];
         int particleX, particleY;
         Particle b;
-        final int particleKey = ((ScreenIngame) logic.getScreen()).getNextParticleKey();
         switch (particleID) {
             case PARTICLE_ATT1:
                 particleX = Globals.bytesToInt(Arrays.copyOfRange(data, 3, 7));
                 particleY = Globals.bytesToInt(Arrays.copyOfRange(data, 7, 11));
-                b = new ParticleAttEmitter(particleKey, particleX, particleY);
-                ((ScreenIngame) logic.getScreen()).addParticle(b);
+                b = new ParticleAttEmitter(particleX, particleY);
+                logic.getScreen().addParticle(b);
                 break;
             case PARTICLE_BALL1:
                 particleX = Globals.bytesToInt(Arrays.copyOfRange(data, 3, 7));
                 particleY = Globals.bytesToInt(Arrays.copyOfRange(data, 7, 11));
-                b = new ParticleBallEmitter(particleKey, particleX, particleY);
-                ((ScreenIngame) logic.getScreen()).addParticle(b);
+                b = new ParticleBallEmitter(particleX, particleY);
+                logic.getScreen().addParticle(b);
                 break;
             case PARTICLE_BOLT:
                 particleX = Globals.bytesToInt(Arrays.copyOfRange(data, 3, 7));
                 particleY = Globals.bytesToInt(Arrays.copyOfRange(data, 7, 11));
-                b = new ParticleBolt(particleKey, particleX, particleY);
-                ((ScreenIngame) logic.getScreen()).addParticle(b);
+                b = new ParticleBolt(particleX, particleY);
+                logic.getScreen().addParticle(b);
                 break;
         }
     }

@@ -6,8 +6,8 @@ import java.awt.image.BufferedImage;
 
 public class ParticleSwordSlash3 extends Particle {
 
-    public ParticleSwordSlash3(final int k, final int x, final int y, final byte f) {
-        super(k, x, y, f);
+    public ParticleSwordSlash3(final int x, final int y, final byte f) {
+        super(x, y, f);
         this.frame = 0;
         this.frameDuration = 30;
         this.duration = 250;
@@ -19,7 +19,7 @@ public class ParticleSwordSlash3 extends Particle {
 
         if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
             this.frameDuration = 30;
-            if (this.frame < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_SLASH3].length - 1) {
+            if (PARTICLE_SPRITE != null && this.frame < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_SLASH3].length - 1) {
                 this.frame++;
             }
             this.lastFrameTime = logic.getTime();

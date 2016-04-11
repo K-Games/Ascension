@@ -153,7 +153,7 @@ public class PacketHandler implements Runnable {
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 2 + Globals.PACKET_INT * Globals.NUM_EQUIP_SLOTS];
         bytes[0] = Globals.DATA_PLAYER_GET_EQUIP;
         bytes[1] = data[2];
-        final int[] e = logic[room].getPlayers().get(data[2]).getEquip();
+        final int[] e = logic[room].getPlayers().get(data[2]).getEquips();
         for (int i = 0; i < e.length; i++) {
             final byte[] itemCode = Globals.intToByte(e[i]);
             System.arraycopy(itemCode, 0, bytes, i * 4 + 2, itemCode.length);
@@ -283,8 +283,8 @@ public class PacketHandler implements Runnable {
             desc += Globals.getStatName(i) + ": " + newPlayer.getStats()[i] + "\n";
         }
         desc += "Equips=[";
-        for (byte i = 0; i < newPlayer.getEquip().length; i++) {
-            desc += newPlayer.getEquip()[i] + ",";
+        for (byte i = 0; i < newPlayer.getEquips().length; i++) {
+            desc += newPlayer.getEquips()[i] + ",";
         }
         desc += "]\n";
         Globals.log("DATA_PLAYER_CREATE", address + ":" + port + " Queueing new player. Room: " + room + " Key: " + freeKey + desc,

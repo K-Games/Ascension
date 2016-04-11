@@ -11,8 +11,8 @@ public class ParticleSwordTauntBuffEmitter extends Particle {
     private final Player owner;
     private long lastParticleTime = 0;
 
-    public ParticleSwordTauntBuffEmitter(final int k, final Player p) {
-        super(k, 0, 0);
+    public ParticleSwordTauntBuffEmitter(final Player p) {
+        super(0, 0);
         this.frame = 0;
         this.duration = 10000;
         this.owner = p;
@@ -28,9 +28,10 @@ public class ParticleSwordTauntBuffEmitter extends Particle {
                 this.y = p.y;
             }
             for (int i = 0; i < 2; i++) {
-                final ParticleSwordTauntAuraParticle b = new ParticleSwordTauntAuraParticle(
-                        ((ScreenIngame) logic.getScreen()).getNextParticleKey(), this.x, this.y, this.facing);
-                ((ScreenIngame) logic.getScreen()).addParticle(b);
+                if (logic.getScreen() instanceof ScreenIngame) {
+                    final ParticleSwordTauntAuraParticle b = new ParticleSwordTauntAuraParticle(this.x, this.y, this.facing);
+                    logic.getScreen().addParticle(b);
+                }
             }
             lastParticleTime = logic.getTime();
         }

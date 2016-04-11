@@ -36,7 +36,8 @@ package de.jarnbjo.util.io;
 import java.io.IOException;
 
 /**
- * An interface with methods allowing bit-wise reading from an input stream. All methods in this interface are optional and an implementation not support a method or a specific state (e.g. endian) will throw an UnspportedOperationException if such a method is being called. This should be speicified in the implementation documentation.
+ * An interface with methods allowing bit-wise reading from an input stream. All methods in this interface are optional and an implementation not support a method or a specific state (e.g. endian)
+ * will throw an UnspportedOperationException if such a method is being called. This should be speicified in the implementation documentation.
  */
 public interface BitInputStream {
 
@@ -138,7 +139,8 @@ public interface BitInputStream {
     public void align();
 
     /**
-     * changes the endian mode used when reading bit-wise from the stream, changing the mode mid-stream will cause the read cursor to move to the beginning of the next byte (as if calling the <code>allign</code> method
+     * changes the endian mode used when reading bit-wise from the stream, changing the mode mid-stream will cause the read cursor to move to the beginning of the next byte (as if calling the
+     * <code>allign</code> method
      *
      * @see #align()
      *

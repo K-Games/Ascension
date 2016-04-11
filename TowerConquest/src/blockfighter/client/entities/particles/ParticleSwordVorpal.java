@@ -6,8 +6,8 @@ import java.awt.image.BufferedImage;
 
 public class ParticleSwordVorpal extends Particle {
 
-    public ParticleSwordVorpal(final int k, final int x, final int y, final byte f) {
-        super(k, x, y, f);
+    public ParticleSwordVorpal(final int x, final int y, final byte f) {
+        super(x, y, f);
         this.frame = 0;
         this.frameDuration = 25;
         this.duration = 200;
@@ -19,7 +19,7 @@ public class ParticleSwordVorpal extends Particle {
 
         if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
             this.frameDuration = 25;
-            if (this.frame < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_VORPAL].length - 1) {
+            if (PARTICLE_SPRITE != null && this.frame < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_VORPAL].length - 1) {
                 this.frame++;
             }
             this.lastFrameTime = logic.getTime();

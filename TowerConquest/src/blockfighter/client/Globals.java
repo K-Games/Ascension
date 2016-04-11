@@ -522,7 +522,7 @@ public class Globals {
         try {
             return FileUtils.openInputStream(new File("resources/" + path));
         } catch (IOException ex) {
-            System.err.println("Failed to load resource: " + path);
+            //System.err.println("Failed to load resource: " + path);
         }
         return null;
     }

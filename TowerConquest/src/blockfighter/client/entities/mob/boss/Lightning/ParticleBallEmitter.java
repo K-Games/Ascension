@@ -2,12 +2,11 @@ package blockfighter.client.entities.mob.boss.Lightning;
 
 import blockfighter.client.Globals;
 import blockfighter.client.entities.particles.Particle;
-import blockfighter.client.screen.ScreenIngame;
 
 public class ParticleBallEmitter extends Particle {
 
-    public ParticleBallEmitter(final int k, final int x, final int y) {
-        super(k, x, y, Globals.RIGHT);
+    public ParticleBallEmitter(final int x, final int y) {
+        super(x, y, Globals.RIGHT);
         this.frame = 0;
         this.duration = 200;
     }
@@ -17,10 +16,9 @@ public class ParticleBallEmitter extends Particle {
         super.update();
         if (!isExpired()) {
             for (int i = 0; i < 20; i++) {
-                final ParticleAmbient b = new ParticleAmbient(((ScreenIngame) logic.getScreen()).getNextParticleKey(),
-                        this.x + Globals.rng(1950), this.y,
+                final ParticleAmbient b = new ParticleAmbient(this.x + Globals.rng(1950), this.y,
                         true);
-                ((ScreenIngame) logic.getScreen()).addParticle(b);
+                logic.getScreen().addParticle(b);
             }
         }
     }

@@ -10,8 +10,8 @@ public class ParticleShieldIronAlly extends Particle {
 
     private final Player owner;
 
-    public ParticleShieldIronAlly(final int k, final Player p) {
-        super(k, 0, 0);
+    public ParticleShieldIronAlly(final Player p) {
+        super(0, 0);
         this.frame = 0;
         this.frameDuration = 25;
         this.duration = 300;
@@ -22,7 +22,7 @@ public class ParticleShieldIronAlly extends Particle {
     public void update() {
         super.update();
         if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
-            if (this.frame < PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_IRONALLY].length - 1) {
+            if (PARTICLE_SPRITE != null && this.frame < PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_IRONALLY].length - 1) {
                 this.frame++;
             }
             this.lastFrameTime = logic.getTime();

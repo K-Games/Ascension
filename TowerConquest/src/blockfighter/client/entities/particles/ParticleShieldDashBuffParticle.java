@@ -6,8 +6,8 @@ import java.awt.image.BufferedImage;
 
 public class ParticleShieldDashBuffParticle extends Particle {
 
-    public ParticleShieldDashBuffParticle(final int k, final int x, final int y, final byte f) {
-        super(k, x, y, f);
+    public ParticleShieldDashBuffParticle(final int x, final int y, final byte f) {
+        super(x, y, f);
         this.x += Globals.rng(50) - 35;
         this.y -= Globals.rng(40) + 30;
         this.frame = 0;

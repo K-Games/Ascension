@@ -6,8 +6,8 @@ import java.awt.image.BufferedImage;
 
 public class ParticleBowVolleyBow extends Particle {
 
-    public ParticleBowVolleyBow(final int k, final int x, final int y, final byte f) {
-        super(k, x, y, f);
+    public ParticleBowVolleyBow(final int x, final int y, final byte f) {
+        super(x, y, f);
         this.frame = 0;
         this.duration = 125;
     }

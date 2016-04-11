@@ -7,8 +7,8 @@ import java.awt.image.BufferedImage;
 
 public class ParticleBowPowerCharge extends Particle {
 
-    public ParticleBowPowerCharge(final int k, final int x, final int y, final byte f) {
-        super(k, x, y, f);
+    public ParticleBowPowerCharge(final int x, final int y, final byte f) {
+        super(x, y, f);
         this.frame = 0;
         this.frameDuration = 25;
         this.duration = 600;
@@ -19,7 +19,7 @@ public class ParticleBowPowerCharge extends Particle {
         super.update();
         if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
             this.frameDuration = 25;
-            if (this.frame < PARTICLE_SPRITE[Globals.PARTICLE_BOW_POWERCHARGE].length - 1) {
+            if (PARTICLE_SPRITE != null && this.frame < PARTICLE_SPRITE[Globals.PARTICLE_BOW_POWERCHARGE].length - 1) {
                 this.frame++;
             }
             this.lastFrameTime = logic.getTime();

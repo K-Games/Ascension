@@ -10,15 +10,15 @@ public class ParticleAmbient extends Particle {
     public static BufferedImage[] SPRITE;
     private boolean small = false;
 
-    public ParticleAmbient(final int k, final int x, final int y) {
-        super(k, x, y, Globals.RIGHT);
+    public ParticleAmbient(final int x, final int y) {
+        super(x, y, Globals.RIGHT);
         this.frame = Globals.rng(12) * 6;
         this.frameDuration = 50;
         this.duration = 300;
     }
 
-    public ParticleAmbient(final int k, final int x, final int y, final boolean set) {
-        this(k, x, y);
+    public ParticleAmbient(final int x, final int y, final boolean set) {
+        this(x, y);
         this.small = set;
     }
 

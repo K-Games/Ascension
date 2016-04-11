@@ -6,8 +6,8 @@ import java.awt.image.BufferedImage;
 
 public class ParticleBurnBuffParticle extends Particle {
 
-    public ParticleBurnBuffParticle(final int k, final int x, final int y, final byte f) {
-        super(k, x, y, f);
+    public ParticleBurnBuffParticle(final int x, final int y, final byte f) {
+        super(x, y, f);
         this.x += Globals.rng(50) - 35;
         this.y -= Globals.rng(100) + 20;
         this.frame = 0;
@@ -21,7 +21,7 @@ public class ParticleBurnBuffParticle extends Particle {
 
         this.y -= 3;
         if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
-            if (this.frame < PARTICLE_SPRITE[Globals.PARTICLE_BURN].length - 1) {
+            if (PARTICLE_SPRITE != null && this.frame < PARTICLE_SPRITE[Globals.PARTICLE_BURN].length - 1) {
                 this.frame++;
             }
             this.lastFrameTime = logic.getTime();

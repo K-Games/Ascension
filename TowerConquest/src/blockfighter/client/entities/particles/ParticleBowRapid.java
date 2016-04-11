@@ -6,8 +6,8 @@ import java.awt.image.BufferedImage;
 
 public class ParticleBowRapid extends Particle {
 
-    public ParticleBowRapid(final int k, final int x, final int y, final byte f) {
-        super(k, x, y, f);
+    public ParticleBowRapid(final int x, final int y, final byte f) {
+        super(x, y, f);
         this.frame = 0;
         this.frameDuration = 50;
         this.duration = 300;
@@ -17,7 +17,7 @@ public class ParticleBowRapid extends Particle {
     public void update() {
         super.update();
         if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
-            if (this.frame < PARTICLE_SPRITE[Globals.PARTICLE_BOW_RAPID].length - 1) {
+            if (PARTICLE_SPRITE != null && this.frame < PARTICLE_SPRITE[Globals.PARTICLE_BOW_RAPID].length - 1) {
                 this.frame++;
             }
             this.lastFrameTime = logic.getTime();

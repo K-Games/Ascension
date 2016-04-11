@@ -2,7 +2,6 @@ package blockfighter.client.entities.particles;
 
 import blockfighter.client.Globals;
 import blockfighter.client.entities.player.Player;
-import blockfighter.client.screen.ScreenIngame;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
@@ -11,8 +10,8 @@ public class ParticleSwordTauntAura extends Particle {
 
     private final Player owner;
 
-    public ParticleSwordTauntAura(final int k, final Player p) {
-        super(k, 0, 0);
+    public ParticleSwordTauntAura(final Player p) {
+        super(0, 0);
         this.frame = 0;
         this.frameDuration = 25;
         this.duration = 500;
@@ -30,14 +29,13 @@ public class ParticleSwordTauntAura extends Particle {
 
         if (this.duration > 100) {
             for (int i = 0; i < 2; i++) {
-                final ParticleSwordTauntAuraParticle b = new ParticleSwordTauntAuraParticle(
-                        ((ScreenIngame) logic.getScreen()).getNextParticleKey(), this.x, this.y, this.facing);
-                ((ScreenIngame) logic.getScreen()).addParticle(b);
+                final ParticleSwordTauntAuraParticle b = new ParticleSwordTauntAuraParticle(this.x, this.y, this.facing);
+                logic.getScreen().addParticle(b);
             }
         }
         if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
             this.frameDuration = 25;
-            if (this.frame < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_TAUNTAURA1].length - 1) {
+            if (PARTICLE_SPRITE != null && this.frame < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_TAUNTAURA1].length - 1) {
                 this.frame++;
             }
             this.lastFrameTime = logic.getTime();

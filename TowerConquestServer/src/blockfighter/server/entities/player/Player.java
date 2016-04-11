@@ -72,6 +72,7 @@ import java.net.InetAddress;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -84,11 +85,13 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 public class Player extends Thread implements GameEntity {
 
+    private static final HashMap<Byte, Object> VALID_PLAYER_SKILL_STATES = new HashMap<>(18);
+
     public final static byte PLAYER_STATE_STAND = 0x00,
             PLAYER_STATE_WALK = 0x01,
             PLAYER_STATE_JUMP = 0x02,
             PLAYER_STATE_SWORD_VORPAL = 0x03,
-            PLAYER_STATE_SWORD_MULTI = 0x04,
+            PLAYER_STATE_SWORD_PHANTOM = 0x04,
             PLAYER_STATE_SWORD_CINDER = 0x05,
             PLAYER_STATE_SWORD_GASH = 0x06,
             PLAYER_STATE_SWORD_SLASH = 0x07,
@@ -105,8 +108,7 @@ public class Player extends Thread implements GameEntity {
             PLAYER_STATE_SHIELD_IRON = 0x12,
             PLAYER_STATE_SHIELD_REFLECT = 0x13,
             PLAYER_STATE_SHIELD_TOSS = 0x14,
-            PLAYER_STATE_DEAD = 0x15,
-            PLAYER_STATE_SWORD_PHANTOM = 0x16;
+            PLAYER_STATE_DEAD = 0x15;
 
     private final byte key;
     private final LogicModule logic;
@@ -132,7 +134,7 @@ public class Player extends Thread implements GameEntity {
     private final GameMap map;
     private final double[] stats = new double[Globals.NUM_STATS], bonusStats = new double[Globals.NUM_STATS];
 
-    private final int[] equip = new int[Globals.NUM_EQUIP_SLOTS];
+    private final int[] equips = new int[Globals.NUM_EQUIP_SLOTS];
     private final ConcurrentHashMap<Byte, Skill> skills = new ConcurrentHashMap<>(Skill.NUM_SKILLS, 0.9f, 1);
     private boolean connected = true;
 
@@ -151,6 +153,32 @@ public class Player extends Thread implements GameEntity {
             lastHPSendTime = 0,
             lastFrameTime = 0;
     private int skillCounter = 0;
+
+    static {
+        initializeValidPlayerSkillStates();
+    }
+
+    public static void initializeValidPlayerSkillStates() {
+        VALID_PLAYER_SKILL_STATES.put(PLAYER_STATE_SWORD_VORPAL, null);
+        VALID_PLAYER_SKILL_STATES.put(PLAYER_STATE_SWORD_PHANTOM, null);
+        VALID_PLAYER_SKILL_STATES.put(PLAYER_STATE_SWORD_CINDER, null);
+        VALID_PLAYER_SKILL_STATES.put(PLAYER_STATE_SWORD_GASH, null);
+        VALID_PLAYER_SKILL_STATES.put(PLAYER_STATE_SWORD_SLASH, null);
+        VALID_PLAYER_SKILL_STATES.put(PLAYER_STATE_SWORD_TAUNT, null);
+        VALID_PLAYER_SKILL_STATES.put(PLAYER_STATE_BOW_ARC, null);
+        VALID_PLAYER_SKILL_STATES.put(PLAYER_STATE_BOW_POWER, null);
+        VALID_PLAYER_SKILL_STATES.put(PLAYER_STATE_BOW_RAPID, null);
+        VALID_PLAYER_SKILL_STATES.put(PLAYER_STATE_BOW_FROST, null);
+        VALID_PLAYER_SKILL_STATES.put(PLAYER_STATE_BOW_STORM, null);
+        VALID_PLAYER_SKILL_STATES.put(PLAYER_STATE_BOW_VOLLEY, null);
+        VALID_PLAYER_SKILL_STATES.put(PLAYER_STATE_SHIELD_CHARGE, null);
+        VALID_PLAYER_SKILL_STATES.put(PLAYER_STATE_SHIELD_DASH, null);
+        VALID_PLAYER_SKILL_STATES.put(PLAYER_STATE_SHIELD_FORTIFY, null);
+        VALID_PLAYER_SKILL_STATES.put(PLAYER_STATE_SHIELD_IRON, null);
+        VALID_PLAYER_SKILL_STATES.put(PLAYER_STATE_SHIELD_REFLECT, null);
+        VALID_PLAYER_SKILL_STATES.put(PLAYER_STATE_SHIELD_TOSS, null);
+
+    }
 
     /**
      * Create a new player entity in the server.
@@ -178,7 +206,7 @@ public class Player extends Thread implements GameEntity {
         extendBuffKeys();
     }
 
-    private static boolean hasPastDuration(int currentDuration, int durationToPast) {
+    public static boolean hasPastDuration(int currentDuration, int durationToPast) {
         if (durationToPast <= 0) {
             return true;
         }
@@ -307,14 +335,26 @@ public class Player extends Thread implements GameEntity {
     public byte getFrame() {
         return this.frame;
     }
-
+    
+    public int getSkillCounter(){
+        return this.skillCounter;
+    }
+    
+    public long getSkillCastTime(){
+        return this.skillCastTime;
+    }
+    
+    public void incrementSkillCounter(){
+        this.skillCounter++;
+    }
+    
     /**
      * Get the item codes of the equipment on this Player
      *
      * @return int[] - Equipment Item Codes
      */
-    public int[] getEquip() {
-        return this.equip;
+    public int[] getEquips() {
+        return this.equips;
     }
 
     public boolean isDead() {
@@ -431,9 +471,6 @@ public class Player extends Thread implements GameEntity {
             case Skill.SWORD_GASH:
                 newSkill = new SkillSwordGash(this.logic);
                 break;
-            //case Skill.SWORD_MULTI:
-            //    newSkill = new SkillSwordMulti();
-            //    break;
             case Skill.SWORD_PHANTOM:
                 newSkill = new SkillSwordPhantom(this.logic);
                 break;
@@ -624,8 +661,8 @@ public class Player extends Thread implements GameEntity {
         }
     }
 
-    private void castSkill(final byte[] data, final byte newState, final byte weaponSlot) {
-        if (!this.skills.get(data[3]).canCast(getItemType(this.equip[weaponSlot]))) {
+    private void castSkill(final byte skillCode) {
+        if (!this.skills.get(skillCode).canCast(this)) {
             return;
         }
         this.skillCounter = 0;
@@ -633,9 +670,9 @@ public class Player extends Thread implements GameEntity {
         // Globals.log("DATA_PLAYER_CASTSKILL", "Key: " + key + " Room: " + logic.getRoom() + " Player: " + getPlayerName() + " Skill: " +
         // data[3], Globals.LOG_TYPE_DATA, true);
 
-        queuePlayerState(newState);
-        this.skills.get(data[3]).setCooldown();
-        sendCooldown(data);
+        queuePlayerState(this.skills.get(skillCode).castPlayerState());
+        this.skills.get(skillCode).setCooldown();
+        sendCooldown(skillCode);
 
         // Tactical Execution Passive
         // Add after being able to cast skill
@@ -660,67 +697,10 @@ public class Player extends Thread implements GameEntity {
 
         this.skillUseQueue.clear();
         if (data != null) {
-            if (data[3] == Skill.SHIELD_IRON || (!isStunned() && !isKnockback())) {
-                if (hasSkill(data[3])) {
-                    switch (data[3]) {
-                        case Skill.SWORD_SLASH:
-                            castSkill(data, PLAYER_STATE_SWORD_SLASH, Globals.ITEM_WEAPON);
-                            break;
-                        case Skill.SWORD_VORPAL:
-                            castSkill(data, PLAYER_STATE_SWORD_VORPAL, Globals.ITEM_WEAPON);
-                            break;
-                        case Skill.SWORD_GASH:
-                            castSkill(data, PLAYER_STATE_SWORD_GASH, Globals.ITEM_WEAPON);
-                            break;
-                        //case Skill.SWORD_MULTI:
-                        //    castSkill(data, PLAYER_STATE_SWORD_MULTI, Globals.ITEM_WEAPON);
-                        //    break;
-                        case Skill.SWORD_PHANTOM:
-                            castSkill(data, PLAYER_STATE_SWORD_PHANTOM, Globals.ITEM_WEAPON);
-                            break;
-                        case Skill.SWORD_CINDER:
-                            castSkill(data, PLAYER_STATE_SWORD_CINDER, Globals.ITEM_WEAPON);
-                            break;
-                        case Skill.SWORD_TAUNT:
-                            castSkill(data, PLAYER_STATE_SWORD_TAUNT, Globals.ITEM_WEAPON);
-                            break;
-                        case Skill.BOW_ARC:
-                            castSkill(data, PLAYER_STATE_BOW_ARC, Globals.ITEM_WEAPON);
-                            break;
-                        case Skill.BOW_POWER:
-                            castSkill(data, PLAYER_STATE_BOW_POWER, Globals.ITEM_WEAPON);
-                            break;
-                        case Skill.BOW_RAPID:
-                            castSkill(data, PLAYER_STATE_BOW_RAPID, Globals.ITEM_WEAPON);
-                            break;
-                        case Skill.BOW_VOLLEY:
-                            castSkill(data, PLAYER_STATE_BOW_VOLLEY, Globals.ITEM_WEAPON);
-                            break;
-                        case Skill.BOW_STORM:
-                            castSkill(data, PLAYER_STATE_BOW_STORM, Globals.ITEM_WEAPON);
-                            break;
-                        case Skill.BOW_FROST:
-                            castSkill(data, PLAYER_STATE_BOW_FROST, Globals.ITEM_WEAPON);
-                            break;
-                        case Skill.SHIELD_CHARGE:
-                            castSkill(data, PLAYER_STATE_SHIELD_CHARGE, Globals.ITEM_OFFHAND);
-                            break;
-                        case Skill.SHIELD_DASH:
-                            castSkill(data, PLAYER_STATE_SHIELD_DASH, Globals.ITEM_OFFHAND);
-                            break;
-                        case Skill.SHIELD_FORTIFY:
-                            castSkill(data, PLAYER_STATE_SHIELD_FORTIFY, Globals.ITEM_OFFHAND);
-                            break;
-                        case Skill.SHIELD_IRON:
-                            castSkill(data, PLAYER_STATE_SHIELD_IRON, Globals.ITEM_OFFHAND);
-                            break;
-                        case Skill.SHIELD_REFLECT:
-                            castSkill(data, PLAYER_STATE_SHIELD_REFLECT, Globals.ITEM_OFFHAND);
-                            break;
-                        case Skill.SHIELD_TOSS:
-                            castSkill(data, PLAYER_STATE_SHIELD_TOSS, Globals.ITEM_OFFHAND);
-                            break;
-                    }
+            byte skillCode = data[3];
+            if (skillCode == Skill.SHIELD_IRON || (!isStunned() && !isKnockback())) {
+                if (hasSkill(skillCode)) {
+                    castSkill(skillCode);
                 }
             }
         }
@@ -769,7 +749,7 @@ public class Player extends Thread implements GameEntity {
             this.skillCounter++;
             final ProjSwordGash proj = new ProjSwordGash(this.logic, this.logic.getNextProjKey(), this, this.x, this.y, (byte) this.skillCounter);
             this.logic.queueAddProj(proj);
-            sendSFX(this.logic.getRoom(), Globals.SFX_GASH, getX(), getY());
+            sendSFX(this.logic.getRoom(), Globals.SFX_SLASH, getX(), getY());
             switch (this.skillCounter) {
                 case 1:
                     sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_GASH1, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
@@ -902,17 +882,17 @@ public class Player extends Thread implements GameEntity {
         }
     }
 
-    private void updateSkillSwordCinder() {
-        final int duration = Globals.nsToMs(this.logic.getTime() - this.skillCastTime);
-        if (hasPastDuration(duration, 50) && this.skillCounter < 1) {
-            this.skillCounter++;
-            final ProjSwordCinder proj = new ProjSwordCinder(this.logic, this.logic.getNextProjKey(), this, this.x, this.y);
-            this.logic.queueAddProj(proj);
-            sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_CINDER, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
-                    this.facing);
-        }
-        updateSkillEnd(duration, 250, true, false);
+    /*    private void updateSkillSwordCinder() {
+    final int duration = Globals.nsToMs(this.logic.getTime() - this.skillCastTime);
+    if (hasPastDuration(duration, 50) && this.skillCounter < 1) {
+    this.skillCounter++;
+    final ProjSwordCinder proj = new ProjSwordCinder(this.logic, this.logic.getNextProjKey(), this, this.x, this.y);
+    this.logic.queueAddProj(proj);
+    sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_CINDER, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
+    this.facing);
     }
+    updateSkillEnd(duration, 250, true, false);
+    }*/
 
     private void updateSkillBowArc() {
         final int duration = Globals.nsToMs(this.logic.getTime() - this.skillCastTime);
@@ -1153,7 +1133,7 @@ public class Player extends Thread implements GameEntity {
                 updateSkillSwordPhantom();
                 break;
             case PLAYER_STATE_SWORD_CINDER:
-                updateSkillSwordCinder();
+                getSkill(Skill.SWORD_CINDER).updateCasting(this);
                 break;
             case PLAYER_STATE_SWORD_TAUNT:
                 updateSkillSwordTaunt();
@@ -1197,7 +1177,7 @@ public class Player extends Thread implements GameEntity {
         }
     }
 
-    private void updateSkillEnd(final int currentSkillDuration, final int skillEndDuration, final boolean isCanceledByStun, final boolean isCanceledByKnockback) {
+    public void updateSkillEnd(final int currentSkillDuration, final int skillEndDuration, final boolean isCanceledByStun, final boolean isCanceledByKnockback) {
         if (currentSkillDuration >= skillEndDuration || (isCanceledByStun && isStunned() || (isCanceledByKnockback && isKnockback()))) {
             setPlayerState(PLAYER_STATE_STAND);
         }
@@ -1236,15 +1216,15 @@ public class Player extends Thread implements GameEntity {
 
                 // Defender Mastery Passive Reduction
                 if (hasSkill(Skill.PASSIVE_SHIELDMASTERY)
-                        && getItemType(this.equip[Globals.ITEM_WEAPON]) == Globals.ITEM_SWORD
-                        && getItemType(this.equip[Globals.ITEM_OFFHAND]) == Globals.ITEM_SHIELD) {
+                        && getItemType(this.equips[Globals.ITEM_WEAPON]) == Globals.ITEM_SWORD
+                        && getItemType(this.equips[Globals.ITEM_OFFHAND]) == Globals.ITEM_SHIELD) {
                     amount = (int) (amount * (1 - (0.05 + 0.005 * getSkillLevel(Skill.PASSIVE_SHIELDMASTERY))));
                 }
 
                 // Dual Wield Passive Reduction
                 if (hasSkill(Skill.PASSIVE_DUALSWORD)
-                        && getItemType(this.equip[Globals.ITEM_WEAPON]) == Globals.ITEM_SWORD
-                        && getItemType(this.equip[Globals.ITEM_OFFHAND]) == Globals.ITEM_SWORD) {
+                        && getItemType(this.equips[Globals.ITEM_WEAPON]) == Globals.ITEM_SWORD
+                        && getItemType(this.equips[Globals.ITEM_OFFHAND]) == Globals.ITEM_SWORD) {
                     amount = (int) (amount * (1 - (0.01 * getSkillLevel(Skill.PASSIVE_DUALSWORD))));
                 }
 
@@ -1444,8 +1424,8 @@ public class Player extends Thread implements GameEntity {
         }
         // Defender Mastery Passive
         if (hasSkill(Skill.PASSIVE_SHIELDMASTERY)
-                && getItemType(this.equip[Globals.ITEM_WEAPON]) == Globals.ITEM_SWORD
-                && getItemType(this.equip[Globals.ITEM_OFFHAND]) == Globals.ITEM_SHIELD) {
+                && getItemType(this.equips[Globals.ITEM_WEAPON]) == Globals.ITEM_SWORD
+                && getItemType(this.equips[Globals.ITEM_OFFHAND]) == Globals.ITEM_SHIELD) {
             mult += 0.09 + 0.002 * getSkillLevel(Skill.PASSIVE_SHIELDMASTERY);
         }
         // Power of Will Passive
@@ -1479,8 +1459,8 @@ public class Player extends Thread implements GameEntity {
         double totalCritChance = this.stats[Globals.STAT_CRITCHANCE] + bonusCritChance;
         // Dual Sword Passive
         if (hasSkill(Skill.PASSIVE_DUALSWORD)
-                && getItemType(this.equip[Globals.ITEM_WEAPON]) == Globals.ITEM_SWORD
-                && getItemType(this.equip[Globals.ITEM_OFFHAND]) == Globals.ITEM_SWORD) {
+                && getItemType(this.equips[Globals.ITEM_WEAPON]) == Globals.ITEM_SWORD
+                && getItemType(this.equips[Globals.ITEM_OFFHAND]) == Globals.ITEM_SWORD) {
             // Check if has Dual Sword passive AND Mainhand/Offhand are both Swords.
             totalCritChance += 0.04 + 0.002 * getSkillLevel(Skill.PASSIVE_DUALSWORD);
         }
@@ -1499,8 +1479,8 @@ public class Player extends Thread implements GameEntity {
         double totalCritDmg = 1 + this.stats[Globals.STAT_CRITDMG] + bonusCritDmg;
         // Bow Mastery Passive
         if (hasSkill(Skill.PASSIVE_BOWMASTERY)
-                && getItemType(this.equip[Globals.ITEM_WEAPON]) == Globals.ITEM_BOW
-                && getItemType(this.equip[Globals.ITEM_OFFHAND]) == Globals.ITEM_ARROW) {
+                && getItemType(this.equips[Globals.ITEM_WEAPON]) == Globals.ITEM_BOW
+                && getItemType(this.equips[Globals.ITEM_OFFHAND]) == Globals.ITEM_ARROW) {
             totalCritDmg += 0.3 + 0.04 * getSkillLevel(Skill.PASSIVE_BOWMASTERY);
         }
         // Keen Eye Passive
@@ -1615,25 +1595,7 @@ public class Player extends Thread implements GameEntity {
      * @return True if player is in a skill use state.
      */
     public boolean isUsingSkill() {
-        return this.playerState == PLAYER_STATE_SWORD_SLASH
-                || this.playerState == PLAYER_STATE_SWORD_VORPAL
-                || this.playerState == PLAYER_STATE_SWORD_GASH
-                || this.playerState == PLAYER_STATE_SWORD_MULTI
-                || this.playerState == PLAYER_STATE_SWORD_TAUNT
-                || this.playerState == PLAYER_STATE_SWORD_CINDER
-                || this.playerState == PLAYER_STATE_BOW_ARC
-                || this.playerState == PLAYER_STATE_BOW_POWER
-                || this.playerState == PLAYER_STATE_BOW_RAPID
-                || this.playerState == PLAYER_STATE_BOW_FROST
-                || this.playerState == PLAYER_STATE_BOW_STORM
-                || this.playerState == PLAYER_STATE_BOW_VOLLEY
-                || this.playerState == PLAYER_STATE_SHIELD_CHARGE
-                || this.playerState == PLAYER_STATE_SHIELD_DASH
-                || this.playerState == PLAYER_STATE_SHIELD_FORTIFY
-                || this.playerState == PLAYER_STATE_SHIELD_IRON
-                || this.playerState == PLAYER_STATE_SHIELD_REFLECT
-                || this.playerState == PLAYER_STATE_SHIELD_TOSS
-                || this.playerState == PLAYER_STATE_SWORD_PHANTOM;
+        return VALID_PLAYER_SKILL_STATES.containsKey(this.playerState);
     }
 
     /**
@@ -1893,17 +1855,6 @@ public class Player extends Thread implements GameEntity {
                 this.animState = Globals.PLAYER_ANIM_STATE_ATTACK;
                 if (frameDuration >= 40 && this.frame < 10) {
                     this.frame++;
-                    this.lastFrameTime = this.logic.getTime();
-                }
-                break;
-            case PLAYER_STATE_SWORD_MULTI:
-                this.animState = Globals.PLAYER_ANIM_STATE_ATTACK;
-                if (frameDuration >= 10) {
-                    if (this.frame == 6) {
-                        this.frame = 3;
-                    } else {
-                        this.frame++;
-                    }
                     this.lastFrameTime = this.logic.getTime();
                 }
                 break;
@@ -2281,7 +2232,7 @@ public class Player extends Thread implements GameEntity {
      * @param itemCode Item Code
      */
     public void setEquip(final int slot, final int itemCode) {
-        this.equip[slot] = itemCode;
+        this.equips[slot] = itemCode;
     }
 
     /**

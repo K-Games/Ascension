@@ -6,8 +6,8 @@ import java.awt.image.BufferedImage;
 
 public class ParticleSwordCinderParticle extends Particle {
 
-    public ParticleSwordCinderParticle(final int k, final int x, final int y, final byte f) {
-        super(k, x, y, f);
+    public ParticleSwordCinderParticle(final int x, final int y, final byte f) {
+        super(x, y, f);
         this.x += Globals.rng(100) + ((this.facing == Globals.RIGHT) ? 60 : 0);
         this.y += Globals.rng(200) + 20;
         this.frame = 0;
@@ -22,7 +22,7 @@ public class ParticleSwordCinderParticle extends Particle {
         this.y -= 3;
         if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
             this.frameDuration = 25;
-            if (this.frame < PARTICLE_SPRITE[Globals.PARTICLE_BURN].length - 1) {
+            if (PARTICLE_SPRITE != null && this.frame < PARTICLE_SPRITE[Globals.PARTICLE_BURN].length - 1) {
                 this.frame++;
             }
             this.lastFrameTime = logic.getTime();

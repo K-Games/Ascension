@@ -194,8 +194,23 @@ public abstract class Particle extends Thread {
         setDaemon(true);
     }
 
-    public Particle(final int k, final int x, final int y, final byte f) {
-        this(k, x, y);
+    public Particle(final int x, final int y) {
+        if (logic != null) {
+            this.particleStartTime = logic.getTime();
+            this.lastFrameTime = logic.getTime();
+        } else {
+            this.particleStartTime = System.nanoTime();
+            this.lastFrameTime = particleStartTime;
+        }
+        this.key = logic.getScreen().getNextParticleKey();
+        this.x = x;
+        this.y = y;
+        this.duration = 200;
+        setDaemon(true);
+    }
+
+    public Particle(final int x, final int y, final byte f) {
+        this(x, y);
         this.facing = f;
     }
 

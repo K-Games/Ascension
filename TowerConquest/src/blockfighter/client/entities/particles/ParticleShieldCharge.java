@@ -2,7 +2,6 @@ package blockfighter.client.entities.particles;
 
 import blockfighter.client.Globals;
 import blockfighter.client.entities.player.Player;
-import blockfighter.client.screen.ScreenIngame;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
@@ -12,8 +11,8 @@ public class ParticleShieldCharge extends Particle {
     private final Player owner;
     private long lastParticleTime = 0;
 
-    public ParticleShieldCharge(final int k, final byte f, final Player p) {
-        super(k, 0, 0, f);
+    public ParticleShieldCharge(final byte f, final Player p) {
+        super(0, 0, f);
         this.frame = 0;
         this.duration = 750;
         this.owner = p;
@@ -29,10 +28,8 @@ public class ParticleShieldCharge extends Particle {
         super.update();
         if (Globals.nsToMs(logic.getTime() - this.particleStartTime) < 650
                 && Globals.nsToMs(logic.getTime() - this.lastParticleTime) >= 50) {
-            final ParticleShieldChargeParticle b = new ParticleShieldChargeParticle(((ScreenIngame) logic.getScreen()).getNextParticleKey(),
-                    this.x, this.y,
-                    this.facing);
-            ((ScreenIngame) logic.getScreen()).addParticle(b);
+            final ParticleShieldChargeParticle b = new ParticleShieldChargeParticle(this.x, this.y, this.facing);
+            logic.getScreen().addParticle(b);
             this.lastParticleTime = logic.getTime();
         }
     }

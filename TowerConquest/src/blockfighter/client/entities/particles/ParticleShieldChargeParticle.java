@@ -6,8 +6,8 @@ import java.awt.image.BufferedImage;
 
 public class ParticleShieldChargeParticle extends Particle {
 
-    public ParticleShieldChargeParticle(final int k, final int x, final int y, final byte f) {
-        super(k, x, y, f);
+    public ParticleShieldChargeParticle(final int x, final int y, final byte f) {
+        super(x, y, f);
         this.frame = 0;
         this.frameDuration = 50;
         this.duration = 400;
@@ -21,7 +21,7 @@ public class ParticleShieldChargeParticle extends Particle {
     public void update() {
         super.update();
         if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
-            if (this.frame < PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_CHARGEPARTICLE].length) {
+            if (PARTICLE_SPRITE != null && this.frame < PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_CHARGEPARTICLE].length) {
                 this.frame++;
             }
             this.lastFrameTime = logic.getTime();
