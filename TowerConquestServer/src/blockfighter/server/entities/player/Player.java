@@ -10,8 +10,6 @@ import blockfighter.server.entities.buff.BuffDmgTakenAmp;
 import blockfighter.server.entities.buff.BuffKnockback;
 import blockfighter.server.entities.buff.BuffPassiveBarrier;
 import blockfighter.server.entities.buff.BuffShieldDash;
-import blockfighter.server.entities.buff.BuffShieldFortify;
-import blockfighter.server.entities.buff.BuffShieldIron;
 import blockfighter.server.entities.buff.BuffShieldReflect;
 import blockfighter.server.entities.buff.BuffStun;
 import blockfighter.server.entities.buff.BuffSwordSlash;
@@ -47,9 +45,6 @@ import blockfighter.server.entities.player.skills.SkillSwordPhantom;
 import blockfighter.server.entities.player.skills.SkillSwordSlash;
 import blockfighter.server.entities.player.skills.SkillSwordTaunt;
 import blockfighter.server.entities.player.skills.SkillSwordVorpal;
-import blockfighter.server.entities.proj.ProjShieldCharge;
-import blockfighter.server.entities.proj.ProjShieldReflect;
-import blockfighter.server.entities.proj.ProjShieldToss;
 import blockfighter.server.maps.GameMap;
 import blockfighter.server.net.PacketSender;
 import java.awt.geom.Point2D;
@@ -716,161 +711,24 @@ public class Player extends Thread implements GameEntity {
         }
     }
 
-    
-
-    private void updateSkillShieldFortify() {
-        final int duration = Globals.nsToMs(this.logic.getTime() - this.skillCastTime);
-        if (duration == 0) {
-            sendParticle(this.logic.getRoom(), Globals.PARTICLE_SHIELD_FORTIFY, this.key);
-            sendSFX(this.logic.getRoom(), Globals.SFX_FORTIFY, getX(), getY());
-        }
-        if (hasPastDuration(duration, 350) && this.skillCounter < 1) {
-            this.skillCounter++;
-            queueBuff(new BuffShieldFortify(this.logic, 5000, 0.01 + 0.005 * getSkillLevel(Skill.SHIELD_FORTIFY), this));
-            sendParticle(this.logic.getRoom(), Globals.PARTICLE_SHIELD_FORTIFYBUFF, this.key);
-            setPlayerState(PLAYER_STATE_STAND);
-        }
-    }
-
-    private void updateSkillShieldIron() {
-        final int duration = Globals.nsToMs(this.logic.getTime() - this.skillCastTime);
-        if (duration == 0) {
-            sendParticle(this.logic.getRoom(), Globals.PARTICLE_SHIELD_IRON, this.key);
-            sendSFX(this.logic.getRoom(), Globals.SFX_IRON, getX(), getY());
-        }
-        if (hasPastDuration(duration, 100) && this.skillCounter < 1) {
-            this.skillCounter++;
-            setRemovingDebuff(true);
-            queueBuff(new BuffShieldIron(this.logic, 2000, 0.55 + 0.01 * getSkillLevel(Skill.SHIELD_IRON)));
-            if (isSkillMaxed(Skill.SHIELD_IRON) && !map.isPvP()) {
-                for (final Map.Entry<Byte, Player> player : this.logic.getPlayers().entrySet()) {
-                    final Player p = player.getValue();
-                    if (p != this && !p.isDead()) {
-                        p.queueBuff(new BuffShieldIron(this.logic, 2000, 0.4));
-                        sendParticle(this.logic.getRoom(), Globals.PARTICLE_SHIELD_IRONALLY, p.getKey());
-                    }
-                }
-            }
-        }
-        if (duration >= 2100) {
-            setRemovingDebuff(false);
-            setPlayerState(PLAYER_STATE_STAND);
-        }
-    }
-
-    private void updateSkillShieldReflectHit(final double dmgTaken, final double mult) {
-        final ProjShieldReflect proj = new ProjShieldReflect(this.logic, this.logic.getNextProjKey(), this, this.x, this.y,
-                dmgTaken * mult);
-        this.logic.queueAddProj(proj);
-        sendParticle(this.logic.getRoom(), Globals.PARTICLE_SHIELD_REFLECTHIT, this.x, this.y);
-    }
-
-    private void updateSkillShieldReflectCast() {
-        final int duration = Globals.nsToMs(this.logic.getTime() - this.skillCastTime);
-        if (duration == 0) {
-            queueBuff(new BuffShieldReflect(this.logic, 3000, .4 + 0.02 * getSkillLevel(Skill.SHIELD_REFLECT), this, this));
-            sendParticle(this.logic.getRoom(), Globals.PARTICLE_SHIELD_REFLECTCAST, this.key);
-            sendParticle(this.logic.getRoom(), Globals.PARTICLE_SHIELD_REFLECTBUFF, this.key);
-            if (isSkillMaxed(Skill.SHIELD_REFLECT)) {
-                for (final Map.Entry<Byte, Player> player : this.logic.getPlayers().entrySet()) {
-                    final Player p = player.getValue();
-                    if (p != this && !p.isDead()) {
-                        p.queueBuff(new BuffShieldReflect(this.logic, 3000, 0.4, this, p));
-                        if (!map.isPvP()) {
-                            sendParticle(this.logic.getRoom(), Globals.PARTICLE_SHIELD_REFLECTCAST, p.getKey());
-                        }
-                    }
-                }
-            }
-        }
-        updateSkillEnd(duration, 250, false, false);
-    }
-
-    private void updateSkillShieldToss() {
-        final int duration = Globals.nsToMs(this.logic.getTime() - this.skillCastTime);
-        final int numHits = isSkillMaxed(Skill.SHIELD_TOSS) ? 3 : 1;
-
-        if (hasPastDuration(duration, 100 + this.skillCounter * 200) && this.skillCounter < numHits) {
-            this.skillCounter++;
-            final ProjShieldToss proj = new ProjShieldToss(this.logic, this.logic.getNextProjKey(), this, this.x, this.y);
-            this.logic.queueAddProj(proj);
-            sendParticle(this.logic.getRoom(), Globals.PARTICLE_SHIELD_TOSS, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
-                    this.facing);
-        }
-        updateSkillEnd(duration, 700, true, false);
-    }
-
-    private void updateSkillShieldCharge() {
-        final int duration = Globals.nsToMs(this.logic.getTime() - this.skillCastTime);
-        setXSpeed((this.facing == Globals.RIGHT) ? 18 : -18);
-        if (duration == 0) {
-            final ProjShieldCharge proj = new ProjShieldCharge(this.logic, this.logic.getNextProjKey(), this, this.x, this.y);
-            this.logic.queueAddProj(proj);
-            sendParticle(this.logic.getRoom(), Globals.PARTICLE_SHIELD_CHARGE, this.key, this.facing);
-        }
-        updateSkillEnd(duration, 750, false, false);
-    }
-
-    private void updateSkillShieldDash() {
-        final int duration = Globals.nsToMs(this.logic.getTime() - this.skillCastTime);
-        if (!isStunned() && !isKnockback()) {
-            setXSpeed((this.facing == Globals.RIGHT) ? 15 : -15);
-        }
-        if (isSkillMaxed(Skill.SHIELD_DASH) && !isInvulnerable()) {
-            setInvulnerable(true);
-        }
-
-        if (duration == 0) {
-            queueBuff(new BuffShieldDash(this.logic, 5000, 0.01 + 0.003 * getSkillLevel(Skill.SHIELD_DASH), this));
-            sendParticle(this.logic.getRoom(), Globals.PARTICLE_SHIELD_DASHBUFF, this.key);
-            sendParticle(this.logic.getRoom(), Globals.PARTICLE_SHIELD_DASH, this.key, this.facing);
-            setYSpeed(-4);
-        }
-
-        if (duration >= 250 || isStunned() || isKnockback()) {
-            setInvulnerable(false);
-            setPlayerState(PLAYER_STATE_STAND);
-        }
-    }
-
     private void updateSkillUse() {
         if (!isKnockback()) {
             setXSpeed(0);
         }
-        switch (this.playerState) {
-           
-            case PLAYER_STATE_SHIELD_DASH:
-                updateSkillShieldDash();
-                break;
-            case PLAYER_STATE_SHIELD_CHARGE:
-                updateSkillShieldCharge();
-                break;
-            case PLAYER_STATE_SHIELD_FORTIFY:
-                updateSkillShieldFortify();
-                break;
-            case PLAYER_STATE_SHIELD_REFLECT:
-                updateSkillShieldReflectCast();
-                break;
-            case PLAYER_STATE_SHIELD_IRON:
-                updateSkillShieldIron();
-                break;
-            case PLAYER_STATE_SHIELD_TOSS:
-                updateSkillShieldToss();
-                break;
-            default:
-                getSkill(PLAYER_STATE_SKILLCODE.get(this.playerState)).updateSkillUse(this);
-        }
+        getSkill(PLAYER_STATE_SKILLCODE.get(this.playerState)).updateSkillUse(this);
     }
 
-    public void updateSkillEnd(boolean ended) {
+    public boolean updateSkillEnd(boolean ended) {
         if (ended) {
             setInvulnerable(false);
             setPlayerState(PLAYER_STATE_STAND);
+            return true;
         }
+        return false;
     }
 
-    public void updateSkillEnd(final int currentSkillDuration, final int skillEndDuration, final boolean isCanceledByStun, final boolean isCanceledByKnockback) {
-        updateSkillEnd(currentSkillDuration >= skillEndDuration || (isCanceledByStun && isStunned() || (isCanceledByKnockback && isKnockback())));
+    public boolean updateSkillEnd(final int currentSkillDuration, final int skillEndDuration, final boolean isCanceledByStun, final boolean isCanceledByKnockback) {
+        return updateSkillEnd(currentSkillDuration >= skillEndDuration || (isCanceledByStun && isStunned() || (isCanceledByKnockback && isKnockback())));
     }
 
     private void updateHP() {
@@ -892,7 +750,9 @@ public class Player extends Thread implements GameEntity {
                 if (dmg.canReflect()) {
                     for (final Buff b : this.reflects) {
                         if (b instanceof BuffShieldReflect) {
-                            ((BuffShieldReflect) b).getOwner().updateSkillShieldReflectHit(amount, ((BuffShieldReflect) b).getMultiplier());
+                            Player reflectOwner = ((BuffShieldReflect) b).getOwner();
+                            SkillShieldReflect reflectSkill = (SkillShieldReflect) reflectOwner.getSkill(Skill.SHIELD_REFLECT);
+                            reflectSkill.updateSkillReflectHit(amount, ((BuffShieldReflect) b).getMultiplier(), reflectOwner);
                         }
                     }
                 }
@@ -1831,7 +1691,7 @@ public class Player extends Thread implements GameEntity {
         return this.isInvulnerable;
     }
 
-    private void setRemovingDebuff(final boolean set) {
+    public void setRemovingDebuff(final boolean set) {
         this.isRemoveDebuff = set;
     }
 

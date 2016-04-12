@@ -18,7 +18,7 @@ public abstract class Skill {
     protected int maxCooldown;
     protected LogicModule logic;
     protected boolean isPassive = false;
-    
+
     public final static byte NUM_SKILLS = 30,
             SWORD_VORPAL = 0x00,
             SWORD_PHANTOM = 0x01,
@@ -193,8 +193,8 @@ public abstract class Skill {
     public byte castPlayerState() {
         return SKILL_PLAYER_STATE.get(this.skillCode);
     }
-    
+
     public void updateSkillUse(Player player) {
-        
+
     }
 }

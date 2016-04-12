@@ -1,8 +1,8 @@
 package blockfighter.server.entities.proj;
 
 import blockfighter.server.LogicModule;
-import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.damage.Damage;
+import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
 import java.awt.geom.Rectangle2D;
 

@@ -13,6 +13,7 @@ public class SkillBowVolley extends Skill {
 
     /**
      * Constructor for Bow Skill Volley.
+     *
      * @param l
      */
     public SkillBowVolley(final LogicModule l) {
@@ -24,7 +25,7 @@ public class SkillBowVolley extends Skill {
 
     @Override
     public void updateSkillUse(Player player) {
-        final int duration = Globals.nsToMs(this.logic.getTime() - this.skillCastTime);
+        final int duration = Globals.nsToMs(this.logic.getTime() - player.getSkillCastTime());
         final int numHits = 20;
         if (Player.hasPastDuration(duration, player.getSkillCounter() * 100) && player.getSkillCounter() < numHits) {
             final ProjBowVolley proj = new ProjBowVolley(this.logic, this.logic.getNextProjKey(), player, player.getX(),

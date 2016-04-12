@@ -27,7 +27,7 @@ public class SkillSwordSlash extends Skill {
     @Override
     public void updateSkillUse(Player player) {
         final int numHits = 3;
-        final int duration = Globals.nsToMs(this.logic.getTime() - this.skillCastTime);
+        final int duration = Globals.nsToMs(this.logic.getTime() - player.getSkillCastTime());
         if (player.isSkillMaxed(Skill.SWORD_SLASH) && duration == 0) {
             player.queueBuff(new BuffSwordSlash(this.logic, 2000, .1, player));
             Player.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_SLASHBUFF, player.getKey());

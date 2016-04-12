@@ -2,10 +2,10 @@ package blockfighter.server.entities.mob.boss.Lightning;
 
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
-import blockfighter.server.entities.mob.Mob;
-import blockfighter.server.entities.mob.MobProjectile;
 import blockfighter.server.entities.buff.BuffKnockback;
 import blockfighter.server.entities.damage.Damage;
+import blockfighter.server.entities.mob.Mob;
+import blockfighter.server.entities.mob.MobProjectile;
 import blockfighter.server.entities.player.Player;
 import java.awt.geom.Rectangle2D;
 import java.util.Map;

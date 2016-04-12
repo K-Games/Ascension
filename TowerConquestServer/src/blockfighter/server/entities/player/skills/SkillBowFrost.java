@@ -25,7 +25,7 @@ public class SkillBowFrost extends Skill {
 
     @Override
     public void updateSkillUse(Player player) {
-        final int duration = Globals.nsToMs(this.logic.getTime() - this.skillCastTime);
+        final int duration = Globals.nsToMs(this.logic.getTime() - player.getSkillCastTime());
         final int numHits = player.isSkillMaxed(Skill.BOW_FROST) ? 3 : 1;
         if (Player.hasPastDuration(duration, 160 + player.getSkillCounter() * 90) && player.getSkillCounter() < numHits) {
             player.incrementSkillCounter();

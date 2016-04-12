@@ -13,6 +13,7 @@ public class SkillBowPower extends Skill {
 
     /**
      * Constructor for Bow Skill Power Shot.
+     *
      * @param l
      */
     public SkillBowPower(final LogicModule l) {
@@ -24,16 +25,16 @@ public class SkillBowPower extends Skill {
 
     @Override
     public void updateSkillUse(Player player) {
-        final int duration = Globals.nsToMs(this.logic.getTime() - this.skillCastTime);
+        final int duration = Globals.nsToMs(this.logic.getTime() - player.getSkillCastTime());
         if (duration == 0) {
             Player.sendSFX(this.logic.getRoom(), Globals.SFX_POWER2, player.getX(), player.getY());
         }
         if (duration <= 400 && Player.hasPastDuration(duration, player.getSkillCounter() * 50) && player.getSkillCounter() < 6) {
             Player.sendParticle(this.logic.getRoom(), Globals.PARTICLE_BOW_POWERCHARGE, player.getX() + ((player.getFacing() == Globals.RIGHT) ? 75 : -75),
                     player.getY() - 215, player.getFacing());
-                        player.incrementSkillCounter();
+            player.incrementSkillCounter();
         } else if (Player.hasPastDuration(duration, 800) && player.getSkillCounter() < 7) {
-                        player.incrementSkillCounter();
+            player.incrementSkillCounter();
             final ProjBowPower proj = new ProjBowPower(this.logic, this.logic.getNextProjKey(), player, player.getX(), player.getY());
             this.logic.queueAddProj(proj);
             Player.sendParticle(this.logic.getRoom(), Globals.PARTICLE_BOW_POWER, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),

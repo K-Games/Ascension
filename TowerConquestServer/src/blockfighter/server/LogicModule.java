@@ -7,6 +7,7 @@ import blockfighter.server.maps.GameMap;
 import blockfighter.server.maps.GameMapArena;
 import blockfighter.server.maps.GameMapFloor1;
 import blockfighter.server.net.PacketSender;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -33,15 +34,18 @@ public class LogicModule extends Thread {
 
     private GameMap map;
     private int projMaxKeys = 500;
+    private int mobMaxKeys = 255;
 
     private final ConcurrentLinkedQueue<Byte> playerKeys = new ConcurrentLinkedQueue<>();
     private final ConcurrentLinkedQueue<Integer> projKeys = new ConcurrentLinkedQueue<>();
+    private final ConcurrentLinkedQueue<Byte> mobKeys = new ConcurrentLinkedQueue<>();
 
     private final ConcurrentLinkedQueue<Player> pAddQueue = new ConcurrentLinkedQueue<>();
     private final ConcurrentLinkedQueue<byte[]> pDirKeydownQueue = new ConcurrentLinkedQueue<>();
     private final ConcurrentLinkedQueue<byte[]> pUseSkillQueue = new ConcurrentLinkedQueue<>();
     private final ConcurrentLinkedQueue<Projectile> projEffectQueue = new ConcurrentLinkedQueue<>();
     private final ConcurrentLinkedQueue<Projectile> projAddQueue = new ConcurrentLinkedQueue<>();
+    private final ConcurrentLinkedQueue<Mob> mobAddQueue = new ConcurrentLinkedQueue<>();
 
     private long lastRefreshAll = 0;
     private long lastUpdateTime = 0, lastProcessQueue = 0;
@@ -68,12 +72,7 @@ public class LogicModule extends Thread {
         } else {
             this.map = new GameMapFloor1();
         }
-        for (int i = 0; i < 500; i++) {
-            this.projKeys.add(i);
-        }
-        for (byte i = 0; i < Globals.SERVER_MAX_PLAYERS; i++) {
-            this.playerKeys.add(i);
-        }
+        reset();
     }
 
     /**
@@ -89,12 +88,27 @@ public class LogicModule extends Thread {
         return this.currentTime;
     }
 
-    public void reset() {
+    private void resetKeys() {
+        for (int i = 0; i < 500; i++) {
+            this.projKeys.add(i);
+        }
+        Byte[] keys = new Byte[mobMaxKeys];
+        for (int i = 0; i < this.mobMaxKeys; i++) {
+            keys[i] = (byte) i;
+        }
+        mobKeys.addAll(Arrays.asList(keys));
+        for (byte i = 0; i < Globals.SERVER_MAX_PLAYERS; i++) {
+            this.playerKeys.add(i);
+        }
+    }
+
+    private void reset() {
         this.players.clear();
         this.mobs.clear();
         this.projectiles.clear();
         this.projKeys.clear();
         this.playerKeys.clear();
+        this.mobKeys.clear();
 
         this.pAddQueue.clear();
         this.pDirKeydownQueue.clear();
@@ -109,12 +123,8 @@ public class LogicModule extends Thread {
         } else {
             this.map = new GameMapFloor1();
         }
-        for (int i = 0; i < 500; i++) {
-            this.projKeys.add(i);
-        }
-        for (byte i = 0; i < Globals.SERVER_MAX_PLAYERS; i++) {
-            this.playerKeys.add(i);
-        }
+        resetKeys();
+        this.map.spawnMapMobs(this);
     }
 
     @Override
@@ -128,14 +138,6 @@ public class LogicModule extends Thread {
             }
             if (this.players.isEmpty()) {
                 return;
-            }
-            if (this.mobs.isEmpty()) {
-                final Mob[] newMobs = this.map.getMobs(this);
-                if (newMobs != null) {
-                    for (final Mob b : newMobs) {
-                        this.mobs.put(b.getKey(), b);
-                    }
-                }
             }
             final long nowMs = System.currentTimeMillis();
 
@@ -168,12 +170,26 @@ public class LogicModule extends Thread {
         for (final Map.Entry<Byte, Mob> mob : this.mobs.entrySet()) {
             LOGIC_THREAD_POOL.execute(mob.getValue());
         }
+
+        final LinkedList<Byte> remove = new LinkedList<>();
         for (final Map.Entry<Byte, Mob> mob : this.mobs.entrySet()) {
             try {
                 mob.getValue().join();
+                if (mob.getValue().isDead()) {
+                    remove.add(mob.getValue().getKey());
+                }
             } catch (final InterruptedException ex) {
                 Globals.logError(ex.getLocalizedMessage(), ex, true);
             }
+        }
+        removeMobs(remove);
+    }
+
+    private void removeMobs(final LinkedList<Byte> remove) {
+        while (!remove.isEmpty()) {
+            final byte key = remove.pop();
+            this.mobs.remove(key);
+            returnMobKey(key);
         }
     }
 
@@ -227,8 +243,8 @@ public class LogicModule extends Thread {
 
     private void removeProjectiles(final LinkedList<Integer> remove) {
         while (!remove.isEmpty()) {
-            final int key = remove.peek();
-            this.projectiles.remove(remove.pop());
+            final int key = remove.pop();
+            this.projectiles.remove(key);
             returnProjKey(key);
         }
     }
@@ -279,10 +295,17 @@ public class LogicModule extends Thread {
      * @return returns next open key
      */
     public byte getNextPlayerKey() {
-        if (this.playerKeys.peek() == null) {
+        if (this.playerKeys.isEmpty()) {
             return -1;
         }
         return this.playerKeys.poll();
+    }
+
+    public byte getNextMobKey() {
+        if (this.mobKeys.isEmpty()) {
+            return -1;
+        }
+        return this.mobKeys.poll();
     }
 
     /**
@@ -330,6 +353,12 @@ public class LogicModule extends Thread {
         this.projAddQueue.add(p);
     }
 
+    public void queueAddMob(final Mob p) {
+        if (p.getKey() != -1) {
+            this.mobAddQueue.add(p);
+        }
+    }
+
     /**
      * Queue project effects to be applied to player.
      *
@@ -340,7 +369,7 @@ public class LogicModule extends Thread {
     }
 
     private void processQueues() {
-        final Runnable[] queues = new Runnable[4];
+        final Runnable[] queues = new Runnable[5];
 
         while (!this.pAddQueue.isEmpty()) {
             final Player newPlayer = this.pAddQueue.poll();
@@ -358,9 +387,6 @@ public class LogicModule extends Thread {
             }
             if (!this.projEffectQueue.isEmpty()) {
                 this.projEffectQueue.clear();
-            }
-            if (!this.projAddQueue.isEmpty()) {
-                this.projAddQueue.clear();
             }
             return;
         }
@@ -422,9 +448,23 @@ public class LogicModule extends Thread {
             }
         };
 
+        queues[4] = () -> {
+            try {
+                while (!this.mobAddQueue.isEmpty()) {
+                    final Mob p = this.mobAddQueue.poll();
+                    if (p != null) {
+                        this.mobs.put(p.getKey(), p);
+                    }
+                }
+            } catch (final Exception ex) {
+                Globals.logError(ex.getLocalizedMessage(), ex, true);
+            }
+        };
+
         for (final Runnable t : queues) {
             LOGIC_THREAD_POOL.execute(t);
         }
+
     }
 
     /**
@@ -449,6 +489,10 @@ public class LogicModule extends Thread {
      */
     public void returnProjKey(final int key) {
         this.projKeys.add(key);
+    }
+
+    public void returnMobKey(final byte key) {
+        this.mobKeys.add(key);
     }
 
     /**

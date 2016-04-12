@@ -19,5 +19,6 @@ An multiplayer action 2D sidescrolling platformer coded in pure Java.
 
 ## v0.16 Server Update 19
 ### Server Changes
+* Mob(Monster) System improved - Added spawning, unified keys per map.
 * Refactored Skill use implementation - Moved from Player class to Skill specific class.
 * Passive Skills now have a flag to indicate its a passive skill.

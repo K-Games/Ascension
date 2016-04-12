@@ -13,6 +13,7 @@ public class SkillSwordCinder extends Skill {
 
     /**
      * Constructor for Sword Skill Cinder.
+     *
      * @param l
      */
     public SkillSwordCinder(final LogicModule l) {
@@ -21,7 +22,7 @@ public class SkillSwordCinder extends Skill {
         this.maxCooldown = 20000;
         this.reqWeapon = Globals.ITEM_SWORD;
     }
-    
+
     @Override
     public void updateSkillUse(Player player) {
         final int duration = Globals.nsToMs(this.logic.getTime() - player.getSkillCastTime());

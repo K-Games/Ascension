@@ -36,7 +36,7 @@ public class SkillSwordPhantom extends Skill {
         }
 
         if (Player.hasPastDuration(duration, 80 + 80 * player.getSkillCounter()) && player.getSkillCounter() < numHits) {
-            if (player.getMap().isPvP()) {
+            if (this.logic.getMap().isPvP()) {
                 Player target;
                 ArrayList<Player> playersInRange = new ArrayList<>(Globals.SERVER_MAX_PLAYERS);
                 for (final Map.Entry<Byte, Player> pEntry : this.logic.getPlayers().entrySet()) {
