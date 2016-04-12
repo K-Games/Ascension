@@ -9,7 +9,7 @@
 # Description
 An multiplayer action 2D sidescrolling platformer coded in pure Java.
 
-## v0.16 Client Update 19
+## v0.17 Client Update 0
 ### Client Changes
 * Added Debug Mode - Currently displays some hidden values in the menu.
 * Prototype screen shake - Nothing triggers this yet.
@@ -19,7 +19,7 @@ An multiplayer action 2D sidescrolling platformer coded in pure Java.
 * Added parallax map backgrounds.
 * Particle key generation changed.
 
-## v0.16 Server Update 19
+## v0.17 Server Update 0
 ### Server Changes
 * Mob(Monster) System improved - Added spawning, unified keys per map.
 * Refactored Skill use implementation - Moved from Player class to Skill specific class.
