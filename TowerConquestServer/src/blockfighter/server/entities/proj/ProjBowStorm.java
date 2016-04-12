@@ -21,13 +21,12 @@ public class ProjBowStorm extends Projectile {
      * Projectile of Bow Skill Arrow Storm.
      *
      * @param l Room/Logic Module
-     * @param k Projectile Key
      * @param o Owning player
      * @param x Spawn x-coordinate
      * @param y Spawn y-coordinate
      */
-    public ProjBowStorm(final LogicModule l, final int k, final Player o, final double x, final double y) {
-        super(l, k, o, x, y, 5000);
+    public ProjBowStorm(final LogicModule l, final Player o, final double x, final double y) {
+        super(l, o, x, y, 5000);
         lastDamageTime = this.logic.getTime();
         this.hitbox = new Rectangle2D.Double[1];
         if (o.getFacing() == Globals.RIGHT) {

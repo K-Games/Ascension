@@ -20,13 +20,12 @@ public class ProjSwordVorpal extends Projectile {
      * Projectile of Sword Skill Vorpal.
      *
      * @param l Room/Logic Module
-     * @param k Projectile Key
      * @param o Owning player
      * @param x Spawn x-coordinate
      * @param y Spawn y-coordinate
      */
-    public ProjSwordVorpal(final LogicModule l, final int k, final Player o, final double x, final double y) {
-        super(l, k, o, x, y, 200);
+    public ProjSwordVorpal(final LogicModule l, final Player o, final double x, final double y) {
+        super(l, o, x, y, 200);
         this.hitbox = new Rectangle2D.Double[1];
         if (o.getFacing() == Globals.RIGHT) {
             this.hitbox[0] = new Rectangle2D.Double(this.x - 60, this.y - 130, 350, 113);

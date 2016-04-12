@@ -95,13 +95,13 @@ public abstract class Screen implements KeyListener, MouseListener, MouseMotionL
     }
 
     public int getNextParticleKey() {
-        if (PARTICLE_KEYS.isEmpty()) {
-            for (int i = numParticleKeys; i < numParticleKeys + 100; i++) {
-                PARTICLE_KEYS.add(i);
-            }
-            numParticleKeys += 100;
+        Integer nextKey = PARTICLE_KEYS.poll();
+        while (nextKey == null) {
+            PARTICLE_KEYS.add(numParticleKeys);
+            numParticleKeys++;
+            nextKey = PARTICLE_KEYS.poll();
         }
-        return PARTICLE_KEYS.remove();
+        return nextKey;
     }
 
     public void returnParticleKey(final int key) {

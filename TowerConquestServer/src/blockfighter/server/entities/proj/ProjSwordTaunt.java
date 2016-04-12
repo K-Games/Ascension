@@ -20,13 +20,12 @@ public class ProjSwordTaunt extends Projectile {
      * Projectile of Sword Skill Taunt.
      *
      * @param l Room/Logic Module
-     * @param k Projectile Key
      * @param o Owning player
      * @param x Spawn x-coordinate
      * @param y Spawn y-coordinate
      */
-    public ProjSwordTaunt(final LogicModule l, final int k, final Player o, final double x, final double y) {
-        super(l, k, o, x, y, 200);
+    public ProjSwordTaunt(final LogicModule l, final Player o, final double x, final double y) {
+        super(l, o, x, y, 200);
         this.hitbox = new Rectangle2D.Double[1];
         if (o.getFacing() == Globals.RIGHT) {
             this.hitbox[0] = new Rectangle2D.Double(this.x - 20, this.y - 155, 250, 160);

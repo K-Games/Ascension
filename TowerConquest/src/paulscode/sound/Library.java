@@ -8,8 +8,7 @@ import java.util.Set;
 import javax.sound.sampled.AudioFormat;
 
 /**
- * The Library class is the class from which all library types are extended. It provides generic methods for interfacing with the audio libraries supported by the SoundSystem. Specific libraries
- * should extend this class and override the necessary methods. For consistant naming conventions, each sub-class should have the name prefix "Library".
+ * The Library class is the class from which all library types are extended. It provides generic methods for interfacing with the audio libraries supported by the SoundSystem. Specific libraries should extend this class and override the necessary methods. For consistant naming conventions, each sub-class should have the name prefix "Library".
  *
  * This class may also be used as the "No Sound Library" (i.e. silent mode) if no other audio libraries are supported by the host machine, or to mute all sound.
  * <br><br>
@@ -101,8 +100,7 @@ public class Library {
     protected boolean reverseByteOrder = false;
 
     /**
-     * Constructor: Instantiates the source map and listener information. NOTES: The 'super()' method should be at the top of constructors for all extended classes. The varriable 'libraryType' should
-     * be given a new value in the constructors for all extended classes.
+     * Constructor: Instantiates the source map and listener information. NOTES: The 'super()' method should be at the top of constructors for all extended classes. The varriable 'libraryType' should be given a new value in the constructors for all extended classes.
      */
     public Library() throws SoundSystemException {
         // grab a handle to the message logger:
@@ -309,8 +307,7 @@ public class Library {
     }
 
     /**
-     * Removes a pre-loaded sound from memory. This is a good method to use for freeing up memory after a large sound file is no longer needed. NOTE: the source will remain in memory after this method
-     * has been called, for as long as the sound is attached to an existing source.
+     * Removes a pre-loaded sound from memory. This is a good method to use for freeing up memory after a large sound file is no longer needed. NOTE: the source will remain in memory after this method has been called, for as long as the sound is attached to an existing source.
      *
      * @param filename Filename/identifier of the sound file to unload.
      */
@@ -1037,9 +1034,7 @@ public class Library {
  /*                         END OVERRIDE METHODS                               */
  /* ########################################################################## */
     /**
-     * Returns a handle to the next available channel. If the specified source is a normal source, a normal channel is returned, and if it is a streaming source, then a streaming channel is returned.
-     * If all channels of the required type are currently playing, then the next channel playing a non-priority source is returned. If no channels are available (i.e. they are all playing priority
-     * sources) then getNextChannel returns null.
+     * Returns a handle to the next available channel. If the specified source is a normal source, a normal channel is returned, and if it is a streaming source, then a streaming channel is returned. If all channels of the required type are currently playing, then the next channel playing a non-priority source is returned. If no channels are available (i.e. they are all playing priority sources) then getNextChannel returns null.
      *
      * @param source Source to find a channel for.
      * @return The next available channel, or null.
@@ -1203,9 +1198,7 @@ public class Library {
     }
 
     /**
-     * Fades out the volume of whatever the specified source is currently playing, then begins playing the specified file at the source's previously assigned volume level. If the filenameURL parameter
-     * is null or empty, the specified source will simply fade out and stop. The miliseconds parameter must be non-negative or zero. This method will remove anything that is currently in the specified
-     * source's list of queued sounds that would have played next when the current sound finished playing. This method may only be used for streaming and MIDI sources.
+     * Fades out the volume of whatever the specified source is currently playing, then begins playing the specified file at the source's previously assigned volume level. If the filenameURL parameter is null or empty, the specified source will simply fade out and stop. The miliseconds parameter must be non-negative or zero. This method will remove anything that is currently in the specified source's list of queued sounds that would have played next when the current sound finished playing. This method may only be used for streaming and MIDI sources.
      *
      * @param sourcename Name of the source to fade out.
      * @param filenameURL Filename/URL of the sound file to play next, or null for none.
@@ -1224,9 +1217,7 @@ public class Library {
     }
 
     /**
-     * Fades out the volume of whatever the specified source is currently playing, then fades the volume back in playing the specified file. Final volume after fade-in completes will be equal to the
-     * source's previously assigned volume level. The filenameURL parameter may not be null or empty. The miliseconds parameters must be non-negative or zero. This method will remove anything that is
-     * currently in the specified source's list of queued sounds that would have played next when the current sound finished playing. This method may only be used for streaming and MIDI sources.
+     * Fades out the volume of whatever the specified source is currently playing, then fades the volume back in playing the specified file. Final volume after fade-in completes will be equal to the source's previously assigned volume level. The filenameURL parameter may not be null or empty. The miliseconds parameters must be non-negative or zero. This method will remove anything that is currently in the specified source's list of queued sounds that would have played next when the current sound finished playing. This method may only be used for streaming and MIDI sources.
      *
      * @param sourcename Name of the source to fade out/in.
      * @param filenameURL Filename/URL of the sound file to play next, or null for none.
@@ -1246,10 +1237,7 @@ public class Library {
     }
 
     /**
-     * Makes sure the current volume levels of streaming sources and MIDI are correct. This method is designed to help reduce the "jerky" fading behavior that happens when using some library and codec
-     * pluggins (such as LibraryJavaSound and CodecJOrbis). This method has no effect on normal "non-streaming" sources. It would normally be called somewhere in the main "game loop". IMPORTANT: To
-     * optimize frame-rates, do not call this method for every frame. It is better to just call this method at some acceptable "granularity" (play around with different granularities to find what
-     * sounds acceptable for a particular situation).
+     * Makes sure the current volume levels of streaming sources and MIDI are correct. This method is designed to help reduce the "jerky" fading behavior that happens when using some library and codec pluggins (such as LibraryJavaSound and CodecJOrbis). This method has no effect on normal "non-streaming" sources. It would normally be called somewhere in the main "game loop". IMPORTANT: To optimize frame-rates, do not call this method for every frame. It is better to just call this method at some acceptable "granularity" (play around with different granularities to find what sounds acceptable for a particular situation).
      */
     public void checkFadeVolumes() {
         if (midiChannel != null) {

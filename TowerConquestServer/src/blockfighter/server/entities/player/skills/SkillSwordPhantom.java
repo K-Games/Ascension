@@ -84,7 +84,7 @@ public class SkillSwordPhantom extends Skill {
                 }
             }
             if (!endPhantom) {
-                final ProjSwordPhantom proj = new ProjSwordPhantom(this.logic, this.logic.getNextProjKey(), player, player.getX(), player.getY());
+                final ProjSwordPhantom proj = new ProjSwordPhantom(this.logic, player, player.getX(), player.getY());
                 this.logic.queueAddProj(proj);
                 Player.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_PHANTOM, player.getX(), player.getY(), player.getFacing());
                 Player.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_PHANTOM2, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(), player.getFacing());

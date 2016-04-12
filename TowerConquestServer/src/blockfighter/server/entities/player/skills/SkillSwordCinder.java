@@ -28,7 +28,7 @@ public class SkillSwordCinder extends Skill {
         final int duration = Globals.nsToMs(this.logic.getTime() - player.getSkillCastTime());
         if (Player.hasPastDuration(duration, 50) && player.getSkillCounter() < 1) {
             player.incrementSkillCounter();
-            final ProjSwordCinder proj = new ProjSwordCinder(this.logic, this.logic.getNextProjKey(), player, player.getX(), player.getY());
+            final ProjSwordCinder proj = new ProjSwordCinder(this.logic, player, player.getX(), player.getY());
             this.logic.queueAddProj(proj);
             Player.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_CINDER, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
                     player.getFacing());

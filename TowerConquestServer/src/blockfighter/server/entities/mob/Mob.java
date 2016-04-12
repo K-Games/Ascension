@@ -62,9 +62,9 @@ public abstract class Mob extends Thread implements GameEntity {
     protected int skillCounter = 0;
     protected byte type;
 
-    public Mob(final LogicModule l, final byte key, final GameMap map, final double x, final double y) {
+    public Mob(final LogicModule l, final GameMap map, final double x, final double y) {
         this.logic = l;
-        this.key = key;
+        this.key = this.logic.getNextMobKey();
         this.x = x;
         this.y = y;
         this.hitbox = new Rectangle2D.Double(x - 50, y - 180, 100, 180);

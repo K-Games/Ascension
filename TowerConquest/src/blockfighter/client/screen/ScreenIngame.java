@@ -264,8 +264,8 @@ public class ScreenIngame extends Screen {
     public void draw(final Graphics2D g) {
         g.setClip(0, 0, 1280, 720);
         final AffineTransform resetForm = g.getTransform();
-        this.map.drawBg(g);
         if (this.players != null && this.myKey != -1 && this.players.containsKey(this.myKey)) {
+            this.map.drawBg(g, this.players.get(this.myKey).getX(), this.players.get(this.myKey).getY());
             double scale = 1;
             g.scale(scale, scale);
             g.translate(640.0 / scale - this.players.get(this.myKey).getX(), 500.0 / scale - this.players.get(this.myKey).getY());
@@ -1130,7 +1130,7 @@ public class ScreenIngame extends Screen {
             remove.add(pEntry.getKey());
         }
         removeParticles(this.particles, remove);
-        
+
         Particle.unloadParticles();
         ItemEquip.unloadSprites();
         for (final Map.Entry<Byte, Mob> mobEntry : this.mobs.entrySet()) {

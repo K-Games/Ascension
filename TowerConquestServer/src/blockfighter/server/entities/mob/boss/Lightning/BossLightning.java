@@ -32,8 +32,8 @@ public class BossLightning extends Mob {
             STATE_AI_BOLT = 0x0A,
             STATE_AI_BALL = 0x0B;
 
-    public BossLightning(final LogicModule l, final byte key, final GameMap map, final double x, final double y) {
-        super(l, key, map, x, y);
+    public BossLightning(final LogicModule l, final GameMap map, final double x, final double y) {
+        super(l, map, x, y);
         this.type = MOB_BOSS_LIGHTNING;
         this.stats = new double[NUM_STATS];
         this.stats[STAT_LEVEL] = l.getRoom();
@@ -45,7 +45,7 @@ public class BossLightning extends Mob {
         super.addSkill(SKILL_BALL, new SkillBall(this.logic));
         super.addSkill(SKILL_ATT1, new SkillAttack1(this.logic));
         super.addSkill(SKILL_ATT2, new SkillAttack2(this.logic));
-        this.logic.queueAddProj(new ProjTouch(this.logic, this.logic.getNextProjKey(), this));
+        //this.logic.queueAddProj(new ProjTouch(this.logic, this));
     }
 
     @Override
@@ -76,6 +76,7 @@ public class BossLightning extends Mob {
             queueMobState(STATE_STAND);
         } else if (this.aggroCounter.isEmpty()) {
             // No aggro, just sit there.
+            setXSpeed(0);
             queueMobState(STATE_STAND);
         } else {
             updateAI();
@@ -188,7 +189,7 @@ public class BossLightning extends Mob {
                     byte count;
                     switch (phase) {
                         case 0:
-                            proj = new ProjBolt(this.logic, this.logic.getNextProjKey(), this, t.getX(), t.getY());
+                            proj = new ProjBolt(this.logic, this, t.getX(), t.getY());
                             this.logic.queueAddProj(proj);
                             sendMobParticle(this.key, this.logic.getRoom(), PARTICLE_BOLT, proj.getHitbox()[0].getX(),
                                     proj.getHitbox()[0].getY());
@@ -199,7 +200,7 @@ public class BossLightning extends Mob {
                                 if (count == 2) {
                                     break;
                                 }
-                                proj = new ProjBolt(this.logic, this.logic.getNextProjKey(), this, player.getKey().getX(),
+                                proj = new ProjBolt(this.logic, this, player.getKey().getX(),
                                         player.getKey().getY());
                                 this.logic.queueAddProj(proj);
                                 sendMobParticle(this.key, this.logic.getRoom(), PARTICLE_BOLT, proj.getHitbox()[0].getX(),
@@ -209,7 +210,7 @@ public class BossLightning extends Mob {
                             break;
                         case 2:
                             for (final Map.Entry<Player, Double> player : this.aggroCounter.entrySet()) {
-                                proj = new ProjBolt(this.logic, this.logic.getNextProjKey(), this, player.getKey().getX(),
+                                proj = new ProjBolt(this.logic, this, player.getKey().getX(),
                                         player.getKey().getY());
                                 this.logic.queueAddProj(proj);
                                 sendMobParticle(this.key, this.logic.getRoom(), PARTICLE_BOLT, proj.getHitbox()[0].getX(),
@@ -229,14 +230,14 @@ public class BossLightning extends Mob {
                     this.animState = STATE_ATTACK2;
                     this.frame = 0;
                     this.skillCounter++;
-                    final ProjBall proj = new ProjBall(this.logic, this.logic.getNextProjKey(), this, this.x, this.y);
+                    final ProjBall proj = new ProjBall(this.logic, this, this.x, this.y);
                     this.logic.queueAddProj(proj);
                     sendMobParticle(this.key, this.logic.getRoom(), PARTICLE_BALL1, proj.getHitbox()[0].getX(),
                             proj.getHitbox()[0].getY());
                 }
                 if ((phase == 1 || phase == 2) && hasPastDuration(duration, 1550) && this.skillCounter == 1) {
                     this.skillCounter++;
-                    final ProjBall proj = new ProjBall(this.logic, this.logic.getNextProjKey(), this, this.x, this.y);
+                    final ProjBall proj = new ProjBall(this.logic, this, this.x, this.y);
                     this.logic.queueAddProj(proj);
                     sendMobParticle(this.key, this.logic.getRoom(), PARTICLE_BALL1, proj.getHitbox()[0].getX(),
                             proj.getHitbox()[0].getY());
@@ -244,7 +245,7 @@ public class BossLightning extends Mob {
                 }
                 if (phase == 2 && hasPastDuration(duration, 2000) && this.skillCounter == 2) {
                     this.skillCounter++;
-                    final ProjBall proj = new ProjBall(this.logic, this.logic.getNextProjKey(), this, this.x, this.y);
+                    final ProjBall proj = new ProjBall(this.logic, this, this.x, this.y);
                     this.logic.queueAddProj(proj);
                     sendMobParticle(this.key, this.logic.getRoom(), PARTICLE_BALL1, proj.getHitbox()[0].getX(),
                             proj.getHitbox()[0].getY());
@@ -258,7 +259,7 @@ public class BossLightning extends Mob {
                 setXSpeed(0);
                 if (hasPastDuration(duration, 50) && this.skillCounter == 0) {
                     this.skillCounter++;
-                    final ProjAttack proj = new ProjAttack(this.logic, this.logic.getNextProjKey(), this, this.x, this.y);
+                    final ProjAttack proj = new ProjAttack(this.logic, this, this.x, this.y);
                     this.logic.queueAddProj(proj);
                     sendMobParticle(this.key, this.logic.getRoom(), PARTICLE_ATT1, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY());
                     if (phase == 1) {
@@ -275,7 +276,7 @@ public class BossLightning extends Mob {
                 setXSpeed(0);
                 if (hasPastDuration(duration, 50) && this.skillCounter == 0) {
                     this.skillCounter++;
-                    final ProjAttack proj = new ProjAttack(this.logic, this.logic.getNextProjKey(), this, this.x, this.y);
+                    final ProjAttack proj = new ProjAttack(this.logic, this, this.x, this.y);
                     this.logic.queueAddProj(proj);
                     sendMobParticle(this.key, this.logic.getRoom(), PARTICLE_ATT1, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY());
                     if (phase == 1) {

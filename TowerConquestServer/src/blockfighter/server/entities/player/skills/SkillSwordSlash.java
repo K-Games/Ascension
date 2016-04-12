@@ -34,7 +34,7 @@ public class SkillSwordSlash extends Skill {
         }
         if (Player.hasPastDuration(duration, (30 + 110 * player.getSkillCounter())) && player.getSkillCounter() < numHits) {
             player.incrementSkillCounter();
-            final ProjSwordSlash proj = new ProjSwordSlash(this.logic, this.logic.getNextProjKey(), player, player.getX(), player.getY(),
+            final ProjSwordSlash proj = new ProjSwordSlash(this.logic, player, player.getX(), player.getY(),
                     player.getSkillCounter());
             this.logic.queueAddProj(proj);
             switch (player.getSkillCounter()) {

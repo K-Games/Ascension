@@ -21,13 +21,12 @@ public class ProjSwordCinder extends Projectile {
      * Projectile of Sword Skill Cinder.
      *
      * @param l Room/Logic Module
-     * @param k Projectile Key
      * @param o Owning player
      * @param x Spawn x-coordinate
      * @param y Spawn y-coordinate
      */
-    public ProjSwordCinder(final LogicModule l, final int k, final Player o, final double x, final double y) {
-        super(l, k, o, x, y, 300);
+    public ProjSwordCinder(final LogicModule l, final Player o, final double x, final double y) {
+        super(l, o, x, y, 300);
         this.hitbox = new Rectangle2D.Double[1];
         if (o.getFacing() == Globals.RIGHT) {
             this.hitbox[0] = new Rectangle2D.Double(this.x - 10, this.y - 220, 170, 238);

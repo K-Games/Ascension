@@ -16,6 +16,9 @@ public class GameMapArena extends GameMap {
 
     public GameMapArena() {
         super.setMapID(0);
+        this.mapHeight = 1600;
+        this.mapWidth = 3700;
+        this.mapYOrigin = -1000;
     }
 
     @Override

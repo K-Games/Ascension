@@ -30,7 +30,7 @@ public class SkillShieldToss extends Skill {
 
         if (Player.hasPastDuration(duration, 100 + player.getSkillCounter() * 200) && player.getSkillCounter() < numHits) {
             player.incrementSkillCounter();
-            final ProjShieldToss proj = new ProjShieldToss(this.logic, this.logic.getNextProjKey(), player, player.getX(), player.getY());
+            final ProjShieldToss proj = new ProjShieldToss(this.logic, player, player.getX(), player.getY());
             this.logic.queueAddProj(proj);
             Player.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SHIELD_TOSS, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
                     player.getFacing());

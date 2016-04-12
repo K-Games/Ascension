@@ -82,11 +82,10 @@ public abstract class Projectile extends Thread implements GameEntity {
      * Constructor called by subclasses to reference sender and logic.
      *
      * @param l Reference to Logic module
-     * @param k Hash map key
      */
-    public Projectile(final LogicModule l, final int k) {
+    public Projectile(final LogicModule l) {
         this.logic = l;
-        this.key = k;
+        this.key = this.logic.getNextProjKey();
         projStartTime = this.logic.getTime();
     }
 
@@ -94,14 +93,13 @@ public abstract class Projectile extends Thread implements GameEntity {
      * Constructor for a empty projectile.
      *
      * @param l Reference to Logic module
-     * @param k Hash map key
      * @param o Owning player
      * @param x Spawning x
      * @param y Spawning y
      * @param duration
      */
-    public Projectile(final LogicModule l, final int k, final Player o, final double x, final double y, final int duration) {
-        this(l, k);
+    public Projectile(final LogicModule l, final Player o, final double x, final double y, final int duration) {
+        this(l);
         this.owner = o;
         this.x = x;
         this.y = y;
@@ -110,8 +108,8 @@ public abstract class Projectile extends Thread implements GameEntity {
         this.duration = duration;
     }
 
-    public Projectile(final LogicModule l, final int k, final Mob o, final double x, final double y, final int duration) {
-        this(l, k);
+    public Projectile(final LogicModule l, final Mob o, final double x, final double y, final int duration) {
+        this(l);
         this.mobOwner = o;
         this.x = x;
         this.y = y;

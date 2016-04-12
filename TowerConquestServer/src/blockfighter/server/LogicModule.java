@@ -156,7 +156,11 @@ public class LogicModule extends Thread {
             }
 
             for (final Map.Entry<Byte, Mob> mob : this.mobs.entrySet()) {
-                fin = mob.getValue().isDead();
+                fin = true;
+                if (!mob.getValue().isDead()) {
+                    fin = false;
+                    break;
+                }
             }
             if (fin) {
                 reset();
@@ -347,22 +351,22 @@ public class LogicModule extends Thread {
      * Projectile must have been created when calling this.
      * </p>
      *
-     * @param p New projectile to be added
+     * @param projectile New projectile to be added
      */
-    public void queueAddProj(final Projectile p) {
-        this.projAddQueue.add(p);
+    public void queueAddProj(final Projectile projectile) {
+        this.projAddQueue.add(projectile);
     }
 
-    public void queueAddMob(final Mob p) {
-        if (p.getKey() != -1) {
-            this.mobAddQueue.add(p);
+    public void queueAddMob(final Mob mob) {
+        if (mob.getKey() != -1) {
+            this.mobAddQueue.add(mob);
         }
     }
 
     /**
      * Queue project effects to be applied to player.
      *
-     * @param p Projectile which will affect the player
+     * @param p Projectile which will have it's effects processed
      */
     public void queueProjEffect(final Projectile p) {
         this.projEffectQueue.add(p);
@@ -473,13 +477,13 @@ public class LogicModule extends Thread {
      * @return key as integer
      */
     public int getNextProjKey() {
-        if (this.projKeys.isEmpty()) {
-            for (int i = this.projMaxKeys; i < this.projMaxKeys + 500; i++) {
-                this.projKeys.add(i);
-            }
-            this.projMaxKeys += 500;
+        Integer nextKey = this.projKeys.poll();
+        while (nextKey == null) {
+            this.projKeys.add(this.projMaxKeys);
+            this.projMaxKeys++;
+            nextKey = this.projKeys.poll();
         }
-        return this.projKeys.remove();
+        return nextKey;
     }
 
     /**

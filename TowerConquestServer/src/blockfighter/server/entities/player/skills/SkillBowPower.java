@@ -35,7 +35,7 @@ public class SkillBowPower extends Skill {
             player.incrementSkillCounter();
         } else if (Player.hasPastDuration(duration, 800) && player.getSkillCounter() < 7) {
             player.incrementSkillCounter();
-            final ProjBowPower proj = new ProjBowPower(this.logic, this.logic.getNextProjKey(), player, player.getX(), player.getY());
+            final ProjBowPower proj = new ProjBowPower(this.logic, player, player.getX(), player.getY());
             this.logic.queueAddProj(proj);
             Player.sendParticle(this.logic.getRoom(), Globals.PARTICLE_BOW_POWER, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
                     player.getFacing());

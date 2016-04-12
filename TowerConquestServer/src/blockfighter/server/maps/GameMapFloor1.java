@@ -26,7 +26,7 @@ public class GameMapFloor1 extends GameMap {
     @Override
     public void spawnMapMobs(final LogicModule l) {
         for (int i = 0; i < 1; i++) {
-            l.queueAddMob(new BossLightning(l, (byte) l.getNextMobKey(), this, 1500, 100));
+            l.queueAddMob(new BossLightning(l, this, 1500, 100));
         }
     }
 }

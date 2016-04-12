@@ -22,11 +22,10 @@ public class ProjTouch extends MobProjectile {
      * Projectile of on boss contact damage
      *
      * @param l Room/Logic Module
-     * @param k Projectile Key
      * @param o Owning player
      */
-    public ProjTouch(final LogicModule l, final int k, final Mob o) {
-        super(l, k, o);
+    public ProjTouch(final LogicModule l, final Mob o) {
+        super(l, o);
         this.hitbox = new Rectangle2D.Double[1];
         this.hitbox[0] = o.getHitbox();
     }

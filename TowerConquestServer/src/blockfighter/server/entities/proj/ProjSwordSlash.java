@@ -19,14 +19,13 @@ public class ProjSwordSlash extends Projectile {
      * Projectile of Sword Skill Defensive Impact.
      *
      * @param l Room/Logic Module
-     * @param k Projectile Key
      * @param o Owning player
      * @param x Spawn x-coordinate
      * @param y Spawn y-coordinate
      * @param hit Hit number to determine hit box.
      */
-    public ProjSwordSlash(final LogicModule l, final int k, final Player o, final double x, final double y, final int hit) {
-        super(l, k, o, x, y, 200);
+    public ProjSwordSlash(final LogicModule l, final Player o, final double x, final double y, final int hit) {
+        super(l, o, x, y, 200);
         this.hitbox = new Rectangle2D.Double[1];
         if (o.getFacing() == Globals.RIGHT) {
             switch (hit) {

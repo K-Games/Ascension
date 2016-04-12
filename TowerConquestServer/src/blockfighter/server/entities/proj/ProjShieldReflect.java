@@ -15,8 +15,8 @@ public class ProjShieldReflect extends Projectile {
 
     private final double dmg;
 
-    public ProjShieldReflect(final LogicModule l, final int k, final Player o, final double x, final double y, final double damage) {
-        super(l, k, o, x, y, 400);
+    public ProjShieldReflect(final LogicModule l, final Player o, final double x, final double y, final double damage) {
+        super(l, o, x, y, 400);
         this.hitbox = new Rectangle2D.Double[1];
         this.hitbox[0] = new Rectangle2D.Double(this.x - 325, this.y - 450, 650, 650);
         this.dmg = damage;

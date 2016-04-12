@@ -30,8 +30,8 @@ public class ProjBowFrost extends Projectile {
      * @param y Spawn y-coordinate
      * @param isSec Is a secondary(non-freezing) shot.
      */
-    public ProjBowFrost(final LogicModule l, final int k, final Player o, final double x, final double y, final boolean isSec) {
-        super(l, k, o, x, y, 500);
+    public ProjBowFrost(final LogicModule l, final Player o, final double x, final double y, final boolean isSec) {
+        super(l, o, x, y, 500);
         this.isSecondary = isSec;
         this.hitbox = new Rectangle2D.Double[1];
         if (o.getFacing() == Globals.RIGHT) {

@@ -29,7 +29,7 @@ public class SkillSwordGash extends Skill {
         final byte numHits = 4;
         if (Player.hasPastDuration(duration, (80 * player.getSkillCounter())) && player.getSkillCounter() < numHits) {
             player.incrementSkillCounter();
-            final ProjSwordGash proj = new ProjSwordGash(this.logic, this.logic.getNextProjKey(), player, player.getX(), player.getY(), (byte) player.getSkillCounter());
+            final ProjSwordGash proj = new ProjSwordGash(this.logic, player, player.getX(), player.getY(), (byte) player.getSkillCounter());
             this.logic.queueAddProj(proj);
             Player.sendSFX(this.logic.getRoom(), Globals.SFX_SLASH, player.getX(), player.getY());
             switch (player.getSkillCounter()) {

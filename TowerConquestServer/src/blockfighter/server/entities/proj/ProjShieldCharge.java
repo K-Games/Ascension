@@ -21,13 +21,12 @@ public class ProjShieldCharge extends Projectile {
      * Projectile of Shield Skill Charge.
      *
      * @param l Room/Logic Module
-     * @param k Projectile Key
      * @param o Owning player
      * @param x Spawn x-coordinate
      * @param y Spawn y-coordinate
      */
-    public ProjShieldCharge(final LogicModule l, final int k, final Player o, final double x, final double y) {
-        super(l, k, o, x, y, 750);
+    public ProjShieldCharge(final LogicModule l, final Player o, final double x, final double y) {
+        super(l, o, x, y, 750);
         this.hitbox = new Rectangle2D.Double[1];
         if (o.getFacing() == Globals.RIGHT) {
             this.hitbox[0] = new Rectangle2D.Double(this.x - 150, this.y - 170, 250, 176);

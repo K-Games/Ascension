@@ -29,7 +29,7 @@ public class SkillBowArc extends Skill {
         final int numHits = 3;
         if (player.getSkillCounter() < numHits && Player.hasPastDuration(duration, 100 + player.getSkillCounter() * 50)) {
             player.incrementSkillCounter();
-            final ProjBowArc proj = new ProjBowArc(this.logic, this.logic.getNextProjKey(), player, player.getX(), player.getY());
+            final ProjBowArc proj = new ProjBowArc(this.logic, player, player.getX(), player.getY());
             this.logic.queueAddProj(proj);
             if (player.getSkillCounter() == 1) {
                 Player.sendParticle(this.logic.getRoom(), Globals.PARTICLE_BOW_ARC, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),

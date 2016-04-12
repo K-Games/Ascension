@@ -11,16 +11,16 @@ import java.util.Map;
  */
 public abstract class MobProjectile extends Projectile {
 
-    public MobProjectile(final LogicModule l, final int k) {
-        super(l, k);
+    public MobProjectile(final LogicModule l) {
+        super(l);
     }
 
-    public MobProjectile(final LogicModule l, final int k, final Mob o, final double x, final double y, final int duration) {
-        super(l, k, o, x, y, duration);
+    public MobProjectile(final LogicModule l, final Mob o, final double x, final double y, final int duration) {
+        super(l, o, x, y, duration);
     }
 
-    public MobProjectile(final LogicModule l, final int k, final Mob o) {
-        super(l, k, o, 0, 0, 0);
+    public MobProjectile(final LogicModule l, final Mob o) {
+        super(l, o, 0, 0, 0);
     }
 
     @Override

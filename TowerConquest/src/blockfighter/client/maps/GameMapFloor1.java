@@ -16,6 +16,9 @@ public class GameMapFloor1 extends GameMap {
 
     public GameMapFloor1() {
         super.setMapID(1);
+        this.mapHeight = 1600;
+        this.mapWidth = 3700;
+        this.mapYOrigin = -1000;
     }
 
     @Override

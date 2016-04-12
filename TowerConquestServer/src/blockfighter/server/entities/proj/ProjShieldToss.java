@@ -22,13 +22,12 @@ public class ProjShieldToss extends Projectile {
      * Projectile of Bow Skill Frost Bind.
      *
      * @param l Room/Logic Module
-     * @param k Projectile Key
      * @param o Owning player
      * @param x Spawn x-coordinate
      * @param y Spawn y-coordinate
      */
-    public ProjShieldToss(final LogicModule l, final int k, final Player o, final double x, final double y) {
-        super(l, k, o, x, y, 500);
+    public ProjShieldToss(final LogicModule l, final Player o, final double x, final double y) {
+        super(l, o, x, y, 500);
         this.hitbox = new Rectangle2D.Double[1];
         if (o.getFacing() == Globals.RIGHT) {
             this.hitbox[0] = new Rectangle2D.Double(this.x, this.y - 190, 190, 150);

@@ -21,14 +21,13 @@ public class ProjSwordGash extends Projectile {
      * Projectile of Sword Skill Gash.
      *
      * @param l Room/Logic Module
-     * @param k Projectile Key
      * @param o Owning player
      * @param x Spawn x-coordinate
      * @param y Spawn y-coordinate
      * @param hit
      */
-    public ProjSwordGash(final LogicModule l, final int k, final Player o, final double x, final double y, final byte hit) {
-        super(l, k, o, x, y, 50);
+    public ProjSwordGash(final LogicModule l, final Player o, final double x, final double y, final byte hit) {
+        super(l, o, x, y, 50);
         this.hitbox = new Rectangle2D.Double[1];
         if (o.getFacing() == Globals.RIGHT) {
             switch (hit) {

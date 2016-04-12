@@ -39,7 +39,7 @@ public class SkillBowRapid extends Skill {
             } else if (player.getSkillCounter() == 3) {
                 projY = player.getY() + 20;
             }
-            final ProjBowRapid proj = new ProjBowRapid(this.logic, this.logic.getNextProjKey(), player, player.getX(), projY);
+            final ProjBowRapid proj = new ProjBowRapid(this.logic, player, player.getX(), projY);
             this.logic.queueAddProj(proj);
             Player.sendParticle(this.logic.getRoom(), Globals.PARTICLE_BOW_RAPID, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
                     player.getFacing());

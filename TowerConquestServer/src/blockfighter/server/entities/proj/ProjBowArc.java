@@ -25,8 +25,8 @@ public class ProjBowArc extends Projectile {
      * @param x Spawn x-coordinate
      * @param y Spawn y-coordinate
      */
-    public ProjBowArc(final LogicModule l, final int k, final Player o, final double x, final double y) {
-        super(l, k, o, x, y, 100);
+    public ProjBowArc(final LogicModule l, final Player o, final double x, final double y) {
+        super(l, o, x, y, 100);
         this.hitbox = new Rectangle2D.Double[1];
         if (o.getFacing() == Globals.RIGHT) {
             this.hitbox[0] = new Rectangle2D.Double(this.x + 50, this.y - 130, 445, 108);

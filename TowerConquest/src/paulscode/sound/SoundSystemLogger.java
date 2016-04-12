@@ -1,11 +1,7 @@
 package paulscode.sound;
 
 /**
- * The SoundSystemLogger class handles all status messages, warnings, and error messages for the SoundSystem library. This class can be extended and methods overriden to change how messages are
- * handled. To do this, the overridden class should be instantiated, and a call should be made to method SoundSystemConfig.setLogger() BEFORE creating the SoundSystem object. If the setLogger() method
- * is called after the SoundSystem has been created, there will be handles floating around to two different message loggers, and the results will be undesirable. See
- * {@link paulscode.sound.SoundSystemConfig SoundSystemConfig} for more information about changing default settings. If an alternate logger is not set by the user, then an instance of this base class
- * will be automatically created by default when the SoundSystem class is instantiated.
+ * The SoundSystemLogger class handles all status messages, warnings, and error messages for the SoundSystem library. This class can be extended and methods overriden to change how messages are handled. To do this, the overridden class should be instantiated, and a call should be made to method SoundSystemConfig.setLogger() BEFORE creating the SoundSystem object. If the setLogger() method is called after the SoundSystem has been created, there will be handles floating around to two different message loggers, and the results will be undesirable. See {@link paulscode.sound.SoundSystemConfig SoundSystemConfig} for more information about changing default settings. If an alternate logger is not set by the user, then an instance of this base class will be automatically created by default when the SoundSystem class is instantiated.
  * <br><br>
  * <b><i> SoundSystem License:</b></i><br><b><br>
  * You are free to use this library for any purpose, commercial or otherwise. You may modify this library or source code, and distribute it any way you like, provided the following conditions are met:

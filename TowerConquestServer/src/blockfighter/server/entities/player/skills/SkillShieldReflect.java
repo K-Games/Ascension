@@ -46,7 +46,7 @@ public class SkillShieldReflect extends Skill {
     }
 
     public void updateSkillReflectHit(final double dmgTaken, final double mult, final Player player) {
-        final ProjShieldReflect proj = new ProjShieldReflect(this.logic, this.logic.getNextProjKey(), player, player.getX(), player.getY(),
+        final ProjShieldReflect proj = new ProjShieldReflect(this.logic, player, player.getX(), player.getY(),
                 dmgTaken * mult);
         this.logic.queueAddProj(proj);
         Player.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SHIELD_REFLECTHIT, player.getX(), player.getY());

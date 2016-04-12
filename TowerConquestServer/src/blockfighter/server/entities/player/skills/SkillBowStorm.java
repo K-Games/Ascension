@@ -28,7 +28,7 @@ public class SkillBowStorm extends Skill {
         final int duration = Globals.nsToMs(this.logic.getTime() - player.getSkillCastTime());
         if (Player.hasPastDuration(duration, 100) && player.getSkillCounter() < 1) {
             player.incrementSkillCounter();
-            final ProjBowStorm proj = new ProjBowStorm(this.logic, this.logic.getNextProjKey(), player, player.getX(), player.getY());
+            final ProjBowStorm proj = new ProjBowStorm(this.logic, player, player.getX(), player.getY());
             this.logic.queueAddProj(proj);
             Player.sendParticle(this.logic.getRoom(), Globals.PARTICLE_BOW_STORM, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
                     player.getFacing());

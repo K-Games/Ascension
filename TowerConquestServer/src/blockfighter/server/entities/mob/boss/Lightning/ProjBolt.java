@@ -20,13 +20,12 @@ public class ProjBolt extends MobProjectile {
      * Projectile of Sword Skill Defensive Impact.
      *
      * @param l Room/Logic Module
-     * @param k Projectile Key
      * @param o Owning player
      * @param x Spawn x-coordinate
      * @param y Spawn y-coordinate
      */
-    public ProjBolt(final LogicModule l, final int k, final Mob o, final double x, final double y) {
-        super(l, k, o);
+    public ProjBolt(final LogicModule l, final Mob o, final double x, final double y) {
+        super(l, o);
         this.x = x;
         this.y = y;
         this.hitbox = new Rectangle2D.Double[1];

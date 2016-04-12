@@ -13,13 +13,7 @@ import paulscode.sound.libraries.LibraryJOAL;
 import paulscode.sound.libraries.LibraryJavaSound;
 
 /**
- * The SoundSystemJPCT class is a user-friendly extention of the core SoundSystem class. It is designed to be easily used with the jPCT API (for more information, visit http://www.jpct.net). In
- * addition to the things which SoundSystem does, SoundSystemJPCT provides methods for binding sources to Object3D's and binding the listener to a Camera. A whole bunch of methods have been added to
- * make source creation much easier than using the core SoundSystem class alone, by automatically using default settings any time a parameter is not specified. All SimpleVector arguments are assumed
- * to be in the jPCT coordinate system, and are automatically converted into the SoundSystem coordinate system (y = -y, z = -z), so the user doesn't have to worry about keeping track of two different
- * coordinate systems. Pluggins for LibraryLWJGLOpenAL, LibraryJavaSound, CodecWav, and CodecJOgg are automatically linked, so the user doesn't have to worry about pluggins either. The SoundSystemJPCT
- * can be constructed by defining which sound library to use or by using the the built in compatibility checking. See {@link paulscode.sound.SoundSystemConfig SoundSystemConfig} for more information
- * about changing default settings.
+ * The SoundSystemJPCT class is a user-friendly extention of the core SoundSystem class. It is designed to be easily used with the jPCT API (for more information, visit http://www.jpct.net). In addition to the things which SoundSystem does, SoundSystemJPCT provides methods for binding sources to Object3D's and binding the listener to a Camera. A whole bunch of methods have been added to make source creation much easier than using the core SoundSystem class alone, by automatically using default settings any time a parameter is not specified. All SimpleVector arguments are assumed to be in the jPCT coordinate system, and are automatically converted into the SoundSystem coordinate system (y = -y, z = -z), so the user doesn't have to worry about keeping track of two different coordinate systems. Pluggins for LibraryLWJGLOpenAL, LibraryJavaSound, CodecWav, and CodecJOgg are automatically linked, so the user doesn't have to worry about pluggins either. The SoundSystemJPCT can be constructed by defining which sound library to use or by using the the built in compatibility checking. See {@link paulscode.sound.SoundSystemConfig SoundSystemConfig} for more information about changing default settings.
  * <br><br>
  * <b><i> SoundSystem License:</b></i><br><b><br>
  * You are free to use this library for any purpose, commercial or otherwise. You may modify this library or source code, and distribute it any way you like, provided the following conditions are met:
@@ -54,8 +48,7 @@ public class SoundSystemJPCT extends SoundSystem {
     private HashMap<String, Object3D> boundObjects = null;
 
     /**
-     * Constructor: Create the sound system. If library priorities have not been defined, SoundSystemJPCT attempts to load the LWJGL binding of OpenAL first, and if that fails it trys JavaSound. If
-     * both fail, it switches to silent mode. See {@link paulscode.sound.SoundSystemConfig SoundSystemConfig} for information about linking with sound libraries and codecs.
+     * Constructor: Create the sound system. If library priorities have not been defined, SoundSystemJPCT attempts to load the LWJGL binding of OpenAL first, and if that fails it trys JavaSound. If both fail, it switches to silent mode. See {@link paulscode.sound.SoundSystemConfig SoundSystemConfig} for information about linking with sound libraries and codecs.
      */
     public SoundSystemJPCT() {
         super();
@@ -106,8 +99,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Loads the message logger, initializes the specified sound library, and starts the command thread. Also instantiates the random number generator and the command queue, and sets className to
-     * "SoundSystemJPCT".
+     * Loads the message logger, initializes the specified sound library, and starts the command thread. Also instantiates the random number generator and the command queue, and sets className to "SoundSystemJPCT".
      *
      * @param libraryClass Library to initialize. See {@link paulscode.sound.SoundSystemConfig SoundSystemConfig} for information about chosing a sound library.
      */
@@ -137,8 +129,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Re-aligns the listener to the camera and keeps sources following the Object3D's that they are bound to. This method should be called on the same thread that manipulates the Camera and
-     * Object3D's, to avoid synchronization-related errors. A good place to call tick() would be within the main game loop.
+     * Re-aligns the listener to the camera and keeps sources following the Object3D's that they are bound to. This method should be called on the same thread that manipulates the Camera and Object3D's, to avoid synchronization-related errors. A good place to call tick() would be within the main game loop.
      */
     public void tick() {
         // If listener is bound to a camera, match its position and orientation:
@@ -208,8 +199,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Binds the listener to the specified camera, so that when the camera's position or orientation changes, the listener automatically follows it. NOTE: When using this method, it is necessary to
-     * call the tick() method within a loop running on the same thread which changes the specified Camera.
+     * Binds the listener to the specified camera, so that when the camera's position or orientation changes, the listener automatically follows it. NOTE: When using this method, it is necessary to call the tick() method within a loop running on the same thread which changes the specified Camera.
      *
      * @param c Camera to follow.
      */
@@ -250,8 +240,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Binds a source to an Object3D so that when the Object3D's position changes, the source automatically follows it. NOTE: When using this method, it is necessary to call the tick() method within a
-     * loop running on the same thread which changes the specified Object3D.
+     * Binds a source to an Object3D so that when the Object3D's position changes, the source automatically follows it. NOTE: When using this method, it is necessary to call the tick() method within a loop running on the same thread which changes the specified Object3D.
      *
      * @param sourcename The source's identifier.
      * @param obj The object to follow.
@@ -439,8 +428,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a new non-streaming, non-priority source at the origin. Default value is used for either fade-distance or rolloff factor, depending on the value of parameter 'attmodel'. See
-     * {@link paulscode.sound.SoundSystemConfig SoundSystemConfig} for more information about Attenuation, fade distance, and rolloff factor.
+     * Creates a new non-streaming, non-priority source at the origin. Default value is used for either fade-distance or rolloff factor, depending on the value of parameter 'attmodel'. See {@link paulscode.sound.SoundSystemConfig SoundSystemConfig} for more information about Attenuation, fade distance, and rolloff factor.
      *
      * @param sourcename A unique identifier for this source. Two sources may not use the same sourcename.
      * @param filename The name of the sound file to play at this source.
@@ -454,8 +442,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a new non-streaming source at the origin. Default value is used for either fade-distance or rolloff factor, depending on the value of parameter 'attmodel'. See
-     * {@link paulscode.sound.SoundSystemConfig SoundSystemConfig} for more information about Attenuation, fade distance, and rolloff factor.
+     * Creates a new non-streaming source at the origin. Default value is used for either fade-distance or rolloff factor, depending on the value of parameter 'attmodel'. See {@link paulscode.sound.SoundSystemConfig SoundSystemConfig} for more information about Attenuation, fade distance, and rolloff factor.
      *
      * @param priority Setting this to true will prevent other sounds from overriding this one.
      * @param sourcename A unique identifier for this source. Two sources may not use the same sourcename.
@@ -470,8 +457,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a new non-streaming, non-priority source at the origin. See {@link paulscode.sound.SoundSystemConfig SoundSystemConfig} for more information about Attenuation, fade distance, and
-     * rolloff factor.
+     * Creates a new non-streaming, non-priority source at the origin. See {@link paulscode.sound.SoundSystemConfig SoundSystemConfig} for more information about Attenuation, fade distance, and rolloff factor.
      *
      * @param sourcename A unique identifier for this source. Two sources may not use the same sourcename.
      * @param filename The name of the sound file to play at this source.
@@ -502,8 +488,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a new non-streaming, non-priority source at the specified position. Default value is used for either fade-distance or rolloff factor, depending on the value of parameter 'attmodel'. See
-     * {@link paulscode.sound.SoundSystemConfig SoundSystemConfig} for more information about Attenuation, fade distance, and rolloff factor.
+     * Creates a new non-streaming, non-priority source at the specified position. Default value is used for either fade-distance or rolloff factor, depending on the value of parameter 'attmodel'. See {@link paulscode.sound.SoundSystemConfig SoundSystemConfig} for more information about Attenuation, fade distance, and rolloff factor.
      *
      * @param sourcename A unique identifier for this source. Two sources may not use the same sourcename.
      * @param filename The name of the sound file to play at this source.
@@ -518,8 +503,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a new non-streaming source at the specified position. Default value is used for either fade-distance or rolloff factor, depending on the value of parameter 'attmodel'. See
-     * {@link paulscode.sound.SoundSystemConfig SoundSystemConfig} for more information about Attenuation, fade distance, and rolloff factor.
+     * Creates a new non-streaming source at the specified position. Default value is used for either fade-distance or rolloff factor, depending on the value of parameter 'attmodel'. See {@link paulscode.sound.SoundSystemConfig SoundSystemConfig} for more information about Attenuation, fade distance, and rolloff factor.
      *
      * @param priority Setting this to true will prevent other sounds from overriding this one.
      * @param sourcename A unique identifier for this source. Two sources may not use the same sourcename.
@@ -549,8 +533,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a new non-streaming, non-priority source at the specified position. See {@link paulscode.sound.SoundSystemConfig SoundSystemConfig} for more information about Attenuation, fade
-     * distance, and rolloff factor.
+     * Creates a new non-streaming, non-priority source at the specified position. See {@link paulscode.sound.SoundSystemConfig SoundSystemConfig} for more information about Attenuation, fade distance, and rolloff factor.
      *
      * @param sourcename A unique identifier for this source. Two sources may not use the same sourcename.
      * @param filename The name of the sound file to play at this source.
@@ -567,8 +550,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a new non-streaming source at the specified position. See {@link paulscode.sound.SoundSystemConfig SoundSystemConfig} for more information about Attenuation, fade distance, and rolloff
-     * factor.
+     * Creates a new non-streaming source at the specified position. See {@link paulscode.sound.SoundSystemConfig SoundSystemConfig} for more information about Attenuation, fade distance, and rolloff factor.
      *
      * @param priority Setting this to true will prevent other sounds from overriding this one.
      * @param sourcename A unique identifier for this source. Two sources may not use the same sourcename.
@@ -654,8 +636,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a new non-streaming, non-priority source at the origin. Default value is used for either fade-distance or rolloff factor, depending on the value of parameter 'attmodel'. See
-     * {@link paulscode.sound.SoundSystemConfig SoundSystemConfig} for more information about Attenuation, fade distance, and rolloff factor.
+     * Creates a new non-streaming, non-priority source at the origin. Default value is used for either fade-distance or rolloff factor, depending on the value of parameter 'attmodel'. See {@link paulscode.sound.SoundSystemConfig SoundSystemConfig} for more information about Attenuation, fade distance, and rolloff factor.
      *
      * @param sourcename A unique identifier for this source. Two sources may not use the same sourcename.
      * @param url URL handle to the sound file to stream at this source.
@@ -670,8 +651,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a new non-streaming source at the origin. Default value is used for either fade-distance or rolloff factor, depending on the value of parameter 'attmodel'. See
-     * {@link paulscode.sound.SoundSystemConfig SoundSystemConfig} for more information about Attenuation, fade distance, and rolloff factor.
+     * Creates a new non-streaming source at the origin. Default value is used for either fade-distance or rolloff factor, depending on the value of parameter 'attmodel'. See {@link paulscode.sound.SoundSystemConfig SoundSystemConfig} for more information about Attenuation, fade distance, and rolloff factor.
      *
      * @param priority Setting this to true will prevent other sounds from overriding this one.
      * @param sourcename A unique identifier for this source. Two sources may not use the same sourcename.
@@ -687,8 +667,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a new non-streaming, non-priority source at the origin. See {@link paulscode.sound.SoundSystemConfig SoundSystemConfig} for more information about Attenuation, fade distance, and
-     * rolloff factor.
+     * Creates a new non-streaming, non-priority source at the origin. See {@link paulscode.sound.SoundSystemConfig SoundSystemConfig} for more information about Attenuation, fade distance, and rolloff factor.
      *
      * @param sourcename A unique identifier for this source. Two sources may not use the same sourcename.
      * @param url URL handle to the sound file to stream at this source.
@@ -722,8 +701,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a new non-streaming, non-priority source at the specified position. Default value is used for either fade-distance or rolloff factor, depending on the value of parameter 'attmodel'. See
-     * {@link paulscode.sound.SoundSystemConfig SoundSystemConfig} for more information about Attenuation, fade distance, and rolloff factor.
+     * Creates a new non-streaming, non-priority source at the specified position. Default value is used for either fade-distance or rolloff factor, depending on the value of parameter 'attmodel'. See {@link paulscode.sound.SoundSystemConfig SoundSystemConfig} for more information about Attenuation, fade distance, and rolloff factor.
      *
      * @param sourcename A unique identifier for this source. Two sources may not use the same sourcename.
      * @param url URL handle to the sound file to stream at this source.
@@ -740,8 +718,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a new non-streaming source at the specified position. Default value is used for either fade-distance or rolloff factor, depending on the value of parameter 'attmodel'. See
-     * {@link paulscode.sound.SoundSystemConfig SoundSystemConfig} for more information about Attenuation, fade distance, and rolloff factor.
+     * Creates a new non-streaming source at the specified position. Default value is used for either fade-distance or rolloff factor, depending on the value of parameter 'attmodel'. See {@link paulscode.sound.SoundSystemConfig SoundSystemConfig} for more information about Attenuation, fade distance, and rolloff factor.
      *
      * @param priority Setting this to true will prevent other sounds from overriding this one.
      * @param sourcename A unique identifier for this source. Two sources may not use the same sourcename.
@@ -772,8 +749,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a new non-streaming, non-priority source at the specified position. See {@link paulscode.sound.SoundSystemConfig SoundSystemConfig} for more information about Attenuation, fade
-     * distance, and rolloff factor.
+     * Creates a new non-streaming, non-priority source at the specified position. See {@link paulscode.sound.SoundSystemConfig SoundSystemConfig} for more information about Attenuation, fade distance, and rolloff factor.
      *
      * @param sourcename A unique identifier for this source. Two sources may not use the same sourcename.
      * @param url URL handle to the sound file to stream at this source.
@@ -791,8 +767,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a new non-streaming source at the specified position. See {@link paulscode.sound.SoundSystemConfig SoundSystemConfig} for more information about Attenuation, fade distance, and rolloff
-     * factor.
+     * Creates a new non-streaming source at the specified position. See {@link paulscode.sound.SoundSystemConfig SoundSystemConfig} for more information about Attenuation, fade distance, and rolloff factor.
      *
      * @param priority Setting this to true will prevent other sounds from overriding this one.
      * @param sourcename A unique identifier for this source. Two sources may not use the same sourcename.
@@ -1255,8 +1230,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary, non-priority source at the origin and plays it. Default values are used for attenuation. After the source finishes playing, it is removed. Returns a randomly generated name
-     * for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
+     * Creates a temporary, non-priority source at the origin and plays it. Default values are used for attenuation. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param filename The name of the sound file to play at this source.
      * @param toLoop Should this source loop, or play only once.
@@ -1268,8 +1242,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary source at the origin and plays it. Default values are used for attenuation. After the source finishes playing, it is removed. Returns a randomly generated name for the new
-     * source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
+     * Creates a temporary source at the origin and plays it. Default values are used for attenuation. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param priority Setting this to true will prevent other sounds from overriding this one.
      * @param filename The name of the sound file to play at this source.
@@ -1283,8 +1256,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary non-priority source at the specified position and plays it. Default values are used for attenuation. After the source finishes playing, it is removed. Returns a randomly
-     * generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
+     * Creates a temporary non-priority source at the specified position and plays it. Default values are used for attenuation. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param filename The name of the sound file to play at this source.
      * @param toLoop Should this source loop, or play only once.
@@ -1298,8 +1270,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary source and plays it. Default values are used for attenuation. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE:
-     * to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
+     * Creates a temporary source and plays it. Default values are used for attenuation. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param priority Setting this to true will prevent other sounds from overriding this one.
      * @param filename The name of the sound file to play at this source.
@@ -1314,9 +1285,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary non-priority source at the origin and plays it. Default value is used for either fade-distance or rolloff factor, depending on the value of parameter 'attmodel'. After the
-     * source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the
-     * return value for sourcename.
+     * Creates a temporary non-priority source at the origin and plays it. Default value is used for either fade-distance or rolloff factor, depending on the value of parameter 'attmodel'. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param filename The name of the sound file to play at this source.
      * @param toLoop Should this source loop, or play only once.
@@ -1329,8 +1298,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary source and plays it. Default value is used for either fade-distance or rolloff factor, depending on the value of parameter 'attmodel'. After the source finishes playing, it
-     * is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
+     * Creates a temporary source and plays it. Default value is used for either fade-distance or rolloff factor, depending on the value of parameter 'attmodel'. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param priority Setting this to true will prevent other sounds from overriding this one.
      * @param filename The name of the sound file to play at this source.
@@ -1345,8 +1313,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary non-priority source at the origin and plays it. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a
-     * source created by this method permanant, call the setActive() method using the return value for sourcename.
+     * Creates a temporary non-priority source at the origin and plays it. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param filename The name of the sound file to play at this source.
      * @param toLoop Should this source loop, or play only once.
@@ -1361,8 +1328,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary source at the origin and plays it. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by
-     * this method permanant, call the setActive() method using the return value for sourcename.
+     * Creates a temporary source at the origin and plays it. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param priority Setting this to true will prevent other sounds from overriding this one.
      * @param filename The name of the sound file to play at this source.
@@ -1378,9 +1344,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary non-priority source and plays it. Default value is used for either fade-distance or rolloff factor, depending on the value of parameter 'attmodel'. After the source finishes
-     * playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for
-     * sourcename.
+     * Creates a temporary non-priority source and plays it. Default value is used for either fade-distance or rolloff factor, depending on the value of parameter 'attmodel'. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param filename The name of the sound file to play at this source.
      * @param toLoop Should this source loop, or play only once.
@@ -1394,8 +1358,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary source and plays it. Default value is used for either fade-distance or rolloff factor, depending on the value of parameter 'attmodel'. After the source finishes playing, it
-     * is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
+     * Creates a temporary source and plays it. Default value is used for either fade-distance or rolloff factor, depending on the value of parameter 'attmodel'. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param priority Setting this to true will prevent other sounds from overriding this one.
      * @param filename The name of the sound file to play at this source.
@@ -1422,8 +1385,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary non-priority source and plays it. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by
-     * this method permanant, call the setActive() method using the return value for sourcename.
+     * Creates a temporary non-priority source and plays it. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param filename The name of the sound file to play at this source.
      * @param toLoop Should this source loop, or play only once.
@@ -1440,8 +1402,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary source and plays it. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method
-     * permanant, call the setActive() method using the return value for sourcename.
+     * Creates a temporary source and plays it. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param priority Setting this to true will prevent other sounds from overriding this one.
      * @param filename The name of the sound file to play at this source.
@@ -1476,8 +1437,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary non-priority source, binds it to the specified Object3D, and plays. Default values are used for attenuation. After the source finishes playing, it is removed. Returns a
-     * randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
+     * Creates a temporary non-priority source, binds it to the specified Object3D, and plays. Default values are used for attenuation. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param filename The name of the sound file to play at this source.
      * @param toLoop Should this source loop, or play only once.
@@ -1490,8 +1450,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary source, binds it to the specified Object3D, and plays. Default values are used for attenuation. After the source finishes playing, it is removed. Returns a randomly
-     * generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
+     * Creates a temporary source, binds it to the specified Object3D, and plays. Default values are used for attenuation. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param priority Setting this to true will prevent other sounds from overriding this one.
      * @param filename The name of the sound file to play at this source.
@@ -1506,9 +1465,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary non-priority source, binds it to the specified Object3D, and plays. Default value is used for either fade-distance or rolloff factor, depending on the value of parameter
-     * 'attmodel'. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive()
-     * method using the return value for sourcename.
+     * Creates a temporary non-priority source, binds it to the specified Object3D, and plays. Default value is used for either fade-distance or rolloff factor, depending on the value of parameter 'attmodel'. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param filename The name of the sound file to play at this source.
      * @param toLoop Should this source loop, or play only once.
@@ -1522,9 +1479,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary source, binds it to the specified Object3D, and plays. Default value is used for either fade-distance or rolloff factor, depending on the value of parameter 'attmodel'.
-     * After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method
-     * using the return value for sourcename.
+     * Creates a temporary source, binds it to the specified Object3D, and plays. Default value is used for either fade-distance or rolloff factor, depending on the value of parameter 'attmodel'. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param priority Setting this to true will prevent other sounds from overriding this one.
      * @param filename The name of the sound file to play at this source.
@@ -1549,8 +1504,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary non-priority source, binds it to the specified Object3D, and plays. After the source finishes playing, it is removed. Returns a randomly generated name for the new source.
-     * NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
+     * Creates a temporary non-priority source, binds it to the specified Object3D, and plays. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param filename The name of the sound file to play at this source.
      * @param toLoop Should this source loop, or play only once.
@@ -1566,8 +1520,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary source, binds it to the specified Object3D, and plays it. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to
-     * make a source created by this method permanant, call the setActive() method using the return value for sourcename.
+     * Creates a temporary source, binds it to the specified Object3D, and plays it. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param priority Setting this to true will prevent other sounds from overriding this one.
      * @param filename The name of the sound file to play at this source.
@@ -1618,8 +1571,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary, non-priority source at the origin and plays it. Default values are used for attenuation. After the source finishes playing, it is removed. Returns a randomly generated name
-     * for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
+     * Creates a temporary, non-priority source at the origin and plays it. Default values are used for attenuation. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param url URL handle to the sound file to stream at this source.
      * @param identifier Filename/identifier of the file referenced by the URL.
@@ -1632,8 +1584,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary source at the origin and plays it. Default values are used for attenuation. After the source finishes playing, it is removed. Returns a randomly generated name for the new
-     * source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
+     * Creates a temporary source at the origin and plays it. Default values are used for attenuation. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param priority Setting this to true will prevent other sounds from overriding this one.
      * @param url URL handle to the sound file to stream at this source.
@@ -1649,8 +1600,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary non-priority source at the specified position and plays it. Default values are used for attenuation. After the source finishes playing, it is removed. Returns a randomly
-     * generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
+     * Creates a temporary non-priority source at the specified position and plays it. Default values are used for attenuation. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param url URL handle to the sound file to stream at this source.
      * @param identifier Filename/identifier of the file referenced by the URL.
@@ -1665,8 +1615,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary source and plays it. Default values are used for attenuation. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE:
-     * to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
+     * Creates a temporary source and plays it. Default values are used for attenuation. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param priority Setting this to true will prevent other sounds from overriding this one.
      * @param url URL handle to the sound file to stream at this source.
@@ -1682,9 +1631,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary non-priority source at the origin and plays it. Default value is used for either fade-distance or rolloff factor, depending on the value of parameter 'attmodel'. After the
-     * source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the
-     * return value for sourcename.
+     * Creates a temporary non-priority source at the origin and plays it. Default value is used for either fade-distance or rolloff factor, depending on the value of parameter 'attmodel'. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param url URL handle to the sound file to stream at this source.
      * @param identifier Filename/identifier of the file referenced by the URL.
@@ -1699,8 +1646,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary source and plays it. Default value is used for either fade-distance or rolloff factor, depending on the value of parameter 'attmodel'. After the source finishes playing, it
-     * is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
+     * Creates a temporary source and plays it. Default value is used for either fade-distance or rolloff factor, depending on the value of parameter 'attmodel'. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param priority Setting this to true will prevent other sounds from overriding this one.
      * @param url URL handle to the sound file to stream at this source.
@@ -1716,8 +1662,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary non-priority source at the origin and plays it. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a
-     * source created by this method permanant, call the setActive() method using the return value for sourcename.
+     * Creates a temporary non-priority source at the origin and plays it. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param url URL handle to the sound file to stream at this source.
      * @param identifier Filename/identifier of the file referenced by the URL.
@@ -1733,8 +1678,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary source at the origin and plays it. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by
-     * this method permanant, call the setActive() method using the return value for sourcename.
+     * Creates a temporary source at the origin and plays it. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param priority Setting this to true will prevent other sounds from overriding this one.
      * @param url URL handle to the sound file to stream at this source.
@@ -1751,9 +1695,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary non-priority source and plays it. Default value is used for either fade-distance or rolloff factor, depending on the value of parameter 'attmodel'. After the source finishes
-     * playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for
-     * sourcename.
+     * Creates a temporary non-priority source and plays it. Default value is used for either fade-distance or rolloff factor, depending on the value of parameter 'attmodel'. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param url URL handle to the sound file to stream at this source.
      * @param identifier Filename/identifier of the file referenced by the URL.
@@ -1769,8 +1711,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary source and plays it. Default value is used for either fade-distance or rolloff factor, depending on the value of parameter 'attmodel'. After the source finishes playing, it
-     * is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
+     * Creates a temporary source and plays it. Default value is used for either fade-distance or rolloff factor, depending on the value of parameter 'attmodel'. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param priority Setting this to true will prevent other sounds from overriding this one.
      * @param url URL handle to the sound file to stream at this source.
@@ -1799,8 +1740,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary non-priority source and plays it. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by
-     * this method permanant, call the setActive() method using the return value for sourcename.
+     * Creates a temporary non-priority source and plays it. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param url URL handle to the sound file to stream at this source.
      * @param identifier Filename/identifier of the file referenced by the URL.
@@ -1818,8 +1758,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary source and plays it. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method
-     * permanant, call the setActive() method using the return value for sourcename.
+     * Creates a temporary source and plays it. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param priority Setting this to true will prevent other sounds from overriding this one.
      * @param url URL handle to the sound file to stream at this source.
@@ -1855,8 +1794,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary non-priority source, binds it to the specified Object3D, and plays. Default values are used for attenuation. After the source finishes playing, it is removed. Returns a
-     * randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
+     * Creates a temporary non-priority source, binds it to the specified Object3D, and plays. Default values are used for attenuation. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param url URL handle to the sound file to stream at this source.
      * @param identifier Filename/identifier of the file referenced by the URL.
@@ -1871,8 +1809,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary source, binds it to the specified Object3D, and plays. Default values are used for attenuation. After the source finishes playing, it is removed. Returns a randomly
-     * generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
+     * Creates a temporary source, binds it to the specified Object3D, and plays. Default values are used for attenuation. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param priority Setting this to true will prevent other sounds from overriding this one.
      * @param url URL handle to the sound file to stream at this source.
@@ -1888,9 +1825,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary non-priority source, binds it to the specified Object3D, and plays. Default value is used for either fade-distance or rolloff factor, depending on the value of parameter
-     * 'attmodel'. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive()
-     * method using the return value for sourcename.
+     * Creates a temporary non-priority source, binds it to the specified Object3D, and plays. Default value is used for either fade-distance or rolloff factor, depending on the value of parameter 'attmodel'. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param url URL handle to the sound file to stream at this source.
      * @param identifier Filename/identifier of the file referenced by the URL.
@@ -1905,9 +1840,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary source, binds it to the specified Object3D, and plays. Default value is used for either fade-distance or rolloff factor, depending on the value of parameter 'attmodel'.
-     * After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method
-     * using the return value for sourcename.
+     * Creates a temporary source, binds it to the specified Object3D, and plays. Default value is used for either fade-distance or rolloff factor, depending on the value of parameter 'attmodel'. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param priority Setting this to true will prevent other sounds from overriding this one.
      * @param url URL handle to the sound file to stream at this source.
@@ -1935,8 +1868,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary non-priority source, binds it to the specified Object3D, and plays. After the source finishes playing, it is removed. Returns a randomly generated name for the new source.
-     * NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
+     * Creates a temporary non-priority source, binds it to the specified Object3D, and plays. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param url URL handle to the sound file to stream at this source.
      * @param identifier Filename/identifier of the file referenced by the URL.
@@ -1953,8 +1885,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary source, binds it to the specified Object3D, and plays it. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to
-     * make a source created by this method permanant, call the setActive() method using the return value for sourcename.
+     * Creates a temporary source, binds it to the specified Object3D, and plays it. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param priority Setting this to true will prevent other sounds from overriding this one.
      * @param url URL handle to the sound file to stream at this source.
@@ -2007,8 +1938,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary, non-priority source at the origin and streams it. Default values are used for attenuation. After the source finishes playing, it is removed. Returns a randomly generated
-     * name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
+     * Creates a temporary, non-priority source at the origin and streams it. Default values are used for attenuation. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param filename The name of the sound file to play at this source.
      * @param toLoop Should this source loop, or play only once.
@@ -2020,8 +1950,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary source at the origin and streams it. Default values are used for attenuation. After the source finishes playing, it is removed. Returns a randomly generated name for the new
-     * source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
+     * Creates a temporary source at the origin and streams it. Default values are used for attenuation. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param priority Setting this to true will prevent other sounds from overriding this one.
      * @param filename The name of the sound file to play at this source.
@@ -2036,8 +1965,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary non-priority source and streams it. Default values are used for attenuation. After the source finishes playing, it is removed. Returns a randomly generated name for the new
-     * source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
+     * Creates a temporary non-priority source and streams it. Default values are used for attenuation. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param filename The name of the sound file to play at this source.
      * @param toLoop Should this source loop, or play only once.
@@ -2051,8 +1979,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary source and streams it. Default values are used for attenuation. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE:
-     * to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
+     * Creates a temporary source and streams it. Default values are used for attenuation. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param priority Setting this to true will prevent other sounds from overriding this one.
      * @param filename The name of the sound file to play at this source.
@@ -2067,9 +1994,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary non-priority source at the origin and streams it. Default value is used for either fade-distance or rolloff factor, depending on the value of parameter 'attmodel'. After the
-     * source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the
-     * return value for sourcename.
+     * Creates a temporary non-priority source at the origin and streams it. Default value is used for either fade-distance or rolloff factor, depending on the value of parameter 'attmodel'. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param filename The name of the sound file to play at this source.
      * @param toLoop Should this source loop, or play only once.
@@ -2082,8 +2007,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary source and streams it. Default value is used for either fade-distance or rolloff factor, depending on the value of parameter 'attmodel'. After the source finishes playing,
-     * it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
+     * Creates a temporary source and streams it. Default value is used for either fade-distance or rolloff factor, depending on the value of parameter 'attmodel'. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param priority Setting this to true will prevent other sounds from overriding this one.
      * @param filename The name of the sound file to play at this source.
@@ -2098,8 +2022,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary non-priority source at the origin and streams it. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a
-     * source created by this method permanant, call the setActive() method using the return value for sourcename.
+     * Creates a temporary non-priority source at the origin and streams it. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param filename The name of the sound file to play at this source.
      * @param toLoop Should this source loop, or play only once.
@@ -2114,8 +2037,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary source at the origin and streams it. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created
-     * by this method permanant, call the setActive() method using the return value for sourcename.
+     * Creates a temporary source at the origin and streams it. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param priority Setting this to true will prevent other sounds from overriding this one.
      * @param filename The name of the sound file to play at this source.
@@ -2131,9 +2053,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary non-priority source and streams it. Default value is used for either fade-distance or rolloff factor, depending on the value of parameter 'attmodel'. After the source
-     * finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return
-     * value for sourcename.
+     * Creates a temporary non-priority source and streams it. Default value is used for either fade-distance or rolloff factor, depending on the value of parameter 'attmodel'. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param filename The name of the sound file to play at this source.
      * @param toLoop Should this source loop, or play only once.
@@ -2147,8 +2067,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary source and streams it. Default value is used for either fade-distance or rolloff factor, depending on the value of parameter 'attmodel'. After the source finishes playing,
-     * it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
+     * Creates a temporary source and streams it. Default value is used for either fade-distance or rolloff factor, depending on the value of parameter 'attmodel'. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param priority Setting this to true will prevent other sounds from overriding this one.
      * @param filename The name of the sound file to play at this source.
@@ -2176,8 +2095,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary non-priority source and streams it. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by
-     * this method permanant, call the setActive() method using the return value for sourcename.
+     * Creates a temporary non-priority source and streams it. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param filename The name of the sound file to play at this source.
      * @param toLoop Should this source loop, or play only once.
@@ -2194,8 +2112,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary source and streams it. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method
-     * permanant, call the setActive() method using the return value for sourcename.
+     * Creates a temporary source and streams it. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param priority Setting this to true will prevent other sounds from overriding this one.
      * @param filename The name of the sound file to play at this source.
@@ -2230,8 +2147,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary non-priority source, binds it to the specified Object3D, and streams it. Default values are used for attenuation. After the source finishes playing, it is removed. Returns a
-     * randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
+     * Creates a temporary non-priority source, binds it to the specified Object3D, and streams it. Default values are used for attenuation. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param filename The name of the sound file to play at this source.
      * @param toLoop Should this source loop, or play only once.
@@ -2245,8 +2161,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary source, binds it to the specified Object3D, and streams it. Default values are used for attenuation. After the source finishes playing, it is removed. Returns a randomly
-     * generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
+     * Creates a temporary source, binds it to the specified Object3D, and streams it. Default values are used for attenuation. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param priority Setting this to true will prevent other sounds from overriding this one.
      * @param filename The name of the sound file to play at this source.
@@ -2261,9 +2176,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary non-priority source, binds it to the specified Object3D, and streams it. Default value is used for either fade-distance or rolloff factor, depending on the value of
-     * parameter 'attmodel'. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the
-     * setActive() method using the return value for sourcename.
+     * Creates a temporary non-priority source, binds it to the specified Object3D, and streams it. Default value is used for either fade-distance or rolloff factor, depending on the value of parameter 'attmodel'. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param filename The name of the sound file to play at this source.
      * @param toLoop Should this source loop, or play only once.
@@ -2277,9 +2190,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary source, binds it to the specified Object3D, and streams it. Default value is used for either fade-distance or rolloff factor, depending on the value of parameter 'attmodel'.
-     * After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method
-     * using the return value for sourcename.
+     * Creates a temporary source, binds it to the specified Object3D, and streams it. Default value is used for either fade-distance or rolloff factor, depending on the value of parameter 'attmodel'. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param priority Setting this to true will prevent other sounds from overriding this one.
      * @param filename The name of the sound file to play at this source.
@@ -2306,8 +2217,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary non-priority source, binds it to the specified Object3D, and streams it. After the source finishes playing, it is removed. Returns a randomly generated name for the new
-     * source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
+     * Creates a temporary non-priority source, binds it to the specified Object3D, and streams it. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param filename The name of the sound file to play at this source.
      * @param toLoop Should this source loop, or play only once.
@@ -2323,8 +2233,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary source, binds it to the specified Object3D, and streams it. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to
-     * make a source created by this method permanant, call the setActive() method using the return value for sourcename.
+     * Creates a temporary source, binds it to the specified Object3D, and streams it. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param priority Setting this to true will prevent other sounds from overriding this one.
      * @param filename The name of the sound file to play at this source.
@@ -2376,8 +2285,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary, non-priority source at the origin and streams it. Default values are used for attenuation. After the source finishes playing, it is removed. Returns a randomly generated
-     * name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
+     * Creates a temporary, non-priority source at the origin and streams it. Default values are used for attenuation. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param url URL handle to the sound file to stream at this source.
      * @param identifier Filename/identifier of the file referenced by the URL.
@@ -2391,8 +2299,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary source at the origin and streams it. Default values are used for attenuation. After the source finishes playing, it is removed. Returns a randomly generated name for the new
-     * source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
+     * Creates a temporary source at the origin and streams it. Default values are used for attenuation. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param priority Setting this to true will prevent other sounds from overriding this one.
      * @param url URL handle to the sound file to stream at this source.
@@ -2408,8 +2315,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary non-priority source and streams it. Default values are used for attenuation. After the source finishes playing, it is removed. Returns a randomly generated name for the new
-     * source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
+     * Creates a temporary non-priority source and streams it. Default values are used for attenuation. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param url URL handle to the sound file to stream at this source.
      * @param identifier Filename/identifier of the file referenced by the URL.
@@ -2424,8 +2330,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary source and streams it. Default values are used for attenuation. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE:
-     * to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
+     * Creates a temporary source and streams it. Default values are used for attenuation. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param priority Setting this to true will prevent other sounds from overriding this one.
      * @param url URL handle to the sound file to stream at this source.
@@ -2441,9 +2346,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary non-priority source at the origin and streams it. Default value is used for either fade-distance or rolloff factor, depending on the value of parameter 'attmodel'. After the
-     * source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the
-     * return value for sourcename.
+     * Creates a temporary non-priority source at the origin and streams it. Default value is used for either fade-distance or rolloff factor, depending on the value of parameter 'attmodel'. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param url URL handle to the sound file to stream at this source.
      * @param identifier Filename/identifier of the file referenced by the URL.
@@ -2458,8 +2361,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary source and streams it. Default value is used for either fade-distance or rolloff factor, depending on the value of parameter 'attmodel'. After the source finishes playing,
-     * it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
+     * Creates a temporary source and streams it. Default value is used for either fade-distance or rolloff factor, depending on the value of parameter 'attmodel'. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param priority Setting this to true will prevent other sounds from overriding this one.
      * @param url URL handle to the sound file to stream at this source.
@@ -2475,8 +2377,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary non-priority source at the origin and streams it. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a
-     * source created by this method permanant, call the setActive() method using the return value for sourcename.
+     * Creates a temporary non-priority source at the origin and streams it. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param url URL handle to the sound file to stream at this source.
      * @param identifier Filename/identifier of the file referenced by the URL.
@@ -2492,8 +2393,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary source at the origin and streams it. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created
-     * by this method permanant, call the setActive() method using the return value for sourcename.
+     * Creates a temporary source at the origin and streams it. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param priority Setting this to true will prevent other sounds from overriding this one.
      * @param url URL handle to the sound file to stream at this source.
@@ -2510,9 +2410,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary non-priority source and streams it. Default value is used for either fade-distance or rolloff factor, depending on the value of parameter 'attmodel'. After the source
-     * finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return
-     * value for sourcename.
+     * Creates a temporary non-priority source and streams it. Default value is used for either fade-distance or rolloff factor, depending on the value of parameter 'attmodel'. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param url URL handle to the sound file to stream at this source.
      * @param identifier Filename/identifier of the file referenced by the URL.
@@ -2528,8 +2426,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary source and streams it. Default value is used for either fade-distance or rolloff factor, depending on the value of parameter 'attmodel'. After the source finishes playing,
-     * it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
+     * Creates a temporary source and streams it. Default value is used for either fade-distance or rolloff factor, depending on the value of parameter 'attmodel'. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param priority Setting this to true will prevent other sounds from overriding this one.
      * @param url URL handle to the sound file to stream at this source.
@@ -2558,8 +2455,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary non-priority source and streams it. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by
-     * this method permanant, call the setActive() method using the return value for sourcename.
+     * Creates a temporary non-priority source and streams it. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param url URL handle to the sound file to stream at this source.
      * @param identifier Filename/identifier of the file referenced by the URL.
@@ -2577,8 +2473,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary source and streams it. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method
-     * permanant, call the setActive() method using the return value for sourcename.
+     * Creates a temporary source and streams it. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param priority Setting this to true will prevent other sounds from overriding this one.
      * @param url URL handle to the sound file to stream at this source.
@@ -2614,8 +2509,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary non-priority source, binds it to the specified Object3D, and streams it. Default values are used for attenuation. After the source finishes playing, it is removed. Returns a
-     * randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
+     * Creates a temporary non-priority source, binds it to the specified Object3D, and streams it. Default values are used for attenuation. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param url URL handle to the sound file to stream at this source.
      * @param identifier Filename/identifier of the file referenced by the URL.
@@ -2630,8 +2524,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary source, binds it to the specified Object3D, and streams it. Default values are used for attenuation. After the source finishes playing, it is removed. Returns a randomly
-     * generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
+     * Creates a temporary source, binds it to the specified Object3D, and streams it. Default values are used for attenuation. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param priority Setting this to true will prevent other sounds from overriding this one.
      * @param url URL handle to the sound file to stream at this source.
@@ -2647,9 +2540,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary non-priority source, binds it to the specified Object3D, and streams it. Default value is used for either fade-distance or rolloff factor, depending on the value of
-     * parameter 'attmodel'. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the
-     * setActive() method using the return value for sourcename.
+     * Creates a temporary non-priority source, binds it to the specified Object3D, and streams it. Default value is used for either fade-distance or rolloff factor, depending on the value of parameter 'attmodel'. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param url URL handle to the sound file to stream at this source.
      * @param identifier Filename/identifier of the file referenced by the URL.
@@ -2664,9 +2555,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary source, binds it to the specified Object3D, and streams it. Default value is used for either fade-distance or rolloff factor, depending on the value of parameter 'attmodel'.
-     * After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method
-     * using the return value for sourcename.
+     * Creates a temporary source, binds it to the specified Object3D, and streams it. Default value is used for either fade-distance or rolloff factor, depending on the value of parameter 'attmodel'. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param priority Setting this to true will prevent other sounds from overriding this one.
      * @param url URL handle to the sound file to stream at this source.
@@ -2694,8 +2583,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary non-priority source, binds it to the specified Object3D, and streams it. After the source finishes playing, it is removed. Returns a randomly generated name for the new
-     * source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
+     * Creates a temporary non-priority source, binds it to the specified Object3D, and streams it. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param url URL handle to the sound file to stream at this source.
      * @param identifier Filename/identifier of the file referenced by the URL.
@@ -2712,8 +2600,7 @@ public class SoundSystemJPCT extends SoundSystem {
     }
 
     /**
-     * Creates a temporary source, binds it to the specified Object3D, and streams it. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to
-     * make a source created by this method permanant, call the setActive() method using the return value for sourcename.
+     * Creates a temporary source, binds it to the specified Object3D, and streams it. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
      *
      * @param priority Setting this to true will prevent other sounds from overriding this one.
      * @param url URL handle to the sound file to stream at this source.
