@@ -21,7 +21,7 @@ public class Globals {
     public static String SERVER_ADDRESS;
 
     public final static boolean TEST_MAX_LEVEL = true,
-            DEBUG_MODE = true;
+            DEBUG_MODE = false;
 
     public final static byte GAME_MAJOR_VERSION = 0,
             GAME_MINOR_VERSION = 16,

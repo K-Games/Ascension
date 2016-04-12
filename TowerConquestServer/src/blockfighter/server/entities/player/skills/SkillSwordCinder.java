@@ -23,7 +23,7 @@ public class SkillSwordCinder extends Skill {
     }
     
     @Override
-    public void updateCasting(Player player) {
+    public void updateSkillUse(Player player) {
         final int duration = Globals.nsToMs(this.logic.getTime() - player.getSkillCastTime());
         if (Player.hasPastDuration(duration, 50) && player.getSkillCounter() < 1) {
             player.incrementSkillCounter();

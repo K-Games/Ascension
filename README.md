@@ -12,6 +12,12 @@ An multiplayer action 2D sidescrolling platformer coded in pure Java.
 ## v0.16 Client Update 19
 ### Client Changes
 * Added Debug Mode - Currently displays some hidden values in the menu.
+* Prototype screen shake - Nothing triggers this yet.
+* Unified Particle keys
+* Client file structure modified - Separated resources from binary.
+* Simplified resource loading into Globals class.
 
 ## v0.16 Server Update 19
 ### Server Changes
+* Refactored Skill use implementation - Moved from Player class to Skill specific class.
+* Passive Skills now have a flag to indicate its a passive skill.

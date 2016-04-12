@@ -22,7 +22,7 @@ public class SkillSwordPhantom extends Skill {
     }
 
     @Override
-    public void updateCasting(Player player) {
+    public void updateSkillUse(Player player) {
         final int duration = Globals.nsToMs(this.logic.getTime() - player.getSkillCastTime());
         final int numHits = getLevel() / 2 + 5;
         final int radius = 350;

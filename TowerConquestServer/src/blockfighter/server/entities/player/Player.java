@@ -3,7 +3,6 @@ package blockfighter.server.entities.player;
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.GameEntity;
-import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.buff.Buff;
 import blockfighter.server.entities.buff.BuffDmgIncrease;
 import blockfighter.server.entities.buff.BuffDmgReduct;
@@ -16,7 +15,6 @@ import blockfighter.server.entities.buff.BuffShieldIron;
 import blockfighter.server.entities.buff.BuffShieldReflect;
 import blockfighter.server.entities.buff.BuffStun;
 import blockfighter.server.entities.buff.BuffSwordSlash;
-import blockfighter.server.entities.buff.BuffSwordTaunt;
 import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.player.skills.Skill;
 import blockfighter.server.entities.player.skills.SkillBowArc;
@@ -49,21 +47,9 @@ import blockfighter.server.entities.player.skills.SkillSwordPhantom;
 import blockfighter.server.entities.player.skills.SkillSwordSlash;
 import blockfighter.server.entities.player.skills.SkillSwordTaunt;
 import blockfighter.server.entities.player.skills.SkillSwordVorpal;
-import blockfighter.server.entities.proj.ProjBowArc;
-import blockfighter.server.entities.proj.ProjBowFrost;
-import blockfighter.server.entities.proj.ProjBowPower;
-import blockfighter.server.entities.proj.ProjBowRapid;
-import blockfighter.server.entities.proj.ProjBowStorm;
-import blockfighter.server.entities.proj.ProjBowVolley;
 import blockfighter.server.entities.proj.ProjShieldCharge;
 import blockfighter.server.entities.proj.ProjShieldReflect;
 import blockfighter.server.entities.proj.ProjShieldToss;
-import blockfighter.server.entities.proj.ProjSwordCinder;
-import blockfighter.server.entities.proj.ProjSwordGash;
-import blockfighter.server.entities.proj.ProjSwordPhantom;
-import blockfighter.server.entities.proj.ProjSwordSlash;
-import blockfighter.server.entities.proj.ProjSwordTaunt;
-import blockfighter.server.entities.proj.ProjSwordVorpal;
 import blockfighter.server.maps.GameMap;
 import blockfighter.server.net.PacketSender;
 import java.awt.geom.Point2D;
@@ -86,6 +72,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class Player extends Thread implements GameEntity {
 
     private static final HashMap<Byte, Object> VALID_PLAYER_SKILL_STATES = new HashMap<>(18);
+    private static final HashMap<Byte, Byte> PLAYER_STATE_SKILLCODE = new HashMap<>(18);
 
     public final static byte PLAYER_STATE_STAND = 0x00,
             PLAYER_STATE_WALK = 0x01,
@@ -177,6 +164,25 @@ public class Player extends Thread implements GameEntity {
         VALID_PLAYER_SKILL_STATES.put(PLAYER_STATE_SHIELD_IRON, null);
         VALID_PLAYER_SKILL_STATES.put(PLAYER_STATE_SHIELD_REFLECT, null);
         VALID_PLAYER_SKILL_STATES.put(PLAYER_STATE_SHIELD_TOSS, null);
+
+        PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SWORD_VORPAL, Skill.SWORD_VORPAL);
+        PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SWORD_PHANTOM, Skill.SWORD_PHANTOM);
+        PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SWORD_CINDER, Skill.SWORD_CINDER);
+        PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SWORD_GASH, Skill.SWORD_GASH);
+        PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SWORD_SLASH, Skill.SWORD_SLASH);
+        PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SWORD_TAUNT, Skill.SWORD_TAUNT);
+        PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_BOW_ARC, Skill.BOW_ARC);
+        PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_BOW_POWER, Skill.BOW_POWER);
+        PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_BOW_RAPID, Skill.BOW_RAPID);
+        PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_BOW_FROST, Skill.BOW_FROST);
+        PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_BOW_STORM, Skill.BOW_STORM);
+        PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_BOW_VOLLEY, Skill.BOW_VOLLEY);
+        PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SHIELD_CHARGE, Skill.SHIELD_CHARGE);
+        PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SHIELD_DASH, Skill.SHIELD_DASH);
+        PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SHIELD_FORTIFY, Skill.SHIELD_FORTIFY);
+        PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SHIELD_IRON, Skill.SHIELD_IRON);
+        PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SHIELD_REFLECT, Skill.SHIELD_REFLECT);
+        PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SHIELD_TOSS, Skill.SHIELD_TOSS);
 
     }
 
@@ -710,212 +716,7 @@ public class Player extends Thread implements GameEntity {
         }
     }
 
-    private void updateSkillSwordSlash() {
-        final int numHits = 3;
-        final int duration = Globals.nsToMs(this.logic.getTime() - this.skillCastTime);
-        if (isSkillMaxed(Skill.SWORD_SLASH) && duration == 0) {
-            queueBuff(new BuffSwordSlash(this.logic, 2000, .1, this));
-            sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_SLASHBUFF, this.key);
-        }
-        if (hasPastDuration(duration, (30 + 110 * this.skillCounter)) && this.skillCounter < numHits) {
-            this.skillCounter++;
-            final ProjSwordSlash proj = new ProjSwordSlash(this.logic, this.logic.getNextProjKey(), this, this.x, this.y,
-                    this.skillCounter);
-            this.logic.queueAddProj(proj);
-            switch (this.skillCounter) {
-                case 1:
-                    sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_SLASH1, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
-                            this.facing);
-                    sendSFX(this.logic.getRoom(), Globals.SFX_SLASH, getX(), getY());
-                    break;
-                case 2:
-                    sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_SLASH2, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
-                            this.facing);
-                    sendSFX(this.logic.getRoom(), Globals.SFX_SLASH, getX(), getY());
-                    break;
-                case 3:
-                    sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_SLASH3, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
-                            this.facing);
-                    sendSFX(this.logic.getRoom(), Globals.SFX_SLASH, getX(), getY());
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        updateSkillEnd(duration, 350, true, false);
-    }
-
-    private void updateSkillSwordGash() {
-        final int duration = Globals.nsToMs(this.logic.getTime() - this.skillCastTime);
-        final byte numHits = 4;
-        if (hasPastDuration(duration, (80 * this.skillCounter)) && this.skillCounter < numHits) {
-            this.skillCounter++;
-            final ProjSwordGash proj = new ProjSwordGash(this.logic, this.logic.getNextProjKey(), this, this.x, this.y, (byte) this.skillCounter);
-            this.logic.queueAddProj(proj);
-            sendSFX(this.logic.getRoom(), Globals.SFX_SLASH, getX(), getY());
-            switch (this.skillCounter) {
-                case 1:
-                    sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_GASH1, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
-                            this.facing);
-                    break;
-                case 2:
-                    sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_GASH2, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
-                            this.facing);
-                    break;
-                case 3:
-                    sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_GASH3, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
-                            this.facing);
-                    break;
-                case 4:
-                    sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_GASH4, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
-                            this.facing);
-                    break;
-            }
-        }
-        updateSkillEnd(duration, 450, true, false);
-    }
-
-    private void updateSkillSwordVorpal() {
-        final int duration = Globals.nsToMs(this.logic.getTime() - this.skillCastTime);
-        int skillTime = isSkillMaxed(Skill.SWORD_VORPAL) ? 150 : 170,
-                numHits = isSkillMaxed(Skill.SWORD_VORPAL) ? 5 : 3;
-        if (hasPastDuration(duration, skillTime * this.skillCounter) && this.skillCounter < numHits) {
-            final ProjSwordVorpal proj = new ProjSwordVorpal(this.logic, this.logic.getNextProjKey(), this, this.x, this.y);
-            this.logic.queueAddProj(proj);
-            this.frame = 0;
-            sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_VORPAL, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
-                    this.facing);
-            this.skillCounter++;
-        }
-
-        updateSkillEnd(duration, 800, true, false);
-    }
-
-    private void updateSkillSwordTaunt() {
-        final int duration = Globals.nsToMs(this.logic.getTime() - this.skillCastTime);
-        if (duration == 0) {
-            if (isSkillMaxed(Skill.SWORD_TAUNT)) {
-                queueBuff(new BuffSwordTaunt(this.logic, 10000, 0.2, 0.2, this));
-                sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_TAUNTBUFF, this.key);
-            }
-            sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_TAUNTAURA1, this.key);
-        }
-        if (hasPastDuration(duration, 50) && this.skillCounter < 1) {
-            this.skillCounter++;
-            final ProjSwordTaunt proj = new ProjSwordTaunt(this.logic, this.logic.getNextProjKey(), this, this.x, this.y);
-            this.logic.queueAddProj(proj);
-            sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_TAUNT, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
-                    this.facing);
-        }
-        updateSkillEnd(duration, 350, false, false);
-    }
-
-    private void updateSkillBowArc() {
-        final int duration = Globals.nsToMs(this.logic.getTime() - this.skillCastTime);
-        final int numHits = 3;
-        if (this.skillCounter < numHits && hasPastDuration(duration, 100 + this.skillCounter * 50)) {
-            this.skillCounter++;
-            final ProjBowArc proj = new ProjBowArc(this.logic, this.logic.getNextProjKey(), this, this.x, this.y);
-            this.logic.queueAddProj(proj);
-            if (this.skillCounter == 1) {
-                sendParticle(this.logic.getRoom(), Globals.PARTICLE_BOW_ARC, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
-                        this.facing);
-                sendSFX(this.logic.getRoom(), Globals.SFX_ARC, getX(), getY());
-            }
-        }
-        updateSkillEnd(duration, 300, false, false);
-    }
-
-    private void updateSkillBowFrost() {
-        final int duration = Globals.nsToMs(this.logic.getTime() - this.skillCastTime);
-        final int numHits = isSkillMaxed(Skill.BOW_FROST) ? 3 : 1;
-        if (hasPastDuration(duration, 160 + this.skillCounter * 90) && this.skillCounter < numHits) {
-            this.skillCounter++;
-            final ProjBowFrost proj = new ProjBowFrost(this.logic, this.logic.getNextProjKey(), this, this.x, this.y, false);
-            this.logic.queueAddProj(proj);
-            sendParticle(this.logic.getRoom(), Globals.PARTICLE_BOW_FROSTARROW, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
-                    this.facing);
-        }
-
-        updateSkillEnd(duration, 380, false, false);
-    }
-
-    private void updateSkillBowStorm() {
-        final int duration = Globals.nsToMs(this.logic.getTime() - this.skillCastTime);
-        if (hasPastDuration(duration, 100) && this.skillCounter < 1) {
-            this.skillCounter++;
-            final ProjBowStorm proj = new ProjBowStorm(this.logic, this.logic.getNextProjKey(), this, this.x, this.y);
-            this.logic.queueAddProj(proj);
-            sendParticle(this.logic.getRoom(), Globals.PARTICLE_BOW_STORM, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
-                    this.facing);
-        }
-        updateSkillEnd(duration, 200, false, false);
-    }
-
-    private void updateSkillBowRapid() {
-        final int duration = Globals.nsToMs(this.logic.getTime() - this.skillCastTime);
-        final int numHits = 3;
-
-        if (hasPastDuration(duration, 150 + this.skillCounter * 150) && this.skillCounter < numHits) {
-            if (skillCounter != 0) {
-                this.frame = 2;
-            }
-            this.skillCounter++;
-            double projY = this.y;
-            if (skillCounter == 1) {
-                projY = this.y - 20;
-            } else if (skillCounter == 3) {
-                projY = this.y + 20;
-            }
-            final ProjBowRapid proj = new ProjBowRapid(this.logic, this.logic.getNextProjKey(), this, this.x, projY);
-            this.logic.queueAddProj(proj);
-            sendParticle(this.logic.getRoom(), Globals.PARTICLE_BOW_RAPID, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
-                    this.facing);
-            sendParticle(this.logic.getRoom(), Globals.PARTICLE_BOW_RAPID2, (getFacing() == Globals.LEFT) ? x - 20 : x - 40, proj.getHitbox()[0].getY() - 40,
-                    this.facing);
-            sendSFX(this.logic.getRoom(), Globals.SFX_RAPID, getX(), getY());
-        }
-        updateSkillEnd(duration, 550, true, false);
-    }
-
-    private void updateSkillBowVolley() {
-        final int duration = Globals.nsToMs(this.logic.getTime() - this.skillCastTime);
-        final int numHits = 20;
-        if (hasPastDuration(duration, this.skillCounter * 100) && this.skillCounter < numHits) {
-            final ProjBowVolley proj = new ProjBowVolley(this.logic, this.logic.getNextProjKey(), this, this.x,
-                    this.y);
-            this.logic.queueAddProj(proj);
-            sendParticle(this.logic.getRoom(), Globals.PARTICLE_BOW_VOLLEYARROW, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
-                    this.facing);
-            sendParticle(this.logic.getRoom(), Globals.PARTICLE_BOW_VOLLEYBOW, getX(), getY() + 30, this.facing);
-            this.skillCounter++;
-            sendSFX(this.logic.getRoom(), Globals.SFX_VOLLEY, getX(), getY());
-        }
-        updateSkillEnd(duration, 1900, true, true);
-    }
-
-    private void updateSkillBowPower() {
-        final int duration = Globals.nsToMs(this.logic.getTime() - this.skillCastTime);
-        if (duration == 0) {
-            sendSFX(this.logic.getRoom(), Globals.SFX_POWER2, getX(), getY());
-        }
-        if (duration <= 400 && hasPastDuration(duration, this.skillCounter * 50) && this.skillCounter < 6) {
-            sendParticle(this.logic.getRoom(), Globals.PARTICLE_BOW_POWERCHARGE, this.x + ((this.facing == Globals.RIGHT) ? 75 : -75),
-                    this.y - 215, this.facing);
-            this.skillCounter++;
-        } else if (hasPastDuration(duration, 800) && this.skillCounter < 7) {
-            this.skillCounter++;
-            final ProjBowPower proj = new ProjBowPower(this.logic, this.logic.getNextProjKey(), this, this.x, this.y);
-            this.logic.queueAddProj(proj);
-            sendParticle(this.logic.getRoom(), Globals.PARTICLE_BOW_POWER, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
-                    this.facing);
-            sendSFX(this.logic.getRoom(), Globals.SFX_POWER, getX(), getY());
-        }
-        if (duration >= 1400 || (!isSkillMaxed(Skill.BOW_POWER) && duration < 800 && (isStunned() || isKnockback()))) {
-            setPlayerState(PLAYER_STATE_STAND);
-        }
-    }
+    
 
     private void updateSkillShieldFortify() {
         final int duration = Globals.nsToMs(this.logic.getTime() - this.skillCastTime);
@@ -1037,42 +838,7 @@ public class Player extends Thread implements GameEntity {
             setXSpeed(0);
         }
         switch (this.playerState) {
-            case PLAYER_STATE_SWORD_SLASH:
-                updateSkillSwordSlash();
-                break;
-            case PLAYER_STATE_SWORD_GASH:
-                updateSkillSwordGash();
-                break;
-            case PLAYER_STATE_SWORD_VORPAL:
-                updateSkillSwordVorpal();
-                break;
-            case PLAYER_STATE_SWORD_PHANTOM:
-                getSkill(Skill.SWORD_PHANTOM).updateCasting(this);
-                break;
-            case PLAYER_STATE_SWORD_CINDER:
-                getSkill(Skill.SWORD_CINDER).updateCasting(this);
-                break;
-            case PLAYER_STATE_SWORD_TAUNT:
-                updateSkillSwordTaunt();
-                break;
-            case PLAYER_STATE_BOW_ARC:
-                updateSkillBowArc();
-                break;
-            case PLAYER_STATE_BOW_RAPID:
-                updateSkillBowRapid();
-                break;
-            case PLAYER_STATE_BOW_POWER:
-                updateSkillBowPower();
-                break;
-            case PLAYER_STATE_BOW_VOLLEY:
-                updateSkillBowVolley();
-                break;
-            case PLAYER_STATE_BOW_STORM:
-                updateSkillBowStorm();
-                break;
-            case PLAYER_STATE_BOW_FROST:
-                updateSkillBowFrost();
-                break;
+           
             case PLAYER_STATE_SHIELD_DASH:
                 updateSkillShieldDash();
                 break;
@@ -1091,6 +857,8 @@ public class Player extends Thread implements GameEntity {
             case PLAYER_STATE_SHIELD_TOSS:
                 updateSkillShieldToss();
                 break;
+            default:
+                getSkill(PLAYER_STATE_SKILLCODE.get(this.playerState)).updateSkillUse(this);
         }
     }
 
@@ -1635,6 +1403,10 @@ public class Player extends Thread implements GameEntity {
     public void setFacing(final byte f) {
         this.facing = f;
         this.updateFacing = true;
+    }
+
+    public void setFrame(final byte f) {
+        this.frame = f;
     }
 
     private boolean updateX(final double change) {

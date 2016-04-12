@@ -194,7 +194,7 @@ public abstract class Skill {
         return SKILL_PLAYER_STATE.get(this.skillCode);
     }
     
-    public void updateCasting(Player player) {
+    public void updateSkillUse(Player player) {
         
     }
 }
