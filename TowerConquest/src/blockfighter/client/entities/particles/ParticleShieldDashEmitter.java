@@ -6,13 +6,10 @@ import java.awt.Point;
 
 public class ParticleShieldDashEmitter extends Particle {
 
-    private final Player owner;
-
     public ParticleShieldDashEmitter(final byte f, final Player p) {
-        super(0, 0, f);
+        super(0, 0, f, p);
         this.frame = 0;
         this.duration = 250;
-        this.owner = p;
     }
 
     @Override

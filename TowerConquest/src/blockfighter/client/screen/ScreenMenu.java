@@ -53,6 +53,11 @@ public abstract class ScreenMenu extends Screen {
 
     @Override
     public void draw(final Graphics2D g) {
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                RenderingHints.VALUE_ANTIALIAS_ON);
+        g.setRenderingHint(
+                RenderingHints.KEY_TEXT_ANTIALIASING,
+                RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
         for (final Map.Entry<Integer, Particle> pEntry : particles.entrySet()) {
             pEntry.getValue().draw(g);
         }

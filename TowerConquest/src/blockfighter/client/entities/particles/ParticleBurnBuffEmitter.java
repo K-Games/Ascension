@@ -7,14 +7,12 @@ import java.awt.Point;
 
 public class ParticleBurnBuffEmitter extends Particle {
 
-    private final Player owner;
     private long lastParticleTime = 0;
 
     public ParticleBurnBuffEmitter(final Player p) {
-        super(0, 0);
+        super(0, 0, p);
         this.frame = 0;
         this.duration = 4000;
-        this.owner = p;
     }
 
     @Override

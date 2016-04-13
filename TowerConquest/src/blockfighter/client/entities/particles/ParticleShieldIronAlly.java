@@ -8,14 +8,11 @@ import java.awt.image.BufferedImage;
 
 public class ParticleShieldIronAlly extends Particle {
 
-    private final Player owner;
-
     public ParticleShieldIronAlly(final Player p) {
-        super(0, 0);
+        super(0, 0, p);
         this.frame = 0;
         this.frameDuration = 25;
         this.duration = 300;
-        this.owner = p;
     }
 
     @Override

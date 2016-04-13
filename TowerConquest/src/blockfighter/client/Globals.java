@@ -119,7 +119,8 @@ public class Globals {
             PARTICLE_SWORD_PHANTOM2 = 0x2A,
             PARTICLE_SWORD_GASH2 = 0x2B,
             PARTICLE_SWORD_GASH3 = 0x2C,
-            PARTICLE_SWORD_GASH4 = 0x2D;
+            PARTICLE_SWORD_GASH4 = 0x2D,
+            PARTICLE_BLOOD_HIT = 0x2E;
 
     public final static int NUM_KEYBINDS = 16,
             KEYBIND_SKILL1 = 0,

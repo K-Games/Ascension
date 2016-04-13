@@ -294,6 +294,8 @@ public class ScreenIngame extends Screen {
         }
 
         g.setTransform(resetForm);
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                RenderingHints.VALUE_ANTIALIAS_ON);
         g.setRenderingHint(
                 RenderingHints.KEY_TEXT_ANTIALIASING,
                 RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
@@ -825,6 +827,13 @@ public class ScreenIngame extends Screen {
                 playerKey = data[2];
                 if (this.players.containsKey(playerKey)) {
                     addParticle(new ParticleBloodEmitter(this.players.get(playerKey)));
+                }
+                break;
+            case Globals.PARTICLE_BLOOD_HIT:
+                playerKey = data[2];
+                byte sourceKey = data[3];
+                if (this.players.containsKey(playerKey)) {
+                    addParticle(new ParticleBloodEmitter(this.players.get(playerKey), this.players.get(sourceKey), true));
                 }
                 break;
         }

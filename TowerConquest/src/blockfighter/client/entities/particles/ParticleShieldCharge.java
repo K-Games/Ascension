@@ -8,14 +8,12 @@ import java.awt.image.BufferedImage;
 
 public class ParticleShieldCharge extends Particle {
 
-    private final Player owner;
     private long lastParticleTime = 0;
 
     public ParticleShieldCharge(final byte f, final Player p) {
-        super(0, 0, f);
+        super(0, 0, f, p);
         this.frame = 0;
         this.duration = 750;
-        this.owner = p;
         final Point point = this.owner.getPos();
         if (point != null) {
             this.x = point.x;

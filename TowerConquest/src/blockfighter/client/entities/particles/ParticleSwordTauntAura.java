@@ -8,14 +8,11 @@ import java.awt.image.BufferedImage;
 
 public class ParticleSwordTauntAura extends Particle {
 
-    private final Player owner;
-
     public ParticleSwordTauntAura(final Player p) {
-        super(0, 0);
+        super(0, 0, p);
         this.frame = 0;
         this.frameDuration = 25;
         this.duration = 500;
-        this.owner = p;
         final Point point = this.owner.getPos();
         if (point != null) {
             this.x = point.x;

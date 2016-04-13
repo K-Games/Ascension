@@ -3,6 +3,7 @@ package blockfighter.client.entities.particles;
 import blockfighter.client.Globals;
 import blockfighter.client.LogicModule;
 import blockfighter.client.Main;
+import blockfighter.client.entities.player.Player;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
@@ -19,6 +20,8 @@ public abstract class Particle extends Thread {
             particleStartTime = 0;
     protected int frame = 0;
     protected byte facing = Globals.RIGHT;
+
+    protected final Player owner;
 
     protected static BufferedImage[][] PARTICLE_SPRITE;
     private final static String[] PARTICLE_SPRITE_FOLDER = new String[Globals.NUM_PARTICLE_EFFECTS];
@@ -179,7 +182,7 @@ public abstract class Particle extends Thread {
         return Globals.nsToMs(logic.getTime() - this.particleStartTime) >= this.duration;
     }
 
-    public Particle(final int k, final int x, final int y) {
+    public Particle(final int k, final int x, final int y, final Player owner) {
         if (logic != null) {
             this.particleStartTime = logic.getTime();
             this.lastFrameTime = logic.getTime();
@@ -191,27 +194,26 @@ public abstract class Particle extends Thread {
         this.x = x;
         this.y = y;
         this.duration = 200;
+        this.owner = owner;
         setDaemon(true);
     }
 
     public Particle(final int x, final int y) {
-        if (logic != null) {
-            this.particleStartTime = logic.getTime();
-            this.lastFrameTime = logic.getTime();
-        } else {
-            this.particleStartTime = System.nanoTime();
-            this.lastFrameTime = particleStartTime;
-        }
-        this.key = logic.getScreen().getNextParticleKey();
-        this.x = x;
-        this.y = y;
-        this.duration = 200;
-        setDaemon(true);
+        this(logic.getScreen().getNextParticleKey(), x, y, null);
     }
 
     public Particle(final int x, final int y, final byte f) {
         this(x, y);
         this.facing = f;
+    }
+
+    public Particle(final int x, final int y, final byte f, final Player owner) {
+        this(x, y, owner);
+        this.facing = f;
+    }
+
+    public Particle(final int x, final int y, final Player owner) {
+        this(logic.getScreen().getNextParticleKey(), x, y, owner);
     }
 
     @SuppressWarnings("unused")

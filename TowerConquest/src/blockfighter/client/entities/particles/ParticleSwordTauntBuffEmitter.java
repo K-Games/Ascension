@@ -8,14 +8,12 @@ import java.awt.Point;
 
 public class ParticleSwordTauntBuffEmitter extends Particle {
 
-    private final Player owner;
     private long lastParticleTime = 0;
 
     public ParticleSwordTauntBuffEmitter(final Player p) {
-        super(0, 0);
+        super(0, 0, p);
         this.frame = 0;
         this.duration = 10000;
-        this.owner = p;
     }
 
     @Override

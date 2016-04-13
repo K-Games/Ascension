@@ -796,6 +796,7 @@ public class Player extends Thread implements GameEntity {
                 this.tacticalDmgMult = 0;
                 // Send client damage display
                 if (!dmg.isHidden()) {
+                    sendParticle(this.logic.getRoom(), Globals.PARTICLE_BLOOD_HIT, dmg.getOwner().getKey(), this.key);
                     sendDamage(dmg, amount);
                 }
                 // Final damage taken
@@ -1894,5 +1895,5 @@ public class Player extends Thread implements GameEntity {
         bytes[3] = key;
         sender.sendAll(bytes, room);
     }
-
+    
 }

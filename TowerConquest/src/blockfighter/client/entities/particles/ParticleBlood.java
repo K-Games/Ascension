@@ -6,18 +6,18 @@ import java.awt.Graphics2D;
 
 public class ParticleBlood extends Particle {
 
-    double xDouble, xSpeed, yDouble, ySpeed, drawSize = 7;
+    double xDouble, xSpeed, yDouble, ySpeed, drawSize = 6;
 
     public ParticleBlood(final int x, final int y, final byte f) {
         super(x, y, f);
         this.x = x - 5 + Globals.rng(10);
-        this.y = y - 75 + Globals.rng(60);
+        this.y = y - 75 + Globals.rng(30);
         this.xDouble = this.x;
         this.yDouble = this.y;
         this.xSpeed = ((f != Globals.RIGHT) ? 1 : -1) * (.15 * Globals.rng(38) + 5.5);
         this.ySpeed = (.15 * Globals.rng(48) - 4);
         this.frame = 0;
-        this.duration = 400;
+        this.duration = 300;
     }
 
     @Override
@@ -33,6 +33,6 @@ public class ParticleBlood extends Particle {
     @Override
     public void draw(final Graphics2D g) {
         g.setColor(Color.RED);
-        g.fillRect(this.x, this.y, (int) this.drawSize, (int) this.drawSize);
+        g.fillOval(this.x, this.y, (int) this.drawSize, (int) this.drawSize);
     }
 }

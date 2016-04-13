@@ -6,14 +6,21 @@ import java.awt.Point;
 
 public class ParticleBloodEmitter extends Particle {
 
-    private final Player owner;
+    private Player source;
     private long lastParticleTime = 0;
 
     public ParticleBloodEmitter(final Player p) {
-        super(0, 0);
+        super(0, 0, p);
         this.frame = 0;
         this.duration = 500;
-        this.owner = p;
+
+    }
+
+    public ParticleBloodEmitter(final Player p, final Player source, final boolean damage) {
+        super(0, 0, p);
+        this.frame = 0;
+        this.duration = 50;
+        this.source = source;
     }
 
     @Override
@@ -25,9 +32,14 @@ public class ParticleBloodEmitter extends Particle {
                 this.x = p.x;
                 this.y = p.y;
             }
-            for (int i = 0; i < 5; i++) {
-                final ParticleBlood b = new ParticleBlood(this.x, this.y, this.owner.getFacing());
-                logic.getScreen().addParticle(b);
+            for (int i = 0; i < ((source == null) ? 5 : 10); i++) {
+                if (source == null) {
+                    final ParticleBlood b = new ParticleBlood(this.x, this.y, this.owner.getFacing());
+                    logic.getScreen().addParticle(b);
+                } else {
+                    final ParticleBlood b = new ParticleBlood(this.x, this.y, (this.owner.getX() <= this.source.getX()) ? Globals.RIGHT : Globals.LEFT);
+                    logic.getScreen().addParticle(b);
+                }
             }
             lastParticleTime = logic.getTime();
         }
