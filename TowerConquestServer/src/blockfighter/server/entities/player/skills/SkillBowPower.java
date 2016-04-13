@@ -29,11 +29,11 @@ public class SkillBowPower extends Skill {
         if (duration == 0) {
             Player.sendSFX(this.logic.getRoom(), Globals.SFX_POWER2, player.getX(), player.getY());
         }
-        if (duration <= 400 && Player.hasPastDuration(duration, player.getSkillCounter() * 50) && player.getSkillCounter() < 6) {
+        if (duration <= 400 && Globals.hasPastDuration(duration, player.getSkillCounter() * 50) && player.getSkillCounter() < 6) {
             Player.sendParticle(this.logic.getRoom(), Globals.PARTICLE_BOW_POWERCHARGE, player.getX() + ((player.getFacing() == Globals.RIGHT) ? 75 : -75),
                     player.getY() - 215, player.getFacing());
             player.incrementSkillCounter();
-        } else if (Player.hasPastDuration(duration, 800) && player.getSkillCounter() < 7) {
+        } else if (Globals.hasPastDuration(duration, 800) && player.getSkillCounter() < 7) {
             player.incrementSkillCounter();
             final ProjBowPower proj = new ProjBowPower(this.logic, player, player.getX(), player.getY());
             this.logic.queueAddProj(proj);

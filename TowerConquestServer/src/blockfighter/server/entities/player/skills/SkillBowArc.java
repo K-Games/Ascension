@@ -27,7 +27,7 @@ public class SkillBowArc extends Skill {
     public void updateSkillUse(Player player) {
         final int duration = Globals.nsToMs(this.logic.getTime() - player.getSkillCastTime());
         final int numHits = 3;
-        if (player.getSkillCounter() < numHits && Player.hasPastDuration(duration, 100 + player.getSkillCounter() * 50)) {
+        if (player.getSkillCounter() < numHits && Globals.hasPastDuration(duration, 100 + player.getSkillCounter() * 50)) {
             player.incrementSkillCounter();
             final ProjBowArc proj = new ProjBowArc(this.logic, player, player.getX(), player.getY());
             this.logic.queueAddProj(proj);

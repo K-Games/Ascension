@@ -34,7 +34,7 @@ public class SkillSwordTaunt extends Skill {
             }
             Player.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_TAUNTAURA1, player.getKey());
         }
-        if (Player.hasPastDuration(duration, 50) && player.getSkillCounter() < 1) {
+        if (Globals.hasPastDuration(duration, 50) && player.getSkillCounter() < 1) {
             player.incrementSkillCounter();
             final ProjSwordTaunt proj = new ProjSwordTaunt(this.logic, player, player.getX(), player.getY());
             this.logic.queueAddProj(proj);

@@ -28,7 +28,7 @@ public class SkillBowRapid extends Skill {
         final int duration = Globals.nsToMs(this.logic.getTime() - player.getSkillCastTime());
         final int numHits = 3;
 
-        if (Player.hasPastDuration(duration, 150 + player.getSkillCounter() * 150) && player.getSkillCounter() < numHits) {
+        if (Globals.hasPastDuration(duration, 150 + player.getSkillCounter() * 150) && player.getSkillCounter() < numHits) {
             if (player.getSkillCounter() != 0) {
                 player.setFrame((byte) 2);
             }

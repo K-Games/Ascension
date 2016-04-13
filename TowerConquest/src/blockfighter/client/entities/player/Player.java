@@ -18,7 +18,7 @@ public class Player extends Thread {
     private int x, y;
     private final byte key;
     private byte facing;
-    private byte state;
+    private byte animState;
     private byte frame;
     private final double[] stats = new double[Globals.NUM_STATS];
     private String name;
@@ -32,7 +32,7 @@ public class Player extends Thread {
         this.y = y;
         this.key = k;
         this.facing = Globals.RIGHT;
-        this.state = Globals.PLAYER_ANIM_STATE_STAND;
+        this.animState = Globals.PLAYER_ANIM_STATE_STAND;
         this.name = "";
         this.frame = 0;
         this.lastUpdateTime = logic.getTime();
@@ -88,7 +88,7 @@ public class Player extends Thread {
     }
 
     public void setState(final byte s) {
-        this.state = s;
+        this.animState = s;
         this.lastUpdateTime = logic.getTime();
     }
 
@@ -112,7 +112,7 @@ public class Player extends Thread {
     }
 
     public void draw(final Graphics2D g) {
-        final byte s = this.state, f = this.frame;
+        final byte s = this.animState, f = this.frame;
         if (s > Globals.NUM_PLAYER_ANIM_STATE || s < 0 || s == Globals.PLAYER_ANIM_STATE_INVIS || f >= Globals.CHAR_SPRITE[s].length) {
             return;
         }
@@ -184,6 +184,6 @@ public class Player extends Thread {
     }
 
     public boolean isDead() {
-        return this.state == Globals.PLAYER_ANIM_STATE_DEAD;
+        return this.animState == Globals.PLAYER_ANIM_STATE_DEAD;
     }
 }

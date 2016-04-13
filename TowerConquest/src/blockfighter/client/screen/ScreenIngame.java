@@ -272,8 +272,10 @@ public class ScreenIngame extends Screen {
             if (screenShake) {
                 g.translate(screenShakeX, screenShakeY);
             }
-
+        } else {
+            this.map.drawBg(g, 0, 0);
         }
+        
         this.map.draw(g);
 
         if (this.mobs != null) {

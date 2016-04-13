@@ -31,7 +31,7 @@ public class SkillShieldFortify extends Skill {
             Player.sendSFX(this.logic.getRoom(), Globals.SFX_FORTIFY, player.getX(), player.getY());
         }
 
-        if (player.updateSkillEnd(Player.hasPastDuration(duration, 350) && player.getSkillCounter() < 1)) {
+        if (player.updateSkillEnd(Globals.hasPastDuration(duration, 350) && player.getSkillCounter() < 1)) {
             player.incrementSkillCounter();
             player.queueBuff(new BuffShieldFortify(this.logic, 5000, 0.01 + 0.005 * player.getSkillLevel(Skill.SHIELD_FORTIFY), player));
             Player.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SHIELD_FORTIFYBUFF, player.getKey());

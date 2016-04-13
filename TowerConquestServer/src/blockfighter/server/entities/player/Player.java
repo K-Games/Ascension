@@ -204,14 +204,14 @@ public class Player extends Thread implements GameEntity {
         this.facing = Globals.RIGHT;
         this.playerState = PLAYER_STATE_STAND;
         this.frame = 0;
-        extendBuffKeys();
+        initializeBuffKeys();
     }
 
-    public static boolean hasPastDuration(int currentDuration, int durationToPast) {
-        if (durationToPast <= 0) {
-            return true;
+    private void initializeBuffKeys() {
+        for (int i = this.maxBuffKeys; i < this.maxBuffKeys + 150; i++) {
+            this.buffKeys.add(i);
         }
-        return currentDuration / durationToPast >= 1;
+        this.maxBuffKeys += 150;
     }
 
     /**
@@ -238,20 +238,13 @@ public class Player extends Thread implements GameEntity {
      * @return Byte - Free buff key, null if none are available.
      */
     public Integer getNextBuffKey() {
-        if (this.buffKeys.isEmpty()) {
-            extendBuffKeys();
+        Integer nextKey = this.buffKeys.poll();
+        while (nextKey == null) {
+            this.buffKeys.add(this.maxBuffKeys);
+            this.maxBuffKeys++;
+            nextKey = this.buffKeys.poll();
         }
-        if (!this.buffKeys.isEmpty()) {
-            return this.buffKeys.poll();
-        }
-        return null;
-    }
-
-    private void extendBuffKeys() {
-        for (int i = this.maxBuffKeys; i < this.maxBuffKeys + 150; i++) {
-            this.buffKeys.add(i);
-        }
-        this.maxBuffKeys += 150;
+        return nextKey;
     }
 
     /**
@@ -742,7 +735,6 @@ public class Player extends Thread implements GameEntity {
             final Damage dmg = this.damageQueue.poll();
             if (dmg != null) {
                 int amount = (int) (dmg.getDamage() * this.dmgAmp);
-
                 // Proc stuff like shadow attack
                 dmg.proc();
 
@@ -796,7 +788,9 @@ public class Player extends Thread implements GameEntity {
                 this.tacticalDmgMult = 0;
                 // Send client damage display
                 if (!dmg.isHidden()) {
-                    sendParticle(this.logic.getRoom(), Globals.PARTICLE_BLOOD_HIT, dmg.getOwner().getKey(), this.key);
+                    if (dmg.getOwner() != null) {
+                        sendParticle(this.logic.getRoom(), Globals.PARTICLE_BLOOD_HIT, dmg.getOwner().getKey(), this.key);
+                    }
                     sendDamage(dmg, amount);
                 }
                 // Final damage taken
@@ -816,7 +810,7 @@ public class Player extends Thread implements GameEntity {
                         sendCooldown(Skill.PASSIVE_BARRIER);
                     }
                 }
-                // System.out.println("Player Damage Raw: " + dmg.getDamage() + ", Taken: " + amount);
+                //System.out.println(this.getPlayerName() + ": Damage Multiplier: " + this.dmgAmp + " Raw: " + dmg.getDamage() + ", Taken: " + amount);
             }
         }
         // Empty healing queued
@@ -862,6 +856,35 @@ public class Player extends Thread implements GameEntity {
         this.reflects.clear();
         this.dmgReduct = 1;
         this.dmgAmp = 1;
+
+        // Empty and add buffs from queue
+        while (!this.buffQueue.isEmpty()) {
+            final Buff b = this.buffQueue.poll();
+            if (b != null) {
+                if (!canDebuffAffect() && b.isDebuff()) {
+                    // Don't apply debuff when invulnerable
+                    continue;
+                }
+
+                if (b instanceof BuffShieldDash) {
+                    final Map.Entry<Integer, Buff> prevBuff = hasBuff(BuffShieldDash.class);
+                    if (prevBuff != null) {
+                        this.buffs.remove(prevBuff.getKey());
+                    }
+                } else if (b instanceof BuffSwordSlash) {
+                    final Map.Entry<Integer, Buff> prevBuff = hasBuff(BuffSwordSlash.class);
+                    if (prevBuff != null) {
+                        this.buffs.remove(prevBuff.getKey());
+                    }
+                }
+                final Integer bKey = getNextBuffKey();
+                if (bKey != null) {
+                    this.buffs.put(bKey, b);
+                    //System.out.println(this.getPlayerName() + ":Applied " + b.getClass().getSimpleName() + " Buff");
+                }
+            }
+        }
+        
         final LinkedList<Integer> remove = new LinkedList<>();
         for (final Map.Entry<Integer, Buff> bEntry : this.buffs.entrySet()) {
             final Buff b = bEntry.getValue();
@@ -902,33 +925,6 @@ public class Player extends Thread implements GameEntity {
         for (final Integer bKey : remove) {
             this.buffs.remove(bKey);
             returnBuffKey(bKey);
-        }
-
-        // Empty and add buffs from queue
-        while (!this.buffQueue.isEmpty()) {
-            final Buff b = this.buffQueue.poll();
-            if (b != null) {
-                if (!canDebuffAffect() && b.isDebuff()) {
-                    // Don't apply debuff when invulnerable
-                    continue;
-                }
-
-                if (b instanceof BuffShieldDash) {
-                    final Map.Entry<Integer, Buff> prevBuff = hasBuff(BuffShieldDash.class);
-                    if (prevBuff != null) {
-                        this.buffs.remove(prevBuff.getKey());
-                    }
-                } else if (b instanceof BuffSwordSlash) {
-                    final Map.Entry<Integer, Buff> prevBuff = hasBuff(BuffSwordSlash.class);
-                    if (prevBuff != null) {
-                        this.buffs.remove(prevBuff.getKey());
-                    }
-                }
-                final Integer bKey = getNextBuffKey();
-                if (bKey != null) {
-                    this.buffs.put(bKey, b);
-                }
-            }
         }
     }
 
@@ -1895,5 +1891,5 @@ public class Player extends Thread implements GameEntity {
         bytes[3] = key;
         sender.sendAll(bytes, room);
     }
-    
+
 }

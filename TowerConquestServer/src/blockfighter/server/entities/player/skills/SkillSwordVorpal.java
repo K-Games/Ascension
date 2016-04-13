@@ -28,7 +28,7 @@ public class SkillSwordVorpal extends Skill {
         final int duration = Globals.nsToMs(this.logic.getTime() - player.getSkillCastTime());
         int skillTime = player.isSkillMaxed(Skill.SWORD_VORPAL) ? 150 : 170,
                 numHits = player.isSkillMaxed(Skill.SWORD_VORPAL) ? 5 : 3;
-        if (Player.hasPastDuration(duration, skillTime * player.getSkillCounter()) && player.getSkillCounter() < numHits) {
+        if (Globals.hasPastDuration(duration, skillTime * player.getSkillCounter()) && player.getSkillCounter() < numHits) {
             final ProjSwordVorpal proj = new ProjSwordVorpal(this.logic, player, player.getX(), player.getY());
             this.logic.queueAddProj(proj);
             player.setFrame((byte) 0);

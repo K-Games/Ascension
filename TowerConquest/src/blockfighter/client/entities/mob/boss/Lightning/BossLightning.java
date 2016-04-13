@@ -12,11 +12,13 @@ public class BossLightning extends Mob {
 
     private long lastParticleTime = 0;
     public static BufferedImage[][] SPRITE;
-    public static final byte STATE_BOLTCHARGE = 0x03,
-            STATE_BALLCHARGE = 0x04,
-            STATE_ATTACK1 = 0x05,
-            STATE_ATTACK2 = 0x06,
-            STATE_BOLTCAST = 0x07;
+
+    public static final byte ANIM_BOLTCHARGE = 0x05,
+            ANIM_BALLCHARGE = 0x06,
+            ANIM_ATTACK1 = 0x07,
+            ANIM_ATTACK2 = 0x08,
+            ANIM_BOLTCAST = 0x09;
+
     public static final byte PARTICLE_ATT1 = 0x00,
             PARTICLE_ATT2 = 0x01,
             PARTICLE_BOLT = 0x02,
@@ -32,43 +34,43 @@ public class BossLightning extends Mob {
         if (SPRITE != null) {
             return;
         }
-        SPRITE = new BufferedImage[8][];
+        SPRITE = new BufferedImage[10][];
 
-        SPRITE[STATE_STAND] = new BufferedImage[10];
-        SPRITE[STATE_WALK] = SPRITE[STATE_STAND];
-        for (int i = 0; i < SPRITE[STATE_STAND].length; i++) {
+        SPRITE[ANIM_STAND] = new BufferedImage[10];
+        SPRITE[ANIM_WALK] = SPRITE[ANIM_STAND];
+        for (int i = 0; i < SPRITE[ANIM_STAND].length; i++) {
             try {
-                SPRITE[STATE_STAND][i] = Globals.loadTextureResource("sprites/mob/bosslightning/stand/" + i + ".png");
+                SPRITE[ANIM_STAND][i] = Globals.loadTextureResource("sprites/mob/bosslightning/stand/" + i + ".png");
             } catch (final Exception ex) {
             }
         }
 
-        SPRITE[STATE_JUMP] = new BufferedImage[1];
-        SPRITE[STATE_JUMP][0] = SPRITE[STATE_STAND][0];
+        SPRITE[ANIM_JUMP] = new BufferedImage[1];
+        SPRITE[ANIM_JUMP][0] = SPRITE[ANIM_STAND][0];
 
-        SPRITE[STATE_BOLTCHARGE] = new BufferedImage[10];
-        for (int i = 0; i < SPRITE[STATE_BOLTCHARGE].length; i++) {
-            SPRITE[STATE_BOLTCHARGE][i] = Globals.loadTextureResource("sprites/mob/bosslightning/boltcharge/" + i + ".png");
+        SPRITE[ANIM_BOLTCHARGE] = new BufferedImage[10];
+        for (int i = 0; i < SPRITE[ANIM_BOLTCHARGE].length; i++) {
+            SPRITE[ANIM_BOLTCHARGE][i] = Globals.loadTextureResource("sprites/mob/bosslightning/boltcharge/" + i + ".png");
         }
 
-        SPRITE[STATE_BALLCHARGE] = new BufferedImage[10];
-        for (int i = 0; i < SPRITE[STATE_BALLCHARGE].length; i++) {
-            SPRITE[STATE_BALLCHARGE][i] = Globals.loadTextureResource("sprites/mob/bosslightning/ballcharge/" + i + ".png");
+        SPRITE[ANIM_BALLCHARGE] = new BufferedImage[10];
+        for (int i = 0; i < SPRITE[ANIM_BALLCHARGE].length; i++) {
+            SPRITE[ANIM_BALLCHARGE][i] = Globals.loadTextureResource("sprites/mob/bosslightning/ballcharge/" + i + ".png");
         }
 
-        SPRITE[STATE_ATTACK1] = new BufferedImage[10];
-        for (int i = 0; i < SPRITE[STATE_ATTACK1].length; i++) {
-            SPRITE[STATE_ATTACK1][i] = Globals.loadTextureResource("sprites/mob/bosslightning/attack1/" + i + ".png");
+        SPRITE[ANIM_ATTACK1] = new BufferedImage[10];
+        for (int i = 0; i < SPRITE[ANIM_ATTACK1].length; i++) {
+            SPRITE[ANIM_ATTACK1][i] = Globals.loadTextureResource("sprites/mob/bosslightning/attack1/" + i + ".png");
         }
 
-        SPRITE[STATE_ATTACK2] = new BufferedImage[10];
-        for (int i = 0; i < SPRITE[STATE_ATTACK2].length; i++) {
-            SPRITE[STATE_ATTACK2][i] = Globals.loadTextureResource("sprites/mob/bosslightning/attack2/" + i + ".png");
+        SPRITE[ANIM_ATTACK2] = new BufferedImage[10];
+        for (int i = 0; i < SPRITE[ANIM_ATTACK2].length; i++) {
+            SPRITE[ANIM_ATTACK2][i] = Globals.loadTextureResource("sprites/mob/bosslightning/attack2/" + i + ".png");
         }
 
-        SPRITE[STATE_BOLTCAST] = new BufferedImage[10];
-        for (int i = 0; i < SPRITE[STATE_BOLTCAST].length; i++) {
-            SPRITE[STATE_BOLTCAST][i] = Globals.loadTextureResource("sprites/mob/bosslightning/boltcast/" + i + ".png");
+        SPRITE[ANIM_BOLTCAST] = new BufferedImage[10];
+        for (int i = 0; i < SPRITE[ANIM_BOLTCAST].length; i++) {
+            SPRITE[ANIM_BOLTCAST][i] = Globals.loadTextureResource("sprites/mob/bosslightning/boltcast/" + i + ".png");
         }
 
         ParticleAmbient.load();
@@ -76,9 +78,11 @@ public class BossLightning extends Mob {
     }
 
     public static void prerender(final Graphics2D g) {
-        for (BufferedImage[] state : SPRITE) {
-            for (BufferedImage frame : state) {
-                g.drawImage(frame, 0, 0, null);
+        for (BufferedImage[] animState : SPRITE) {
+            if (animState != null) {
+                for (BufferedImage frame : animState) {
+                    g.drawImage(frame, 0, 0, null);
+                }
             }
         }
     }
@@ -102,7 +106,7 @@ public class BossLightning extends Mob {
 
     @Override
     public void update() {
-        if (Globals.nsToMs(logic.getTime() - lastParticleTime) >= 100 && this.state != STATE_BALLCHARGE) {
+        if (Globals.nsToMs(logic.getTime() - lastParticleTime) >= 100 && this.animState != ANIM_BALLCHARGE) {
             for (int i = 0; i < 3; i++) {
                 final ParticleAmbient b = new ParticleAmbient(this.x + (Globals.rng(300) - 200), this.y - (Globals.rng(200) + 150), true);
                 logic.getScreen().addParticle(b);
@@ -140,7 +144,7 @@ public class BossLightning extends Mob {
 
     @Override
     public void draw(final Graphics2D g) {
-        final byte s = this.state, f = this.frame;
+        final byte s = this.animState, f = this.frame;
         if (SPRITE == null || f >= SPRITE[s].length) {
             return;
         }
@@ -149,14 +153,14 @@ public class BossLightning extends Mob {
         int drawSrcY = this.y - sprite.getHeight();
 
         switch (s) {
-            case STATE_BALLCHARGE:
+            case ANIM_BALLCHARGE:
                 drawSrcY += 70;
                 drawSrcX += ((this.facing == Globals.RIGHT) ? 1 : -1) * 50;
                 break;
-            case STATE_ATTACK1:
+            case ANIM_ATTACK1:
                 drawSrcX += ((this.facing == Globals.RIGHT) ? 1 : -1) * 50;
                 break;
-            case STATE_ATTACK2:
+            case ANIM_ATTACK2:
                 drawSrcX += ((this.facing == Globals.RIGHT) ? 1 : -1) * 100;
                 break;
         }

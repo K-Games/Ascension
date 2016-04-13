@@ -28,7 +28,7 @@ public class SkillShieldToss extends Skill {
         final int duration = Globals.nsToMs(this.logic.getTime() - player.getSkillCastTime());
         final int numHits = player.isSkillMaxed(Skill.SHIELD_TOSS) ? 3 : 1;
 
-        if (Player.hasPastDuration(duration, 100 + player.getSkillCounter() * 200) && player.getSkillCounter() < numHits) {
+        if (Globals.hasPastDuration(duration, 100 + player.getSkillCounter() * 200) && player.getSkillCounter() < numHits) {
             player.incrementSkillCounter();
             final ProjShieldToss proj = new ProjShieldToss(this.logic, player, player.getX(), player.getY());
             this.logic.queueAddProj(proj);

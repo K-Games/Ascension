@@ -15,6 +15,8 @@ import java.util.Map;
  */
 public class BossLightning extends Mob {
 
+    private static final byte NUM_SKILLS = 4;
+
     public static final byte SKILL_BOLT = 0x00, SKILL_BALL = 0x01, SKILL_ATT1 = 0x02, SKILL_ATT2 = 0x03;
     public static final byte PARTICLE_ATT1 = 0x00,
             PARTICLE_ATT2 = 0x01,
@@ -22,18 +24,19 @@ public class BossLightning extends Mob {
             PARTICLE_BALL1 = 0x03,
             PARTICLE_BALL2 = 0x04;
 
-    public static final byte STATE_BOLTCHARGE = 0x03,
-            STATE_BALLCHARGE = 0x04,
-            STATE_ATTACK1 = 0x05,
+    public static final byte ANIM_BOLTCHARGE = 0x05,
+            ANIM_BALLCHARGE = 0x06,
+            ANIM_ATTACK1 = 0x07,
+            ANIM_ATTACK2 = 0x08,
+            ANIM_BOLTCAST = 0x09;
+
+    public static final byte STATE_ATTACK1 = 0x05,
             STATE_ATTACK2 = 0x06,
-            STATE_BOLTCAST = 0x07,
-            STATE_AI_ATTACK1 = 0x08,
-            STATE_AI_ATTACK2 = 0x09,
-            STATE_AI_BOLT = 0x0A,
-            STATE_AI_BALL = 0x0B;
+            STATE_BOLT = 0x07,
+            STATE_BALL = 0x08;
 
     public BossLightning(final LogicModule l, final GameMap map, final double x, final double y) {
-        super(l, map, x, y);
+        super(l, map, x, y, NUM_SKILLS);
         this.type = MOB_BOSS_LIGHTNING;
         this.stats = new double[NUM_STATS];
         this.stats[STAT_LEVEL] = l.getRoom();
@@ -41,19 +44,17 @@ public class BossLightning extends Mob {
         this.stats[STAT_MINHP] = this.stats[STAT_MAXHP];
         this.hitbox.width = 330;
         this.hitbox.height = 280;
+
+        super.addValidMobSkillState(STATE_ATTACK1);
+        super.addValidMobSkillState(STATE_ATTACK2);
+        super.addValidMobSkillState(STATE_BOLT);
+        super.addValidMobSkillState(STATE_BALL);
+
         super.addSkill(SKILL_BOLT, new SkillBolt(this.logic));
         super.addSkill(SKILL_BALL, new SkillBall(this.logic));
         super.addSkill(SKILL_ATT1, new SkillAttack1(this.logic));
         super.addSkill(SKILL_ATT2, new SkillAttack2(this.logic));
         //this.logic.queueAddProj(new ProjTouch(this.logic, this));
-    }
-
-    @Override
-    public boolean isUsingSkill() {
-        return this.mobState == STATE_AI_ATTACK1
-                || this.mobState == STATE_AI_ATTACK2
-                || this.mobState == STATE_AI_BOLT
-                || this.mobState == STATE_AI_BALL;
     }
 
     @Override
@@ -72,11 +73,9 @@ public class BossLightning extends Mob {
 
         // Update Actions
         if (isStunned()) {
-            setXSpeed(0);
             queueMobState(STATE_STAND);
         } else if (this.aggroCounter.isEmpty()) {
             // No aggro, just sit there.
-            setXSpeed(0);
             queueMobState(STATE_STAND);
         } else {
             updateAI();
@@ -130,24 +129,24 @@ public class BossLightning extends Mob {
         }
 
         if (canCast(SKILL_BOLT)) {
-            queueMobState(STATE_AI_BOLT);
+            queueMobState(STATE_BOLT);
             setCooldown(SKILL_BOLT);
             this.skillCounter = 0;
             this.skillCastTime = this.logic.getTime();
         } else if (canCast(SKILL_BALL)) {
-            queueMobState(STATE_AI_BALL);
+            queueMobState(STATE_BALL);
             setCooldown(SKILL_BALL);
             this.skillCounter = 0;
             this.skillCastTime = this.logic.getTime();
         } else if (Math.abs(this.x - t.getX()) > 450) {
             queueMobState(STATE_WALK);
         } else if (canCast(SKILL_ATT1)) {
-            queueMobState(STATE_AI_ATTACK1);
+            queueMobState(STATE_ATTACK1);
             setCooldown(SKILL_ATT1);
             this.skillCounter = 0;
             this.skillCastTime = this.logic.getTime();
         } else if (canCast(SKILL_ATT2)) {
-            queueMobState(STATE_AI_ATTACK2);
+            queueMobState(STATE_ATTACK2);
             setCooldown(SKILL_ATT2);
             this.skillCounter = 0;
             this.skillCastTime = this.logic.getTime();
@@ -170,6 +169,7 @@ public class BossLightning extends Mob {
         switch (this.mobState) {
             case STATE_STAND:
                 nextAIstate(t);
+                setXSpeed(0);
                 break;
             case STATE_WALK:
                 nextAIstate(t);
@@ -179,10 +179,10 @@ public class BossLightning extends Mob {
                     setXSpeed(-3);
                 }
                 break;
-            case STATE_AI_BOLT:
+            case STATE_BOLT:
                 setXSpeed(0);
-                if (hasPastDuration(duration, 1100) && this.skillCounter == 0) {
-                    this.animState = STATE_BOLTCAST;
+                if (Globals.hasPastDuration(duration, 1100) && this.skillCounter == 0) {
+                    this.animState = ANIM_BOLTCAST;
                     this.frame = 0;
                     this.skillCounter++;
                     ProjBolt proj;
@@ -220,14 +220,14 @@ public class BossLightning extends Mob {
                             break;
                     }
                 }
-                if (hasPastDuration(duration, 2000)) {
+                if (Globals.hasPastDuration(duration, 2000)) {
                     queueMobState(STATE_STAND);
                 }
                 break;
-            case STATE_AI_BALL:
+            case STATE_BALL:
                 setXSpeed(0);
-                if (hasPastDuration(duration, 1100) && this.skillCounter == 0) {
-                    this.animState = STATE_ATTACK2;
+                if (Globals.hasPastDuration(duration, 1100) && this.skillCounter == 0) {
+                    this.animState = ANIM_ATTACK2;
                     this.frame = 0;
                     this.skillCounter++;
                     final ProjBall proj = new ProjBall(this.logic, this, this.x, this.y);
@@ -235,7 +235,7 @@ public class BossLightning extends Mob {
                     sendMobParticle(this.key, this.logic.getRoom(), PARTICLE_BALL1, proj.getHitbox()[0].getX(),
                             proj.getHitbox()[0].getY());
                 }
-                if ((phase == 1 || phase == 2) && hasPastDuration(duration, 1550) && this.skillCounter == 1) {
+                if ((phase == 1 || phase == 2) && Globals.hasPastDuration(duration, 1550) && this.skillCounter == 1) {
                     this.skillCounter++;
                     final ProjBall proj = new ProjBall(this.logic, this, this.x, this.y);
                     this.logic.queueAddProj(proj);
@@ -243,7 +243,7 @@ public class BossLightning extends Mob {
                             proj.getHitbox()[0].getY());
                     reduceCooldown(SKILL_BALL, 2000);
                 }
-                if (phase == 2 && hasPastDuration(duration, 2000) && this.skillCounter == 2) {
+                if (phase == 2 && Globals.hasPastDuration(duration, 2000) && this.skillCounter == 2) {
                     this.skillCounter++;
                     final ProjBall proj = new ProjBall(this.logic, this, this.x, this.y);
                     this.logic.queueAddProj(proj);
@@ -251,13 +251,13 @@ public class BossLightning extends Mob {
                             proj.getHitbox()[0].getY());
                     reduceCooldown(SKILL_BALL, 1000);
                 }
-                if (hasPastDuration(duration, 2300)) {
+                if (Globals.hasPastDuration(duration, 2300)) {
                     queueMobState(STATE_STAND);
                 }
                 break;
-            case STATE_AI_ATTACK1:
+            case STATE_ATTACK1:
                 setXSpeed(0);
-                if (hasPastDuration(duration, 50) && this.skillCounter == 0) {
+                if (Globals.hasPastDuration(duration, 50) && this.skillCounter == 0) {
                     this.skillCounter++;
                     final ProjAttack proj = new ProjAttack(this.logic, this, this.x, this.y);
                     this.logic.queueAddProj(proj);
@@ -268,13 +268,13 @@ public class BossLightning extends Mob {
                         reduceCooldown(SKILL_ATT1, 1000);
                     }
                 }
-                if (hasPastDuration(duration, 400)) {
+                if (Globals.hasPastDuration(duration, 400)) {
                     queueMobState(STATE_STAND);
                 }
                 break;
-            case STATE_AI_ATTACK2:
+            case STATE_ATTACK2:
                 setXSpeed(0);
-                if (hasPastDuration(duration, 50) && this.skillCounter == 0) {
+                if (Globals.hasPastDuration(duration, 50) && this.skillCounter == 0) {
                     this.skillCounter++;
                     final ProjAttack proj = new ProjAttack(this.logic, this, this.x, this.y);
                     this.logic.queueAddProj(proj);
@@ -285,7 +285,7 @@ public class BossLightning extends Mob {
                         reduceCooldown(SKILL_ATT2, 1000);
                     }
                 }
-                if (hasPastDuration(duration, 400)) {
+                if (Globals.hasPastDuration(duration, 400)) {
                     queueMobState(STATE_STAND);
                 }
                 break;
@@ -318,10 +318,10 @@ public class BossLightning extends Mob {
                     this.lastFrameTime = this.logic.getTime();
                 }
                 break;
-            case STATE_AI_BOLT:
+            case STATE_BOLT:
                 if (frameDuration >= 30) {
                     if (duration < 1000) {
-                        this.animState = STATE_BOLTCHARGE;
+                        this.animState = ANIM_BOLTCHARGE;
                         this.frame++;
                         if (this.frame == 10) {
                             this.frame = 0;
@@ -332,10 +332,10 @@ public class BossLightning extends Mob {
                     this.lastFrameTime = this.logic.getTime();
                 }
                 break;
-            case STATE_AI_BALL:
+            case STATE_BALL:
                 if (frameDuration >= 30) {
                     if (duration < 1000) {
-                        this.animState = STATE_BALLCHARGE;
+                        this.animState = ANIM_BALLCHARGE;
                         this.frame++;
                         if (this.frame == 10) {
                             this.frame = 0;
@@ -346,8 +346,8 @@ public class BossLightning extends Mob {
                     this.lastFrameTime = this.logic.getTime();
                 }
                 break;
-            case STATE_AI_ATTACK1:
-                this.animState = STATE_ATTACK1;
+            case STATE_ATTACK1:
+                this.animState = ANIM_ATTACK1;
                 if (frameDuration >= 20) {
                     if (this.frame < 9) {
                         this.frame++;
@@ -355,8 +355,8 @@ public class BossLightning extends Mob {
                     this.lastFrameTime = this.logic.getTime();
                 }
                 break;
-            case STATE_AI_ATTACK2:
-                this.animState = STATE_ATTACK2;
+            case STATE_ATTACK2:
+                this.animState = ANIM_ATTACK2;
                 if (frameDuration >= 20) {
                     if (this.frame < 9) {
                         this.frame++;
