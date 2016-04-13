@@ -115,12 +115,12 @@ public class LogicModule implements Runnable {
         PacketSender.sendGetAll(this.selectedRoom, k);
     }
 
-    public void sendSetBossType(final byte k) {
-        PacketSender.sendSetBossType(this.selectedRoom, k);
+    public void sendSetMobType(final byte k) {
+        PacketSender.sendSetMobType(this.selectedRoom, k);
     }
 
-    public void sendGetBossStat(final byte k, final byte s) {
-        PacketSender.sendGetBossStat(this.selectedRoom, k, s);
+    public void sendGetMobStat(final byte k, final byte s) {
+        PacketSender.sendGetMobStat(this.selectedRoom, k, s);
     }
 
     public void sendGetName(final byte k) {

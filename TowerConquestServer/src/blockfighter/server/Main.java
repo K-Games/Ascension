@@ -1,6 +1,6 @@
 package blockfighter.server;
 
-import blockfighter.server.entities.boss.Boss;
+import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.proj.Projectile;
 import blockfighter.server.net.PacketHandler;
@@ -82,7 +82,7 @@ public class Main {
             PacketHandler.setPacketSender(packetSender);
 
             Player.setPacketSender(packetSender);
-            Boss.setPacketSender(packetSender);
+            Mob.setPacketSender(packetSender);
             Projectile.setPacketSender(packetSender);
 
             Globals.log("Server started", String.format("%1$td/%1$tm/%1$tY %1$tT", System.currentTimeMillis()), Globals.LOG_TYPE_ERR,
@@ -103,7 +103,7 @@ public class Main {
             packetReceiver.start();
 
         } catch (final Exception ex) {
-            Globals.log(ex.getLocalizedMessage(), ex, true);
+            Globals.logError(ex.getLocalizedMessage(), ex, true);
         }
     }
 

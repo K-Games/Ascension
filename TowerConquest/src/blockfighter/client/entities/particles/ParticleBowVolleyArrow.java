@@ -6,8 +6,8 @@ import java.awt.image.BufferedImage;
 
 public class ParticleBowVolleyArrow extends Particle {
 
-    public ParticleBowVolleyArrow(final int k, final int x, final int y, final byte f) {
-        super(k, x, y, f);
+    public ParticleBowVolleyArrow(final int x, final int y, final byte f) {
+        super(x, y, f);
         this.frame = 0;
         this.frameDuration = 50;
         this.duration = 300;
@@ -17,7 +17,7 @@ public class ParticleBowVolleyArrow extends Particle {
     public void update() {
         super.update();
         if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
-            if (this.frame < PARTICLE_SPRITE[Globals.PARTICLE_BOW_VOLLEYARROW].length - 1) {
+            if (PARTICLE_SPRITE != null && this.frame < PARTICLE_SPRITE[Globals.PARTICLE_BOW_VOLLEYARROW].length - 1) {
                 this.frame++;
             }
             this.lastFrameTime = logic.getTime();

@@ -22,7 +22,7 @@ public class Player extends Thread {
     private byte frame;
     private final double[] stats = new double[Globals.NUM_STATS];
     private String name;
-    private final ItemEquip[] equipment = new ItemEquip[Globals.NUM_EQUIP_SLOTS];
+    private final ItemEquip[] equips = new ItemEquip[Globals.NUM_EQUIP_SLOTS];
     private long lastUpdateTime;
     private static LogicModule logic;
     private boolean disconnect = false;
@@ -98,7 +98,7 @@ public class Player extends Thread {
     }
 
     public void setEquip(final byte slot, final int itemCode) {
-        this.equipment[slot] = new ItemEquip(itemCode);
+        this.equips[slot] = new ItemEquip(itemCode);
     }
 
     public void setStat(final byte statType, final double stat) {
@@ -127,29 +127,29 @@ public class Player extends Thread {
 		 * Globals.RIGHT) ? 1 : -1) * 40; break; }
          */
         final int drawDscX = drawSrcX + ((this.facing == Globals.RIGHT) ? 1 : -1) * sprite.getWidth();
-        if (this.equipment[Globals.ITEM_OFFHAND] != null) {
-            this.equipment[Globals.ITEM_OFFHAND].drawIngame(g, this.x, this.y, s, f, this.facing, true);
+        if (this.equips[Globals.ITEM_OFFHAND] != null) {
+            this.equips[Globals.ITEM_OFFHAND].drawIngame(g, this.x, this.y, s, f, this.facing, true);
         }
         g.drawImage(sprite, drawSrcX, drawSrcY, drawDscX, drawDscY, 0, 0, sprite.getWidth(), sprite.getHeight(), null);
 
-        if (this.equipment[Globals.ITEM_CHEST] != null) {
-            this.equipment[Globals.ITEM_CHEST].drawIngame(g, this.x, this.y, s, f, this.facing);
+        if (this.equips[Globals.ITEM_CHEST] != null) {
+            this.equips[Globals.ITEM_CHEST].drawIngame(g, this.x, this.y, s, f, this.facing);
         }
-        if (this.equipment[Globals.ITEM_SHOULDER] != null) {
-            this.equipment[Globals.ITEM_SHOULDER].drawIngame(g, this.x, this.y, s, f, this.facing);
+        if (this.equips[Globals.ITEM_SHOULDER] != null) {
+            this.equips[Globals.ITEM_SHOULDER].drawIngame(g, this.x, this.y, s, f, this.facing);
         }
 
-        if (this.equipment[Globals.ITEM_PANTS] != null) {
-            this.equipment[Globals.ITEM_PANTS].drawIngame(g, this.x, this.y, s, f, this.facing);
+        if (this.equips[Globals.ITEM_PANTS] != null) {
+            this.equips[Globals.ITEM_PANTS].drawIngame(g, this.x, this.y, s, f, this.facing);
         }
-        if (this.equipment[Globals.ITEM_SHOE] != null) {
-            this.equipment[Globals.ITEM_SHOE].drawIngame(g, this.x, this.y, s, f, this.facing);
+        if (this.equips[Globals.ITEM_SHOE] != null) {
+            this.equips[Globals.ITEM_SHOE].drawIngame(g, this.x, this.y, s, f, this.facing);
         }
-        if (this.equipment[Globals.ITEM_WEAPON] != null) {
-            this.equipment[Globals.ITEM_WEAPON].drawIngame(g, this.x, this.y, s, f, this.facing);
+        if (this.equips[Globals.ITEM_WEAPON] != null) {
+            this.equips[Globals.ITEM_WEAPON].drawIngame(g, this.x, this.y, s, f, this.facing);
         }
-        if (this.equipment[Globals.ITEM_GLOVE] != null) {
-            this.equipment[Globals.ITEM_GLOVE].drawIngame(g, this.x, this.y, s, f, this.facing);
+        if (this.equips[Globals.ITEM_GLOVE] != null) {
+            this.equips[Globals.ITEM_GLOVE].drawIngame(g, this.x, this.y, s, f, this.facing);
         }
 
         g.setFont(Globals.ARIAL_18PT);
@@ -168,7 +168,7 @@ public class Player extends Thread {
         if (this.name.length() <= 0) {
             logic.sendGetName(this.key);
         }
-        for (final ItemEquip e : this.equipment) {
+        for (final ItemEquip e : this.equips) {
             if (e == null) {
                 logic.sendGetEquip(this.key);
                 break;

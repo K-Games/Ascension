@@ -1,12 +1,11 @@
 package blockfighter.client.maps;
 
 import blockfighter.client.Globals;
-import blockfighter.client.entities.boss.Lightning.BossLightning;
-import blockfighter.client.entities.boss.Lightning.ParticleAmbient;
-import blockfighter.client.entities.boss.Lightning.ParticleBolt;
+import blockfighter.client.entities.mob.boss.Lightning.BossLightning;
+import blockfighter.client.entities.mob.boss.Lightning.ParticleAmbient;
+import blockfighter.client.entities.mob.boss.Lightning.ParticleBolt;
 import java.awt.Color;
 import java.awt.Graphics2D;
-import javax.imageio.ImageIO;
 
 /**
  * PvP map
@@ -17,6 +16,9 @@ public class GameMapFloor1 extends GameMap {
 
     public GameMapFloor1() {
         super.setMapID(1);
+        this.mapHeight = 1600;
+        this.mapWidth = 3700;
+        this.mapYOrigin = -1000;
     }
 
     @Override
@@ -44,7 +46,10 @@ public class GameMapFloor1 extends GameMap {
 
     @Override
     public void loadAssets() throws Exception {
-        this.bg = ImageIO.read(Globals.class.getResourceAsStream("sprites/maps/" + getMapID() + "/bg.png"));
+        this.bg = Globals.loadTextureResource("sprites/maps/" + getMapID() + "/bg.png");
+        if (this.bg == null) {
+            throw new NullPointerException("Failed to load map " + getMapID() + " bg.");
+        }
         BossLightning.load();
     }
 
@@ -53,7 +58,7 @@ public class GameMapFloor1 extends GameMap {
         System.out.println("Prerendering Floor 1 Particles");
         ParticleAmbient.prerender(g);
         ParticleBolt.prerender(g);
-        System.out.println("Prerendering Boss Assets");
+        System.out.println("Prerendering Mob Assets");
         BossLightning.prerender(g);
     }
 

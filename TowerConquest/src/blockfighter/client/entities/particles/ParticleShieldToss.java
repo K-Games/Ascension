@@ -6,8 +6,8 @@ import java.awt.image.BufferedImage;
 
 public class ParticleShieldToss extends Particle {
 
-    public ParticleShieldToss(final int k, final int x, final int y, final byte f) {
-        super(k, x, y, f);
+    public ParticleShieldToss(final int x, final int y, final byte f) {
+        super(x, y, f);
         this.frame = 0;
         this.duration = 500;
     }
@@ -21,7 +21,7 @@ public class ParticleShieldToss extends Particle {
             this.x -= 30;
         }
 
-        if (this.frame < PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_TOSS].length - 1) {
+        if (PARTICLE_SPRITE != null && this.frame < PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_TOSS].length - 1) {
             this.frame++;
         } else {
             this.frame = 0;

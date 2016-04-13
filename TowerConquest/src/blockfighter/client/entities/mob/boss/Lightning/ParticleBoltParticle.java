@@ -1,4 +1,4 @@
-package blockfighter.client.entities.boss.Lightning;
+package blockfighter.client.entities.mob.boss.Lightning;
 
 import blockfighter.client.Globals;
 import blockfighter.client.entities.particles.Particle;
@@ -9,8 +9,8 @@ public class ParticleBoltParticle extends Particle {
 
     double dX, dY, speedX, speedY;
 
-    public ParticleBoltParticle(final int k, final int x, final int y) {
-        super(k, x, y, Globals.RIGHT);
+    public ParticleBoltParticle(final int x, final int y) {
+        super(x, y, Globals.RIGHT);
         this.dX = x;
         this.dY = y;
         this.speedX = (Globals.rng(20) - 10) * 1.5;
@@ -28,7 +28,7 @@ public class ParticleBoltParticle extends Particle {
         this.x = (int) this.dX;
         this.y = (int) this.dY;
         if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
-            if (this.frame < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_SLASHBUFF].length - 1) {
+            if (PARTICLE_SPRITE != null && this.frame < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_SLASHBUFF].length - 1) {
                 this.frame++;
             }
             this.lastFrameTime = logic.getTime();

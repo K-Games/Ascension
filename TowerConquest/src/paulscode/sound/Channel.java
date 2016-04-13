@@ -4,8 +4,7 @@ import java.util.LinkedList;
 import javax.sound.sampled.AudioFormat;
 
 /**
- * The Channel class is the base class which can be extended for library-specific channels. It is also used in the "no-sound" library. A channel is a reserved sound-card voice through which sources
- * are played back. Channels can be either streaming channels or normal (non-streaming) ones. For consistant naming conventions, each sub-class should have the name prefix "Channel".
+ * The Channel class is the base class which can be extended for library-specific channels. It is also used in the "no-sound" library. A channel is a reserved sound-card voice through which sources are played back. Channels can be either streaming channels or normal (non-streaming) ones. For consistant naming conventions, each sub-class should have the name prefix "Channel".
  * <br><br>
  * <b><i> SoundSystem License:</b></i><br><b><br>
  * You are free to use this library for any purpose, commercial or otherwise. You may modify this library or source code, and distribute it any way you like, provided the following conditions are met:

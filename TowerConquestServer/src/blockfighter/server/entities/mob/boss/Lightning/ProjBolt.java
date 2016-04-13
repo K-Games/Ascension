@@ -1,11 +1,11 @@
-package blockfighter.server.entities.boss.Lightning;
+package blockfighter.server.entities.mob.boss.Lightning;
 
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
-import blockfighter.server.entities.boss.Boss;
-import blockfighter.server.entities.boss.BossProjectile;
 import blockfighter.server.entities.buff.BuffKnockback;
 import blockfighter.server.entities.damage.Damage;
+import blockfighter.server.entities.mob.Mob;
+import blockfighter.server.entities.mob.MobProjectile;
 import blockfighter.server.entities.player.Player;
 import java.awt.geom.Rectangle2D;
 
@@ -14,19 +14,18 @@ import java.awt.geom.Rectangle2D;
  *
  * @author Ken Kwan
  */
-public class ProjBolt extends BossProjectile {
+public class ProjBolt extends MobProjectile {
 
     /**
      * Projectile of Sword Skill Defensive Impact.
      *
      * @param l Room/Logic Module
-     * @param k Projectile Key
      * @param o Owning player
      * @param x Spawn x-coordinate
      * @param y Spawn y-coordinate
      */
-    public ProjBolt(final LogicModule l, final int k, final Boss o, final double x, final double y) {
-        super(l, k, o);
+    public ProjBolt(final LogicModule l, final Mob o, final double x, final double y) {
+        super(l, o);
         this.x = x;
         this.y = y;
         this.hitbox = new Rectangle2D.Double[1];
@@ -39,9 +38,9 @@ public class ProjBolt extends BossProjectile {
         while (!this.playerQueue.isEmpty()) {
             final Player p = this.playerQueue.poll();
             if (p != null && !p.isDead()) {
-                final int damage = (int) (250 * Math.pow(getBossOwner().getStats()[Boss.STAT_LEVEL], 1.7));
-                p.queueDamage(new Damage(damage, false, getBossOwner(), p, this.hitbox[0], p.getHitbox()));
-                p.queueBuff(new BuffKnockback(this.logic, 300, (getBossOwner().getFacing() == Globals.RIGHT) ? 5 : -5, -8, getBossOwner(), p));
+                final int damage = (int) (250 * Math.pow(getMobOwner().getStats()[Mob.STAT_LEVEL], 1.7));
+                p.queueDamage(new Damage(damage, false, getMobOwner(), p, this.hitbox[0], p.getHitbox()));
+                p.queueBuff(new BuffKnockback(this.logic, 300, (getMobOwner().getFacing() == Globals.RIGHT) ? 5 : -5, -8, getMobOwner(), p));
             }
         }
         this.queuedEffect = false;

@@ -1,9 +1,9 @@
-package blockfighter.client.entities.boss;
+package blockfighter.client.entities.mob;
 
 import blockfighter.client.Globals;
 import blockfighter.client.LogicModule;
 import blockfighter.client.Main;
-import blockfighter.client.entities.boss.Lightning.BossLightning;
+import blockfighter.client.entities.mob.boss.Lightning.BossLightning;
 import java.awt.Graphics2D;
 import java.awt.Point;
 
@@ -11,7 +11,7 @@ import java.awt.Point;
  *
  * @author Ken Kwan
  */
-public abstract class Boss extends Thread {
+public abstract class Mob extends Thread {
 
     public final static int NUM_STATS = 3;
     public final static byte STAT_LEVEL = 0,
@@ -21,14 +21,14 @@ public abstract class Boss extends Thread {
             STATE_WALK = 0x01,
             STATE_JUMP = 0x02;
 
-    public final static byte BOSS_LIGHTNING = 0x00;
+    public final static byte MOB_BOSS_LIGHTNING = 0x00;
 
     protected int x, y;
     protected byte key, facing, state, frame;
     protected double[] stats;
     protected static LogicModule logic;
 
-    public Boss(final int x, final int y, final byte k) {
+    public Mob(final int x, final int y, final byte k) {
         this.x = x;
         this.y = y;
         this.key = k;
@@ -96,16 +96,16 @@ public abstract class Boss extends Thread {
         update();
         if (this.stats[STAT_MAXHP] <= 0) {
             // Get boss stat
-            logic.sendGetBossStat(this.key, STAT_MAXHP);
+            logic.sendGetMobStat(this.key, STAT_MAXHP);
         }
     }
 
     public abstract void update();
 
-    public static Boss spawnBoss(final byte type, final byte key, final int x, final int y) {
-        Boss b = null;
+    public static Mob spawnMob(final byte type, final byte key, final int x, final int y) {
+        Mob b = null;
         switch (type) {
-            case BOSS_LIGHTNING:
+            case MOB_BOSS_LIGHTNING:
                 b = new BossLightning(x, y, key);
                 BossLightning.load();
                 break;

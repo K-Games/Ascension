@@ -10,6 +10,16 @@
 <project name="TowerConquest" default="default" basedir=".">
     <description>Builds, tests, and runs the project TowerConquest.</description>
     <import file="nbproject/build-impl.xml"/>
+        <target name="-post-compile">
+            <copy todir="${dist.dir}/resources" >  
+                <fileset dir="resources" includes="**"/>
+            </copy>
+        </target>
+        <target name="-post-jar">
+            <delete file="${dist.dir}/README.TXT"/>
+            <move file="${dist.dir}/bin.jar" tofile="${dist.dir}/bin/bin.jar" />
+            <move file="${dist.dir}/lib" todir="${dist.dir}/bin/" />
+        </target>
     <!--
 
     There exist several targets which are by default empty and which can be 

@@ -9,21 +9,20 @@
 # Description
 An multiplayer action 2D sidescrolling platformer coded in pure Java.
 
-## v0.16 Client Update 18
+## v0.17 Client Update 0
 ### Client Changes
-* Renamed Global PLAYER_STATE constants to PLAYER_ANIM_STATE
-* Rendering now uses hardware acceleration.
-* Abstracted item sprite and data loading.
-* Abstracted player sprite loading.
-* Item data files now has formatting.
-* Quiver renamed to Arrow Enchantment.
-* Constant renamed from ITEM_QUIVER to ITEM_ARROW.
-* Critical Hit Chance bonus per upgrade reduced from 0.2% to 0.1%
-* Minor adjustments to stat generation for new equipments.
-* Method name changes for ItemEquip for readability.
-* Renamed Gash -> Blade Flurry, Echoing Fury -> Vorpal Strike.
+* Added Debug Mode - Currently displays some hidden values in the menu.
+* Prototype screen shake - Nothing triggers this yet.
+* Unified Particle keys
+* Client file structure modified - Separated resources from binary.
+* Simplified resource loading into Globals class.
+* Added parallax map backgrounds.
+* Particle key generation changed.
 
-## v0.16 Server Update 18
+## v0.17 Server Update 0
 ### Server Changes
-* Renamed Global PLAYER_STATE constants to PLAYER_ANIM_STATE
-* Constant renamed from ITEM_QUIVER to ITEM_ARROW.
+* Mob(Monster) System improved - Added spawning, unified keys per map.
+* Refactored Skill use implementation - Moved from Player class to Skill specific class.
+* Passive Skills now have a flag to indicate its a passive skill.
+* Projectile keys are no longer a constructor parameter - Retrieved in the constructor itself.
+* Removed unused/retired Skills.

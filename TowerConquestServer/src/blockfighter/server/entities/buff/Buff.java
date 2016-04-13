@@ -3,7 +3,7 @@ package blockfighter.server.entities.buff;
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.GameEntity;
-import blockfighter.server.entities.boss.Boss;
+import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
 
 /**
@@ -17,7 +17,7 @@ public abstract class Buff implements GameEntity {
      * Owning player of buff
      */
     private Player playerOwner, playerTarget;
-    private Boss bossOwner, bossTarget;
+    private Mob mobOwner, mobTarget;
     private boolean isDebuff = false;
     private final Byte particleID = null;
     protected LogicModule logic;
@@ -50,15 +50,15 @@ public abstract class Buff implements GameEntity {
         this.playerTarget = t;
     }
 
-    public Buff(final LogicModule l, final int d, Player o, Boss t) {
+    public Buff(final LogicModule l, final int d, Player o, Mob t) {
         this(l, d);
         this.playerOwner = o;
-        this.bossTarget = t;
+        this.mobTarget = t;
     }
 
-    public Buff(final LogicModule l, final int d, Boss o, Player t) {
+    public Buff(final LogicModule l, final int d, Mob o, Player t) {
         this(l, d);
-        this.bossOwner = o;
+        this.mobOwner = o;
         this.playerTarget = t;
     }
 
@@ -73,24 +73,24 @@ public abstract class Buff implements GameEntity {
         this.playerOwner = owner;
     }
 
-    public void setOwner(final Boss owner) {
-        this.bossOwner = owner;
+    public void setOwner(final Mob owner) {
+        this.mobOwner = owner;
     }
 
-    public void setBossOwner(final Boss owner) {
-        this.bossOwner = owner;
+    public void setMobOwner(final Mob owner) {
+        this.mobOwner = owner;
     }
 
     public void setTarget(final Player t) {
         this.playerTarget = t;
     }
 
-    public void setTarget(final Boss t) {
-        this.bossTarget = t;
+    public void setTarget(final Mob t) {
+        this.mobTarget = t;
     }
 
-    public void setBossTarget(final Boss t) {
-        this.bossTarget = t;
+    public void setMobTarget(final Mob t) {
+        this.mobTarget = t;
     }
 
     public Player getOwner() {
@@ -101,12 +101,12 @@ public abstract class Buff implements GameEntity {
         return this.playerTarget;
     }
 
-    public Boss getBossOwner() {
-        return this.bossOwner;
+    public Mob getMobOwner() {
+        return this.mobOwner;
     }
 
-    public Boss getBossTarget() {
-        return this.bossTarget;
+    public Mob getMobTarget() {
+        return this.mobTarget;
     }
 
     @Override

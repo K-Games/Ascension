@@ -8,8 +8,8 @@ public class ParticleShieldFortifyBuff extends Particle {
 
     double pX, speedX;
 
-    public ParticleShieldFortifyBuff(final int k, final int x, final int y, final byte f) {
-        super(k, x, y, f);
+    public ParticleShieldFortifyBuff(final int x, final int y, final byte f) {
+        super(x, y, f);
         this.x += Globals.rng(10) * 10 - 60;
         this.y += -30 - Globals.rng(100);
         this.frameDuration = 25;
@@ -22,7 +22,7 @@ public class ParticleShieldFortifyBuff extends Particle {
 
         this.y -= 7;
         if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
-            if (this.frame < PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_FORTIFYBUFF].length) {
+            if (PARTICLE_SPRITE != null && this.frame < PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_FORTIFYBUFF].length) {
                 this.frame++;
             }
             this.lastFrameTime = logic.getTime();

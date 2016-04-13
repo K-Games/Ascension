@@ -7,8 +7,8 @@ import java.awt.image.BufferedImage;
 
 public class ParticlePassiveResist extends Particle {
 
-    public ParticlePassiveResist(final int k, final int x, final int y) {
-        super(k, x, y, Globals.RIGHT);
+    public ParticlePassiveResist(final int x, final int y) {
+        super(x, y, Globals.RIGHT);
         this.frame = 0;
         this.frameDuration = 25;
         this.duration = 300;
@@ -19,7 +19,7 @@ public class ParticlePassiveResist extends Particle {
         super.update();
 
         if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
-            if (this.frame < PARTICLE_SPRITE[Globals.PARTICLE_PASSIVE_RESIST].length - 1) {
+            if (PARTICLE_SPRITE != null && this.frame < PARTICLE_SPRITE[Globals.PARTICLE_PASSIVE_RESIST].length - 1) {
                 this.frame++;
             }
             this.lastFrameTime = logic.getTime();

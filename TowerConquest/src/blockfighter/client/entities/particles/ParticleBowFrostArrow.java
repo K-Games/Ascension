@@ -6,8 +6,8 @@ import java.awt.image.BufferedImage;
 
 public class ParticleBowFrostArrow extends Particle {
 
-    public ParticleBowFrostArrow(final int k, final int x, final int y, final byte f) {
-        super(k, x, y, f);
+    public ParticleBowFrostArrow(final int x, final int y, final byte f) {
+        super(x, y, f);
         this.frame = 0;
         this.frameDuration = 500;
         this.duration = 725;
@@ -23,7 +23,7 @@ public class ParticleBowFrostArrow extends Particle {
         }
         if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
             this.frameDuration = 25;
-            if (this.frame < PARTICLE_SPRITE[Globals.PARTICLE_BOW_FROSTARROW].length) {
+            if (PARTICLE_SPRITE != null && this.frame < PARTICLE_SPRITE[Globals.PARTICLE_BOW_FROSTARROW].length) {
                 this.frame++;
             }
             this.lastFrameTime = logic.getTime();

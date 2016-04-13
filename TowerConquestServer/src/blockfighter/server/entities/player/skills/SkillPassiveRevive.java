@@ -12,6 +12,7 @@ public class SkillPassiveRevive extends Skill {
         super(l);
         this.skillCode = PASSIVE_REVIVE;
         this.maxCooldown = 120000;
+        this.isPassive = true;
     }
 
 }

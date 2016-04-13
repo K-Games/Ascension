@@ -3,6 +3,7 @@ package blockfighter.client.maps;
 import blockfighter.client.Globals;
 import blockfighter.client.entities.particles.Particle;
 import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.Map;
@@ -18,6 +19,8 @@ public abstract class GameMap {
     protected static ConcurrentHashMap<Integer, Particle> particles = new ConcurrentHashMap<>(20);
     protected long lastUpdateTime = 0;
     protected static ExecutorService threadPool;
+    protected int mapHeight, mapWidth, mapXOrigin = 0, mapYOrigin = 0;
+    private final static double PARALLAX_FACTOR = 0.3;
     private int mapID = -1;
     BufferedImage bg;
 
@@ -82,7 +85,15 @@ public abstract class GameMap {
         }
     }
 
-    public void drawBg(final Graphics2D g) {
+    public void drawBg(final Graphics2D g, final int x, final int y) {
+        double relativeX = 1D * (x - this.mapXOrigin) / this.mapWidth,
+                relativeY = 1D * (y - this.mapYOrigin) / this.mapHeight;
+        final AffineTransform resetForm = g.getTransform();
+        double scale = 1 + PARALLAX_FACTOR;
+
+        g.translate(-relativeX * (PARALLAX_FACTOR * 1280), -relativeY * (PARALLAX_FACTOR * 720));
+        g.scale(scale, scale);
         g.drawImage(this.bg, 0, 0, 1280, 720, null);
+        g.setTransform(resetForm);
     }
 }

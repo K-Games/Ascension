@@ -2,7 +2,6 @@ package blockfighter.server.maps;
 
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
-import blockfighter.server.entities.boss.Boss;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
@@ -61,7 +60,6 @@ public class GameMapArena extends GameMap {
     }
 
     @Override
-    public Boss[] getBosses(final LogicModule l) {
-        return null;
+    public void spawnMapMobs(final LogicModule l) {
     }
 }

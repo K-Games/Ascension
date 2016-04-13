@@ -1,16 +1,14 @@
-package blockfighter.client.entities.boss.Lightning;
+package blockfighter.client.entities.mob.boss.Lightning;
 
 import blockfighter.client.Globals;
-import blockfighter.client.entities.boss.Boss;
+import blockfighter.client.entities.mob.Mob;
 import blockfighter.client.entities.particles.Particle;
-import blockfighter.client.screen.ScreenIngame;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.Arrays;
-import javax.imageio.ImageIO;
 
-public class BossLightning extends Boss {
+public class BossLightning extends Mob {
 
     private long lastParticleTime = 0;
     public static BufferedImage[][] SPRITE;
@@ -40,7 +38,7 @@ public class BossLightning extends Boss {
         SPRITE[STATE_WALK] = SPRITE[STATE_STAND];
         for (int i = 0; i < SPRITE[STATE_STAND].length; i++) {
             try {
-                SPRITE[STATE_STAND][i] = ImageIO.read(Globals.class.getResourceAsStream("sprites/boss/lightning/stand/" + i + ".png"));
+                SPRITE[STATE_STAND][i] = Globals.loadTextureResource("sprites/mob/bosslightning/stand/" + i + ".png");
             } catch (final Exception ex) {
             }
         }
@@ -50,45 +48,27 @@ public class BossLightning extends Boss {
 
         SPRITE[STATE_BOLTCHARGE] = new BufferedImage[10];
         for (int i = 0; i < SPRITE[STATE_BOLTCHARGE].length; i++) {
-            try {
-                SPRITE[STATE_BOLTCHARGE][i] = ImageIO
-                        .read(Globals.class.getResourceAsStream("sprites/boss/lightning/boltcharge/" + i + ".png"));
-            } catch (final Exception ex) {
-            }
+            SPRITE[STATE_BOLTCHARGE][i] = Globals.loadTextureResource("sprites/mob/bosslightning/boltcharge/" + i + ".png");
         }
 
         SPRITE[STATE_BALLCHARGE] = new BufferedImage[10];
         for (int i = 0; i < SPRITE[STATE_BALLCHARGE].length; i++) {
-            try {
-                SPRITE[STATE_BALLCHARGE][i] = ImageIO
-                        .read(Globals.class.getResourceAsStream("sprites/boss/lightning/ballcharge/" + i + ".png"));
-            } catch (final Exception ex) {
-            }
+            SPRITE[STATE_BALLCHARGE][i] = Globals.loadTextureResource("sprites/mob/bosslightning/ballcharge/" + i + ".png");
         }
 
         SPRITE[STATE_ATTACK1] = new BufferedImage[10];
         for (int i = 0; i < SPRITE[STATE_ATTACK1].length; i++) {
-            try {
-                SPRITE[STATE_ATTACK1][i] = ImageIO.read(Globals.class.getResourceAsStream("sprites/boss/lightning/attack1/" + i + ".png"));
-            } catch (final Exception ex) {
-            }
+            SPRITE[STATE_ATTACK1][i] = Globals.loadTextureResource("sprites/mob/bosslightning/attack1/" + i + ".png");
         }
 
         SPRITE[STATE_ATTACK2] = new BufferedImage[10];
         for (int i = 0; i < SPRITE[STATE_ATTACK2].length; i++) {
-            try {
-                SPRITE[STATE_ATTACK2][i] = ImageIO.read(Globals.class.getResourceAsStream("sprites/boss/lightning/attack2/" + i + ".png"));
-            } catch (final Exception ex) {
-            }
+            SPRITE[STATE_ATTACK2][i] = Globals.loadTextureResource("sprites/mob/bosslightning/attack2/" + i + ".png");
         }
 
         SPRITE[STATE_BOLTCAST] = new BufferedImage[10];
         for (int i = 0; i < SPRITE[STATE_BOLTCAST].length; i++) {
-            try {
-                SPRITE[STATE_BOLTCAST][i] = ImageIO
-                        .read(Globals.class.getResourceAsStream("sprites/boss/lightning/boltcast/" + i + ".png"));
-            } catch (final Exception ex) {
-            }
+            SPRITE[STATE_BOLTCAST][i] = Globals.loadTextureResource("sprites/mob/bosslightning/boltcast/" + i + ".png");
         }
 
         ParticleAmbient.load();
@@ -124,9 +104,8 @@ public class BossLightning extends Boss {
     public void update() {
         if (Globals.nsToMs(logic.getTime() - lastParticleTime) >= 100 && this.state != STATE_BALLCHARGE) {
             for (int i = 0; i < 3; i++) {
-                final ParticleAmbient b = new ParticleAmbient(((ScreenIngame) logic.getScreen()).getNextParticleKey(),
-                        this.x + (Globals.rng(300) - 200), this.y - (Globals.rng(200) + 150), true);
-                ((ScreenIngame) logic.getScreen()).addParticle(b);
+                final ParticleAmbient b = new ParticleAmbient(this.x + (Globals.rng(300) - 200), this.y - (Globals.rng(200) + 150), true);
+                logic.getScreen().addParticle(b);
             }
             this.lastParticleTime = logic.getTime();
         }
@@ -137,25 +116,24 @@ public class BossLightning extends Boss {
         final byte particleID = data[2];
         int particleX, particleY;
         Particle b;
-        final int particleKey = ((ScreenIngame) logic.getScreen()).getNextParticleKey();
         switch (particleID) {
             case PARTICLE_ATT1:
                 particleX = Globals.bytesToInt(Arrays.copyOfRange(data, 3, 7));
                 particleY = Globals.bytesToInt(Arrays.copyOfRange(data, 7, 11));
-                b = new ParticleAttEmitter(particleKey, particleX, particleY);
-                ((ScreenIngame) logic.getScreen()).addParticle(b);
+                b = new ParticleAttEmitter(particleX, particleY);
+                logic.getScreen().addParticle(b);
                 break;
             case PARTICLE_BALL1:
                 particleX = Globals.bytesToInt(Arrays.copyOfRange(data, 3, 7));
                 particleY = Globals.bytesToInt(Arrays.copyOfRange(data, 7, 11));
-                b = new ParticleBallEmitter(particleKey, particleX, particleY);
-                ((ScreenIngame) logic.getScreen()).addParticle(b);
+                b = new ParticleBallEmitter(particleX, particleY);
+                logic.getScreen().addParticle(b);
                 break;
             case PARTICLE_BOLT:
                 particleX = Globals.bytesToInt(Arrays.copyOfRange(data, 3, 7));
                 particleY = Globals.bytesToInt(Arrays.copyOfRange(data, 7, 11));
-                b = new ParticleBolt(particleKey, particleX, particleY);
-                ((ScreenIngame) logic.getScreen()).addParticle(b);
+                b = new ParticleBolt(particleX, particleY);
+                logic.getScreen().addParticle(b);
                 break;
         }
     }

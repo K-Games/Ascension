@@ -8,8 +8,8 @@ public class ParticleBowVolleyBuffParticle extends Particle {
 
     double xDouble, xSpeed;
 
-    public ParticleBowVolleyBuffParticle(final int k, final int x, final int y, final byte f) {
-        super(k, x, y, f);
+    public ParticleBowVolleyBuffParticle(final int x, final int y, final byte f) {
+        super(x, y, f);
         this.x += Globals.rng(50) - 35;
         this.y -= Globals.rng(40) + 29;
         this.xDouble = this.x;
@@ -27,7 +27,7 @@ public class ParticleBowVolleyBuffParticle extends Particle {
         this.x = (int) this.xDouble;
         this.y -= 9;
         if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
-            if (this.frame < PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_DASHBUFF].length - 1) {
+            if (PARTICLE_SPRITE != null && this.frame < PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_DASHBUFF].length - 1) {
                 this.frame++;
             }
             this.lastFrameTime = logic.getTime();

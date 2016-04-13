@@ -14,7 +14,7 @@ public class ParticleMenuUpgrade extends Particle {
     private int deltaY;
 
     public ParticleMenuUpgrade(final int k, final int x, final int y, final int c, final int dX, final int dY) {
-        super(k, x, y);
+        super(x, y);
         this.duration = 1000;
         this.color = c;
         this.deltaX = dX;

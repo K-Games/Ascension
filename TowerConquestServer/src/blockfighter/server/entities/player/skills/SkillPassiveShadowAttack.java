@@ -12,6 +12,7 @@ public class SkillPassiveShadowAttack extends Skill {
         super(l);
         this.skillCode = PASSIVE_SHADOWATTACK;
         this.maxCooldown = 200;
+        this.isPassive = true;
     }
 
 }

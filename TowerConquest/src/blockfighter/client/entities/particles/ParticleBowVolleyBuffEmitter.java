@@ -2,7 +2,6 @@ package blockfighter.client.entities.particles;
 
 import blockfighter.client.Globals;
 import blockfighter.client.entities.player.Player;
-import blockfighter.client.screen.ScreenIngame;
 import java.awt.Point;
 
 public class ParticleBowVolleyBuffEmitter extends Particle {
@@ -10,8 +9,8 @@ public class ParticleBowVolleyBuffEmitter extends Particle {
     private final Player owner;
     private long lastParticleTime = 0;
 
-    public ParticleBowVolleyBuffEmitter(final int k, final Player p) {
-        super(k, 0, 0);
+    public ParticleBowVolleyBuffEmitter(final Player p) {
+        super(0, 0);
         this.frame = 0;
         this.duration = 4000;
         this.owner = p;
@@ -26,10 +25,8 @@ public class ParticleBowVolleyBuffEmitter extends Particle {
                 this.x = p.x;
                 this.y = p.y;
             }
-            final ParticleBowVolleyBuffParticle b = new ParticleBowVolleyBuffParticle(
-                    ((ScreenIngame) logic.getScreen()).getNextParticleKey(), this.x,
-                    this.y, this.facing);
-            ((ScreenIngame) logic.getScreen()).addParticle(b);
+            final ParticleBowVolleyBuffParticle b = new ParticleBowVolleyBuffParticle(this.x, this.y, this.facing);
+            logic.getScreen().addParticle(b);
             lastParticleTime = logic.getTime();
         }
     }

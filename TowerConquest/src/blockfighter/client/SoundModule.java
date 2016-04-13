@@ -17,7 +17,7 @@ public class SoundModule implements Runnable {
     public void run() {
         this.soundModule = new SoundSystemJPCT();
         this.soundModule.setMasterVolume(0.2f);
-        SoundSystemConfig.setSoundFilesPackage("blockfighter/client/sounds/");
+        SoundSystemConfig.setSoundFilesPackage("resources/sounds/");
     }
 
     public void setListenerPos(final int x, final int y) {

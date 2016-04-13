@@ -1,21 +1,25 @@
-package blockfighter.client.entities.boss.Lightning;
+package blockfighter.client.entities.mob.boss.Lightning;
 
 import blockfighter.client.Globals;
 import blockfighter.client.entities.particles.Particle;
-import blockfighter.client.screen.ScreenIngame;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
 
-public class ParticleBolt extends Particle {
+public class ParticleAmbient extends Particle {
 
     public static BufferedImage[] SPRITE;
+    private boolean small = false;
 
-    public ParticleBolt(final int k, final int x, final int y) {
-        super(k, x, y, Globals.RIGHT);
-        this.frame = 0;
+    public ParticleAmbient(final int x, final int y) {
+        super(x, y, Globals.RIGHT);
+        this.frame = Globals.rng(12) * 6;
         this.frameDuration = 50;
-        this.duration = 400;
+        this.duration = 300;
+    }
+
+    public ParticleAmbient(final int x, final int y, final boolean set) {
+        this(x, y);
+        this.small = set;
     }
 
     public static void prerender(final Graphics2D g) {
@@ -28,12 +32,9 @@ public class ParticleBolt extends Particle {
         if (SPRITE != null) {
             return;
         }
-        SPRITE = new BufferedImage[8];
+        SPRITE = new BufferedImage[72];
         for (int i = 0; i < SPRITE.length; i++) {
-            try {
-                SPRITE[i] = ImageIO.read(Globals.class.getResourceAsStream("sprites/boss/lightning/particle/bolt/" + i + ".png"));
-            } catch (final Exception ex) {
-            }
+            SPRITE[i] = Globals.loadTextureResource("sprites/mob/bosslightning/particle/ambient/" + i + ".png");
         }
     }
 
@@ -51,18 +52,10 @@ public class ParticleBolt extends Particle {
     public void update() {
         super.update();
         if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
-            if (this.frame < SPRITE.length) {
+            if (this.frame % 6 < 5) {
                 this.frame++;
             }
             this.lastFrameTime = logic.getTime();
-        }
-        if (Globals.nsToMs(logic.getTime() - this.particleStartTime) >= 150) {
-            for (int i = 0; i < 30; i++) {
-                final ParticleBoltParticle b = new ParticleBoltParticle(((ScreenIngame) logic.getScreen()).getNextParticleKey(),
-                        this.x + 150,
-                        this.y + 1100);
-                ((ScreenIngame) logic.getScreen()).addParticle(b);
-            }
         }
     }
 
@@ -77,8 +70,8 @@ public class ParticleBolt extends Particle {
         final BufferedImage sprite = SPRITE[this.frame];
         final int drawSrcX = this.x;
         final int drawSrcY = this.y;
-        final int drawDstX = drawSrcX + 300;
-        final int drawDstY = drawSrcY + 1200;
-        g.drawImage(sprite, drawSrcX, drawSrcY, drawDstX, drawDstY, 0, 0, sprite.getWidth(), sprite.getHeight(), null);
+        final int drawDscY = (int) (drawSrcY + sprite.getHeight() * ((this.small) ? 0.5 : 1));
+        final int drawDscX = (int) (drawSrcX + sprite.getWidth() * ((this.small) ? 0.5 : 1));
+        g.drawImage(sprite, drawSrcX, drawSrcY, drawDscX, drawDscY, 0, 0, sprite.getWidth(), sprite.getHeight(), null);
     }
 }

@@ -58,12 +58,11 @@ public class PacketSender implements Runnable {
                             socket.send(p.getDatagram());
                         }
                     } catch (final IOException ex) {
-                        //this.outPacketQueue.clear();
                         if (p.getPlayer() != null) {
                             p.getPlayer().disconnect();
                         }
                         Globals.log(PacketSender.class.getName(), "Disconnecting " + p.getPlayer().getPlayerName() + " due to unreachable network.", Globals.LOG_TYPE_ERR, true);
-                        Globals.log(ex.getLocalizedMessage(), ex, true);
+                        Globals.logError(ex.getLocalizedMessage(), ex, true);
                     }
                 });
             }
@@ -120,7 +119,7 @@ public class PacketSender implements Runnable {
                 final DatagramPacket packet = createPacket(bytes, address, port);
                 socket.send(packet);
             } catch (final IOException ex) {
-                Globals.log(ex.getLocalizedMessage(), ex, true);
+                Globals.logError(ex.getLocalizedMessage(), ex, true);
             }
         });
     }

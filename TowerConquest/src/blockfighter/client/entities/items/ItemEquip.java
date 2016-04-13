@@ -10,12 +10,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import javax.imageio.ImageIO;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.LineIterator;
 import org.apache.commons.lang3.StringUtils;
-import java.util.List;
 
 /**
  *
@@ -25,7 +24,9 @@ public class ItemEquip implements Item {
 
     private static DecimalFormat df = new DecimalFormat("###,###,##0.##");
 
-    public final static double UPGRADE_CRITCHANCE = 0.001, // 0.1%
+    private final static HashMap<Byte, Color> TIER_COLOURS = new HashMap<>(7);
+
+    private final static double UPGRADE_CRITCHANCE = 0.001, // 0.1%
             UPGRADE_CRITDMG = 0.02, // 2%
             UPGRADE_REGEN = 8,
             UPGRADE_ARMOR = 24,
@@ -56,6 +57,27 @@ public class ItemEquip implements Item {
     protected int itemCode;
 
     static {
+        loadItemTypeNames();
+        loadTierColours();
+        loadItemCodes();
+        ITEM_NAMES = new HashMap<>(ITEM_CODES.size());
+        ITEM_ICONS = new HashMap<>(ITEM_CODES.size());
+        ITEM_DESC = new HashMap<>(ITEM_CODES.size());
+        loadItemData();
+        loadItemDrawOffset();
+    }
+
+    private static void loadTierColours() {
+        TIER_COLOURS.put(TIER_COMMON, Color.WHITE);
+        TIER_COLOURS.put(TIER_UNCOMMON, new Color(180, 0, 255));
+        TIER_COLOURS.put(TIER_RARE, new Color(255, 225, 0));
+        TIER_COLOURS.put(TIER_RUNIC, new Color(255, 130, 0));
+        TIER_COLOURS.put(TIER_LEGENDARY, new Color(205, 15, 0));
+        TIER_COLOURS.put(TIER_ARCHAIC, new Color(0, 220, 0));
+        TIER_COLOURS.put(TIER_DIVINE, new Color(0, 255, 160));
+    }
+
+    private static void loadItemTypeNames() {
         ITEM_TYPENAME.put(Globals.ITEM_AMULET, "Amulet");
         ITEM_TYPENAME.put(Globals.ITEM_BELT, "Belt");
         ITEM_TYPENAME.put(Globals.ITEM_BOW, "Bow");
@@ -70,14 +92,6 @@ public class ItemEquip implements Item {
         ITEM_TYPENAME.put(Globals.ITEM_SHOULDER, "Shoulder");
         ITEM_TYPENAME.put(Globals.ITEM_SWORD, "Sword");
 
-        loadItemCodes();
-
-        ITEM_NAMES = new HashMap<>(ITEM_CODES.size());
-        ITEM_ICONS = new HashMap<>(ITEM_CODES.size());
-        ITEM_DESC = new HashMap<>(ITEM_CODES.size());
-        loadItemDetails();
-
-        loadItemDrawOffset();
     }
 
     public static void init() {
@@ -85,7 +99,7 @@ public class ItemEquip implements Item {
 
     private static void loadItemCodes() {
         try {
-            InputStream itemFile = Globals.class.getResourceAsStream("itemdata/equip/itemcodes.txt");
+            InputStream itemFile = Globals.loadResourceAsStream("itemdata/equip/itemcodes.txt");
             LineIterator it = IOUtils.lineIterator(itemFile, "UTF-8");
             try {
                 while (it.hasNext()) {
@@ -105,14 +119,14 @@ public class ItemEquip implements Item {
         }
     }
 
-    private static void loadItemDetails() {
+    private static void loadItemData() {
         System.out.println("Loading Item Data...");
         System.out.print("[");
         for (final Map.Entry<Integer, Integer> itemEntry : ITEM_CODES.entrySet()) {
             final int itemCode = itemEntry.getValue();
             System.out.print(itemCode + ",");
             try {
-                InputStream itemFile = Globals.class.getResourceAsStream("itemdata/equip/" + itemCode + ".txt");
+                InputStream itemFile = Globals.loadResourceAsStream("itemdata/equip/" + itemCode + ".txt");
                 List<String> fileLines = IOUtils.readLines(itemFile);
                 String[] data = fileLines.toArray(new String[fileLines.size()]);
                 for (int i = 0; i < data.length; i++) {
@@ -185,11 +199,7 @@ public class ItemEquip implements Item {
     }
 
     public static void loadItemIcon(final int code) {
-        BufferedImage icon = null;
-        try {
-            icon = ImageIO.read(Globals.class.getResourceAsStream("sprites/equip/" + code + "/icon.png"));
-        } catch (final Exception ex) {
-        }
+        BufferedImage icon = Globals.loadTextureResource("sprites/equip/" + code + "/icon.png");
         ITEM_ICONS.put(code, icon);
     }
 
@@ -223,11 +233,7 @@ public class ItemEquip implements Item {
                             folder = "jump";
                             break;
                     }
-                    try {
-                        load[state][frames] = ImageIO
-                                .read(Globals.class.getResourceAsStream("sprites/equip/" + code + "/mainhand/" + folder + "/" + frames + ".png"));
-                    } catch (final Exception ex) {
-                    }
+                    load[state][frames] = Globals.loadTextureResource("sprites/equip/" + code + "/mainhand/" + folder + "/" + frames + ".png");
                 }
             }
         }
@@ -264,11 +270,7 @@ public class ItemEquip implements Item {
                             folder = "jump";
                             break;
                     }
-                    try {
-                        load[state][frames] = ImageIO
-                                .read(Globals.class.getResourceAsStream("sprites/equip/" + code + "/offhand/" + folder + "/" + frames + ".png"));
-                    } catch (final Exception ex) {
-                    }
+                    load[state][frames] = Globals.loadTextureResource("sprites/equip/" + code + "/offhand/" + folder + "/" + frames + ".png");
                 }
             }
         }
@@ -408,36 +410,18 @@ public class ItemEquip implements Item {
             boxHeight += lines * 20;
         }
         g.setFont(Globals.ARIAL_15PT);
-        String tierString = "";
-        switch (getTier()) {
-            case ItemEquip.TIER_COMMON:
-                tierString = "Common ";
-                break;
-            case ItemEquip.TIER_UNCOMMON:
-                tierString = "Uncommon ";
-                break;
-            case ItemEquip.TIER_RARE:
-                tierString = "Rare ";
-                break;
-            case ItemEquip.TIER_RUNIC:
-                tierString = "Runic ";
-                break;
-            case ItemEquip.TIER_LEGENDARY:
-                tierString = "Legendary ";
-                break;
-            case ItemEquip.TIER_ARCHAIC:
-                tierString = "Archaic ";
-                break;
-            case ItemEquip.TIER_DIVINE:
-                tierString = "Divine ";
-                break;
-        }
+        String tierName = getTierName(getTier());
+        String itemHeader = tierName + " " + getItemName();
+
         int maxWidth = 0;
         if (getUpgrades() > 0) {
-            maxWidth = Math.max(maxWidth, g.getFontMetrics().stringWidth(tierString + getItemName() + " +" + getUpgrades()));
-        } else {
-            maxWidth = Math.max(maxWidth, g.getFontMetrics().stringWidth(tierString + getItemName()));
+            itemHeader += " +" + getUpgrades();
         }
+        if (Globals.DEBUG_MODE) {
+            itemHeader += " Mult=[" + getBonusMult() + "]";
+        }
+
+        maxWidth = Math.max(maxWidth, g.getFontMetrics().stringWidth(itemHeader));
         maxWidth = Math.max(maxWidth, g.getFontMetrics().stringWidth("Type: " + ITEM_TYPENAME.get(getItemType(this.itemCode))));
         maxWidth = Math.max(maxWidth, g.getFontMetrics().stringWidth("Level: " + (int) getTotalStats()[Globals.STAT_LEVEL]));
 
@@ -484,37 +468,11 @@ public class ItemEquip implements Item {
         g.drawRect(x + 31, y + 1, boxWidth - 2, boxHeight - 2);
 
         g.setFont(Globals.ARIAL_15PT);
-        switch (getTier()) {
-            case ItemEquip.TIER_COMMON:
-                g.setColor(Color.WHITE);
-                break;
-            case ItemEquip.TIER_UNCOMMON:
-                g.setColor(new Color(180, 0, 255));
-                break;
-            case ItemEquip.TIER_RARE:
-                g.setColor(new Color(255, 225, 0));
-                break;
-            case ItemEquip.TIER_RUNIC:
-                g.setColor(new Color(255, 130, 0));
-                break;
-            case ItemEquip.TIER_LEGENDARY:
-                g.setColor(new Color(205, 15, 0));
-                break;
-            case ItemEquip.TIER_ARCHAIC:
-                g.setColor(new Color(0, 220, 0));
-                break;
-            case ItemEquip.TIER_DIVINE:
-                g.setColor(new Color(0, 255, 160));
-                break;
-        }
-        if (getUpgrades() > 0) {
-            g.drawString(tierString + getItemName() + " +" + getUpgrades(), x + 40, y + 20);
-        } else {
-            g.drawString(tierString + getItemName(), x + 40, y + 20);
-        }
+        g.setColor(TIER_COLOURS.get(getTier()));
+        g.drawString(itemHeader, x + 40, y + 20);
+
         g.setColor(Color.WHITE);
         int rowY = 40;
-
         g.drawString("Type: " + ITEM_TYPENAME.get(getItemType(this.itemCode)), x + 40, y + rowY);
         rowY += 20;
         g.drawString(Globals.getStatName(Globals.STAT_LEVEL) + ": " + (int) getTotalStats()[Globals.STAT_LEVEL], x + 40, y + rowY);
@@ -652,6 +610,27 @@ public class ItemEquip implements Item {
     @Override
     public int getItemCode() {
         return this.itemCode;
+    }
+
+    public static String getTierName(final byte tier) {
+        switch (tier) {
+            case ItemEquip.TIER_COMMON:
+                return "Common";
+            case ItemEquip.TIER_UNCOMMON:
+                return "Uncommon";
+            case ItemEquip.TIER_RARE:
+                return "Rare";
+            case ItemEquip.TIER_RUNIC:
+                return "Runic";
+            case ItemEquip.TIER_LEGENDARY:
+                return "Legendary";
+            case ItemEquip.TIER_ARCHAIC:
+                return "Archaic";
+            case ItemEquip.TIER_DIVINE:
+                return "Divine";
+            default:
+                return "";
+        }
     }
 
     public static boolean isValidItem(final int i) {

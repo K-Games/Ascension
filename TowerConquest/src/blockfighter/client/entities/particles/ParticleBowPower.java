@@ -1,14 +1,13 @@
 package blockfighter.client.entities.particles;
 
 import blockfighter.client.Globals;
-import blockfighter.client.screen.ScreenIngame;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 public class ParticleBowPower extends Particle {
 
-    public ParticleBowPower(final int k, final int x, final int y, final byte f) {
-        super(k, x, y, f);
+    public ParticleBowPower(final int x, final int y, final byte f) {
+        super(x, y, f);
         this.frame = 0;
         this.frameDuration = 25;
         this.duration = 600;
@@ -19,14 +18,13 @@ public class ParticleBowPower extends Particle {
         super.update();
         if (Globals.nsToMs(logic.getTime() - this.particleStartTime) >= 50) {
             for (int i = 0; i < 2; i++) {
-                final ParticleBowPowerParticle b = new ParticleBowPowerParticle(((ScreenIngame) logic.getScreen()).getNextParticleKey(),
-                        this.x + ((this.facing == Globals.RIGHT) ? 0 : 700), this.y, this.facing);
-                ((ScreenIngame) logic.getScreen()).addParticle(b);
+                final ParticleBowPowerParticle b = new ParticleBowPowerParticle(this.x + ((this.facing == Globals.RIGHT) ? 0 : 700), this.y, this.facing);
+                logic.getScreen().addParticle(b);
             }
         }
         if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
             this.frameDuration = 25;
-            if (this.frame < PARTICLE_SPRITE[Globals.PARTICLE_BOW_POWER].length - 1) {
+            if (PARTICLE_SPRITE != null && this.frame < PARTICLE_SPRITE[Globals.PARTICLE_BOW_POWER].length - 1) {
                 this.frame++;
             }
             this.lastFrameTime = logic.getTime();

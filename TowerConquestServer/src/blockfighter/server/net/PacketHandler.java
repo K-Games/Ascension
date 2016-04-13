@@ -2,7 +2,7 @@ package blockfighter.server.net;
 
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
-import blockfighter.server.entities.boss.Boss;
+import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
@@ -88,11 +88,11 @@ public class PacketHandler implements Runnable {
             case Globals.DATA_PLAYER_GET_EQUIP:
                 receivePlayerGetEquip(data, room, address, port);
                 break;
-            case Globals.DATA_BOSS_GET_STAT:
-                receiveBossGetStat(data, room, address, port);
+            case Globals.DATA_MOB_GET_STAT:
+                receiveMobGetStat(data, room, address, port);
                 break;
-            case Globals.DATA_BOSS_SET_TYPE:
-                receiveBossSetType(data, room, address, port);
+            case Globals.DATA_MOB_SET_TYPE:
+                receiveMobSetType(data, room, address, port);
                 break;
             default:
                 Globals.log("DATA_UNKNOWN", address.toString(), Globals.LOG_TYPE_DATA, true);
@@ -100,45 +100,45 @@ public class PacketHandler implements Runnable {
         }
     }
 
-    private void receiveBossGetStat(final byte[] data, final byte room, final InetAddress address, final int port) {
-        if (!logic[room].getBosses().containsKey(data[2])) {
+    private void receiveMobGetStat(final byte[] data, final byte room, final InetAddress address, final int port) {
+        if (!logic[room].getMobs().containsKey(data[2])) {
             return;
         }
         byte[] stat;
         switch (data[3]) {
-            case Boss.STAT_MAXHP:
+            case Mob.STAT_MAXHP:
                 stat = Globals.intToByte(10000);
                 break;
-            case Boss.STAT_MINHP:
-                final double[] bStats = logic[room].getBosses().get(data[2]).getStats();
-                final double hpPercent = bStats[Boss.STAT_MINHP] / bStats[Boss.STAT_MAXHP] * 10000;
+            case Mob.STAT_MINHP:
+                final double[] bStats = logic[room].getMobs().get(data[2]).getStats();
+                final double hpPercent = bStats[Mob.STAT_MINHP] / bStats[Mob.STAT_MAXHP] * 10000;
                 stat = Globals.intToByte((int) hpPercent);
                 break;
             default:
-                stat = Globals.intToByte((int) logic[room].getBosses().get(data[2]).getStats()[data[3]]);
+                stat = Globals.intToByte((int) logic[room].getMobs().get(data[2]).getStats()[data[3]]);
         }
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT];
-        bytes[0] = Globals.DATA_BOSS_GET_STAT;
+        bytes[0] = Globals.DATA_MOB_GET_STAT;
         bytes[1] = data[2];
         bytes[2] = data[3];
         System.arraycopy(stat, 0, bytes, 3, stat.length);
         sender.sendAddress(bytes, address, port);
     }
 
-    private void receiveBossSetType(final byte[] data, final byte room, final InetAddress address, final int port) {
-        if (!logic[room].getBosses().containsKey(data[2])) {
+    private void receiveMobSetType(final byte[] data, final byte room, final InetAddress address, final int port) {
+        if (!logic[room].getMobs().containsKey(data[2])) {
             return;
         }
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT * 2];
-        bytes[0] = Globals.DATA_BOSS_SET_TYPE;
+        bytes[0] = Globals.DATA_MOB_SET_TYPE;
         bytes[1] = data[2];
-        bytes[2] = logic[room].getBosses().get(data[2]).getType();
-        final byte[] posXInt = Globals.intToByte((int) logic[room].getBosses().get(data[2]).getX());
+        bytes[2] = logic[room].getMobs().get(data[2]).getType();
+        final byte[] posXInt = Globals.intToByte((int) logic[room].getMobs().get(data[2]).getX());
         bytes[3] = posXInt[0];
         bytes[4] = posXInt[1];
         bytes[5] = posXInt[2];
         bytes[6] = posXInt[3];
-        final byte[] posYInt = Globals.intToByte((int) logic[room].getBosses().get(data[2]).getY());
+        final byte[] posYInt = Globals.intToByte((int) logic[room].getMobs().get(data[2]).getY());
         bytes[7] = posYInt[0];
         bytes[8] = posYInt[1];
         bytes[9] = posYInt[2];
@@ -153,7 +153,7 @@ public class PacketHandler implements Runnable {
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 2 + Globals.PACKET_INT * Globals.NUM_EQUIP_SLOTS];
         bytes[0] = Globals.DATA_PLAYER_GET_EQUIP;
         bytes[1] = data[2];
-        final int[] e = logic[room].getPlayers().get(data[2]).getEquip();
+        final int[] e = logic[room].getPlayers().get(data[2]).getEquips();
         for (int i = 0; i < e.length; i++) {
             final byte[] itemCode = Globals.intToByte(e[i]);
             System.arraycopy(itemCode, 0, bytes, i * 4 + 2, itemCode.length);
@@ -283,8 +283,8 @@ public class PacketHandler implements Runnable {
             desc += Globals.getStatName(i) + ": " + newPlayer.getStats()[i] + "\n";
         }
         desc += "Equips=[";
-        for (byte i = 0; i < newPlayer.getEquip().length; i++) {
-            desc += newPlayer.getEquip()[i]+",";
+        for (byte i = 0; i < newPlayer.getEquips().length; i++) {
+            desc += newPlayer.getEquips()[i] + ",";
         }
         desc += "]\n";
         Globals.log("DATA_PLAYER_CREATE", address + ":" + port + " Queueing new player. Room: " + room + " Key: " + freeKey + desc,

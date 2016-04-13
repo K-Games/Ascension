@@ -2,10 +2,10 @@ package blockfighter.server.entities.proj;
 
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
-import blockfighter.server.entities.boss.Boss;
 import blockfighter.server.entities.buff.BuffKnockback;
 import blockfighter.server.entities.buff.BuffStun;
 import blockfighter.server.entities.damage.Damage;
+import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.player.skills.Skill;
 import java.awt.geom.Rectangle2D;
@@ -30,8 +30,8 @@ public class ProjBowFrost extends Projectile {
      * @param y Spawn y-coordinate
      * @param isSec Is a secondary(non-freezing) shot.
      */
-    public ProjBowFrost(final LogicModule l, final int k, final Player o, final double x, final double y, final boolean isSec) {
-        super(l, k, o, x, y, 500);
+    public ProjBowFrost(final LogicModule l, final Player o, final double x, final double y, final boolean isSec) {
+        super(l, o, x, y, 500);
         this.isSecondary = isSec;
         this.hitbox = new Rectangle2D.Double[1];
         if (o.getFacing() == Globals.RIGHT) {
@@ -70,8 +70,8 @@ public class ProjBowFrost extends Projectile {
                 p.queueBuff(new BuffStun(this.logic, owner.isSkillMaxed(Skill.BOW_FROST) ? 2500 : 1500));
             }
         }
-        while (!this.bossQueue.isEmpty()) {
-            final Boss b = this.bossQueue.poll();
+        while (!this.mobQueue.isEmpty()) {
+            final Mob b = this.mobQueue.poll();
             final Player owner = getOwner();
             if (b != null && !b.isDead()) {
                 int damage;

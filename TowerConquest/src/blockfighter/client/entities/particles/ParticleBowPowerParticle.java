@@ -6,8 +6,8 @@ import java.awt.image.BufferedImage;
 
 public class ParticleBowPowerParticle extends Particle {
 
-    public ParticleBowPowerParticle(final int k, final int x, final int y, final byte f) {
-        super(k, x, y, f);
+    public ParticleBowPowerParticle(final int x, final int y, final byte f) {
+        super(x, y, f);
         if (this.facing == Globals.RIGHT) {
             this.x += Globals.rng(450);
         } else {
@@ -24,7 +24,7 @@ public class ParticleBowPowerParticle extends Particle {
         super.update();
         this.x += (this.facing == Globals.RIGHT) ? 20 : -20;
         if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
-            if (this.frame < PARTICLE_SPRITE[Globals.PARTICLE_BOW_POWERPARTICLE].length - 1) {
+            if (PARTICLE_SPRITE != null && this.frame < PARTICLE_SPRITE[Globals.PARTICLE_BOW_POWERPARTICLE].length - 1) {
                 this.frame++;
             }
             this.lastFrameTime = logic.getTime();

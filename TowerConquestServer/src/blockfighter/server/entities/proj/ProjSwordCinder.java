@@ -2,10 +2,10 @@ package blockfighter.server.entities.proj;
 
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
-import blockfighter.server.entities.boss.Boss;
 import blockfighter.server.entities.buff.BuffBurn;
 import blockfighter.server.entities.buff.BuffKnockback;
 import blockfighter.server.entities.damage.Damage;
+import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.player.skills.Skill;
 import java.awt.geom.Rectangle2D;
@@ -21,13 +21,12 @@ public class ProjSwordCinder extends Projectile {
      * Projectile of Sword Skill Cinder.
      *
      * @param l Room/Logic Module
-     * @param k Projectile Key
      * @param o Owning player
      * @param x Spawn x-coordinate
      * @param y Spawn y-coordinate
      */
-    public ProjSwordCinder(final LogicModule l, final int k, final Player o, final double x, final double y) {
-        super(l, k, o, x, y, 300);
+    public ProjSwordCinder(final LogicModule l, final Player o, final double x, final double y) {
+        super(l, o, x, y, 300);
         this.hitbox = new Rectangle2D.Double[1];
         if (o.getFacing() == Globals.RIGHT) {
             this.hitbox[0] = new Rectangle2D.Double(this.x - 10, this.y - 220, 170, 238);
@@ -57,8 +56,8 @@ public class ProjSwordCinder extends Projectile {
                 sender.sendAll(bytes, this.logic.getRoom());
             }
         }
-        while (!this.bossQueue.isEmpty()) {
-            final Boss b = this.bossQueue.poll();
+        while (!this.mobQueue.isEmpty()) {
+            final Mob b = this.mobQueue.poll();
             final Player owner = getOwner();
             if (b != null && !b.isDead()) {
                 int damage = (int) (owner.rollDamage() * (4.5 + owner.getSkillLevel(Skill.SWORD_CINDER) * .2));

@@ -2,9 +2,9 @@ package blockfighter.server.entities.proj;
 
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
-import blockfighter.server.entities.boss.Boss;
 import blockfighter.server.entities.buff.BuffKnockback;
 import blockfighter.server.entities.damage.Damage;
+import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.player.skills.Skill;
 import java.awt.geom.Rectangle2D;
@@ -25,8 +25,8 @@ public class ProjBowPower extends Projectile {
      * @param x Spawn x-coordinate
      * @param y Spawn y-coordinate
      */
-    public ProjBowPower(final LogicModule l, final int k, final Player o, final double x, final double y) {
-        super(l, k, o, x, y, 300);
+    public ProjBowPower(final LogicModule l, final Player o, final double x, final double y) {
+        super(l, o, x, y, 300);
         this.hitbox = new Rectangle2D.Double[1];
         if (o.getFacing() == Globals.RIGHT) {
             this.hitbox[0] = new Rectangle2D.Double(this.x + 80, this.y - 155, 700, 150);
@@ -54,8 +54,8 @@ public class ProjBowPower extends Projectile {
             }
         }
 
-        while (!this.bossQueue.isEmpty()) {
-            final Boss b = this.bossQueue.poll();
+        while (!this.mobQueue.isEmpty()) {
+            final Mob b = this.mobQueue.poll();
             final Player owner = getOwner();
             if (b != null && !b.isDead()) {
                 int damage = (int) (owner.rollDamage() * (5 + owner.getSkillLevel(Skill.BOW_POWER)));

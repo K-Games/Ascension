@@ -6,8 +6,8 @@ import java.awt.image.BufferedImage;
 
 public class ParticleShieldReflectHit extends Particle {
 
-    public ParticleShieldReflectHit(final int k, final int x, final int y) {
-        super(k, x, y);
+    public ParticleShieldReflectHit(final int x, final int y) {
+        super(x, y);
         this.frame = 0;
         this.frameDuration = 25;
         this.duration = 400;
@@ -18,7 +18,7 @@ public class ParticleShieldReflectHit extends Particle {
         super.update();
 
         if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
-            if (this.frame < PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_REFLECTHIT].length - 1) {
+            if (PARTICLE_SPRITE != null && this.frame < PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_REFLECTHIT].length - 1) {
                 this.frame++;
             }
             this.lastFrameTime = logic.getTime();

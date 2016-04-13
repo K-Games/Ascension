@@ -2,8 +2,8 @@ package blockfighter.server.entities.proj;
 
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
-import blockfighter.server.entities.boss.Boss;
 import blockfighter.server.entities.damage.Damage;
+import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.player.skills.Skill;
 import java.awt.geom.Rectangle2D;
@@ -21,14 +21,13 @@ public class ProjSwordGash extends Projectile {
      * Projectile of Sword Skill Gash.
      *
      * @param l Room/Logic Module
-     * @param k Projectile Key
      * @param o Owning player
      * @param x Spawn x-coordinate
      * @param y Spawn y-coordinate
      * @param hit
      */
-    public ProjSwordGash(final LogicModule l, final int k, final Player o, final double x, final double y, final byte hit) {
-        super(l, k, o, x, y, 50);
+    public ProjSwordGash(final LogicModule l, final Player o, final double x, final double y, final byte hit) {
+        super(l, o, x, y, 50);
         this.hitbox = new Rectangle2D.Double[1];
         if (o.getFacing() == Globals.RIGHT) {
             switch (hit) {
@@ -75,8 +74,8 @@ public class ProjSwordGash extends Projectile {
                 }
             }
         }
-        while (!this.bossQueue.isEmpty()) {
-            final Boss b = this.bossQueue.poll();
+        while (!this.mobQueue.isEmpty()) {
+            final Mob b = this.mobQueue.poll();
             final Player owner = getOwner();
             if (b != null && !b.isDead()) {
                 int damage = (int) (owner.rollDamage() * (.75 + 0.03 * owner.getSkillLevel(Skill.SWORD_GASH)));

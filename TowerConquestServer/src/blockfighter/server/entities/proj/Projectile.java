@@ -3,7 +3,7 @@ package blockfighter.server.entities.proj;
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.GameEntity;
-import blockfighter.server.entities.boss.Boss;
+import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.net.PacketSender;
 import java.awt.geom.Rectangle2D;
@@ -42,9 +42,9 @@ public abstract class Projectile extends Thread implements GameEntity {
     private Player owner;
 
     /**
-     * Owning Boss of Projectile
+     * Owning Mob of Projectile
      */
-    private Boss bossOwner;
+    private Mob mobOwner;
     /**
      * Array of players hit by this projectile
      */
@@ -54,8 +54,8 @@ public abstract class Projectile extends Thread implements GameEntity {
      * Queue of players to be hit by projectile
      */
     protected final LinkedList<Player> playerQueue = new LinkedList<>();
-    protected ArrayList<Boss> bHit = new ArrayList<>();
-    protected final LinkedList<Boss> bossQueue = new LinkedList<>();
+    protected ArrayList<Mob> bHit = new ArrayList<>();
+    protected final LinkedList<Mob> mobQueue = new LinkedList<>();
     /**
      * The duration of this projectile in milliseconds.
      */
@@ -82,11 +82,10 @@ public abstract class Projectile extends Thread implements GameEntity {
      * Constructor called by subclasses to reference sender and logic.
      *
      * @param l Reference to Logic module
-     * @param k Hash map key
      */
-    public Projectile(final LogicModule l, final int k) {
+    public Projectile(final LogicModule l) {
         this.logic = l;
-        this.key = k;
+        this.key = this.logic.getNextProjKey();
         projStartTime = this.logic.getTime();
     }
 
@@ -94,14 +93,13 @@ public abstract class Projectile extends Thread implements GameEntity {
      * Constructor for a empty projectile.
      *
      * @param l Reference to Logic module
-     * @param k Hash map key
      * @param o Owning player
      * @param x Spawning x
      * @param y Spawning y
      * @param duration
      */
-    public Projectile(final LogicModule l, final int k, final Player o, final double x, final double y, final int duration) {
-        this(l, k);
+    public Projectile(final LogicModule l, final Player o, final double x, final double y, final int duration) {
+        this(l);
         this.owner = o;
         this.x = x;
         this.y = y;
@@ -110,9 +108,9 @@ public abstract class Projectile extends Thread implements GameEntity {
         this.duration = duration;
     }
 
-    public Projectile(final LogicModule l, final int k, final Boss o, final double x, final double y, final int duration) {
-        this(l, k);
-        this.bossOwner = o;
+    public Projectile(final LogicModule l, final Mob o, final double x, final double y, final int duration) {
+        this(l);
+        this.mobOwner = o;
         this.x = x;
         this.y = y;
         this.hitbox = new Rectangle2D.Double[1];
@@ -135,10 +133,10 @@ public abstract class Projectile extends Thread implements GameEntity {
             }
         }
 
-        for (final Map.Entry<Byte, Boss> bEntry : this.logic.getBosses().entrySet()) {
-            final Boss b = bEntry.getValue();
+        for (final Map.Entry<Byte, Mob> bEntry : this.logic.getMobs().entrySet()) {
+            final Mob b = bEntry.getValue();
             if (!this.bHit.contains(b) && b.intersectHitbox(this.hitbox[0])) {
-                this.bossQueue.add(b);
+                this.mobQueue.add(b);
                 this.bHit.add(b);
                 queueEffect(this);
             }
@@ -170,12 +168,12 @@ public abstract class Projectile extends Thread implements GameEntity {
         return this.owner;
     }
 
-    public void setBossOwner(final Boss owner) {
-        this.bossOwner = owner;
+    public void setMobOwner(final Mob owner) {
+        this.mobOwner = owner;
     }
 
-    public Boss getBossOwner() {
-        return this.bossOwner;
+    public Mob getMobOwner() {
+        return this.mobOwner;
     }
 
     @Override
@@ -183,7 +181,7 @@ public abstract class Projectile extends Thread implements GameEntity {
         try {
             update();
         } catch (final Exception ex) {
-            Globals.log(ex.getLocalizedMessage(), ex, true);
+            Globals.logError(ex.getLocalizedMessage(), ex, true);
         }
     }
 

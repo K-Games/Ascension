@@ -130,18 +130,18 @@ public class PacketSender {
         sendPacket(requestPacket);
     }
 
-    public static void sendSetBossType(final byte room, final byte bossKey) {
+    public static void sendSetMobType(final byte room, final byte mobKey) {
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
-        bytes[0] = Globals.DATA_BOSS_SET_TYPE;
+        bytes[0] = Globals.DATA_MOB_SET_TYPE;
         bytes[1] = room;
-        bytes[2] = bossKey;
+        bytes[2] = mobKey;
         final DatagramPacket requestPacket = createPacket(bytes);
         sendPacket(requestPacket);
     }
 
-    public static void sendGetBossStat(final byte room, final byte key, final byte stat) {
+    public static void sendGetMobStat(final byte room, final byte key, final byte stat) {
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 4];
-        bytes[0] = Globals.DATA_BOSS_GET_STAT;
+        bytes[0] = Globals.DATA_MOB_GET_STAT;
         bytes[1] = room;
         bytes[2] = key;
         bytes[3] = stat;

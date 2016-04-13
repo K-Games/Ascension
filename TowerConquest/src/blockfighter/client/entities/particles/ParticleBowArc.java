@@ -6,8 +6,8 @@ import java.awt.image.BufferedImage;
 
 public class ParticleBowArc extends Particle {
 
-    public ParticleBowArc(final int k, final int x, final int y, final byte f) {
-        super(k, x, y, f);
+    public ParticleBowArc(final int x, final int y, final byte f) {
+        super(x, y, f);
         this.frame = 0;
         this.frameDuration = 100;
         this.duration = 400;
@@ -18,7 +18,7 @@ public class ParticleBowArc extends Particle {
         super.update();
         if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
             this.frameDuration = 25;
-            if (this.frame < PARTICLE_SPRITE[Globals.PARTICLE_BOW_ARC].length) {
+            if (PARTICLE_SPRITE != null && this.frame < PARTICLE_SPRITE[Globals.PARTICLE_BOW_ARC].length) {
                 this.frame++;
             }
             this.lastFrameTime = logic.getTime();
