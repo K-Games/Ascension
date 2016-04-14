@@ -32,7 +32,7 @@ public class Player extends Thread {
         this.y = y;
         this.key = k;
         this.facing = Globals.RIGHT;
-        this.animState = Globals.PLAYER_ANIM_STATE_STAND;
+        this.animState = Globals.PLAYER_ANIM_STATE_INVIS;
         this.name = "";
         this.frame = 0;
         this.lastUpdateTime = logic.getTime();

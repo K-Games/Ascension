@@ -9,20 +9,11 @@
 # Description
 An multiplayer action 2D sidescrolling platformer coded in pure Java.
 
-## v0.17 Client Update 0
+## v0.17 Client Update 1
 ### Client Changes
-* Added Debug Mode - Currently displays some hidden values in the menu.
-* Prototype screen shake - Nothing triggers this yet.
-* Unified Particle keys
-* Client file structure modified - Separated resources from binary.
-* Simplified resource loading into Globals class.
-* Added parallax map backgrounds.
-* Particle key generation changed.
+* Fixed loading into map before loading completed.
 
-## v0.17 Server Update 0
+## v0.17 Server Update 1
 ### Server Changes
-* Mob(Monster) System improved - Added spawning, unified keys per map.
-* Refactored Skill use implementation - Moved from Player class to Skill specific class.
-* Passive Skills now have a flag to indicate its a passive skill.
-* Projectile keys are no longer a constructor parameter - Retrieved in the constructor itself.
-* Removed unused/retired Skills.
+* Mob(Monster) System improved - MobSkill is now it's own type, Mob Skills were subtypes of Skill before.
+* Mob Buffs now parity Player buffs - Mobs now correctly take Damage Amplification and Reduction buffs.

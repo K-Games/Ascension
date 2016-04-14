@@ -302,6 +302,7 @@ public class PacketHandler implements Runnable {
 
         newPlayer.sendPos();
         newPlayer.sendName();
+        newPlayer.sendStat(Globals.STAT_MAXHP);
     }
 
     private void receivePlayerLogin(final byte[] data, final byte room, final InetAddress address, final int port) {

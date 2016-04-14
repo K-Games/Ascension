@@ -884,7 +884,7 @@ public class Player extends Thread implements GameEntity {
                 }
             }
         }
-        
+
         final LinkedList<Integer> remove = new LinkedList<>();
         for (final Map.Entry<Integer, Buff> bEntry : this.buffs.entrySet()) {
             final Buff b = bEntry.getValue();
@@ -1677,6 +1677,16 @@ public class Player extends Thread implements GameEntity {
         bytes[0] = Globals.DATA_PLAYER_GET_NAME;
         bytes[1] = this.key;
         System.arraycopy(data, 0, bytes, 2, data.length);
+        sender.sendAll(bytes, this.logic.getRoom());
+    }
+
+    public void sendStat(final byte statID) {
+        final byte[] stat = Globals.intToByte((int) getStats()[statID]);
+        final byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT];
+        bytes[0] = Globals.DATA_PLAYER_GET_STAT;
+        bytes[1] = this.key;
+        bytes[2] = statID;
+        System.arraycopy(stat, 0, bytes, 3, stat.length);
         sender.sendAll(bytes, this.logic.getRoom());
     }
 
