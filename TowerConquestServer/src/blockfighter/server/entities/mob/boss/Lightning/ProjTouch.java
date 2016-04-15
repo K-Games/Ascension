@@ -44,9 +44,9 @@ public class ProjTouch extends MobProjectile {
 
         for (final Map.Entry<Byte, Player> pEntry : this.logic.getPlayers().entrySet()) {
             final Player p = pEntry.getValue();
-            if (p != getOwner() && !this.pHit.contains(p) && !p.isInvulnerable() && p.intersectHitbox(this.hitbox[0])) {
+            if (p != getOwner() && !this.pHit.containsKey(p.getKey()) && !p.isInvulnerable() && p.intersectHitbox(this.hitbox[0])) {
                 this.playerQueue.add(p);
-                this.pHit.add(p);
+                this.pHit.put(p.getKey(), p);
                 queueEffect(this);
             }
         }

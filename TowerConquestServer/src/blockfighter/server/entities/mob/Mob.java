@@ -126,7 +126,25 @@ public abstract class Mob extends Thread implements GameEntity {
         this.skills.get(sc).reduceCooldown(amount);
     }
 
-    public abstract Player getTarget();
+    public Player getTarget() {
+        Player target = null;
+        double maxAggro = 0;
+        final LinkedList<Player> remove = new LinkedList<>();
+        for (final Map.Entry<Player, Double> p : this.aggroCounter.entrySet()) {
+            if (!p.getKey().isConnected() || p.getKey().isDead()) {
+                remove.add(p.getKey());
+                continue;
+            }
+            if (p.getValue() > maxAggro) {
+                maxAggro = p.getValue();
+                target = p.getKey();
+            }
+        }
+        while (!remove.isEmpty()) {
+            this.aggroCounter.remove(remove.poll());
+        }
+        return target;
+    }
 
     public boolean isUsingSkill() {
         return validMobSkillStates.containsKey(this.mobState);
@@ -202,6 +220,22 @@ public abstract class Mob extends Thread implements GameEntity {
 
     public byte getFrame() {
         return this.frame;
+    }
+
+    public MobSkill getSkill(final byte skillCode) {
+        return this.skills.get(skillCode);
+    }
+
+    public int getSkillCounter() {
+        return this.skillCounter;
+    }
+
+    public long getSkillCastTime() {
+        return this.skillCastTime;
+    }
+
+    public void incrementSkillCounter() {
+        this.skillCounter++;
     }
 
     public void setPos(final double x, final double y) {

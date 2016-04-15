@@ -5,8 +5,6 @@ import blockfighter.server.LogicModule;
 import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.maps.GameMap;
-import java.util.LinkedList;
-import java.util.Map;
 
 /**
  * Debug_Lightning boss Work in progress
@@ -43,7 +41,7 @@ public class BossShadowFiend extends Mob {
         super.addValidMobSkillState(STATE_DARKLINES);
         super.addValidMobSkillState(STATE_ORBS);
 
-        //super.addSkill(SKILL_ATT2, new SkillAttack2(this.logic));
+        super.addSkill(SKILL_RAZE, new SkillRaze(this.logic));
         //this.logic.queueAddProj(new ProjTouch(this.logic, this));
     }
 
@@ -87,27 +85,6 @@ public class BossShadowFiend extends Mob {
         }
     }
 
-    @Override
-    public Player getTarget() {
-        Player target = null;
-        double maxAggro = 0;
-        final LinkedList<Player> remove = new LinkedList<>();
-        for (final Map.Entry<Player, Double> p : this.aggroCounter.entrySet()) {
-            if (!p.getKey().isConnected() || p.getKey().isDead()) {
-                remove.add(p.getKey());
-                continue;
-            }
-            if (p.getValue() > maxAggro) {
-                maxAggro = p.getValue();
-                target = p.getKey();
-            }
-        }
-        while (!remove.isEmpty()) {
-            this.aggroCounter.remove(remove.poll());
-        }
-        return target;
-    }
-
     private void nextAIstate(final Player t) {
         if (t == null) {
             queueMobState(STATE_STAND);
@@ -120,10 +97,17 @@ public class BossShadowFiend extends Mob {
             setFacing(Globals.LEFT);
         }
 
-        if (Math.abs(this.x - t.getX()) > 450) {
+        if (Math.abs(this.x - t.getX()) > 1500) {
             queueMobState(STATE_WALK);
         } else {
             queueMobState(STATE_STAND);
+        }
+
+        if (canCast(SKILL_RAZE)) {
+            queueMobState(STATE_RAZE);
+            setCooldown(SKILL_RAZE);
+            this.skillCounter = 0;
+            this.skillCastTime = this.logic.getTime();
         }
     }
 
@@ -150,6 +134,10 @@ public class BossShadowFiend extends Mob {
                 } else {
                     setXSpeed(-3);
                 }
+                break;
+            case STATE_RAZE:
+                setXSpeed(0);
+                getSkill(SKILL_RAZE).updateSkillUse(this);
                 break;
         }
     }

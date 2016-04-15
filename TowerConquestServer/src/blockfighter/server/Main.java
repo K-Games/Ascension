@@ -90,7 +90,7 @@ public class Main {
             Globals.log("Server started", String.format("%1$td/%1$tm/%1$tY %1$tT", System.currentTimeMillis()), Globals.LOG_TYPE_DATA,
                     true);
 
-            PACKETSENDER_SCHEDULER.scheduleAtFixedRate(packetSender, 0, 5, TimeUnit.MILLISECONDS);
+            PACKETSENDER_SCHEDULER.scheduleAtFixedRate(packetSender, 0, 2, TimeUnit.MILLISECONDS);
             for (byte i = 0; i < server_rooms.length; i++) {
                 server_rooms[i] = new LogicModule(i);
                 LOGIC_SCHEDULER.scheduleAtFixedRate(server_rooms[i], 0, 750, TimeUnit.MICROSECONDS);

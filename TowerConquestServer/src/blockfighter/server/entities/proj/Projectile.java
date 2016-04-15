@@ -7,7 +7,7 @@ import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.net.PacketSender;
 import java.awt.geom.Rectangle2D;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
@@ -48,13 +48,13 @@ public abstract class Projectile extends Thread implements GameEntity {
     /**
      * Array of players hit by this projectile
      */
-    protected ArrayList<Player> pHit = new ArrayList<>();
+    protected HashMap<Byte, Player> pHit = new HashMap<>();
 
     /**
      * Queue of players to be hit by projectile
      */
     protected final LinkedList<Player> playerQueue = new LinkedList<>();
-    protected ArrayList<Mob> bHit = new ArrayList<>();
+    protected HashMap<Byte, Mob> bHit = new HashMap<>();
     protected final LinkedList<Mob> mobQueue = new LinkedList<>();
     /**
      * The duration of this projectile in milliseconds.
@@ -125,9 +125,9 @@ public abstract class Projectile extends Thread implements GameEntity {
         if (this.logic.getMap().isPvP()) {
             for (final Map.Entry<Byte, Player> pEntry : this.logic.getPlayers().entrySet()) {
                 final Player p = pEntry.getValue();
-                if (p != getOwner() && !this.pHit.contains(p) && !p.isInvulnerable() && p.intersectHitbox(this.hitbox[0])) {
+                if (p != getOwner() && !this.pHit.containsKey(p.getKey()) && !p.isInvulnerable() && p.intersectHitbox(this.hitbox[0])) {
                     this.playerQueue.add(p);
-                    this.pHit.add(p);
+                    this.pHit.put(p.getKey(), p);
                     queueEffect(this);
                 }
             }
@@ -135,9 +135,9 @@ public abstract class Projectile extends Thread implements GameEntity {
 
         for (final Map.Entry<Byte, Mob> bEntry : this.logic.getMobs().entrySet()) {
             final Mob b = bEntry.getValue();
-            if (!this.bHit.contains(b) && b.intersectHitbox(this.hitbox[0])) {
+            if (!this.bHit.containsKey(b.getKey()) && b.intersectHitbox(this.hitbox[0])) {
                 this.mobQueue.add(b);
-                this.bHit.add(b);
+                this.bHit.put(b.getKey(), b);
                 queueEffect(this);
             }
         }
