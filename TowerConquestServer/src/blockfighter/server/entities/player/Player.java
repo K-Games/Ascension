@@ -1059,7 +1059,7 @@ public class Player extends Thread implements GameEntity {
         this.stats[Globals.STAT_CRITDMG] = this.stats[Globals.STAT_CRITDMG] + this.bonusStats[Globals.STAT_CRITDMG];
         this.stats[Globals.STAT_REGEN] = this.stats[Globals.STAT_REGEN] + this.bonusStats[Globals.STAT_REGEN];
         this.stats[Globals.STAT_ARMOR] = this.stats[Globals.STAT_ARMOR] + this.bonusStats[Globals.STAT_ARMOR];
-        this.stats[Globals.STAT_DAMAGEREDUCT] = 1 - Globals.calcReduction(this.stats[Globals.STAT_ARMOR]);
+        this.stats[Globals.STAT_DAMAGEREDUCT] = Globals.calcReduction(this.stats[Globals.STAT_ARMOR]);
     }
 
     public void giveDrop(final double lvl) {

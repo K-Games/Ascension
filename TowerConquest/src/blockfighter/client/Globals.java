@@ -399,7 +399,7 @@ public class Globals {
     }
 
     public static final double calcReduction(final double armor) {
-        return armor / (armor + REDUCT_CONST);
+        return 1 - (armor / (armor + REDUCT_CONST));
     }
 
     public static final double calcEHP(final double reduct, final double maxHP) {

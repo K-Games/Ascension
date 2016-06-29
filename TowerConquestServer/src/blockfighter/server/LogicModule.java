@@ -130,7 +130,6 @@ public class LogicModule extends Thread {
     @Override
     public void run() {
         try {
-            boolean fin = false;
             currentTime = System.nanoTime();
             if (currentTime - this.lastProcessQueue >= Globals.PROCESS_QUEUE) {
                 processQueues();
@@ -155,14 +154,14 @@ public class LogicModule extends Thread {
                 this.lastRefreshAll = nowMs;
             }
 
+            boolean fin = true;
             for (final Map.Entry<Byte, Mob> mob : this.mobs.entrySet()) {
-                fin = true;
                 if (!mob.getValue().isDead()) {
                     fin = false;
                     break;
                 }
             }
-            if (fin) {
+            if (!this.getMap().isPvP() && fin) {
                 reset();
             }
         } catch (final Exception ex) {

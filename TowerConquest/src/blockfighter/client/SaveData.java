@@ -582,7 +582,7 @@ public class SaveData {
         this.totalStats[Globals.STAT_REGEN] = this.baseStats[Globals.STAT_REGEN] + this.bonusStats[Globals.STAT_REGEN];
         this.totalStats[Globals.STAT_CRITCHANCE] = this.baseStats[Globals.STAT_CRITCHANCE] + this.bonusStats[Globals.STAT_CRITCHANCE];
         this.totalStats[Globals.STAT_CRITDMG] = this.baseStats[Globals.STAT_CRITDMG] + this.bonusStats[Globals.STAT_CRITDMG];
-        this.totalStats[Globals.STAT_DAMAGEREDUCT] = 1 - Globals.calcReduction(this.totalStats[Globals.STAT_ARMOR]);
+        this.totalStats[Globals.STAT_DAMAGEREDUCT] = Globals.calcReduction(this.totalStats[Globals.STAT_ARMOR]);
     }
 
     public ItemEquip[] getInventory(final byte type) {
