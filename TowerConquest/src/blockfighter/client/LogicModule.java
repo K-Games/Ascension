@@ -97,6 +97,7 @@ public class LogicModule implements Runnable {
                 } catch (final InterruptedException e) {
                 }
             }
+            System.out.println("Finished Loading");
             ScreenIngame ingameScreen = new ScreenIngame(key, size, loading.getLoadedMap());
             while (!this.dataQueue.isEmpty()) {
                 ingameScreen.queueData(this.dataQueue.poll());

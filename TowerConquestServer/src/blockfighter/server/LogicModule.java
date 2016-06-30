@@ -48,7 +48,7 @@ public class LogicModule extends Thread {
     private final ConcurrentLinkedQueue<Mob> mobAddQueue = new ConcurrentLinkedQueue<>();
 
     private long lastRefreshAll = 0;
-    private long lastUpdateTime = 0, lastProcessQueue = 0;
+    private long lastUpdateTime = 0, lastProcessQueue = 0, lastResetCheckTime = 0, resetStartTime = 0;
 
     private static final ExecutorService LOGIC_THREAD_POOL = Executors.newFixedThreadPool(Globals.SERVER_LOGIC_THREADS,
             new BasicThreadFactory.Builder()
@@ -117,7 +117,7 @@ public class LogicModule extends Thread {
         this.projAddQueue.clear();
 
         this.projMaxKeys = 500;
-
+        this.resetStartTime = 0;
         if (this.room == 0) {
             this.map = new GameMapArena();
         } else {
@@ -147,23 +147,23 @@ public class LogicModule extends Thread {
                 this.lastUpdateTime = currentTime;
             }
 
-            if (nowMs - this.lastRefreshAll >= 30000) {
+            /*if (nowMs - this.lastRefreshAll >= 30000) {
                 // sender.broadcastAllPlayersUpdate(room);
                 // System.out.println(sender.getBytes()/1024D);
                 // sender.resetByte();
                 this.lastRefreshAll = nowMs;
+            }*/
+            if (!this.getMap().isPvP() && currentTime - this.lastResetCheckTime >= Globals.msToNs(1000)) {
+                if (this.resetStartTime == 0) {
+                    if (this.mobs.isEmpty()) {
+                        this.resetStartTime = currentTime;
+                    }
+                } else if (currentTime - this.resetStartTime >= Globals.msToNs(5000)) {
+                    reset();
+                }
+                this.lastResetCheckTime = currentTime;
             }
 
-            boolean fin = true;
-            for (final Map.Entry<Byte, Mob> mob : this.mobs.entrySet()) {
-                if (!mob.getValue().isDead()) {
-                    fin = false;
-                    break;
-                }
-            }
-            if (!this.getMap().isPvP() && fin) {
-                reset();
-            }
         } catch (final Exception ex) {
             Globals.logError(ex.getLocalizedMessage(), ex, true);
         }
@@ -381,18 +381,7 @@ public class LogicModule extends Thread {
                 this.players.put(key, newPlayer);
             }
         }
-        if (this.players.isEmpty()) {
-            if (!this.pDirKeydownQueue.isEmpty()) {
-                this.pDirKeydownQueue.clear();
-            }
-            if (!this.pUseSkillQueue.isEmpty()) {
-                this.pUseSkillQueue.clear();
-            }
-            if (!this.projEffectQueue.isEmpty()) {
-                this.projEffectQueue.clear();
-            }
-            return;
-        }
+
         queues[0] = () -> {
             try {
                 while (!this.pDirKeydownQueue.isEmpty()) {
@@ -463,6 +452,22 @@ public class LogicModule extends Thread {
                 Globals.logError(ex.getLocalizedMessage(), ex, true);
             }
         };
+
+        if (this.players.isEmpty()) {
+            if (!this.pDirKeydownQueue.isEmpty()) {
+                this.pDirKeydownQueue.clear();
+            }
+            if (!this.pUseSkillQueue.isEmpty()) {
+                this.pUseSkillQueue.clear();
+            }
+            if (!this.projEffectQueue.isEmpty()) {
+                this.projEffectQueue.clear();
+            }
+            if (!this.mobAddQueue.isEmpty()) {
+                LOGIC_THREAD_POOL.execute(queues[4]);
+            }
+            return;
+        }
 
         for (final Runnable t : queues) {
             LOGIC_THREAD_POOL.execute(t);

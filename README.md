@@ -18,4 +18,5 @@ An multiplayer action 2D sidescrolling platformer coded in pure Java.
 * Mob(Monster) System improved - MobSkill is now it's own type, Mob Skills were subtypes of Skill before.
 * Mob Buffs now parity Player buffs - Mobs now correctly take Damage Amplification and Reduction buffs.
 * Slight change in Damage Reduction calculation.
+* Added a 5 second grace period between clearing a level and resetting.
 * Fixed rare case where a level would not reset when finished.
