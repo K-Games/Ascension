@@ -324,7 +324,7 @@ public abstract class Mob extends Thread implements GameEntity {
         }
 
         if (Globals.nsToMs(this.logic.getTime() - this.lastHPSend) >= 150) {
-            final byte[] minHP = Globals.intToByte((int) (this.stats[STAT_MINHP] / this.stats[STAT_MAXHP] * 10000));
+            final byte[] minHP = Globals.intToBytes((int) (this.stats[STAT_MINHP] / this.stats[STAT_MAXHP] * 10000));
             final byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT];
             bytes[0] = Globals.DATA_MOB_GET_STAT;
             bytes[1] = this.key;
@@ -476,12 +476,12 @@ public abstract class Mob extends Thread implements GameEntity {
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 2 + Globals.PACKET_INT * 2];
         bytes[0] = Globals.DATA_MOB_SET_POS;
         bytes[1] = this.key;
-        final byte[] posXInt = Globals.intToByte((int) this.x);
+        final byte[] posXInt = Globals.intToBytes((int) this.x);
         bytes[2] = posXInt[0];
         bytes[3] = posXInt[1];
         bytes[4] = posXInt[2];
         bytes[5] = posXInt[3];
-        final byte[] posYInt = Globals.intToByte((int) this.y);
+        final byte[] posYInt = Globals.intToBytes((int) this.y);
         bytes[6] = posYInt[0];
         bytes[7] = posYInt[1];
         bytes[8] = posYInt[2];
@@ -513,17 +513,17 @@ public abstract class Mob extends Thread implements GameEntity {
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 2 + Globals.PACKET_INT * 3];
         bytes[0] = Globals.DATA_NUMBER;
         bytes[1] = dmg.getDamageType();
-        final byte[] posXInt = Globals.intToByte(dmg.getDmgPoint().x);
+        final byte[] posXInt = Globals.intToBytes(dmg.getDmgPoint().x);
         bytes[2] = posXInt[0];
         bytes[3] = posXInt[1];
         bytes[4] = posXInt[2];
         bytes[5] = posXInt[3];
-        final byte[] posYInt = Globals.intToByte(dmg.getDmgPoint().y);
+        final byte[] posYInt = Globals.intToBytes(dmg.getDmgPoint().y);
         bytes[6] = posYInt[0];
         bytes[7] = posYInt[1];
         bytes[8] = posYInt[2];
         bytes[9] = posYInt[3];
-        final byte[] d = Globals.intToByte(dmgDealt);
+        final byte[] d = Globals.intToBytes(dmgDealt);
         bytes[10] = d[0];
         bytes[11] = d[1];
         bytes[12] = d[2];
@@ -536,12 +536,12 @@ public abstract class Mob extends Thread implements GameEntity {
         bytes[0] = Globals.DATA_MOB_PARTICLE_EFFECT;
         bytes[1] = key;
         bytes[2] = particleID;
-        final byte[] posXInt = Globals.intToByte((int) x);
+        final byte[] posXInt = Globals.intToBytes((int) x);
         bytes[3] = posXInt[0];
         bytes[4] = posXInt[1];
         bytes[5] = posXInt[2];
         bytes[6] = posXInt[3];
-        final byte[] posYInt = Globals.intToByte((int) y);
+        final byte[] posYInt = Globals.intToBytes((int) y);
         bytes[7] = posYInt[0];
         bytes[8] = posYInt[1];
         bytes[9] = posYInt[2];

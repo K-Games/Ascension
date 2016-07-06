@@ -10,6 +10,7 @@ import blockfighter.server.net.PacketSender;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
@@ -509,18 +510,18 @@ public class LogicModule extends Thread {
      * @param id Player uID
      * @return True if a player in this room has this uID.
      */
-    public boolean containsPlayerID(final int id) {
+    public boolean containsPlayerID(final UUID id) {
         for (final Map.Entry<Byte, Player> player : this.players.entrySet()) {
-            if (player.getValue().getUniqueID() == id) {
+            if (player.getValue().getUniqueID().equals(id)) {
                 return true;
             }
         }
         return false;
     }
 
-    public byte getPlayerKey(final int id) {
+    public byte getPlayerKey(final UUID id) {
         for (final Map.Entry<Byte, Player> player : this.players.entrySet()) {
-            if (player.getValue().getUniqueID() == id) {
+            if (player.getValue().getUniqueID().equals(id)) {
                 return player.getKey();
             }
         }

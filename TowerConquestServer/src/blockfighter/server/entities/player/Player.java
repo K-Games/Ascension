@@ -56,6 +56,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -94,7 +95,7 @@ public class Player extends Thread implements GameEntity {
 
     private final byte key;
     private final LogicModule logic;
-    private int uniqueID = -1;
+    private UUID uniqueID;
     private String name = "";
     private double x, y, ySpeed, xSpeed;
     private final boolean[] dirKeydown = new boolean[4];
@@ -836,7 +837,7 @@ public class Player extends Thread implements GameEntity {
 
         // Update client hp every 150ms or if damaged/healed(excluding regen).
         if (sinceLastHPSend >= 150) {
-            final byte[] stat = Globals.intToByte((int) this.stats[Globals.STAT_MINHP]);
+            final byte[] stat = Globals.intToBytes((int) this.stats[Globals.STAT_MINHP]);
             final byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT];
             bytes[0] = Globals.DATA_PLAYER_GET_STAT;
             bytes[1] = this.key;
@@ -1065,7 +1066,7 @@ public class Player extends Thread implements GameEntity {
     public void giveDrop(final double lvl) {
         final byte[] bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_INT];
         bytes[0] = Globals.DATA_PLAYER_GIVEDROP;
-        final byte[] lev = Globals.intToByte((int) lvl);
+        final byte[] lev = Globals.intToBytes((int) lvl);
         bytes[1] = lev[0];
         bytes[2] = lev[1];
         bytes[3] = lev[2];
@@ -1076,7 +1077,7 @@ public class Player extends Thread implements GameEntity {
     public void giveEXP(final double amount) {
         byte[] bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_INT];
         bytes[0] = Globals.DATA_PLAYER_GIVEEXP;
-        final byte[] exp = Globals.intToByte((int) amount);
+        final byte[] exp = Globals.intToBytes((int) amount);
         bytes[1] = exp[0];
         bytes[2] = exp[1];
         bytes[3] = exp[2];
@@ -1086,17 +1087,17 @@ public class Player extends Thread implements GameEntity {
         bytes = new byte[Globals.PACKET_BYTE * 2 + Globals.PACKET_INT * 3];
         bytes[0] = Globals.DATA_NUMBER;
         bytes[1] = Globals.NUMBER_TYPE_EXP;
-        final byte[] posXInt = Globals.intToByte((int) this.x - 20);
+        final byte[] posXInt = Globals.intToBytes((int) this.x - 20);
         bytes[2] = posXInt[0];
         bytes[3] = posXInt[1];
         bytes[4] = posXInt[2];
         bytes[5] = posXInt[3];
-        final byte[] posYInt = Globals.intToByte((int) this.y);
+        final byte[] posYInt = Globals.intToBytes((int) this.y);
         bytes[6] = posYInt[0];
         bytes[7] = posYInt[1];
         bytes[8] = posYInt[2];
         bytes[9] = posYInt[3];
-        final byte[] d = Globals.intToByte((int) amount);
+        final byte[] d = Globals.intToBytes((int) amount);
         bytes[10] = d[0];
         bytes[11] = d[1];
         bytes[12] = d[2];
@@ -1518,12 +1519,12 @@ public class Player extends Thread implements GameEntity {
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 2 + Globals.PACKET_INT * 2];
         bytes[0] = Globals.DATA_SOUND_EFFECT;
         bytes[1] = sfxID;
-        final byte[] posXInt = Globals.intToByte((int) soundX);
+        final byte[] posXInt = Globals.intToBytes((int) soundX);
         bytes[2] = posXInt[0];
         bytes[3] = posXInt[1];
         bytes[4] = posXInt[2];
         bytes[5] = posXInt[3];
-        final byte[] posYInt = Globals.intToByte((int) soundY);
+        final byte[] posYInt = Globals.intToBytes((int) soundY);
         bytes[6] = posYInt[0];
         bytes[7] = posYInt[1];
         bytes[8] = posYInt[2];
@@ -1535,12 +1536,12 @@ public class Player extends Thread implements GameEntity {
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 5 + Globals.PACKET_INT * 2];
         bytes[0] = Globals.DATA_PLAYER_GET_ALL;
         bytes[1] = this.key;
-        final byte[] posXInt = Globals.intToByte((int) this.x);
+        final byte[] posXInt = Globals.intToBytes((int) this.x);
         bytes[2] = posXInt[0];
         bytes[3] = posXInt[1];
         bytes[4] = posXInt[2];
         bytes[5] = posXInt[3];
-        final byte[] posYInt = Globals.intToByte((int) this.y);
+        final byte[] posYInt = Globals.intToBytes((int) this.y);
         bytes[6] = posYInt[0];
         bytes[7] = posYInt[1];
         bytes[8] = posYInt[2];
@@ -1569,12 +1570,12 @@ public class Player extends Thread implements GameEntity {
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT * 2];
         bytes[0] = Globals.DATA_PLAYER_SET_POS;
         bytes[1] = this.key;
-        final byte[] posXInt = Globals.intToByte((int) this.x);
+        final byte[] posXInt = Globals.intToBytes((int) this.x);
         bytes[2] = posXInt[0];
         bytes[3] = posXInt[1];
         bytes[4] = posXInt[2];
         bytes[5] = posXInt[3];
-        final byte[] posYInt = Globals.intToByte((int) this.y);
+        final byte[] posYInt = Globals.intToBytes((int) this.y);
         bytes[6] = posYInt[0];
         bytes[7] = posYInt[1];
         bytes[8] = posYInt[2];
@@ -1642,17 +1643,17 @@ public class Player extends Thread implements GameEntity {
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 2 + Globals.PACKET_INT * 3];
         bytes[0] = Globals.DATA_NUMBER;
         bytes[1] = dmg.getDamageType();
-        final byte[] posXInt = Globals.intToByte(dmg.getDmgPoint().x);
+        final byte[] posXInt = Globals.intToBytes(dmg.getDmgPoint().x);
         bytes[2] = posXInt[0];
         bytes[3] = posXInt[1];
         bytes[4] = posXInt[2];
         bytes[5] = posXInt[3];
-        final byte[] posYInt = Globals.intToByte(dmg.getDmgPoint().y);
+        final byte[] posYInt = Globals.intToBytes(dmg.getDmgPoint().y);
         bytes[6] = posYInt[0];
         bytes[7] = posYInt[1];
         bytes[8] = posYInt[2];
         bytes[9] = posYInt[3];
-        final byte[] d = Globals.intToByte(dmgDealt);
+        final byte[] d = Globals.intToBytes(dmgDealt);
         bytes[10] = d[0];
         bytes[11] = d[1];
         bytes[12] = d[2];
@@ -1681,7 +1682,7 @@ public class Player extends Thread implements GameEntity {
     }
 
     public void sendStat(final byte statID) {
-        final byte[] stat = Globals.intToByte((int) getStats()[statID]);
+        final byte[] stat = Globals.intToBytes((int) getStats()[statID]);
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT];
         bytes[0] = Globals.DATA_PLAYER_GET_STAT;
         bytes[1] = this.key;
@@ -1715,7 +1716,7 @@ public class Player extends Thread implements GameEntity {
      *
      * @param id uID
      */
-    public void setUniqueID(final int id) {
+    public void setUniqueID(final UUID id) {
         this.uniqueID = id;
     }
 
@@ -1724,7 +1725,7 @@ public class Player extends Thread implements GameEntity {
      *
      * @return
      */
-    public int getUniqueID() {
+    public UUID getUniqueID() {
         return this.uniqueID;
     }
 
@@ -1854,12 +1855,12 @@ public class Player extends Thread implements GameEntity {
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT * 2];
         bytes[0] = Globals.DATA_PARTICLE_EFFECT;
         bytes[1] = particleID;
-        final byte[] posXInt = Globals.intToByte((int) x);
+        final byte[] posXInt = Globals.intToBytes((int) x);
         bytes[2] = posXInt[0];
         bytes[3] = posXInt[1];
         bytes[4] = posXInt[2];
         bytes[5] = posXInt[3];
-        final byte[] posYInt = Globals.intToByte((int) y);
+        final byte[] posYInt = Globals.intToBytes((int) y);
         bytes[6] = posYInt[0];
         bytes[7] = posYInt[1];
         bytes[8] = posYInt[2];
@@ -1872,12 +1873,12 @@ public class Player extends Thread implements GameEntity {
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 2 + Globals.PACKET_INT * 2];
         bytes[0] = Globals.DATA_PARTICLE_EFFECT;
         bytes[1] = particleID;
-        final byte[] posXInt = Globals.intToByte((int) x);
+        final byte[] posXInt = Globals.intToBytes((int) x);
         bytes[2] = posXInt[0];
         bytes[3] = posXInt[1];
         bytes[4] = posXInt[2];
         bytes[5] = posXInt[3];
-        final byte[] posYInt = Globals.intToByte((int) y);
+        final byte[] posYInt = Globals.intToBytes((int) y);
         bytes[6] = posYInt[0];
         bytes[7] = posYInt[1];
         bytes[8] = posYInt[2];

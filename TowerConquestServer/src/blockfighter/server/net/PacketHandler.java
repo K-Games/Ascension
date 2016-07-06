@@ -7,6 +7,7 @@ import blockfighter.server.entities.player.Player;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.nio.charset.StandardCharsets;
+import java.util.UUID;
 
 /**
  * Threads to handle incoming requests.
@@ -107,15 +108,15 @@ public class PacketHandler implements Runnable {
         byte[] stat;
         switch (data[3]) {
             case Mob.STAT_MAXHP:
-                stat = Globals.intToByte(10000);
+                stat = Globals.intToBytes(10000);
                 break;
             case Mob.STAT_MINHP:
                 final double[] bStats = logic[room].getMobs().get(data[2]).getStats();
                 final double hpPercent = bStats[Mob.STAT_MINHP] / bStats[Mob.STAT_MAXHP] * 10000;
-                stat = Globals.intToByte((int) hpPercent);
+                stat = Globals.intToBytes((int) hpPercent);
                 break;
             default:
-                stat = Globals.intToByte((int) logic[room].getMobs().get(data[2]).getStats()[data[3]]);
+                stat = Globals.intToBytes((int) logic[room].getMobs().get(data[2]).getStats()[data[3]]);
         }
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT];
         bytes[0] = Globals.DATA_MOB_GET_STAT;
@@ -133,12 +134,12 @@ public class PacketHandler implements Runnable {
         bytes[0] = Globals.DATA_MOB_SET_TYPE;
         bytes[1] = data[2];
         bytes[2] = logic[room].getMobs().get(data[2]).getType();
-        final byte[] posXInt = Globals.intToByte((int) logic[room].getMobs().get(data[2]).getX());
+        final byte[] posXInt = Globals.intToBytes((int) logic[room].getMobs().get(data[2]).getX());
         bytes[3] = posXInt[0];
         bytes[4] = posXInt[1];
         bytes[5] = posXInt[2];
         bytes[6] = posXInt[3];
-        final byte[] posYInt = Globals.intToByte((int) logic[room].getMobs().get(data[2]).getY());
+        final byte[] posYInt = Globals.intToBytes((int) logic[room].getMobs().get(data[2]).getY());
         bytes[7] = posYInt[0];
         bytes[8] = posYInt[1];
         bytes[9] = posYInt[2];
@@ -155,7 +156,7 @@ public class PacketHandler implements Runnable {
         bytes[1] = data[2];
         final int[] e = logic[room].getPlayers().get(data[2]).getEquips();
         for (int i = 0; i < e.length; i++) {
-            final byte[] itemCode = Globals.intToByte(e[i]);
+            final byte[] itemCode = Globals.intToBytes(e[i]);
             System.arraycopy(itemCode, 0, bytes, i * 4 + 2, itemCode.length);
         }
         sender.sendAddress(bytes, address, port);
@@ -165,7 +166,7 @@ public class PacketHandler implements Runnable {
         if (!logic[room].getPlayers().containsKey(data[2])) {
             return;
         }
-        final byte[] stat = Globals.intToByte((int) logic[room].getPlayers().get(data[2]).getStats()[data[3]]);
+        final byte[] stat = Globals.intToBytes((int) logic[room].getPlayers().get(data[2]).getStats()[data[3]]);
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT];
         bytes[0] = Globals.DATA_PLAYER_GET_STAT;
         bytes[1] = data[2];
@@ -213,9 +214,25 @@ public class PacketHandler implements Runnable {
     private void receivePlayerCreate(final byte[] data, final byte room, final InetAddress address, final int port) {
         Globals.log("DATA_PLAYER_CREATE", address + ":" + port + " Attempting to create player. Room: " + room, Globals.LOG_TYPE_DATA,
                 true);
-        byte[] temp = new byte[4];
-        System.arraycopy(data, 17, temp, 0, temp.length);
-        final int id = Globals.bytesToInt(temp);
+
+        byte[] temp = new byte[8];
+        long leastSigBit, mostSigBit;
+        int pos = 17;
+
+        System.arraycopy(data, pos, temp, 0, temp.length);
+        pos += temp.length;
+        leastSigBit = Globals.bytesToLong(temp);
+
+        System.arraycopy(data, pos, temp, 0, temp.length);
+        pos += temp.length;
+        mostSigBit = Globals.bytesToLong(temp);
+
+        final UUID id = new UUID(mostSigBit, leastSigBit);
+
+        if (logic[room].containsPlayerID(id)) {
+            Globals.log("DATA_PLAYER_LOGIN", address + ":" + port + " uID Already In Room uID: " + id, Globals.LOG_TYPE_DATA, true);
+            return;
+        }
 
         if (logic[room].containsPlayerID(id)) {
             final LogicModule lm = logic[room];
@@ -244,41 +261,55 @@ public class PacketHandler implements Runnable {
         System.arraycopy(data, 2, temp, 0, temp.length);
         newPlayer.setPlayerName(new String(temp, StandardCharsets.UTF_8).trim());
 
-        temp = new byte[4];
         newPlayer.setUniqueID(id);
 
-        System.arraycopy(data, 21, temp, 0, temp.length);
+        temp = new byte[4];
+        System.arraycopy(data, pos, temp, 0, temp.length);
+        pos += temp.length;
         newPlayer.setStat(Globals.STAT_LEVEL, Globals.bytesToInt(temp));
-        System.arraycopy(data, 25, temp, 0, temp.length);
+        System.arraycopy(data, pos, temp, 0, temp.length);
+        pos += temp.length;
         newPlayer.setStat(Globals.STAT_POWER, Globals.bytesToInt(temp));
-        System.arraycopy(data, 29, temp, 0, temp.length);
+        System.arraycopy(data, pos, temp, 0, temp.length);
+        pos += temp.length;
         newPlayer.setStat(Globals.STAT_DEFENSE, Globals.bytesToInt(temp));
-        System.arraycopy(data, 33, temp, 0, temp.length);
+        System.arraycopy(data, pos, temp, 0, temp.length);
+        pos += temp.length;
         newPlayer.setStat(Globals.STAT_SPIRIT, Globals.bytesToInt(temp));
 
-        System.arraycopy(data, 37, temp, 0, temp.length);
+        System.arraycopy(data, pos, temp, 0, temp.length);
+        pos += temp.length;
         newPlayer.setBonusStat(Globals.STAT_ARMOR, Globals.bytesToInt(temp));
-        System.arraycopy(data, 41, temp, 0, temp.length);
+        System.arraycopy(data, pos, temp, 0, temp.length);
+        pos += temp.length;
         newPlayer.setBonusStat(Globals.STAT_REGEN, Globals.bytesToInt(temp) / 10D);
-        System.arraycopy(data, 45, temp, 0, temp.length);
+        System.arraycopy(data, pos, temp, 0, temp.length);
+        pos += temp.length;
         newPlayer.setBonusStat(Globals.STAT_CRITDMG, Globals.bytesToInt(temp) / 10000D);
-        System.arraycopy(data, 49, temp, 0, temp.length);
+        System.arraycopy(data, pos, temp, 0, temp.length);
+        pos += temp.length;
         newPlayer.setBonusStat(Globals.STAT_CRITCHANCE, Globals.bytesToInt(temp) / 10000D);
 
         for (int i = 0; i < Globals.NUM_EQUIP_SLOTS; i++) {
-            System.arraycopy(data, i * 4 + 53, temp, 0, temp.length);
+            System.arraycopy(data, pos, temp, 0, temp.length);
+            pos += temp.length;
             newPlayer.setEquip(i, Globals.bytesToInt(temp));
         }
 
         for (int i = 0; i < 12; i++) {
-            if (data[i * 2 + 97] == -1) {
+            temp = new byte[2];
+            System.arraycopy(data, pos, temp, 0, temp.length);
+            pos += temp.length;
+            if (temp[0] == -1) {
                 continue;
             }
-            newPlayer.setSkill(data[i * 2 + 97], data[i * 2 + 98]);
+            newPlayer.setSkill(temp[0], temp[1]);
         }
+        
         logic[room].queueAddPlayer(newPlayer);
         String desc = "\n";
         desc += "Name: " + newPlayer.getPlayerName() + "\n";
+        desc += "ID: " + newPlayer.getUniqueID() + "\n";
         for (byte i = 0; i < newPlayer.getStats().length; i++) {
             desc += Globals.getStatName(i) + ": " + newPlayer.getStats()[i] + "\n";
         }
@@ -307,9 +338,20 @@ public class PacketHandler implements Runnable {
 
     private void receivePlayerLogin(final byte[] data, final byte room, final InetAddress address, final int port) {
         Globals.log("DATA_PLAYER_LOGIN", address + ":" + port + " Login Attempt Room: " + room, Globals.LOG_TYPE_DATA, true);
-        final byte[] temp = new byte[4];
-        System.arraycopy(data, 17, temp, 0, temp.length);
-        final int id = Globals.bytesToInt(temp);
+
+        final byte[] temp = new byte[8];
+        long leastSigBit, mostSigBit;
+        int pos = 17;
+
+        System.arraycopy(data, pos, temp, 0, temp.length);
+        pos += temp.length;
+        leastSigBit = Globals.bytesToLong(temp);
+
+        System.arraycopy(data, pos, temp, 0, temp.length);
+        pos += temp.length;
+        mostSigBit = Globals.bytesToLong(temp);
+
+        final UUID id = new UUID(mostSigBit, leastSigBit);
 
         if (logic[room].containsPlayerID(id)) {
             Globals.log("DATA_PLAYER_LOGIN", address + ":" + port + " uID Already In Room uID: " + id, Globals.LOG_TYPE_DATA, true);
@@ -321,7 +363,7 @@ public class PacketHandler implements Runnable {
         bytes[1] = Globals.GAME_MAJOR_VERSION;
         bytes[2] = Globals.GAME_MINOR_VERSION;
         sender.sendAddress(bytes, address, port);
-        Globals.log("DATA_PLAYER_LOGIN", address + ":" + port + " Logged in", Globals.LOG_TYPE_DATA, true);
+        Globals.log("DATA_PLAYER_LOGIN", address + ":" + port + " Logged in. Sent Version Data.", Globals.LOG_TYPE_DATA, true);
     }
 
     private void receivePlayerGetAll(final byte[] data, final byte room) {

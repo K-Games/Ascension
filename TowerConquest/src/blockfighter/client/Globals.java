@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.ByteBuffer;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import javax.imageio.ImageIO;
@@ -21,7 +22,7 @@ public class Globals {
     public static String SERVER_ADDRESS;
 
     public final static boolean TEST_MAX_LEVEL = true,
-            DEBUG_MODE = false;
+            DEBUG_MODE = true;
 
     public final static byte GAME_MAJOR_VERSION = 0,
             GAME_MINOR_VERSION = 17,
@@ -210,6 +211,7 @@ public class Globals {
     public final static int PACKET_MAX_SIZE = 512;
     public final static int PACKET_BYTE = 1;
     public final static int PACKET_INT = 4;
+    public final static int PACKET_LONG = 8;
     public final static int PACKET_CHAR = 1;
 
     // Datatypes
@@ -410,17 +412,26 @@ public class Globals {
         return (int) (Math.round(Math.pow(level, 3.75) + 100));
     }
 
-    public static final byte[] intToByte(final int input) {
-        final byte[] bytes = new byte[4];
-        bytes[0] = (byte) (input & 0xff);
-        bytes[1] = (byte) ((input >> 8) & 0xff);
-        bytes[2] = (byte) ((input >>> 16) & 0xff);
-        bytes[3] = (byte) ((input >>> 24) & 0xff);
-        return bytes;
+    public static byte[] longToBytes(long input) {
+        ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
+        buffer.putLong(input);
+        return buffer.array();
     }
 
-    public static final int bytesToInt(final byte[] input) {
-        return (input[0] & 0xff | (input[1] & 0xff) << 8 | (input[2] & 0xff) << 16 | (input[3] & 0xff) << 24);
+    public static long bytesToLong(byte[] bytes) {
+        ByteBuffer buffer = ByteBuffer.wrap(bytes);
+        return buffer.getLong();
+    }
+
+    public static final byte[] intToBytes(final int input) {
+        ByteBuffer buffer = ByteBuffer.allocate(Integer.BYTES);
+        buffer.putInt(input);
+        return buffer.array();
+    }
+
+    public static final int bytesToInt(final byte[] bytes) {
+        ByteBuffer buffer = ByteBuffer.wrap(bytes);
+        return buffer.getInt();
     }
 
     private static void loadGFX() {

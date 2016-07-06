@@ -23,7 +23,7 @@ public class PacketSender {
     public static void sendPlayerLogin(final byte room, final SaveData c) {
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 2 // Data type + room
                 + 15 // Name length
-                + Globals.PACKET_INT // uID
+                + Globals.PACKET_LONG * 2 // uID
                 ];
         bytes[0] = Globals.DATA_PLAYER_LOGIN;
         bytes[1] = room;
@@ -31,101 +31,103 @@ public class PacketSender {
         byte[] temp = c.getPlayerName().getBytes(StandardCharsets.UTF_8);
         System.arraycopy(temp, 0, bytes, 2, temp.length);
 
-        temp = Globals.intToByte(c.getUniqueID());
-        bytes[17] = temp[0];
-        bytes[18] = temp[1];
-        bytes[19] = temp[2];
-        bytes[20] = temp[3];
+        temp = Globals.longToBytes(c.getUniqueID().getLeastSignificantBits());
+        System.arraycopy(temp, 0, bytes, 17, temp.length);
+
+        temp = Globals.longToBytes(c.getUniqueID().getMostSignificantBits());
+        System.arraycopy(temp, 0, bytes, 25, temp.length);
+
         final DatagramPacket requestPacket = createPacket(bytes);
         sendPacket(requestPacket);
     }
 
     public static void sendPlayerCreate(final byte room, final SaveData c) {
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 2 // Data type + room
-                + 15 // Name length
-                + Globals.PACKET_INT // uID
+                + Globals.MAX_NAME_LENGTH // Name length
+                + Globals.PACKET_LONG * 2 // uID
                 + Globals.PACKET_INT * 8 // Stats
                 + Globals.PACKET_INT * 11 // equipments
                 + 12 * 2 * Globals.PACKET_BYTE // Hotkey'd skills + level
                 ];
         bytes[0] = Globals.DATA_PLAYER_CREATE;
         bytes[1] = room;
+        int pos = 2;
 
         byte[] temp = c.getPlayerName().getBytes(StandardCharsets.UTF_8);
-        System.arraycopy(temp, 0, bytes, 2, temp.length);
+        System.arraycopy(temp, 0, bytes, pos, temp.length);
+        pos += Globals.MAX_NAME_LENGTH;
 
-        temp = Globals.intToByte(c.getUniqueID());
-        bytes[17] = temp[0];
-        bytes[18] = temp[1];
-        bytes[19] = temp[2];
-        bytes[20] = temp[3];
+        temp = Globals.longToBytes(c.getUniqueID().getLeastSignificantBits());
+        System.arraycopy(temp, 0, bytes, pos, temp.length);
+        pos += temp.length;
+        
+        temp = Globals.longToBytes(c.getUniqueID().getMostSignificantBits());
+        System.arraycopy(temp, 0, bytes, pos, temp.length);
+        pos += temp.length;
 
         double[] stats = c.getTotalStats();
-        temp = Globals.intToByte((int) stats[Globals.STAT_LEVEL]);
-        bytes[21] = temp[0];
-        bytes[22] = temp[1];
-        bytes[23] = temp[2];
-        bytes[24] = temp[3];
-        temp = Globals.intToByte((int) stats[Globals.STAT_POWER]);
-        bytes[25] = temp[0];
-        bytes[26] = temp[1];
-        bytes[27] = temp[2];
-        bytes[28] = temp[3];
-        temp = Globals.intToByte((int) stats[Globals.STAT_DEFENSE]);
-        bytes[29] = temp[0];
-        bytes[30] = temp[1];
-        bytes[31] = temp[2];
-        bytes[32] = temp[3];
-        temp = Globals.intToByte((int) stats[Globals.STAT_SPIRIT]);
-        bytes[33] = temp[0];
-        bytes[34] = temp[1];
-        bytes[35] = temp[2];
-        bytes[36] = temp[3];
+        temp = Globals.intToBytes((int) stats[Globals.STAT_LEVEL]);
+        System.arraycopy(temp, 0, bytes, pos, temp.length);
+        pos += temp.length;
+
+        temp = Globals.intToBytes((int) stats[Globals.STAT_POWER]);
+        System.arraycopy(temp, 0, bytes, pos, temp.length);
+        pos += temp.length;
+
+        temp = Globals.intToBytes((int) stats[Globals.STAT_DEFENSE]);
+        System.arraycopy(temp, 0, bytes, pos, temp.length);
+        pos += temp.length;
+
+        temp = Globals.intToBytes((int) stats[Globals.STAT_SPIRIT]);
+        System.arraycopy(temp, 0, bytes, pos, temp.length);
+        pos += temp.length;
 
         stats = c.getBonusStats();
-        temp = Globals.intToByte((int) stats[Globals.STAT_ARMOR]);
-        bytes[37] = temp[0];
-        bytes[38] = temp[1];
-        bytes[39] = temp[2];
-        bytes[40] = temp[3];
-        temp = Globals.intToByte((int) (stats[Globals.STAT_REGEN] * 10));
-        bytes[41] = temp[0];
-        bytes[42] = temp[1];
-        bytes[43] = temp[2];
-        bytes[44] = temp[3];
-        temp = Globals.intToByte((int) (stats[Globals.STAT_CRITDMG] * 10000));
-        bytes[45] = temp[0];
-        bytes[46] = temp[1];
-        bytes[47] = temp[2];
-        bytes[48] = temp[3];
-        temp = Globals.intToByte((int) (stats[Globals.STAT_CRITCHANCE] * 10000));
-        bytes[49] = temp[0];
-        bytes[50] = temp[1];
-        bytes[51] = temp[2];
-        bytes[52] = temp[3];
+        temp = Globals.intToBytes((int) stats[Globals.STAT_ARMOR]);
+        System.arraycopy(temp, 0, bytes, pos, temp.length);
+        pos += temp.length;
+
+        temp = Globals.intToBytes((int) (stats[Globals.STAT_REGEN] * 10));
+        System.arraycopy(temp, 0, bytes, pos, temp.length);
+        pos += temp.length;
+
+        temp = Globals.intToBytes((int) (stats[Globals.STAT_CRITDMG] * 10000));
+        System.arraycopy(temp, 0, bytes, pos, temp.length);
+        pos += temp.length;
+
+        temp = Globals.intToBytes((int) (stats[Globals.STAT_CRITCHANCE] * 10000));
+        System.arraycopy(temp, 0, bytes, pos, temp.length);
+        pos += temp.length;
 
         final ItemEquip[] equip = c.getEquip();
-        for (int i = 0; i < equip.length; i++) {
-            if (equip[i] == null) {
+        for (ItemEquip equip1 : equip) {
+            if (equip1 == null) {
+                temp = Globals.intToBytes(0);
+                System.arraycopy(temp, 0, bytes, pos, temp.length);
+                pos += temp.length;
                 continue;
             }
-            temp = Globals.intToByte(equip[i].getItemCode());
-            bytes[i * 4 + 53] = temp[0];
-            bytes[i * 4 + 54] = temp[1];
-            bytes[i * 4 + 55] = temp[2];
-            bytes[i * 4 + 56] = temp[3];
+            temp = Globals.intToBytes(equip1.getItemCode());
+            System.arraycopy(temp, 0, bytes, pos, temp.length);
+            pos += temp.length;
         }
 
         final Skill[] skills = c.getHotkeys();
-        for (int i = 0; i < skills.length; i++) {
-            if (skills[i] == null) {
-                bytes[i * 2 + 97] = -1;
-                bytes[i * 2 + 98] = 0;
+        for (Skill skill : skills) {
+            temp = new byte[2];
+            if (skill == null) {
+                temp[0] = -1;
+                temp[1] = 0;
+                System.arraycopy(temp, 0, bytes, pos, temp.length);
+                pos += temp.length;
                 continue;
             }
-            bytes[i * 2 + 97] = skills[i].getSkillCode();
-            bytes[i * 2 + 98] = skills[i].getLevel();
+            temp[0] = skill.getSkillCode();
+            temp[1] = skill.getLevel();
+            System.arraycopy(temp, 0, bytes, pos, temp.length);
+            pos += temp.length;
         }
+        
         final DatagramPacket requestPacket = createPacket(bytes);
         sendPacket(requestPacket);
     }

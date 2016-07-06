@@ -8,6 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Properties;
@@ -449,17 +450,26 @@ public class Globals {
         return 1 - (armor / (armor + REDUCT_CONST));
     }
 
-    public static final byte[] intToByte(final int input) {
-        final byte[] bytes = new byte[4];
-        bytes[0] = (byte) (input & 0xff);
-        bytes[1] = (byte) ((input >> 8) & 0xff);
-        bytes[2] = (byte) ((input >>> 16) & 0xff);
-        bytes[3] = (byte) ((input >>> 24) & 0xff);
-        return bytes;
+    public static byte[] longToBytes(long input) {
+        ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
+        buffer.putLong(input);
+        return buffer.array();
     }
 
-    public static final int bytesToInt(final byte[] input) {
-        return (input[0] & 0xff | (input[1] & 0xff) << 8 | (input[2] & 0xff) << 16 | (input[3] & 0xff) << 24);
+    public static long bytesToLong(byte[] bytes) {
+        ByteBuffer buffer = ByteBuffer.wrap(bytes);
+        return buffer.getLong();
+    }
+
+    public static final byte[] intToBytes(final int input) {
+        ByteBuffer buffer = ByteBuffer.allocate(Integer.BYTES);
+        buffer.putInt(input);
+        return buffer.array();
+    }
+
+    public static final int bytesToInt(final byte[] bytes) {
+        ByteBuffer buffer = ByteBuffer.wrap(bytes);
+        return buffer.getInt();
     }
 
     public static final int nsToMs(final long time) {
