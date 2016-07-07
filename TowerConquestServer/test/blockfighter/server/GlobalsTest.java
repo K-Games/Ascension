@@ -2,30 +2,13 @@ package blockfighter.server;
 
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.runner.RunWith;
+import org.mockito.runners.MockitoJUnitRunner;
 
+@RunWith(MockitoJUnitRunner.class)
 public class GlobalsTest {
-
-    @BeforeClass
-    public static void setUpClass() {
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
 
     @Test
     public void testGetStatNameReturnInvalidStatWhenStatIDIsInvalid() {
@@ -36,7 +19,6 @@ public class GlobalsTest {
         System.out.println("Expected: " + expResult);
         System.out.println("Result: " + result);
         assertEquals(expResult, result);
-        System.out.println("Success");
     }
 
     @Test
@@ -46,12 +28,8 @@ public class GlobalsTest {
         String expResult = "INVALID STAT";
         String result = Globals.getStatName(statID);
         assertNotEquals(expResult, result);
-        System.out.println("Success");
     }
 
-    /**
-     * Test of longToBytes method, of class Globals.
-     */
     @Test
     public void testLongToBytes() {
         System.out.println("longToBytes: Long Max Value convert to correct bytes");
@@ -61,12 +39,8 @@ public class GlobalsTest {
         System.out.println("Expected: " + Arrays.toString(expResult));
         System.out.println("Result: " + Arrays.toString(result));
         assertArrayEquals(expResult, result);
-        System.out.println("Success");
     }
 
-    /**
-     * Test of bytesToLong method, of class Globals.
-     */
     @Test
     public void testBytesToLong() {
         System.out.println("bytesToLong: Bytes convert to Long Max Value");
@@ -76,7 +50,6 @@ public class GlobalsTest {
         System.out.println("Expected: " + expResult);
         System.out.println("Result: " + result);
         assertEquals(expResult, result);
-        System.out.println("Success");
     }
 
     @Test
@@ -88,7 +61,6 @@ public class GlobalsTest {
         System.out.println("Expected: " + Arrays.toString(expResult));
         System.out.println("Result: " + Arrays.toString(result));
         assertArrayEquals(expResult, result);
-        System.out.println("Success");
     }
 
     @Test
@@ -100,7 +72,6 @@ public class GlobalsTest {
         System.out.println("Expected: " + expResult);
         System.out.println("Result: " + result);
         assertEquals(expResult, result);
-        System.out.println("Success");
     }
 
     @Test
@@ -112,7 +83,6 @@ public class GlobalsTest {
         System.out.println("Expected: " + expResult);
         System.out.println("Result: " + result);
         assertEquals(expResult, result);
-        System.out.println("Success");
     }
 
     @Test
@@ -124,7 +94,6 @@ public class GlobalsTest {
         System.out.println("Expected: " + expResult);
         System.out.println("Result: " + result);
         assertEquals(expResult, result);
-        System.out.println("Success");
     }
 
     @Test
@@ -136,7 +105,6 @@ public class GlobalsTest {
         System.out.println("Expected: " + expResult);
         System.out.println("Result: " + result);
         assertEquals(expResult, result);
-        System.out.println("Success");
     }
 
     @Test
@@ -146,7 +114,6 @@ public class GlobalsTest {
         int durationToPast = 6000;
         boolean result = Globals.hasPastDuration(currentDuration, durationToPast);
         assertFalse(result);
-        System.out.println("Success");
     }
 
     @Test
@@ -154,9 +121,8 @@ public class GlobalsTest {
         System.out.println("hasPastDuration: True When Duration Has Past");
         int currentDuration = 5000;
         int durationToPast = 0;
-        
+
         boolean result = Globals.hasPastDuration(currentDuration, durationToPast);
         assertTrue(result);
-        System.out.println("Success");
     }
 }

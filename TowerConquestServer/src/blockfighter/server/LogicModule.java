@@ -37,16 +37,16 @@ public class LogicModule extends Thread {
     private int projMaxKeys = 500;
     private int mobMaxKeys = 255;
 
-    private final ConcurrentLinkedQueue<Byte> playerKeys = new ConcurrentLinkedQueue<>();
-    private final ConcurrentLinkedQueue<Integer> projKeys = new ConcurrentLinkedQueue<>();
-    private final ConcurrentLinkedQueue<Byte> mobKeys = new ConcurrentLinkedQueue<>();
+    private ConcurrentLinkedQueue<Byte> playerKeys = new ConcurrentLinkedQueue<>();
+    private ConcurrentLinkedQueue<Integer> projKeys = new ConcurrentLinkedQueue<>();
+    private ConcurrentLinkedQueue<Byte> mobKeys = new ConcurrentLinkedQueue<>();
 
-    private final ConcurrentLinkedQueue<Player> pAddQueue = new ConcurrentLinkedQueue<>();
-    private final ConcurrentLinkedQueue<byte[]> pDirKeydownQueue = new ConcurrentLinkedQueue<>();
-    private final ConcurrentLinkedQueue<byte[]> pUseSkillQueue = new ConcurrentLinkedQueue<>();
-    private final ConcurrentLinkedQueue<Projectile> projEffectQueue = new ConcurrentLinkedQueue<>();
-    private final ConcurrentLinkedQueue<Projectile> projAddQueue = new ConcurrentLinkedQueue<>();
-    private final ConcurrentLinkedQueue<Mob> mobAddQueue = new ConcurrentLinkedQueue<>();
+    private ConcurrentLinkedQueue<Player> playAddQueue = new ConcurrentLinkedQueue<>();
+    private ConcurrentLinkedQueue<byte[]> playDirKeydownQueue = new ConcurrentLinkedQueue<>();
+    private ConcurrentLinkedQueue<byte[]> playUseSkillQueue = new ConcurrentLinkedQueue<>();
+    private ConcurrentLinkedQueue<Projectile> projEffectQueue = new ConcurrentLinkedQueue<>();
+    private ConcurrentLinkedQueue<Projectile> projAddQueue = new ConcurrentLinkedQueue<>();
+    private ConcurrentLinkedQueue<Mob> mobAddQueue = new ConcurrentLinkedQueue<>();
 
     private long lastRefreshAll = 0;
     private long lastUpdateTime = 0, lastProcessQueue = 0, lastResetCheckTime = 0, resetStartTime = 0;
@@ -111,9 +111,9 @@ public class LogicModule extends Thread {
         this.playerKeys.clear();
         this.mobKeys.clear();
 
-        this.pAddQueue.clear();
-        this.pDirKeydownQueue.clear();
-        this.pUseSkillQueue.clear();
+        this.playAddQueue.clear();
+        this.playDirKeydownQueue.clear();
+        this.playUseSkillQueue.clear();
         this.projEffectQueue.clear();
         this.projAddQueue.clear();
 
@@ -321,7 +321,7 @@ public class LogicModule extends Thread {
      * @param newPlayer New player to be queued
      */
     public void queueAddPlayer(final Player newPlayer) {
-        this.pAddQueue.add(newPlayer);
+        this.playAddQueue.add(newPlayer);
     }
 
     /**
@@ -333,7 +333,7 @@ public class LogicModule extends Thread {
      * @param data Bytes to be processed - 1:Key, 2:direction, 3:1 = true, 0 = false
      */
     public void queuePlayerDirKeydown(final byte[] data) {
-        this.pDirKeydownQueue.add(data);
+        this.playDirKeydownQueue.add(data);
     }
 
     /**
@@ -342,7 +342,7 @@ public class LogicModule extends Thread {
      * @param data 1:key, 2:action type
      */
     public void queuePlayerUseSkill(final byte[] data) {
-        this.pUseSkillQueue.add(data);
+        this.playUseSkillQueue.add(data);
     }
 
     /**
@@ -375,8 +375,8 @@ public class LogicModule extends Thread {
     private void processQueues() {
         final Runnable[] queues = new Runnable[5];
 
-        while (!this.pAddQueue.isEmpty()) {
-            final Player newPlayer = this.pAddQueue.poll();
+        while (!this.playAddQueue.isEmpty()) {
+            final Player newPlayer = this.playAddQueue.poll();
             if (newPlayer != null) {
                 final byte key = newPlayer.getKey();
                 this.players.put(key, newPlayer);
@@ -385,8 +385,8 @@ public class LogicModule extends Thread {
 
         queues[0] = () -> {
             try {
-                while (!this.pDirKeydownQueue.isEmpty()) {
-                    final byte[] data = this.pDirKeydownQueue.poll();
+                while (!this.playDirKeydownQueue.isEmpty()) {
+                    final byte[] data = this.playDirKeydownQueue.poll();
                     if (data != null) {
                         final byte key = data[2], dir = data[3], value = data[4];
                         if (this.players.containsKey(key)) {
@@ -401,8 +401,8 @@ public class LogicModule extends Thread {
 
         queues[1] = () -> {
             try {
-                while (!this.pUseSkillQueue.isEmpty()) {
-                    final byte[] data = this.pUseSkillQueue.poll();
+                while (!this.playUseSkillQueue.isEmpty()) {
+                    final byte[] data = this.playUseSkillQueue.poll();
                     if (data != null) {
                         final byte key = data[2];
                         if (this.players.containsKey(key)) {
@@ -455,11 +455,11 @@ public class LogicModule extends Thread {
         };
 
         if (this.players.isEmpty()) {
-            if (!this.pDirKeydownQueue.isEmpty()) {
-                this.pDirKeydownQueue.clear();
+            if (!this.playDirKeydownQueue.isEmpty()) {
+                this.playDirKeydownQueue.clear();
             }
-            if (!this.pUseSkillQueue.isEmpty()) {
-                this.pUseSkillQueue.clear();
+            if (!this.playUseSkillQueue.isEmpty()) {
+                this.playUseSkillQueue.clear();
             }
             if (!this.projEffectQueue.isEmpty()) {
                 this.projEffectQueue.clear();
@@ -526,5 +526,68 @@ public class LogicModule extends Thread {
             }
         }
         return -1;
+    }
+
+    /**
+     * @param playerKeys the playerKeys to set
+     */
+    public void setPlayerKeys(ConcurrentLinkedQueue<Byte> playerKeys) {
+        this.playerKeys = playerKeys;
+    }
+
+    /**
+     * @param mobKeys the mobKeys to set
+     */
+    public void setMobKeys(ConcurrentLinkedQueue<Byte> mobKeys) {
+        this.mobKeys = mobKeys;
+    }
+
+    /**
+     * @param projKeys the projKeys to set
+     */
+    public void setProjKeys(ConcurrentLinkedQueue<Integer> projKeys) {
+        this.projKeys = projKeys;
+    }
+
+    /**
+     * @param playAddQueue the playAddQueue to set
+     */
+    public void setPlayAddQueue(ConcurrentLinkedQueue<Player> playAddQueue) {
+        this.playAddQueue = playAddQueue;
+    }
+
+    /**
+     * @param playDirKeydownQueue the playDirKeydownQueue to set
+     */
+    public void setPlayDirKeydownQueue(ConcurrentLinkedQueue<byte[]> playDirKeydownQueue) {
+        this.playDirKeydownQueue = playDirKeydownQueue;
+    }
+
+    /**
+     * @param playUseSkillQueue the playUseSkillQueue to set
+     */
+    public void setPlayUseSkillQueue(ConcurrentLinkedQueue<byte[]> playUseSkillQueue) {
+        this.playUseSkillQueue = playUseSkillQueue;
+    }
+
+    /**
+     * @param projEffectQueue the projEffectQueue to set
+     */
+    public void setProjEffectQueue(ConcurrentLinkedQueue<Projectile> projEffectQueue) {
+        this.projEffectQueue = projEffectQueue;
+    }
+
+    /**
+     * @param projAddQueue the projAddQueue to set
+     */
+    public void setProjAddQueue(ConcurrentLinkedQueue<Projectile> projAddQueue) {
+        this.projAddQueue = projAddQueue;
+    }
+
+    /**
+     * @param mobAddQueue the mobAddQueue to set
+     */
+    public void setMobAddQueue(ConcurrentLinkedQueue<Mob> mobAddQueue) {
+        this.mobAddQueue = mobAddQueue;
     }
 }
