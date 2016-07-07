@@ -28,10 +28,10 @@ public class LogicModule extends Thread {
     private static PacketSender sender;
     private byte room = -1;
 
-    private final ConcurrentHashMap<Byte, Player> players = new ConcurrentHashMap<>(Globals.SERVER_MAX_PLAYERS, 0.9f,
+    private ConcurrentHashMap<Byte, Player> players = new ConcurrentHashMap<>(Globals.SERVER_MAX_PLAYERS, 0.9f,
             Math.max(Globals.SERVER_MAX_PLAYERS / 5, 3));
-    private final ConcurrentHashMap<Byte, Mob> mobs = new ConcurrentHashMap<>(1, 0.9f, 1);
-    private final ConcurrentHashMap<Integer, Projectile> projectiles = new ConcurrentHashMap<>(500, 0.75f, 3);
+    private ConcurrentHashMap<Byte, Mob> mobs = new ConcurrentHashMap<>(1, 0.9f, 1);
+    private ConcurrentHashMap<Integer, Projectile> projectiles = new ConcurrentHashMap<>(500, 0.75f, 3);
 
     private GameMap map;
     private int projMaxKeys = 500;
@@ -120,9 +120,9 @@ public class LogicModule extends Thread {
         this.projMaxKeys = 500;
         this.resetStartTime = 0;
         if (this.room == 0) {
-            this.map = new GameMapArena();
+            this.setMap(new GameMapArena());
         } else {
-            this.map = new GameMapFloor1();
+            this.setMap(new GameMapFloor1());
         }
         resetKeys();
         this.map.spawnMapMobs(this);
@@ -547,6 +547,7 @@ public class LogicModule extends Thread {
      */
     public void setProjKeys(ConcurrentLinkedQueue<Integer> projKeys) {
         this.projKeys = projKeys;
+        this.projMaxKeys = this.projKeys.size();
     }
 
     /**
@@ -589,5 +590,33 @@ public class LogicModule extends Thread {
      */
     public void setMobAddQueue(ConcurrentLinkedQueue<Mob> mobAddQueue) {
         this.mobAddQueue = mobAddQueue;
+    }
+
+    /**
+     * @param players the players to set
+     */
+    public void setPlayers(ConcurrentHashMap<Byte, Player> players) {
+        this.players = players;
+    }
+
+    /**
+     * @param mobs the mobs to set
+     */
+    public void setMobs(ConcurrentHashMap<Byte, Mob> mobs) {
+        this.mobs = mobs;
+    }
+
+    /**
+     * @param projectiles the projectiles to set
+     */
+    public void setProjectiles(ConcurrentHashMap<Integer, Projectile> projectiles) {
+        this.projectiles = projectiles;
+    }
+
+    /**
+     * @param map the map to set
+     */
+    public void setMap(GameMap map) {
+        this.map = map;
     }
 }

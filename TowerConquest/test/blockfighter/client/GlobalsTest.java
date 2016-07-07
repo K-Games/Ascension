@@ -16,8 +16,7 @@ public class GlobalsTest {
         byte statID = 40;
         String expResult = "INVALID STAT";
         String result = Globals.getStatName(statID);
-        System.out.println("Expected: " + expResult);
-        System.out.println("Result: " + result);
+        System.out.println("Expected: <" + expResult + ">, Result: <" + result + ">");
         assertEquals(expResult, result);
     }
 
@@ -47,8 +46,7 @@ public class GlobalsTest {
         byte[] bytes = {(byte) 0x7F, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF};
         long expResult = Long.MAX_VALUE;
         long result = Globals.bytesToLong(bytes);
-        System.out.println("Expected: " + expResult);
-        System.out.println("Result: " + result);
+        System.out.println("Expected: <" + expResult + ">, Result: <" + result + ">");
         assertEquals(expResult, result);
     }
 
@@ -69,8 +67,7 @@ public class GlobalsTest {
         byte[] bytes = {(byte) 0x80, (byte) 0x00, (byte) 0x00, (byte) 0x00};
         int expResult = Integer.MIN_VALUE;
         int result = Globals.bytesToInt(bytes);
-        System.out.println("Expected: " + expResult);
-        System.out.println("Result: " + result);
+        System.out.println("Expected: <" + expResult + ">, Result: <" + result + ">");
         assertEquals(expResult, result);
     }
 
@@ -80,8 +77,7 @@ public class GlobalsTest {
         long time = 1000000000L;
         long expResult = TimeUnit.MILLISECONDS.convert(time, TimeUnit.NANOSECONDS);
         int result = Globals.nsToMs(time);
-        System.out.println("Expected: " + expResult);
-        System.out.println("Result: " + result);
+        System.out.println("Expected: <" + expResult + ">, Result: <" + result + ">");
         assertEquals(expResult, result);
     }
 
@@ -91,8 +87,7 @@ public class GlobalsTest {
         long time = 1000L;
         long expResult = TimeUnit.NANOSECONDS.convert(time, TimeUnit.MILLISECONDS);
         long result = Globals.msToNs(time);
-        System.out.println("Expected: " + expResult);
-        System.out.println("Result: " + result);
+        System.out.println("Expected: <" + expResult + ">, Result: <" + result + ">");
         assertEquals(expResult, result);
     }
 
@@ -102,8 +97,7 @@ public class GlobalsTest {
         int i = 0;
         int expResult = -1;
         int result = Globals.rng(i);
-        System.out.println("Expected: " + expResult);
-        System.out.println("Result: " + result);
+        System.out.println("Expected: <" + expResult + ">, Result: <" + result + ">");
         assertEquals(expResult, result);
     }
 
