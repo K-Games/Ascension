@@ -68,6 +68,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class Player extends Thread implements GameEntity {
 
     private static final HashMap<Byte, Object> VALID_PLAYER_SKILL_STATES = new HashMap<>(18);
+    private static final HashMap<Byte, Object> IMMOVABLE_PLAYER_SKILL_STATES = new HashMap<>(18);
     private static final HashMap<Byte, Byte> PLAYER_STATE_SKILLCODE = new HashMap<>(18);
 
     public final static byte PLAYER_STATE_STAND = 0x00,
@@ -160,6 +161,20 @@ public class Player extends Thread implements GameEntity {
         VALID_PLAYER_SKILL_STATES.put(PLAYER_STATE_SHIELD_IRON, null);
         VALID_PLAYER_SKILL_STATES.put(PLAYER_STATE_SHIELD_REFLECT, null);
         VALID_PLAYER_SKILL_STATES.put(PLAYER_STATE_SHIELD_TOSS, null);
+
+        IMMOVABLE_PLAYER_SKILL_STATES.put(PLAYER_STATE_SWORD_VORPAL, null);
+        IMMOVABLE_PLAYER_SKILL_STATES.put(PLAYER_STATE_SWORD_PHANTOM, null);
+        IMMOVABLE_PLAYER_SKILL_STATES.put(PLAYER_STATE_BOW_ARC, null);
+        IMMOVABLE_PLAYER_SKILL_STATES.put(PLAYER_STATE_BOW_POWER, null);
+        IMMOVABLE_PLAYER_SKILL_STATES.put(PLAYER_STATE_BOW_RAPID, null);
+        IMMOVABLE_PLAYER_SKILL_STATES.put(PLAYER_STATE_BOW_FROST, null);
+        IMMOVABLE_PLAYER_SKILL_STATES.put(PLAYER_STATE_BOW_VOLLEY, null);
+        IMMOVABLE_PLAYER_SKILL_STATES.put(PLAYER_STATE_SHIELD_CHARGE, null);
+        IMMOVABLE_PLAYER_SKILL_STATES.put(PLAYER_STATE_SHIELD_DASH, null);
+        IMMOVABLE_PLAYER_SKILL_STATES.put(PLAYER_STATE_SHIELD_FORTIFY, null);
+        IMMOVABLE_PLAYER_SKILL_STATES.put(PLAYER_STATE_SHIELD_IRON, null);
+        IMMOVABLE_PLAYER_SKILL_STATES.put(PLAYER_STATE_SHIELD_REFLECT, null);
+        IMMOVABLE_PLAYER_SKILL_STATES.put(PLAYER_STATE_SHIELD_TOSS, null);
 
         PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SWORD_VORPAL, Skill.SWORD_VORPAL);
         PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SWORD_PHANTOM, Skill.SWORD_PHANTOM);
@@ -600,7 +615,7 @@ public class Player extends Thread implements GameEntity {
                 setXSpeed(0);
             }
 
-            if (!isUsingSkill() && !isStunned() && !isKnockback()) {
+            if (!isImmovableUsingSkill() && !isStunned() && !isKnockback()) {
                 updateFacing();
                 if (!this.isJumping && !this.isFalling) {
                     updateWalk(movedX);
@@ -706,7 +721,7 @@ public class Player extends Thread implements GameEntity {
     }
 
     private void updateSkillUse() {
-        if (!isKnockback()) {
+        if (!isKnockback() && isImmovableUsingSkill()) {
             setXSpeed(0);
         }
         getSkill(PLAYER_STATE_SKILLCODE.get(this.playerState)).updateSkillUse(this);
@@ -1144,6 +1159,10 @@ public class Player extends Thread implements GameEntity {
      */
     public boolean isUsingSkill() {
         return VALID_PLAYER_SKILL_STATES.containsKey(this.playerState);
+    }
+
+    public boolean isImmovableUsingSkill() {
+        return IMMOVABLE_PLAYER_SKILL_STATES.containsKey(this.playerState);
     }
 
     /**
