@@ -747,9 +747,11 @@ public class Player extends Thread implements GameEntity {
             // Take no damage
             this.damageQueue.clear();
         }
+        Player lastHitter = null;
         while (!this.damageQueue.isEmpty()) {
             final Damage dmg = this.damageQueue.poll();
             if (dmg != null) {
+                lastHitter = dmg.getOwner();
                 int amount = (int) (dmg.getDamage() * this.dmgAmp);
                 // Proc stuff like shadow attack
                 dmg.proc();
@@ -826,7 +828,7 @@ public class Player extends Thread implements GameEntity {
                         sendCooldown(Skill.PASSIVE_BARRIER);
                     }
                 }
-                //System.out.println(this.getPlayerName() + ": Damage Multiplier: " + this.dmgAmp + " Raw: " + dmg.getDamage() + ", Taken: " + amount);
+                Globals.log("Player", this.getPlayerName() + ": Damage Multiplier: " + this.dmgAmp + " Raw: " + dmg.getDamage() + ", Taken: " + amount, Globals.LOG_TYPE_DATA, true);
             }
         }
         // Empty healing queued
@@ -847,6 +849,9 @@ public class Player extends Thread implements GameEntity {
         }
 
         if (this.stats[Globals.STAT_MINHP] <= 0) {
+            if (lastHitter != null) {
+                lastHitter.giveEXP(Globals.calcEXPtoNxtLvl(this.stats[Globals.STAT_LEVEL]) / 20);
+            }
             die();
         }
 
@@ -1117,7 +1122,7 @@ public class Player extends Thread implements GameEntity {
         bytes[11] = d[1];
         bytes[12] = d[2];
         bytes[13] = d[3];
-        sender.sendAll(bytes, this.logic.getRoom());
+        sender.sendPlayer(bytes, this);
     }
 
     /**
