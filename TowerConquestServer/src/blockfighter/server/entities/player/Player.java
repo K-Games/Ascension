@@ -644,7 +644,7 @@ public class Player extends Thread implements GameEntity {
         }
 
         if (this.connected && Globals.nsToMs(this.logic.getTime() - this.lastActionTime) >= Globals.SERVER_MAX_IDLE) {
-            Globals.log("Player", this.address + ":" + this.port + " Idle disconnected Key: " + this.key, Globals.LOG_TYPE_DATA, true);
+            Globals.log(Player.class.getName(), this.address + ":" + this.port + " Idle disconnected Key: " + this.key, Globals.LOG_TYPE_DATA, true);
             disconnect();
         }
     }
@@ -828,7 +828,11 @@ public class Player extends Thread implements GameEntity {
                         sendCooldown(Skill.PASSIVE_BARRIER);
                     }
                 }
-                Globals.log("Player", this.getPlayerName() + ": Damage Multiplier: " + this.dmgAmp + " Raw: " + dmg.getDamage() + ", Taken: " + amount, Globals.LOG_TYPE_DATA, true);
+                //Globals.log(Player.class.getSimpleName(), "<" + this.getPlayerName() + "> taking damage"
+                //        + " | Source: <" + ((dmg.getOwner() != null) ? dmg.getOwner().getPlayerName() : dmg.getMobOwner().getClass().getSimpleName()) + ">"
+                //        + " | Damage Amp: " + this.dmgAmp
+                //        + " | Raw: " + dmg.getDamage()
+                //        + " | Taken: " + amount, Globals.LOG_TYPE_DATA, true);
             }
         }
         // Empty healing queued

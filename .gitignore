@@ -1,0 +1,10 @@
+/TowerConquest/nbproject/private/
+/TowerConquestServer/nbproject/private/
+/TowerConquest/build/
+/TowerConquest/dist/
+/TowerConquestServer/build/
+/TowerConquestServer/dist/
+*.tcdat
+*log
+logs/
+server.txt

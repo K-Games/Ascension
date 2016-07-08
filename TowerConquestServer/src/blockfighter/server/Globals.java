@@ -273,7 +273,7 @@ public class Globals {
                 log("Config", "Max Packet Sender Threads: " + SERVER_PACKETSENDER_THREADS, Globals.LOG_TYPE_DATA, true);
             }
         } catch (final FileNotFoundException e) {
-            log("config.properties not found in root directory. Using default server values.", "Config", Globals.LOG_TYPE_DATA, true);
+            log("Config", "config.properties not found in root directory. Using default server values.", Globals.LOG_TYPE_DATA, true);
         } catch (final IOException ex) {
             Logger.getLogger(Globals.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
