@@ -326,7 +326,7 @@ public class SaveData {
         mostSigBits = Globals.bytesToLong(temp);
         pos += temp.length;
         c.uniqueID = new UUID(mostSigBits, leastSigBits);
-        System.out.println(c.uniqueID);
+
         final int[] statIDs = {Globals.STAT_LEVEL,
             Globals.STAT_POWER,
             Globals.STAT_DEFENSE,

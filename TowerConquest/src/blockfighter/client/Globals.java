@@ -44,7 +44,8 @@ public class Globals {
     public final static Font ARIAL_15PTITALIC = new Font("Arial", Font.ITALIC, 15);
     public final static Font ARIAL_24PT = new Font("Arial", Font.PLAIN, 24);
     public final static Font ARIAL_18PT = new Font("Arial", Font.PLAIN, 18);
-
+    public final static Font ARIALBLACK_18P = new Font("Arial", Font.BOLD, 18); 
+    
     public final static byte MAX_NAME_LENGTH = 15;
 
     private final static Random RNG = new Random();
