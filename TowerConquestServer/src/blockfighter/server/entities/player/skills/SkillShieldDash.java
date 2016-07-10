@@ -21,7 +21,7 @@ public class SkillShieldDash extends Skill {
     public void updateSkillUse(Player player) {
         final int duration = Globals.nsToMs(this.logic.getTime() - player.getSkillCastTime());
         if (!player.isStunned() && !player.isKnockback()) {
-            player.setXSpeed((player.getFacing() == Globals.RIGHT) ? 15 : -15);
+            player.setXSpeed((player.getFacing() == Globals.RIGHT) ? 11 : -11);
         }
         if (player.isSkillMaxed(Skill.SHIELD_DASH) && !player.isInvulnerable()) {
             player.setInvulnerable(true);

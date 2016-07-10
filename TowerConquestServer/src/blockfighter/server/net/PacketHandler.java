@@ -252,7 +252,7 @@ public class PacketHandler implements Runnable {
             Globals.log("DATA_PLAYER_CREATE", address + ":" + port + " Room " + room + " at max capacity", Globals.LOG_TYPE_DATA, true);
             return;
         }
-        
+
         Globals.log("DATA_PLAYER_CREATE", address + ":" + port + " Creating player. Room: " + room, Globals.LOG_TYPE_DATA,
                 true);
 
