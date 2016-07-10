@@ -71,6 +71,7 @@ public class Main {
             });
         }
         try {
+
             final LogicModule[] server_rooms = new LogicModule[Globals.SERVER_ROOMS];
             PacketSender.setLogic(server_rooms);
             PacketHandler.setLogic(server_rooms);
@@ -85,18 +86,16 @@ public class Main {
             Mob.setPacketSender(packetSender);
             Projectile.setPacketSender(packetSender);
 
-            Globals.log("Server started", String.format("%1$td/%1$tm/%1$tY %1$tT", System.currentTimeMillis()), Globals.LOG_TYPE_ERR,
-                    false);
-            Globals.log("Server started", String.format("%1$td/%1$tm/%1$tY %1$tT", System.currentTimeMillis()), Globals.LOG_TYPE_DATA,
-                    true);
+            Globals.log(Main.class, "Server started ", Globals.LOG_TYPE_ERR, false);
+            Globals.log(Main.class, "Server started", Globals.LOG_TYPE_DATA, true);
 
             PACKETSENDER_SCHEDULER.scheduleAtFixedRate(packetSender, 0, 2, TimeUnit.MILLISECONDS);
             for (byte i = 0; i < server_rooms.length; i++) {
                 server_rooms[i] = new LogicModule(i);
                 LOGIC_SCHEDULER.scheduleAtFixedRate(server_rooms[i], 0, 750, TimeUnit.MICROSECONDS);
             }
-            Globals.log("Initialization", "Initialized " + server_rooms.length + " rooms", Globals.LOG_TYPE_ERR, false);
-            Globals.log("Initialization", "Initialized " + server_rooms.length + " rooms", Globals.LOG_TYPE_DATA, true);
+            Globals.log(Main.class, "Initialized " + server_rooms.length + " rooms", Globals.LOG_TYPE_ERR, false);
+            Globals.log(Main.class, "Initialized " + server_rooms.length + " rooms", Globals.LOG_TYPE_DATA, true);
 
             packetReceiver.setDaemon(true);
             packetReceiver.setName("PacketReceiver");

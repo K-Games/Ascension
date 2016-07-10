@@ -644,7 +644,7 @@ public class Player extends Thread implements GameEntity {
         }
 
         if (this.connected && Globals.nsToMs(this.logic.getTime() - this.lastActionTime) >= Globals.SERVER_MAX_IDLE) {
-            Globals.log(Player.class.getName(), this.address + ":" + this.port + " Idle disconnected Key: " + this.key, Globals.LOG_TYPE_DATA, true);
+            Globals.log(Player.class, this.address, this.port, " Disconnecting <" + this.name + "> due to idling.");
             disconnect();
         }
     }

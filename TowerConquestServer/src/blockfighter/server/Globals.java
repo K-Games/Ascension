@@ -8,6 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.net.InetAddress;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -254,26 +255,26 @@ public class Globals {
             prop.load(inputStream);
             if (prop.getProperty("port") != null) {
                 SERVER_PORT = Integer.parseInt(prop.getProperty("port"));
-                log("Config", "Server Port: " + SERVER_PORT, Globals.LOG_TYPE_DATA, true);
+                log(Globals.class, "Config", "Server Port: " + SERVER_PORT, Globals.LOG_TYPE_DATA, true);
             }
             if (prop.getProperty("maxplayers") != null) {
                 SERVER_MAX_PLAYERS = Byte.parseByte(prop.getProperty("maxplayers"));
-                log("Config", "Max Players per Room: " + SERVER_MAX_PLAYERS, Globals.LOG_TYPE_DATA, true);
+                log(Globals.class, "Config", "Max Players per Room: " + SERVER_MAX_PLAYERS, Globals.LOG_TYPE_DATA, true);
             }
             if (prop.getProperty("rooms") != null) {
                 SERVER_ROOMS = (byte) (1 + Byte.parseByte(prop.getProperty("rooms")));
-                log("Config", "Rooms: " + SERVER_ROOMS, Globals.LOG_TYPE_DATA, true);
+                log(Globals.class, "Config", "Rooms: " + SERVER_ROOMS, Globals.LOG_TYPE_DATA, true);
             }
             if (prop.getProperty("logicthreads") != null) {
                 SERVER_LOGIC_THREADS = Byte.parseByte(prop.getProperty("logicthreads"));
-                log("Config", "Logic Module Threads: " + SERVER_LOGIC_THREADS, Globals.LOG_TYPE_DATA, true);
+                log(Globals.class, "Config", "Logic Module Threads: " + SERVER_LOGIC_THREADS, Globals.LOG_TYPE_DATA, true);
             }
             if (prop.getProperty("packetsenderthreads") != null) {
                 SERVER_PACKETSENDER_THREADS = Byte.parseByte(prop.getProperty("packetsenderthreads"));
-                log("Config", "Max Packet Sender Threads: " + SERVER_PACKETSENDER_THREADS, Globals.LOG_TYPE_DATA, true);
+                log(Globals.class, "Config", "Max Packet Sender Threads: " + SERVER_PACKETSENDER_THREADS, Globals.LOG_TYPE_DATA, true);
             }
         } catch (final FileNotFoundException e) {
-            log("Config", "config.properties not found in root directory. Using default server values.", Globals.LOG_TYPE_DATA, true);
+            log(Globals.class, "Config", "config.properties not found in root directory. Using default server values.", Globals.LOG_TYPE_DATA, true);
         } catch (final IOException ex) {
             Logger.getLogger(Globals.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
@@ -293,17 +294,39 @@ public class Globals {
     }
 
     public final static void createLogDirectory() {
+
         try {
             Files.createDirectories(Paths.get(LOG_DIR + "/" + ERRLOG_FILE).getParent());
-            Files.createFile(Paths.get(LOG_DIR + "/" + ERRLOG_FILE));
+            if (!new File(LOG_DIR + "/" + ERRLOG_FILE).exists()) {
+                Files.createFile(Paths.get(LOG_DIR + "/" + ERRLOG_FILE));
+            }
+
             Files.createDirectories(Paths.get(LOG_DIR + "/" + DATALOG_FILE).getParent());
-            Files.createFile(Paths.get(LOG_DIR + "/" + DATALOG_FILE));
+            if (!new File(LOG_DIR + "/" + DATALOG_FILE).exists()) {
+                Files.createFile(Paths.get(LOG_DIR + "/" + DATALOG_FILE));
+            }
         } catch (final IOException e) {
-            Logger.getLogger(Globals.class.getName()).log(Level.SEVERE, null, e);
+            Logger.getLogger(Globals.class.getName()).log(Level.SEVERE, "Couldn't create log file.", e);
         }
     }
 
-    public final static void log(final String origin, final String info, final byte logType, final boolean console) {
+    public final static void log(final Class originClass, final String info, final byte logType, final boolean outputToConsole) {
+        log(originClass.getSimpleName(), info, logType, outputToConsole);
+    }
+
+    public final static void log(final Class originClass, final String customClassDesc, final String info, final byte logType, final boolean outputToConsole) {
+        log(originClass.getSimpleName() + " " + customClassDesc, info, logType, outputToConsole);
+    }
+
+    public final static void log(final Class originClass, final InetAddress ipAddress, final int port, final String info) {
+        Globals.log(originClass, ipAddress + ":" + port + " " + info, Globals.LOG_TYPE_DATA, true);
+    }
+
+    public final static void log(final Class originClass, final String customClassDesc, final InetAddress ipAddress, final int port, final String info) {
+        Globals.log(originClass.getSimpleName() + " " + customClassDesc, ipAddress + ":" + port + " " + info, Globals.LOG_TYPE_DATA, true);
+    }
+
+    public final static void log(final String className, final String info, final byte logType, final boolean outputToConsole) {
 
         final Runnable logging = () -> {
             String logFile;
@@ -318,34 +341,35 @@ public class Globals {
                     logFile = "Other.log";
             }
 
-            String logT = "?:";
+            String logT = "?";
             switch (logType) {
                 case LOG_TYPE_ERR:
-                    logT = "ERROR:";
+                    logT = "ERROR";
                     break;
                 case LOG_TYPE_DATA:
-                    logT = "DATA:";
+                    logT = "DATA";
                     break;
             }
 
-            if (console) {
-                System.out.println(logT + origin + ": " + info);
+            String message = "[" + String.format("%1$td/%1$tm/%1$tY %1$tT %1$tZ", System.currentTimeMillis()) + "] " + logT + ":" + className + ":" + info;
+            if (outputToConsole) {
+                System.out.println(message);
             }
 
             if (LOGGING) {
                 try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(new File(LOG_DIR, logFile), true)))) {
-                    out.println("[" + String.format("%1$td/%1$tm/%1$tY %1$tT", System.currentTimeMillis()) + "]" + origin + "@" + info);
+                    out.println(message);
                 } catch (final IOException e) {
                     System.err.println(e);
                 }
             }
             switch (logType) {
                 case LOG_TYPE_ERR:
-                    errConsole.append("\n" + origin + "@" + info);
+                    errConsole.append("\n" + message);
                     errConsole.setCaretPosition(errConsole.getDocument().getLength());
                     break;
                 case LOG_TYPE_DATA:
-                    dataConsole.append("\n" + origin + "@" + info);
+                    dataConsole.append("\n" + message);
                     dataConsole.setCaretPosition(dataConsole.getDocument().getLength());
                     break;
             }
@@ -354,23 +378,28 @@ public class Globals {
         LOG_THREAD.execute(logging);
     }
 
-    public static final void logError(final String ex, final Exception e, final boolean console) {
+    public static final void logError(final String errorMessage, final Exception e, final boolean outputToConsole) {
         final Runnable logging = () -> {
             final String logFile = ERRLOG_FILE;
-            if (console) {
-                System.out.println("ERROR:" + ex + "@" + e.getStackTrace()[1]);
+            String message = "[" + String.format("%1$td/%1$tm/%1$tY %1$tT %1$tZ", System.currentTimeMillis()) + "] ERROR:" + errorMessage + ":" + e.getStackTrace()[1];
+
+            if (outputToConsole) {
+                System.out.println(message);
             }
             if (LOGGING) {
                 try (final PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(new File(LOG_DIR, logFile), true)))) {
-                    out.println("[" + String.format("%1$td/%1$tm/%1$tY %1$tT", System.currentTimeMillis()) + "]" + ex + "@");
+                    out.println(message);
                     for (final StackTraceElement s : e.getStackTrace()) {
-                        out.println("[" + String.format("%1$td/%1$tm/%1$tY %1$tT", System.currentTimeMillis()) + "]" + s.toString());
+                        out.println(s.toString());
+                        if (outputToConsole) {
+                            System.out.println(s.toString());
+                        }
                     }
                 } catch (final IOException e1) {
                     System.err.println(e1);
                 }
             }
-            errConsole.append("\n" + ex + "@" + e.getStackTrace()[1]);
+            errConsole.append("\n" + message);
             errConsole.setCaretPosition(errConsole.getDocument().getLength());
         };
         LOG_THREAD.execute(logging);

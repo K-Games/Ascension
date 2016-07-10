@@ -30,7 +30,7 @@ public class PacketReceiver extends Thread {
                 .build());
         try {
             final DatagramSocket socket = new DatagramSocket(Globals.SERVER_PORT);
-            System.out.println("Server listening on port " + Globals.SERVER_PORT);
+            Globals.log(PacketReceiver.class, "Server listening on port " + Globals.SERVER_PORT, Globals.LOG_TYPE_DATA, true);
             PacketSender.setSocket(socket);
             while (true) {
                 final byte[] request = new byte[Globals.PACKET_MAX_SIZE];
