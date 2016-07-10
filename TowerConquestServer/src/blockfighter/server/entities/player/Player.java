@@ -806,7 +806,7 @@ public class Player extends Thread implements GameEntity {
                 this.tacticalDmgMult = 0;
                 // Send client damage display
                 if (!dmg.isHidden()) {
-                    if (dmg.getOwner() != null) {
+                    if (dmg.getOwner() != null && dmg.isCrit()) {
                         sendParticle(this.logic.getRoom(), Globals.PARTICLE_BLOOD_HIT, dmg.getOwner().getKey(), this.key);
                     }
                     sendDamage(dmg, amount);
@@ -867,7 +867,7 @@ public class Player extends Thread implements GameEntity {
             bytes[1] = this.key;
             bytes[2] = Globals.STAT_MINHP;
             System.arraycopy(stat, 0, bytes, 3, stat.length);
-            sender.sendPlayer(bytes, this);
+            sender.sendAll(bytes, this.logic.getRoom());
             //this.nextHPSend = 150;
             this.lastHPSendTime = this.logic.getTime();
         }
@@ -1111,7 +1111,7 @@ public class Player extends Thread implements GameEntity {
         bytes = new byte[Globals.PACKET_BYTE * 2 + Globals.PACKET_INT * 3];
         bytes[0] = Globals.DATA_NUMBER;
         bytes[1] = Globals.NUMBER_TYPE_EXP;
-        final byte[] posXInt = Globals.intToBytes((int) this.x - 20);
+        final byte[] posXInt = Globals.intToBytes((int) this.x);
         bytes[2] = posXInt[0];
         bytes[3] = posXInt[1];
         bytes[4] = posXInt[2];
@@ -1671,12 +1671,12 @@ public class Player extends Thread implements GameEntity {
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 2 + Globals.PACKET_INT * 3];
         bytes[0] = Globals.DATA_NUMBER;
         bytes[1] = dmg.getDamageType();
-        final byte[] posXInt = Globals.intToBytes(dmg.getDmgPoint().x);
+        final byte[] posXInt = Globals.intToBytes((int)this.x);
         bytes[2] = posXInt[0];
         bytes[3] = posXInt[1];
         bytes[4] = posXInt[2];
         bytes[5] = posXInt[3];
-        final byte[] posYInt = Globals.intToBytes(dmg.getDmgPoint().y);
+        final byte[] posYInt = Globals.intToBytes((int)this.y - 20);
         bytes[6] = posYInt[0];
         bytes[7] = posYInt[1];
         bytes[8] = posYInt[2];

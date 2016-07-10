@@ -185,4 +185,7 @@ public class Damage {
         return this.canReflect;
     }
 
+    public boolean isCrit() {
+        return this.isCrit;
+    }
 }
