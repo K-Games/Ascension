@@ -1,7 +1,10 @@
 package paulscode.sound;
 
 /**
- * The CommandThread class is designed to move all command processing into a single thread to be run in the background and avoid conflicts between threads. Commands are processed in the order that they were queued. The arguements for each command are stored in a {@link paulscode.sound.CommandObject CommandObject}. The Command Queue is located in the {@link paulscode.sound.SoundSystem SoundSystem} class. Calling kill() stops the thread, and this should be immediatly followed by a call to interrupt() to wake up the thread so it may end. This class also checks for temporary sources that are finished playing, and removes them.
+ * The CommandThread class is designed to move all command processing into a single thread to be run in the background and avoid conflicts between threads. Commands are processed in the order that
+ * they were queued. The arguements for each command are stored in a {@link paulscode.sound.CommandObject CommandObject}. The Command Queue is located in the
+ * {@link paulscode.sound.SoundSystem SoundSystem} class. Calling kill() stops the thread, and this should be immediatly followed by a call to interrupt() to wake up the thread so it may end. This
+ * class also checks for temporary sources that are finished playing, and removes them.
  *
  * NOTE: The command thread is created automatically by the sound system, so it is unlikely that the user would ever need to use this class.
  * <br><br>
@@ -68,7 +71,8 @@ public class CommandThread extends SimpleThread {
     }
 
     /**
-     * The main loop for processing commands. The Command Thread starts out asleep, and it sleeps again after it finishes processing commands, so it must be interrupted when commands are queued for processing.
+     * The main loop for processing commands. The Command Thread starts out asleep, and it sleeps again after it finishes processing commands, so it must be interrupted when commands are queued for
+     * processing.
      */
     @Override
     public void run() {

@@ -32,10 +32,12 @@ import java.io.*;
 
 /**
  * <p>
- * An instance of this class represents an ogg page read from an ogg file or network stream. It has no public constructor, but instances can be created by the <code>create</code> methods, supplying a JMF stream or a <code>RandomAccessFile</code> which is positioned at the beginning of an Ogg page.</p>
+ * An instance of this class represents an ogg page read from an ogg file or network stream. It has no public constructor, but instances can be created by the <code>create</code> methods, supplying a
+ * JMF stream or a <code>RandomAccessFile</code> which is positioned at the beginning of an Ogg page.</p>
  *
  * <p>
- * Furtheron, the class provides methods for accessing the raw page data, as well as data attributes like segmenting information, sequence number, stream serial number, chechsum and wether this page is the beginning or end of a logical bitstream (BOS, EOS) and if the page data starts with a continued packet or a fresh data packet.</p>
+ * Furtheron, the class provides methods for accessing the raw page data, as well as data attributes like segmenting information, sequence number, stream serial number, chechsum and wether this page
+ * is the beginning or end of a logical bitstream (BOS, EOS) and if the page data starts with a continued packet or a fresh data packet.</p>
  */
 public class OggPage {
 
@@ -93,7 +95,8 @@ public class OggPage {
     }
 
     /**
-     * This method is called to read data from the current position in the specified RandomAccessFile and create a new OggPage instance based on the data read. If the parameter <code>skipData</code> is set to <code>true</code>, the actual page segments (page data) is skipped and not read into memory. This mode is useful when scanning through an ogg file to build a seek table.
+     * This method is called to read data from the current position in the specified RandomAccessFile and create a new OggPage instance based on the data read. If the parameter <code>skipData</code>
+     * is set to <code>true</code>, the actual page segments (page data) is skipped and not read into memory. This mode is useful when scanning through an ogg file to build a seek table.
      *
      * @param source the source from which the ogg page is generated
      * @param skipData if set to <code>true</code>, the actual page data is not read into memory
@@ -118,7 +121,8 @@ public class OggPage {
     }
 
     /**
-     * This method is called to read data from the current position in the specified InpuStream and create a new OggPage instance based on the data read. If the parameter <code>skipData</code> is set to <code>true</code>, the actual page segments (page data) is skipped and not read into memory. This mode is useful when scanning through an ogg file to build a seek table.
+     * This method is called to read data from the current position in the specified InpuStream and create a new OggPage instance based on the data read. If the parameter <code>skipData</code> is set
+     * to <code>true</code>, the actual page segments (page data) is skipped and not read into memory. This mode is useful when scanning through an ogg file to build a seek table.
      *
      * @param source the source from which the ogg page is generated
      * @param skipData if set to <code>true</code>, the actual page data is not read into memory
@@ -270,7 +274,8 @@ public class OggPage {
     }
 
     /**
-     * Returns the absolute granule position of the last complete packet contained in this Ogg page, or -1 if the page contains a single packet, which is not completed on this page. For pages containing Vorbis data, this value is the sample index within the Vorbis stream. The Vorbis stream does not necessarily start with sample index 0.
+     * Returns the absolute granule position of the last complete packet contained in this Ogg page, or -1 if the page contains a single packet, which is not completed on this page. For pages
+     * containing Vorbis data, this value is the sample index within the Vorbis stream. The Vorbis stream does not necessarily start with sample index 0.
      *
      * @return the absolute granule position of the last packet completed on this page
      */

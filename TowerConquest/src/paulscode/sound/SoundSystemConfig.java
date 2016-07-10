@@ -7,7 +7,8 @@ import java.util.ListIterator;
 import java.util.Locale;
 
 /**
- * The SoundSystemConfig class is used to access global sound system settings, and to link with external pluggins. All members of this class are static. SoundSystemConfig is sort of a "catch all" configuration class, so if you are not sure where to find something in the SoundSystem library, this is probably a good place to start.
+ * The SoundSystemConfig class is used to access global sound system settings, and to link with external pluggins. All members of this class are static. SoundSystemConfig is sort of a "catch all"
+ * configuration class, so if you are not sure where to find something in the SoundSystem library, this is probably a good place to start.
  * <br><br>
  * <b><i> SoundSystem License:</b></i><br><b><br>
  * You are free to use this library for any purpose, commercial or otherwise. You may modify this library or source code, and distribute it any way you like, provided the following conditions are met:
@@ -53,11 +54,13 @@ public class SoundSystemConfig {
      */
     public static final int ATTENUATION_NONE = 0;  // no attenuation
     /**
-     * Global identifier for rolloff attenuation. Rolloff attenuation is a realistic attenuation model, which uses a rolloff factor to determine how quickly a source fades with distance. A smaller rolloff factor will fade at a further distance, and a rolloff factor of 0 will never fade. NOTE: In OpenAL, rolloff attenuation only works for monotone sounds.
+     * Global identifier for rolloff attenuation. Rolloff attenuation is a realistic attenuation model, which uses a rolloff factor to determine how quickly a source fades with distance. A smaller
+     * rolloff factor will fade at a further distance, and a rolloff factor of 0 will never fade. NOTE: In OpenAL, rolloff attenuation only works for monotone sounds.
      */
     public static final int ATTENUATION_ROLLOFF = 1;  // logrithmic attenuation
     /**
-     * Global identifier for linear attenuation. Linear attenuation is less realistic than rolloff attenuation, but it allows the user to specify a maximum "fade distance" where a source's volume becomes zero.
+     * Global identifier for linear attenuation. Linear attenuation is less realistic than rolloff attenuation, but it allows the user to specify a maximum "fade distance" where a source's volume
+     * becomes zero.
      */
     public static final int ATTENUATION_LINEAR = 2;  // linear attenuation
 
@@ -74,7 +77,8 @@ public class SoundSystemConfig {
 //  END GLOBAL IDENTIFIERS
 //  PRIVATE STATIC VARIABLES
     /**
-     * Handle to the message logger. The default logger can be changed by overridding the {@link paulscode.sound.SoundSystemLogger SoundSystemLogger} class and calling the setLogger() method (must be done BEFORE instantiating the SoundSystem class!)
+     * Handle to the message logger. The default logger can be changed by overridding the {@link paulscode.sound.SoundSystemLogger SoundSystemLogger} class and calling the setLogger() method (must be
+     * done BEFORE instantiating the SoundSystem class!)
      */
     private static SoundSystemLogger logger = null;
 
@@ -143,11 +147,13 @@ public class SoundSystemConfig {
      */
     private static int numberStreamingBuffers = 3;
     /**
-     * Enables a transition-speed optimization by assuming all sounds in each streaming source's queue will have exactly the same format once decoded (including channels, sample rate, and sample size). This is an advanced setting which should only be changed by experienced developers.
+     * Enables a transition-speed optimization by assuming all sounds in each streaming source's queue will have exactly the same format once decoded (including channels, sample rate, and sample
+     * size). This is an advanced setting which should only be changed by experienced developers.
      */
     private static boolean streamQueueFormatsMatch = false;
     /**
-     * The maximum number of bytes to read in for (non-streaming) files. Increase this value if non-streaming sounds are getting cut off. Decrease this value if large sound files are causing lag during load time.
+     * The maximum number of bytes to read in for (non-streaming) files. Increase this value if non-streaming sounds are getting cut off. Decrease this value if large sound files are causing lag
+     * during load time.
      */
     private static int maxFileSize = 268435456;
     /**
@@ -161,14 +167,16 @@ public class SoundSystemConfig {
     private static boolean midiCodec = false;
 
     /**
-     * MIDI device to try using as the Synthesizer. May be the full name or part of the name. If this String is empty, the default Synthesizer will be used, or one of the common alternate synthesizers if the default Synthesizer is unavailable.
+     * MIDI device to try using as the Synthesizer. May be the full name or part of the name. If this String is empty, the default Synthesizer will be used, or one of the common alternate synthesizers
+     * if the default Synthesizer is unavailable.
      */
     private static String overrideMIDISynthesizer = "";
 
 //  END PRIVATE STATIC VARIABLES
 // THESE TWO METHODS PROVIDE INFORMATION ABOUT THE INDIVIDUAL SOUND LIBRARIES
     /**
-     * Adds an entry to the list of library types. This method has no effect if the specified library type is already in the list of libraries. NOTE: The parameterless constructor of the SoundSystem class will try to load libraries in the order that they were entered into the list.
+     * Adds an entry to the list of library types. This method has no effect if the specified library type is already in the list of libraries. NOTE: The parameterless constructor of the SoundSystem
+     * class will try to load libraries in the order that they were entered into the list.
      *
      * @param libraryClass Derivitive of class 'Library'.
      */
@@ -337,7 +345,11 @@ public class SoundSystemConfig {
 // Use the following methods to interface the private variables above:
 // STATIC NONSYNCHRONIZED INTERFACE METHODS
     /**
-     * Changes the message logger to use for handling status messages, warnings, and error messages. This method should only be called BEFORE instantiating the SoundSystem class! If this method is called after the SoundSystem has been created, there will be handles floating around to two different loggers, and the results will be undesirable. This method can be used to change how messages are handled. First, the {@link paulscode.sound.SoundSystemLogger SoundSystemLogger} class should be extended and methods overriden to change how messages are handled. Then, the overridden class should be instantiated, and a call made to SoundSystemConfig.setLogger() before creating the SoundSystem object. If an alternate logger is not set by the user before the SoundSystem is instantiated, then an instance of the base SoundSystemLogger class will be used by default.
+     * Changes the message logger to use for handling status messages, warnings, and error messages. This method should only be called BEFORE instantiating the SoundSystem class! If this method is
+     * called after the SoundSystem has been created, there will be handles floating around to two different loggers, and the results will be undesirable. This method can be used to change how
+     * messages are handled. First, the {@link paulscode.sound.SoundSystemLogger SoundSystemLogger} class should be extended and methods overriden to change how messages are handled. Then, the
+     * overridden class should be instantiated, and a call made to SoundSystemConfig.setLogger() before creating the SoundSystem object. If an alternate logger is not set by the user before the
+     * SoundSystem is instantiated, then an instance of the base SoundSystemLogger class will be used by default.
      *
      * @param l Handle to a message logger.
      */
@@ -356,7 +368,9 @@ public class SoundSystemConfig {
 
 //  STATIC SYNCHRONIZED INTERFACE METHODS
     /**
-     * Sets the maximum number of normal (non-streaming) channels that can be created. Streaming channels are created first, so the higher the maximum number of streaming channels is set, the fewer non-streaming channels will be available. If unable to create the number of channels specified, SoundSystem will create as many as possible. NOTE: Some sound library pluggins may require the total number of channels (non-streaming + streaming) to be 32.
+     * Sets the maximum number of normal (non-streaming) channels that can be created. Streaming channels are created first, so the higher the maximum number of streaming channels is set, the fewer
+     * non-streaming channels will be available. If unable to create the number of channels specified, SoundSystem will create as many as possible. NOTE: Some sound library pluggins may require the
+     * total number of channels (non-streaming + streaming) to be 32.
      *
      * @param number How many normal audio channels.
      */
@@ -374,7 +388,9 @@ public class SoundSystemConfig {
     }
 
     /**
-     * Sets the maximum number of streaming channels that can be created. Streaming channels are created first, so the higher the maximum number of streaming channels is set, the fewer non-streaming channels will be available. If unable to create the number of channels specified, SoundSystem will create as many as possible. NOTE: Some sound library pluggins may require the total number of channels (non-streaming + streaming) to be 32.
+     * Sets the maximum number of streaming channels that can be created. Streaming channels are created first, so the higher the maximum number of streaming channels is set, the fewer non-streaming
+     * channels will be available. If unable to create the number of channels specified, SoundSystem will create as many as possible. NOTE: Some sound library pluggins may require the total number of
+     * channels (non-streaming + streaming) to be 32.
      *
      * @param number How many streaming audio channels.
      */
@@ -446,7 +462,8 @@ public class SoundSystemConfig {
     }
 
     /**
-     * Sets the doppler factor, for determining Doppler Effect scale. Use this method BEFORE instantiating the SoundSystem. To change the Doppler factor after the SoundSystem is instantiated, use the SoundSystem.changeDopplerFactor method instead.
+     * Sets the doppler factor, for determining Doppler Effect scale. Use this method BEFORE instantiating the SoundSystem. To change the Doppler factor after the SoundSystem is instantiated, use the
+     * SoundSystem.changeDopplerFactor method instead.
      *
      * @param factor Doppler factor.
      */
@@ -464,7 +481,8 @@ public class SoundSystemConfig {
     }
 
     /**
-     * Sets the Doppler velocity, for use in Doppler Effect. Use this method BEFORE instantiating the SoundSystem. To change the Doppler velocity after the SoundSystem is instantiated, use the SoundSystem.changeDopplerVelocity method instead.
+     * Sets the Doppler velocity, for use in Doppler Effect. Use this method BEFORE instantiating the SoundSystem. To change the Doppler velocity after the SoundSystem is instantiated, use the
+     * SoundSystem.changeDopplerVelocity method instead.
      *
      * @param velocity Doppler velocity.
      */
@@ -554,7 +572,8 @@ public class SoundSystemConfig {
     }
 
     /**
-     * Enables a transition-speed optimization by assuming all sounds in each streaming source's queue will have exactly the same format once decoded (including channels, sample rate, and sample size). This is an advanced setting which should only be changed by experienced developers.
+     * Enables a transition-speed optimization by assuming all sounds in each streaming source's queue will have exactly the same format once decoded (including channels, sample rate, and sample
+     * size). This is an advanced setting which should only be changed by experienced developers.
      *
      * @param val False by default.
      */
@@ -563,7 +582,8 @@ public class SoundSystemConfig {
     }
 
     /**
-     * Returns whether or not all sounds in each streaming source's queue will be handled as if they have exactly the same format once decoded (including channels, sample rate, and sample size). This is an advanced setting which should only be changed by experienced developers.
+     * Returns whether or not all sounds in each streaming source's queue will be handled as if they have exactly the same format once decoded (including channels, sample rate, and sample size). This
+     * is an advanced setting which should only be changed by experienced developers.
      *
      * @return Normally false.
      */
@@ -572,7 +592,8 @@ public class SoundSystemConfig {
     }
 
     /**
-     * Sets the maximum number of bytes to read in for (non-streaming) files. Increase this value if non-streaming sounds are getting cut off. Decrease this value if large sound files are causing lag during load time.
+     * Sets the maximum number of bytes to read in for (non-streaming) files. Increase this value if non-streaming sounds are getting cut off. Decrease this value if large sound files are causing lag
+     * during load time.
      *
      * @param size Size in bytes.
      */
@@ -617,7 +638,8 @@ public class SoundSystemConfig {
     }
 
     /**
-     * Sets the name of the MIDI synthesizer to use instead of the default. If 'name' is an empty string, the default Synthesizer will be used, or one of the common alternate synthesizers if the default Synthesizer is unavailable.
+     * Sets the name of the MIDI synthesizer to use instead of the default. If 'name' is an empty string, the default Synthesizer will be used, or one of the common alternate synthesizers if the
+     * default Synthesizer is unavailable.
      *
      * @param name All or part of the MIDI device name.
      */

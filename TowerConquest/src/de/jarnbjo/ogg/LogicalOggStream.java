@@ -91,7 +91,8 @@ public interface LogicalOggStream {
     public long getMaximumGranulePosition();
 
     /**
-     * This method is invoked on all logical streams when calling the same method on the physical stream. The same restrictions as mentioned there apply. This method does not work if the physical Ogg stream is not seekable.
+     * This method is invoked on all logical streams when calling the same method on the physical stream. The same restrictions as mentioned there apply. This method does not work if the physical Ogg
+     * stream is not seekable.
      *
      * @param granulePosition
      *

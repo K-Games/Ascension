@@ -60,7 +60,7 @@ public class PacketSender {
         temp = Globals.longToBytes(c.getUniqueID().getLeastSignificantBits());
         System.arraycopy(temp, 0, bytes, pos, temp.length);
         pos += temp.length;
-        
+
         temp = Globals.longToBytes(c.getUniqueID().getMostSignificantBits());
         System.arraycopy(temp, 0, bytes, pos, temp.length);
         pos += temp.length;
@@ -127,7 +127,7 @@ public class PacketSender {
             System.arraycopy(temp, 0, bytes, pos, temp.length);
             pos += temp.length;
         }
-        
+
         final DatagramPacket requestPacket = createPacket(bytes);
         sendPacket(requestPacket);
     }

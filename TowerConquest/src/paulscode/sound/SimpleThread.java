@@ -1,7 +1,8 @@
 package paulscode.sound;
 
 /**
- * The SimpleThread class is the template used to create all thread classes used by in the SoundSystem library. It provides methods for common actions like sleeping, killing, and checking liveness. NOTE: super.cleanup() must be called at the bottom of overriden cleanup() methods, and cleanup() must be called at the bottom of the run() method for all extended classes.
+ * The SimpleThread class is the template used to create all thread classes used by in the SoundSystem library. It provides methods for common actions like sleeping, killing, and checking liveness.
+ * NOTE: super.cleanup() must be called at the bottom of overriden cleanup() methods, and cleanup() must be called at the bottom of the run() method for all extended classes.
  * <br><br>
  * <b><i> SoundSystem License:</b></i><br><b><br>
  * You are free to use this library for any purpose, commercial or otherwise. You may modify this library or source code, and distribute it any way you like, provided the following conditions are met:
@@ -51,7 +52,8 @@ public class SimpleThread extends Thread {
     private boolean kill = false;
 
     /**
-     * Removes all references to instantiated objects, and changes the thread's state to "not alive". Method alive() returns false when this method has completed. NOTE: super.cleanup() must be called at the bottom of overriden cleanup() methods, and cleanup() must be called at the bottom of the run() method for all extended classes.
+     * Removes all references to instantiated objects, and changes the thread's state to "not alive". Method alive() returns false when this method has completed. NOTE: super.cleanup() must be called
+     * at the bottom of overriden cleanup() methods, and cleanup() must be called at the bottom of the run() method for all extended classes.
      */
     protected void cleanup() {
         kill(SET, true);  // tread needs to shut down
@@ -59,7 +61,8 @@ public class SimpleThread extends Thread {
     }
 
     /**
-     * Executes the thread's main loop. NOTES: Extended classes should check method dying() often to know when the user wants the thread to shut down. Method cleanup() must be called at the bottom of the run() method for all extended classes.
+     * Executes the thread's main loop. NOTES: Extended classes should check method dying() often to know when the user wants the thread to shut down. Method cleanup() must be called at the bottom of
+     * the run() method for all extended classes.
      */
     @Override
     public void run() {
