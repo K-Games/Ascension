@@ -42,11 +42,11 @@ public class ItemEquip implements Item {
     private final static HashMap<String, Point> ITEM_DRAWOFFSET = new HashMap<>();
 
     public final static byte TIER_COMMON = 0, //0-49% stat multiplier
-            TIER_UNCOMMON = 1,  //50-69%
-            TIER_RARE = 2,      //70-84%
-            TIER_RUNIC = 3,     //85-89%
+            TIER_UNCOMMON = 1, //50-69%
+            TIER_RARE = 2, //70-84%
+            TIER_RUNIC = 3, //85-89%
             TIER_LEGENDARY = 4, //90-94%
-            TIER_ARCHAIC = 5,   //95-109%
+            TIER_ARCHAIC = 5, //95-109%
             TIER_DIVINE = 6;    //110%+
 
     protected double[] baseStats = new double[Globals.NUM_STATS],

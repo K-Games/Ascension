@@ -161,7 +161,7 @@ public class Player extends Thread {
         g.drawString(this.name, this.x - width / 2, this.y + 21);
         g.setColor(Color.WHITE);
         g.drawString(this.name, this.x - width / 2, this.y + 20);
-        
+
         if (this.getStat(Globals.STAT_MAXHP) > 0) {
             int hpBarWidth = 80, hpBarHeight = 7;
             g.setColor(Color.GRAY);

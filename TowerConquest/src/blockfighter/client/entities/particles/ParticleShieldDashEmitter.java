@@ -9,7 +9,7 @@ public class ParticleShieldDashEmitter extends Particle {
     public ParticleShieldDashEmitter(final byte f, final Player p) {
         super(0, 0, f, p);
         this.frame = 0;
-        this.duration = 250;
+        this.duration = 75;
     }
 
     @Override
@@ -21,7 +21,7 @@ public class ParticleShieldDashEmitter extends Particle {
                 this.x = p.x;
                 this.y = p.y;
             }
-            final ParticleShieldDash b = new ParticleShieldDash(this.x + ((this.facing == Globals.RIGHT) ? -172 : -200), this.y - 330, this.facing);
+            final ParticleShieldDash b = new ParticleShieldDash(this.x + ((this.facing == Globals.RIGHT) ? -222 : -150), this.y - 310, this.facing);
             logic.getScreen().addParticle(b);
         }
     }

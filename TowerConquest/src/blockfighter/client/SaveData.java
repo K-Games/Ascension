@@ -332,7 +332,7 @@ public class SaveData {
             Globals.STAT_DEFENSE,
             Globals.STAT_SPIRIT,
             Globals.STAT_SKILLPOINTS};
-        
+
         temp = new byte[4];
         for (final int i : statIDs) {
             System.arraycopy(data, pos, temp, 0, temp.length);

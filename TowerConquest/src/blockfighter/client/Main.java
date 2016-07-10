@@ -13,7 +13,6 @@ import blockfighter.client.render.RenderModule;
 import blockfighter.client.render.RenderPanel;
 import blockfighter.client.screen.Screen;
 import java.awt.Dimension;
-import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -63,7 +62,7 @@ public class Main {
         if (args.length >= 1) {
             Globals.SERVER_ADDRESS = args[0];
         }
-        
+
         javax.swing.SwingUtilities.invokeLater(() -> {
             createAndShowGUI();
         });

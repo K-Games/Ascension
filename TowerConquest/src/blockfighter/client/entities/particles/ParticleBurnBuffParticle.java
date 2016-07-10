@@ -9,7 +9,7 @@ public class ParticleBurnBuffParticle extends Particle {
     public ParticleBurnBuffParticle(final int x, final int y, final byte f) {
         super(x, y, f);
         this.x += Globals.rng(50) - 35;
-        this.y -= Globals.rng(100) + 20;
+        this.y -= Globals.rng(80) + 20;
         this.frame = 0;
         this.frameDuration = 25;
         this.duration = 500;
