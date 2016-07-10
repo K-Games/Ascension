@@ -35,7 +35,7 @@ public class SkillSwordPhantom extends Skill {
             Player.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_PHANTOM, player.getX(), player.getY(), player.getFacing());
         }
 
-        if (Player.hasPastDuration(duration, 80 + 80 * player.getSkillCounter()) && player.getSkillCounter() < numHits) {
+        if (Globals.hasPastDuration(duration, 80 + 80 * player.getSkillCounter()) && player.getSkillCounter() < numHits) {
             if (this.logic.getMap().isPvP()) {
                 Player target;
                 ArrayList<Player> playersInRange = new ArrayList<>(Globals.SERVER_MAX_PLAYERS);

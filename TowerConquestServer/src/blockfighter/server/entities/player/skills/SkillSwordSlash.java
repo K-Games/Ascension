@@ -32,7 +32,7 @@ public class SkillSwordSlash extends Skill {
             player.queueBuff(new BuffSwordSlash(this.logic, 2000, .1, player));
             Player.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_SLASHBUFF, player.getKey());
         }
-        if (Player.hasPastDuration(duration, (30 + 110 * player.getSkillCounter())) && player.getSkillCounter() < numHits) {
+        if (Globals.hasPastDuration(duration, (30 + 110 * player.getSkillCounter())) && player.getSkillCounter() < numHits) {
             player.incrementSkillCounter();
             final ProjSwordSlash proj = new ProjSwordSlash(this.logic, player, player.getX(), player.getY(),
                     player.getSkillCounter());

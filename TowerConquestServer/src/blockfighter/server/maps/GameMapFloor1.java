@@ -2,7 +2,7 @@ package blockfighter.server.maps;
 
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
-import blockfighter.server.entities.mob.boss.Lightning.BossLightning;
+import blockfighter.server.entities.mob.boss.ShadowFiend.BossShadowFiend;
 import java.awt.geom.Rectangle2D;
 
 public class GameMapFloor1 extends GameMap {
@@ -26,7 +26,7 @@ public class GameMapFloor1 extends GameMap {
     @Override
     public void spawnMapMobs(final LogicModule l) {
         for (int i = 0; i < 1; i++) {
-            l.queueAddMob(new BossLightning(l, this, 1500, 100));
+            l.queueAddMob(new BossShadowFiend(l, this, 1500, 100));
         }
     }
 }

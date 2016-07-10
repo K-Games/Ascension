@@ -12,6 +12,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -30,6 +31,7 @@ public class LogicModule implements Runnable {
     // private Screen screen = new ScreenSpriteTest();
     private final SoundModule soundModule;
     private boolean initBgm = false, loggedIn = false;
+    private final ConcurrentLinkedQueue<byte[]> dataQueue = new ConcurrentLinkedQueue<>();
 
     public LogicModule(final SoundModule s) {
         this.soundModule = s;
@@ -95,8 +97,13 @@ public class LogicModule implements Runnable {
                 } catch (final InterruptedException e) {
                 }
             }
-            setScreen(new ScreenIngame(key, size, loading.getLoadedMap()));
-            playBGM(loading.getLoadedMap().getBGM());
+            System.out.println("Finished Loading");
+            ScreenIngame ingameScreen = new ScreenIngame(key, size, loading.getLoadedMap());
+            while (!this.dataQueue.isEmpty()) {
+                ingameScreen.queueData(this.dataQueue.poll());
+            }
+            ingameScreen.update();
+            setScreen(ingameScreen);
             sendGetAll(key);
         } catch (final Exception e) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, e);
@@ -149,6 +156,7 @@ public class LogicModule implements Runnable {
 
     public void sendLogin(final String server, final byte r) {
         this.selectedRoom = r;
+        this.dataQueue.clear();
         final Thread send = new Thread() {
             @Override
             public void run() {
@@ -199,6 +207,8 @@ public class LogicModule implements Runnable {
     public void queueData(final byte[] data) {
         if (this.screen instanceof ScreenIngame) {
             ((ScreenIngame) this.screen).queueData(data);
+        } else {
+            this.dataQueue.add(data);
         }
     }
 

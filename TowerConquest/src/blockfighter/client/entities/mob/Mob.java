@@ -17,14 +17,17 @@ public abstract class Mob extends Thread {
     public final static byte STAT_LEVEL = 0,
             STAT_MAXHP = 1,
             STAT_MINHP = 2;
-    public final static byte STATE_STAND = 0x00,
-            STATE_WALK = 0x01,
-            STATE_JUMP = 0x02;
+    public final static byte ANIM_STAND = 0x00,
+            ANIM_WALK = 0x01,
+            ANIM_JUMP = 0x02,
+            ANIM_DYING = 0x03,
+            ANIM_DEAD = 0x04;
 
-    public final static byte MOB_BOSS_LIGHTNING = 0x00;
+    public final static byte MOB_BOSS_LIGHTNING = 0x00,
+            MOB_BOSS_SHADOWFIEND = 0x01;
 
     protected int x, y;
-    protected byte key, facing, state, frame;
+    protected byte key, facing, animState, frame;
     protected double[] stats;
     protected static LogicModule logic;
 
@@ -33,7 +36,7 @@ public abstract class Mob extends Thread {
         this.y = y;
         this.key = k;
         this.facing = Globals.RIGHT;
-        this.state = STATE_STAND;
+        this.animState = ANIM_STAND;
         this.frame = 0;
         setDaemon(true);
     }
@@ -68,7 +71,7 @@ public abstract class Mob extends Thread {
     }
 
     public void setState(final byte s) {
-        this.state = s;
+        this.animState = s;
     }
 
     public void setFrame(final byte f) {

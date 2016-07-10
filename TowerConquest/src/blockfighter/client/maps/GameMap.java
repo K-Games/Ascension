@@ -20,7 +20,7 @@ public abstract class GameMap {
     protected long lastUpdateTime = 0;
     protected static ExecutorService threadPool;
     protected int mapHeight, mapWidth, mapXOrigin = 0, mapYOrigin = 0;
-    private final static double PARALLAX_FACTOR = 0.3;
+    private final static double PARALLAX_FACTOR = 0.35;
     private int mapID = -1;
     BufferedImage bg;
 

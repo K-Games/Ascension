@@ -3,6 +3,7 @@ package blockfighter.client.entities.ingamenumber;
 import blockfighter.client.Globals;
 import blockfighter.client.LogicModule;
 import blockfighter.client.Main;
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 
@@ -19,18 +20,18 @@ public class IngameNumber extends Thread {
     private final double speedX;
 
     private final double speedY;
-    private final int damage;
+    private final int number;
     private long startTime = 0;
     private long lastUpdateTime = 0;
     private int duration = 700;
 
-    public IngameNumber(final int dmg, final byte t, final Point loc) {
+    public IngameNumber(final int num, final byte t, final Point loc) {
         this.startTime = logic.getTime();
-        this.damage = dmg;
+        this.number = num;
         this.type = t;
-        this.x = loc.x + (Globals.rng(10) * 4 - 20);
+        this.x = loc.x;
         this.y = loc.y;
-        this.speedY = -5;
+        this.speedY = -3;
         this.speedX = 0;
         setDaemon(true);
     }
@@ -53,12 +54,35 @@ public class IngameNumber extends Thread {
     }
 
     public void draw(final Graphics2D g) {
-        final char[] decimalArray = Integer.toString(this.damage).toCharArray();
-        for (int i = 0; i < decimalArray.length; i++) {
-            g.drawImage(Globals.DAMAGE_FONT[this.type][decimalArray[i] - 48], (int) (this.x + i * 17), (int) this.y, null);
+        //final char[] decimalArray = Integer.toString(this.number).toCharArray();
+        g.setFont(Globals.ARIALBLACK_18P);
+
+        //for (int i = 0; i < decimalArray.length; i++) {
+        //    g.drawImage(Globals.DAMAGE_FONT[this.type][decimalArray[i] - 48], (int) (this.x + i * 17), (int) this.y, null);
+        //}
+        String output = (this.type == Globals.NUMBER_TYPE_EXP)
+                ? Integer.toString(this.number) + "EXP" : Integer.toString(this.number);
+
+        int outputWidth = g.getFontMetrics().stringWidth(output);
+        for (int i = 0; i < 2; i++) {
+            g.setColor(Color.BLACK);
+            g.drawString(output, (float) this.x - outputWidth / 2 - 1 + i * 2 * 1, (float) this.y);
+            g.drawString(output, (float) this.x - outputWidth / 2, (float) this.y - 1 + i * 2 * 1);
         }
-        if (this.type == Globals.NUMBER_TYPE_EXP) {
-            g.drawImage(Globals.EXP_WORD[0], (int) (this.x + 7 + decimalArray.length * 17), (int) this.y, null);
+        switch (this.type) {
+            case Globals.NUMBER_TYPE_PLAYER:
+                g.setColor(Color.red);
+                break;
+            case Globals.NUMBER_TYPE_PLAYERCRIT:
+                g.setColor(Color.ORANGE);
+                break;
+            case Globals.NUMBER_TYPE_MOB:
+                g.setColor(Color.MAGENTA);
+                break;
+            case Globals.NUMBER_TYPE_EXP:
+                g.setColor(Color.YELLOW);
+                break;
         }
+        g.drawString(output, (float) this.x - outputWidth / 2, (float) this.y);
     }
 }

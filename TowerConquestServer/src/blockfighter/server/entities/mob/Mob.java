@@ -4,14 +4,16 @@ import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.GameEntity;
 import blockfighter.server.entities.buff.Buff;
+import blockfighter.server.entities.buff.BuffDmgReduct;
+import blockfighter.server.entities.buff.BuffDmgTakenAmp;
 import blockfighter.server.entities.buff.BuffKnockback;
 import blockfighter.server.entities.buff.BuffStun;
 import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.player.Player;
-import blockfighter.server.entities.player.skills.Skill;
 import blockfighter.server.maps.GameMap;
 import blockfighter.server.net.PacketSender;
 import java.awt.geom.Rectangle2D;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -30,9 +32,18 @@ public abstract class Mob extends Thread implements GameEntity {
 
     public final static byte STATE_STAND = 0x00,
             STATE_WALK = 0x01,
-            STATE_JUMP = 0x02;
+            STATE_JUMP = 0x02,
+            STATE_DYING = 0x03,
+            STATE_DEAD = 0x04;
 
-    public final static byte MOB_BOSS_LIGHTNING = 0x00;
+    public final static byte ANIM_STAND = 0x00,
+            ANIM_WALK = 0x01,
+            ANIM_JUMP = 0x02,
+            ANIM_DYING = 0x03,
+            ANIM_DEAD = 0x04;
+
+    public final static byte MOB_BOSS_LIGHTNING = 0x00,
+            MOB_BOSS_SHADOWFIEND = 0x01;
 
     protected final byte key;
     protected final LogicModule logic;
@@ -43,8 +54,10 @@ public abstract class Mob extends Thread implements GameEntity {
     protected Rectangle2D.Double hitbox;
     protected double[] stats = new double[NUM_STATS];
 
-    protected ConcurrentHashMap<Byte, Buff> buffs = new ConcurrentHashMap<>(10, 0.9f, 1);
+    private final HashMap<Byte, Object> validMobSkillStates;
+    protected ConcurrentHashMap<Integer, Buff> buffs = new ConcurrentHashMap<>(10, 0.9f, 1);
     protected Buff isStun, isKnockback;
+    protected double dmgReduct, dmgAmp;
     protected Byte nextState;
     protected int stunReduction = 0;
 
@@ -54,15 +67,16 @@ public abstract class Mob extends Thread implements GameEntity {
     protected ConcurrentLinkedQueue<Damage> damageQueue = new ConcurrentLinkedQueue<>();
     protected ConcurrentLinkedQueue<Integer> healQueue = new ConcurrentLinkedQueue<>();
     protected ConcurrentLinkedQueue<Buff> buffQueue = new ConcurrentLinkedQueue<>();
-    protected ConcurrentLinkedQueue<Byte> buffKeys = new ConcurrentLinkedQueue<>();
+    protected ConcurrentLinkedQueue<Integer> buffKeys = new ConcurrentLinkedQueue<>();
 
     protected ConcurrentHashMap<Player, Double> aggroCounter = new ConcurrentHashMap<>();
-    private final ConcurrentHashMap<Byte, Skill> skills = new ConcurrentHashMap<>(2, 0.9f, 1);
+    private final ConcurrentHashMap<Byte, MobSkill> skills = new ConcurrentHashMap<>(2, 0.9f, 1);
     protected long skillCastTime = 0, lastHPSend = 0, lastFrameTime = 0;
     protected int skillCounter = 0;
     protected byte type;
+    protected int maxBuffKeys = 0;
 
-    public Mob(final LogicModule l, final GameMap map, final double x, final double y) {
+    public Mob(final LogicModule l, final GameMap map, final double x, final double y, final byte numSkills) {
         this.logic = l;
         this.key = this.logic.getNextMobKey();
         this.x = x;
@@ -72,16 +86,15 @@ public abstract class Mob extends Thread implements GameEntity {
         this.facing = Globals.RIGHT;
         this.mobState = STATE_STAND;
         this.frame = 0;
-        for (byte i = -128; i < 127; i++) {
-            this.buffKeys.add(i);
-        }
+        initializeBuffKeys();
+        this.validMobSkillStates = new HashMap<>(numSkills);
     }
 
-    protected static boolean hasPastDuration(int currentDuration, int durationToPast) {
-        if (durationToPast <= 0) {
-            return true;
+    private void initializeBuffKeys() {
+        for (int i = this.maxBuffKeys; i < this.maxBuffKeys + 150; i++) {
+            this.buffKeys.add(i);
         }
-        return currentDuration / durationToPast >= 1;
+        this.maxBuffKeys += 150;
     }
 
     /**
@@ -93,7 +106,11 @@ public abstract class Mob extends Thread implements GameEntity {
         sender = ps;
     }
 
-    public void addSkill(final byte sc, final Skill s) {
+    public void addValidMobSkillState(final byte state) {
+        this.validMobSkillStates.put(state, null);
+    }
+
+    public void addSkill(final byte sc, final MobSkill s) {
         this.skills.put(sc, s);
     }
 
@@ -109,15 +126,35 @@ public abstract class Mob extends Thread implements GameEntity {
         this.skills.get(sc).reduceCooldown(amount);
     }
 
-    public abstract Player getTarget();
+    public Player getTarget() {
+        Player target = null;
+        double maxAggro = 0;
+        final LinkedList<Player> remove = new LinkedList<>();
+        for (final Map.Entry<Player, Double> p : this.aggroCounter.entrySet()) {
+            if (!p.getKey().isConnected() || p.getKey().isDead()) {
+                remove.add(p.getKey());
+                continue;
+            }
+            if (p.getValue() > maxAggro) {
+                maxAggro = p.getValue();
+                target = p.getKey();
+            }
+        }
+        while (!remove.isEmpty()) {
+            this.aggroCounter.remove(remove.poll());
+        }
+        return target;
+    }
 
-    public abstract boolean isUsingSkill();
+    public boolean isUsingSkill() {
+        return validMobSkillStates.containsKey(this.mobState);
+    }
 
     public boolean isDead() {
         return this.isDead;
     }
 
-    private void returnBuffKey(final byte bKey) {
+    private void returnBuffKey(final int bKey) {
         this.buffKeys.add(bKey);
     }
 
@@ -125,11 +162,14 @@ public abstract class Mob extends Thread implements GameEntity {
         return this.hitbox;
     }
 
-    private Byte getNextBuffKey() {
-        if (!this.buffKeys.isEmpty()) {
-            return this.buffKeys.poll();
+    private Integer getNextBuffKey() {
+        Integer nextKey = this.buffKeys.poll();
+        while (nextKey == null) {
+            this.buffKeys.add(this.maxBuffKeys);
+            this.maxBuffKeys++;
+            nextKey = this.buffKeys.poll();
         }
-        return null;
+        return nextKey;
     }
 
     public double[] getStats() {
@@ -180,6 +220,22 @@ public abstract class Mob extends Thread implements GameEntity {
 
     public byte getFrame() {
         return this.frame;
+    }
+
+    public MobSkill getSkill(final byte skillCode) {
+        return this.skills.get(skillCode);
+    }
+
+    public int getSkillCounter() {
+        return this.skillCounter;
+    }
+
+    public long getSkillCastTime() {
+        return this.skillCastTime;
+    }
+
+    public void incrementSkillCounter() {
+        this.skillCounter++;
     }
 
     public void setPos(final double x, final double y) {
@@ -235,11 +291,14 @@ public abstract class Mob extends Thread implements GameEntity {
         while (!this.damageQueue.isEmpty()) {
             final Damage dmg = this.damageQueue.poll();
             if (dmg != null) {
-                final int amount = dmg.getDamage();
+                int amount = (int) (dmg.getDamage() * this.dmgAmp);
+                // Buff Reductions
+                amount = (int) (amount * this.dmgReduct);
+
                 dmg.proc();
-                addAggro(dmg.getOwner(), dmg.getDamage());
+                addAggro(dmg.getOwner(), amount);
                 if (!dmg.isHidden()) {
-                    sendDamage(dmg);
+                    sendDamage(dmg, amount);
                 }
                 this.stats[STAT_MINHP] -= amount;
                 this.lastHPSend = 0;
@@ -265,7 +324,7 @@ public abstract class Mob extends Thread implements GameEntity {
         }
 
         if (Globals.nsToMs(this.logic.getTime() - this.lastHPSend) >= 150) {
-            final byte[] minHP = Globals.intToByte((int) (this.stats[STAT_MINHP] / this.stats[STAT_MAXHP] * 10000));
+            final byte[] minHP = Globals.intToBytes((int) (this.stats[STAT_MINHP] / this.stats[STAT_MAXHP] * 10000));
             final byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT];
             bytes[0] = Globals.DATA_MOB_GET_STAT;
             bytes[1] = this.key;
@@ -287,34 +346,48 @@ public abstract class Mob extends Thread implements GameEntity {
     public void updateBuffs() {
         this.isStun = null;
         this.isKnockback = null;
-        final LinkedList<Byte> remove = new LinkedList<>();
-        for (final Map.Entry<Byte, Buff> bEntry : this.buffs.entrySet()) {
+        this.dmgReduct = 1;
+        this.dmgAmp = 1;
+
+        // Empty and add buffs from queue
+        while (!this.buffQueue.isEmpty()) {
+            final Buff b = this.buffQueue.poll();
+            final Integer bKey = getNextBuffKey();
+            if (bKey != null && b != null) {
+                if (b instanceof BuffStun) {
+                    b.reduceDuration(this.stunReduction);
+                    this.stunReduction += 100;
+                }
+                this.buffs.put(bKey, b);
+            }
+        }
+
+        final LinkedList<Integer> remove = new LinkedList<>();
+        for (final Map.Entry<Integer, Buff> bEntry : this.buffs.entrySet()) {
             final Buff b = bEntry.getValue();
             b.update();
             if (this.isStun == null && b instanceof BuffStun) {
                 this.isStun = b;
-                this.stunReduction += 100;
+
             } else if (this.isKnockback == null && b instanceof BuffKnockback) {
                 this.isKnockback = b;
+            }
+            // Add all the damage reduction buffs(Multiplicative)
+            if (b instanceof BuffDmgReduct) {
+                this.dmgReduct = this.dmgReduct * ((BuffDmgReduct) b).getDmgTakenMult();
+            }
+
+            // Add all the damage intake amplification(Additive)
+            if (b instanceof BuffDmgTakenAmp) {
+                this.dmgAmp = this.dmgAmp + ((BuffDmgTakenAmp) b).getDmgTakenAmp();
             }
             if (b.isExpired()) {
                 remove.add(bEntry.getKey());
             }
         }
-        for (final byte bKey : remove) {
+        for (final int bKey : remove) {
             this.buffs.remove(bKey);
             returnBuffKey(bKey);
-        }
-        // Empty and add buffs from queue
-        while (!this.buffQueue.isEmpty()) {
-            final Buff b = this.buffQueue.poll();
-            final Byte bKey = getNextBuffKey();
-            if (bKey != null && b != null) {
-                if (b instanceof BuffStun) {
-                    b.reduceDuration(this.stunReduction);
-                }
-                this.buffs.put(bKey, b);
-            }
         }
     }
 
@@ -403,12 +476,12 @@ public abstract class Mob extends Thread implements GameEntity {
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 2 + Globals.PACKET_INT * 2];
         bytes[0] = Globals.DATA_MOB_SET_POS;
         bytes[1] = this.key;
-        final byte[] posXInt = Globals.intToByte((int) this.x);
+        final byte[] posXInt = Globals.intToBytes((int) this.x);
         bytes[2] = posXInt[0];
         bytes[3] = posXInt[1];
         bytes[4] = posXInt[2];
         bytes[5] = posXInt[3];
-        final byte[] posYInt = Globals.intToByte((int) this.y);
+        final byte[] posYInt = Globals.intToBytes((int) this.y);
         bytes[6] = posYInt[0];
         bytes[7] = posYInt[1];
         bytes[8] = posYInt[2];
@@ -436,21 +509,21 @@ public abstract class Mob extends Thread implements GameEntity {
         this.updateAnimState = false;
     }
 
-    public void sendDamage(final Damage dmg) {
+    public void sendDamage(final Damage dmg, final int dmgDealt) {
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 2 + Globals.PACKET_INT * 3];
         bytes[0] = Globals.DATA_NUMBER;
         bytes[1] = dmg.getDamageType();
-        final byte[] posXInt = Globals.intToByte(dmg.getDmgPoint().x);
+        final byte[] posXInt = Globals.intToBytes(dmg.getDmgPoint().x);
         bytes[2] = posXInt[0];
         bytes[3] = posXInt[1];
         bytes[4] = posXInt[2];
         bytes[5] = posXInt[3];
-        final byte[] posYInt = Globals.intToByte(dmg.getDmgPoint().y);
+        final byte[] posYInt = Globals.intToBytes(dmg.getDmgPoint().y);
         bytes[6] = posYInt[0];
         bytes[7] = posYInt[1];
         bytes[8] = posYInt[2];
         bytes[9] = posYInt[3];
-        final byte[] d = Globals.intToByte(dmg.getDamage());
+        final byte[] d = Globals.intToBytes(dmgDealt);
         bytes[10] = d[0];
         bytes[11] = d[1];
         bytes[12] = d[2];
@@ -463,12 +536,12 @@ public abstract class Mob extends Thread implements GameEntity {
         bytes[0] = Globals.DATA_MOB_PARTICLE_EFFECT;
         bytes[1] = key;
         bytes[2] = particleID;
-        final byte[] posXInt = Globals.intToByte((int) x);
+        final byte[] posXInt = Globals.intToBytes((int) x);
         bytes[3] = posXInt[0];
         bytes[4] = posXInt[1];
         bytes[5] = posXInt[2];
         bytes[6] = posXInt[3];
-        final byte[] posYInt = Globals.intToByte((int) y);
+        final byte[] posYInt = Globals.intToBytes((int) y);
         bytes[7] = posYInt[0];
         bytes[8] = posYInt[1];
         bytes[9] = posYInt[2];

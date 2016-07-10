@@ -124,6 +124,7 @@ public class ScreenIngame extends Screen {
             }
         }
         this.map = m;
+        logic.playBGM(this.map.getBGM());
     }
 
     @Override
@@ -272,8 +273,10 @@ public class ScreenIngame extends Screen {
             if (screenShake) {
                 g.translate(screenShakeX, screenShakeY);
             }
-
+        } else {
+            this.map.drawBg(g, 0, 0);
         }
+
         this.map.draw(g);
 
         if (this.mobs != null) {
@@ -294,6 +297,8 @@ public class ScreenIngame extends Screen {
         }
 
         g.setTransform(resetForm);
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                RenderingHints.VALUE_ANTIALIAS_ON);
         g.setRenderingHint(
                 RenderingHints.KEY_TEXT_ANTIALIASING,
                 RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
@@ -348,12 +353,17 @@ public class ScreenIngame extends Screen {
     private void drawHPbar(final Graphics2D g, final BufferedImage hud) {
         if (this.players.containsKey(this.myKey)) {
             final BufferedImage hpbar = Globals.HUD[1];
+            final double hpbarWidth;
+
+            if (this.players.get(this.myKey).getStat(Globals.STAT_MINHP) <= this.players.get(this.myKey).getStat(Globals.STAT_MAXHP)) {
+                hpbarWidth = this.players.get(this.myKey).getStat(Globals.STAT_MINHP) / this.players.get(this.myKey).getStat(Globals.STAT_MAXHP);
+            } else {
+                hpbarWidth = 1;
+            }
+
             g.drawImage(hpbar,
                     Globals.WINDOW_WIDTH / 2 - hud.getWidth() / 2 + 2, Globals.WINDOW_HEIGHT - hud.getHeight() + 2,
-                    (int) (this.players.get(this.myKey).getStat(Globals.STAT_MINHP)
-                    / this.players.get(this.myKey).getStat(Globals.STAT_MAXHP) * 802D),
-                    38,
-                    null);
+                    (int) (hpbarWidth * 802D), 38, null);
             g.setFont(Globals.ARIAL_18PT);
             final int width = g.getFontMetrics().stringWidth(
                     (int) this.players.get(this.myKey).getStat(Globals.STAT_MINHP) + "/"
@@ -491,22 +501,21 @@ public class ScreenIngame extends Screen {
 
     private void dataPlayerGetEquip(final byte[] data) {
         final byte key = data[1];
-        if (this.players.containsKey(key)) {
-            for (byte i = 0; i < Globals.NUM_EQUIP_SLOTS; i++) {
-                final byte[] temp = new byte[4];
-                System.arraycopy(data, i * 4 + 2, temp, 0, temp.length);
-                this.players.get(key).setEquip(i, Globals.bytesToInt(temp));
-            }
+        spawnPlayer(key);
+        for (byte i = 0; i < Globals.NUM_EQUIP_SLOTS; i++) {
+            final byte[] temp = new byte[4];
+            System.arraycopy(data, i * 4 + 2, temp, 0, temp.length);
+            this.players.get(key).setEquip(i, Globals.bytesToInt(temp));
         }
     }
 
     private void dataPlayerGetStat(final byte[] data) {
         final byte key = data[1];
-        if (this.players.containsKey(key)) {
-            final byte stat = data[2];
-            final int amount = Globals.bytesToInt(Arrays.copyOfRange(data, 3, 7));
-            this.players.get(key).setStat(stat, amount);
-        }
+        spawnPlayer(key);
+        final byte stat = data[2];
+        final int amount = Globals.bytesToInt(Arrays.copyOfRange(data, 3, 7));
+        this.players.get(key).setStat(stat, amount);
+
     }
 
     private void dataPlayerGetAll(final byte[] data) {
@@ -514,11 +523,8 @@ public class ScreenIngame extends Screen {
         final int x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
         final int y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
         final byte facing = data[10], state = data[11], frame = data[12];
-        if (this.players.containsKey(key)) {
-            this.players.get(key).setPos(x, y);
-        } else {
-            this.players.put(key, new Player(x, y, key));
-        }
+        spawnPlayer(key);
+        this.players.get(key).setPos(x, y);
         this.players.get(key).setFacing(facing);
         this.players.get(key).setState(state);
         this.players.get(key).setFrame(frame);
@@ -529,30 +535,25 @@ public class ScreenIngame extends Screen {
         final int x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
         final int y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
         final byte facing = data[10];
-        if (this.players.containsKey(key)) {
-            this.players.get(key).setPos(x, y);
-            this.players.get(key).setFacing(facing);
-        } else {
-            this.players.put(key, new Player(x, y, key, facing));
-        }
+        spawnPlayer(key, x, y);
+        this.players.get(key).setPos(x, y);
+        this.players.get(key).setFacing(facing);
     }
 
     private void dataPlayerSetFacing(final byte[] data) {
         final byte key = data[1];
         final byte facing = data[2];
-        if (this.players.containsKey(key)) {
-            this.players.get(key).setFacing(facing);
-        }
+        spawnPlayer(key);
+        this.players.get(key).setFacing(facing);
     }
 
     private void dataPlayerSetState(final byte[] data) {
         final byte key = data[1];
-        if (this.players.containsKey(key)) {
-            final byte state = data[2];
-            final byte frame = data[3];
-            this.players.get(key).setState(state);
-            this.players.get(key).setFrame(frame);
-        }
+        spawnPlayer(key);
+        final byte state = data[2];
+        final byte frame = data[3];
+        this.players.get(key).setState(state);
+        this.players.get(key).setFrame(frame);
     }
 
     private void dataPlayerDisconnect(final byte[] data) {
@@ -827,16 +828,22 @@ public class ScreenIngame extends Screen {
                     addParticle(new ParticleBloodEmitter(this.players.get(playerKey)));
                 }
                 break;
+            case Globals.PARTICLE_BLOOD_HIT:
+                playerKey = data[2];
+                byte sourceKey = data[3];
+                if (this.players.containsKey(playerKey)) {
+                    addParticle(new ParticleBloodEmitter(this.players.get(playerKey), this.players.get(sourceKey), true));
+                }
+                break;
         }
     }
 
     private void dataPlayerGetName(final byte[] data) {
         final byte key = data[1];
-        if (this.players.containsKey(key)) {
-            final byte[] temp = new byte[Globals.MAX_NAME_LENGTH];
-            System.arraycopy(data, 2, temp, 0, temp.length);
-            this.players.get(key).setPlayerName(new String(temp, StandardCharsets.UTF_8).trim());
-        }
+        spawnPlayer(key);
+        final byte[] temp = new byte[Globals.MAX_NAME_LENGTH];
+        System.arraycopy(data, 2, temp, 0, temp.length);
+        this.players.get(key).setPlayerName(new String(temp, StandardCharsets.UTF_8).trim());
     }
 
     private void dataMobParticleEffect(final byte[] data) {
@@ -857,45 +864,38 @@ public class ScreenIngame extends Screen {
 
     private void dataMobSetPos(final byte[] data) {
         final byte key = data[1];
-        if (this.mobs.containsKey(key)) {
+        if (isExistingMob(key)) {
             final int x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
             final int y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
             this.mobs.get(key).setPos(x, y);
-        } else {
-            logic.sendSetMobType(key);
         }
+
     }
 
     private void dataMobSetFacing(final byte[] data) {
         final byte key = data[1];
-        if (this.mobs.containsKey(key)) {
+        if (isExistingMob(key)) {
             final byte facing = data[2];
             this.mobs.get(key).setFacing(facing);
-        } else {
-            logic.sendSetMobType(key);
         }
     }
 
     private void dataMobSetState(final byte[] data) {
         final byte key = data[1];
-        if (this.mobs.containsKey(key)) {
+        if (isExistingMob(key)) {
             final byte state = data[2];
             final byte frame = data[3];
             this.mobs.get(key).setState(state);
             this.mobs.get(key).setFrame(frame);
-        } else {
-            logic.sendSetMobType(key);
         }
     }
 
     private void dataMobGetStat(final byte[] data) {
         final byte key = data[1];
-        if (this.mobs.containsKey(key)) {
+        if (isExistingMob(key)) {
             final byte stat = data[2];
             final int amount = Globals.bytesToInt(Arrays.copyOfRange(data, 3, 7));
             this.mobs.get(key).setStat(stat, amount);
-        } else {
-            logic.sendSetMobType(key);
         }
     }
 
@@ -932,6 +932,24 @@ public class ScreenIngame extends Screen {
 
     private void setSkillKeyDown(final int slot, final boolean set) {
         this.skillKeyDown[slot] = set;
+    }
+
+    private void spawnPlayer(final byte key) {
+        spawnPlayer(key, 0, 0);
+    }
+
+    private boolean isExistingMob(final byte key) {
+        if (!this.mobs.containsKey(key)) {
+            logic.sendSetMobType(key);
+            return false;
+        }
+        return true;
+    }
+
+    private void spawnPlayer(final byte key, final int x, final int y) {
+        if (!this.players.containsKey(key)) {
+            this.players.put(key, new Player(x, y, key));
+        }
     }
 
     @Override

@@ -8,14 +8,11 @@ import java.awt.image.BufferedImage;
 
 public class ParticleShieldReflectCast extends Particle {
 
-    private final Player owner;
-
     public ParticleShieldReflectCast(final Player p) {
-        super(0, 0);
+        super(0, 0, p);
         this.frame = 0;
         this.frameDuration = 25;
         this.duration = 400;
-        this.owner = p;
     }
 
     @Override

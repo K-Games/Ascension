@@ -8,6 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Properties;
@@ -39,7 +40,7 @@ public class Globals {
 
     public final static byte GAME_MAJOR_VERSION = 0,
             GAME_MINOR_VERSION = 17,
-            GAME_UPDATE_NUMBER = 0;
+            GAME_UPDATE_NUMBER = 1;
     private final static String GAME_DEV_STATE = "ALPHA";
 
     public final static String GAME_RELEASE_VERSION = GAME_DEV_STATE + " " + GAME_MAJOR_VERSION + "." + GAME_MINOR_VERSION + "."
@@ -134,7 +135,8 @@ public class Globals {
             PARTICLE_SWORD_PHANTOM2 = 0x2A,
             PARTICLE_SWORD_GASH2 = 0x2B,
             PARTICLE_SWORD_GASH3 = 0x2C,
-            PARTICLE_SWORD_GASH4 = 0x2D;
+            PARTICLE_SWORD_GASH4 = 0x2D,
+            PARTICLE_BLOOD_HIT = 0x2E;
 
     public final static byte NUM_SFX = 9,
             SFX_SLASH = 0x00,
@@ -271,7 +273,7 @@ public class Globals {
                 log("Config", "Max Packet Sender Threads: " + SERVER_PACKETSENDER_THREADS, Globals.LOG_TYPE_DATA, true);
             }
         } catch (final FileNotFoundException e) {
-            log("config.properties not found in root directory. Using default server values.", "Config", Globals.LOG_TYPE_DATA, true);
+            log("Config", "config.properties not found in root directory. Using default server values.", Globals.LOG_TYPE_DATA, true);
         } catch (final IOException ex) {
             Logger.getLogger(Globals.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
@@ -445,20 +447,29 @@ public class Globals {
     }
 
     public static final double calcReduction(final double armor) {
-        return armor / (armor + REDUCT_CONST);
+        return 1 - (armor / (armor + REDUCT_CONST));
     }
 
-    public static final byte[] intToByte(final int input) {
-        final byte[] bytes = new byte[4];
-        bytes[0] = (byte) (input & 0xff);
-        bytes[1] = (byte) ((input >> 8) & 0xff);
-        bytes[2] = (byte) ((input >>> 16) & 0xff);
-        bytes[3] = (byte) ((input >>> 24) & 0xff);
-        return bytes;
+    public static byte[] longToBytes(long input) {
+        ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
+        buffer.putLong(input);
+        return buffer.array();
     }
 
-    public static final int bytesToInt(final byte[] input) {
-        return (input[0] & 0xff | (input[1] & 0xff) << 8 | (input[2] & 0xff) << 16 | (input[3] & 0xff) << 24);
+    public static long bytesToLong(byte[] bytes) {
+        ByteBuffer buffer = ByteBuffer.wrap(bytes);
+        return buffer.getLong();
+    }
+
+    public static final byte[] intToBytes(final int input) {
+        ByteBuffer buffer = ByteBuffer.allocate(Integer.BYTES);
+        buffer.putInt(input);
+        return buffer.array();
+    }
+
+    public static final int bytesToInt(final byte[] bytes) {
+        ByteBuffer buffer = ByteBuffer.wrap(bytes);
+        return buffer.getInt();
     }
 
     public static final int nsToMs(final long time) {
@@ -474,6 +485,13 @@ public class Globals {
             return RNG.nextInt(i);
         }
         return -1;
+    }
+
+    public static boolean hasPastDuration(final int currentDuration, final int durationToPast) {
+        if (durationToPast <= 0) {
+            return true;
+        }
+        return currentDuration >= durationToPast;
     }
 
 }

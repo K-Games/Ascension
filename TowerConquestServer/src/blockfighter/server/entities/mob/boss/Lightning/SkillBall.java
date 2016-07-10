@@ -1,13 +1,13 @@
 package blockfighter.server.entities.mob.boss.Lightning;
 
 import blockfighter.server.LogicModule;
-import blockfighter.server.entities.player.skills.Skill;
+import blockfighter.server.entities.mob.MobSkill;
 
 /**
  *
  * @author Ken Kwan
  */
-public class SkillBall extends Skill {
+public class SkillBall extends MobSkill {
 
     public SkillBall(final LogicModule l) {
         super(l);

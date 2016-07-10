@@ -39,6 +39,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
@@ -53,7 +54,7 @@ public class SaveData {
             totalStats = new double[Globals.NUM_STATS],
             bonusStats = new double[Globals.NUM_STATS];
 
-    private int uniqueID;
+    private UUID uniqueID;
     private String name;
     private final byte saveNum;
 
@@ -68,7 +69,7 @@ public class SaveData {
     public SaveData(final String n, final byte saveNumber) {
         this.saveNum = saveNumber;
         this.name = n;
-        this.uniqueID = Globals.rng(Integer.MAX_VALUE);
+        this.uniqueID = UUID.randomUUID();
         // initalize skill list
         this.skills[Skill.SWORD_CINDER] = new SkillSwordCinder();
         this.skills[Skill.SWORD_GASH] = new SkillSwordGash();
@@ -150,14 +151,18 @@ public class SaveData {
     }
 
     public static void saveData(final byte saveNum, final SaveData c) {
-        final byte[] data = new byte[46413];
+        final byte[] data = new byte[46409 + Long.BYTES * 2];
         byte[] temp = c.name.getBytes(StandardCharsets.UTF_8);
 
         int pos = 0;
         System.arraycopy(temp, 0, data, pos, temp.length);
         pos += Globals.MAX_NAME_LENGTH;
 
-        temp = Globals.intToByte(c.uniqueID);
+        temp = Globals.longToBytes(c.getUniqueID().getLeastSignificantBits());
+        System.arraycopy(temp, 0, data, pos, temp.length);
+        pos += temp.length;
+
+        temp = Globals.longToBytes(c.getUniqueID().getMostSignificantBits());
         System.arraycopy(temp, 0, data, pos, temp.length);
         pos += temp.length;
 
@@ -168,7 +173,7 @@ public class SaveData {
             Globals.STAT_SKILLPOINTS};
 
         for (final int i : statIDs) {
-            temp = Globals.intToByte((int) c.baseStats[i]);
+            temp = Globals.intToBytes((int) c.baseStats[i]);
             System.arraycopy(temp, 0, data, pos, temp.length);
             pos += temp.length;
         }
@@ -182,7 +187,7 @@ public class SaveData {
         pos = saveHotkeys(data, c, pos);
         pos = saveKeyBind(data, c.getKeyBind(), pos);
 
-        temp = Globals.intToByte((int) c.baseStats[Globals.STAT_EXP]);
+        temp = Globals.intToBytes((int) c.baseStats[Globals.STAT_EXP]);
         System.arraycopy(temp, 0, data, pos, temp.length);
         pos += temp.length;
 
@@ -197,7 +202,7 @@ public class SaveData {
         int nextPos = pos;
         for (final int element : keybind) {
             byte[] temp;
-            temp = Globals.intToByte(element);
+            temp = Globals.intToBytes(element);
             System.arraycopy(temp, 0, data, nextPos, temp.length);
             nextPos += temp.length;
         }
@@ -213,11 +218,11 @@ public class SaveData {
             }
             byte[] temp;
 
-            temp = Globals.intToByte(item.getItemCode());
+            temp = Globals.intToBytes(item.getItemCode());
             System.arraycopy(temp, 0, data, nextPos, temp.length);
             nextPos += temp.length;
 
-            temp = Globals.intToByte(item.getLevel());
+            temp = Globals.intToBytes(item.getLevel());
             System.arraycopy(temp, 0, data, nextPos, temp.length);
             nextPos += temp.length;
         }
@@ -254,7 +259,7 @@ public class SaveData {
                 continue;
             }
             byte[] temp;
-            temp = Globals.intToByte(item.getItemCode());
+            temp = Globals.intToBytes(item.getItemCode());
             System.arraycopy(temp, 0, data, nextPos, temp.length);
             nextPos += temp.length;
 
@@ -270,26 +275,26 @@ public class SaveData {
             for (final int i : statIDs) {
                 switch (i) {
                     case Globals.STAT_REGEN:
-                        temp = Globals.intToByte((int) (item.getBaseStats()[i] * 10));
+                        temp = Globals.intToBytes((int) (item.getBaseStats()[i] * 10));
                         break;
                     case Globals.STAT_CRITDMG:
-                        temp = Globals.intToByte((int) (item.getBaseStats()[i] * 10000));
+                        temp = Globals.intToBytes((int) (item.getBaseStats()[i] * 10000));
                         break;
                     case Globals.STAT_CRITCHANCE:
-                        temp = Globals.intToByte((int) (item.getBaseStats()[i] * 10000));
+                        temp = Globals.intToBytes((int) (item.getBaseStats()[i] * 10000));
                         break;
                     default:
-                        temp = Globals.intToByte((int) item.getBaseStats()[i]);
+                        temp = Globals.intToBytes((int) item.getBaseStats()[i]);
                 }
                 System.arraycopy(temp, 0, data, nextPos, temp.length);
                 nextPos += temp.length;
             }
 
-            temp = Globals.intToByte(item.getUpgrades());
+            temp = Globals.intToBytes(item.getUpgrades());
             System.arraycopy(temp, 0, data, nextPos, temp.length);
             nextPos += temp.length;
 
-            temp = Globals.intToByte((int) (item.getBonusMult() * 100));
+            temp = Globals.intToBytes((int) (item.getBonusMult() * 100));
             System.arraycopy(temp, 0, data, nextPos, temp.length);
             nextPos += temp.length;
         }
@@ -311,17 +316,24 @@ public class SaveData {
         c.name = new String(temp, StandardCharsets.UTF_8).trim();
         pos += Globals.MAX_NAME_LENGTH;
 
-        temp = new byte[4];
+        long leastSigBits, mostSigBits;
+        temp = new byte[8];
         System.arraycopy(data, pos, temp, 0, temp.length);
-        c.uniqueID = Globals.bytesToInt(temp);
+        leastSigBits = Globals.bytesToLong(temp);
         pos += temp.length;
+
+        System.arraycopy(data, pos, temp, 0, temp.length);
+        mostSigBits = Globals.bytesToLong(temp);
+        pos += temp.length;
+        c.uniqueID = new UUID(mostSigBits, leastSigBits);
 
         final int[] statIDs = {Globals.STAT_LEVEL,
             Globals.STAT_POWER,
             Globals.STAT_DEFENSE,
             Globals.STAT_SPIRIT,
             Globals.STAT_SKILLPOINTS};
-
+        
+        temp = new byte[4];
         for (final int i : statIDs) {
             System.arraycopy(data, pos, temp, 0, temp.length);
             c.baseStats[i] = Globals.bytesToInt(temp);
@@ -479,7 +491,7 @@ public class SaveData {
         return this.totalStats;
     }
 
-    public int getUniqueID() {
+    public UUID getUniqueID() {
         return this.uniqueID;
     }
 
@@ -582,7 +594,7 @@ public class SaveData {
         this.totalStats[Globals.STAT_REGEN] = this.baseStats[Globals.STAT_REGEN] + this.bonusStats[Globals.STAT_REGEN];
         this.totalStats[Globals.STAT_CRITCHANCE] = this.baseStats[Globals.STAT_CRITCHANCE] + this.bonusStats[Globals.STAT_CRITCHANCE];
         this.totalStats[Globals.STAT_CRITDMG] = this.baseStats[Globals.STAT_CRITDMG] + this.bonusStats[Globals.STAT_CRITDMG];
-        this.totalStats[Globals.STAT_DAMAGEREDUCT] = 1 - Globals.calcReduction(this.totalStats[Globals.STAT_ARMOR]);
+        this.totalStats[Globals.STAT_DAMAGEREDUCT] = Globals.calcReduction(this.totalStats[Globals.STAT_ARMOR]);
     }
 
     public ItemEquip[] getInventory(final byte type) {

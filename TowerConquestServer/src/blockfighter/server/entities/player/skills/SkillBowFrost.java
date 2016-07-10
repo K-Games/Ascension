@@ -27,7 +27,7 @@ public class SkillBowFrost extends Skill {
     public void updateSkillUse(Player player) {
         final int duration = Globals.nsToMs(this.logic.getTime() - player.getSkillCastTime());
         final int numHits = player.isSkillMaxed(Skill.BOW_FROST) ? 3 : 1;
-        if (Player.hasPastDuration(duration, 160 + player.getSkillCounter() * 90) && player.getSkillCounter() < numHits) {
+        if (Globals.hasPastDuration(duration, 160 + player.getSkillCounter() * 90) && player.getSkillCounter() < numHits) {
             player.incrementSkillCounter();
             final ProjBowFrost proj = new ProjBowFrost(this.logic, player, player.getX(), player.getY(), false);
             this.logic.queueAddProj(proj);

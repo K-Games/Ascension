@@ -27,7 +27,7 @@ public class SkillBowVolley extends Skill {
     public void updateSkillUse(Player player) {
         final int duration = Globals.nsToMs(this.logic.getTime() - player.getSkillCastTime());
         final int numHits = 20;
-        if (Player.hasPastDuration(duration, player.getSkillCounter() * 100) && player.getSkillCounter() < numHits) {
+        if (Globals.hasPastDuration(duration, player.getSkillCounter() * 100) && player.getSkillCounter() < numHits) {
             final ProjBowVolley proj = new ProjBowVolley(this.logic, player, player.getX(),
                     player.getY());
             this.logic.queueAddProj(proj);
