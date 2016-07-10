@@ -11,5 +11,8 @@ An multiplayer action 2D sidescrolling platformer coded in pure Java.
 
 ## v0.17 Update 2
 ### Client Changes
+* Minor adjustments to sound effects.
+* Minor adjust to some particle visuals.
 
 ### Server Changes
+* Dash distance decreased from 375 to 275.
