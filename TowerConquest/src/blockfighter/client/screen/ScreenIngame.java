@@ -90,10 +90,11 @@ public class ScreenIngame extends Screen {
     private boolean screenShake = false;
 
     private byte myKey = -1;
+    private Rectangle2D logoutBox;
 
     private long pingTime = 0;
     private int ping = 0;
-    private byte pID = 0;
+    private byte pingID = 0;
 
     private long lastUpdateTime = 0, lastNumberUpdateTime = 0;
     private long lastRequestTime = 50;
@@ -168,9 +169,9 @@ public class ScreenIngame extends Screen {
             this.lastRequestTime = now;
         }
         if (now - this.lastPingTime >= Globals.PING_UPDATE) {
-            this.pID = (byte) (Globals.rng(256));
+            this.pingID = (byte) (Globals.rng(256));
             this.pingTime = System.currentTimeMillis();
-            logic.sendGetPing(this.myKey, this.pID);
+            logic.sendGetPing(this.myKey, this.pingID);
             this.lastPingTime = now;
         }
     }
@@ -316,6 +317,15 @@ public class ScreenIngame extends Screen {
         g.setFont(Globals.ARIAL_12PT);
         g.setColor(Color.WHITE);
         g.drawString("Ping: " + this.ping, 1220, 40);
+
+        g.setColor(Color.BLACK);
+        g.setFont(Globals.ARIAL_15PT);
+
+        this.logoutBox = g.getFontMetrics().getStringBounds("Leave", g);
+        g.fillRect(10, 10, (int) this.logoutBox.getWidth() + 6, (int) this.logoutBox.getHeight() + 6);
+        g.setColor(Color.WHITE);
+        g.drawString("Leave", 13, (int) (9 + this.logoutBox.getHeight()));
+        g.drawRect(10, 10, (int) this.logoutBox.getWidth() + 6, (int) this.logoutBox.getHeight() + 6);
     }
 
     private void drawHotkeys(final Graphics2D g) {
@@ -917,7 +927,7 @@ public class ScreenIngame extends Screen {
     }
 
     public void setPing(final byte rID) {
-        if (rID != this.pID) {
+        if (rID != this.pingID) {
             return;
         }
         this.ping = (int) (System.currentTimeMillis() - this.pingTime);
@@ -1111,7 +1121,10 @@ public class ScreenIngame extends Screen {
 
     @Override
     public void mouseReleased(final MouseEvent e) {
-
+        Rectangle2D.Double box = new Rectangle2D.Double(10, 10, this.logoutBox.getWidth() + 6, this.logoutBox.getHeight() + 6);
+        if (box.contains(e.getPoint())) {
+            logic.sendDisconnect(this.myKey);
+        }
     }
 
     @Override

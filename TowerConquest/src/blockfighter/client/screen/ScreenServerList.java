@@ -41,7 +41,7 @@ public class ScreenServerList extends ScreenMenu {
 
         String[] listItems = new String[10];
         //listItems[0] = "Arena";
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < listItems.length; i++) {
             listItems[i] = "Lvl " + (i * 10 + 1) + "-" + ((i + 1) * 10);
         }
         SERVER_ROOMS = new JComboBox<>(listItems);

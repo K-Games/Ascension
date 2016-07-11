@@ -15,6 +15,8 @@ An multiplayer action 2D sidescrolling platformer coded in pure Java.
 * Minor adjust to some particle visuals.
 * Added `-port` launch parameter to specify port to connect.
 * Added responses when failing to login to a room.
+* Added a leave button in game - Can still leave a room with ESC button.
+* Map Levels removed - Replaced with Arena Level Selection.
 
 ### Server Changes
 * Dash distance decreased from 375 to 275.

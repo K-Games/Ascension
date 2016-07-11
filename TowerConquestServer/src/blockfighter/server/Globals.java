@@ -61,7 +61,7 @@ public class Globals {
 
     public static int SERVER_PORT = 25565;
     public static byte SERVER_MAX_PLAYERS = 10;
-    public static byte SERVER_ROOMS = 11;
+    public static byte SERVER_ROOMS = 10;
     public static int SERVER_MAX_IDLE = 120000;
     public static byte SERVER_LOGIC_THREADS = 3,
             SERVER_PACKETSENDER_THREADS = 5;

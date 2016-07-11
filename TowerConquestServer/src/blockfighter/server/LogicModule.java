@@ -5,7 +5,6 @@ import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.proj.Projectile;
 import blockfighter.server.maps.GameMap;
 import blockfighter.server.maps.GameMapArena;
-import blockfighter.server.maps.GameMapFloor1;
 import blockfighter.server.net.PacketSender;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -36,7 +35,8 @@ public class LogicModule extends Thread {
     private GameMap map;
     private int projMaxKeys = 500;
     private int mobMaxKeys = 255;
-
+    private int minLevel = 0, maxLevel = 0;
+    
     private ConcurrentLinkedQueue<Byte> playerKeys = new ConcurrentLinkedQueue<>();
     private ConcurrentLinkedQueue<Integer> projKeys = new ConcurrentLinkedQueue<>();
     private ConcurrentLinkedQueue<Byte> mobKeys = new ConcurrentLinkedQueue<>();
@@ -85,11 +85,11 @@ public class LogicModule extends Thread {
     }
 
     public boolean isFull() {
-        return this.playerKeys.size() <= 0;
+        return this.playerKeys.isEmpty();
     }
 
     public boolean isInLevelRange(int level) {
-        return level >= room * 10 + 1 && level <= (room + 1) * 10;
+        return level >= this.minLevel && level <= this.maxLevel;
     }
 
     private void resetKeys() {
@@ -124,6 +124,8 @@ public class LogicModule extends Thread {
         this.resetStartTime = 0;
         //if (this.room == 0) {
         this.setMap(new GameMapArena());
+        this.setMinLevel(this.room * 10 + 1);
+        this.setMaxLevel((this.room + 1) * 10);
         //} else {
         //    this.setMap(new GameMapFloor1());
         //}
@@ -621,5 +623,19 @@ public class LogicModule extends Thread {
      */
     public void setMap(GameMap map) {
         this.map = map;
+    }
+
+    /**
+     * @param minLevel the minLevel to set
+     */
+    public void setMinLevel(int minLevel) {
+        this.minLevel = minLevel;
+    }
+
+    /**
+     * @param maxLevel the maxLevel to set
+     */
+    public void setMaxLevel(int maxLevel) {
+        this.maxLevel = maxLevel;
     }
 }
