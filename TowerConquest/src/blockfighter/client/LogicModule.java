@@ -58,15 +58,35 @@ public class LogicModule implements Runnable {
     public void receiveLogin(final byte[] data) {
         byte attempts = 0;
         this.loggedIn = false;
-        System.out.println("Server Version: " + data[1] + "." + data[2]);
-        if (data[1] != Globals.GAME_MAJOR_VERSION || data[2] != Globals.GAME_MINOR_VERSION) {
-            System.out.println("Client Version mismatched. Client Version: " + Globals.GAME_MAJOR_VERSION + "." + Globals.GAME_MINOR_VERSION);
-            shutdownSocket();
-            if (getScreen() instanceof ScreenServerList) {
-                ((ScreenServerList) getScreen()).setStatus(ScreenServerList.STATUS_WRONGVERSION);
-            }
-            return;
+
+        byte loginResponse = data[1];
+        switch (loginResponse) {
+            case Globals.LOGIN_SUCCESS:
+                if (data[2] != Globals.GAME_MAJOR_VERSION || data[3] != Globals.GAME_MINOR_VERSION) {
+                    System.out.println("Client Version mismatched. Client Version: " + Globals.GAME_MAJOR_VERSION + "." + Globals.GAME_MINOR_VERSION);
+                    shutdownSocket();
+                    if (getScreen() instanceof ScreenServerList) {
+                        ((ScreenServerList) getScreen()).setStatus(ScreenServerList.STATUS_WRONGVERSION);
+                    }
+                    return;
+                }
+                break;
+            case Globals.LOGIN_FAIL_UID_IN_ROOM:
+                shutdownSocket();
+                if (getScreen() instanceof ScreenServerList) {
+                    ((ScreenServerList) getScreen()).setStatus(ScreenServerList.STATUS_UIDINROOM);
+                }
+                return;
+            case Globals.LOGIN_FAIL_FULL_ROOM:
+                shutdownSocket();
+                if (getScreen() instanceof ScreenServerList) {
+                    ((ScreenServerList) getScreen()).setStatus(ScreenServerList.STATUS_FULLROOM);
+                }
+                return;
+            default:
+                return;
         }
+
         while (!this.loggedIn && attempts < 5) {
             System.out.println("Attempting to login with character. " + (attempts + 1) + "/5");
             PacketSender.sendPlayerCreate(this.selectedRoom, this.selectedChar);

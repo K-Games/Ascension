@@ -241,7 +241,11 @@ public class Globals {
             DATA_MOB_GET_STAT = 0x16,
             DATA_PLAYER_GIVEDROP = 0x17,
             DATA_PLAYER_CREATE = 0x18;
-
+    
+    public static final byte LOGIN_SUCCESS = 0x00,
+            LOGIN_FAIL_UID_IN_ROOM = 0x01,
+            LOGIN_FAIL_FULL_ROOM = 0x02;
+    
     public final static BufferedImage[][] CHAR_SPRITE = new BufferedImage[NUM_PLAYER_ANIM_STATE][];
     public final static BufferedImage[] HUD = new BufferedImage[2];
 

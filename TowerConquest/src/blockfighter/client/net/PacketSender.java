@@ -22,20 +22,16 @@ public class PacketSender {
 
     public static void sendPlayerLogin(final byte room, final SaveData c) {
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 2 // Data type + room
-                + 15 // Name length
                 + Globals.PACKET_LONG * 2 // uID
                 ];
         bytes[0] = Globals.DATA_PLAYER_LOGIN;
         bytes[1] = room;
 
-        byte[] temp = c.getPlayerName().getBytes(StandardCharsets.UTF_8);
+        byte[] temp = Globals.longToBytes(c.getUniqueID().getLeastSignificantBits());
         System.arraycopy(temp, 0, bytes, 2, temp.length);
 
-        temp = Globals.longToBytes(c.getUniqueID().getLeastSignificantBits());
-        System.arraycopy(temp, 0, bytes, 17, temp.length);
-
         temp = Globals.longToBytes(c.getUniqueID().getMostSignificantBits());
-        System.arraycopy(temp, 0, bytes, 25, temp.length);
+        System.arraycopy(temp, 0, bytes, 10, temp.length);
 
         final DatagramPacket requestPacket = createPacket(bytes);
         sendPacket(requestPacket);

@@ -89,6 +89,10 @@ public class LogicModule extends Thread {
         return this.currentTime;
     }
 
+    public boolean isFull() {
+        return this.playerKeys.size() <= 0;
+    }
+
     private void resetKeys() {
         for (int i = 0; i < 500; i++) {
             this.projKeys.add(i);

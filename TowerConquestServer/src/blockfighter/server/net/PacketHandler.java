@@ -243,11 +243,6 @@ public class PacketHandler implements Runnable {
             }
         }
 
-        if (lm.containsPlayerID(id)) {
-            Globals.log(PacketHandler.class, "DATA_PLAYER_LOGIN", address, port, "<" + lm.getPlayers().get(lm.getPlayerKey(id)).getPlayerName() + "> uID already in room. uID: " + id);
-            return;
-        }
-
         final byte freeKey = lm.getNextPlayerKey();
         if (freeKey == -1) {
             Globals.log(PacketHandler.class, "DATA_PLAYER_CREATE", address, port, "Room " + room + " at max capacity.");
@@ -319,7 +314,7 @@ public class PacketHandler implements Runnable {
             desc += newPlayer.getEquips()[i] + ",";
         }
         desc += "]\n";
-        Globals.log(PacketHandler.class, "DATA_PLAYER_CREATE", address, port, "Queueing new player. Room: " + room + " Key: " + freeKey + desc);
+        Globals.log(PacketHandler.class, "DATA_PLAYER_CREATE", address, port, "Queueing new player <" + newPlayer.getPlayerName() + "> into room " + room + ". Key: " + freeKey + desc);
 
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 4];
         bytes[0] = Globals.DATA_PLAYER_CREATE;
@@ -337,10 +332,43 @@ public class PacketHandler implements Runnable {
     private void receivePlayerLogin(final byte[] data, final byte room, final InetAddress address, final int port) {
         Globals.log(PacketHandler.class, "DATA_PLAYER_LOGIN", address, port, "Login Attempt Room: " + room);
 
-        final byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
+        byte[] temp = new byte[8];
+        long leastSigBit, mostSigBit;
+        int pos = 2;
+        final LogicModule lm = logic[room];
+
+        System.arraycopy(data, pos, temp, 0, temp.length);
+        pos += temp.length;
+        leastSigBit = Globals.bytesToLong(temp);
+
+        System.arraycopy(data, pos, temp, 0, temp.length);
+        pos += temp.length;
+        mostSigBit = Globals.bytesToLong(temp);
+
+        final UUID id = new UUID(mostSigBit, leastSigBit);
+        if (lm.containsPlayerID(id)) {
+            final byte[] bytes = new byte[Globals.PACKET_BYTE * 2];
+            bytes[0] = Globals.DATA_PLAYER_LOGIN;
+            bytes[1] = Globals.LOGIN_FAIL_UID_IN_ROOM;
+            sender.sendAddress(bytes, address, port);
+            Globals.log(PacketHandler.class, "DATA_PLAYER_LOGIN", address, port, "Failed to login - <" + lm.getPlayers().get(lm.getPlayerKey(id)).getPlayerName() + "> is already in room. uID: " + id);
+            return;
+        }
+
+        if (lm.isFull()) {
+            final byte[] bytes = new byte[Globals.PACKET_BYTE * 2];
+            bytes[0] = Globals.DATA_PLAYER_LOGIN;
+            bytes[1] = Globals.LOGIN_FAIL_FULL_ROOM;
+            sender.sendAddress(bytes, address, port);
+            Globals.log(PacketHandler.class, "DATA_PLAYER_LOGIN", address, port, "Failed to login - Room " + room + " is at max capacity");
+            return;
+        }
+        
+        final byte[] bytes = new byte[Globals.PACKET_BYTE * 4];
         bytes[0] = Globals.DATA_PLAYER_LOGIN;
-        bytes[1] = Globals.GAME_MAJOR_VERSION;
-        bytes[2] = Globals.GAME_MINOR_VERSION;
+        bytes[1] = Globals.LOGIN_SUCCESS;
+        bytes[2] = Globals.GAME_MAJOR_VERSION;
+        bytes[3] = Globals.GAME_MINOR_VERSION;
         sender.sendAddress(bytes, address, port);
         Globals.log(PacketHandler.class, "DATA_PLAYER_LOGIN", address, port, "Logged in. Sent Version Data: " + Globals.GAME_MAJOR_VERSION + "." + Globals.GAME_MINOR_VERSION);
     }

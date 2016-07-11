@@ -26,7 +26,9 @@ public class ScreenServerList extends ScreenMenu {
             STATUS_SOCKETCLOSED = 1,
             STATUS_FAILEDCONNECT = 2,
             STATUS_UNKNOWNHOST = 3,
-            STATUS_WRONGVERSION = 4;
+            STATUS_WRONGVERSION = 4,
+            STATUS_FULLROOM = 5,
+            STATUS_UIDINROOM = 6;
 
     private final JTextField SERVERADDRESS_FIELD = new JTextField();
     private final JComboBox<String> SERVER_ROOMS;
@@ -221,6 +223,16 @@ public class ScreenServerList extends ScreenMenu {
                 this.connecting = false;
                 this.SERVER_ROOMS.setEnabled(true);
                 this.status = "Could not connect: Server is a different version.";
+                break;
+            case STATUS_FULLROOM:
+                this.connecting = false;
+                this.SERVER_ROOMS.setEnabled(true);
+                this.status = "Could not connect: Room is full.";
+                break;
+            case STATUS_UIDINROOM:
+                this.connecting = false;
+                this.SERVER_ROOMS.setEnabled(true);
+                this.status = "Could not connect: This character is already in the room.";
                 break;
             default:
                 this.connecting = false;
