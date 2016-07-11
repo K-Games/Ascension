@@ -363,7 +363,20 @@ public class PacketHandler implements Runnable {
             Globals.log(PacketHandler.class, "DATA_PLAYER_LOGIN", address, port, "Failed to login - Room " + room + " is at max capacity");
             return;
         }
-        
+
+        temp = new byte[4];
+        System.arraycopy(data, pos, temp, 0, temp.length);
+        final int level = Globals.bytesToInt(temp);
+
+        if (!lm.isInLevelRange(level)) {
+            final byte[] bytes = new byte[Globals.PACKET_BYTE * 2];
+            bytes[0] = Globals.DATA_PLAYER_LOGIN;
+            bytes[1] = Globals.LOGIN_FAIL_OUTSIDE_LEVEL_RANGE;
+            sender.sendAddress(bytes, address, port);
+            Globals.log(PacketHandler.class, "DATA_PLAYER_LOGIN", address, port, "Failed to login - Level " + level + " is outside room " + room + " level range.");
+            return;
+        }
+
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 4];
         bytes[0] = Globals.DATA_PLAYER_LOGIN;
         bytes[1] = Globals.LOGIN_SUCCESS;

@@ -68,11 +68,6 @@ public class LogicModule extends Thread {
      */
     public LogicModule(final byte r) {
         this.room = r;
-        if (r == 0) {
-            this.map = new GameMapArena();
-        } else {
-            this.map = new GameMapFloor1();
-        }
         reset();
     }
 
@@ -91,6 +86,10 @@ public class LogicModule extends Thread {
 
     public boolean isFull() {
         return this.playerKeys.size() <= 0;
+    }
+
+    public boolean isInLevelRange(int level) {
+        return level >= room * 10 + 1 && level <= (room + 1) * 10;
     }
 
     private void resetKeys() {
@@ -123,11 +122,11 @@ public class LogicModule extends Thread {
 
         this.projMaxKeys = 500;
         this.resetStartTime = 0;
-        if (this.room == 0) {
-            this.setMap(new GameMapArena());
-        } else {
-            this.setMap(new GameMapFloor1());
-        }
+        //if (this.room == 0) {
+        this.setMap(new GameMapArena());
+        //} else {
+        //    this.setMap(new GameMapFloor1());
+        //}
         resetKeys();
         this.map.spawnMapMobs(this);
     }

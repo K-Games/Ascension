@@ -13,6 +13,11 @@ An multiplayer action 2D sidescrolling platformer coded in pure Java.
 ### Client Changes
 * Minor adjustments to sound effects.
 * Minor adjust to some particle visuals.
+* Added `-port` launch parameter to specify port to connect.
+* Added responses when failing to login to a room.
 
 ### Server Changes
 * Dash distance decreased from 375 to 275.
+* Standardized logging format - Format is now [TIMESTAMP] Log Type:Class:Info
+* Player state valid hash maps changed to use hash sets for performance.
+* All maps are now Arenas - Restricted between levels.

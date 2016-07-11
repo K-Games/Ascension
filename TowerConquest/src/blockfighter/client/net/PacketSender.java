@@ -23,6 +23,7 @@ public class PacketSender {
     public static void sendPlayerLogin(final byte room, final SaveData c) {
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 2 // Data type + room
                 + Globals.PACKET_LONG * 2 // uID
+                + Globals.PACKET_INT //Level
                 ];
         bytes[0] = Globals.DATA_PLAYER_LOGIN;
         bytes[1] = room;
@@ -32,6 +33,10 @@ public class PacketSender {
 
         temp = Globals.longToBytes(c.getUniqueID().getMostSignificantBits());
         System.arraycopy(temp, 0, bytes, 10, temp.length);
+
+        double[] stats = c.getTotalStats();
+        temp = Globals.intToBytes((int) stats[Globals.STAT_LEVEL]);
+        System.arraycopy(temp, 0, bytes, 18, temp.length);
 
         final DatagramPacket requestPacket = createPacket(bytes);
         sendPacket(requestPacket);

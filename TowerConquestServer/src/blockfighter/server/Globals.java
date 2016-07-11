@@ -61,9 +61,9 @@ public class Globals {
 
     public static int SERVER_PORT = 25565;
     public static byte SERVER_MAX_PLAYERS = 10;
-    public static byte SERVER_ROOMS = 101;
+    public static byte SERVER_ROOMS = 11;
     public static int SERVER_MAX_IDLE = 120000;
-    public static byte SERVER_LOGIC_THREADS = 5,
+    public static byte SERVER_LOGIC_THREADS = 3,
             SERVER_PACKETSENDER_THREADS = 5;
 
     public final static byte MAX_NAME_LENGTH = 15;
@@ -236,11 +236,12 @@ public class Globals {
             DATA_MOB_GET_STAT = 0x16,
             DATA_PLAYER_GIVEDROP = 0x17,
             DATA_PLAYER_CREATE = 0x18;
-    
+
     public static final byte LOGIN_SUCCESS = 0x00,
             LOGIN_FAIL_UID_IN_ROOM = 0x01,
-            LOGIN_FAIL_FULL_ROOM = 0x02;
-    
+            LOGIN_FAIL_FULL_ROOM = 0x02,
+            LOGIN_FAIL_OUTSIDE_LEVEL_RANGE = 0x03;
+
     public static final byte NUMBER_TYPE_PLAYER = 0,
             NUMBER_TYPE_PLAYERCRIT = 1,
             NUMBER_TYPE_MOB = 2,

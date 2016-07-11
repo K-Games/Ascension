@@ -28,7 +28,8 @@ public class ScreenServerList extends ScreenMenu {
             STATUS_UNKNOWNHOST = 3,
             STATUS_WRONGVERSION = 4,
             STATUS_FULLROOM = 5,
-            STATUS_UIDINROOM = 6;
+            STATUS_UIDINROOM = 6,
+            STATUS_OUTSIDELEVEL = 7;
 
     private final JTextField SERVERADDRESS_FIELD = new JTextField();
     private final JComboBox<String> SERVER_ROOMS;
@@ -38,10 +39,10 @@ public class ScreenServerList extends ScreenMenu {
 
     public ScreenServerList() {
 
-        String[] listItems = new String[101];
-        listItems[0] = "Arena";
-        for (int i = 0; i < 100; i++) {
-            listItems[i + 1] = "Level " + (i + 1);
+        String[] listItems = new String[10];
+        //listItems[0] = "Arena";
+        for (int i = 0; i < 10; i++) {
+            listItems[i] = "Lvl " + (i * 10 + 1) + "-" + ((i + 1) * 10);
         }
         SERVER_ROOMS = new JComboBox<>(listItems);
         final FocusHandler focusHandler = new FocusHandler();
@@ -234,10 +235,15 @@ public class ScreenServerList extends ScreenMenu {
                 this.SERVER_ROOMS.setEnabled(true);
                 this.status = "Could not connect: This character is already in the room.";
                 break;
+            case STATUS_OUTSIDELEVEL:
+                this.connecting = false;
+                this.SERVER_ROOMS.setEnabled(true);
+                this.status = "Could not connect: This character does not meet the level requirements.";
+                break;
             default:
                 this.connecting = false;
                 this.SERVER_ROOMS.setEnabled(true);
-                this.status = "Unkown Status";
+                this.status = "Could not connect: Unkown Status";
         }
     }
 }

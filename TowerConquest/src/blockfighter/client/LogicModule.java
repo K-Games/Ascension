@@ -63,7 +63,6 @@ public class LogicModule implements Runnable {
         switch (loginResponse) {
             case Globals.LOGIN_SUCCESS:
                 if (data[2] != Globals.GAME_MAJOR_VERSION || data[3] != Globals.GAME_MINOR_VERSION) {
-                    System.out.println("Client Version mismatched. Client Version: " + Globals.GAME_MAJOR_VERSION + "." + Globals.GAME_MINOR_VERSION);
                     shutdownSocket();
                     if (getScreen() instanceof ScreenServerList) {
                         ((ScreenServerList) getScreen()).setStatus(ScreenServerList.STATUS_WRONGVERSION);
@@ -83,7 +82,17 @@ public class LogicModule implements Runnable {
                     ((ScreenServerList) getScreen()).setStatus(ScreenServerList.STATUS_FULLROOM);
                 }
                 return;
+            case Globals.LOGIN_FAIL_OUTSIDE_LEVEL_RANGE:
+                shutdownSocket();
+                if (getScreen() instanceof ScreenServerList) {
+                    ((ScreenServerList) getScreen()).setStatus(ScreenServerList.STATUS_OUTSIDELEVEL);
+                }
+                return;
             default:
+                shutdownSocket();
+                if (getScreen() instanceof ScreenServerList) {
+                    ((ScreenServerList) getScreen()).setStatus((byte) -1);
+                }
                 return;
         }
 
