@@ -59,8 +59,26 @@ public class Main {
      * @throws java.lang.IllegalAccessException
      */
     public static void main(final String[] args) throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
-        if (args.length >= 1) {
-            Globals.SERVER_ADDRESS = args[0];
+        if (args.length > 0) {
+            int port = -1;
+            for (int i = 0; i < args.length; i++) {
+                switch (args[i]) {
+                    case "-port":
+                        if (port == -1) {
+                            try {
+                                port = Integer.parseInt(args[i + 1]);
+                                if (port > 0 || port <= 65535) {
+                                    System.out.println("Setting server connection port to " + port);
+                                    Globals.SERVER_PORT = port;
+                                }
+                            } catch (Exception e) {
+                                System.err.println("-port Specify a valid port between 1 to 65535");
+                                System.exit(201);
+                            }
+                        }
+                        break;
+                }
+            }
         }
 
         javax.swing.SwingUtilities.invokeLater(() -> {
