@@ -54,6 +54,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.UUID;
@@ -67,8 +68,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 public class Player extends Thread implements GameEntity {
 
-    private static final HashMap<Byte, Object> VALID_PLAYER_SKILL_STATES = new HashMap<>(18);
-    private static final HashMap<Byte, Object> IMMOVABLE_PLAYER_SKILL_STATES = new HashMap<>(18);
+    private static HashSet<Byte> VALID_PLAYER_SKILL_STATES;
+    private static HashSet<Byte> IMMOVABLE_PLAYER_SKILL_STATES;
     private static final HashMap<Byte, Byte> PLAYER_STATE_SKILLCODE = new HashMap<>(18);
 
     public final static byte PLAYER_STATE_STAND = 0x00,
@@ -143,38 +144,44 @@ public class Player extends Thread implements GameEntity {
     }
 
     public static void initializeValidPlayerSkillStates() {
-        VALID_PLAYER_SKILL_STATES.put(PLAYER_STATE_SWORD_VORPAL, null);
-        VALID_PLAYER_SKILL_STATES.put(PLAYER_STATE_SWORD_PHANTOM, null);
-        VALID_PLAYER_SKILL_STATES.put(PLAYER_STATE_SWORD_CINDER, null);
-        VALID_PLAYER_SKILL_STATES.put(PLAYER_STATE_SWORD_GASH, null);
-        VALID_PLAYER_SKILL_STATES.put(PLAYER_STATE_SWORD_SLASH, null);
-        VALID_PLAYER_SKILL_STATES.put(PLAYER_STATE_SWORD_TAUNT, null);
-        VALID_PLAYER_SKILL_STATES.put(PLAYER_STATE_BOW_ARC, null);
-        VALID_PLAYER_SKILL_STATES.put(PLAYER_STATE_BOW_POWER, null);
-        VALID_PLAYER_SKILL_STATES.put(PLAYER_STATE_BOW_RAPID, null);
-        VALID_PLAYER_SKILL_STATES.put(PLAYER_STATE_BOW_FROST, null);
-        VALID_PLAYER_SKILL_STATES.put(PLAYER_STATE_BOW_STORM, null);
-        VALID_PLAYER_SKILL_STATES.put(PLAYER_STATE_BOW_VOLLEY, null);
-        VALID_PLAYER_SKILL_STATES.put(PLAYER_STATE_SHIELD_CHARGE, null);
-        VALID_PLAYER_SKILL_STATES.put(PLAYER_STATE_SHIELD_DASH, null);
-        VALID_PLAYER_SKILL_STATES.put(PLAYER_STATE_SHIELD_FORTIFY, null);
-        VALID_PLAYER_SKILL_STATES.put(PLAYER_STATE_SHIELD_IRON, null);
-        VALID_PLAYER_SKILL_STATES.put(PLAYER_STATE_SHIELD_REFLECT, null);
-        VALID_PLAYER_SKILL_STATES.put(PLAYER_STATE_SHIELD_TOSS, null);
+        Byte[] validSkillStates = {
+            PLAYER_STATE_SWORD_VORPAL,
+            PLAYER_STATE_SWORD_PHANTOM,
+            PLAYER_STATE_SWORD_CINDER,
+            PLAYER_STATE_SWORD_GASH,
+            PLAYER_STATE_SWORD_SLASH,
+            PLAYER_STATE_SWORD_TAUNT,
+            PLAYER_STATE_BOW_ARC,
+            PLAYER_STATE_BOW_POWER,
+            PLAYER_STATE_BOW_RAPID,
+            PLAYER_STATE_BOW_FROST,
+            PLAYER_STATE_BOW_STORM,
+            PLAYER_STATE_BOW_VOLLEY,
+            PLAYER_STATE_SHIELD_CHARGE,
+            PLAYER_STATE_SHIELD_DASH,
+            PLAYER_STATE_SHIELD_FORTIFY,
+            PLAYER_STATE_SHIELD_IRON,
+            PLAYER_STATE_SHIELD_REFLECT,
+            PLAYER_STATE_SHIELD_TOSS
+        };
+        VALID_PLAYER_SKILL_STATES = new HashSet<>(Arrays.asList(validSkillStates));
 
-        IMMOVABLE_PLAYER_SKILL_STATES.put(PLAYER_STATE_SWORD_VORPAL, null);
-        IMMOVABLE_PLAYER_SKILL_STATES.put(PLAYER_STATE_SWORD_PHANTOM, null);
-        IMMOVABLE_PLAYER_SKILL_STATES.put(PLAYER_STATE_BOW_ARC, null);
-        IMMOVABLE_PLAYER_SKILL_STATES.put(PLAYER_STATE_BOW_POWER, null);
-        IMMOVABLE_PLAYER_SKILL_STATES.put(PLAYER_STATE_BOW_RAPID, null);
-        IMMOVABLE_PLAYER_SKILL_STATES.put(PLAYER_STATE_BOW_FROST, null);
-        IMMOVABLE_PLAYER_SKILL_STATES.put(PLAYER_STATE_BOW_VOLLEY, null);
-        IMMOVABLE_PLAYER_SKILL_STATES.put(PLAYER_STATE_SHIELD_CHARGE, null);
-        IMMOVABLE_PLAYER_SKILL_STATES.put(PLAYER_STATE_SHIELD_DASH, null);
-        IMMOVABLE_PLAYER_SKILL_STATES.put(PLAYER_STATE_SHIELD_FORTIFY, null);
-        IMMOVABLE_PLAYER_SKILL_STATES.put(PLAYER_STATE_SHIELD_IRON, null);
-        IMMOVABLE_PLAYER_SKILL_STATES.put(PLAYER_STATE_SHIELD_REFLECT, null);
-        IMMOVABLE_PLAYER_SKILL_STATES.put(PLAYER_STATE_SHIELD_TOSS, null);
+        Byte[] immovableSkills = {
+            PLAYER_STATE_SWORD_VORPAL,
+            PLAYER_STATE_SWORD_PHANTOM,
+            PLAYER_STATE_BOW_ARC,
+            PLAYER_STATE_BOW_POWER,
+            PLAYER_STATE_BOW_RAPID,
+            PLAYER_STATE_BOW_FROST,
+            PLAYER_STATE_BOW_VOLLEY,
+            PLAYER_STATE_SHIELD_CHARGE,
+            PLAYER_STATE_SHIELD_DASH,
+            PLAYER_STATE_SHIELD_FORTIFY,
+            PLAYER_STATE_SHIELD_IRON,
+            PLAYER_STATE_SHIELD_REFLECT,
+            PLAYER_STATE_SHIELD_TOSS
+        };
+        IMMOVABLE_PLAYER_SKILL_STATES = new HashSet<>(Arrays.asList(immovableSkills));
 
         PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SWORD_VORPAL, Skill.SWORD_VORPAL);
         PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SWORD_PHANTOM, Skill.SWORD_PHANTOM);
@@ -1167,11 +1174,11 @@ public class Player extends Thread implements GameEntity {
      * @return True if player is in a skill use state.
      */
     public boolean isUsingSkill() {
-        return VALID_PLAYER_SKILL_STATES.containsKey(this.playerState);
+        return VALID_PLAYER_SKILL_STATES.contains(this.playerState);
     }
 
     public boolean isImmovableUsingSkill() {
-        return IMMOVABLE_PLAYER_SKILL_STATES.containsKey(this.playerState);
+        return IMMOVABLE_PLAYER_SKILL_STATES.contains(this.playerState);
     }
 
     /**
