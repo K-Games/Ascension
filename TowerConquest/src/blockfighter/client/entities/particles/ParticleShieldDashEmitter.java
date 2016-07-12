@@ -1,6 +1,5 @@
 package blockfighter.client.entities.particles;
 
-import blockfighter.client.Globals;
 import blockfighter.client.entities.player.Player;
 import java.awt.Point;
 
@@ -21,7 +20,7 @@ public class ParticleShieldDashEmitter extends Particle {
                 this.x = p.x;
                 this.y = p.y;
             }
-            final ParticleShieldDash b = new ParticleShieldDash(this.x + ((this.facing == Globals.RIGHT) ? -222 : -150), this.y - 310, this.facing);
+            final ParticleShieldDash b = new ParticleShieldDash(this.x, this.y, this.facing);
             logic.getScreen().addParticle(b);
         }
     }

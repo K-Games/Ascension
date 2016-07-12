@@ -8,6 +8,8 @@ public class ParticleShieldDash extends Particle {
 
     public ParticleShieldDash(final int x, final int y, final byte f) {
         super(x, y, f);
+       this.x += ((this.facing == Globals.RIGHT) ? -199 : -80);
+       this.y -= 250;
         this.frame = 0;
         this.frameDuration = 25;
         this.duration = 400;

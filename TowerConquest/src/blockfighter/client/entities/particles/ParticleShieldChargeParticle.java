@@ -9,7 +9,7 @@ public class ParticleShieldChargeParticle extends Particle {
     public ParticleShieldChargeParticle(final int x, final int y, final byte f) {
         super(x, y, f);
         this.frame = 0;
-        this.frameDuration = 50;
+        this.frameDuration = 75;
         this.duration = 400;
         this.y += Globals.rng(11) * 15;
         if (this.facing == Globals.RIGHT) {
