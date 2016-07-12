@@ -11,5 +11,8 @@
                 <root id="test.test.dir" name="Test Packages"/>
             </test-roots>
         </data>
+        <libraries xmlns="http://www.netbeans.org/ns/ant-project-libraries/1">
+            <definitions>../Shared Libraries/nblibraries.properties</definitions>
+        </libraries>
     </configuration>
 </project>
