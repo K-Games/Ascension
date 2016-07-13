@@ -81,10 +81,10 @@ public class ScreenIngame extends Screen {
     private final ConcurrentHashMap<Byte, Player> players;
     private final ConcurrentHashMap<Byte, Mob> mobs = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Integer, Particle> particles = new ConcurrentHashMap<>(500, 0.9f, 1);
-    private final ConcurrentHashMap<Integer, IngameNumber> dmgNum = new ConcurrentHashMap<>(500, 0.9f, 1);
+    private final ConcurrentHashMap<Integer, IngameNumber> ingameNumber = new ConcurrentHashMap<>(500, 0.9f, 1);
 
-    private final ConcurrentLinkedQueue<Integer> dmgKeys = new ConcurrentLinkedQueue<>();
-    private int numDmgKeys = 500;
+    private final ConcurrentLinkedQueue<Integer> ingameNumKeys = new ConcurrentLinkedQueue<>();
+    private int numIngameNumKeys = 500;
 
     private double screenShakeX = 0, screenShakeY = 0;
     private boolean screenShake = false;
@@ -177,11 +177,11 @@ public class ScreenIngame extends Screen {
     }
 
     private void updateIngameNumber() {
-        for (final Map.Entry<Integer, IngameNumber> pEntry : this.dmgNum.entrySet()) {
+        for (final Map.Entry<Integer, IngameNumber> pEntry : this.ingameNumber.entrySet()) {
             threadPool.execute(pEntry.getValue());
         }
         final LinkedList<Integer> remove = new LinkedList<>();
-        for (final Map.Entry<Integer, IngameNumber> pEntry : this.dmgNum.entrySet()) {
+        for (final Map.Entry<Integer, IngameNumber> pEntry : this.ingameNumber.entrySet()) {
             try {
                 pEntry.getValue().join();
                 if (pEntry.getValue().isExpired()) {
@@ -197,7 +197,7 @@ public class ScreenIngame extends Screen {
         while (!remove.isEmpty()) {
             final int p = remove.pop();
             returnDmgKey(p);
-            this.dmgNum.remove(p);
+            this.ingameNumber.remove(p);
         }
     }
 
@@ -293,7 +293,7 @@ public class ScreenIngame extends Screen {
         for (final Map.Entry<Integer, Particle> pEntry : this.particles.entrySet()) {
             pEntry.getValue().draw(g);
         }
-        for (final Map.Entry<Integer, IngameNumber> pEntry : this.dmgNum.entrySet()) {
+        for (final Map.Entry<Integer, IngameNumber> pEntry : this.ingameNumber.entrySet()) {
             pEntry.getValue().draw(g);
         }
 
@@ -406,17 +406,17 @@ public class ScreenIngame extends Screen {
     }
 
     public void returnDmgKey(final int key) {
-        this.dmgKeys.add(key);
+        this.ingameNumKeys.add(key);
     }
 
-    public int getNextDmgKey() {
-        if (this.dmgKeys.isEmpty()) {
-            for (int i = this.numDmgKeys; i < this.numDmgKeys + 500; i++) {
-                this.dmgKeys.add(i);
+    public int getNextIngameNumKey() {
+        if (this.ingameNumKeys.isEmpty()) {
+            for (int i = this.numIngameNumKeys; i < this.numIngameNumKeys + 500; i++) {
+                this.ingameNumKeys.add(i);
             }
-            this.numDmgKeys += 500;
+            this.numIngameNumKeys += 500;
         }
-        return this.dmgKeys.remove();
+        return this.ingameNumKeys.remove();
     }
 
     private void processDataQueue() {
@@ -455,7 +455,7 @@ public class ScreenIngame extends Screen {
                     dataPlayerSetCooldown(data);
                     break;
                 case Globals.DATA_NUMBER:
-                    dataDamage(data);
+                    dataIngameNumber(data);
                     break;
                 case Globals.DATA_PLAYER_GIVEEXP:
                     dataPlayerGiveEXP(data);
@@ -497,7 +497,10 @@ public class ScreenIngame extends Screen {
 
     private void dataPlayerGiveDrop(final byte[] data) {
         final int lvl = Globals.bytesToInt(Arrays.copyOfRange(data, 1, 5));
-        this.c.addDrops(lvl);
+        final int dropCode = Globals.bytesToInt(Arrays.copyOfRange(data, 5, 9));
+        //TODO - Add drop gained notification
+        
+        this.c.addDrops(lvl, dropCode);
     }
 
     private void dataPlayerGiveEXP(final byte[] data) {
@@ -573,13 +576,13 @@ public class ScreenIngame extends Screen {
         }
     }
 
-    private void dataDamage(final byte[] data) {
+    private void dataIngameNumber(final byte[] data) {
         final byte type = data[1];
         final int x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
         final int y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
-        final int dmg = Globals.bytesToInt(Arrays.copyOfRange(data, 10, 14));
-        final int key = getNextDmgKey();
-        this.dmgNum.put(key, new IngameNumber(dmg, type, new Point(x, y)));
+        final int value = Globals.bytesToInt(Arrays.copyOfRange(data, 10, 14));
+        final int key = getNextIngameNumKey();
+        this.ingameNumber.put(key, new IngameNumber(value, type, new Point(x, y)));
     }
 
     private void dataParticleEffect(final byte[] data) {
@@ -910,7 +913,7 @@ public class ScreenIngame extends Screen {
     }
 
     public void addDmgNum(final IngameNumber d) {
-        this.dmgNum.put(getNextDmgKey(), d);
+        this.ingameNumber.put(getNextIngameNumKey(), d);
     }
 
     @Override
