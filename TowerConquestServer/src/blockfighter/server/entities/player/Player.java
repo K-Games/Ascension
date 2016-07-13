@@ -14,6 +14,7 @@ import blockfighter.server.entities.buff.BuffShieldReflect;
 import blockfighter.server.entities.buff.BuffStun;
 import blockfighter.server.entities.buff.BuffSwordSlash;
 import blockfighter.server.entities.damage.Damage;
+import blockfighter.server.entities.items.Items;
 import blockfighter.server.entities.player.skills.Skill;
 import blockfighter.server.entities.player.skills.SkillBowArc;
 import blockfighter.server.entities.player.skills.SkillBowFrost;
@@ -862,6 +863,7 @@ public class Player extends Thread implements GameEntity {
         if (this.stats[Globals.STAT_MINHP] <= 0) {
             if (lastHitter != null) {
                 lastHitter.giveEXP(Globals.calcEXPtoNxtLvl(this.stats[Globals.STAT_LEVEL]) / 20);
+                lastHitter.giveDrop(this.stats[Globals.STAT_LEVEL]);
             }
             die();
         }
@@ -1095,14 +1097,37 @@ public class Player extends Thread implements GameEntity {
     }
 
     public void giveDrop(final double lvl) {
-        final byte[] bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_INT];
-        bytes[0] = Globals.DATA_PLAYER_GIVEDROP;
-        final byte[] lev = Globals.intToBytes((int) lvl);
-        bytes[1] = lev[0];
-        bytes[2] = lev[1];
-        bytes[3] = lev[2];
-        bytes[4] = lev[3];
-        sender.sendPlayer(bytes, this);
+        for (int equipCode : Items.ITEM_CODES) {
+            if (Globals.rng(100) < 10) {
+                final byte[] bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_INT * 2];
+                bytes[0] = Globals.DATA_PLAYER_GIVEDROP;
+
+                final byte[] level = Globals.intToBytes((int) lvl);
+                System.arraycopy(level, 0, bytes, 1, level.length);
+
+                final byte[] itemCode = Globals.intToBytes(equipCode);
+                System.arraycopy(itemCode, 0, bytes, 5, itemCode.length);
+
+                sender.sendPlayer(bytes, this);
+            }
+            break;
+        }
+
+        for (int upgradeCode : Items.ITEM_UPGRADE_CODES) {
+            if (Globals.rng(100) < 10) {
+                final byte[] bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_INT * 2];
+                bytes[0] = Globals.DATA_PLAYER_GIVEDROP;
+
+                final byte[] level = Globals.intToBytes((int) lvl);
+                System.arraycopy(level, 0, bytes, 1, level.length);
+
+                final byte[] itemCode = Globals.intToBytes(upgradeCode);
+                System.arraycopy(itemCode, 0, bytes, 5, itemCode.length);
+
+                sender.sendPlayer(bytes, this);
+            }
+            break;
+        }
     }
 
     public void giveEXP(final double amount) {

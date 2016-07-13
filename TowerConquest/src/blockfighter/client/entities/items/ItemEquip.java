@@ -10,16 +10,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.LineIterator;
 import org.apache.commons.lang3.StringUtils;
 
-/**
- *
- * @author Ken Kwan
- */
 public class ItemEquip implements Item {
 
     private static DecimalFormat df = new DecimalFormat("###,###,##0.##");
@@ -32,7 +28,7 @@ public class ItemEquip implements Item {
             UPGRADE_ARMOR = 24,
             UPGRADE_MULT = 0.04;
 
-    public final static HashMap<Integer, Integer> ITEM_CODES = new HashMap<>();
+    public final static HashSet<Integer> ITEM_CODES = new HashSet<>();
 
     private final static HashMap<Byte, String> ITEM_TYPENAME = new HashMap<>(13);
     private final static HashMap<Integer, String> ITEM_NAMES;
@@ -106,7 +102,7 @@ public class ItemEquip implements Item {
                     String line = it.nextLine();
                     try {
                         int itemcode = Integer.parseInt(line);
-                        ITEM_CODES.put(itemcode, itemcode);
+                        ITEM_CODES.add(itemcode);
                     } catch (NumberFormatException e) {
                     }
                 }
@@ -122,8 +118,7 @@ public class ItemEquip implements Item {
     private static void loadItemData() {
         System.out.println("Loading Item Data...");
         System.out.print("[");
-        for (final Map.Entry<Integer, Integer> itemEntry : ITEM_CODES.entrySet()) {
-            final int itemCode = itemEntry.getValue();
+        for (final int itemCode : ITEM_CODES) {
             System.out.print(itemCode + ",");
             try {
                 InputStream itemFile = Globals.loadResourceAsStream("itemdata/equip/" + itemCode + ".txt");
@@ -410,8 +405,7 @@ public class ItemEquip implements Item {
             boxHeight += lines * 20;
         }
         g.setFont(Globals.ARIAL_15PT);
-        String tierName = getTierName(getTier());
-        String itemHeader = tierName + " " + getItemName();
+        String itemHeader = getItemName();
 
         int maxWidth = 0;
         if (getUpgrades() > 0) {
@@ -634,7 +628,7 @@ public class ItemEquip implements Item {
     }
 
     public static boolean isValidItem(final int i) {
-        return ITEM_CODES.containsKey(i);
+        return ITEM_CODES.contains(i);
     }
 
     public double getBonusMult() {
@@ -650,7 +644,14 @@ public class ItemEquip implements Item {
         if (!ITEM_NAMES.containsKey(this.itemCode)) {
             return "NO NAME";
         }
-        return ITEM_NAMES.get(this.itemCode);
+        return getTierName(getTier()) + " " + ITEM_NAMES.get(this.itemCode);
+    }
+
+    public static String getItemName(final int code) {
+        if (!ITEM_NAMES.containsKey(code)) {
+            return "INVALID ITEM CODE";
+        }
+        return ITEM_NAMES.get(code);
     }
 
     public void addUpgrade(final int amount) {

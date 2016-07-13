@@ -20,6 +20,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JTextArea;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
 /**
@@ -528,4 +529,12 @@ public class Globals {
         return currentDuration >= durationToPast;
     }
 
+    public static final InputStream loadResourceAsStream(String path) {
+        try {
+            return FileUtils.openInputStream(new File("resources/" + path));
+        } catch (IOException ex) {
+            logError("Failed to load resource: " + path, ex, true);
+        }
+        return null;
+    }
 }

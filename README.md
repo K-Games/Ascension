@@ -23,3 +23,4 @@ An multiplayer action 2D sidescrolling platformer coded in pure Java.
 * Standardized logging format - Format is now [TIMESTAMP] Log Type:Class:Info
 * Player state valid hash maps changed to use hash sets for performance.
 * All maps are now Arenas - Restricted between levels.
+* Players now have a chance to get an item when killing another player.

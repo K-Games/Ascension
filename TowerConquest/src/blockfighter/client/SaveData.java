@@ -125,8 +125,7 @@ public class SaveData {
             addItem(new ItemUpgrade(ItemUpgrade.ITEM_TOME, (int) this.baseStats[Globals.STAT_LEVEL]));
         }
 
-        for (final Map.Entry<Integer, Integer> itemEntry : ITEM_CODES.entrySet()) {
-            final int itemCode = itemEntry.getValue();
+        for (final int itemCode : ITEM_CODES) {
             final ItemEquip startEq = new ItemEquip(itemCode, this.baseStats[Globals.STAT_LEVEL], Globals.TEST_MAX_LEVEL);
             addItem(startEq);
         }
@@ -495,19 +494,15 @@ public class SaveData {
         return this.uniqueID;
     }
 
-    public void addDrops(final int lvl) {
-        for (int i = 1; i <= 3; i++) {
-            if (Globals.rng(100) < 30 * i) {
-                addItem(new ItemUpgrade(1, lvl + Globals.rng(6)));
-            }
+    public void addDrops(final int lvl, final int dropItemCode) {
+        if (ItemUpgrade.isValidItem(dropItemCode)) {
+            addItem(new ItemUpgrade(dropItemCode, lvl + Globals.rng(6)));
+            return;
         }
-
-        for (final Map.Entry<Integer, Integer> itemEntry : ITEM_CODES.entrySet()) {
-            final int itemCode = itemEntry.getValue();
-            if (Globals.rng(100) < 50) {
-                final ItemEquip e = new ItemEquip(itemCode, lvl, Globals.rng(100) < 20);
-                addItem(e);
-            }
+        
+        if (ItemEquip.isValidItem(dropItemCode)) {
+            final ItemEquip e = new ItemEquip(dropItemCode, lvl, Globals.rng(100) < 20);
+            addItem(e);
         }
     }
 

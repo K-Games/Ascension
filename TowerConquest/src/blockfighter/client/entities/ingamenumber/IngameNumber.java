@@ -3,6 +3,7 @@ package blockfighter.client.entities.ingamenumber;
 import blockfighter.client.Globals;
 import blockfighter.client.LogicModule;
 import blockfighter.client.Main;
+import blockfighter.client.entities.items.ItemEquip;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -60,9 +61,15 @@ public class IngameNumber extends Thread {
         //for (int i = 0; i < decimalArray.length; i++) {
         //    g.drawImage(Globals.DAMAGE_FONT[this.type][decimalArray[i] - 48], (int) (this.x + i * 17), (int) this.y, null);
         //}
-        String output = (this.type == Globals.NUMBER_TYPE_EXP)
-                ? Integer.toString(this.number) + "EXP" : Integer.toString(this.number);
-
+        String output;
+        switch (this.type) {
+            case Globals.NUMBER_TYPE_EXP:
+                output = Integer.toString(this.number) + "EXP";
+                break;
+            default:
+                output = Integer.toString(this.number);
+        }
+        
         int outputWidth = g.getFontMetrics().stringWidth(output);
         for (int i = 0; i < 2; i++) {
             g.setColor(Color.BLACK);
