@@ -82,7 +82,7 @@ public class Globals {
 
     public final static double GRAVITY = 0.35, MAX_FALLSPEED = 12.5;
 
-    public final static int NUM_PLAYER_ANIM_STATE = 8;
+    public final static int NUM_PLAYER_ANIM_STATE = 9;
     public final static byte PLAYER_ANIM_STATE_STAND = 0x00,
             PLAYER_ANIM_STATE_WALK = 0x01,
             PLAYER_ANIM_STATE_JUMP = 0x02,
@@ -90,7 +90,8 @@ public class Globals {
             PLAYER_ANIM_STATE_ATTACKBOW = 0x04,
             PLAYER_ANIM_STATE_BUFF = 0x05,
             PLAYER_ANIM_STATE_DEAD = 0x06,
-            PLAYER_ANIM_STATE_INVIS = 0x07;
+            PLAYER_ANIM_STATE_INVIS = 0x07,
+            PLAYER_ANIM_STATE_ROLL = 0x08;
 
     public final static int NUM_PARTICLE_EFFECTS = 46;
     public final static byte PARTICLE_SWORD_SLASH1 = 0x00,

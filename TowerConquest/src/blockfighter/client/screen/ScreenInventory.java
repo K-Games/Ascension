@@ -79,7 +79,7 @@ public class ScreenInventory extends ScreenMenu {
             } else {
                 this.charFrame++;
             }
-            this.nextFrameTime = 150000000;
+            this.nextFrameTime = 250000000;
             this.lastFrameTime = now;
         }
     }

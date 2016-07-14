@@ -165,11 +165,11 @@ public class Player extends Thread {
         if (this.getStat(Globals.STAT_MAXHP) > 0) {
             int hpBarWidth = 80, hpBarHeight = 7;
             g.setColor(Color.GRAY);
-            g.fillRect(this.x - (hpBarWidth + 2) / 2, y - 110, hpBarWidth, hpBarHeight);
+            g.fillRect(this.x - (hpBarWidth + 2) / 2, y - 130, hpBarWidth, hpBarHeight);
             g.setColor(Color.RED);
-            g.fillRect(this.x - hpBarWidth / 2, y - 110, (int) (hpBarWidth * this.getStat(Globals.STAT_MINHP) / this.getStat(Globals.STAT_MAXHP)), hpBarHeight);
+            g.fillRect(this.x - hpBarWidth / 2, y - 130, (int) (hpBarWidth * this.getStat(Globals.STAT_MINHP) / this.getStat(Globals.STAT_MAXHP)), hpBarHeight);
             g.setColor(Color.BLACK);
-            g.drawRect(this.x - (hpBarWidth + 2) / 2, y - 110, hpBarWidth, hpBarHeight);
+            g.drawRect(this.x - (hpBarWidth + 2) / 2, y - 130, hpBarWidth, hpBarHeight);
         }
 
     }

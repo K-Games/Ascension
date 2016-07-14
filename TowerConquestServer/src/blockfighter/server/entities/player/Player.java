@@ -1381,8 +1381,8 @@ public class Player extends Thread implements GameEntity {
         switch (this.playerState) {
             case PLAYER_STATE_STAND:
                 this.animState = Globals.PLAYER_ANIM_STATE_STAND;
-                if (frameDuration >= 150) {
-                    if (this.frame == 5) {
+                if (frameDuration >= 250) {
+                    if (this.frame == 3) {
                         this.frame = 0;
                     } else {
                         this.frame++;
@@ -1392,7 +1392,7 @@ public class Player extends Thread implements GameEntity {
                 break;
             case PLAYER_STATE_DEAD:
                 this.animState = Globals.PLAYER_ANIM_STATE_DEAD;
-                if (frameDuration >= 50) {
+                if ((this.frame == 2 && frameDuration >= 250) || (this.frame != 2 && frameDuration >= 50)) {
                     if (this.frame < 10) {
                         this.frame++;
                     }
@@ -1401,8 +1401,8 @@ public class Player extends Thread implements GameEntity {
                 break;
             case PLAYER_STATE_WALK:
                 this.animState = Globals.PLAYER_ANIM_STATE_WALK;
-                if (frameDuration >= 40) {
-                    if (this.frame == 15) {
+                if (frameDuration >= 70) {
+                    if (this.frame == 7) {
                         this.frame = 0;
                     } else {
                         this.frame++;
@@ -1513,6 +1513,7 @@ public class Player extends Thread implements GameEntity {
                 this.animState = Globals.PLAYER_ANIM_STATE_ATTACK;
                 if (frameDuration >= 20 && this.frame < 2) {
                     this.frame++;
+                    this.lastFrameTime = this.logic.getTime();
                 }
                 break;
             case PLAYER_STATE_SHIELD_CHARGE:

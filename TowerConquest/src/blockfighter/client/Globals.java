@@ -198,7 +198,7 @@ public class Globals {
             STAT_PER_LEVEL = 7,
             SP_PER_LEVEL = 3;
 
-    public final static int NUM_PLAYER_ANIM_STATE = 8;
+    public final static int NUM_PLAYER_ANIM_STATE = 9;
     public final static byte PLAYER_ANIM_STATE_STAND = 0x00,
             PLAYER_ANIM_STATE_WALK = 0x01,
             PLAYER_ANIM_STATE_JUMP = 0x02,
@@ -206,7 +206,8 @@ public class Globals {
             PLAYER_ANIM_STATE_ATTACKBOW = 0x04,
             PLAYER_ANIM_STATE_BUFF = 0x05,
             PLAYER_ANIM_STATE_DEAD = 0x06,
-            PLAYER_ANIM_STATE_INVIS = 0x07;
+            PLAYER_ANIM_STATE_INVIS = 0x07,
+            PLAYER_ANIM_STATE_ROLL = 0x08;
 
     // Packet globals
     public final static int PACKET_MAX_SIZE = 512;
@@ -309,7 +310,7 @@ public class Globals {
     public static final byte NUMBER_TYPE_PLAYER = 0,
             NUMBER_TYPE_PLAYERCRIT = 1,
             NUMBER_TYPE_MOB = 2;
-    
+
     public static final byte NOTIFICATION_EXP = 0,
             NOTIFICATION_ITEMEQUIP = 1,
             NOTIFICATION_ITEMUPGRADE = 2;
@@ -317,10 +318,11 @@ public class Globals {
     static {
         PLAYER_ANIM_FRAMES[PLAYER_ANIM_STATE_ATTACK] = 11;
         PLAYER_ANIM_FRAMES[PLAYER_ANIM_STATE_ATTACKBOW] = 6;
-        PLAYER_ANIM_FRAMES[PLAYER_ANIM_STATE_STAND] = 6;
-        PLAYER_ANIM_FRAMES[PLAYER_ANIM_STATE_WALK] = 16;
+        PLAYER_ANIM_FRAMES[PLAYER_ANIM_STATE_STAND] = 4;
+        PLAYER_ANIM_FRAMES[PLAYER_ANIM_STATE_WALK] = 8;
         PLAYER_ANIM_FRAMES[PLAYER_ANIM_STATE_BUFF] = 7;
         PLAYER_ANIM_FRAMES[PLAYER_ANIM_STATE_DEAD] = 10;
+        PLAYER_ANIM_FRAMES[PLAYER_ANIM_STATE_ROLL] = 10;
         PLAYER_ANIM_FRAMES[PLAYER_ANIM_STATE_JUMP] = 1;
         loadSound();
         loadGFX();
@@ -470,6 +472,9 @@ public class Globals {
                             break;
                         case PLAYER_ANIM_STATE_JUMP:
                             folder = "jump";
+                            break;
+                        case PLAYER_ANIM_STATE_ROLL:
+                            folder = "roll";
                             break;
                     }
                     CHAR_SPRITE[state][frames] = Globals.loadTextureResource("sprites/character/" + folder + "/" + frames + ".png");

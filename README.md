@@ -17,6 +17,7 @@ An multiplayer action 2D sidescrolling platformer coded in pure Java.
 * Added responses when failing to login to a room.
 * Added a leave button in game - Can still leave a room with ESC button.
 * Map Levels removed - Replaced with Arena Level Selection.
+* New sprites for Dash, Walk, Stand and Death.
 
 ### Server Changes
 * Dash distance decreased from 375 to 275.
