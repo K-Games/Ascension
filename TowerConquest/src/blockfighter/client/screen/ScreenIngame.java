@@ -5,49 +5,8 @@ import blockfighter.client.SaveData;
 import blockfighter.client.entities.ingamenumber.IngameNumber;
 import blockfighter.client.entities.items.ItemEquip;
 import blockfighter.client.entities.mob.Mob;
-import blockfighter.client.entities.particles.Particle;
-import blockfighter.client.entities.particles.ParticleBloodEmitter;
-import blockfighter.client.entities.particles.ParticleBowArc;
-import blockfighter.client.entities.particles.ParticleBowFrostArrow;
-import blockfighter.client.entities.particles.ParticleBowPower;
-import blockfighter.client.entities.particles.ParticleBowPowerCharge;
-import blockfighter.client.entities.particles.ParticleBowRapid;
-import blockfighter.client.entities.particles.ParticleBowRapid2;
-import blockfighter.client.entities.particles.ParticleBowStormEmitter;
-import blockfighter.client.entities.particles.ParticleBowVolleyArrow;
-import blockfighter.client.entities.particles.ParticleBowVolleyBow;
-import blockfighter.client.entities.particles.ParticleBowVolleyBuffEmitter;
-import blockfighter.client.entities.particles.ParticleBurnBuffEmitter;
-import blockfighter.client.entities.particles.ParticlePassiveBarrier;
-import blockfighter.client.entities.particles.ParticlePassiveResist;
-import blockfighter.client.entities.particles.ParticlePassiveShadowAttack;
-import blockfighter.client.entities.particles.ParticleShieldCharge;
-import blockfighter.client.entities.particles.ParticleShieldDashBuffEmitter;
-import blockfighter.client.entities.particles.ParticleShieldDashEmitter;
-import blockfighter.client.entities.particles.ParticleShieldFortify;
-import blockfighter.client.entities.particles.ParticleShieldFortifyEmitter;
-import blockfighter.client.entities.particles.ParticleShieldIron;
-import blockfighter.client.entities.particles.ParticleShieldIronAlly;
-import blockfighter.client.entities.particles.ParticleShieldReflectCast;
-import blockfighter.client.entities.particles.ParticleShieldReflectEmitter;
-import blockfighter.client.entities.particles.ParticleShieldReflectHit;
-import blockfighter.client.entities.particles.ParticleShieldToss;
-import blockfighter.client.entities.particles.ParticleSwordCinder;
-import blockfighter.client.entities.particles.ParticleSwordGash;
-import blockfighter.client.entities.particles.ParticleSwordGash2;
-import blockfighter.client.entities.particles.ParticleSwordGash3;
-import blockfighter.client.entities.particles.ParticleSwordGash4;
-import blockfighter.client.entities.particles.ParticleSwordMulti;
-import blockfighter.client.entities.particles.ParticleSwordPhantom;
-import blockfighter.client.entities.particles.ParticleSwordPhantom2;
-import blockfighter.client.entities.particles.ParticleSwordSlash1;
-import blockfighter.client.entities.particles.ParticleSwordSlash2;
-import blockfighter.client.entities.particles.ParticleSwordSlash3;
-import blockfighter.client.entities.particles.ParticleSwordSlashBuffEmitter;
-import blockfighter.client.entities.particles.ParticleSwordTaunt;
-import blockfighter.client.entities.particles.ParticleSwordTauntAura;
-import blockfighter.client.entities.particles.ParticleSwordTauntBuffEmitter;
-import blockfighter.client.entities.particles.ParticleSwordVorpal;
+import blockfighter.client.entities.notification.Notification;
+import blockfighter.client.entities.particles.*;
 import blockfighter.client.entities.player.Player;
 import blockfighter.client.entities.player.skills.Skill;
 import blockfighter.client.maps.GameMap;
@@ -82,6 +41,7 @@ public class ScreenIngame extends Screen {
     private final ConcurrentHashMap<Byte, Mob> mobs = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Integer, Particle> particles = new ConcurrentHashMap<>(500, 0.9f, 1);
     private final ConcurrentHashMap<Integer, IngameNumber> ingameNumber = new ConcurrentHashMap<>(500, 0.9f, 1);
+    private final ConcurrentHashMap<Byte, Notification> notifications = new ConcurrentHashMap<>(20, 0.9f, 1);
 
     private final ConcurrentLinkedQueue<Integer> ingameNumKeys = new ConcurrentLinkedQueue<>();
     private int numIngameNumKeys = 500;
@@ -149,12 +109,8 @@ public class ScreenIngame extends Screen {
             this.lastSendKeyTime = now;
         }
 
-        if (now - this.lastNumberUpdateTime >= Globals.INGAME_NUMBER_UPDATE) {
-            updateIngameNumber();
-            this.lastNumberUpdateTime = now;
-        }
-
         if (now - this.lastUpdateTime >= Globals.LOGIC_UPDATE) {
+            updateIngameNumber();
             updateParticles(this.particles);
             updatePlayers();
             updateMobs();

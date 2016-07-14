@@ -308,8 +308,11 @@ public class Globals {
 
     public static final byte NUMBER_TYPE_PLAYER = 0,
             NUMBER_TYPE_PLAYERCRIT = 1,
-            NUMBER_TYPE_MOB = 2,
-            NUMBER_TYPE_EXP = 3;
+            NUMBER_TYPE_MOB = 2;
+    
+    public static final byte NOTIFICATION_EXP = 0,
+            NOTIFICATION_ITEMEQUIP = 1,
+            NOTIFICATION_ITEMUPGRADE = 2;
 
     static {
         PLAYER_ANIM_FRAMES[PLAYER_ANIM_STATE_ATTACK] = 11;
@@ -500,12 +503,12 @@ public class Globals {
             SKILL_ICON[i] = Globals.loadTextureResource("sprites/skillicon/" + i + ".png");
         }
 
-        for (byte i = 0; i < 10; i++) {
-            DAMAGE_FONT[NUMBER_TYPE_MOB][i] = Globals.loadTextureResource("sprites/number/boss/" + i + ".png");
-            DAMAGE_FONT[NUMBER_TYPE_PLAYER][i] = Globals.loadTextureResource("sprites/number/player/" + i + ".png");
-            DAMAGE_FONT[NUMBER_TYPE_PLAYERCRIT][i] = Globals.loadTextureResource("sprites/number/playercrit/" + i + ".png");
-            DAMAGE_FONT[NUMBER_TYPE_EXP][i] = Globals.loadTextureResource("sprites/number/exp/" + i + ".png");
-        }
+//        for (byte i = 0; i < 10; i++) {
+//            DAMAGE_FONT[NUMBER_TYPE_MOB][i] = Globals.loadTextureResource("sprites/number/boss/" + i + ".png");
+//            DAMAGE_FONT[NUMBER_TYPE_PLAYER][i] = Globals.loadTextureResource("sprites/number/player/" + i + ".png");
+//            DAMAGE_FONT[NUMBER_TYPE_PLAYERCRIT][i] = Globals.loadTextureResource("sprites/number/playercrit/" + i + ".png");
+//            DAMAGE_FONT[NUMBER_TYPE_EXP][i] = Globals.loadTextureResource("sprites/number/exp/" + i + ".png");
+//        }
         EXP_WORD[0] = Globals.loadTextureResource("sprites/number/exp/exp.png");
     }
 

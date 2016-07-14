@@ -3,7 +3,6 @@ package blockfighter.client.entities.ingamenumber;
 import blockfighter.client.Globals;
 import blockfighter.client.LogicModule;
 import blockfighter.client.Main;
-import blockfighter.client.entities.items.ItemEquip;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -23,8 +22,7 @@ public class IngameNumber extends Thread {
     private final double speedY;
     private final int number;
     private long startTime = 0;
-    private long lastUpdateTime = 0;
-    private int duration = 700;
+    private final int duration = 500;
 
     public IngameNumber(final int num, final byte t, final Point loc) {
         this.startTime = logic.getTime();
@@ -43,11 +41,8 @@ public class IngameNumber extends Thread {
 
     @Override
     public void run() {
-        if (Globals.nsToMs(logic.getTime() - lastUpdateTime) >= Globals.INGAME_NUMBER_UPDATE) {
-            this.y += this.speedY;
-            this.x += this.speedX;
-            lastUpdateTime = logic.getTime();
-        }
+        this.y += this.speedY;
+        this.x += this.speedX;
     }
 
     public boolean isExpired() {
@@ -61,15 +56,8 @@ public class IngameNumber extends Thread {
         //for (int i = 0; i < decimalArray.length; i++) {
         //    g.drawImage(Globals.DAMAGE_FONT[this.type][decimalArray[i] - 48], (int) (this.x + i * 17), (int) this.y, null);
         //}
-        String output;
-        switch (this.type) {
-            case Globals.NUMBER_TYPE_EXP:
-                output = Integer.toString(this.number) + "EXP";
-                break;
-            default:
-                output = Integer.toString(this.number);
-        }
-        
+        String output = Integer.toString(this.number);
+
         int outputWidth = g.getFontMetrics().stringWidth(output);
         for (int i = 0; i < 2; i++) {
             g.setColor(Color.BLACK);
@@ -85,9 +73,6 @@ public class IngameNumber extends Thread {
                 break;
             case Globals.NUMBER_TYPE_MOB:
                 g.setColor(Color.MAGENTA);
-                break;
-            case Globals.NUMBER_TYPE_EXP:
-                g.setColor(Color.YELLOW);
                 break;
         }
         g.drawString(output, (float) this.x - outputWidth / 2, (float) this.y);

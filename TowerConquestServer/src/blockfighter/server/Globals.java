@@ -245,8 +245,7 @@ public class Globals {
 
     public static final byte NUMBER_TYPE_PLAYER = 0,
             NUMBER_TYPE_PLAYERCRIT = 1,
-            NUMBER_TYPE_MOB = 2,
-            NUMBER_TYPE_EXP = 3;
+            NUMBER_TYPE_MOB = 2;
 
     static {
         createLogDirectory();
