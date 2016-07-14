@@ -8,7 +8,7 @@ public class ParticleShieldDashEmitter extends Particle {
     public ParticleShieldDashEmitter(final byte f, final Player p) {
         super(0, 0, f, p);
         this.frame = 0;
-        this.duration = 75;
+        this.duration = 50;
     }
 
     @Override

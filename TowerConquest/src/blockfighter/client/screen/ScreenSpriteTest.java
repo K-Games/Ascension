@@ -26,6 +26,8 @@ public class ScreenSpriteTest extends ScreenMenu {
 
     private byte att5Frame = 0;
 
+    private byte rollFrame = 0;
+
     private long nextFrameTime = 0;
     private final int itemCode = 100000;
     private final ItemEquip e = new ItemEquip(this.itemCode);
@@ -61,7 +63,12 @@ public class ScreenSpriteTest extends ScreenMenu {
                 if (this.att5Frame == Globals.CHAR_SPRITE[Globals.PLAYER_ANIM_STATE_ATTACKBOW].length) {
                     this.att5Frame = 0;
                 }
-                this.nextFrameTime = 100000000;
+                
+                this.rollFrame++;
+                if (this.rollFrame == Globals.CHAR_SPRITE[Globals.PLAYER_ANIM_STATE_ROLL].length) {
+                    this.rollFrame = 0;
+                }
+                this.nextFrameTime = 150000000;
             }
             this.lastUpdateTime = now;
         }
@@ -117,6 +124,13 @@ public class ScreenSpriteTest extends ScreenMenu {
         this.e.drawIngame(g, x, y, Globals.PLAYER_ANIM_STATE_ATTACKBOW, this.att5Frame, Globals.RIGHT, true);
         g.drawImage(character, 950, 400, null);
         this.e.drawIngame(g, x, y, Globals.PLAYER_ANIM_STATE_ATTACKBOW, this.att5Frame, Globals.RIGHT);
+        
+        character = Globals.CHAR_SPRITE[Globals.PLAYER_ANIM_STATE_ROLL][this.rollFrame];
+        x = 720 + character.getWidth() / 2;
+        y = 400 + character.getHeight();
+        this.e.drawIngame(g, x, y, Globals.PLAYER_ANIM_STATE_ROLL, this.rollFrame, Globals.RIGHT, true);
+        g.drawImage(character, 720, 400, null);
+        this.e.drawIngame(g, x, y, Globals.PLAYER_ANIM_STATE_ROLL, this.rollFrame, Globals.RIGHT);
     }
 
     @SuppressWarnings("hiding")
