@@ -51,7 +51,7 @@ public class IngameNumber extends Thread {
 
     public void draw(final Graphics2D g) {
         //final char[] decimalArray = Integer.toString(this.number).toCharArray();
-        g.setFont(Globals.ARIALBLACK_18P);
+        g.setFont(Globals.ARIAL_18P);
 
         //for (int i = 0; i < decimalArray.length; i++) {
         //    g.drawImage(Globals.DAMAGE_FONT[this.type][decimalArray[i] - 48], (int) (this.x + i * 17), (int) this.y, null);

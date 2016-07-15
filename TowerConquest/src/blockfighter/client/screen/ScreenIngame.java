@@ -4,6 +4,7 @@ import blockfighter.client.Globals;
 import blockfighter.client.SaveData;
 import blockfighter.client.entities.ingamenumber.IngameNumber;
 import blockfighter.client.entities.items.ItemEquip;
+import blockfighter.client.entities.items.ItemUpgrade;
 import blockfighter.client.entities.mob.Mob;
 import blockfighter.client.entities.notification.Notification;
 import blockfighter.client.entities.particles.*;
@@ -41,7 +42,7 @@ public class ScreenIngame extends Screen {
     private final ConcurrentHashMap<Byte, Mob> mobs = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Integer, Particle> particles = new ConcurrentHashMap<>(500, 0.9f, 1);
     private final ConcurrentHashMap<Integer, IngameNumber> ingameNumber = new ConcurrentHashMap<>(500, 0.9f, 1);
-    private final ConcurrentHashMap<Byte, Notification> notifications = new ConcurrentHashMap<>(20, 0.9f, 1);
+    private final ConcurrentLinkedQueue<Notification> notifications = new ConcurrentLinkedQueue<>();
 
     private final ConcurrentLinkedQueue<Integer> ingameNumKeys = new ConcurrentLinkedQueue<>();
     private int numIngameNumKeys = 500;
@@ -56,7 +57,7 @@ public class ScreenIngame extends Screen {
     private int ping = 0;
     private byte pingID = 0;
 
-    private long lastUpdateTime = 0, lastNumberUpdateTime = 0;
+    private long lastUpdateTime = 0;
     private long lastRequestTime = 50;
     private long lastQueueTime = 0;
     private long lastPingTime = 0;
@@ -114,6 +115,8 @@ public class ScreenIngame extends Screen {
             updateParticles(this.particles);
             updatePlayers();
             updateMobs();
+            updateNotifications();
+
             if (this.players.containsKey(this.myKey)) {
                 logic.setSoundLisenterPos(this.players.get(this.myKey).getX(), this.players.get(this.myKey).getY());
             }
@@ -146,10 +149,10 @@ public class ScreenIngame extends Screen {
             } catch (final InterruptedException ex) {
             }
         }
-        removeDmgNum(remove);
+        removeIngameNumber(remove);
     }
 
-    private void removeDmgNum(final LinkedList<Integer> remove) {
+    private void removeIngameNumber(final LinkedList<Integer> remove) {
         while (!remove.isEmpty()) {
             final int p = remove.pop();
             returnDmgKey(p);
@@ -185,6 +188,21 @@ public class ScreenIngame extends Screen {
 
     public void spawnParticle() {
         final int key = getNextParticleKey();
+    }
+
+    private void updateNotifications() {
+        for (Notification n : this.notifications) {
+            threadPool.execute(n);
+        }
+        for (Notification n : this.notifications) {
+            try {
+                n.join();
+            } catch (final InterruptedException ex) {
+            }
+        }
+        if (this.notifications.peek() != null && this.notifications.peek().isExpired()) {
+            this.notifications.remove();
+        }
     }
 
     private void updateMobs() {
@@ -261,13 +279,16 @@ public class ScreenIngame extends Screen {
                 RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
         final BufferedImage hud = Globals.HUD[0];
         g.drawImage(hud, Globals.WINDOW_WIDTH / 2 - hud.getWidth() / 2, Globals.WINDOW_HEIGHT - hud.getHeight(), null);
-
-        drawHPbar(g, hud);
+        
+        drawHUD(g, hud);
         drawHotkeys(g);
 
         if (this.drawInfoHotkey != -1) {
             drawSkillInfo(g, this.hotkeySlots[this.drawInfoHotkey], this.c.getHotkeys()[this.drawInfoHotkey]);
         }
+        
+        drawNotifications(g);
+        
         g.setColor(new Color(25, 25, 25, 150));
         g.fillRect(1210, 5, 65, 45);
         g.setFont(Globals.ARIAL_12PT);
@@ -282,6 +303,14 @@ public class ScreenIngame extends Screen {
         g.setColor(Color.WHITE);
         g.drawString("Leave", 13, (int) (9 + this.logoutBox.getHeight()));
         g.drawRect(10, 10, (int) this.logoutBox.getWidth() + 6, (int) this.logoutBox.getHeight() + 6);
+    }
+
+    private void drawNotifications(final Graphics2D g) {
+        int x = 10, y = 710 + g.getFontMetrics(Globals.ARIAL_15PT).getHeight() - this.notifications.size() * (5 + g.getFontMetrics(Globals.ARIAL_15PT).getHeight());
+        for (Notification n : this.notifications) {
+            n.draw(g, x, y);
+            y += (5 + g.getFontMetrics(Globals.ARIAL_15PT).getHeight());
+        }
     }
 
     private void drawHotkeys(final Graphics2D g) {
@@ -316,7 +345,7 @@ public class ScreenIngame extends Screen {
         }
     }
 
-    private void drawHPbar(final Graphics2D g, final BufferedImage hud) {
+    private void drawHUD(final Graphics2D g, final BufferedImage hud) {
         if (this.players.containsKey(this.myKey)) {
             final BufferedImage hpbar = Globals.HUD[1];
             final double hpbarWidth;
@@ -455,12 +484,18 @@ public class ScreenIngame extends Screen {
         final int lvl = Globals.bytesToInt(Arrays.copyOfRange(data, 1, 5));
         final int dropCode = Globals.bytesToInt(Arrays.copyOfRange(data, 5, 9));
         //TODO - Add drop gained notification
-        
+        if (ItemEquip.isValidItem(dropCode)) {
+            this.notifications.add(new Notification(dropCode, Globals.NOTIFICATION_ITEMEQUIP));
+        }
+        if (ItemUpgrade.isValidItem(dropCode)) {
+            this.notifications.add(new Notification(dropCode, Globals.NOTIFICATION_ITEMUPGRADE));
+        }
         this.c.addDrops(lvl, dropCode);
     }
 
     private void dataPlayerGiveEXP(final byte[] data) {
         final int amount = Globals.bytesToInt(Arrays.copyOfRange(data, 1, 5));
+        this.notifications.add(new Notification(amount, Globals.NOTIFICATION_EXP));
         this.c.addExp(amount);
     }
 

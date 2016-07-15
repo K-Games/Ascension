@@ -34,10 +34,11 @@ public class Notification extends Thread {
 
     @Override
     public void run() {
-        float transparency = 1f - (logic.getTime() - this.startTime) / this.duration;
-        this.colour = new Color(Color.YELLOW.getRed() / 255F, Color.YELLOW.getBlue() / 255F, Color.YELLOW.getGreen() / 255F, transparency);
-        this.border = new Color(0, 0, 0, transparency);
-
+        if (!isExpired()) {
+            float transparency = 1f - Globals.nsToMs(logic.getTime() - this.startTime) * 1f / this.duration;
+            this.colour = new Color(255, 200, 0, (int)(transparency * 255));
+            this.border = new Color(0, 0, 0, transparency);
+        }
         this.lastUpdateTime = logic.getTime();
     }
 
@@ -46,12 +47,12 @@ public class Notification extends Thread {
     }
 
     public void draw(final Graphics2D g, final int x, final int y) {
-        g.setFont(Globals.ARIALBLACK_18P);
+        g.setFont(Globals.ARIAL_15PT);
 
         String output = "";
         switch (this.type) {
             case Globals.NOTIFICATION_EXP:
-                output = "Gained " + Integer.toString(this.number) + "EXP";
+                output = "Gained " + Integer.toString(this.number) + " EXP";
                 break;
             case Globals.NOTIFICATION_ITEMEQUIP:
                 output = "Received " + ItemEquip.getItemName(this.number);
@@ -59,12 +60,6 @@ public class Notification extends Thread {
             case Globals.NOTIFICATION_ITEMUPGRADE:
                 output = "Received Tome of Enhancement";
                 break;
-        }
-
-        for (int i = 0; i < 2; i++) {
-            g.setColor(this.border);
-            g.drawString(output, (float) x - 1 + i * 2 * 1, (float) y);
-            g.drawString(output, (float) x, (float) y - 1 + i * 2 * 1);
         }
 
         g.setColor(this.colour);
