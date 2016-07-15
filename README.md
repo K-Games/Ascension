@@ -20,7 +20,7 @@ An multiplayer action 2D sidescrolling platformer coded in pure Java.
 * New sprites for Dash, Walk, Stand and Death.
 
 ### Server Changes
-* Dash distance decreased from 375 over 0.25s to 300 over 0.5s.
+* Dash distance decreased from 375 over 0.25s to 340 over 0.4s.
 * Dash Damage Buff is now applied at the end instead of the beginning.
 * Standardized logging format - Format is now [TIMESTAMP] Log Type:Class:Info
 * Player state valid hash maps changed to use hash sets for performance.
