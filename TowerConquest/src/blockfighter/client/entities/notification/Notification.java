@@ -17,7 +17,6 @@ public class Notification extends Thread {
     private final byte type;
     private final int number;
     private long startTime = 0;
-    private long lastUpdateTime = 0;
     private final int duration = 5000;
     private Color colour, border;
 
@@ -36,10 +35,8 @@ public class Notification extends Thread {
     public void run() {
         if (!isExpired()) {
             float transparency = 1f - Globals.nsToMs(logic.getTime() - this.startTime) * 1f / this.duration;
-            this.colour = new Color(255, 200, 0, (int) (transparency * 255));
-            this.border = new Color(0, 0, 0, transparency);
+            this.colour = new Color(255, 255, 255, (int) (transparency * 255));
         }
-        this.lastUpdateTime = logic.getTime();
     }
 
     public boolean isExpired() {
@@ -61,7 +58,6 @@ public class Notification extends Thread {
                 output = "Received Tome of Enhancement";
                 break;
         }
-
         g.setColor(this.colour);
         g.drawString(output, (float) x, (float) y);
     }
