@@ -7,6 +7,7 @@ import blockfighter.server.entities.player.Player;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.UUID;
 
 /**
@@ -309,11 +310,7 @@ public class PacketHandler implements Runnable {
         for (byte i = 0; i < newPlayer.getStats().length; i++) {
             desc += Globals.getStatName(i) + ": " + newPlayer.getStats()[i] + "\n";
         }
-        desc += "Equips=[";
-        for (byte i = 0; i < newPlayer.getEquips().length; i++) {
-            desc += newPlayer.getEquips()[i] + ",";
-        }
-        desc += "]\n";
+        desc += "Equips=" + Arrays.toString(newPlayer.getEquips()) + "\n";
         Globals.log(PacketHandler.class, "DATA_PLAYER_CREATE", address, port, "Queueing new player <" + newPlayer.getPlayerName() + "> into room " + room + ". Key: " + freeKey + desc);
 
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 4];

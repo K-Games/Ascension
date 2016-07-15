@@ -63,7 +63,7 @@ public class ScreenSpriteTest extends ScreenMenu {
                 if (this.att5Frame == Globals.CHAR_SPRITE[Globals.PLAYER_ANIM_STATE_ATTACKBOW].length) {
                     this.att5Frame = 0;
                 }
-                
+
                 this.rollFrame++;
                 if (this.rollFrame == Globals.CHAR_SPRITE[Globals.PLAYER_ANIM_STATE_ROLL].length) {
                     this.rollFrame = 0;
@@ -124,7 +124,7 @@ public class ScreenSpriteTest extends ScreenMenu {
         this.e.drawIngame(g, x, y, Globals.PLAYER_ANIM_STATE_ATTACKBOW, this.att5Frame, Globals.RIGHT, true);
         g.drawImage(character, 950, 400, null);
         this.e.drawIngame(g, x, y, Globals.PLAYER_ANIM_STATE_ATTACKBOW, this.att5Frame, Globals.RIGHT);
-        
+
         character = Globals.CHAR_SPRITE[Globals.PLAYER_ANIM_STATE_ROLL][this.rollFrame];
         x = 720 + character.getWidth() / 2;
         y = 400 + character.getHeight();

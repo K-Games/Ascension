@@ -36,7 +36,7 @@ public class LogicModule extends Thread {
     private int projMaxKeys = 500;
     private int mobMaxKeys = 255;
     private int minLevel = 0, maxLevel = 0;
-    
+
     private ConcurrentLinkedQueue<Byte> playerKeys = new ConcurrentLinkedQueue<>();
     private ConcurrentLinkedQueue<Integer> projKeys = new ConcurrentLinkedQueue<>();
     private ConcurrentLinkedQueue<Byte> mobKeys = new ConcurrentLinkedQueue<>();

@@ -60,7 +60,7 @@ public class PacketSender implements Runnable {
                     } catch (final IOException ex) {
                         if (p.getPlayer() != null) {
                             p.getPlayer().disconnect();
-                            Globals.log(PacketSender.class, p.getPlayer().getAddress()  + ":" + p.getPlayer().getPort() + " Disconnecting <" + p.getPlayer().getPlayerName() + "> due to unreachable network.", Globals.LOG_TYPE_ERR, true);
+                            Globals.log(PacketSender.class, p.getPlayer().getAddress() + ":" + p.getPlayer().getPort() + " Disconnecting <" + p.getPlayer().getPlayerName() + "> due to unreachable network.", Globals.LOG_TYPE_ERR, true);
                         }
                         Globals.logError(ex.getLocalizedMessage(), ex, true);
                     }

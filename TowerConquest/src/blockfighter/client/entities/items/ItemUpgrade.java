@@ -23,7 +23,7 @@ public class ItemUpgrade implements Item {
 
     private static void loadUpgradeItems() {
         ITEM_UPGRADE_CODES.add(100);
-        
+
         ITEM_NAMES.put(ITEM_TOME, "Tome of Enhancement");
     }
 

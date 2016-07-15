@@ -279,16 +279,16 @@ public class ScreenIngame extends Screen {
                 RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
         final BufferedImage hud = Globals.HUD[0];
         g.drawImage(hud, Globals.WINDOW_WIDTH / 2 - hud.getWidth() / 2, Globals.WINDOW_HEIGHT - hud.getHeight(), null);
-        
+
         drawHUD(g, hud);
         drawHotkeys(g);
 
         if (this.drawInfoHotkey != -1) {
             drawSkillInfo(g, this.hotkeySlots[this.drawInfoHotkey], this.c.getHotkeys()[this.drawInfoHotkey]);
         }
-        
+
         drawNotifications(g);
-        
+
         g.setColor(new Color(25, 25, 25, 150));
         g.fillRect(1210, 5, 65, 45);
         g.setFont(Globals.ARIAL_12PT);

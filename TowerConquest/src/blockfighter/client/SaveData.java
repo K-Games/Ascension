@@ -498,7 +498,7 @@ public class SaveData {
             addItem(new ItemUpgrade(dropItemCode, lvl + Globals.rng(6)));
             return;
         }
-        
+
         if (ItemEquip.isValidItem(dropItemCode)) {
             final ItemEquip e = new ItemEquip(dropItemCode, lvl, Globals.rng(100) < 20);
             addItem(e);

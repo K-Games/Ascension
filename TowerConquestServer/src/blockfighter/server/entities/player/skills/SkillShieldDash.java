@@ -31,7 +31,7 @@ public class SkillShieldDash extends Skill {
             Player.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SHIELD_DASH, player.getKey(), player.getFacing());
             player.setYSpeed(-4);
         }
-        
+
         if (player.getSkillCounter() == 0 && duration >= 500) {
             player.incrementSkillCounter();
             player.queueBuff(new BuffShieldDash(this.logic, 5000, 0.01 + 0.003 * player.getSkillLevel(Skill.SHIELD_DASH), player));

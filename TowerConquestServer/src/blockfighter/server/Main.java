@@ -1,6 +1,5 @@
 package blockfighter.server;
 
-import blockfighter.server.entities.items.Items;
 import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.proj.Projectile;
@@ -86,8 +85,7 @@ public class Main {
             Player.setPacketSender(packetSender);
             Mob.setPacketSender(packetSender);
             Projectile.setPacketSender(packetSender);
-            
-            Items.loadItemCodes();
+
             Globals.log(Main.class, "Server started ", Globals.LOG_TYPE_ERR, false);
             Globals.log(Main.class, "Server started", Globals.LOG_TYPE_DATA, true);
 

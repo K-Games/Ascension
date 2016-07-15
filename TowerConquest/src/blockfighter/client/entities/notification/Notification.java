@@ -36,7 +36,7 @@ public class Notification extends Thread {
     public void run() {
         if (!isExpired()) {
             float transparency = 1f - Globals.nsToMs(logic.getTime() - this.startTime) * 1f / this.duration;
-            this.colour = new Color(255, 200, 0, (int)(transparency * 255));
+            this.colour = new Color(255, 200, 0, (int) (transparency * 255));
             this.border = new Color(0, 0, 0, transparency);
         }
         this.lastUpdateTime = logic.getTime();

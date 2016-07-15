@@ -14,10 +14,13 @@ import blockfighter.client.render.RenderModule;
 import blockfighter.client.render.RenderPanel;
 import blockfighter.client.screen.Screen;
 import java.awt.Dimension;
+import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
@@ -39,28 +42,37 @@ public class Main {
 
     static {
         SHARED_THREADPOOL.execute(SOUND_MODULE);
-        Particle.init();
-        Screen.init();
-        RenderModule.init();
-        FocusHandler.init();
-        KeyHandler.init();
-        MouseHandler.init();
-        Player.init();
-        Mob.init();
-        PacketHandler.init();
-        PacketReceiver.init();
-        IngameNumber.init();
-        Skill.init();
-        ItemEquip.init();
-        Notification.init();
+
+        Class<?>[] classes = {
+            Particle.class,
+            Screen.class,
+            RenderModule.class,
+            FocusHandler.class,
+            KeyHandler.class,
+            MouseHandler.class,
+            Player.class,
+            Mob.class,
+            PacketHandler.class,
+            PacketReceiver.class,
+            IngameNumber.class,
+            Skill.class,
+            ItemEquip.class,
+            Notification.class
+        };
+        
+        for (Class<?> cls : classes) {
+            try {
+                cls.getMethod("init").invoke(null);
+            } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 
     /**
      * @param args the command line arguments
-     * @throws java.lang.NoSuchFieldException
-     * @throws java.lang.IllegalAccessException
      */
-    public static void main(final String[] args) throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
+    public static void main(final String[] args) {
         if (args.length > 0) {
             int port = -1;
             for (int i = 0; i < args.length; i++) {
