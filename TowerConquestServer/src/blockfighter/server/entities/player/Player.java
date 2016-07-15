@@ -1376,7 +1376,7 @@ public class Player extends Thread implements GameEntity {
 
     private void updateAnimState() {
         final byte prevAnimState = this.animState, prevFrame = this.frame;
-        final int duration = Globals.nsToMs(this.logic.getTime() - this.skillCastTime);
+        final int skillDuration = Globals.nsToMs(this.logic.getTime() - this.skillCastTime);
         final int frameDuration = Globals.nsToMs(this.logic.getTime() - this.lastFrameTime);
         switch (this.playerState) {
             case PLAYER_STATE_STAND:
@@ -1412,13 +1412,20 @@ public class Player extends Thread implements GameEntity {
                 break;
             case PLAYER_STATE_JUMP:
                 this.animState = Globals.PLAYER_ANIM_STATE_JUMP;
-                if (this.frame != 0) {
-                    this.frame = 0;
+                if (frameDuration >= 30) {
+                    if (this.isFalling && this.map.isWithinDistanceToGround(this.x, this.y, 110)) {
+                        this.frame = 2;
+                    } else if (this.frame < 1) {
+                        this.frame++;
+                    } else {
+                        this.frame = 1;
+                    }
+                    this.lastFrameTime = this.logic.getTime();
                 }
                 break;
             case PLAYER_STATE_SWORD_SLASH:
                 if (frameDuration >= 10) {
-                    if (duration < 200 && duration > 100) {
+                    if (skillDuration < 200 && skillDuration > 100) {
                         this.animState = Globals.PLAYER_ANIM_STATE_ATTACK;
                         if (this.frame > 0) {
                             this.frame--;
@@ -1481,7 +1488,7 @@ public class Player extends Thread implements GameEntity {
             case PLAYER_STATE_BOW_POWER:
                 this.animState = Globals.PLAYER_ANIM_STATE_ATTACKBOW;
                 if (frameDuration >= ((this.frame < 5) ? 20 : 70)) {
-                    if (duration < 800) {
+                    if (skillDuration < 800) {
                         if (this.frame != 5) {
                             this.frame++;
                         }
