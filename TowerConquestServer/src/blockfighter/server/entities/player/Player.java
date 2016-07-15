@@ -1424,24 +1424,17 @@ public class Player extends Thread implements GameEntity {
                 }
                 break;
             case PLAYER_STATE_SWORD_SLASH:
-                if (frameDuration >= 10) {
-                    if (skillDuration < 200 && skillDuration > 100) {
-                        this.animState = Globals.PLAYER_ANIM_STATE_ATTACK;
-                        if (this.frame > 0) {
-                            this.frame--;
-                        }
-                    } else {
-                        this.animState = Globals.PLAYER_ANIM_STATE_ATTACK;
-                        if (this.frame < 10) {
-                            this.frame++;
-                        }
+                if (frameDuration >= 20) {
+                    this.animState = Globals.PLAYER_ANIM_STATE_ATTACK;
+                    if (this.frame < 5) {
+                        this.frame++;
                     }
                     this.lastFrameTime = this.logic.getTime();
                 }
                 break;
             case PLAYER_STATE_SWORD_GASH:
                 this.animState = Globals.PLAYER_ANIM_STATE_ATTACK;
-                if (frameDuration >= ((this.frame == 1) ? 150 : 40) && this.frame < 10) {
+                if (frameDuration >= ((this.frame == 4) ? 150 : 20) && this.frame < 5) {
                     this.frame++;
 
                     this.lastFrameTime = this.logic.getTime();
@@ -1452,21 +1445,21 @@ public class Player extends Thread implements GameEntity {
                 break;
             case PLAYER_STATE_SWORD_VORPAL:
                 this.animState = Globals.PLAYER_ANIM_STATE_ATTACK;
-                if (frameDuration >= 40 && this.frame < 10) {
+                if (frameDuration >= 20 && this.frame < 5) {
                     this.frame++;
                     this.lastFrameTime = this.logic.getTime();
                 }
                 break;
             case PLAYER_STATE_SWORD_CINDER:
                 this.animState = Globals.PLAYER_ANIM_STATE_ATTACK;
-                if (frameDuration >= ((this.frame == 1) ? 40 : 30) && this.frame < 10) {
+                if (frameDuration >= ((this.frame == 4) ? 40 : 30) && this.frame < 5) {
                     this.frame++;
                     this.lastFrameTime = this.logic.getTime();
                 }
                 break;
             case PLAYER_STATE_SWORD_TAUNT:
                 this.animState = Globals.PLAYER_ANIM_STATE_ATTACK;
-                if (frameDuration >= ((this.frame == 1) ? 150 : 30) && this.frame < 10) {
+                if (frameDuration >= ((this.frame == 4) ? 150 : 30) && this.frame < 5) {
                     this.frame++;
                     this.lastFrameTime = this.logic.getTime();
                 }
@@ -1525,7 +1518,7 @@ public class Player extends Thread implements GameEntity {
                 break;
             case PLAYER_STATE_SHIELD_CHARGE:
                 this.animState = Globals.PLAYER_ANIM_STATE_ATTACK;
-                if (frameDuration >= ((this.frame == 1) ? 600 : 20) && this.frame < 10) {
+                if (frameDuration >= ((this.frame == 1) ? 4 : 20) && this.frame < 4) {
                     this.frame++;
                     this.lastFrameTime = this.logic.getTime();
                 }
@@ -1552,7 +1545,7 @@ public class Player extends Thread implements GameEntity {
                 break;
             case PLAYER_STATE_SHIELD_TOSS:
                 this.animState = Globals.PLAYER_ANIM_STATE_ATTACK;
-                if (frameDuration >= 40 && this.frame < 10) {
+                if (frameDuration >= 40 && this.frame < 5) {
                     this.frame++;
                     this.lastFrameTime = this.logic.getTime();
                 }
