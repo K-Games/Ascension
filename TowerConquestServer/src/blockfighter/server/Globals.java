@@ -12,6 +12,8 @@ import java.net.InetAddress;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Properties;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
@@ -60,9 +62,9 @@ public class Globals {
             .build());
     ;
 
-    public static int SERVER_PORT = 25565;
+    public static int SERVER_PORT = 25568;
     public static byte SERVER_MAX_PLAYERS = 10;
-    public static byte SERVER_ROOMS = 10;
+    public static HashMap<Byte, Byte> SERVER_ROOMS = new HashMap<>();
     public static int SERVER_MAX_IDLE = 120000;
     public static byte SERVER_LOGIC_THREADS = 3,
             SERVER_PACKETSENDER_THREADS = 5;
@@ -253,6 +255,26 @@ public class Globals {
     }
 
     public final static void setServerProp() {
+        switch (SERVER_PORT) {
+            case 25565:
+                for (byte i = 0; i < 3; i++) {
+                    SERVER_ROOMS.put(i, i);
+                }
+                break;
+            case 25566:
+                for (byte i = 0; i < 3; i++) {
+                    SERVER_ROOMS.put((byte) (i + 3), i);
+                }
+                break;
+            case 25567:
+                for (byte i = 0; i < 3; i++) {
+                    SERVER_ROOMS.put((byte) (i + 6), i);
+                }
+                break;
+            case 25568:
+                SERVER_ROOMS.put((byte) 9, (byte) 0);
+                break;
+        }
         InputStream inputStream = null;
         try {
             final Properties prop = new Properties();
@@ -261,23 +283,23 @@ public class Globals {
             prop.load(inputStream);
             if (prop.getProperty("port") != null) {
                 SERVER_PORT = Integer.parseInt(prop.getProperty("port"));
-                log(Globals.class, "Config", "Server Port: " + SERVER_PORT, Globals.LOG_TYPE_DATA, true);
             }
             if (prop.getProperty("maxplayers") != null) {
                 SERVER_MAX_PLAYERS = Byte.parseByte(prop.getProperty("maxplayers"));
-                log(Globals.class, "Config", "Max Players per Room: " + SERVER_MAX_PLAYERS, Globals.LOG_TYPE_DATA, true);
             }
             if (prop.getProperty("rooms") != null) {
-                SERVER_ROOMS = (byte) (1 + Byte.parseByte(prop.getProperty("rooms")));
-                log(Globals.class, "Config", "Rooms: " + SERVER_ROOMS, Globals.LOG_TYPE_DATA, true);
+                SERVER_ROOMS.clear();
+                String[] rooms = prop.getProperty("rooms").split(",");
+                Object[] roomNums = Arrays.asList(rooms).stream().map(Byte::parseByte).toArray();
+                for (byte i = 0; i < roomNums.length; i++) {
+                    SERVER_ROOMS.put((Byte) roomNums[i], i);
+                }
             }
             if (prop.getProperty("logicthreads") != null) {
                 SERVER_LOGIC_THREADS = Byte.parseByte(prop.getProperty("logicthreads"));
-                log(Globals.class, "Config", "Logic Module Threads: " + SERVER_LOGIC_THREADS, Globals.LOG_TYPE_DATA, true);
             }
             if (prop.getProperty("packetsenderthreads") != null) {
                 SERVER_PACKETSENDER_THREADS = Byte.parseByte(prop.getProperty("packetsenderthreads"));
-                log(Globals.class, "Config", "Max Packet Sender Threads: " + SERVER_PACKETSENDER_THREADS, Globals.LOG_TYPE_DATA, true);
             }
         } catch (final FileNotFoundException e) {
             log(Globals.class, "Config", "config.properties not found in root directory. Using default server values.", Globals.LOG_TYPE_DATA, true);
@@ -291,6 +313,12 @@ public class Globals {
                     Logger.getLogger(Globals.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
+            log(Globals.class, "Config", "Server Port: " + SERVER_PORT, Globals.LOG_TYPE_DATA, true);
+            log(Globals.class, "Config", "Max Players per Room: " + SERVER_MAX_PLAYERS, Globals.LOG_TYPE_DATA, true);
+            log(Globals.class, "Config", "Rooms: " + SERVER_ROOMS, Globals.LOG_TYPE_DATA, true);
+            log(Globals.class, "Config", "Logic Module Threads: " + SERVER_LOGIC_THREADS, Globals.LOG_TYPE_DATA, true);
+            log(Globals.class, "Config", "Max Packet Sender Threads: " + SERVER_PACKETSENDER_THREADS, Globals.LOG_TYPE_DATA, true);
+
         }
     }
 

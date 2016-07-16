@@ -36,7 +36,7 @@ public class PacketSender implements Runnable {
     private int bytesSent = 0;
     private final ConcurrentLinkedQueue<ServerPacket> outPacketQueue = new ConcurrentLinkedQueue<>();
 
-    private static final ExecutorService SENDER_THREAD_POOL = new ThreadPoolExecutor(0, Globals.SERVER_PACKETSENDER_THREADS,
+    private static final ExecutorService SENDER_THREAD_POOL = new ThreadPoolExecutor(Globals.SERVER_PACKETSENDER_THREADS, Globals.SERVER_PACKETSENDER_THREADS,
             10L, TimeUnit.SECONDS,
             new LinkedBlockingQueue<>(),
             new BasicThreadFactory.Builder()
@@ -131,7 +131,7 @@ public class PacketSender implements Runnable {
      * @param room Room(Logic Module index) that contains the players
      */
     public void sendAll(final byte[] bytes, final byte room) {
-        for (final Map.Entry<Byte, Player> pEntry : logic[room].getPlayers().entrySet()) {
+        for (final Map.Entry<Byte, Player> pEntry : logic[Globals.SERVER_ROOMS.get(room)].getPlayers().entrySet()) {
             final DatagramPacket packet = createPacket(bytes, pEntry.getValue());
             this.outPacketQueue.add(new ServerPacket(packet, pEntry.getValue()));
         }

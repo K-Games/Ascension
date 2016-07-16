@@ -108,6 +108,12 @@ public class LogicModule implements Runnable {
                 }
             }
         }
+        if (attempts >= 5) {
+            shutdownSocket();
+            if (getScreen() instanceof ScreenServerList) {
+                ((ScreenServerList) getScreen()).setStatus(ScreenServerList.STATUS_FAILEDCONNECT);
+            }
+        }
     }
 
     public void receiveCreate(final byte mapID, final byte key, final byte size) {
@@ -197,6 +203,10 @@ public class LogicModule implements Runnable {
                     Globals.SERVER_ADDRESS = server;
                     if (LogicModule.this.screen instanceof ScreenServerList) {
                         ((ScreenServerList) LogicModule.this.screen).setStatus(ScreenServerList.STATUS_CONNECTING);
+                    }
+                    if (!Globals.customPort) {
+                        Globals.SERVER_PORT = 25565 + (int) (r / 3);
+                        System.out.println(Globals.SERVER_PORT);
                     }
                     socket.connect(InetAddress.getByName(Globals.SERVER_ADDRESS), Globals.SERVER_PORT);
                     socket.setSoTimeout(5000);

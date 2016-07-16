@@ -4,6 +4,7 @@ import blockfighter.client.Globals;
 import blockfighter.client.LogicModule;
 import blockfighter.client.Main;
 import java.net.DatagramPacket;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  *
@@ -11,34 +12,41 @@ import java.net.DatagramPacket;
  */
 public class PacketHandler implements Runnable {
 
-    private DatagramPacket r = null;
+    ConcurrentLinkedQueue<DatagramPacket> packetQueue = new ConcurrentLinkedQueue<>();
     private static LogicModule logic;
-
-    public PacketHandler(final DatagramPacket response) {
-        this.r = response;
-    }
 
     public static void init() {
         logic = Main.getLogicModule();
     }
 
+    public void queuePacket(DatagramPacket data) {
+        packetQueue.add(data);
+    }
+
     @Override
     public void run() {
-        final byte[] data = this.r.getData();
-        final byte dataType = data[0];
-        switch (dataType) {
-            case Globals.DATA_PLAYER_LOGIN:
-                receiveLogin(data);
-                break;
-            case Globals.DATA_PLAYER_CREATE:
-                receiveCreate(data);
-                break;
-            case Globals.DATA_PING:
-                receiveGetPing(data);
-                break;
-            default:
-                receiveData(data);
-                break;
+        process();
+    }
+
+    public void process() {
+        while (!packetQueue.isEmpty()) {
+            DatagramPacket r = packetQueue.poll();
+            final byte[] data = r.getData();
+            final byte dataType = data[0];
+            switch (dataType) {
+                case Globals.DATA_PLAYER_LOGIN:
+                    receiveLogin(data);
+                    break;
+                case Globals.DATA_PLAYER_CREATE:
+                    receiveCreate(data);
+                    break;
+                case Globals.DATA_PING:
+                    receiveGetPing(data);
+                    break;
+                default:
+                    receiveData(data);
+                    break;
+            }
         }
     }
 
@@ -50,7 +58,12 @@ public class PacketHandler implements Runnable {
     }
 
     private void receiveLogin(final byte[] data) {
-        logic.receiveLogin(data);
+        new Thread() {
+            @Override
+            public void run() {
+                logic.receiveLogin(data);
+            }
+        }.start();
     }
 
     private void receiveGetPing(final byte[] data) {
@@ -59,6 +72,10 @@ public class PacketHandler implements Runnable {
 
     private void receiveData(final byte[] data) {
         logic.queueData(data);
+    }
+
+    public void clearDataQueue() {
+        this.packetQueue.clear();
     }
 
 }

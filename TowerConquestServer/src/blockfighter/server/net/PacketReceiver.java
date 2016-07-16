@@ -5,11 +5,6 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
 /**
  * Thread to accept incoming connections. Start only one in the server. An instance of this class should not be required to be referenced at any time.
@@ -18,16 +13,14 @@ import org.apache.commons.lang3.concurrent.BasicThreadFactory;
  */
 public class PacketReceiver extends Thread {
 
+    private PacketHandler packetHandler;
+
+    public PacketReceiver(PacketHandler ph) {
+        this.packetHandler = ph;
+    }
+
     @Override
     public void run() {
-        final ExecutorService threadPool = new ThreadPoolExecutor(1, 3,
-                10L, TimeUnit.SECONDS,
-                new LinkedBlockingQueue<>(),
-                new BasicThreadFactory.Builder()
-                .namingPattern("PacketHandlerExecutor-%d")
-                .daemon(true)
-                .priority(Thread.NORM_PRIORITY)
-                .build());
         try {
             final DatagramSocket socket = new DatagramSocket(Globals.SERVER_PORT);
             Globals.log(PacketReceiver.class, "Server listening on port " + Globals.SERVER_PORT, Globals.LOG_TYPE_DATA, true);
@@ -36,7 +29,7 @@ public class PacketReceiver extends Thread {
                 final byte[] request = new byte[Globals.PACKET_MAX_SIZE];
                 final DatagramPacket packet = new DatagramPacket(request, request.length);
                 socket.receive(packet);
-                threadPool.execute(new PacketHandler(packet));
+                packetHandler.queuePacket(packet);
             }
         } catch (final SocketException ex) {
             Globals.logError(ex.getLocalizedMessage(), ex, true);

@@ -33,6 +33,7 @@ public class Main {
     private static final SoundModule SOUND_MODULE = new SoundModule();
 
     private static final LogicModule LOGIC_MODULE = new LogicModule(SOUND_MODULE);
+    private static final PacketHandler PACKET_HANDLER = new PacketHandler();
     private static final ExecutorService SHARED_THREADPOOL = Executors.newFixedThreadPool(4,
             new BasicThreadFactory.Builder()
             .namingPattern("SHARED_THREADPOOL-%d")
@@ -59,7 +60,7 @@ public class Main {
             ItemEquip.class,
             Notification.class
         };
-        
+
         for (Class<?> cls : classes) {
             try {
                 cls.getMethod("init").invoke(null);
@@ -84,6 +85,7 @@ public class Main {
                                 if (port > 0 || port <= 65535) {
                                     System.out.println("Setting server connection port to " + port);
                                     Globals.SERVER_PORT = port;
+                                    Globals.customPort = true;
                                 }
                             } catch (Exception e) {
                                 System.err.println("-port Specify a valid port between 1 to 65535");
@@ -94,7 +96,6 @@ public class Main {
                 }
             }
         }
-
         javax.swing.SwingUtilities.invokeLater(() -> {
             createAndShowGUI();
         });
@@ -139,16 +140,21 @@ public class Main {
                 SOUND_MODULE.shutdown();
             }
         });
-        final ScheduledExecutorService service = Executors.newScheduledThreadPool(2, new BasicThreadFactory.Builder()
+        final ScheduledExecutorService service = Executors.newScheduledThreadPool(3, new BasicThreadFactory.Builder()
                 .namingPattern("RunScheduler-%d")
                 .daemon(true)
                 .priority(Thread.NORM_PRIORITY)
                 .build());
         service.scheduleAtFixedRate(LOGIC_MODULE, 0, 1, TimeUnit.MILLISECONDS);
         service.scheduleAtFixedRate(render, 0, Globals.RENDER_UPDATE, TimeUnit.MICROSECONDS);
+        service.scheduleAtFixedRate(PACKET_HANDLER, 0, 1, TimeUnit.MILLISECONDS);
     }
 
     public static LogicModule getLogicModule() {
         return LOGIC_MODULE;
+    }
+
+    public static PacketHandler getPacketHandler() {
+        return PACKET_HANDLER;
     }
 }

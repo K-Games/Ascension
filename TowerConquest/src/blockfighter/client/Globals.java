@@ -18,7 +18,8 @@ import org.apache.commons.io.FileUtils;
  */
 public class Globals {
 
-    public static int SERVER_PORT = 25565;
+    public static boolean customPort = false;
+    public static int SERVER_PORT;
     public static String SERVER_ADDRESS;
 
     public final static boolean TEST_MAX_LEVEL = true,

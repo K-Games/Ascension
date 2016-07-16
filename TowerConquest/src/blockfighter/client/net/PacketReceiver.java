@@ -11,19 +11,18 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  *
  * @author Ken Kwan
  */
 public class PacketReceiver extends Thread {
-
+    private static PacketHandler packetHandler;
     private static LogicModule logic;
     private DatagramSocket socket = null;
-    private static final ExecutorService THREAD_POOL = Executors.newFixedThreadPool(5);
+    
     private boolean isConnected = true, settingStatus = true;
+
 
     public PacketReceiver(final DatagramSocket s) {
         this.socket = s;
@@ -31,6 +30,7 @@ public class PacketReceiver extends Thread {
 
     public static void init() {
         logic = Main.getLogicModule();
+        packetHandler = Main.getPacketHandler();
     }
 
     @Override
@@ -40,7 +40,7 @@ public class PacketReceiver extends Thread {
                 final byte[] request = new byte[Globals.PACKET_MAX_SIZE];
                 final DatagramPacket p = new DatagramPacket(request, request.length);
                 this.socket.receive(p);
-                THREAD_POOL.execute(new PacketHandler(p));
+                packetHandler.queuePacket(p);
             }
         } catch (final SocketTimeoutException e) {
             if (this.settingStatus && logic.getScreen() instanceof ScreenServerList) {
@@ -61,11 +61,12 @@ public class PacketReceiver extends Thread {
 
     public void shutdown() {
         this.socket.close();
+        packetHandler.clearDataQueue();
     }
 
     public void shutdown(boolean settingStatus) {
         this.settingStatus = settingStatus;
-        this.socket.close();
+        shutdown();
     }
 
     public boolean isConnected() {

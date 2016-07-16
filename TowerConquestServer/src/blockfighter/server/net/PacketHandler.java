@@ -9,6 +9,7 @@ import java.net.InetAddress;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * Threads to handle incoming requests.
@@ -17,18 +18,10 @@ import java.util.UUID;
  */
 public class PacketHandler implements Runnable {
 
-    private DatagramPacket requestPacket = null;
+    ConcurrentLinkedQueue<DatagramPacket> packetQueue = new ConcurrentLinkedQueue<>();
+
     private static LogicModule[] logic;
     private static PacketSender sender;
-
-    /**
-     * Packet Handler constructor Initialized when a packet is received on the Packet Receiver.
-     *
-     * @param request Packet that is received
-     */
-    public PacketHandler(final DatagramPacket request) {
-        this.requestPacket = request;
-    }
 
     /**
      * Set the static Logic Module array
@@ -48,57 +41,70 @@ public class PacketHandler implements Runnable {
         sender = ps;
     }
 
+    public void queuePacket(DatagramPacket data) {
+        packetQueue.add(data);
+    }
+
     @Override
     public void run() {
-        final byte[] data = this.requestPacket.getData();
-        final byte dataType = data[0];
-        final byte room = data[1];
-        final InetAddress address = this.requestPacket.getAddress();
-        final int port = this.requestPacket.getPort();
-        if (room >= Globals.SERVER_ROOMS || room < 0) {
-            Globals.log(PacketHandler.class, "DATA_INVALID_ROOM", address, port, "Invalid Room Number. Room: " + room);
-            return;
-        }
-        switch (dataType) {
-            case Globals.DATA_PLAYER_LOGIN:
-                receivePlayerLogin(data, room, address, port);
-                break;
-            case Globals.DATA_PLAYER_CREATE:
-                receivePlayerCreate(data, room, address, port);
-                break;
-            case Globals.DATA_PLAYER_GET_ALL:
-                receivePlayerGetAll(data, room);
-                break;
-            case Globals.DATA_PLAYER_SET_MOVE:
-                receivePlayerSetMove(data, room);
-                break;
-            case Globals.DATA_PING:
-                receivePing(data, room, address, port);
-                break;
-            case Globals.DATA_PLAYER_USESKILL:
-                receivePlayerUseSkill(data, room);
-                break;
-            case Globals.DATA_PLAYER_DISCONNECT:
-                receivePlayerDisconnect(data, room);
-                break;
-            case Globals.DATA_PLAYER_GET_NAME:
-                receivePlayerGetName(data, room, address, port);
-                break;
-            case Globals.DATA_PLAYER_GET_STAT:
-                receivePlayerGetStat(data, room, address, port);
-                break;
-            case Globals.DATA_PLAYER_GET_EQUIP:
-                receivePlayerGetEquip(data, room, address, port);
-                break;
-            case Globals.DATA_MOB_GET_STAT:
-                receiveMobGetStat(data, room, address, port);
-                break;
-            case Globals.DATA_MOB_SET_TYPE:
-                receiveMobSetType(data, room, address, port);
-                break;
-            default:
-                Globals.log(PacketHandler.class, "DATA_UNKNOWN", address, port, "Unknown data type.");
-                break;
+        process();
+    }
+
+    public void process() {
+        if (!packetQueue.isEmpty()) {
+            DatagramPacket requestPacket = packetQueue.poll();
+            final byte[] data = requestPacket.getData();
+            final byte dataType = data[0];
+            final byte room = data[1];
+            final InetAddress address = requestPacket.getAddress();
+            final int port = requestPacket.getPort();
+            if (!Globals.SERVER_ROOMS.containsKey(room)) {
+                Globals.log(PacketHandler.class, "DATA_INVALID_ROOM", address, port, "Invalid Room Number. Room: " + room);
+                return;
+            }
+            final byte index = Globals.SERVER_ROOMS.get(room);
+
+            switch (dataType) {
+                case Globals.DATA_PLAYER_LOGIN:
+                    receivePlayerLogin(data, index, address, port);
+                    break;
+                case Globals.DATA_PLAYER_CREATE:
+                    receivePlayerCreate(data, index, address, port);
+                    break;
+                case Globals.DATA_PLAYER_GET_ALL:
+                    receivePlayerGetAll(data, index);
+                    break;
+                case Globals.DATA_PLAYER_SET_MOVE:
+                    receivePlayerSetMove(data, index);
+                    break;
+                case Globals.DATA_PING:
+                    receivePing(data, index, address, port);
+                    break;
+                case Globals.DATA_PLAYER_USESKILL:
+                    receivePlayerUseSkill(data, index);
+                    break;
+                case Globals.DATA_PLAYER_DISCONNECT:
+                    receivePlayerDisconnect(data, index);
+                    break;
+                case Globals.DATA_PLAYER_GET_NAME:
+                    receivePlayerGetName(data, index, address, port);
+                    break;
+                case Globals.DATA_PLAYER_GET_STAT:
+                    receivePlayerGetStat(data, index, address, port);
+                    break;
+                case Globals.DATA_PLAYER_GET_EQUIP:
+                    receivePlayerGetEquip(data, index, address, port);
+                    break;
+                case Globals.DATA_MOB_GET_STAT:
+                    receiveMobGetStat(data, index, address, port);
+                    break;
+                case Globals.DATA_MOB_SET_TYPE:
+                    receiveMobSetType(data, index, address, port);
+                    break;
+                default:
+                    Globals.log(PacketHandler.class, "DATA_UNKNOWN", address, port, "Unknown data type.");
+                    break;
+            }
         }
     }
 
@@ -250,7 +256,7 @@ public class PacketHandler implements Runnable {
             return;
         }
 
-        Globals.log(PacketHandler.class, "DATA_PLAYER_CREATE", address, port, "Creating a new player. Room: " + room);
+        Globals.log(PacketHandler.class, "DATA_PLAYER_CREATE", address, port, "Creating a new player. Room: " + lm.getRoom());
 
         final Player newPlayer = new Player(lm, freeKey, address, port, lm.getMap());
 
@@ -320,20 +326,19 @@ public class PacketHandler implements Runnable {
         bytes[3] = Globals.SERVER_MAX_PLAYERS;
         sender.sendAddress(bytes, address, port);
         Globals.log(PacketHandler.class, "DATA_PLAYER_CREATE",
-                address, port, "Sent <" + newPlayer.getPlayerName() + "> creation confirmation. Room: " + room + " Key: " + freeKey);
+                address, port, "Sent <" + newPlayer.getPlayerName() + "> creation confirmation.  Room: " + lm.getRoom() + " Key: " + freeKey);
         newPlayer.sendPos();
         newPlayer.sendName();
         newPlayer.sendStat(Globals.STAT_MAXHP);
     }
 
     private void receivePlayerLogin(final byte[] data, final byte room, final InetAddress address, final int port) {
-        Globals.log(PacketHandler.class, "DATA_PLAYER_LOGIN", address, port, "Login Attempt Room: " + room);
-
         byte[] temp = new byte[8];
         long leastSigBit, mostSigBit;
         int pos = 2;
         final LogicModule lm = logic[room];
-
+        Globals.log(PacketHandler.class, "DATA_PLAYER_LOGIN", address, port, "Login Attempt Room: " + lm.getRoom());
+        
         System.arraycopy(data, pos, temp, 0, temp.length);
         pos += temp.length;
         leastSigBit = Globals.bytesToLong(temp);
@@ -357,7 +362,7 @@ public class PacketHandler implements Runnable {
             bytes[0] = Globals.DATA_PLAYER_LOGIN;
             bytes[1] = Globals.LOGIN_FAIL_FULL_ROOM;
             sender.sendAddress(bytes, address, port);
-            Globals.log(PacketHandler.class, "DATA_PLAYER_LOGIN", address, port, "Failed to login - Room " + room + " is at max capacity");
+            Globals.log(PacketHandler.class, "DATA_PLAYER_LOGIN", address, port, "Failed to login - Room " + lm.getRoom() + " is at max capacity");
             return;
         }
 
@@ -384,7 +389,6 @@ public class PacketHandler implements Runnable {
     }
 
     private void receivePlayerGetAll(final byte[] data, final byte room) {
-        // Globals.log(PacketHandler.class,"DATA_PLAYER_GET_ALL", "Room: " + room, Globals.LOG_TYPE_DATA, true);
         if (!logic[room].getPlayers().containsKey(data[2])) {
             return;
         }
