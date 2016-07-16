@@ -61,7 +61,6 @@ public abstract class Mob extends Thread implements GameEntity {
     protected Byte nextState;
     protected int stunReduction = 0;
 
-    protected static PacketSender sender;
     protected final GameMap map;
 
     protected ConcurrentLinkedQueue<Damage> damageQueue = new ConcurrentLinkedQueue<>();
@@ -95,15 +94,6 @@ public abstract class Mob extends Thread implements GameEntity {
             this.buffKeys.add(i);
         }
         this.maxBuffKeys += 150;
-    }
-
-    /**
-     * Set a reference to the Server PacketSender.
-     *
-     * @param ps Server PacketSender
-     */
-    public static void setPacketSender(final PacketSender ps) {
-        sender = ps;
     }
 
     public void addValidMobSkillState(final byte state) {
@@ -330,7 +320,7 @@ public abstract class Mob extends Thread implements GameEntity {
             bytes[1] = this.key;
             bytes[2] = STAT_MINHP;
             System.arraycopy(minHP, 0, bytes, 3, minHP.length);
-            sender.sendAll(bytes, this.logic.getRoom());
+            PacketSender.sendAll(bytes, this.logic.getRoom());
             this.lastHPSend = this.logic.getTime();
         }
     }
@@ -486,7 +476,7 @@ public abstract class Mob extends Thread implements GameEntity {
         bytes[7] = posYInt[1];
         bytes[8] = posYInt[2];
         bytes[9] = posYInt[3];
-        sender.sendAll(bytes, this.logic.getRoom());
+        PacketSender.sendAll(bytes, this.logic.getRoom());
         this.updatePos = false;
     }
 
@@ -495,7 +485,7 @@ public abstract class Mob extends Thread implements GameEntity {
         bytes[0] = Globals.DATA_MOB_SET_FACING;
         bytes[1] = this.key;
         bytes[2] = this.facing;
-        sender.sendAll(bytes, this.logic.getRoom());
+        PacketSender.sendAll(bytes, this.logic.getRoom());
         this.updateFacing = false;
     }
 
@@ -505,7 +495,7 @@ public abstract class Mob extends Thread implements GameEntity {
         bytes[1] = this.key;
         bytes[2] = this.animState;
         bytes[3] = this.frame;
-        sender.sendAll(bytes, this.logic.getRoom());
+        PacketSender.sendAll(bytes, this.logic.getRoom());
         this.updateAnimState = false;
     }
 
@@ -528,7 +518,7 @@ public abstract class Mob extends Thread implements GameEntity {
         bytes[11] = d[1];
         bytes[12] = d[2];
         bytes[13] = d[3];
-        sender.sendAll(bytes, this.logic.getRoom());
+        PacketSender.sendAll(bytes, this.logic.getRoom());
     }
 
     public static void sendMobParticle(final byte key, final byte room, final byte particleID, final double x, final double y) {
@@ -546,6 +536,6 @@ public abstract class Mob extends Thread implements GameEntity {
         bytes[8] = posYInt[1];
         bytes[9] = posYInt[2];
         bytes[10] = posYInt[3];
-        sender.sendAll(bytes, room);
+        PacketSender.sendAll(bytes, room);
     }
 }

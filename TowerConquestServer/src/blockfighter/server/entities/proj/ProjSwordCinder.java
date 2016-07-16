@@ -8,6 +8,7 @@ import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.player.skills.Skill;
+import blockfighter.server.net.PacketSender;
 import java.awt.geom.Rectangle2D;
 
 /**
@@ -53,7 +54,7 @@ public class ProjSwordCinder extends Projectile {
                 bytes[0] = Globals.DATA_PARTICLE_EFFECT;
                 bytes[1] = Globals.PARTICLE_BURN;
                 bytes[2] = p.getKey();
-                sender.sendAll(bytes, this.logic.getRoom());
+                PacketSender.sendAll(bytes, this.logic.getRoom());
             }
         }
         while (!this.mobQueue.isEmpty()) {

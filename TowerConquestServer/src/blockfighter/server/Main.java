@@ -3,6 +3,7 @@ package blockfighter.server;
 import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.proj.Projectile;
+import blockfighter.server.net.GameServer;
 import blockfighter.server.net.PacketHandler;
 import blockfighter.server.net.PacketReceiver;
 import blockfighter.server.net.PacketSender;
@@ -82,33 +83,20 @@ public class Main {
             final LogicModule[] server_rooms = new LogicModule[Globals.SERVER_ROOMS.size()];
             PacketSender.setLogic(server_rooms);
             PacketHandler.setLogic(server_rooms);
-
-            final PacketHandler packetHandler = new PacketHandler();
-            final PacketSender packetSender = new PacketSender();
-            final PacketReceiver packetReceiver = new PacketReceiver(packetHandler);
-
-            LogicModule.setPacketSender(packetSender);
-            PacketHandler.setPacketSender(packetSender);
-
-            Player.setPacketSender(packetSender);
-            Mob.setPacketSender(packetSender);
-            Projectile.setPacketSender(packetSender);
+            final GameServer server = new GameServer();
+            server.start();
 
             Globals.log(Main.class, "Server started ", Globals.LOG_TYPE_ERR, false);
             Globals.log(Main.class, "Server started", Globals.LOG_TYPE_DATA, true);
 
-            PACKETSENDER_SCHEDULER.scheduleAtFixedRate(packetSender, 0, 2, TimeUnit.MILLISECONDS);
-            PACKETHANDLER_SCHEDULER.scheduleAtFixedRate(packetHandler, 0, 10, TimeUnit.MICROSECONDS);
+            //PACKETSENDER_SCHEDULER.scheduleAtFixedRate(packetSender, 0, 2, TimeUnit.MILLISECONDS);
+            //PACKETHANDLER_SCHEDULER.scheduleAtFixedRate(packetHandler, 0, 10, TimeUnit.MICROSECONDS);
             for (final Map.Entry<Byte, Byte> b : Globals.SERVER_ROOMS.entrySet()) {
                 server_rooms[b.getValue()] = new LogicModule(b.getKey());
                 LOGIC_SCHEDULER.scheduleAtFixedRate(server_rooms[b.getValue()], 0, 750, TimeUnit.MICROSECONDS);
             }
             Globals.log(Main.class, "Initialized " + server_rooms.length + " rooms", Globals.LOG_TYPE_ERR, false);
             Globals.log(Main.class, "Initialized " + server_rooms.length + " rooms", Globals.LOG_TYPE_DATA, true);
-
-            packetReceiver.setDaemon(true);
-            packetReceiver.setName("PacketReceiver");
-            packetReceiver.start();
 
         } catch (final Exception ex) {
             Globals.logError(ex.getLocalizedMessage(), ex, true);

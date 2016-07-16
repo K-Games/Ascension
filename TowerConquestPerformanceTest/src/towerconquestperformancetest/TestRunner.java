@@ -3,8 +3,6 @@ package towerconquestperformancetest;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
 public class TestRunner {
@@ -19,29 +17,26 @@ public class TestRunner {
         byte i = 0;
         for (byte room = 0; room < 10; room++) {
             for (byte player = 0; player < 10; player++) {
-                if (i < 99) {
-                    try {
-                        Thread.sleep(50);
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(TestRunner.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    TestLogicModule logic = new TestLogicModule();
-                    TestPacketHandler ph = new TestPacketHandler(logic);
-                    logic.setPH(ph);
+                if (i < 97) {
+                    TestLogicModule logic = new TestLogicModule(i, room);
                     if (room < 3) {
-                        logic.sendLogin(server, 25565, room, i);
+                        logic.connect(server, 25568, room);
                     } else if (room < 6) {
-                        logic.sendLogin(server, 25566, room, i);
+                        logic.connect(server, 25568, room);
                     } else if (room < 7) {
-                        logic.sendLogin(server, 25567, room, i);
+                        logic.connect(server, 25568, room);
                     } else if (room < 10) {
-                        logic.sendLogin(server, 25568, room, i);
+                        logic.connect(server, 25568, room);
                     }
-                    service.scheduleAtFixedRate(logic, 0, 100, TimeUnit.MILLISECONDS);
-                    service.scheduleAtFixedRate(ph, 0, 10, TimeUnit.MILLISECONDS);
+                    service.scheduleAtFixedRate(logic, 0, 1000, TimeUnit.MILLISECONDS);
                     i++;
                 }
             }
         }
+//        for (byte player = 0; player < 49; player++) {
+//            TestLogicModule logic = new TestLogicModule(player, (byte) 9);
+//            logic.connect(server, 25568, (byte) 9);
+//            service.scheduleAtFixedRate(logic, 0, 100, TimeUnit.MILLISECONDS);
+//        }
     }
 }

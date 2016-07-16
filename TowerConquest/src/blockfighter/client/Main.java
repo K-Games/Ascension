@@ -8,7 +8,6 @@ import blockfighter.client.entities.particles.Particle;
 import blockfighter.client.entities.player.Player;
 import blockfighter.client.entities.player.skills.Skill;
 import blockfighter.client.maps.GameMap;
-import blockfighter.client.net.PacketHandler;
 import blockfighter.client.net.PacketReceiver;
 import blockfighter.client.render.RenderModule;
 import blockfighter.client.render.RenderPanel;
@@ -33,7 +32,6 @@ public class Main {
     private static final SoundModule SOUND_MODULE = new SoundModule();
 
     private static final LogicModule LOGIC_MODULE = new LogicModule(SOUND_MODULE);
-    private static final PacketHandler PACKET_HANDLER = new PacketHandler();
     private static final ExecutorService SHARED_THREADPOOL = Executors.newFixedThreadPool(4,
             new BasicThreadFactory.Builder()
             .namingPattern("SHARED_THREADPOOL-%d")
@@ -53,7 +51,6 @@ public class Main {
             MouseHandler.class,
             Player.class,
             Mob.class,
-            PacketHandler.class,
             PacketReceiver.class,
             IngameNumber.class,
             Skill.class,
@@ -147,14 +144,10 @@ public class Main {
                 .build());
         service.scheduleAtFixedRate(LOGIC_MODULE, 0, 1, TimeUnit.MILLISECONDS);
         service.scheduleAtFixedRate(render, 0, Globals.RENDER_UPDATE, TimeUnit.MICROSECONDS);
-        service.scheduleAtFixedRate(PACKET_HANDLER, 0, 1, TimeUnit.MILLISECONDS);
     }
 
     public static LogicModule getLogicModule() {
         return LOGIC_MODULE;
     }
 
-    public static PacketHandler getPacketHandler() {
-        return PACKET_HANDLER;
-    }
 }

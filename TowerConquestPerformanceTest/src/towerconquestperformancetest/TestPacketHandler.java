@@ -1,57 +1,40 @@
 package towerconquestperformancetest;
 
-import java.net.DatagramPacket;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-public class TestPacketHandler extends Thread {
+public class TestPacketHandler {
 
-    ConcurrentLinkedQueue<DatagramPacket> packetQueue = new ConcurrentLinkedQueue<>();
-    private TestLogicModule logic;
+    private static ConcurrentLinkedQueue<byte[]> packetQueue = new ConcurrentLinkedQueue<>();
 
-    public TestPacketHandler(TestLogicModule l) {
-        logic = l;
-    }
-
-    public void queuePacket(DatagramPacket data) {
-        packetQueue.add(data);
-    }
-
-    @Override
-    public void run() {
-        process();
-    }
-
-    public void process() {
-        while (!packetQueue.isEmpty()) {
-            DatagramPacket requestPacket = packetQueue.poll();
-            final byte[] data = requestPacket.getData();
-            final byte dataType = data[0];
-            switch (dataType) {
-                case Globals.DATA_PLAYER_LOGIN:
-                    receiveLogin(data);
-                    break;
-                case Globals.DATA_PLAYER_CREATE:
-                    receiveCreate(data);
-                    break;
-                default:
-                    break;
-            }
+    public static void process(final byte[] data, final TestGameClient gameClient) {
+        final byte dataType = data[0];
+        switch (dataType) {
+            case Globals.DATA_PLAYER_LOGIN:
+                receiveLogin(data, gameClient);
+                break;
+            case Globals.DATA_PLAYER_CREATE:
+                receiveCreate(data, gameClient);
+                break;
         }
     }
 
-    private void receiveCreate(final byte[] data) {
+    private static void receiveCreate(final byte[] data, final TestGameClient gameClient) {
         final byte mapID = data[1],
                 key = data[2],
                 size = data[3];
-        logic.receiveCreate(mapID, key, size);
+        gameClient.receiveCreate(mapID, key, size);
     }
 
-    private void receiveLogin(final byte[] data) {
+    private static void receiveLogin(final byte[] data, final TestGameClient gameClient) {
         new Thread() {
             @Override
             public void run() {
-                logic.receiveLogin(data);
+                gameClient.receiveLogin(data);
             }
         }.start();
+    }
+
+    public static void clearDataQueue() {
+        packetQueue.clear();
     }
 }

@@ -257,7 +257,6 @@ public class Globals {
     public final static BufferedImage[][] DAMAGE_FONT = new BufferedImage[4][10];
     public final static BufferedImage[] EXP_WORD = new BufferedImage[1];
 
-
     public final static byte NUM_BGM = 4,
             BGM_MENU = 0x00,
             BGM_ARENA1 = 0x01,
@@ -307,7 +306,6 @@ public class Globals {
     public static final byte NOTIFICATION_EXP = 0,
             NOTIFICATION_ITEMEQUIP = 1,
             NOTIFICATION_ITEMUPGRADE = 2;
-
 
     public static final String getStatName(final byte statID) {
         switch (statID) {

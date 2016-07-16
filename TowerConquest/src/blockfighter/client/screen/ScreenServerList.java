@@ -164,7 +164,7 @@ public class ScreenServerList extends ScreenMenu {
                     this.connecting = true;
                     this.SERVER_ROOMS.setEnabled(false);
                     saveServerList(this.SERVERADDRESS_FIELD.getText().trim());
-                    logic.sendLogin(this.SERVERADDRESS_FIELD.getText().trim(), (byte) this.SERVER_ROOMS.getSelectedIndex());
+                    logic.connect(this.SERVERADDRESS_FIELD.getText().trim(), (byte) this.SERVER_ROOMS.getSelectedIndex());
                 }
             }
         }

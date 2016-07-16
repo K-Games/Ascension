@@ -4,8 +4,7 @@ import blockfighter.client.Globals;
 import blockfighter.client.SaveData;
 import blockfighter.client.entities.items.ItemEquip;
 import blockfighter.client.entities.player.skills.Skill;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
+import com.esotericsoftware.kryonet.Client;
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -14,10 +13,10 @@ import java.nio.charset.StandardCharsets;
  */
 public class PacketSender {
 
-    private static DatagramSocket socket = null;
+    private static Client client;
 
-    public static void setSocket(final DatagramSocket s) {
-        socket = s;
+    public static void setClient(final Client cl) {
+        client = cl;
     }
 
     public static void sendPlayerLogin(final byte room, final SaveData c) {
@@ -38,8 +37,7 @@ public class PacketSender {
         temp = Globals.intToBytes((int) stats[Globals.STAT_LEVEL]);
         System.arraycopy(temp, 0, bytes, 18, temp.length);
 
-        final DatagramPacket requestPacket = createPacket(bytes);
-        sendPacket(requestPacket);
+        sendPacket(bytes);
     }
 
     public static void sendPlayerCreate(final byte room, final SaveData c) {
@@ -128,9 +126,7 @@ public class PacketSender {
             System.arraycopy(temp, 0, bytes, pos, temp.length);
             pos += temp.length;
         }
-
-        final DatagramPacket requestPacket = createPacket(bytes);
-        sendPacket(requestPacket);
+        sendPacket(bytes);
     }
 
     public static void sendSetMobType(final byte room, final byte mobKey) {
@@ -138,8 +134,7 @@ public class PacketSender {
         bytes[0] = Globals.DATA_MOB_SET_TYPE;
         bytes[1] = room;
         bytes[2] = mobKey;
-        final DatagramPacket requestPacket = createPacket(bytes);
-        sendPacket(requestPacket);
+        sendPacket(bytes);
     }
 
     public static void sendGetMobStat(final byte room, final byte key, final byte stat) {
@@ -148,8 +143,7 @@ public class PacketSender {
         bytes[1] = room;
         bytes[2] = key;
         bytes[3] = stat;
-        final DatagramPacket requestPacket = createPacket(bytes);
-        sendPacket(requestPacket);
+        sendPacket(bytes);
     }
 
     public static void sendGetAll(final byte room, final byte myKey) {
@@ -157,8 +151,7 @@ public class PacketSender {
         bytes[0] = Globals.DATA_PLAYER_GET_ALL;
         bytes[1] = room;
         bytes[2] = myKey;
-        final DatagramPacket requestPacket = createPacket(bytes);
-        sendPacket(requestPacket);
+        sendPacket(bytes);
     }
 
     public static void sendMove(final byte room, final byte key, final byte direction, final boolean move) {
@@ -168,8 +161,7 @@ public class PacketSender {
         bytes[2] = key;
         bytes[3] = direction;
         bytes[4] = (byte) (move ? 1 : 0);
-        final DatagramPacket requestPacket = createPacket(bytes);
-        sendPacket(requestPacket);
+        sendPacket(bytes);
     }
 
     public static void sendUseSkill(final byte room, final byte key, final byte skillCode) {
@@ -178,8 +170,7 @@ public class PacketSender {
         bytes[1] = room;
         bytes[2] = key;
         bytes[3] = skillCode;
-        final DatagramPacket requestPacket = createPacket(bytes);
-        sendPacket(requestPacket);
+        sendPacket(bytes);
     }
 
     public static void sendGetPing(final byte room, final byte myKey, final byte pID) {
@@ -188,8 +179,7 @@ public class PacketSender {
         bytes[1] = room;
         bytes[2] = myKey;
         bytes[3] = pID;
-        final DatagramPacket requestPacket = createPacket(bytes);
-        sendPacket(requestPacket);
+        sendPacket(bytes);
     }
 
     public static void sendDisconnect(final byte room, final byte myKey) {
@@ -197,8 +187,7 @@ public class PacketSender {
         bytes[0] = Globals.DATA_PLAYER_DISCONNECT;
         bytes[1] = room;
         bytes[2] = myKey;
-        final DatagramPacket requestPacket = createPacket(bytes);
-        sendPacket(requestPacket);
+        sendPacket(bytes);
     }
 
     public static void sendGetName(final byte room, final byte key) {
@@ -206,8 +195,7 @@ public class PacketSender {
         bytes[0] = Globals.DATA_PLAYER_GET_NAME;
         bytes[1] = room;
         bytes[2] = key;
-        final DatagramPacket requestPacket = createPacket(bytes);
-        sendPacket(requestPacket);
+        sendPacket(bytes);
     }
 
     public static void sendGetStat(final byte room, final byte key, final byte stat) {
@@ -216,8 +204,7 @@ public class PacketSender {
         bytes[1] = room;
         bytes[2] = key;
         bytes[3] = stat;
-        final DatagramPacket requestPacket = createPacket(bytes);
-        sendPacket(requestPacket);
+        sendPacket(bytes);
     }
 
     public static void sendGetEquip(final byte room, final byte key) {
@@ -225,21 +212,10 @@ public class PacketSender {
         bytes[0] = Globals.DATA_PLAYER_GET_EQUIP;
         bytes[1] = room;
         bytes[2] = key;
-        final DatagramPacket requestPacket = createPacket(bytes);
-        sendPacket(requestPacket);
+        sendPacket(bytes);
     }
 
-    private static void sendPacket(final DatagramPacket packet) {
-        try {
-            if (!socket.isClosed()) {
-                socket.send(packet);
-            }
-        } catch (final Exception ex) {
-            System.err.println(PacketSender.class.getCanonicalName() + ": " + ex.getLocalizedMessage() + "@" + ex.getStackTrace()[0]);
-        }
-    }
-
-    private static DatagramPacket createPacket(final byte[] bytes) {
-        return new DatagramPacket(bytes, bytes.length);
+    private static void sendPacket(final byte[] packet) {
+        client.sendTCP(packet);
     }
 }

@@ -47,10 +47,11 @@ import blockfighter.server.entities.player.skills.SkillSwordSlash;
 import blockfighter.server.entities.player.skills.SkillSwordTaunt;
 import blockfighter.server.entities.player.skills.SkillSwordVorpal;
 import blockfighter.server.maps.GameMap;
+import blockfighter.server.net.GameServer;
 import blockfighter.server.net.PacketSender;
+import com.esotericsoftware.kryonet.Connection;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.net.InetAddress;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -114,9 +115,7 @@ public class Player extends Thread implements GameEntity {
     private double dmgReduct, dmgAmp;
     private double barrierDmgTaken = 0, tacticalDmgMult = 0;
 
-    private final InetAddress address;
-    private final int port;
-    private static PacketSender sender;
+    private final Connection connection;
     private final GameMap map;
     private final double[] stats = new double[Globals.NUM_STATS], bonusStats = new double[Globals.NUM_STATS];
 
@@ -209,17 +208,15 @@ public class Player extends Thread implements GameEntity {
      * Create a new player entity in the server.
      *
      * @param key The key of this player in the player array in logic module
-     * @param address IP address of player
-     * @param port Connected port
      * @param map Reference to server's loaded map
+     * @param c Player connection
      * @param l Reference to Logic module
      */
-    public Player(final LogicModule l, final byte key, final InetAddress address, final int port, final GameMap map) {
+    public Player(final LogicModule l, final byte key, final Connection c, final GameMap map) {
         this.logic = l;
         this.lastActionTime = l.getTime();
         this.key = key;
-        this.address = address;
-        this.port = port;
+        this.connection = c;
         Point2D.Double spawn = map.getRandomSpawnPoint();
         this.x = spawn.x;
         this.y = spawn.y;
@@ -236,15 +233,6 @@ public class Player extends Thread implements GameEntity {
             this.buffKeys.add(i);
         }
         this.maxBuffKeys += 150;
-    }
-
-    /**
-     * Set the static packet sender for Player class
-     *
-     * @param ps Server PacketSender
-     */
-    public static void setPacketSender(final PacketSender ps) {
-        sender = ps;
     }
 
     /**
@@ -313,28 +301,8 @@ public class Player extends Thread implements GameEntity {
         return this.animState;
     }
 
-    /**
-     * Return this player's IP address.
-     * <p>
-     * Used for broadcasting to player with UDP.
-     * </p>
-     *
-     * @return The player's IP
-     */
-    public InetAddress getAddress() {
-        return this.address;
-    }
-
-    /**
-     * Return this player's connected port.
-     * <p>
-     * Used for broadcasting to player with UDP.
-     * </p>
-     *
-     * @return The player's port in int
-     */
-    public int getPort() {
-        return this.port;
+    public Connection getConnection() {
+        return this.connection;
     }
 
     /**
@@ -652,7 +620,7 @@ public class Player extends Thread implements GameEntity {
         }
 
         if (this.connected && Globals.nsToMs(this.logic.getTime() - this.lastActionTime) >= Globals.SERVER_MAX_IDLE) {
-            Globals.log(Player.class, this.address, this.port, " Disconnecting <" + this.name + "> due to idling.");
+            Globals.log(Player.class, this.connection + " Disconnecting <" + this.name + "> due to idling.", Globals.LOG_TYPE_DATA, true);
             disconnect();
         }
     }
@@ -876,7 +844,7 @@ public class Player extends Thread implements GameEntity {
             bytes[1] = this.key;
             bytes[2] = Globals.STAT_MINHP;
             System.arraycopy(stat, 0, bytes, 3, stat.length);
-            sender.sendAll(bytes, this.logic.getRoom());
+            PacketSender.sendAll(bytes, this.logic.getRoom());
             //this.nextHPSend = 150;
             this.lastHPSendTime = this.logic.getTime();
         }
@@ -1108,7 +1076,7 @@ public class Player extends Thread implements GameEntity {
                 final byte[] itemCode = Globals.intToBytes(equipCode);
                 System.arraycopy(itemCode, 0, bytes, 5, itemCode.length);
 
-                sender.sendPlayer(bytes, this);
+                PacketSender.sendPlayer(bytes, this);
             }
             break;
         }
@@ -1124,7 +1092,7 @@ public class Player extends Thread implements GameEntity {
                 final byte[] itemCode = Globals.intToBytes(upgradeCode);
                 System.arraycopy(itemCode, 0, bytes, 5, itemCode.length);
 
-                sender.sendPlayer(bytes, this);
+                PacketSender.sendPlayer(bytes, this);
             }
             break;
         }
@@ -1138,7 +1106,7 @@ public class Player extends Thread implements GameEntity {
         bytes[2] = exp[1];
         bytes[3] = exp[2];
         bytes[4] = exp[3];
-        sender.sendPlayer(bytes, this);
+        PacketSender.sendPlayer(bytes, this);
     }
 
     /**
@@ -1570,7 +1538,7 @@ public class Player extends Thread implements GameEntity {
         bytes[7] = posYInt[1];
         bytes[8] = posYInt[2];
         bytes[9] = posYInt[3];
-        sender.sendAll(bytes, room);
+        PacketSender.sendAll(bytes, room);
     }
 
     public void sendData() {
@@ -1595,7 +1563,7 @@ public class Player extends Thread implements GameEntity {
             bytes[12] = this.frame;
         }
 
-        sender.sendAll(bytes, this.logic.getRoom());
+        PacketSender.sendAll(bytes, this.logic.getRoom());
         this.updatePos = false;
         this.updateFacing = false;
         this.updateAnimState = false;
@@ -1622,7 +1590,7 @@ public class Player extends Thread implements GameEntity {
         bytes[8] = posYInt[2];
         bytes[9] = posYInt[3];
         bytes[10] = this.facing;
-        sender.sendAll(bytes, this.logic.getRoom());
+        PacketSender.sendAll(bytes, this.logic.getRoom());
         this.updatePos = false;
     }
 
@@ -1637,7 +1605,7 @@ public class Player extends Thread implements GameEntity {
         bytes[0] = Globals.DATA_PLAYER_SET_FACING;
         bytes[1] = this.key;
         bytes[2] = this.facing;
-        sender.sendAll(bytes, this.logic.getRoom());
+        PacketSender.sendAll(bytes, this.logic.getRoom());
         this.updateFacing = false;
     }
 
@@ -1657,7 +1625,7 @@ public class Player extends Thread implements GameEntity {
         } else {
             bytes[3] = this.frame;
         }
-        sender.sendAll(bytes, this.logic.getRoom());
+        PacketSender.sendAll(bytes, this.logic.getRoom());
         this.updateAnimState = false;
     }
 
@@ -1670,14 +1638,14 @@ public class Player extends Thread implements GameEntity {
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 2];
         bytes[0] = Globals.DATA_PLAYER_SET_COOLDOWN;
         bytes[1] = data[3];
-        sender.sendPlayer(bytes, this);
+        PacketSender.sendPlayer(bytes, this);
     }
 
     public void sendCooldown(final byte skillCode) {
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 2];
         bytes[0] = Globals.DATA_PLAYER_SET_COOLDOWN;
         bytes[1] = skillCode;
-        sender.sendPlayer(bytes, this);
+        PacketSender.sendPlayer(bytes, this);
     }
 
     public void sendDamage(final Damage dmg, final int dmgDealt) {
@@ -1700,13 +1668,13 @@ public class Player extends Thread implements GameEntity {
         bytes[12] = d[2];
         bytes[13] = d[3];
         if (map.isPvP()) {
-            sender.sendPlayer(bytes, dmg.getOwner());
+            PacketSender.sendPlayer(bytes, dmg.getOwner());
 
             final byte[] pvpBytes = Arrays.copyOf(bytes, bytes.length);
             pvpBytes[1] = Globals.NUMBER_TYPE_MOB;
-            sender.sendPlayer(pvpBytes, this);
+            PacketSender.sendPlayer(pvpBytes, this);
         } else {
-            sender.sendAll(bytes, this.logic.getRoom());
+            PacketSender.sendAll(bytes, this.logic.getRoom());
         }
     }
 
@@ -1719,7 +1687,7 @@ public class Player extends Thread implements GameEntity {
         bytes[0] = Globals.DATA_PLAYER_GET_NAME;
         bytes[1] = this.key;
         System.arraycopy(data, 0, bytes, 2, data.length);
-        sender.sendAll(bytes, this.logic.getRoom());
+        PacketSender.sendAll(bytes, this.logic.getRoom());
     }
 
     public void sendStat(final byte statID) {
@@ -1729,7 +1697,7 @@ public class Player extends Thread implements GameEntity {
         bytes[1] = this.key;
         bytes[2] = statID;
         System.arraycopy(stat, 0, bytes, 3, stat.length);
-        sender.sendAll(bytes, this.logic.getRoom());
+        PacketSender.sendAll(bytes, this.logic.getRoom());
     }
 
     public void setInvulnerable(final boolean set) {
@@ -1843,6 +1811,14 @@ public class Player extends Thread implements GameEntity {
      */
     public void disconnect() {
         this.connected = false;
+        final byte[] bytes = new byte[2];
+        bytes[0] = Globals.DATA_PLAYER_DISCONNECT;
+        bytes[1] = this.key;
+        PacketSender.sendAll(bytes, logic.getRoom());
+        this.connection.close();
+        GameServer.removeConnectionPlayer(this.connection);
+        Globals.log(Player.class, "Disconnected <" + getPlayerName() + ">", Globals.LOG_TYPE_DATA, true);
+
     }
 
     /**
@@ -1907,7 +1883,7 @@ public class Player extends Thread implements GameEntity {
         bytes[8] = posYInt[2];
         bytes[9] = posYInt[3];
         bytes[10] = facing;
-        sender.sendAll(bytes, room);
+        PacketSender.sendAll(bytes, room);
     }
 
     public static void sendParticle(final byte room, final byte particleID, final double x, final double y) {
@@ -1924,7 +1900,7 @@ public class Player extends Thread implements GameEntity {
         bytes[7] = posYInt[1];
         bytes[8] = posYInt[2];
         bytes[9] = posYInt[3];
-        sender.sendAll(bytes, room);
+        PacketSender.sendAll(bytes, room);
     }
 
     public static void sendParticle(final byte room, final byte particleID, final byte key) {
@@ -1932,7 +1908,7 @@ public class Player extends Thread implements GameEntity {
         bytes[0] = Globals.DATA_PARTICLE_EFFECT;
         bytes[1] = particleID;
         bytes[2] = key;
-        sender.sendAll(bytes, room);
+        PacketSender.sendAll(bytes, room);
     }
 
     public static void sendParticle(final byte room, final byte particleID, final byte key, final byte facing) {
@@ -1941,7 +1917,7 @@ public class Player extends Thread implements GameEntity {
         bytes[1] = particleID;
         bytes[2] = facing;
         bytes[3] = key;
-        sender.sendAll(bytes, room);
+        PacketSender.sendAll(bytes, room);
     }
 
 }

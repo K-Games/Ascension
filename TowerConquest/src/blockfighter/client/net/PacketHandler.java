@@ -1,81 +1,65 @@
 package blockfighter.client.net;
 
 import blockfighter.client.Globals;
-import blockfighter.client.LogicModule;
-import blockfighter.client.Main;
-import java.net.DatagramPacket;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  *
  * @author Ken Kwan
  */
-public class PacketHandler implements Runnable {
+public class PacketHandler {
 
-    ConcurrentLinkedQueue<DatagramPacket> packetQueue = new ConcurrentLinkedQueue<>();
-    private static LogicModule logic;
+    private static ConcurrentLinkedQueue<byte[]> packetQueue = new ConcurrentLinkedQueue<>();
+    private static GameClient gameClient;
 
-    public static void init() {
-        logic = Main.getLogicModule();
+    public static void setGameClient(final GameClient cl) {
+        gameClient = cl;
     }
 
-    public void queuePacket(DatagramPacket data) {
-        packetQueue.add(data);
-    }
-
-    @Override
-    public void run() {
-        process();
-    }
-
-    public void process() {
-        while (!packetQueue.isEmpty()) {
-            DatagramPacket r = packetQueue.poll();
-            final byte[] data = r.getData();
-            final byte dataType = data[0];
-            switch (dataType) {
-                case Globals.DATA_PLAYER_LOGIN:
-                    receiveLogin(data);
-                    break;
-                case Globals.DATA_PLAYER_CREATE:
-                    receiveCreate(data);
-                    break;
-                case Globals.DATA_PING:
-                    receiveGetPing(data);
-                    break;
-                default:
-                    receiveData(data);
-                    break;
-            }
+    public static void process(final byte[] data) {
+        final byte dataType = data[0];
+        switch (dataType) {
+            case Globals.DATA_PLAYER_LOGIN:
+                receiveLogin(data);
+                break;
+            case Globals.DATA_PLAYER_CREATE:
+                receiveCreate(data);
+                break;
+            case Globals.DATA_PING:
+                receiveGetPing(data);
+                break;
+            default:
+                receiveData(data);
+                break;
         }
     }
 
-    private void receiveCreate(final byte[] data) {
+    private static void receiveCreate(final byte[] data) {
         final byte mapID = data[1],
                 key = data[2],
                 size = data[3];
-        logic.receiveCreate(mapID, key, size);
+        gameClient.receiveCreate(mapID, key, size);
     }
 
-    private void receiveLogin(final byte[] data) {
+    private static void receiveLogin(final byte[] data) {
         new Thread() {
             @Override
             public void run() {
-                logic.receiveLogin(data);
+                gameClient.receiveLogin(data);
             }
         }.start();
     }
 
-    private void receiveGetPing(final byte[] data) {
-        logic.setPing(data[1]);
+    private static void receiveGetPing(final byte[] data) {
+        gameClient.setPing(data[1]);
     }
 
-    private void receiveData(final byte[] data) {
-        logic.queueData(data);
+    private static void receiveData(final byte[] data) {
+        gameClient.queueData(data);
     }
 
-    public void clearDataQueue() {
-        this.packetQueue.clear();
+    public static void clearDataQueue() {
+        packetQueue.clear();
     }
 
 }

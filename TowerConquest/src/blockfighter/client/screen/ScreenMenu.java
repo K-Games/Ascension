@@ -113,7 +113,7 @@ public abstract class ScreenMenu extends Screen {
                             break;
                         case 4:
                             logic.setScreen(new ScreenServerList());
-                            // logic.sendLogin();
+                            // logic.connect();
                             break;
                         case 5:
                             logic.setScreen(new ScreenKeyBind());

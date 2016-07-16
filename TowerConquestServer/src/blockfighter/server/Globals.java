@@ -8,7 +8,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
-import java.net.InetAddress;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -62,10 +61,10 @@ public class Globals {
             .build());
     ;
 
-    public static int SERVER_PORT = 25568;
+    public static int SERVER_PORT = 25565;
     public static byte SERVER_MAX_PLAYERS = 10;
     public static HashMap<Byte, Byte> SERVER_ROOMS = new HashMap<>();
-    public static int SERVER_MAX_IDLE = 120000;
+    public static int SERVER_MAX_IDLE = 1200000;
     public static byte SERVER_LOGIC_THREADS = 3,
             SERVER_PACKETSENDER_THREADS = 5;
 
@@ -209,7 +208,7 @@ public class Globals {
             MAXDMG_BASE = 40;
 
     // Packet globals
-    public final static int PACKET_MAX_SIZE = 512;
+    public final static int PACKET_MAX_SIZE = 256;
     public final static int PACKET_BYTE = 1;
     public final static int PACKET_INT = 4;
     public final static int PACKET_CHAR = 1;
@@ -255,25 +254,8 @@ public class Globals {
     }
 
     public final static void setServerProp() {
-        switch (SERVER_PORT) {
-            case 25565:
-                for (byte i = 0; i < 3; i++) {
-                    SERVER_ROOMS.put(i, i);
-                }
-                break;
-            case 25566:
-                for (byte i = 0; i < 3; i++) {
-                    SERVER_ROOMS.put((byte) (i + 3), i);
-                }
-                break;
-            case 25567:
-                for (byte i = 0; i < 3; i++) {
-                    SERVER_ROOMS.put((byte) (i + 6), i);
-                }
-                break;
-            case 25568:
-                SERVER_ROOMS.put((byte) 9, (byte) 0);
-                break;
+        for (byte i = 0; i < 10; i++) {
+            SERVER_ROOMS.put(i, i);
         }
         InputStream inputStream = null;
         try {
@@ -350,14 +332,6 @@ public class Globals {
 
     public final static void log(final Class originClass, final String customClassDesc, final String info, final byte logType, final boolean outputToConsole) {
         log(originClass.getSimpleName() + " " + customClassDesc, info, logType, outputToConsole);
-    }
-
-    public final static void log(final Class originClass, final InetAddress ipAddress, final int port, final String info) {
-        Globals.log(originClass, ipAddress + ":" + port + " " + info, Globals.LOG_TYPE_DATA, true);
-    }
-
-    public final static void log(final Class originClass, final String customClassDesc, final InetAddress ipAddress, final int port, final String info) {
-        Globals.log(originClass.getSimpleName() + " " + customClassDesc, ipAddress + ":" + port + " " + info, Globals.LOG_TYPE_DATA, true);
     }
 
     public final static void log(final String className, final String info, final byte logType, final boolean outputToConsole) {

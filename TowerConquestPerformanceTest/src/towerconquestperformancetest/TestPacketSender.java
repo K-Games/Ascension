@@ -1,18 +1,11 @@
 package towerconquestperformancetest;
 
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
+import com.esotericsoftware.kryonet.Client;
 import java.nio.charset.StandardCharsets;
 
 public class TestPacketSender {
 
-    private DatagramSocket socket = null;
-
-    public void setSocket(final DatagramSocket s) {
-        socket = s;
-    }
-
-    public void sendPlayerLogin(final byte room, final TestSaveData c) {
+    public static void sendPlayerLogin(final byte room, final TestSaveData c, final Client client) {
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 2 // Data type + room
                 + Globals.PACKET_LONG * 2 // uID
                 + Globals.PACKET_INT //Level
@@ -30,11 +23,10 @@ public class TestPacketSender {
         temp = Globals.intToBytes((int) stats[Globals.STAT_LEVEL]);
         System.arraycopy(temp, 0, bytes, 18, temp.length);
 
-        final DatagramPacket requestPacket = createPacket(bytes);
-        sendPacket(requestPacket);
+        sendPacket(bytes, client);
     }
 
-    public void sendPlayerCreate(final byte room, final TestSaveData c) {
+    public static void sendPlayerCreate(final byte room, final TestSaveData c, final Client client) {
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 2 // Data type + room
                 + Globals.MAX_NAME_LENGTH // Name length
                 + Globals.PACKET_LONG * 2 // uID
@@ -63,98 +55,65 @@ public class TestPacketSender {
         System.arraycopy(temp, 0, bytes, pos, temp.length);
         pos += temp.length;
 
-        final DatagramPacket requestPacket = createPacket(bytes);
-        sendPacket(requestPacket);
+        temp = Globals.intToBytes((int) stats[Globals.STAT_POWER]);
+        System.arraycopy(temp, 0, bytes, pos, temp.length);
+        pos += temp.length;
+
+        temp = Globals.intToBytes((int) stats[Globals.STAT_DEFENSE]);
+        System.arraycopy(temp, 0, bytes, pos, temp.length);
+        pos += temp.length;
+
+        temp = Globals.intToBytes((int) stats[Globals.STAT_SPIRIT]);
+        System.arraycopy(temp, 0, bytes, pos, temp.length);
+        pos += temp.length;
+
+        stats = c.getTotalStats();
+        temp = Globals.intToBytes((int) stats[Globals.STAT_ARMOR]);
+        System.arraycopy(temp, 0, bytes, pos, temp.length);
+        pos += temp.length;
+
+        temp = Globals.intToBytes((int) (stats[Globals.STAT_REGEN] * 10));
+        System.arraycopy(temp, 0, bytes, pos, temp.length);
+        pos += temp.length;
+
+        temp = Globals.intToBytes((int) (stats[Globals.STAT_CRITDMG] * 10000));
+        System.arraycopy(temp, 0, bytes, pos, temp.length);
+        pos += temp.length;
+
+        temp = Globals.intToBytes((int) (stats[Globals.STAT_CRITCHANCE] * 10000));
+        System.arraycopy(temp, 0, bytes, pos, temp.length);
+        pos += temp.length;
+
+        sendPacket(bytes, client);
     }
 
-    public void sendGetAll(final byte room, final byte myKey) {
-        final byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
-        bytes[0] = Globals.DATA_PLAYER_GET_ALL;
-        bytes[1] = room;
-        bytes[2] = myKey;
-        final DatagramPacket requestPacket = createPacket(bytes);
-        sendPacket(requestPacket);
-    }
-
-    public void sendMove(final byte room, final byte key, final byte direction, final boolean move) {
+    public static void sendMove(final byte room, final byte key, final byte direction, final boolean move, final Client client) {
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 5];
         bytes[0] = Globals.DATA_PLAYER_SET_MOVE;
         bytes[1] = room;
         bytes[2] = key;
         bytes[3] = direction;
         bytes[4] = (byte) (move ? 1 : 0);
-        final DatagramPacket requestPacket = createPacket(bytes);
-        sendPacket(requestPacket);
+        sendPacket(bytes, client);
     }
 
-    public void sendUseSkill(final byte room, final byte key, final byte skillCode) {
-        final byte[] bytes = new byte[Globals.PACKET_BYTE * 4];
-        bytes[0] = Globals.DATA_PLAYER_USESKILL;
-        bytes[1] = room;
-        bytes[2] = key;
-        bytes[3] = skillCode;
-        final DatagramPacket requestPacket = createPacket(bytes);
-        sendPacket(requestPacket);
-    }
-
-    public void sendGetPing(final byte room, final byte myKey, final byte pID) {
-        final byte[] bytes = new byte[Globals.PACKET_BYTE * 4];
-        bytes[0] = Globals.DATA_PING;
-        bytes[1] = room;
-        bytes[2] = myKey;
-        bytes[3] = pID;
-        final DatagramPacket requestPacket = createPacket(bytes);
-        sendPacket(requestPacket);
-    }
-
-    public void sendDisconnect(final byte room, final byte myKey) {
+    public static void sendDisconnect(final byte room, final byte myKey, final Client client) {
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
         bytes[0] = Globals.DATA_PLAYER_DISCONNECT;
         bytes[1] = room;
         bytes[2] = myKey;
-        final DatagramPacket requestPacket = createPacket(bytes);
-        sendPacket(requestPacket);
+        sendPacket(bytes, client);
     }
 
-    public void sendGetName(final byte room, final byte key) {
+    public static void sendGetName(final byte room, final byte key, final Client client) {
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
         bytes[0] = Globals.DATA_PLAYER_GET_NAME;
         bytes[1] = room;
         bytes[2] = key;
-        final DatagramPacket requestPacket = createPacket(bytes);
-        sendPacket(requestPacket);
+        sendPacket(bytes, client);
     }
 
-    public void sendGetStat(final byte room, final byte key, final byte stat) {
-        final byte[] bytes = new byte[Globals.PACKET_BYTE * 4];
-        bytes[0] = Globals.DATA_PLAYER_GET_STAT;
-        bytes[1] = room;
-        bytes[2] = key;
-        bytes[3] = stat;
-        final DatagramPacket requestPacket = createPacket(bytes);
-        sendPacket(requestPacket);
-    }
-
-    public void sendGetEquip(final byte room, final byte key) {
-        final byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
-        bytes[0] = Globals.DATA_PLAYER_GET_EQUIP;
-        bytes[1] = room;
-        bytes[2] = key;
-        final DatagramPacket requestPacket = createPacket(bytes);
-        sendPacket(requestPacket);
-    }
-
-    private void sendPacket(final DatagramPacket packet) {
-        try {
-            if (!socket.isClosed()) {
-                socket.send(packet);
-            }
-        } catch (final Exception ex) {
-            System.err.println(TestPacketSender.class.getCanonicalName() + ": " + ex.getLocalizedMessage() + "@" + ex.getStackTrace()[0]);
-        }
-    }
-
-    private static DatagramPacket createPacket(final byte[] bytes) {
-        return new DatagramPacket(bytes, bytes.length);
+    private static void sendPacket(final byte[] packet, final Client client) {
+        client.sendTCP(packet);
     }
 }

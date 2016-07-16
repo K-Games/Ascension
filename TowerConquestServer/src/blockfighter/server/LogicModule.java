@@ -5,7 +5,6 @@ import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.proj.Projectile;
 import blockfighter.server.maps.GameMap;
 import blockfighter.server.maps.GameMapArena;
-import blockfighter.server.net.PacketSender;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Map;
@@ -24,7 +23,6 @@ import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 public class LogicModule extends Thread {
 
     private long currentTime = 0;
-    private static PacketSender sender;
     private byte room = -1;
 
     private ConcurrentHashMap<Byte, Player> players = new ConcurrentHashMap<>(Globals.SERVER_MAX_PLAYERS, 0.9f,
@@ -69,15 +67,6 @@ public class LogicModule extends Thread {
     public LogicModule(final byte r) {
         this.room = r;
         reset();
-    }
-
-    /**
-     * Set a reference to the Server PacketSender.
-     *
-     * @param ps Server PacketSender
-     */
-    public static void setPacketSender(final PacketSender ps) {
-        sender = ps;
     }
 
     public long getTime() {
@@ -212,10 +201,6 @@ public class LogicModule extends Thread {
                 player.getValue().join();
                 if (!(player.getValue().isConnected())) {
                     remove.add(player.getValue().getKey());
-                    final byte[] bytes = new byte[2];
-                    bytes[0] = Globals.DATA_PLAYER_DISCONNECT;
-                    bytes[1] = player.getValue().getKey();
-                    sender.sendAll(bytes, this.room);
                 }
             } catch (final InterruptedException ex) {
                 Globals.logError(ex.getLocalizedMessage(), ex, true);

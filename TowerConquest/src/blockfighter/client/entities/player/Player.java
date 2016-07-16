@@ -4,6 +4,7 @@ import blockfighter.client.Globals;
 import blockfighter.client.LogicModule;
 import blockfighter.client.Main;
 import blockfighter.client.entities.items.ItemEquip;
+import blockfighter.client.net.GameClient;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -26,8 +27,10 @@ public class Player extends Thread {
     private long lastUpdateTime;
     private static LogicModule logic;
     private boolean disconnect = false;
+    private GameClient client;
 
-    public Player(final int x, final int y, final byte k) {
+    public Player(final int x, final int y, final byte k, final GameClient cl) {
+        this.client = cl;
         this.x = x;
         this.y = y;
         this.key = k;
@@ -39,8 +42,8 @@ public class Player extends Thread {
         setDaemon(true);
     }
 
-    public Player(final int x, final int y, final byte k, final byte f) {
-        this(x, y, k);
+    public Player(final int x, final int y, final byte k, final byte f, final GameClient cl) {
+        this(x, y, k, cl);
         this.facing = f;
     }
 
@@ -177,16 +180,16 @@ public class Player extends Thread {
     @Override
     public void run() {
         if (this.name.length() <= 0) {
-            logic.sendGetName(this.key);
+            client.sendGetName(this.key);
         }
         for (final ItemEquip e : this.equips) {
             if (e == null) {
-                logic.sendGetEquip(this.key);
+                client.sendGetEquip(this.key);
                 break;
             }
         }
         if (this.stats[Globals.STAT_MAXHP] <= 0) {
-            logic.sendGetStat(this.key, Globals.STAT_MAXHP);
+            client.sendGetStat(this.key, Globals.STAT_MAXHP);
         }
     }
 
