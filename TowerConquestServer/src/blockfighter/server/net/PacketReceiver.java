@@ -21,7 +21,9 @@ public class PacketReceiver extends Listener {
     @Override
     public void disconnected(Connection c) {
         try {
-            GameServer.getPlayerFromConnection(c).disconnect();
+            if (GameServer.getPlayerFromConnection(c) != null) {
+                GameServer.getPlayerFromConnection(c).disconnect();
+            }
         } catch (Exception e) {
             Globals.log(PacketReceiver.class, "Exception while disconnecting a connection", Globals.LOG_TYPE_ERR, true);
         }

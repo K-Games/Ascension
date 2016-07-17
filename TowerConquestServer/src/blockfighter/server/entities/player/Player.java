@@ -1810,15 +1810,16 @@ public class Player extends Thread implements GameEntity {
      * Disconnect a player in the next tick.
      */
     public void disconnect() {
-        this.connected = false;
-        final byte[] bytes = new byte[2];
-        bytes[0] = Globals.DATA_PLAYER_DISCONNECT;
-        bytes[1] = this.key;
-        PacketSender.sendAll(bytes, logic.getRoom());
-        this.connection.close();
-        GameServer.removeConnectionPlayer(this.connection);
-        Globals.log(Player.class, "Disconnected <" + getPlayerName() + ">", Globals.LOG_TYPE_DATA, true);
-
+        if (isConnected()) {
+            this.connected = false;
+            final byte[] bytes = new byte[2];
+            bytes[0] = Globals.DATA_PLAYER_DISCONNECT;
+            bytes[1] = this.key;
+            PacketSender.sendAll(bytes, logic.getRoom());
+            this.connection.close();
+            GameServer.removeConnectionPlayer(this.connection);
+            Globals.log(Player.class, "Disconnected <" + getPlayerName() + ">", Globals.LOG_TYPE_DATA, true);
+        }
     }
 
     /**

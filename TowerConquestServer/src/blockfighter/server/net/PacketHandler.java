@@ -175,11 +175,12 @@ public class PacketHandler {
     }
 
     private static void receivePlayerDisconnect(final byte[] data, final byte index) {
-        if (logic[index].getPlayers().get(data[2]) == null) {
+        Player p = logic[index].getPlayers().get(data[2]);
+        if (p == null) {
             return;
         }
-        logic[index].getPlayers().get(data[2]).disconnect();
-        Globals.log(PacketHandler.class, "DATA_PLAYER_DISCONNECT", "Disconnecting <" + logic[index].getPlayers().get(data[2]).getPlayerName() + "> Key: " + data[2], Globals.LOG_TYPE_DATA, true);
+        p.disconnect();
+        Globals.log(PacketHandler.class, "DATA_PLAYER_DISCONNECT", "Disconnecting <" + p.getPlayerName() + "> Key: " + data[2], Globals.LOG_TYPE_DATA, true);
     }
 
     private static void receivePing(final byte[] data, final byte index, final Connection c) {
