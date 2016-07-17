@@ -22,19 +22,19 @@ public class Globals {
     public static int SERVER_PORT = 25565;
     public static String SERVER_ADDRESS;
 
-    public final static boolean TEST_MAX_LEVEL = true,
+    public final static boolean TEST_MAX_LEVEL = false,
             DEBUG_MODE = false;
 
     public final static byte GAME_MAJOR_VERSION = 0,
-            GAME_MINOR_VERSION = 17,
-            GAME_UPDATE_NUMBER = 2;
+            GAME_MINOR_VERSION = 18,
+            GAME_UPDATE_NUMBER = 0;
 
     private final static String GAME_DEV_STATE = "ALPHA";
 
     public final static String GAME_RELEASE_VERSION = GAME_DEV_STATE + " " + GAME_MAJOR_VERSION + "." + GAME_MINOR_VERSION + "."
             + GAME_UPDATE_NUMBER;
 
-    public final static String WINDOW_TITLE = "Tower Conquest " + GAME_RELEASE_VERSION;
+    public final static String WINDOW_TITLE = "Ascenion " + GAME_RELEASE_VERSION;
     public final static int WINDOW_WIDTH = 1280;
     public final static int WINDOW_HEIGHT = 720;
 

@@ -21,45 +21,44 @@ public class ScreenTitle extends Screen {
     @Override
     public void update() {
         final long now = logic.getTime(); // Get time now
+
+        if (Globals.nsToMs(now - fadeInStart) < 5000) {
+            int transparency = (int) (255 * (1f - Globals.nsToMs(now - fadeInStart) / 5000f));
+            fadeInColor = new Color(255, 255, 255, (transparency < 0) ? 0 : transparency);
+        } else {
+            fadeInColor = new Color(255, 255, 255, 0);
+            finishedFadeIn = true;
+        }
+        if (exitingTitle && Globals.nsToMs(now - fadeOutStart) < 2000) {
+            int transparency = (int) (255 * Globals.nsToMs(now - fadeOutStart) / 2000f);
+            fadeOutColor = new Color(0, 0, 0, (transparency < 0) ? 0 : transparency);
+        }
         if (now - this.lastUpdateTime >= Globals.LOGIC_UPDATE) {
-            if (Globals.nsToMs(now - fadeInStart) < 5000) {
-                int transparency = (int) (255 * (1f - Globals.nsToMs(now - fadeInStart) / 5000f));
-                fadeInColor = new Color(255, 255, 255, (transparency < 0) ? 0 : transparency);
-            } else {
-                fadeInColor = new Color(255, 255, 255, 0);
-                finishedFadeIn = true;
-            }
-            if (exitingTitle && Globals.nsToMs(now - fadeOutStart) < 2000) {
-                int transparency = (int) (255 * Globals.nsToMs(now - fadeOutStart) / 2000f);
-                fadeOutColor = new Color(0, 0, 0, (transparency < 0) ? 0 : transparency);
-            } else {
-                fadeOutColor = new Color(0, 0, 0, 255);
-            }
             bg1y--;
             bg2y--;
             if (bg1y <= -720) {
                 bg1y = 720;
             }
-
-            if (bg2y <= -720) {
-                bg2y = 720;
-            }
-            if (Globals.nsToMs(now - fontFadeStart) < 1000) {
-                int transparency = (fontFadeIn) ? (int) (255 * Globals.nsToMs(now - fontFadeStart) / 1000f)
-                        : (int) (255 * (1f - Globals.nsToMs(now - fontFadeStart) / 1000f));
-                fontColor = new Color(160, 0, 0, (transparency < 0) ? 0 : (transparency > 255) ? 255 : transparency);
-            }
-
-            if (Globals.nsToMs(now - fontFadeStart) >= 1000) {
-                fontFadeIn = !fontFadeIn;
-                fontFadeStart = now;
-            }
-
-            if (exitingTitle && Globals.nsToMs(now - fadeOutStart) >= 2000) {
-                logic.setScreen(new ScreenSelectChar(true));
-            }
             this.lastUpdateTime = now;
         }
+        if (bg2y <= -720) {
+            bg2y = 720;
+        }
+        if (Globals.nsToMs(now - fontFadeStart) < 1000) {
+            int transparency = (fontFadeIn) ? (int) (255 * Globals.nsToMs(now - fontFadeStart) / 1000f)
+                    : (int) (255 * (1f - Globals.nsToMs(now - fontFadeStart) / 1000f));
+            fontColor = new Color(160, 0, 0, (transparency < 0) ? 0 : (transparency > 255) ? 255 : transparency);
+        }
+
+        if (Globals.nsToMs(now - fontFadeStart) >= 1000) {
+            fontFadeIn = !fontFadeIn;
+            fontFadeStart = now;
+        }
+
+        if (exitingTitle && Globals.nsToMs(now - fadeOutStart) >= 2000) {
+            logic.setScreen(new ScreenSelectChar(true));
+        }
+
     }
 
     @Override
@@ -101,8 +100,10 @@ public class ScreenTitle extends Screen {
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        exitingTitle = true;
-        fadeOutStart = System.nanoTime();
+        if (!exitingTitle) {
+            exitingTitle = true;
+            fadeOutStart = System.nanoTime();
+        }
     }
 
     @Override

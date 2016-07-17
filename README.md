@@ -1,15 +1,14 @@
 ```
- __ __|                                 ___|                                          |   
-    |   _ \ \ \  \   /  _ \   __|      |       _ \   __ \    _` |  |   |   _ \   __|  __| 
-    |  (   | \ \  \ /   __/  |         |      (   |  |   |  (   |  |   |   __/ \__ \  |   
-   _| \___/   \_/\_/  \___| _|        \____| \___/  _|  _| \__, | \__,_| \___| ____/ \__| 
-                                                               _|                         
+     \                                   _)               
+    _ \     __|   __|   _ \  __ \    __|  |   _ \   __ \  
+   ___ \  \__ \  (      __/  |   | \__ \  |  (   |  |   | 
+ _/    _\ ____/ \___| \___| _|  _| ____/ _| \___/  _|  _|                                             _|                         
 ```
 
 # Description
 An multiplayer action 2D sidescrolling platformer coded in pure Java.
 
-## v0.17 Update 2
+## Version 0.18
 ### Client Changes
 * Minor adjustments to sound effects.
 * Minor adjust to some particle visuals.
@@ -35,7 +34,9 @@ An multiplayer action 2D sidescrolling platformer coded in pure Java.
 * Complete Netcode rework. Now backed by Kyronet TCP.
 
 # Credits
-Title & Menu Tracks
-Hero - geluf
-Through the Forest in Midwinter - geluf
+
+## Title & Menu Tracks
+Hero - [geluf](https://soundcloud.com/geluf)
+
+Through the Forest in Midwinter - [geluf](https://soundcloud.com/geluf)
 
