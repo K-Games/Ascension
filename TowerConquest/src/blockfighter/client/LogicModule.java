@@ -16,7 +16,7 @@ public class LogicModule implements Runnable {
     private long currentTime = 0;
     private SaveData selectedChar;
     private byte selectedRoom = 0;
-    private Screen screen ;
+    private Screen screen;
     private final SoundModule soundModule;
 
     public LogicModule(final SoundModule s) {

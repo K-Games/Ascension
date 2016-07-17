@@ -21,6 +21,7 @@ An multiplayer action 2D sidescrolling platformer coded in pure Java.
 * Notifications when receiving EXP or items.
 * Complete Netcode rework.
 * UI Overhaul
+* Added Title Screen
 
 ### Server Changes
 * Dash distance decreased from 375 over 0.25s to 340 over 0.4s.

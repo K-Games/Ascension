@@ -17,18 +17,20 @@ import java.awt.image.BufferedImage;
 public class ScreenKeyBind extends ScreenMenu {
 
     private final SaveData c;
-    private final Rectangle2D.Double[] keyBox = new Rectangle2D.Double[Globals.NUM_KEYBINDS];
+    private final static Rectangle2D.Double[] KEY_BOX = new Rectangle2D.Double[Globals.NUM_KEYBINDS];
     private int selectedKeyBox = -1;
+
+    static {
+        for (int i = 0; i < 12; i++) {
+            KEY_BOX[i] = new Rectangle2D.Double(365, 45 + (i * 50), 180, 30);
+        }
+        for (int i = 12; i < KEY_BOX.length; i++) {
+            KEY_BOX[i] = new Rectangle2D.Double(800, 45 + ((i - 12) * 50), 180, 30);
+        }
+    }
 
     public ScreenKeyBind() {
         this.c = logic.getSelectedChar();
-
-        for (int i = 0; i < 12; i++) {
-            this.keyBox[i] = new Rectangle2D.Double(365, 45 + (i * 50), 180, 30);
-        }
-        for (int i = 12; i < this.keyBox.length; i++) {
-            this.keyBox[i] = new Rectangle2D.Double(800, 45 + ((i - 12) * 50), 180, 30);
-        }
     }
 
     @Override
@@ -47,43 +49,43 @@ public class ScreenKeyBind extends ScreenMenu {
 
     private void drawButtons(final Graphics2D g) {
         final BufferedImage button = Globals.MENU_BUTTON[Globals.BUTTON_SMALLRECT];
-        for (int i = 0; i < this.keyBox.length; i++) {
-            g.drawImage(button, (int) this.keyBox[i].x, (int) this.keyBox[i].y, null);
+        for (int i = 0; i < KEY_BOX.length; i++) {
+            g.drawImage(button, (int) KEY_BOX[i].x, (int) KEY_BOX[i].y, null);
             g.setFont(Globals.ARIAL_18PT);
             if (this.selectedKeyBox == i) {
-                drawStringOutline(g, "Assign a key", (int) (this.keyBox[i].x + 40), (int) (this.keyBox[i].y + 25), 1);
+                drawStringOutline(g, "Assign a key", (int) (KEY_BOX[i].x + 40), (int) (KEY_BOX[i].y + 25), 1);
                 g.setColor(Color.WHITE);
-                g.drawString("Assign a key", (int) (this.keyBox[i].x + 40), (int) (this.keyBox[i].y + 25));
+                g.drawString("Assign a key", (int) (KEY_BOX[i].x + 40), (int) (KEY_BOX[i].y + 25));
             } else {
                 String key = "Not Assigned";
                 if (this.c.getKeyBind()[i] != -1) {
                     key = KeyEvent.getKeyText(this.c.getKeyBind()[i]);
                 }
                 final int width = g.getFontMetrics().stringWidth(key);
-                drawStringOutline(g, key, (int) (this.keyBox[i].x + 90 - width / 2), (int) (this.keyBox[i].y + 25), 1);
+                drawStringOutline(g, key, (int) (KEY_BOX[i].x + 90 - width / 2), (int) (KEY_BOX[i].y + 25), 1);
                 g.setColor(Color.WHITE);
-                g.drawString(key, (int) (this.keyBox[i].x + 90 - width / 2), (int) (this.keyBox[i].y + 25));
+                g.drawString(key, (int) (KEY_BOX[i].x + 90 - width / 2), (int) (KEY_BOX[i].y + 25));
             }
         }
 
         for (int i = 0; i < 12; i++) {
             g.setFont(Globals.ARIAL_18PT);
-            drawStringOutline(g, "Hotkey Bar " + (i + 1) + ": ", 240, (int) (this.keyBox[i].y + 25), 1);
+            drawStringOutline(g, "Hotkey Bar " + (i + 1) + ": ", 240, (int) (KEY_BOX[i].y + 25), 1);
             g.setColor(Color.WHITE);
-            g.drawString("Hotkey Bar " + (i + 1) + ": ", 240, (int) (this.keyBox[i].y + 25));
+            g.drawString("Hotkey Bar " + (i + 1) + ": ", 240, (int) (KEY_BOX[i].y + 25));
         }
 
         g.setFont(Globals.ARIAL_18PT);
-        drawStringOutline(g, "Walk Left: ", 690, (int) (this.keyBox[Globals.KEYBIND_LEFT].y + 25), 1);
-        drawStringOutline(g, "Walk Right: ", 690, (int) (this.keyBox[Globals.KEYBIND_RIGHT].y + 25), 1);
-        drawStringOutline(g, "Jump: ", 690, (int) (this.keyBox[Globals.KEYBIND_JUMP].y + 25), 1);
-        drawStringOutline(g, "Down: ", 690, (int) (this.keyBox[Globals.KEYBIND_DOWN].y + 25), 1);
+        drawStringOutline(g, "Walk Left: ", 690, (int) (KEY_BOX[Globals.KEYBIND_LEFT].y + 25), 1);
+        drawStringOutline(g, "Walk Right: ", 690, (int) (KEY_BOX[Globals.KEYBIND_RIGHT].y + 25), 1);
+        drawStringOutline(g, "Jump: ", 690, (int) (KEY_BOX[Globals.KEYBIND_JUMP].y + 25), 1);
+        drawStringOutline(g, "Down: ", 690, (int) (KEY_BOX[Globals.KEYBIND_DOWN].y + 25), 1);
 
         g.setColor(Color.WHITE);
-        g.drawString("Walk Left: ", 690, (int) (this.keyBox[Globals.KEYBIND_LEFT].y + 25));
-        g.drawString("Walk Right: ", 690, (int) (this.keyBox[Globals.KEYBIND_RIGHT].y + 25));
-        g.drawString("Jump: ", 690, (int) (this.keyBox[Globals.KEYBIND_JUMP].y + 25));
-        g.drawString("Down: ", 690, (int) (this.keyBox[Globals.KEYBIND_DOWN].y + 25));
+        g.drawString("Walk Left: ", 690, (int) (KEY_BOX[Globals.KEYBIND_LEFT].y + 25));
+        g.drawString("Walk Right: ", 690, (int) (KEY_BOX[Globals.KEYBIND_RIGHT].y + 25));
+        g.drawString("Jump: ", 690, (int) (KEY_BOX[Globals.KEYBIND_JUMP].y + 25));
+        g.drawString("Down: ", 690, (int) (KEY_BOX[Globals.KEYBIND_DOWN].y + 25));
     }
 
     @Override
@@ -130,8 +132,8 @@ public class ScreenKeyBind extends ScreenMenu {
     @Override
     public void mouseReleased(final MouseEvent e) {
         super.mouseReleased(e);
-        for (int i = 0; i < this.keyBox.length; i++) {
-            if (this.keyBox[i].contains(e.getPoint())) {
+        for (int i = 0; i < KEY_BOX.length; i++) {
+            if (KEY_BOX[i].contains(e.getPoint())) {
                 this.selectedKeyBox = i;
                 return;
             }

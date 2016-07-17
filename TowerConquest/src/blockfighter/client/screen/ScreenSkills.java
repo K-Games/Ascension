@@ -21,10 +21,10 @@ public class ScreenSkills extends ScreenMenu {
 
     private final SaveData c;
     // Slots(x,y) in the GUI
-    private final Rectangle2D.Double[] hotkeySlots = new Rectangle2D.Double[12];
-    private final Rectangle2D.Double[] skillSlots = new Rectangle2D.Double[Skill.NUM_SKILLS];
-    private final Rectangle2D.Double[] addBox = new Rectangle2D.Double[Skill.NUM_SKILLS];
-    private final Rectangle2D.Double resetBox;
+    private static final Rectangle2D.Double[] HOTKEY_SLOTS = new Rectangle2D.Double[12];
+    private static final Rectangle2D.Double[] SKILL_SLOTS = new Rectangle2D.Double[Skill.NUM_SKILLS];
+    private static final Rectangle2D.Double[] ADD_SKILL_BOX = new Rectangle2D.Double[Skill.NUM_SKILLS];
+    private static final Rectangle2D.Double RESET_BOX;
 
     private static final int SWORD_BOX_X = 260, SWORD_BOX_Y = 55;
     private static final int BOW_BOX_X = 505, BOW_BOX_Y = 55;
@@ -42,60 +42,63 @@ public class ScreenSkills extends ScreenMenu {
     private int drawInfoSkill = -1, drawInfoHotkey = -1;
     private int dragSkill = -1, dragHotkey = -1;
 
+    static {
+
+        SKILL_SLOTS[Skill.SWORD_GASH] = new Rectangle2D.Double(SWORD_BOX_X, SWORD_BOX_Y, 60, 60);
+        SKILL_SLOTS[Skill.SWORD_SLASH] = new Rectangle2D.Double(SWORD_BOX_X, SWORD_BOX_Y + 90, 60, 60);
+        //skillSlots[Skill.SWORD_MULTI] = new Rectangle2D.Double(241, 235, 60, 60);
+        SKILL_SLOTS[Skill.SWORD_PHANTOM] = new Rectangle2D.Double(SWORD_BOX_X, SWORD_BOX_Y + 180, 60, 60);
+        SKILL_SLOTS[Skill.SWORD_VORPAL] = new Rectangle2D.Double(SWORD_BOX_X, SWORD_BOX_Y + 270, 60, 60);
+        SKILL_SLOTS[Skill.SWORD_CINDER] = new Rectangle2D.Double(SWORD_BOX_X, SWORD_BOX_Y + 360, 60, 60);
+        SKILL_SLOTS[Skill.SWORD_TAUNT] = new Rectangle2D.Double(SWORD_BOX_X, SWORD_BOX_Y + 450, 60, 60);
+
+        SKILL_SLOTS[Skill.BOW_ARC] = new Rectangle2D.Double(BOW_BOX_X, BOW_BOX_Y, 60, 60);
+        SKILL_SLOTS[Skill.BOW_RAPID] = new Rectangle2D.Double(BOW_BOX_X, BOW_BOX_Y + 90, 60, 60);
+        SKILL_SLOTS[Skill.BOW_POWER] = new Rectangle2D.Double(BOW_BOX_X, BOW_BOX_Y + 180, 60, 60);
+        SKILL_SLOTS[Skill.BOW_VOLLEY] = new Rectangle2D.Double(BOW_BOX_X, BOW_BOX_Y + 270, 60, 60);
+        SKILL_SLOTS[Skill.BOW_STORM] = new Rectangle2D.Double(BOW_BOX_X, BOW_BOX_Y + 360, 60, 60);
+        SKILL_SLOTS[Skill.BOW_FROST] = new Rectangle2D.Double(BOW_BOX_X, BOW_BOX_Y + 450, 60, 60);
+
+        SKILL_SLOTS[Skill.SHIELD_DASH] = new Rectangle2D.Double(UTIL_BOX_X, UTIL_BOX_Y, 60, 60);
+        SKILL_SLOTS[Skill.SHIELD_FORTIFY] = new Rectangle2D.Double(UTIL_BOX_X, UTIL_BOX_Y + 75, 60, 60);
+
+        SKILL_SLOTS[Skill.SHIELD_IRON] = new Rectangle2D.Double(SHIELD_BOX_X, SHIELD_BOX_Y, 60, 60);
+        SKILL_SLOTS[Skill.SHIELD_CHARGE] = new Rectangle2D.Double(SHIELD_BOX_X, SHIELD_BOX_Y + 75, 60, 60);
+        SKILL_SLOTS[Skill.SHIELD_REFLECT] = new Rectangle2D.Double(SHIELD_BOX_X, SHIELD_BOX_Y + 150, 60, 60);
+        SKILL_SLOTS[Skill.SHIELD_TOSS] = new Rectangle2D.Double(SHIELD_BOX_X, SHIELD_BOX_Y + 225, 60, 60);
+
+        SKILL_SLOTS[Skill.PASSIVE_DUALSWORD] = new Rectangle2D.Double(PASSIVE_BOX_X, PASSIVE_BOX_Y, 60, 60);
+        SKILL_SLOTS[Skill.PASSIVE_BOWMASTERY] = new Rectangle2D.Double(PASSIVE_BOX_X, PASSIVE_BOX_Y + 85, 60, 60);
+        SKILL_SLOTS[Skill.PASSIVE_SHIELDMASTERY] = new Rectangle2D.Double(PASSIVE_BOX_X, PASSIVE_BOX_Y + 170, 60, 60);
+
+        SKILL_SLOTS[Skill.PASSIVE_RESIST] = new Rectangle2D.Double(PASSIVE_BOX_X, PASSIVE_BOX_Y + 255, 60, 60);
+        SKILL_SLOTS[Skill.PASSIVE_BARRIER] = new Rectangle2D.Double(PASSIVE_BOX_X, PASSIVE_BOX_Y + 340, 60, 60);
+
+        SKILL_SLOTS[Skill.PASSIVE_KEENEYE] = new Rectangle2D.Double(PASSIVE_BOX_X + 110, PASSIVE_BOX_Y, 60, 60);
+        SKILL_SLOTS[Skill.PASSIVE_WILLPOWER] = new Rectangle2D.Double(PASSIVE_BOX_X + 110, PASSIVE_BOX_Y + 85, 60, 60);
+        SKILL_SLOTS[Skill.PASSIVE_TACTICAL] = new Rectangle2D.Double(PASSIVE_BOX_X + 110, PASSIVE_BOX_Y + 170, 60, 60);
+        SKILL_SLOTS[Skill.PASSIVE_VITALHIT] = new Rectangle2D.Double(PASSIVE_BOX_X + 110, PASSIVE_BOX_Y + 255, 60, 60);
+        SKILL_SLOTS[Skill.PASSIVE_SHADOWATTACK] = new Rectangle2D.Double(PASSIVE_BOX_X + 110, PASSIVE_BOX_Y + 340, 60, 60);
+
+        SKILL_SLOTS[Skill.PASSIVE_11] = new Rectangle2D.Double(PASSIVE_BOX_X, PASSIVE_BOX_Y + 425, 60, 60);
+        SKILL_SLOTS[Skill.PASSIVE_12] = new Rectangle2D.Double(PASSIVE_BOX_X + 110, PASSIVE_BOX_Y + 425, 60, 60);
+        for (int i = 0; i < HOTKEY_SLOTS.length; i++) {
+            HOTKEY_SLOTS[i] = new Rectangle2D.Double(HOTKEY_BOX_X + (i * 64), HOTKEY_BOX_Y, 60, 60);
+        }
+        for (int i = 0; i < 18; i++) {
+            ADD_SKILL_BOX[i] = new Rectangle2D.Double(SKILL_SLOTS[i].x + 140, SKILL_SLOTS[i].y + 32, 30, 23);
+        }
+
+        for (int i = 18; i < ADD_SKILL_BOX.length; i++) {
+            ADD_SKILL_BOX[i] = new Rectangle2D.Double(SKILL_SLOTS[i].x + 59, SKILL_SLOTS[i].y + 37, 30, 23);
+        }
+        RESET_BOX = new Rectangle2D.Double(1050, 630, 180, 30);
+    }
+
     public ScreenSkills() {
         this.c = logic.getSelectedChar();
         this.hotkeyList = this.c.getHotkeys();
         this.skillList = this.c.getSkills();
-
-        this.skillSlots[Skill.SWORD_GASH] = new Rectangle2D.Double(SWORD_BOX_X, SWORD_BOX_Y, 60, 60);
-        this.skillSlots[Skill.SWORD_SLASH] = new Rectangle2D.Double(SWORD_BOX_X, SWORD_BOX_Y + 90, 60, 60);
-        //this.skillSlots[Skill.SWORD_MULTI] = new Rectangle2D.Double(241, 235, 60, 60);
-        this.skillSlots[Skill.SWORD_PHANTOM] = new Rectangle2D.Double(SWORD_BOX_X, SWORD_BOX_Y + 180, 60, 60);
-        this.skillSlots[Skill.SWORD_VORPAL] = new Rectangle2D.Double(SWORD_BOX_X, SWORD_BOX_Y + 270, 60, 60);
-        this.skillSlots[Skill.SWORD_CINDER] = new Rectangle2D.Double(SWORD_BOX_X, SWORD_BOX_Y + 360, 60, 60);
-        this.skillSlots[Skill.SWORD_TAUNT] = new Rectangle2D.Double(SWORD_BOX_X, SWORD_BOX_Y + 450, 60, 60);
-
-        this.skillSlots[Skill.BOW_ARC] = new Rectangle2D.Double(BOW_BOX_X, BOW_BOX_Y, 60, 60);
-        this.skillSlots[Skill.BOW_RAPID] = new Rectangle2D.Double(BOW_BOX_X, BOW_BOX_Y + 90, 60, 60);
-        this.skillSlots[Skill.BOW_POWER] = new Rectangle2D.Double(BOW_BOX_X, BOW_BOX_Y + 180, 60, 60);
-        this.skillSlots[Skill.BOW_VOLLEY] = new Rectangle2D.Double(BOW_BOX_X, BOW_BOX_Y + 270, 60, 60);
-        this.skillSlots[Skill.BOW_STORM] = new Rectangle2D.Double(BOW_BOX_X, BOW_BOX_Y + 360, 60, 60);
-        this.skillSlots[Skill.BOW_FROST] = new Rectangle2D.Double(BOW_BOX_X, BOW_BOX_Y + 450, 60, 60);
-
-        this.skillSlots[Skill.SHIELD_DASH] = new Rectangle2D.Double(UTIL_BOX_X, UTIL_BOX_Y, 60, 60);
-        this.skillSlots[Skill.SHIELD_FORTIFY] = new Rectangle2D.Double(UTIL_BOX_X, UTIL_BOX_Y + 75, 60, 60);
-
-        this.skillSlots[Skill.SHIELD_IRON] = new Rectangle2D.Double(SHIELD_BOX_X, SHIELD_BOX_Y, 60, 60);
-        this.skillSlots[Skill.SHIELD_CHARGE] = new Rectangle2D.Double(SHIELD_BOX_X, SHIELD_BOX_Y + 75, 60, 60);
-        this.skillSlots[Skill.SHIELD_REFLECT] = new Rectangle2D.Double(SHIELD_BOX_X, SHIELD_BOX_Y + 150, 60, 60);
-        this.skillSlots[Skill.SHIELD_TOSS] = new Rectangle2D.Double(SHIELD_BOX_X, SHIELD_BOX_Y + 225, 60, 60);
-
-        this.skillSlots[Skill.PASSIVE_DUALSWORD] = new Rectangle2D.Double(PASSIVE_BOX_X, PASSIVE_BOX_Y, 60, 60);
-        this.skillSlots[Skill.PASSIVE_BOWMASTERY] = new Rectangle2D.Double(PASSIVE_BOX_X, PASSIVE_BOX_Y + 85, 60, 60);
-        this.skillSlots[Skill.PASSIVE_SHIELDMASTERY] = new Rectangle2D.Double(PASSIVE_BOX_X, PASSIVE_BOX_Y + 170, 60, 60);
-
-        this.skillSlots[Skill.PASSIVE_RESIST] = new Rectangle2D.Double(PASSIVE_BOX_X, PASSIVE_BOX_Y + 255, 60, 60);
-        this.skillSlots[Skill.PASSIVE_BARRIER] = new Rectangle2D.Double(PASSIVE_BOX_X, PASSIVE_BOX_Y + 340, 60, 60);
-
-        this.skillSlots[Skill.PASSIVE_KEENEYE] = new Rectangle2D.Double(PASSIVE_BOX_X + 110, PASSIVE_BOX_Y, 60, 60);
-        this.skillSlots[Skill.PASSIVE_WILLPOWER] = new Rectangle2D.Double(PASSIVE_BOX_X + 110, PASSIVE_BOX_Y + 85, 60, 60);
-        this.skillSlots[Skill.PASSIVE_TACTICAL] = new Rectangle2D.Double(PASSIVE_BOX_X + 110, PASSIVE_BOX_Y + 170, 60, 60);
-        this.skillSlots[Skill.PASSIVE_VITALHIT] = new Rectangle2D.Double(PASSIVE_BOX_X + 110, PASSIVE_BOX_Y + 255, 60, 60);
-        this.skillSlots[Skill.PASSIVE_SHADOWATTACK] = new Rectangle2D.Double(PASSIVE_BOX_X + 110, PASSIVE_BOX_Y + 340, 60, 60);
-
-        this.skillSlots[Skill.PASSIVE_11] = new Rectangle2D.Double(PASSIVE_BOX_X, PASSIVE_BOX_Y + 425, 60, 60);
-        this.skillSlots[Skill.PASSIVE_12] = new Rectangle2D.Double(PASSIVE_BOX_X + 110, PASSIVE_BOX_Y + 425, 60, 60);
-        for (int i = 0; i < this.hotkeySlots.length; i++) {
-            this.hotkeySlots[i] = new Rectangle2D.Double(HOTKEY_BOX_X + (i * 64), HOTKEY_BOX_Y, 60, 60);
-        }
-        for (int i = 0; i < 18; i++) {
-            this.addBox[i] = new Rectangle2D.Double(this.skillSlots[i].x + 140, this.skillSlots[i].y + 32, 30, 23);
-        }
-
-        for (int i = 18; i < this.addBox.length; i++) {
-            this.addBox[i] = new Rectangle2D.Double(this.skillSlots[i].x + 59, this.skillSlots[i].y + 37, 30, 23);
-        }
-        this.resetBox = new Rectangle2D.Double(1050, 630, 180, 30);
     }
 
     @Override
@@ -113,7 +116,7 @@ public class ScreenSkills extends ScreenMenu {
         g.drawString("Skill Points: " + (int) this.c.getBaseStats()[Globals.STAT_SKILLPOINTS], 1080, 620);
 
         final BufferedImage button = Globals.MENU_BUTTON[Globals.BUTTON_SMALLRECT];
-        g.drawImage(button, (int) this.resetBox.x, (int) this.resetBox.y, null);
+        g.drawImage(button, (int) RESET_BOX.x, (int) RESET_BOX.y, null);
         g.setFont(Globals.ARIAL_18PT);
         drawStringOutline(g, "Reset Skills", 1090, 657, 1);
         g.setColor(Color.WHITE);
@@ -133,9 +136,9 @@ public class ScreenSkills extends ScreenMenu {
 
     private void drawSkillInfo(final Graphics2D g) {
         if (this.drawInfoSkill != -1) {
-            drawSkillInfo(g, this.skillSlots[this.drawInfoSkill], this.skillList[this.drawInfoSkill]);
+            drawSkillInfo(g, SKILL_SLOTS[this.drawInfoSkill], this.skillList[this.drawInfoSkill]);
         } else if (this.drawInfoHotkey != -1) {
-            drawSkillInfo(g, this.hotkeySlots[this.drawInfoHotkey], this.hotkeyList[this.drawInfoHotkey]);
+            drawSkillInfo(g, HOTKEY_SLOTS[this.drawInfoHotkey], this.hotkeyList[this.drawInfoHotkey]);
         }
     }
 
@@ -170,10 +173,10 @@ public class ScreenSkills extends ScreenMenu {
         drawStringOutline(g, "Passive", PASSIVE_BOX_X + 60, PASSIVE_BOX_Y - 5, 1);
         g.setColor(Color.WHITE);
         g.drawString("Passive", PASSIVE_BOX_X + 60, PASSIVE_BOX_Y - 5);
-        for (int i = 0; i < this.hotkeySlots.length; i++) {
-            g.drawImage(button, (int) this.hotkeySlots[i].x, (int) this.hotkeySlots[i].y, null);
+        for (int i = 0; i < HOTKEY_SLOTS.length; i++) {
+            g.drawImage(button, (int) HOTKEY_SLOTS[i].x, (int) HOTKEY_SLOTS[i].y, null);
             if (this.hotkeyList[i] != null) {
-                this.hotkeyList[i].draw(g, (int) this.hotkeySlots[i].x, (int) this.hotkeySlots[i].y);
+                this.hotkeyList[i].draw(g, (int) HOTKEY_SLOTS[i].x, (int) HOTKEY_SLOTS[i].y);
             }
             String key = "?";
             if (this.c.getKeyBind()[i] != -1) {
@@ -181,47 +184,47 @@ public class ScreenSkills extends ScreenMenu {
             }
             final int width = g.getFontMetrics().stringWidth(key);
             g.setFont(Globals.ARIAL_15PT);
-            drawStringOutline(g, key, (int) this.hotkeySlots[i].x + 30 - width / 2, (int) this.hotkeySlots[i].y + 75, 1);
+            drawStringOutline(g, key, (int) HOTKEY_SLOTS[i].x + 30 - width / 2, (int) HOTKEY_SLOTS[i].y + 75, 1);
             g.setColor(Color.WHITE);
-            g.drawString(key, (int) this.hotkeySlots[i].x + 30 - width / 2, (int) this.hotkeySlots[i].y + 75);
+            g.drawString(key, (int) HOTKEY_SLOTS[i].x + 30 - width / 2, (int) HOTKEY_SLOTS[i].y + 75);
         }
 
         for (int i = 0; i < 18; i++) {
-            g.drawImage(button, (int) this.skillSlots[i].x, (int) this.skillSlots[i].y, null);
-            this.skillList[i].draw(g, (int) this.skillSlots[i].x, (int) this.skillSlots[i].y);
+            g.drawImage(button, (int) SKILL_SLOTS[i].x, (int) SKILL_SLOTS[i].y, null);
+            this.skillList[i].draw(g, (int) SKILL_SLOTS[i].x, (int) SKILL_SLOTS[i].y);
             g.setFont(Globals.ARIAL_15PT);
-            drawStringOutline(g, this.skillList[i].getSkillName(), (int) this.skillSlots[i].x + 70, (int) this.skillSlots[i].y + 20, 1);
-            drawStringOutline(g, "Level: " + this.skillList[i].getLevel(), (int) this.skillSlots[i].x + 70, (int) this.skillSlots[i].y + 50,
+            drawStringOutline(g, this.skillList[i].getSkillName(), (int) SKILL_SLOTS[i].x + 70, (int) SKILL_SLOTS[i].y + 20, 1);
+            drawStringOutline(g, "Level: " + this.skillList[i].getLevel(), (int) SKILL_SLOTS[i].x + 70, (int) SKILL_SLOTS[i].y + 50,
                     1);
             g.setColor(Color.WHITE);
-            g.drawString(this.skillList[i].getSkillName(), (int) this.skillSlots[i].x + 70, (int) this.skillSlots[i].y + 20);
-            g.drawString("Level: " + this.skillList[i].getLevel(), (int) this.skillSlots[i].x + 70, (int) this.skillSlots[i].y + 50);
+            g.drawString(this.skillList[i].getSkillName(), (int) SKILL_SLOTS[i].x + 70, (int) SKILL_SLOTS[i].y + 20);
+            g.drawString("Level: " + this.skillList[i].getLevel(), (int) SKILL_SLOTS[i].x + 70, (int) SKILL_SLOTS[i].y + 50);
 
             if (this.c.getBaseStats()[Globals.STAT_SKILLPOINTS] > 0 && !this.skillList[i].isMaxed()) {
                 button = Globals.MENU_BUTTON[Globals.BUTTON_ADDSTAT];
-                g.drawImage(button, (int) this.addBox[i].x, (int) this.addBox[i].y, null);
+                g.drawImage(button, (int) ADD_SKILL_BOX[i].x, (int) ADD_SKILL_BOX[i].y, null);
                 g.setFont(Globals.ARIAL_15PT);
-                drawStringOutline(g, "+", (int) this.addBox[i].x + 11, (int) this.addBox[i].y + 18, 1);
+                drawStringOutline(g, "+", (int) ADD_SKILL_BOX[i].x + 11, (int) ADD_SKILL_BOX[i].y + 18, 1);
                 g.setColor(Color.WHITE);
-                g.drawString("+", (int) this.addBox[i].x + 11, (int) this.addBox[i].y + 18);
+                g.drawString("+", (int) ADD_SKILL_BOX[i].x + 11, (int) ADD_SKILL_BOX[i].y + 18);
             }
         }
 
-        for (int i = 18; i < this.skillSlots.length; i++) {
-            g.drawImage(button, (int) this.skillSlots[i].x, (int) this.skillSlots[i].y, null);
-            this.skillList[i].draw(g, (int) this.skillSlots[i].x, (int) this.skillSlots[i].y);
+        for (int i = 18; i < SKILL_SLOTS.length; i++) {
+            g.drawImage(button, (int) SKILL_SLOTS[i].x, (int) SKILL_SLOTS[i].y, null);
+            this.skillList[i].draw(g, (int) SKILL_SLOTS[i].x, (int) SKILL_SLOTS[i].y);
             g.setFont(Globals.ARIAL_15PT);
-            drawStringOutline(g, "Level: " + this.skillList[i].getLevel(), (int) this.skillSlots[i].x, (int) this.skillSlots[i].y + 80, 1);
+            drawStringOutline(g, "Level: " + this.skillList[i].getLevel(), (int) SKILL_SLOTS[i].x, (int) SKILL_SLOTS[i].y + 80, 1);
             g.setColor(Color.WHITE);
-            g.drawString("Level: " + this.skillList[i].getLevel(), (int) this.skillSlots[i].x, (int) this.skillSlots[i].y + 80);
+            g.drawString("Level: " + this.skillList[i].getLevel(), (int) SKILL_SLOTS[i].x, (int) SKILL_SLOTS[i].y + 80);
 
             if (this.c.getBaseStats()[Globals.STAT_SKILLPOINTS] > 0 && !this.skillList[i].isMaxed()) {
                 button = Globals.MENU_BUTTON[Globals.BUTTON_ADDSTAT];
-                g.drawImage(button, (int) this.addBox[i].x, (int) this.addBox[i].y, null);
+                g.drawImage(button, (int) ADD_SKILL_BOX[i].x, (int) ADD_SKILL_BOX[i].y, null);
                 g.setFont(Globals.ARIAL_15PT);
-                drawStringOutline(g, "+", (int) this.addBox[i].x + 11, (int) this.addBox[i].y + 18, 1);
+                drawStringOutline(g, "+", (int) ADD_SKILL_BOX[i].x + 11, (int) ADD_SKILL_BOX[i].y + 18, 1);
                 g.setColor(Color.WHITE);
-                g.drawString("+", (int) this.addBox[i].x + 11, (int) this.addBox[i].y + 18);
+                g.drawString("+", (int) ADD_SKILL_BOX[i].x + 11, (int) ADD_SKILL_BOX[i].y + 18);
             }
         }
     }
@@ -262,8 +265,8 @@ public class ScreenSkills extends ScreenMenu {
 
         super.mouseReleased(e);
         if (SwingUtilities.isLeftMouseButton(e)) {
-            for (int i = 0; i < this.hotkeySlots.length; i++) {
-                if (this.hotkeySlots[i].contains(e.getPoint())) {
+            for (int i = 0; i < HOTKEY_SLOTS.length; i++) {
+                if (HOTKEY_SLOTS[i].contains(e.getPoint())) {
                     if (drSkill != -1) {
                         this.hotkeyList[i] = this.skillList[drSkill];
                         return;
@@ -277,12 +280,12 @@ public class ScreenSkills extends ScreenMenu {
                     return;
                 }
             }
-            if (this.resetBox.contains(e.getPoint())) {
+            if (RESET_BOX.contains(e.getPoint())) {
                 this.c.resetSkill();
                 return;
             }
-            for (byte i = 0; i < this.addBox.length; i++) {
-                if (this.addBox[i].contains(e.getPoint())) {
+            for (byte i = 0; i < ADD_SKILL_BOX.length; i++) {
+                if (ADD_SKILL_BOX[i].contains(e.getPoint())) {
                     if (this.c.getBaseStats()[Globals.STAT_SKILLPOINTS] > 0 && !this.skillList[i].isMaxed()) {
                         this.c.addSkill(i);
                         return;
@@ -308,15 +311,15 @@ public class ScreenSkills extends ScreenMenu {
         mouseMoved(e);
         if (SwingUtilities.isLeftMouseButton(e)) {
             if (this.dragSkill == -1 && this.dragHotkey == -1) {
-                for (int i = 0; i < this.hotkeySlots.length; i++) {
-                    if (this.hotkeySlots[i].contains(e.getPoint()) && this.hotkeyList[i] != null) {
+                for (int i = 0; i < HOTKEY_SLOTS.length; i++) {
+                    if (HOTKEY_SLOTS[i].contains(e.getPoint()) && this.hotkeyList[i] != null) {
                         this.dragHotkey = i;
                         return;
                     }
                 }
 
-                for (byte i = 0; i < this.skillSlots.length; i++) {
-                    if (this.skillSlots[i].contains(e.getPoint()) && this.skillSlots[i] != null) {
+                for (byte i = 0; i < SKILL_SLOTS.length; i++) {
+                    if (SKILL_SLOTS[i].contains(e.getPoint()) && SKILL_SLOTS[i] != null) {
                         this.dragSkill = i;
                         return;
                     }
@@ -330,15 +333,15 @@ public class ScreenSkills extends ScreenMenu {
         this.mousePos = e.getPoint();
         this.drawInfoSkill = -1;
         this.drawInfoHotkey = -1;
-        for (int i = 0; i < this.hotkeySlots.length; i++) {
-            if (this.hotkeySlots[i].contains(e.getPoint()) && this.hotkeyList[i] != null) {
+        for (int i = 0; i < HOTKEY_SLOTS.length; i++) {
+            if (HOTKEY_SLOTS[i].contains(e.getPoint()) && this.hotkeyList[i] != null) {
                 this.drawInfoHotkey = i;
                 return;
             }
         }
 
-        for (byte i = 0; i < this.skillSlots.length; i++) {
-            if (this.skillSlots[i].contains(e.getPoint()) && this.skillSlots[i] != null) {
+        for (byte i = 0; i < SKILL_SLOTS.length; i++) {
+            if (SKILL_SLOTS[i].contains(e.getPoint()) && SKILL_SLOTS[i] != null) {
                 this.drawInfoSkill = i;
                 return;
             }

@@ -18,18 +18,18 @@ import javax.swing.SwingUtilities;
  * @author Ken Kwan
  */
 public class ScreenInventory extends ScreenMenu {
-    
+
     private static final int EQUIP_BOX_X = 980, EQUIP_BOX_Y = 40;
     private static final int STAT_BOX_X = 935, STAT_BOX_Y = 440;
 
     private final SaveData c;
-    private byte selectedTab = Globals.ITEM_WEAPON;
+    private static byte selectedTab = Globals.ITEM_WEAPON;
     private boolean destroy = false, destroyConfirm = false;
-    private final Rectangle2D.Double[] inventSlots = new Rectangle2D.Double[100],
-            equipSlots = new Rectangle2D.Double[Globals.NUM_EQUIP_SLOTS],
-            tabs = new Rectangle2D.Double[Globals.NUM_ITEM_TABS],
-            destroyBox = new Rectangle2D.Double[2],
-            promptBox = new Rectangle2D.Double[2];
+    private static final Rectangle2D.Double[] INVENTORY_SLOTS = new Rectangle2D.Double[100],
+            EQUIP_SLOTS = new Rectangle2D.Double[Globals.NUM_EQUIP_SLOTS],
+            ITEM_TABS = new Rectangle2D.Double[Globals.NUM_ITEM_TABS],
+            DESTROY_BOX = new Rectangle2D.Double[2],
+            PROMPT_BOX = new Rectangle2D.Double[2];
 
     private Point mousePos;
 
@@ -40,33 +40,36 @@ public class ScreenInventory extends ScreenMenu {
     private int nextFrameTime = 0;
     private long lastFrameTime = 0;
 
+    static {
+        for (int i = 0; i < INVENTORY_SLOTS.length; i++) {
+            INVENTORY_SLOTS[i] = new Rectangle2D.Double(270 + (i * 62) - (i / 10 * 620), 30 + i / 10 * 62, 60, 60);
+        }
+
+        for (int i = 0; i < ITEM_TABS.length; i++) {
+            ITEM_TABS[i] = new Rectangle2D.Double(230, 30 + i * 61, 30, 60);
+        }
+
+        EQUIP_SLOTS[Globals.ITEM_AMULET] = new Rectangle2D.Double(EQUIP_BOX_X + 160, EQUIP_BOX_Y, 60, 60);
+        EQUIP_SLOTS[Globals.ITEM_BELT] = new Rectangle2D.Double(EQUIP_BOX_X + 160, EQUIP_BOX_Y + 210, 60, 60);
+        EQUIP_SLOTS[Globals.ITEM_OFFHAND] = new Rectangle2D.Double(EQUIP_BOX_X + 160, EQUIP_BOX_Y + 140, 60, 60);
+        EQUIP_SLOTS[Globals.ITEM_CHEST] = new Rectangle2D.Double(EQUIP_BOX_X + 160, EQUIP_BOX_Y + 70, 60, 60);
+        EQUIP_SLOTS[Globals.ITEM_HEAD] = new Rectangle2D.Double(EQUIP_BOX_X + 80, EQUIP_BOX_Y, 60, 60);
+        EQUIP_SLOTS[Globals.ITEM_RING] = new Rectangle2D.Double(EQUIP_BOX_X, 40, EQUIP_BOX_Y + 20, 60);
+        EQUIP_SLOTS[Globals.ITEM_SHOULDER] = new Rectangle2D.Double(EQUIP_BOX_X, EQUIP_BOX_Y + 70, 60, 60);
+        EQUIP_SLOTS[Globals.ITEM_GLOVE] = new Rectangle2D.Double(EQUIP_BOX_X, EQUIP_BOX_Y + 210, 60, 60);
+        EQUIP_SLOTS[Globals.ITEM_WEAPON] = new Rectangle2D.Double(EQUIP_BOX_X, EQUIP_BOX_Y + 140, 60, 60);
+        EQUIP_SLOTS[Globals.ITEM_PANTS] = new Rectangle2D.Double(EQUIP_BOX_X + 45, EQUIP_BOX_Y + 280, 60, 60);
+        EQUIP_SLOTS[Globals.ITEM_SHOE] = new Rectangle2D.Double(EQUIP_BOX_X + 115, EQUIP_BOX_Y + 280, 60, 60);
+
+        for (int i = 0; i < DESTROY_BOX.length; i++) {
+            DESTROY_BOX[i] = new Rectangle2D.Double(520 + i * 185, 655, 180, 30);
+        }
+        PROMPT_BOX[0] = new Rectangle2D.Double(401, 400, 214, 112);
+        PROMPT_BOX[1] = new Rectangle2D.Double(665, 400, 214, 112);
+    }
+
     public ScreenInventory() {
         this.c = logic.getSelectedChar();
-        for (int i = 0; i < this.inventSlots.length; i++) {
-            this.inventSlots[i] = new Rectangle2D.Double(270 + (i * 62) - (i / 10 * 620), 30 + i / 10 * 62, 60, 60);
-        }
-
-        for (int i = 0; i < this.tabs.length; i++) {
-            this.tabs[i] = new Rectangle2D.Double(230, 30 + i * 61, 30, 60);
-        }
-
-        this.equipSlots[Globals.ITEM_AMULET] = new Rectangle2D.Double(EQUIP_BOX_X + 160, EQUIP_BOX_Y, 60, 60);
-        this.equipSlots[Globals.ITEM_BELT] = new Rectangle2D.Double(EQUIP_BOX_X + 160, EQUIP_BOX_Y + 210, 60, 60);
-        this.equipSlots[Globals.ITEM_OFFHAND] = new Rectangle2D.Double(EQUIP_BOX_X + 160, EQUIP_BOX_Y + 140, 60, 60);
-        this.equipSlots[Globals.ITEM_CHEST] = new Rectangle2D.Double(EQUIP_BOX_X + 160, EQUIP_BOX_Y + 70, 60, 60);
-        this.equipSlots[Globals.ITEM_HEAD] = new Rectangle2D.Double(EQUIP_BOX_X + 80, EQUIP_BOX_Y, 60, 60);
-        this.equipSlots[Globals.ITEM_RING] = new Rectangle2D.Double(EQUIP_BOX_X, 40, EQUIP_BOX_Y + 20, 60);
-        this.equipSlots[Globals.ITEM_SHOULDER] = new Rectangle2D.Double(EQUIP_BOX_X, EQUIP_BOX_Y + 70, 60, 60);
-        this.equipSlots[Globals.ITEM_GLOVE] = new Rectangle2D.Double(EQUIP_BOX_X, EQUIP_BOX_Y + 210, 60, 60);
-        this.equipSlots[Globals.ITEM_WEAPON] = new Rectangle2D.Double(EQUIP_BOX_X, EQUIP_BOX_Y + 140, 60, 60);
-        this.equipSlots[Globals.ITEM_PANTS] = new Rectangle2D.Double(EQUIP_BOX_X + 45, EQUIP_BOX_Y + 280, 60, 60);
-        this.equipSlots[Globals.ITEM_SHOE] = new Rectangle2D.Double(EQUIP_BOX_X + 115, EQUIP_BOX_Y + 280, 60, 60);
-
-        for (int i = 0; i < this.destroyBox.length; i++) {
-            this.destroyBox[i] = new Rectangle2D.Double(520 + i * 185, 655, 180, 30);
-        }
-        this.promptBox[0] = new Rectangle2D.Double(401, 400, 214, 112);
-        this.promptBox[1] = new Rectangle2D.Double(665, 400, 214, 112);
     }
 
     @Override
@@ -97,8 +100,8 @@ public class ScreenInventory extends ScreenMenu {
                 RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
 
         BufferedImage button = Globals.MENU_BUTTON[Globals.BUTTON_SMALLRECT];
-        g.drawImage(button, (int) this.destroyBox[0].x, (int) this.destroyBox[0].y, null);
-        g.drawImage(button, (int) this.destroyBox[1].x, (int) this.destroyBox[1].y, null);
+        g.drawImage(button, (int) DESTROY_BOX[0].x, (int) DESTROY_BOX[0].y, null);
+        g.drawImage(button, (int) DESTROY_BOX[1].x, (int) DESTROY_BOX[1].y, null);
         g.setFont(Globals.ARIAL_18PT);
         drawStringOutline(g, "Destroy Item", 560, 682, 1);
         drawStringOutline(g, "Destroy All", 750, 682, 1);
@@ -117,7 +120,7 @@ public class ScreenInventory extends ScreenMenu {
             g.drawImage(button, this.mousePos.x + 10, this.mousePos.y + 15, null);
         }
         if (this.dragItem != -1) {
-            this.c.getInventory(this.selectedTab)[this.dragItem].draw(g, this.mousePos.x + 5, this.mousePos.y + 5);
+            this.c.getInventory(selectedTab)[this.dragItem].draw(g, this.mousePos.x + 5, this.mousePos.y + 5);
         } else if (this.dragEquip != -1) {
             this.c.getEquip()[this.dragEquip].draw(g, this.mousePos.x + 5, this.mousePos.y + 5);
         }
@@ -149,13 +152,13 @@ public class ScreenInventory extends ScreenMenu {
     }
 
     private void drawItemTabs(final Graphics2D g) {
-        for (int i = 0; i < this.tabs.length; i++) {
+        for (int i = 0; i < ITEM_TABS.length; i++) {
             final BufferedImage button = Globals.MENU_BUTTON[i + 5];
-            g.drawImage(button, (int) this.tabs[i].x, (int) this.tabs[i].y, null);
+            g.drawImage(button, (int) ITEM_TABS[i].x, (int) ITEM_TABS[i].y, null);
         }
         // Tab pointer
-        g.drawImage(Globals.MENU_TABPOINTER[0], 260, (int) this.tabs[this.selectedTab].y, null);
-        g.drawImage(Globals.MENU_TABPOINTER[1], (int) this.tabs[this.selectedTab].x, (int) this.tabs[this.selectedTab].y, null);
+        g.drawImage(Globals.MENU_TABPOINTER[0], 260, (int) ITEM_TABS[selectedTab].y, null);
+        g.drawImage(Globals.MENU_TABPOINTER[1], (int) ITEM_TABS[selectedTab].x, (int) ITEM_TABS[selectedTab].y, null);
 
     }
 
@@ -164,9 +167,9 @@ public class ScreenInventory extends ScreenMenu {
             return;
         }
         if (this.drawInfoItem != -1) {
-            drawItemInfo(g, this.inventSlots[this.drawInfoItem], this.c.getInventory(this.selectedTab)[this.drawInfoItem]);
+            drawItemInfo(g, INVENTORY_SLOTS[this.drawInfoItem], this.c.getInventory(selectedTab)[this.drawInfoItem]);
         } else if (this.drawInfoEquip != -1) {
-            drawItemInfo(g, this.equipSlots[this.drawInfoEquip], this.c.getEquip()[this.drawInfoEquip]);
+            drawItemInfo(g, EQUIP_SLOTS[this.drawInfoEquip], this.c.getEquip()[this.drawInfoEquip]);
         }
     }
 
@@ -231,10 +234,10 @@ public class ScreenInventory extends ScreenMenu {
 
         final BufferedImage button = Globals.MENU_BUTTON[Globals.BUTTON_SLOT];
         // Equipment
-        for (int i = 0; i < this.equipSlots.length; i++) {
-            g.drawImage(button, (int) this.equipSlots[i].x, (int) this.equipSlots[i].y, null);
+        for (int i = 0; i < EQUIP_SLOTS.length; i++) {
+            g.drawImage(button, (int) EQUIP_SLOTS[i].x, (int) EQUIP_SLOTS[i].y, null);
             if (this.c.getEquip()[i] != null) {
-                this.c.getEquip()[i].draw(g, (int) this.equipSlots[i].x, (int) this.equipSlots[i].y);
+                this.c.getEquip()[i].draw(g, (int) EQUIP_SLOTS[i].x, (int) EQUIP_SLOTS[i].y);
             }
             String s = "";
             switch (i) {
@@ -283,21 +286,21 @@ public class ScreenInventory extends ScreenMenu {
                     break;
             }
             g.setFont(Globals.ARIAL_12PT);
-            drawStringOutline(g, s, (int) this.equipSlots[i].x + 2, (int) this.equipSlots[i].y + 58, 1);
+            drawStringOutline(g, s, (int) EQUIP_SLOTS[i].x + 2, (int) EQUIP_SLOTS[i].y + 58, 1);
             g.setColor(Color.WHITE);
-            g.drawString(s, (int) this.equipSlots[i].x + 2, (int) this.equipSlots[i].y + 58);
+            g.drawString(s, (int) EQUIP_SLOTS[i].x + 2, (int) EQUIP_SLOTS[i].y + 58);
         }
     }
 
     private void drawInventory(final Graphics2D g) {
         final BufferedImage button = Globals.MENU_BUTTON[Globals.BUTTON_SLOT];
 
-        for (int i = 0; i < this.c.getInventory(this.selectedTab).length; i++) {
-            g.drawImage(button, (int) this.inventSlots[i].x, (int) this.inventSlots[i].y, null);
-            if (this.c.getInventory(this.selectedTab)[i] != null) {
-                this.c.getInventory(this.selectedTab)[i].draw(g, (int) this.inventSlots[i].x, (int) this.inventSlots[i].y);
+        for (int i = 0; i < this.c.getInventory(selectedTab).length; i++) {
+            g.drawImage(button, (int) INVENTORY_SLOTS[i].x, (int) INVENTORY_SLOTS[i].y, null);
+            if (this.c.getInventory(selectedTab)[i] != null) {
+                this.c.getInventory(selectedTab)[i].draw(g, (int) INVENTORY_SLOTS[i].x, (int) INVENTORY_SLOTS[i].y);
             }
-            if (this.selectedTab == Globals.ITEM_WEAPON) {
+            if (selectedTab == Globals.ITEM_WEAPON) {
                 g.setFont(Globals.ARIAL_15PT);
                 drawStringOutline(g, "Right Click to equip as Offhand", 280, 682, 1);
                 g.setColor(new Color(255, 130, 0));
@@ -353,42 +356,42 @@ public class ScreenInventory extends ScreenMenu {
 
         super.mouseReleased(e);
         if (SwingUtilities.isLeftMouseButton(e)) {
-            for (byte i = 0; i < this.tabs.length; i++) {
-                if (drItem == -1 && drEq == -1 && this.tabs[i].contains(e.getPoint())) {
-                    this.selectedTab = i;
+            for (byte i = 0; i < ITEM_TABS.length; i++) {
+                if (drItem == -1 && drEq == -1 && ITEM_TABS[i].contains(e.getPoint())) {
+                    selectedTab = i;
                     this.destroy = false;
                     return;
                 }
             }
 
-            for (int i = 0; i < this.inventSlots.length; i++) {
-                if (this.inventSlots[i].contains(e.getPoint())) {
+            for (int i = 0; i < INVENTORY_SLOTS.length; i++) {
+                if (INVENTORY_SLOTS[i].contains(e.getPoint())) {
                     if (!this.destroy) {
                         if (drItem != -1) {
-                            final ItemEquip temp = this.c.getInventory(this.selectedTab)[i];
-                            this.c.getInventory(this.selectedTab)[i] = this.c.getInventory(this.selectedTab)[drItem];
-                            this.c.getInventory(this.selectedTab)[drItem] = temp;
+                            final ItemEquip temp = this.c.getInventory(selectedTab)[i];
+                            this.c.getInventory(selectedTab)[i] = this.c.getInventory(selectedTab)[drItem];
+                            this.c.getInventory(selectedTab)[drItem] = temp;
                             return;
                         }
                         if (drEq != -1) {
                             this.c.equipItem(drEq, i);
                             return;
                         }
-                        if (this.c.getInventory(this.selectedTab)[i] != null) {
-                            this.c.equipItem(this.selectedTab, i);
+                        if (this.c.getInventory(selectedTab)[i] != null) {
+                            this.c.equipItem(selectedTab, i);
                             return;
                         }
                     } else {
-                        this.c.destroyItem(this.selectedTab, i);
+                        this.c.destroyItem(selectedTab, i);
                     }
                     return;
                 }
             }
 
-            for (byte i = 0; !this.destroy && i < this.equipSlots.length; i++) {
-                if (this.equipSlots[i].contains(e.getPoint())) {
+            for (byte i = 0; !this.destroy && i < EQUIP_SLOTS.length; i++) {
+                if (EQUIP_SLOTS[i].contains(e.getPoint())) {
                     if (drItem != -1) {
-                        if (this.selectedTab == i || (this.selectedTab == Globals.ITEM_WEAPON && i == Globals.ITEM_OFFHAND)) {
+                        if (selectedTab == i || (selectedTab == Globals.ITEM_WEAPON && i == Globals.ITEM_OFFHAND)) {
                             this.c.equipItem(i, drItem);
                             return;
                         }
@@ -400,8 +403,8 @@ public class ScreenInventory extends ScreenMenu {
                 }
             }
 
-            for (int i = 0; i < this.destroyBox.length; i++) {
-                if (this.destroyBox[i].contains(e.getPoint())) {
+            for (int i = 0; i < DESTROY_BOX.length; i++) {
+                if (DESTROY_BOX[i].contains(e.getPoint())) {
                     switch (i) {
                         case 0:
                             this.destroy = !this.destroy;
@@ -417,9 +420,9 @@ public class ScreenInventory extends ScreenMenu {
         }
 
         if (SwingUtilities.isRightMouseButton(e)) {
-            if (this.selectedTab == Globals.ITEM_WEAPON) {
-                for (int i = 0; i < this.inventSlots.length; i++) {
-                    if (this.inventSlots[i].contains(e.getPoint()) && this.c.getInventory(this.selectedTab)[i] != null) {
+            if (selectedTab == Globals.ITEM_WEAPON) {
+                for (int i = 0; i < INVENTORY_SLOTS.length; i++) {
+                    if (INVENTORY_SLOTS[i].contains(e.getPoint()) && this.c.getInventory(selectedTab)[i] != null) {
                         if (!this.destroy) {
                             this.c.equipItem(Globals.ITEM_OFFHAND, i);
                         }
@@ -431,10 +434,10 @@ public class ScreenInventory extends ScreenMenu {
     }
 
     private void mouseReleased_destroyConfirm(final MouseEvent e) {
-        for (byte i = 0; i < this.promptBox.length; i++) {
-            if (this.promptBox[i].contains(e.getPoint())) {
+        for (byte i = 0; i < PROMPT_BOX.length; i++) {
+            if (PROMPT_BOX[i].contains(e.getPoint())) {
                 if (i == 0) {
-                    this.c.destroyAll(this.selectedTab);
+                    this.c.destroyAll(selectedTab);
                 }
                 this.destroyConfirm = false;
             }
@@ -459,20 +462,20 @@ public class ScreenInventory extends ScreenMenu {
         }
         if (SwingUtilities.isLeftMouseButton(e)) {
             if (this.dragItem == -1 && this.dragEquip == -1) {
-                for (int i = 0; i < this.inventSlots.length; i++) {
-                    if (this.inventSlots[i].contains(e.getPoint()) && this.c.getInventory(this.selectedTab)[i] != null) {
+                for (int i = 0; i < INVENTORY_SLOTS.length; i++) {
+                    if (INVENTORY_SLOTS[i].contains(e.getPoint()) && this.c.getInventory(selectedTab)[i] != null) {
                         this.dragItem = i;
                         return;
                     }
                 }
 
-                for (byte i = 0; i < this.equipSlots.length; i++) {
-                    if (this.equipSlots[i].contains(e.getPoint()) && this.c.getEquip()[i] != null) {
+                for (byte i = 0; i < EQUIP_SLOTS.length; i++) {
+                    if (EQUIP_SLOTS[i].contains(e.getPoint()) && this.c.getEquip()[i] != null) {
                         this.dragEquip = i;
                         if (i == Globals.ITEM_OFFHAND) {
-                            this.selectedTab = Globals.ITEM_WEAPON;
+                            selectedTab = Globals.ITEM_WEAPON;
                         } else {
-                            this.selectedTab = i;
+                            selectedTab = i;
                         }
                         return;
                     }
@@ -486,15 +489,15 @@ public class ScreenInventory extends ScreenMenu {
         this.mousePos = e.getPoint();
         this.drawInfoItem = -1;
         this.drawInfoEquip = -1;
-        for (int i = 0; i < this.inventSlots.length; i++) {
-            if (this.inventSlots[i].contains(e.getPoint()) && this.c.getInventory(this.selectedTab)[i] != null) {
+        for (int i = 0; i < INVENTORY_SLOTS.length; i++) {
+            if (INVENTORY_SLOTS[i].contains(e.getPoint()) && this.c.getInventory(selectedTab)[i] != null) {
                 this.drawInfoItem = i;
                 return;
             }
         }
 
-        for (byte i = 0; i < this.equipSlots.length; i++) {
-            if (this.equipSlots[i].contains(e.getPoint()) && this.c.getEquip()[i] != null) {
+        for (byte i = 0; i < EQUIP_SLOTS.length; i++) {
+            if (EQUIP_SLOTS[i].contains(e.getPoint()) && this.c.getEquip()[i] != null) {
                 this.drawInfoEquip = i;
                 return;
             }
