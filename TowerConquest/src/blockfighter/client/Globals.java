@@ -45,7 +45,7 @@ public class Globals {
     public final static Font ARIAL_15PTITALIC = new Font("Arial", Font.ITALIC, 15);
     public final static Font ARIAL_24PT = new Font("Arial", Font.PLAIN, 24);
     public final static Font ARIAL_18PT = new Font("Arial", Font.PLAIN, 18);
-    public final static Font ARIAL_18P = new Font("Arial", Font.BOLD, 18);
+    public final static Font ARIAL_18PTBOLD = new Font("Arial", Font.BOLD, 18);
 
     public final static byte MAX_NAME_LENGTH = 15;
 
@@ -251,6 +251,7 @@ public class Globals {
 
     public final static BufferedImage[][] CHAR_SPRITE = new BufferedImage[NUM_PLAYER_ANIM_STATE][];
     public final static BufferedImage[] HUD = new BufferedImage[2];
+    public static BufferedImage TITLE;
 
     public final static BufferedImage[] MENU_BG = new BufferedImage[3];
     public final static BufferedImage[] MENU_SMOKE = new BufferedImage[1];
@@ -490,6 +491,8 @@ public class Globals {
         for (byte i = 0; i < MENU_BG.length; i++) {
             MENU_BG[i] = Globals.loadTextureResource("sprites/ui/menu/bg" + (i + 1) + ".png");
         }
+
+        TITLE = Globals.loadTextureResource("sprites/ui/menu/title.png");
 
         for (byte i = 0; i < MENU_BUTTON.length; i++) {
             MENU_BUTTON[i] = Globals.loadTextureResource("sprites/ui/menu/button" + (i + 1) + ".png");

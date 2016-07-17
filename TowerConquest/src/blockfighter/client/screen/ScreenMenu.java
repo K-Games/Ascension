@@ -26,7 +26,7 @@ public abstract class ScreenMenu extends Screen {
     private static final Rectangle2D.Double[] MENU_BOX = new Rectangle2D.Double[7];
     protected boolean fadeIn = false;
 
-    private long fadeInStart = System.currentTimeMillis();
+    private long fadeInStart = System.nanoTime();
     private Color fadeInColor;
     protected boolean finishedFadeIn = false;
 
@@ -67,9 +67,8 @@ public abstract class ScreenMenu extends Screen {
             updateParticles(particles);
             this.lastUpdateTime = now;
             if (fadeIn) {
-                long curTime = System.currentTimeMillis();
-                if (!finishedFadeIn && curTime - fadeInStart < 2000) {
-                    int transparency = (int) (255 * (1f - (curTime - fadeInStart) / 2000f));
+                if (!finishedFadeIn && Globals.nsToMs(now - fadeInStart) < 2000) {
+                    int transparency = (int) (255 * (1f - Globals.nsToMs(now - fadeInStart) / 2000f));
                     fadeInColor = new Color(0, 0, 0, (transparency < 0) ? 0 : transparency);
                 } else {
                     fadeInColor = new Color(0, 0, 0, 0);

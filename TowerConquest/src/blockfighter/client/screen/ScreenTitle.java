@@ -4,6 +4,7 @@ import blockfighter.client.Globals;
 import blockfighter.client.entities.particles.Particle;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -11,36 +12,73 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class ScreenTitle extends Screen {
 
-    private long fadeInStart = System.currentTimeMillis();
-    private long fadeOutStart;
-    private Color fadeInColor, fadeOutColor;
-    private boolean exitingTitle = false, finishedFadeIn = false;
+    private long fadeInStart = System.nanoTime();
+    private long fadeOutStart, lastUpdateTime, fontFadeStart;
+    private Color fadeInColor, fadeOutColor, fontColor;
+    private boolean exitingTitle = false, finishedFadeIn = false, fontFadeIn = false;
+    private int bg1y = 0, bg2y = 720;
 
     @Override
     public void update() {
-        long curTime = System.currentTimeMillis();
-        if (curTime - fadeInStart < 5000) {
-            int transparency = (int) (255 * (1f - (curTime - fadeInStart) / 3000f));
-            fadeInColor = new Color(255, 255, 255, (transparency < 0) ? 0 : transparency);
-        } else {
-            fadeInColor = new Color(255, 255, 255, 0);
-            finishedFadeIn = true;
-        }
-        if (exitingTitle && curTime - fadeOutStart < 2000) {
-            int transparency = (int) (255 * (curTime - fadeOutStart) / 2000f);
-            fadeOutColor = new Color(0, 0, 0, (transparency < 0) ? 0 : transparency);
-        } else {
-            fadeOutColor = new Color(0, 0, 0, 255);
-        }
-        if (exitingTitle && curTime - fadeOutStart >= 3000) {
-            logic.setScreen(new ScreenSelectChar(true));
+        final long now = logic.getTime(); // Get time now
+        if (now - this.lastUpdateTime >= Globals.LOGIC_UPDATE) {
+            if (Globals.nsToMs(now - fadeInStart) < 5000) {
+                int transparency = (int) (255 * (1f - Globals.nsToMs(now - fadeInStart) / 5000f));
+                fadeInColor = new Color(255, 255, 255, (transparency < 0) ? 0 : transparency);
+            } else {
+                fadeInColor = new Color(255, 255, 255, 0);
+                finishedFadeIn = true;
+            }
+            if (exitingTitle && Globals.nsToMs(now - fadeOutStart) < 2000) {
+                int transparency = (int) (255 * Globals.nsToMs(now - fadeOutStart) / 2000f);
+                fadeOutColor = new Color(0, 0, 0, (transparency < 0) ? 0 : transparency);
+            } else {
+                fadeOutColor = new Color(0, 0, 0, 255);
+            }
+            bg1y--;
+            bg2y--;
+            if (bg1y <= -720) {
+                bg1y = 720;
+            }
+
+            if (bg2y <= -720) {
+                bg2y = 720;
+            }
+            if (Globals.nsToMs(now - fontFadeStart) < 1000) {
+                int transparency = (fontFadeIn) ? (int) (255 * Globals.nsToMs(now - fontFadeStart) / 1000f)
+                        : (int) (255 * (1f - Globals.nsToMs(now - fontFadeStart) / 1000f));
+                fontColor = new Color(160, 0, 0, (transparency < 0) ? 0 : (transparency > 255) ? 255 : transparency);
+            }
+
+            if (Globals.nsToMs(now - fontFadeStart) >= 1000) {
+                fontFadeIn = !fontFadeIn;
+                fontFadeStart = now;
+            }
+
+            if (exitingTitle && Globals.nsToMs(now - fadeOutStart) >= 2000) {
+                logic.setScreen(new ScreenSelectChar(true));
+            }
+            this.lastUpdateTime = now;
         }
     }
 
     @Override
     public void draw(Graphics2D g) {
         final BufferedImage bg = Globals.MENU_BG[2];
-        g.drawImage(bg, 0, 0, 1280, 720, null);
+        g.drawImage(bg, 0, bg1y, 1280, 720, null);
+        g.drawImage(bg, 0, bg2y + 720, 1280, bg2y, 0, 0, bg.getWidth(), bg.getHeight(), null);
+        g.drawImage(Globals.TITLE, Globals.WINDOW_WIDTH / 2 - Globals.TITLE.getWidth() / 2, 100, null);
+
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                RenderingHints.VALUE_ANTIALIAS_ON);
+        g.setRenderingHint(
+                RenderingHints.KEY_TEXT_ANTIALIASING,
+                RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
+        g.setFont(Globals.ARIAL_24PT);
+        g.setColor(fontColor);
+        String click = "Click to continue";
+        g.drawString(click, Globals.WINDOW_WIDTH / 2 - g.getFontMetrics().stringWidth(click) / 2, 500);
+
         if (!finishedFadeIn) {
             g.setColor(fadeInColor);
             g.fillRect(0, 0, Globals.WINDOW_WIDTH, Globals.WINDOW_HEIGHT);
@@ -64,7 +102,7 @@ public class ScreenTitle extends Screen {
     @Override
     public void mouseReleased(MouseEvent e) {
         exitingTitle = true;
-        fadeOutStart = System.currentTimeMillis();
+        fadeOutStart = System.nanoTime();
     }
 
     @Override
