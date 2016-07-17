@@ -22,15 +22,15 @@ public class IngameNumber extends Thread {
     private final double speedY;
     private final int number;
     private long startTime = 0;
-    private final int duration = 500;
+    private final int duration = 700;
 
     public IngameNumber(final int num, final byte t, final Point loc) {
         this.startTime = logic.getTime();
         this.number = num;
         this.type = t;
         this.x = loc.x;
-        this.y = loc.y;
-        this.speedY = -3;
+        this.y = loc.y - 18;
+        this.speedY = -2;
         this.speedX = 0;
         setDaemon(true);
     }

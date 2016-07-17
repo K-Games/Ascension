@@ -480,7 +480,10 @@ public class ScreenIngame extends Screen {
         final byte sfxID = data[1];
         final int x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
         final int y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
-        logic.playSound(sfxID, x, y);
+
+        if (Point.distance(this.players.get(this.myKey).getX(), this.players.get(this.myKey).getY(), x, y) <= 800) {
+            logic.playSound(sfxID, x, y);
+        }
     }
 
     private void dataPlayerGiveDrop(final byte[] data) {
