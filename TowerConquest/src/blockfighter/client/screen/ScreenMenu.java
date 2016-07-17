@@ -43,6 +43,9 @@ public abstract class ScreenMenu extends Screen {
     }
 
     @Override
+    public byte getBGM() {
+        return Globals.BGM_MENU;
+    }
     public void update() {
         final long now = logic.getTime(); // Get time now
         if (now - this.lastUpdateTime >= Globals.LOGIC_UPDATE) {

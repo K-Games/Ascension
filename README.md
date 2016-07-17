@@ -32,3 +32,9 @@ An multiplayer action 2D sidescrolling platformer coded in pure Java.
 * Item drops are defined by server itemcode.txt list.
 * Servers can now setup with different room numbers. Doesn't have to boot with sequential room numbers.
 * Complete Netcode rework. Now backed by Kyronet TCP.
+
+# Credits
+Title & Menu Tracks
+Hero - geluf
+Through the Forest in Midwinter - geluf
+

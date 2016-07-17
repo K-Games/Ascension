@@ -96,6 +96,10 @@ public abstract class Screen implements KeyListener, MouseListener, MouseMotionL
         logic.disableSound();
     }
 
+    public byte getBGM() {
+        return -1;
+    }
+
     public int getNextParticleKey() {
         Integer nextKey = PARTICLE_KEYS.poll();
         while (nextKey == null) {

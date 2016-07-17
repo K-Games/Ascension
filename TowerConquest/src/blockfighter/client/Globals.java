@@ -252,7 +252,7 @@ public class Globals {
     public final static BufferedImage[][] CHAR_SPRITE = new BufferedImage[NUM_PLAYER_ANIM_STATE][];
     public final static BufferedImage[] HUD = new BufferedImage[2];
 
-    public final static BufferedImage[] MENU_BG = new BufferedImage[2];
+    public final static BufferedImage[] MENU_BG = new BufferedImage[3];
     public final static BufferedImage[] MENU_SMOKE = new BufferedImage[1];
     public final static BufferedImage[] MENU_UPGRADEPARTICLE = new BufferedImage[4];
     public final static BufferedImage[] MENU_BUTTON = new BufferedImage[16];
@@ -266,11 +266,12 @@ public class Globals {
 
     public final static BufferedImage[] SKILL_ICON = new BufferedImage[Skill.NUM_SKILLS];
 
-    public final static byte NUM_BGM = 4,
+    public final static byte NUM_BGM = 5,
             BGM_MENU = 0x00,
             BGM_ARENA1 = 0x01,
             BGM_ARENA2 = 0x02,
-            BGM_ARENA3 = 0x03;
+            BGM_ARENA3 = 0x03,
+            BGM_TITLE = 0x04;
 
     public final static byte NUM_SFX = 9,
             SFX_SLASH = 0x00,
@@ -330,10 +331,11 @@ public class Globals {
     }
 
     private static void loadSound() {
-        SOUND_BGM[BGM_MENU] = "theme.ogg";
+        SOUND_BGM[BGM_MENU] = "hero.ogg";
         SOUND_BGM[BGM_ARENA1] = "bgm/0.ogg";
         SOUND_BGM[BGM_ARENA2] = "bgm/1.ogg";
         SOUND_BGM[BGM_ARENA3] = "bgm/2.ogg";
+        SOUND_BGM[BGM_TITLE] = "Through the Forest in Midwinter.ogg";
 
         SOUND_SFX[SFX_SLASH] = "sfx/sword/slash/0.wav";
         SOUND_SFX[SFX_GASH] = "sfx/sword/gash/0.wav";

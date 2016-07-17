@@ -12,6 +12,8 @@ import blockfighter.client.net.PacketReceiver;
 import blockfighter.client.render.RenderModule;
 import blockfighter.client.render.RenderPanel;
 import blockfighter.client.screen.Screen;
+import blockfighter.client.screen.ScreenSelectChar;
+import blockfighter.client.screen.ScreenTitle;
 import java.awt.Dimension;
 import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.ExecutorService;
@@ -142,6 +144,7 @@ public class Main {
                 .daemon(true)
                 .priority(Thread.NORM_PRIORITY)
                 .build());
+        LOGIC_MODULE.setScreen(new ScreenTitle());
         service.scheduleAtFixedRate(LOGIC_MODULE, 0, 1, TimeUnit.MILLISECONDS);
         service.scheduleAtFixedRate(render, 0, Globals.RENDER_UPDATE, TimeUnit.MICROSECONDS);
     }

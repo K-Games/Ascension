@@ -12,11 +12,12 @@ public class SoundModule implements Runnable {
 
     private SoundSystemJPCT soundModule;
     private float originVol = 0.2f;
+    private byte currentBGM = -1;
 
     @Override
     public void run() {
         this.soundModule = new SoundSystemJPCT();
-        this.soundModule.setMasterVolume(0.2f);
+        this.soundModule.setMasterVolume(0.35f);
         SoundSystemConfig.setSoundFilesPackage("resources/sounds/");
     }
 
@@ -41,11 +42,14 @@ public class SoundModule implements Runnable {
     }
 
     public void playBGM(final byte bgmID) {
-        if (isLoaded() && bgmID > -1) {
-            this.soundModule.stop("bgm");
-            this.soundModule.backgroundMusic("bgm", Globals.SOUND_BGM[bgmID]);
-            this.soundModule.setVolume("bgm", .35f);
-            System.out.println("Play " + Globals.SOUND_BGM[bgmID]);
+        if (isLoaded() && bgmID > -1 && currentBGM != bgmID) {
+            if (currentBGM != -1) {
+                this.soundModule.fadeOut(Globals.SOUND_BGM[currentBGM], null, 1000);
+            }
+            this.soundModule.backgroundMusic(Globals.SOUND_BGM[bgmID], Globals.SOUND_BGM[bgmID]);
+            currentBGM = bgmID;
+            this.soundModule.setVolume("bgm", .7f);
+            System.out.println("Playing " + Globals.SOUND_BGM[bgmID]);
         }
     }
 

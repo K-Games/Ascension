@@ -3,7 +3,6 @@ package blockfighter.client;
 import blockfighter.client.net.GameClient;
 import blockfighter.client.screen.Screen;
 import blockfighter.client.screen.ScreenIngame;
-import blockfighter.client.screen.ScreenSelectChar;
 import blockfighter.client.screen.ScreenServerList;
 
 /**
@@ -17,10 +16,8 @@ public class LogicModule implements Runnable {
     private long currentTime = 0;
     private SaveData selectedChar;
     private byte selectedRoom = 0;
-    private Screen screen = new ScreenSelectChar();
-    // private Screen screen = new ScreenSpriteTest();
+    private Screen screen ;
     private final SoundModule soundModule;
-    private boolean initBgm = false;
 
     public LogicModule(final SoundModule s) {
         this.soundModule = s;
@@ -28,10 +25,6 @@ public class LogicModule implements Runnable {
 
     @Override
     public void run() {
-        if (this.soundModule.isLoaded() && !this.initBgm) {
-            this.soundModule.playBGM(Globals.BGM_MENU);
-            this.initBgm = true;
-        }
         try {
             this.currentTime = System.nanoTime();
             this.screen.update();
@@ -83,14 +76,16 @@ public class LogicModule implements Runnable {
     }
 
     public void setScreen(final Screen s) {
-        this.screen.unload();
+        this.soundModule.playBGM(s.getBGM());
+        if (this.screen != null) {
+            this.screen.unload();
+        }
         this.screen = s;
     }
 
     public void returnMenu() {
         shutdownClient();
-        setScreen(new ScreenServerList());
-        this.soundModule.playBGM(Globals.BGM_MENU);
+        setScreen(new ScreenServerList(true));
     }
 
     public void playSound(final byte sfxID, final int x, final int y) {

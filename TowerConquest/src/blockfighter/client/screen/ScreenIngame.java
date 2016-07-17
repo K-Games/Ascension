@@ -89,9 +89,13 @@ public class ScreenIngame extends Screen {
             }
         }
         this.map = m;
-        logic.playBGM(this.map.getBGM());
     }
-
+    
+    @Override
+    public byte getBGM() {
+        return this.map.getBGM();
+    }
+    
     @Override
     public void update() {
         final long now = logic.getTime(); // Get time now
