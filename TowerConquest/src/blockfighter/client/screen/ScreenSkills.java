@@ -26,6 +26,13 @@ public class ScreenSkills extends ScreenMenu {
     private final Rectangle2D.Double[] addBox = new Rectangle2D.Double[Skill.NUM_SKILLS];
     private final Rectangle2D.Double resetBox;
 
+    private static final int SWORD_BOX_X = 260, SWORD_BOX_Y = 55;
+    private static final int BOW_BOX_X = 505, BOW_BOX_Y = 55;
+    private static final int UTIL_BOX_X = 770, UTIL_BOX_Y = 75;
+    private static final int SHIELD_BOX_X = 770, SHIELD_BOX_Y = 270;
+    private static final int PASSIVE_BOX_X = 1020, PASSIVE_BOX_Y = 55;
+    private static final int HOTKEY_BOX_X = 240, HOTKEY_BOX_Y = 605;
+
     // Actual skills stored
     private final Skill[] hotkeyList;
     private final Skill[] skillList;
@@ -40,45 +47,46 @@ public class ScreenSkills extends ScreenMenu {
         this.hotkeyList = this.c.getHotkeys();
         this.skillList = this.c.getSkills();
 
-        this.skillSlots[Skill.SWORD_GASH] = new Rectangle2D.Double(241, 55, 60, 60);
-        this.skillSlots[Skill.SWORD_SLASH] = new Rectangle2D.Double(241, 145, 60, 60);
+        this.skillSlots[Skill.SWORD_GASH] = new Rectangle2D.Double(SWORD_BOX_X, SWORD_BOX_Y, 60, 60);
+        this.skillSlots[Skill.SWORD_SLASH] = new Rectangle2D.Double(SWORD_BOX_X, SWORD_BOX_Y + 90, 60, 60);
         //this.skillSlots[Skill.SWORD_MULTI] = new Rectangle2D.Double(241, 235, 60, 60);
-        this.skillSlots[Skill.SWORD_PHANTOM] = new Rectangle2D.Double(241, 235, 60, 60);
-        this.skillSlots[Skill.SWORD_VORPAL] = new Rectangle2D.Double(241, 325, 60, 60);
-        this.skillSlots[Skill.SWORD_CINDER] = new Rectangle2D.Double(241, 415, 60, 60);
-        this.skillSlots[Skill.SWORD_TAUNT] = new Rectangle2D.Double(241, 505, 60, 60);
+        this.skillSlots[Skill.SWORD_PHANTOM] = new Rectangle2D.Double(SWORD_BOX_X, SWORD_BOX_Y + 180, 60, 60);
+        this.skillSlots[Skill.SWORD_VORPAL] = new Rectangle2D.Double(SWORD_BOX_X, SWORD_BOX_Y + 270, 60, 60);
+        this.skillSlots[Skill.SWORD_CINDER] = new Rectangle2D.Double(SWORD_BOX_X, SWORD_BOX_Y + 360, 60, 60);
+        this.skillSlots[Skill.SWORD_TAUNT] = new Rectangle2D.Double(SWORD_BOX_X, SWORD_BOX_Y + 450, 60, 60);
 
-        this.skillSlots[Skill.BOW_ARC] = new Rectangle2D.Double(506, 55, 60, 60);
-        this.skillSlots[Skill.BOW_RAPID] = new Rectangle2D.Double(506, 145, 60, 60);
-        this.skillSlots[Skill.BOW_POWER] = new Rectangle2D.Double(506, 235, 60, 60);
-        this.skillSlots[Skill.BOW_VOLLEY] = new Rectangle2D.Double(506, 325, 60, 60);
-        this.skillSlots[Skill.BOW_STORM] = new Rectangle2D.Double(506, 415, 60, 60);
-        this.skillSlots[Skill.BOW_FROST] = new Rectangle2D.Double(506, 505, 60, 60);
+        this.skillSlots[Skill.BOW_ARC] = new Rectangle2D.Double(BOW_BOX_X, BOW_BOX_Y, 60, 60);
+        this.skillSlots[Skill.BOW_RAPID] = new Rectangle2D.Double(BOW_BOX_X, BOW_BOX_Y + 90, 60, 60);
+        this.skillSlots[Skill.BOW_POWER] = new Rectangle2D.Double(BOW_BOX_X, BOW_BOX_Y + 180, 60, 60);
+        this.skillSlots[Skill.BOW_VOLLEY] = new Rectangle2D.Double(BOW_BOX_X, BOW_BOX_Y + 270, 60, 60);
+        this.skillSlots[Skill.BOW_STORM] = new Rectangle2D.Double(BOW_BOX_X, BOW_BOX_Y + 360, 60, 60);
+        this.skillSlots[Skill.BOW_FROST] = new Rectangle2D.Double(BOW_BOX_X, BOW_BOX_Y + 450, 60, 60);
 
-        this.skillSlots[Skill.SHIELD_FORTIFY] = new Rectangle2D.Double(767, 55, 60, 60);
-        this.skillSlots[Skill.SHIELD_IRON] = new Rectangle2D.Double(767, 145, 60, 60);
-        this.skillSlots[Skill.SHIELD_CHARGE] = new Rectangle2D.Double(767, 235, 60, 60);
-        this.skillSlots[Skill.SHIELD_REFLECT] = new Rectangle2D.Double(767, 325, 60, 60);
-        this.skillSlots[Skill.SHIELD_TOSS] = new Rectangle2D.Double(767, 415, 60, 60);
-        this.skillSlots[Skill.SHIELD_DASH] = new Rectangle2D.Double(767, 505, 60, 60);
+        this.skillSlots[Skill.SHIELD_DASH] = new Rectangle2D.Double(UTIL_BOX_X, UTIL_BOX_Y, 60, 60);
+        this.skillSlots[Skill.SHIELD_FORTIFY] = new Rectangle2D.Double(UTIL_BOX_X, UTIL_BOX_Y + 75, 60, 60);
 
-        this.skillSlots[Skill.PASSIVE_DUALSWORD] = new Rectangle2D.Double(1050, 55, 60, 60);
-        this.skillSlots[Skill.PASSIVE_KEENEYE] = new Rectangle2D.Double(1050, 140, 60, 60);
-        this.skillSlots[Skill.PASSIVE_VITALHIT] = new Rectangle2D.Double(1050, 225, 60, 60);
+        this.skillSlots[Skill.SHIELD_IRON] = new Rectangle2D.Double(SHIELD_BOX_X, SHIELD_BOX_Y, 60, 60);
+        this.skillSlots[Skill.SHIELD_CHARGE] = new Rectangle2D.Double(SHIELD_BOX_X, SHIELD_BOX_Y + 75, 60, 60);
+        this.skillSlots[Skill.SHIELD_REFLECT] = new Rectangle2D.Double(SHIELD_BOX_X, SHIELD_BOX_Y + 150, 60, 60);
+        this.skillSlots[Skill.SHIELD_TOSS] = new Rectangle2D.Double(SHIELD_BOX_X, SHIELD_BOX_Y + 225, 60, 60);
 
-        this.skillSlots[Skill.PASSIVE_SHIELDMASTERY] = new Rectangle2D.Double(1050, 310, 60, 60);
-        this.skillSlots[Skill.PASSIVE_BARRIER] = new Rectangle2D.Double(1050, 395, 60, 60);
-        this.skillSlots[Skill.PASSIVE_RESIST] = new Rectangle2D.Double(1050, 480, 60, 60);
+        this.skillSlots[Skill.PASSIVE_DUALSWORD] = new Rectangle2D.Double(PASSIVE_BOX_X, PASSIVE_BOX_Y, 60, 60);
+        this.skillSlots[Skill.PASSIVE_BOWMASTERY] = new Rectangle2D.Double(PASSIVE_BOX_X, PASSIVE_BOX_Y + 85, 60, 60);
+        this.skillSlots[Skill.PASSIVE_SHIELDMASTERY] = new Rectangle2D.Double(PASSIVE_BOX_X, PASSIVE_BOX_Y + 170, 60, 60);
 
-        this.skillSlots[Skill.PASSIVE_BOWMASTERY] = new Rectangle2D.Double(1160, 55, 60, 60);
-        this.skillSlots[Skill.PASSIVE_WILLPOWER] = new Rectangle2D.Double(1160, 140, 60, 60);
-        this.skillSlots[Skill.PASSIVE_TACTICAL] = new Rectangle2D.Double(1160, 225, 60, 60);
+        this.skillSlots[Skill.PASSIVE_RESIST] = new Rectangle2D.Double(PASSIVE_BOX_X, PASSIVE_BOX_Y + 255, 60, 60);
+        this.skillSlots[Skill.PASSIVE_BARRIER] = new Rectangle2D.Double(PASSIVE_BOX_X, PASSIVE_BOX_Y + 340, 60, 60);
 
-        this.skillSlots[Skill.PASSIVE_REVIVE] = new Rectangle2D.Double(1160, 310, 60, 60);
-        this.skillSlots[Skill.PASSIVE_SHADOWATTACK] = new Rectangle2D.Double(1160, 395, 60, 60);
-        this.skillSlots[Skill.PASSIVE_12] = new Rectangle2D.Double(1160, 480, 60, 60);
+        this.skillSlots[Skill.PASSIVE_KEENEYE] = new Rectangle2D.Double(PASSIVE_BOX_X + 110, PASSIVE_BOX_Y, 60, 60);
+        this.skillSlots[Skill.PASSIVE_WILLPOWER] = new Rectangle2D.Double(PASSIVE_BOX_X + 110, PASSIVE_BOX_Y + 85, 60, 60);
+        this.skillSlots[Skill.PASSIVE_TACTICAL] = new Rectangle2D.Double(PASSIVE_BOX_X + 110, PASSIVE_BOX_Y + 170, 60, 60);
+        this.skillSlots[Skill.PASSIVE_VITALHIT] = new Rectangle2D.Double(PASSIVE_BOX_X + 110, PASSIVE_BOX_Y + 255, 60, 60);
+        this.skillSlots[Skill.PASSIVE_SHADOWATTACK] = new Rectangle2D.Double(PASSIVE_BOX_X + 110, PASSIVE_BOX_Y + 340, 60, 60);
+
+        this.skillSlots[Skill.PASSIVE_11] = new Rectangle2D.Double(PASSIVE_BOX_X, PASSIVE_BOX_Y + 425, 60, 60);
+        this.skillSlots[Skill.PASSIVE_12] = new Rectangle2D.Double(PASSIVE_BOX_X + 110, PASSIVE_BOX_Y + 425, 60, 60);
         for (int i = 0; i < this.hotkeySlots.length; i++) {
-            this.hotkeySlots[i] = new Rectangle2D.Double(240 + (i * 64), 605, 60, 60);
+            this.hotkeySlots[i] = new Rectangle2D.Double(HOTKEY_BOX_X + (i * 64), HOTKEY_BOX_Y, 60, 60);
         }
         for (int i = 0; i < 18; i++) {
             this.addBox[i] = new Rectangle2D.Double(this.skillSlots[i].x + 140, this.skillSlots[i].y + 32, 30, 23);
@@ -92,7 +100,7 @@ public class ScreenSkills extends ScreenMenu {
 
     @Override
     public void draw(final Graphics2D g) {
-        final BufferedImage bg = Globals.MENU_BG[3];
+        final BufferedImage bg = Globals.MENU_BG[1];
         g.drawImage(bg, 0, 0, null);
 
         g.setRenderingHint(
@@ -133,22 +141,35 @@ public class ScreenSkills extends ScreenMenu {
 
     private void drawSlots(final Graphics2D g) {
         BufferedImage button = Globals.MENU_BUTTON[Globals.BUTTON_SLOT];
+
+        g.setColor(SKILL_BOX_BG_COLOR);
+        g.fillRoundRect(SWORD_BOX_X - 10, SWORD_BOX_Y - 25, 210, 545, 15, 15);
+        g.fillRoundRect(BOW_BOX_X - 10, BOW_BOX_Y - 25, 210, 545, 15, 15);
+        g.fillRoundRect(UTIL_BOX_X - 10, UTIL_BOX_Y - 25, 210, 170, 15, 15);
+        g.fillRoundRect(SHIELD_BOX_X - 10, SHIELD_BOX_Y - 25, 210, 320, 15, 15);
+        g.fillRoundRect(PASSIVE_BOX_X - 10, PASSIVE_BOX_Y - 25, 220, 545, 15, 15);
+        g.fillRoundRect(HOTKEY_BOX_X - 10, HOTKEY_BOX_Y - 10, 784, 90, 15, 15);
+
         g.setFont(Globals.ARIAL_18PT);
-        drawStringOutline(g, "Sword", 325, 45, 1);
+        drawStringOutline(g, "Sword", SWORD_BOX_X + 65, SWORD_BOX_Y - 5, 1);
         g.setColor(Color.WHITE);
-        g.drawString("Sword", 325, 45);
+        g.drawString("Sword", SWORD_BOX_X + 65, SWORD_BOX_Y - 5);
 
-        drawStringOutline(g, "Bow", 600, 45, 1);
+        drawStringOutline(g, "Bow", BOW_BOX_X + 75, BOW_BOX_Y - 5, 1);
         g.setColor(Color.WHITE);
-        g.drawString("Bow", 600, 45);
+        g.drawString("Bow", BOW_BOX_X + 75, BOW_BOX_Y - 5);
 
-        drawStringOutline(g, "Shield", 850, 45, 1);
+        drawStringOutline(g, "Utility", UTIL_BOX_X + 75, UTIL_BOX_Y - 5, 1);
         g.setColor(Color.WHITE);
-        g.drawString("Shield", 850, 45);
+        g.drawString("Utility", UTIL_BOX_X + 75, UTIL_BOX_Y - 5);
 
-        drawStringOutline(g, "Passive", 1105, 45, 1);
+        drawStringOutline(g, "Shield", SHIELD_BOX_X + 65, SHIELD_BOX_Y - 5, 1);
         g.setColor(Color.WHITE);
-        g.drawString("Passive", 1105, 45);
+        g.drawString("Shield", SHIELD_BOX_X + 65, SHIELD_BOX_Y - 5);
+
+        drawStringOutline(g, "Passive", PASSIVE_BOX_X + 60, PASSIVE_BOX_Y - 5, 1);
+        g.setColor(Color.WHITE);
+        g.drawString("Passive", PASSIVE_BOX_X + 60, PASSIVE_BOX_Y - 5);
         for (int i = 0; i < this.hotkeySlots.length; i++) {
             g.drawImage(button, (int) this.hotkeySlots[i].x, (int) this.hotkeySlots[i].y, null);
             if (this.hotkeyList[i] != null) {

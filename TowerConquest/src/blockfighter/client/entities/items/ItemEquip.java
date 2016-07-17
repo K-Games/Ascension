@@ -374,6 +374,7 @@ public class ItemEquip implements Item {
         drawIcon(g, x, y);
     }
 
+    @Override
     public void drawInfo(final Graphics2D g, final Rectangle2D.Double box) {
         int y = (int) box.y;
         int x = (int) box.x;

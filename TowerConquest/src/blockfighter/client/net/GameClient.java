@@ -35,10 +35,7 @@ public class GameClient extends Thread {
         if (logic.getScreen() instanceof ScreenServerList) {
             ((ScreenServerList) logic.getScreen()).setStatus(ScreenServerList.STATUS_CONNECTING);
         }
-        if (!Globals.customPort) {
-            Globals.SERVER_PORT = 25565 + (int) (logic.getSelectedRoom() / 3);
-            System.out.println(Globals.SERVER_PORT);
-        }
+        System.out.println(Globals.SERVER_PORT);
 
         this.client = new Client(Globals.PACKET_MAX_SIZE * 200, Globals.PACKET_MAX_SIZE);
         PacketSender.setClient(this.client);
@@ -57,7 +54,7 @@ public class GameClient extends Thread {
         } catch (IOException ex) {
             client.close();
             if (logic.getScreen() instanceof ScreenServerList) {
-                ((ScreenServerList) logic.getScreen()).setStatus(ScreenServerList.STATUS_UNKNOWNHOST);
+                ((ScreenServerList) logic.getScreen()).setStatus(ScreenServerList.STATUS_FAILEDCONNECT);
             }
         }
 

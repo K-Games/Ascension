@@ -95,32 +95,45 @@ public abstract class ScreenMenu extends Screen {
     public void mouseReleased(final MouseEvent e) {
         panel.requestFocus();
         if (SwingUtilities.isLeftMouseButton(e)) {
-            for (int i = 0; i < this.menuBox.length; i++) {
+            for (byte i = 0; i < this.menuBox.length; i++) {
                 if (this.menuBox[i].contains(e.getPoint())) {
                     SaveData.saveData(logic.getSelectedChar().getSaveNum(), logic.getSelectedChar());
                     switch (i) {
                         case 0:
-                            logic.setScreen(new ScreenStats());
+                            if (!(logic.getScreen() instanceof ScreenStats)) {
+                                logic.setScreen(new ScreenStats());
+                            }
                             break;
                         case 1:
-                            logic.setScreen(new ScreenInventory());
+                            if (!(logic.getScreen() instanceof ScreenInventory)) {
+                                logic.setScreen(new ScreenInventory());
+                            }
                             break;
                         case 2:
-                            logic.setScreen(new ScreenUpgrade());
+                            if (!(logic.getScreen() instanceof ScreenUpgrade)) {
+                                logic.setScreen(new ScreenUpgrade());
+                            }
                             break;
                         case 3:
-                            logic.setScreen(new ScreenSkills());
+                            if (!(logic.getScreen() instanceof ScreenSkills)) {
+                                logic.setScreen(new ScreenSkills());
+                            }
                             break;
                         case 4:
-                            logic.setScreen(new ScreenServerList());
-                            // logic.connect();
+                            if (!(logic.getScreen() instanceof ScreenServerList)) {
+                                logic.setScreen(new ScreenServerList());
+                            }
                             break;
                         case 5:
-                            logic.setScreen(new ScreenKeyBind());
+                            if (!(logic.getScreen() instanceof ScreenKeyBind)) {
+                                logic.setScreen(new ScreenKeyBind());
+                            }
                             break;
                         case 6:
-                            logic.setSelectedChar(null);
-                            logic.setScreen(new ScreenSelectChar());
+                            if (!(logic.getScreen() instanceof ScreenSelectChar)) {
+                                logic.setSelectedChar(null);
+                                logic.setScreen(new ScreenSelectChar());
+                            }
                             break;
                     }
                 }

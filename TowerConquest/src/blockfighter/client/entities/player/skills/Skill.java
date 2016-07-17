@@ -53,6 +53,7 @@ public abstract class Skill {
             PASSIVE_WILLPOWER = 0x19,
             PASSIVE_TACTICAL = 0x1A,
             PASSIVE_REVIVE = 0x1B,
+            PASSIVE_11 = 0x1B,
             PASSIVE_SHADOWATTACK = 0x1C,
             PASSIVE_12 = 0x1D;
 

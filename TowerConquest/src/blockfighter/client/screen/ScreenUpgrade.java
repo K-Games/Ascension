@@ -21,6 +21,9 @@ import javax.swing.SwingUtilities;
  */
 public class ScreenUpgrade extends ScreenMenu {
 
+    private static final int EQUIP_BOX_X = 980, EQUIP_BOX_Y = 40;
+    private static final int UPGRADE_BOX_X = 980, UPGRADE_BOX_Y = 430;
+
     private final SaveData c;
     private boolean destroy = false, destroyConfirm = false;
 
@@ -52,20 +55,21 @@ public class ScreenUpgrade extends ScreenMenu {
             this.inventSlots[i] = new Rectangle2D.Double(255 + (i * 62) - (i / 10 * 620), 30 + i / 10 * 62, 60, 60);
         }
 
-        this.equipSlots[Globals.ITEM_AMULET] = new Rectangle2D.Double(1140, 40, 60, 60);
-        this.equipSlots[Globals.ITEM_BELT] = new Rectangle2D.Double(1140, 250, 60, 60);
-        this.equipSlots[Globals.ITEM_OFFHAND] = new Rectangle2D.Double(1140, 180, 60, 60);
-        this.equipSlots[Globals.ITEM_CHEST] = new Rectangle2D.Double(1140, 110, 60, 60);
-        this.equipSlots[Globals.ITEM_HEAD] = new Rectangle2D.Double(1060, 40, 60, 60);
-        this.equipSlots[Globals.ITEM_RING] = new Rectangle2D.Double(980, 40, 60, 60);
-        this.equipSlots[Globals.ITEM_SHOULDER] = new Rectangle2D.Double(980, 110, 60, 60);
-        this.equipSlots[Globals.ITEM_GLOVE] = new Rectangle2D.Double(980, 250, 60, 60);
-        this.equipSlots[Globals.ITEM_WEAPON] = new Rectangle2D.Double(980, 180, 60, 60);
-        this.equipSlots[Globals.ITEM_PANTS] = new Rectangle2D.Double(1025, 320, 60, 60);
-        this.equipSlots[Globals.ITEM_SHOE] = new Rectangle2D.Double(1095, 320, 60, 60);
+        this.equipSlots[Globals.ITEM_AMULET] = new Rectangle2D.Double(EQUIP_BOX_X + 160, EQUIP_BOX_Y, 60, 60);
+        this.equipSlots[Globals.ITEM_BELT] = new Rectangle2D.Double(EQUIP_BOX_X + 160, EQUIP_BOX_Y + 210, 60, 60);
+        this.equipSlots[Globals.ITEM_OFFHAND] = new Rectangle2D.Double(EQUIP_BOX_X + 160, EQUIP_BOX_Y + 140, 60, 60);
+        this.equipSlots[Globals.ITEM_CHEST] = new Rectangle2D.Double(EQUIP_BOX_X + 160, EQUIP_BOX_Y + 70, 60, 60);
+        this.equipSlots[Globals.ITEM_HEAD] = new Rectangle2D.Double(EQUIP_BOX_X + 80, EQUIP_BOX_Y, 60, 60);
+        this.equipSlots[Globals.ITEM_RING] = new Rectangle2D.Double(EQUIP_BOX_X, 40, EQUIP_BOX_Y + 20, 60);
+        this.equipSlots[Globals.ITEM_SHOULDER] = new Rectangle2D.Double(EQUIP_BOX_X, EQUIP_BOX_Y + 70, 60, 60);
+        this.equipSlots[Globals.ITEM_GLOVE] = new Rectangle2D.Double(EQUIP_BOX_X, EQUIP_BOX_Y + 210, 60, 60);
+        this.equipSlots[Globals.ITEM_WEAPON] = new Rectangle2D.Double(EQUIP_BOX_X, EQUIP_BOX_Y + 140, 60, 60);
+        this.equipSlots[Globals.ITEM_PANTS] = new Rectangle2D.Double(EQUIP_BOX_X + 45, EQUIP_BOX_Y + 280, 60, 60);
+        this.equipSlots[Globals.ITEM_SHOE] = new Rectangle2D.Double(EQUIP_BOX_X + 115, EQUIP_BOX_Y + 280, 60, 60);
 
-        this.upgradeBox[0] = new Rectangle2D.Double(980, 450, 60, 60);
-        this.upgradeBox[1] = new Rectangle2D.Double(1140, 450, 60, 60);
+        this.upgradeBox[0] = new Rectangle2D.Double(UPGRADE_BOX_X, UPGRADE_BOX_Y + 30, 60, 60);
+        this.upgradeBox[1] = new Rectangle2D.Double(UPGRADE_BOX_X + 160, UPGRADE_BOX_Y + 30, 60, 60);
+        this.combineBox = new Rectangle2D.Double(UPGRADE_BOX_X + 20, UPGRADE_BOX_Y + 130, 180, 30);
 
         for (int i = 0; i < this.destroyBox.length; i++) {
             this.destroyBox[i] = new Rectangle2D.Double(520 + i * 185, 655, 180, 30);
@@ -73,7 +77,6 @@ public class ScreenUpgrade extends ScreenMenu {
         this.promptBox[0] = new Rectangle2D.Double(401, 400, 214, 112);
         this.promptBox[1] = new Rectangle2D.Double(665, 400, 214, 112);
 
-        this.combineBox = new Rectangle2D.Double(1000, 580, 180, 30);
     }
 
     @Override
@@ -122,43 +125,20 @@ public class ScreenUpgrade extends ScreenMenu {
 
     @Override
     public void draw(final Graphics2D g) {
-        final BufferedImage bg = Globals.MENU_BG[2];
+        final BufferedImage bg = Globals.MENU_BG[1];
         g.drawImage(bg, 0, 0, null);
 
         final Graphics2D g2d = g;
         g2d.setRenderingHint(
                 RenderingHints.KEY_TEXT_ANTIALIASING,
                 RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
-        BufferedImage button = Globals.MENU_BUTTON[Globals.BUTTON_SMALLRECT];
-        g.drawImage(button, (int) this.destroyBox[0].x, (int) this.destroyBox[0].y, null);
-        g.drawImage(button, (int) this.destroyBox[1].x, (int) this.destroyBox[1].y, null);
-        g.drawImage(button, (int) this.combineBox.x, (int) this.combineBox.y, null);
 
-        g.setFont(Globals.ARIAL_18PT);
-        drawStringOutline(g, "Destroy Item", 560, 682, 1);
-        drawStringOutline(g, "Destroy All", 750, 682, 1);
-        drawStringOutline(g, "Enhance", 1053, 607, 1);
-        g.setColor(Color.WHITE);
-        g.drawString("Destroy Item", 560, 682);
-        g.drawString("Destroy All", 750, 682);
-        g.drawString("Enhance", 1053, 607);
-
-        final int selTemp1 = this.selectUpgrade, selTemp2 = this.selectEquip;
-        if (selTemp1 >= 0 && selTemp2 >= 0) {
-            g.setFont(Globals.ARIAL_15PT);
-            drawStringOutline(g, "Chance of Success: "
-                    + this.df.format(ItemUpgrade.upgradeChance(this.c.getUpgrades()[selTemp1], this.c.getEquip()[selTemp2]) * 100) + "%",
-                    1000, 550, 1);
-            g.setColor(Color.WHITE);
-            g.drawString("Chance of Success: "
-                    + this.df.format(ItemUpgrade.upgradeChance(this.c.getUpgrades()[selTemp1], this.c.getEquip()[selTemp2]) * 100) + "%",
-                    1000, 550);
-        }
-
-        drawSlots(g);
+        drawEquipSlots(g);
+        drawUpgradeBox(g);
+        drawInventory(g);
         drawDestroyConfirm(g);
         if (this.destroy) {
-            button = Globals.MENU_ITEMDELETE[0];
+            BufferedImage button = Globals.MENU_ITEMDELETE[0];
             g.drawImage(button, this.mousePos.x + 10, this.mousePos.y + 15, null);
         }
         drawMenuButton(g);
@@ -192,11 +172,11 @@ public class ScreenUpgrade extends ScreenMenu {
         }
     }
 
-    private void drawSlots(final Graphics2D g) {
-        final BufferedImage button = Globals.MENU_BUTTON[Globals.BUTTON_SLOT];
+    private void drawEquipSlots(final Graphics2D g) {
+        g.setColor(SKILL_BOX_BG_COLOR);
+        g.fillRoundRect(EQUIP_BOX_X - 10, EQUIP_BOX_Y - 10, 240, 360, 15, 15);
         final BufferedImage character = Globals.CHAR_SPRITE[Globals.PLAYER_ANIM_STATE_STAND][this.charFrame];
-
-        final int x = 1070 + character.getWidth() / 2, y = 200 + character.getHeight();
+        final int x = EQUIP_BOX_X + 90 + character.getWidth() / 2, y = EQUIP_BOX_Y + 160 + character.getHeight();
         if (this.c.getEquip()[Globals.ITEM_OFFHAND] != null) {
             this.c.getEquip()[Globals.ITEM_OFFHAND].drawIngame(g, x, y, Globals.PLAYER_ANIM_STATE_STAND, this.charFrame, Globals.RIGHT, true);
         }
@@ -222,14 +202,7 @@ public class ScreenUpgrade extends ScreenMenu {
             this.c.getEquip()[Globals.ITEM_GLOVE].drawIngame(g, x, y, Globals.PLAYER_ANIM_STATE_STAND, this.charFrame, Globals.RIGHT);
         }
 
-        // Inventory
-        for (int i = 0; i < this.c.getUpgrades().length; i++) {
-            g.drawImage(button, (int) this.inventSlots[i].x, (int) this.inventSlots[i].y, null);
-            if (this.c.getUpgrades()[i] != null) {
-                this.c.getUpgrades()[i].draw(g, (int) this.inventSlots[i].x, (int) this.inventSlots[i].y);
-            }
-        }
-
+        final BufferedImage button = Globals.MENU_BUTTON[Globals.BUTTON_SLOT];
         // Equipment
         for (int i = 0; i < this.equipSlots.length; i++) {
             g.drawImage(button, (int) this.equipSlots[i].x, (int) this.equipSlots[i].y, null);
@@ -287,7 +260,18 @@ public class ScreenUpgrade extends ScreenMenu {
             g.setColor(Color.WHITE);
             g.drawString(s, (int) this.equipSlots[i].x + 2, (int) this.equipSlots[i].y + 58);
         }
+    }
 
+    private void drawUpgradeBox(final Graphics2D g) {
+        g.setColor(SKILL_BOX_BG_COLOR);
+        g.fillRoundRect(UPGRADE_BOX_X - 20, UPGRADE_BOX_Y - 10, 260, 190, 15, 15);
+        
+        g.setFont(Globals.ARIAL_15PT);
+        drawStringOutline(g, "Equipment Upgrade", UPGRADE_BOX_X + 40,  UPGRADE_BOX_Y + 15, 1);
+        g.setColor(Color.WHITE);
+        g.drawString("Equipment Upgrade", UPGRADE_BOX_X + 40,  UPGRADE_BOX_Y + 15);
+        
+        BufferedImage button = Globals.MENU_BUTTON[Globals.BUTTON_SLOT];
         // upgrades
         for (final Rectangle2D.Double box : this.upgradeBox) {
             g.drawImage(button, (int) box.x, (int) box.y, null);
@@ -303,6 +287,49 @@ public class ScreenUpgrade extends ScreenMenu {
                 this.c.getEquip()[this.selectEquip].draw(g, (int) this.upgradeBox[1].x, (int) this.upgradeBox[1].y);
             }
         }
+        button = Globals.MENU_BUTTON[Globals.BUTTON_SMALLRECT];
+        g.drawImage(button, (int) this.destroyBox[0].x, (int) this.destroyBox[0].y, null);
+        g.drawImage(button, (int) this.destroyBox[1].x, (int) this.destroyBox[1].y, null);
+        g.drawImage(button, (int) this.combineBox.x, (int) this.combineBox.y, null);
+
+        final int selTemp1 = this.selectUpgrade, selTemp2 = this.selectEquip;
+        if (selTemp1 >= 0 && selTemp2 >= 0) {
+            g.setFont(Globals.ARIAL_15PT);
+            drawStringOutline(g, "Chance of Success: "
+                    + this.df.format(ItemUpgrade.upgradeChance(this.c.getUpgrades()[selTemp1], this.c.getEquip()[selTemp2]) * 100) + "%",
+                    UPGRADE_BOX_X + 20, UPGRADE_BOX_Y + 115, 1);
+            g.setColor(Color.WHITE);
+            g.drawString("Chance of Success: "
+                    + this.df.format(ItemUpgrade.upgradeChance(this.c.getUpgrades()[selTemp1], this.c.getEquip()[selTemp2]) * 100) + "%",
+                    UPGRADE_BOX_X + 20, UPGRADE_BOX_Y + 115);
+        }
+
+        g.setFont(Globals.ARIAL_18PT);
+        drawStringOutline(g, "Enhance", (int) this.combineBox.x + 55, (int) this.combineBox.y + 25, 1);
+        g.setColor(Color.WHITE);
+        g.drawString("Enhance", (int) this.combineBox.x + 55, (int) this.combineBox.y + 25);
+    }
+
+    private void drawInventory(final Graphics2D g) {
+        BufferedImage button = Globals.MENU_BUTTON[Globals.BUTTON_SLOT];
+        // Inventory
+        for (int i = 0; i < this.c.getUpgrades().length; i++) {
+            g.drawImage(button, (int) this.inventSlots[i].x, (int) this.inventSlots[i].y, null);
+            if (this.c.getUpgrades()[i] != null) {
+                this.c.getUpgrades()[i].draw(g, (int) this.inventSlots[i].x, (int) this.inventSlots[i].y);
+            }
+        }
+        button = Globals.MENU_BUTTON[Globals.BUTTON_SMALLRECT];
+        g.drawImage(button, (int) this.destroyBox[0].x, (int) this.destroyBox[0].y, null);
+        g.drawImage(button, (int) this.destroyBox[1].x, (int) this.destroyBox[1].y, null);
+
+        g.setFont(Globals.ARIAL_18PT);
+        drawStringOutline(g, "Destroy Item", 560, 682, 1);
+        drawStringOutline(g, "Destroy All", 750, 682, 1);
+        g.setColor(Color.WHITE);
+        g.drawString("Destroy Item", 560, 682);
+        g.drawString("Destroy All", 750, 682);
+
     }
 
     private void drawItemInfo(final Graphics2D g) {
@@ -324,28 +351,7 @@ public class ScreenUpgrade extends ScreenMenu {
         if (e == null) {
             return;
         }
-        g.setColor(new Color(30, 30, 30, 185));
-        int y = (int) box.y;
-        int x = (int) box.x;
-        final int boxHeight = 60, boxWidth = 280;
-
-        if (y + boxHeight > 720) {
-            y = 700 - boxHeight;
-        }
-
-        if (x + 30 + boxWidth > 1280) {
-            x = 1240 - boxWidth;
-        }
-        g.fillRect(x + 30, y, boxWidth, boxHeight);
-        g.setColor(Color.BLACK);
-        g.drawRect(x + 30, y, boxWidth, boxHeight);
-        g.drawRect(x + 31, y + 1, boxWidth - 2, boxHeight - 2);
-
-        g.setFont(Globals.ARIAL_15PT);
-        g.setColor(Color.WHITE);
-        g.drawString("Level " + e.getLevel() + " " + e.getItemName(), x + 40, y + 20);
-        g.drawString("Use this to enhance any equipment.", x + 40, y + 40);
-
+        e.drawInfo(g, box);
     }
 
     private void drawItemInfo(final Graphics2D g, final Rectangle2D.Double box, final ItemEquip e) {

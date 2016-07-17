@@ -3,6 +3,7 @@ package blockfighter.client.entities.items;
 import blockfighter.client.Globals;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -85,5 +86,30 @@ public class ItemUpgrade implements Item {
     @Override
     public String getItemName() {
         return ITEM_NAMES.get(this.itemCode);
+    }
+
+    @Override
+    public void drawInfo(Graphics2D g, Rectangle2D.Double box) {
+        g.setColor(new Color(30, 30, 30, 185));
+        int y = (int) box.y;
+        int x = (int) box.x;
+        final int boxHeight = 60, boxWidth = 280;
+
+        if (y + boxHeight > 720) {
+            y = 700 - boxHeight;
+        }
+
+        if (x + 30 + boxWidth > 1280) {
+            x = 1240 - boxWidth;
+        }
+        g.fillRect(x + 30, y, boxWidth, boxHeight);
+        g.setColor(Color.BLACK);
+        g.drawRect(x + 30, y, boxWidth, boxHeight);
+        g.drawRect(x + 31, y + 1, boxWidth - 2, boxHeight - 2);
+
+        g.setFont(Globals.ARIAL_15PT);
+        g.setColor(Color.WHITE);
+        g.drawString("Level " + getLevel() + " " + getItemName(), x + 40, y + 20);
+        g.drawString("Use this to enhance any equipment.", x + 40, y + 40);
     }
 }

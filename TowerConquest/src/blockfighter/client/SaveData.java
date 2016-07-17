@@ -10,6 +10,7 @@ import blockfighter.client.entities.player.skills.SkillBowPower;
 import blockfighter.client.entities.player.skills.SkillBowRapid;
 import blockfighter.client.entities.player.skills.SkillBowStorm;
 import blockfighter.client.entities.player.skills.SkillBowVolley;
+import blockfighter.client.entities.player.skills.SkillPassive11;
 import blockfighter.client.entities.player.skills.SkillPassive12;
 import blockfighter.client.entities.player.skills.SkillPassiveBarrier;
 import blockfighter.client.entities.player.skills.SkillPassiveBowMastery;
@@ -101,7 +102,7 @@ public class SaveData {
         this.skills[Skill.PASSIVE_BOWMASTERY] = new SkillPassiveBowMastery();
         this.skills[Skill.PASSIVE_WILLPOWER] = new SkillPassiveWillpower();
         this.skills[Skill.PASSIVE_TACTICAL] = new SkillPassiveTactical();
-        this.skills[Skill.PASSIVE_REVIVE] = new SkillPassiveRevive();
+        this.skills[Skill.PASSIVE_11] = new SkillPassive11();
         this.skills[Skill.PASSIVE_SHADOWATTACK] = new SkillPassiveShadowAttack();
         this.skills[Skill.PASSIVE_12] = new SkillPassive12();
     }

@@ -17,7 +17,7 @@ public class TestRunner {
         byte i = 0;
         for (byte room = 0; room < 10; room++) {
             for (byte player = 0; player < 10; player++) {
-                if (i < 97) {
+                if (i < 99) {
                     TestLogicModule logic = new TestLogicModule(i, room);
                     if (room < 3) {
                         logic.connect(server, 25568, room);

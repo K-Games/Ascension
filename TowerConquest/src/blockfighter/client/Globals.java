@@ -19,7 +19,7 @@ import org.apache.commons.io.FileUtils;
 public class Globals {
 
     public static boolean customPort = false;
-    public static int SERVER_PORT;
+    public static int SERVER_PORT = 25565;
     public static String SERVER_ADDRESS;
 
     public final static boolean TEST_MAX_LEVEL = true,
@@ -252,7 +252,7 @@ public class Globals {
     public final static BufferedImage[][] CHAR_SPRITE = new BufferedImage[NUM_PLAYER_ANIM_STATE][];
     public final static BufferedImage[] HUD = new BufferedImage[2];
 
-    public final static BufferedImage[] MENU_BG = new BufferedImage[5];
+    public final static BufferedImage[] MENU_BG = new BufferedImage[2];
     public final static BufferedImage[] MENU_SMOKE = new BufferedImage[1];
     public final static BufferedImage[] MENU_UPGRADEPARTICLE = new BufferedImage[4];
     public final static BufferedImage[] MENU_BUTTON = new BufferedImage[16];

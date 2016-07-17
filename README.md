@@ -19,7 +19,8 @@ An multiplayer action 2D sidescrolling platformer coded in pure Java.
 * Map Levels removed - Replaced with Arena Level Selection.
 * New sprites for Dash, Walk, Stand and Death.
 * Notifications when receiving EXP or items.
-* Netcode improvements.
+* Complete Netcode rework.
+* UI Overhaul
 
 ### Server Changes
 * Dash distance decreased from 375 over 0.25s to 340 over 0.4s.
@@ -28,6 +29,6 @@ An multiplayer action 2D sidescrolling platformer coded in pure Java.
 * Player state valid hash maps changed to use hash sets for performance.
 * All maps are now Arenas - Restricted between levels.
 * Players now have a chance to get an item when killing another player.
-* Packet Handling no longer takes an individual thread. It now gets processed in batches.
-* Servers can now setup with different room numbers. Don't have to boot with sequential room numbers.
-* Item drops are now defined by server itemcode.txt list.
+* Item drops are defined by server itemcode.txt list.
+* Servers can now setup with different room numbers. Doesn't have to boot with sequential room numbers.
+* Complete Netcode rework. Now backed by Kyronet TCP.

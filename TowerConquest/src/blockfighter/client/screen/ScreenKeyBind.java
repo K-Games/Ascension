@@ -33,7 +33,7 @@ public class ScreenKeyBind extends ScreenMenu {
 
     @Override
     public void draw(final Graphics2D g) {
-        final BufferedImage bg = Globals.MENU_BG[4];
+        final BufferedImage bg = Globals.MENU_BG[1];
         g.drawImage(bg, 0, 0, null);
 
         g.setRenderingHint(

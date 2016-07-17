@@ -18,6 +18,9 @@ import javax.swing.SwingUtilities;
  * @author Ken Kwan
  */
 public class ScreenInventory extends ScreenMenu {
+    
+    private static final int EQUIP_BOX_X = 980, EQUIP_BOX_Y = 40;
+    private static final int STAT_BOX_X = 935, STAT_BOX_Y = 440;
 
     private final SaveData c;
     private byte selectedTab = Globals.ITEM_WEAPON;
@@ -47,17 +50,17 @@ public class ScreenInventory extends ScreenMenu {
             this.tabs[i] = new Rectangle2D.Double(230, 30 + i * 61, 30, 60);
         }
 
-        this.equipSlots[Globals.ITEM_AMULET] = new Rectangle2D.Double(1140, 40, 60, 60);
-        this.equipSlots[Globals.ITEM_BELT] = new Rectangle2D.Double(1140, 250, 60, 60);
-        this.equipSlots[Globals.ITEM_OFFHAND] = new Rectangle2D.Double(1140, 180, 60, 60);
-        this.equipSlots[Globals.ITEM_CHEST] = new Rectangle2D.Double(1140, 110, 60, 60);
-        this.equipSlots[Globals.ITEM_HEAD] = new Rectangle2D.Double(1060, 40, 60, 60);
-        this.equipSlots[Globals.ITEM_RING] = new Rectangle2D.Double(980, 40, 60, 60);
-        this.equipSlots[Globals.ITEM_SHOULDER] = new Rectangle2D.Double(980, 110, 60, 60);
-        this.equipSlots[Globals.ITEM_GLOVE] = new Rectangle2D.Double(980, 250, 60, 60);
-        this.equipSlots[Globals.ITEM_WEAPON] = new Rectangle2D.Double(980, 180, 60, 60);
-        this.equipSlots[Globals.ITEM_PANTS] = new Rectangle2D.Double(1025, 320, 60, 60);
-        this.equipSlots[Globals.ITEM_SHOE] = new Rectangle2D.Double(1095, 320, 60, 60);
+        this.equipSlots[Globals.ITEM_AMULET] = new Rectangle2D.Double(EQUIP_BOX_X + 160, EQUIP_BOX_Y, 60, 60);
+        this.equipSlots[Globals.ITEM_BELT] = new Rectangle2D.Double(EQUIP_BOX_X + 160, EQUIP_BOX_Y + 210, 60, 60);
+        this.equipSlots[Globals.ITEM_OFFHAND] = new Rectangle2D.Double(EQUIP_BOX_X + 160, EQUIP_BOX_Y + 140, 60, 60);
+        this.equipSlots[Globals.ITEM_CHEST] = new Rectangle2D.Double(EQUIP_BOX_X + 160, EQUIP_BOX_Y + 70, 60, 60);
+        this.equipSlots[Globals.ITEM_HEAD] = new Rectangle2D.Double(EQUIP_BOX_X + 80, EQUIP_BOX_Y, 60, 60);
+        this.equipSlots[Globals.ITEM_RING] = new Rectangle2D.Double(EQUIP_BOX_X, 40, EQUIP_BOX_Y + 20, 60);
+        this.equipSlots[Globals.ITEM_SHOULDER] = new Rectangle2D.Double(EQUIP_BOX_X, EQUIP_BOX_Y + 70, 60, 60);
+        this.equipSlots[Globals.ITEM_GLOVE] = new Rectangle2D.Double(EQUIP_BOX_X, EQUIP_BOX_Y + 210, 60, 60);
+        this.equipSlots[Globals.ITEM_WEAPON] = new Rectangle2D.Double(EQUIP_BOX_X, EQUIP_BOX_Y + 140, 60, 60);
+        this.equipSlots[Globals.ITEM_PANTS] = new Rectangle2D.Double(EQUIP_BOX_X + 45, EQUIP_BOX_Y + 280, 60, 60);
+        this.equipSlots[Globals.ITEM_SHOE] = new Rectangle2D.Double(EQUIP_BOX_X + 115, EQUIP_BOX_Y + 280, 60, 60);
 
         for (int i = 0; i < this.destroyBox.length; i++) {
             this.destroyBox[i] = new Rectangle2D.Double(520 + i * 185, 655, 180, 30);
@@ -86,7 +89,7 @@ public class ScreenInventory extends ScreenMenu {
 
     @Override
     public void draw(final Graphics2D g) {
-        final BufferedImage bg = Globals.MENU_BG[2];
+        final BufferedImage bg = Globals.MENU_BG[1];
         g.drawImage(bg, 0, 0, null);
 
         g.setRenderingHint(
@@ -104,7 +107,8 @@ public class ScreenInventory extends ScreenMenu {
         g.drawString("Destroy All", 750, 682);
 
         drawStats(g);
-        drawSlots(g);
+        drawEquipSlots(g);
+        drawInventory(g);
         drawItemTabs(g);
         drawDestroyConfirm(g);
         drawMenuButton(g);
@@ -167,51 +171,39 @@ public class ScreenInventory extends ScreenMenu {
     }
 
     private void drawStats(final Graphics2D g) {
-        g.setFont(Globals.ARIAL_15PT);
-        final int statY = 440, statX = 935;
-        final double[] bs = this.c.getBaseStats(), bonus = this.c.getBonusStats(), total = this.c.getTotalStats();
-        drawStringOutline(g, "Level: " + (int) bs[Globals.STAT_LEVEL], statX, statY, 1);
-        drawStringOutline(g, "Power: " + (int) bs[Globals.STAT_POWER] + " + " + (int) bonus[Globals.STAT_POWER], statX, statY + 25, 1);
-        drawStringOutline(g, "Defense: " + (int) bs[Globals.STAT_DEFENSE] + " + " + (int) bonus[Globals.STAT_DEFENSE], statX, statY + 50,
-                1);
-        drawStringOutline(g, "Spirit: " + (int) bs[Globals.STAT_SPIRIT] + " + " + (int) bonus[Globals.STAT_SPIRIT], statX, statY + 75, 1);
+        g.setColor(SKILL_BOX_BG_COLOR);
+        g.fillRoundRect(STAT_BOX_X - 10, STAT_BOX_Y - 20, 320, 255, 15, 15);
+        double[] baseStats = this.c.getBaseStats();
+        double[] totalStats = this.c.getTotalStats();
+        double[] bonusStats = this.c.getBonusStats();
+        String[] statString = {
+            "Level: " + (int) baseStats[Globals.STAT_LEVEL],
+            "Power: " + (int) baseStats[Globals.STAT_POWER] + " + " + (int) bonusStats[Globals.STAT_POWER],
+            "Defense: " + (int) baseStats[Globals.STAT_DEFENSE] + " + " + (int) bonusStats[Globals.STAT_DEFENSE],
+            "Spirit: " + (int) baseStats[Globals.STAT_SPIRIT] + " + " + (int) bonusStats[Globals.STAT_SPIRIT],
+            "HP: " + (int) totalStats[Globals.STAT_MAXHP],
+            "Damage: " + (int) totalStats[Globals.STAT_MINDMG] + " - " + (int) totalStats[Globals.STAT_MAXDMG],
+            "Armor: " + (int) baseStats[Globals.STAT_ARMOR] + " + " + (int) bonusStats[Globals.STAT_ARMOR],
+            "Regen: " + this.df.format(baseStats[Globals.STAT_REGEN]) + " + " + this.df.format(bonusStats[Globals.STAT_REGEN]) + " HP/Sec",
+            "Critical Hit Chance: " + this.df.format(baseStats[Globals.STAT_CRITCHANCE] * 100) + " + "
+            + this.df.format(bonusStats[Globals.STAT_CRITCHANCE] * 100) + "%",
+            "Critical Hit Damage: " + this.df.format((1 + baseStats[Globals.STAT_CRITDMG]) * 100) + " + "
+            + this.df.format(bonusStats[Globals.STAT_CRITDMG] * 100) + "%"};
 
-        drawStringOutline(g, "HP: " + (int) total[Globals.STAT_MAXHP], statX, statY + 105, 1);
-        drawStringOutline(g, "Damage: " + (int) total[Globals.STAT_MINDMG] + " - " + (int) total[Globals.STAT_MAXDMG], statX, statY + 130,
-                1);
-        drawStringOutline(g, "Armor: " + (int) bs[Globals.STAT_ARMOR] + " + " + (int) bonus[Globals.STAT_ARMOR], statX, statY + 155, 1);
-        drawStringOutline(g,
-                "Regen: " + this.df.format(bs[Globals.STAT_REGEN]) + " + " + this.df.format(bonus[Globals.STAT_REGEN]) + " HP/Sec",
-                statX, statY + 180, 1);
-        drawStringOutline(g, "Critical Hit Chance: " + this.df.format(bs[Globals.STAT_CRITCHANCE] * 100) + " + "
-                + this.df.format(bonus[Globals.STAT_CRITCHANCE] * 100) + "%", statX, statY + 205, 1);
-        drawStringOutline(g, "Critical Hit Damage: " + this.df.format((1 + bs[Globals.STAT_CRITDMG]) * 100) + " + "
-                + this.df.format(bonus[Globals.STAT_CRITDMG] * 100) + "%", statX, statY + 230, 1);
-
-        g.setColor(Color.WHITE);
-        g.drawString("Level: " + (int) bs[Globals.STAT_LEVEL], statX, statY);
-        g.drawString("Power: " + (int) bs[Globals.STAT_POWER] + " + " + (int) bonus[Globals.STAT_POWER], statX, statY + 25);
-        g.drawString("Defense: " + (int) bs[Globals.STAT_DEFENSE] + " + " + (int) bonus[Globals.STAT_DEFENSE], statX, statY + 50);
-        g.drawString("Spirit: " + (int) bs[Globals.STAT_SPIRIT] + " + " + (int) bonus[Globals.STAT_SPIRIT], statX, statY + 75);
-
-        g.drawString("HP: " + (int) total[Globals.STAT_MAXHP], statX, statY + 105);
-        g.drawString("Damage: " + (int) total[Globals.STAT_MINDMG] + " - " + (int) total[Globals.STAT_MAXDMG], statX, statY + 130);
-        g.drawString("Armor: " + (int) bs[Globals.STAT_ARMOR] + " + " + (int) bonus[Globals.STAT_ARMOR], statX, statY + 155);
-        g.drawString("Regen: " + this.df.format(bs[Globals.STAT_REGEN]) + " + " + this.df.format(bonus[Globals.STAT_REGEN]) + " HP/Sec",
-                statX,
-                statY + 180);
-        g.drawString("Critical Hit Chance: " + this.df.format(bs[Globals.STAT_CRITCHANCE] * 100) + " + "
-                + this.df.format(bonus[Globals.STAT_CRITCHANCE] * 100) + "%", statX, statY + 205);
-        g.drawString("Critical Hit Damage: " + this.df.format((1 + bs[Globals.STAT_CRITDMG]) * 100) + " + "
-                + this.df.format(bonus[Globals.STAT_CRITDMG] * 100) + "%", statX, statY + 230);
+        for (byte i = 0; i < statString.length; i++) {
+            g.setFont(Globals.ARIAL_15PT);
+            drawStringOutline(g, statString[i], STAT_BOX_X, STAT_BOX_Y + i * 25, 1);
+            g.setColor(Color.WHITE);
+            g.drawString(statString[i], STAT_BOX_X, STAT_BOX_Y + i * 25);
+        }
 
     }
 
-    private void drawSlots(final Graphics2D g) {
-        final BufferedImage button = Globals.MENU_BUTTON[Globals.BUTTON_SLOT];
+    private void drawEquipSlots(final Graphics2D g) {
+        g.setColor(SKILL_BOX_BG_COLOR);
+        g.fillRoundRect(EQUIP_BOX_X - 10, EQUIP_BOX_Y - 10, 240, 360, 15, 15);
         final BufferedImage character = Globals.CHAR_SPRITE[Globals.PLAYER_ANIM_STATE_STAND][this.charFrame];
-
-        final int x = 1070 + character.getWidth() / 2, y = 200 + character.getHeight();
+        final int x = EQUIP_BOX_X + 90 + character.getWidth() / 2, y = EQUIP_BOX_Y + 160 + character.getHeight();
         if (this.c.getEquip()[Globals.ITEM_OFFHAND] != null) {
             this.c.getEquip()[Globals.ITEM_OFFHAND].drawIngame(g, x, y, Globals.PLAYER_ANIM_STATE_STAND, this.charFrame, Globals.RIGHT, true);
         }
@@ -237,20 +229,7 @@ public class ScreenInventory extends ScreenMenu {
             this.c.getEquip()[Globals.ITEM_GLOVE].drawIngame(g, x, y, Globals.PLAYER_ANIM_STATE_STAND, this.charFrame, Globals.RIGHT);
         }
 
-        // Inventory
-        for (int i = 0; i < this.c.getInventory(this.selectedTab).length; i++) {
-            g.drawImage(button, (int) this.inventSlots[i].x, (int) this.inventSlots[i].y, null);
-            if (this.c.getInventory(this.selectedTab)[i] != null) {
-                this.c.getInventory(this.selectedTab)[i].draw(g, (int) this.inventSlots[i].x, (int) this.inventSlots[i].y);
-            }
-            if (this.selectedTab == Globals.ITEM_WEAPON) {
-                g.setFont(Globals.ARIAL_15PT);
-                drawStringOutline(g, "Right Click to equip as Offhand", 280, 682, 1);
-                g.setColor(new Color(255, 130, 0));
-                g.drawString("Right Click to equip as Offhand", 280, 682);
-            }
-        }
-
+        final BufferedImage button = Globals.MENU_BUTTON[Globals.BUTTON_SLOT];
         // Equipment
         for (int i = 0; i < this.equipSlots.length; i++) {
             g.drawImage(button, (int) this.equipSlots[i].x, (int) this.equipSlots[i].y, null);
@@ -307,6 +286,23 @@ public class ScreenInventory extends ScreenMenu {
             drawStringOutline(g, s, (int) this.equipSlots[i].x + 2, (int) this.equipSlots[i].y + 58, 1);
             g.setColor(Color.WHITE);
             g.drawString(s, (int) this.equipSlots[i].x + 2, (int) this.equipSlots[i].y + 58);
+        }
+    }
+
+    private void drawInventory(final Graphics2D g) {
+        final BufferedImage button = Globals.MENU_BUTTON[Globals.BUTTON_SLOT];
+
+        for (int i = 0; i < this.c.getInventory(this.selectedTab).length; i++) {
+            g.drawImage(button, (int) this.inventSlots[i].x, (int) this.inventSlots[i].y, null);
+            if (this.c.getInventory(this.selectedTab)[i] != null) {
+                this.c.getInventory(this.selectedTab)[i].draw(g, (int) this.inventSlots[i].x, (int) this.inventSlots[i].y);
+            }
+            if (this.selectedTab == Globals.ITEM_WEAPON) {
+                g.setFont(Globals.ARIAL_15PT);
+                drawStringOutline(g, "Right Click to equip as Offhand", 280, 682, 1);
+                g.setColor(new Color(255, 130, 0));
+                g.drawString("Right Click to equip as Offhand", 280, 682);
+            }
         }
     }
 
