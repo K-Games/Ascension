@@ -6,6 +6,7 @@ import blockfighter.server.entities.player.Player;
 import com.esotericsoftware.kryonet.Server;
 import com.esotericsoftware.kryonet.Connection;
 import java.util.Map;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -26,34 +27,42 @@ import org.apache.commons.lang3.concurrent.BasicThreadFactory;
  *
  * @author Ken Kwan
  */
-public class PacketSender {
+public class PacketSender implements Runnable {
 
     private static LogicModule[] logic;
     private static Server server;
     private int dataSent = 0;
+    private static final ConcurrentLinkedQueue<GamePacket> OUT_PACKET_QUEUE = new ConcurrentLinkedQueue<>();
 
-    private static final ExecutorService SENDER_THREAD_POOL = new ThreadPoolExecutor(Globals.SERVER_PACKETSENDER_THREADS, Globals.SERVER_PACKETSENDER_THREADS,
-            10L, TimeUnit.SECONDS,
-            new LinkedBlockingQueue<>(),
-            new BasicThreadFactory.Builder()
-            .namingPattern("PacketSender-%d")
-            .daemon(true)
-            .priority(Thread.MAX_PRIORITY)
-            .build());
+    private static ExecutorService SENDER_THREAD_POOL;
 
-//    @Override
-//    public void run() {
-//        while (!this.outPacketQueue.isEmpty()) {
-//            final ServerPacket p = this.outPacketQueue.poll();
-//            if (p != null) {
-//                SENDER_THREAD_POOL.execute(() -> {
-//                    if ((p.getPlayer() == null && p.getConnection() != null) || p.getPlayer().isConnected()) {
-//                        server.sendToTCP(p.getConnection().getID(), p.getData());
-//                    }
-//                });
-//            }
-//        }
-//    }
+    public static void init() {
+        SENDER_THREAD_POOL = new ThreadPoolExecutor(1, Globals.SERVER_PACKETSENDER_THREADS,
+                10L, TimeUnit.SECONDS,
+                new LinkedBlockingQueue<>(),
+                new BasicThreadFactory.Builder()
+                .namingPattern("PacketSender-%d")
+                .daemon(true)
+                .priority(Thread.MAX_PRIORITY)
+                .build());
+    }
+
+    @Override
+    public void run() {
+        while (!OUT_PACKET_QUEUE.isEmpty()) {
+            final GamePacket p = OUT_PACKET_QUEUE.poll();
+            if (p != null) {
+                SENDER_THREAD_POOL.execute(() -> {
+                    if (p.getPlayer() != null) {
+                        server.sendToTCP(p.getPlayer().getConnection().getID(), p.getData());
+                    } else if (p.getConnection() != null) {
+                        server.sendToTCP(p.getConnection().getID(), p.getData());
+                    }
+                });
+            }
+        }
+    }
+
     /**
      * Reset sent byte count.
      */
@@ -98,18 +107,24 @@ public class PacketSender {
      * @param c Connection to send to
      */
     public static void sendConnection(final byte[] data, final Connection c) {
-        server.sendToTCP(c.getID(), data);
-        //this.outPacketQueue.add(new ServerPacket(data, c));
+        if (Globals.SERVER_BATCH_PACKETSEND) {
+            OUT_PACKET_QUEUE.add(new GamePacket(data, c));
+        } else {
+            server.sendToTCP(c.getID(), data);
+        }
     }
 
     public static void sendPlayer(final byte[] data, final Player p) {
         if (p.isConnected()) {
             try {
-                server.sendToTCP(p.getConnection().getID(), data);
+                if (Globals.SERVER_BATCH_PACKETSEND) {
+                    OUT_PACKET_QUEUE.add(new GamePacket(data, p));
+                } else {
+                    server.sendToTCP(p.getConnection().getID(), data);
+                }
             } catch (Exception e) {
             }
         }
-        //this.outPacketQueue.add(new ServerPacket(data, p));
     }
 
     /**

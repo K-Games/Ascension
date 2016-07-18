@@ -1,11 +1,7 @@
 package blockfighter.server;
 
-import blockfighter.server.entities.mob.Mob;
-import blockfighter.server.entities.player.Player;
-import blockfighter.server.entities.proj.Projectile;
 import blockfighter.server.net.GameServer;
 import blockfighter.server.net.PacketHandler;
-import blockfighter.server.net.PacketReceiver;
 import blockfighter.server.net.PacketSender;
 import java.awt.Dimension;
 import java.util.Arrays;
@@ -88,8 +84,10 @@ public class Main {
 
             Globals.log(Main.class, "Server started ", Globals.LOG_TYPE_ERR, false);
             Globals.log(Main.class, "Server started", Globals.LOG_TYPE_DATA, true);
-
-            //PACKETSENDER_SCHEDULER.scheduleAtFixedRate(packetSender, 0, 2, TimeUnit.MILLISECONDS);
+            if (Globals.SERVER_BATCH_PACKETSEND) {
+                PacketSender.init();
+                PACKETSENDER_SCHEDULER.scheduleAtFixedRate(new PacketSender(), 0, 5, TimeUnit.MICROSECONDS);
+            }
             //PACKETHANDLER_SCHEDULER.scheduleAtFixedRate(packetHandler, 0, 10, TimeUnit.MICROSECONDS);
             for (final Map.Entry<Byte, Byte> b : Globals.SERVER_ROOMS.entrySet()) {
                 server_rooms[b.getValue()] = new LogicModule(b.getKey());

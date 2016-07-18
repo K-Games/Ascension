@@ -9,15 +9,14 @@ import com.esotericsoftware.kryonet.Server;
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class GameServer extends Thread {
+public class GameServer {
 
     public static ConcurrentHashMap<Connection, Player> connectionPlayerMap = new ConcurrentHashMap<>();
 
     private Server server;
     private PacketReceiver receiver;
 
-    @Override
-    public void run() {
+    public void start() {
         try {
             this.server = new Server(Globals.PACKET_MAX_SIZE * 1000, Globals.PACKET_MAX_SIZE);
             PacketSender.setServer(server);
@@ -35,6 +34,8 @@ public class GameServer extends Thread {
     }
 
     public static void addPlayerConnection(final Connection c, final Player p) {
+        c.setKeepAliveTCP(0);
+        c.setTimeout(15000);
         connectionPlayerMap.put(c, p);
     }
 

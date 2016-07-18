@@ -5,20 +5,11 @@ import blockfighter.server.LogicModule;
 import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
 import com.esotericsoftware.kryonet.Connection;
-import java.net.DatagramPacket;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
-/**
- * Threads to handle incoming requests.
- *
- * @author Ken Kwan
- */
 public class PacketHandler {
-
-    ConcurrentLinkedQueue<DatagramPacket> packetQueue = new ConcurrentLinkedQueue<>();
 
     private static LogicModule[] logic;
 
@@ -29,10 +20,6 @@ public class PacketHandler {
      */
     public static void setLogic(final LogicModule[] l) {
         logic = l;
-    }
-
-    public void queuePacket(DatagramPacket data) {
-        packetQueue.add(data);
     }
 
     public static void process(byte[] data, Connection c) {
