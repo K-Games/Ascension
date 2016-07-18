@@ -139,7 +139,7 @@ public class Main {
                 SOUND_MODULE.shutdown();
             }
         });
-        final ScheduledExecutorService service = Executors.newScheduledThreadPool(3, new BasicThreadFactory.Builder()
+        final ScheduledExecutorService service = Executors.newScheduledThreadPool(2, new BasicThreadFactory.Builder()
                 .namingPattern("RunScheduler-%d")
                 .daemon(true)
                 .priority(Thread.NORM_PRIORITY)

@@ -14,11 +14,11 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class GameClient extends Thread {
+public class GameClient {
 
     private Client client;
     private PacketReceiver receiver;
-    private LogicModule logic;
+    private final LogicModule logic;
     private boolean loggedIn = false;
     private final ConcurrentLinkedQueue<byte[]> dataQueue = new ConcurrentLinkedQueue<>();
 
@@ -27,8 +27,7 @@ public class GameClient extends Thread {
         Globals.SERVER_ADDRESS = server;
     }
 
-    @Override
-    public void run() {
+    public void start() {
         if (this.receiver != null && this.receiver.isConnected()) {
             return;
         }
@@ -37,6 +36,8 @@ public class GameClient extends Thread {
         }
 
         this.client = new Client(Globals.PACKET_MAX_SIZE * 200, Globals.PACKET_MAX_SIZE);
+        this.client.setTimeout(5000);
+        this.client.setKeepAliveTCP(0);
         PacketSender.setClient(this.client);
         PacketHandler.setGameClient(this);
         this.client.start();
@@ -62,7 +63,6 @@ public class GameClient extends Thread {
     public void shutdownClient() {
         client.close();
         if (this.receiver != null) {
-            this.receiver.shutdown();
             this.receiver = null;
         }
     }
@@ -215,9 +215,4 @@ public class GameClient extends Thread {
         }
     }
 
-    public void disconnect() {
-        if (logic.getScreen() instanceof ScreenIngame) {
-            ((ScreenIngame) logic.getScreen()).disconnect();
-        }
-    }
 }

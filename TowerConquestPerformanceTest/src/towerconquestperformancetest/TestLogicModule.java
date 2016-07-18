@@ -1,6 +1,6 @@
 package towerconquestperformancetest;
 
-public class TestLogicModule extends Thread {
+public class TestLogicModule {
     // Shared Data
 
     private TestGameClient client;
@@ -13,10 +13,9 @@ public class TestLogicModule extends Thread {
         this.selectedChar.newCharacter(room * 10 + 1);
     }
 
-    @Override
     public void run() {
         if (myKey != -1) {
-            client.sendMoveKey(this.myKey, Globals.UP, true);
+            client.sendMoveKey(this.myKey, (byte) Globals.rng(4), Globals.rng(2) == 0);
         }
     }
 
@@ -24,17 +23,11 @@ public class TestLogicModule extends Thread {
         this.selectedRoom = r;
 
         client = new TestGameClient(this, server, port);
-        client.setName("GameClient");
-        client.setDaemon(true);
-        client.start();
+        client.run();
     }
 
     public void setKey(final byte key) {
         this.myKey = key;
-    }
-
-    public void disconnect() {
-
     }
 
     public void setSelectedChar(final TestSaveData s) {

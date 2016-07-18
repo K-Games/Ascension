@@ -36,6 +36,7 @@ public class ScreenServerList extends ScreenMenu {
     private static final Rectangle CONNECT_BOX = new Rectangle(650, 230, 200, 70);
     private String status = "Waiting to connect...";
     private boolean connecting = false, enabledInput = false;
+    private byte statusCode = -1;
 
     static {
         String[] listItems = new String[10];
@@ -75,18 +76,14 @@ public class ScreenServerList extends ScreenMenu {
             panel.add(SERVER_ROOMS);
             panel.revalidate();
         });
-        SERVERADDRESS_FIELD.setVisible(!fadeIn);
-        SERVER_ROOMS.setEnabled(!fadeIn);
         this.enabledInput = !fadeIn;
-
     }
 
     @Override
     public void update() {
         super.update();
         if (this.fadeIn && this.finishedFadeIn && !this.enabledInput) {
-            SERVERADDRESS_FIELD.setVisible(true);
-            SERVER_ROOMS.setEnabled(true);
+            enableFields();
             this.enabledInput = true;
         }
     }
@@ -184,6 +181,7 @@ public class ScreenServerList extends ScreenMenu {
                 if (SERVERADDRESS_FIELD.getText().trim().length() > 0) {
                     connecting = true;
                     SERVER_ROOMS.setEnabled(false);
+                    SERVERADDRESS_FIELD.setEnabled(false);
                     saveServerList(SERVERADDRESS_FIELD.getText().trim());
                     logic.connect(SERVERADDRESS_FIELD.getText().trim(), (byte) SERVER_ROOMS.getSelectedIndex());
                 }
@@ -222,49 +220,52 @@ public class ScreenServerList extends ScreenMenu {
     }
 
     public void setStatus(final byte code) {
+        if (code == STATUS_FAILEDCONNECT && this.statusCode != 0) {
+            return;
+        }
+        this.statusCode = code;
         switch (code) {
             case STATUS_CONNECTING:
                 this.status = "Connecting...";
                 break;
             case STATUS_SOCKETCLOSED:
-                connecting = false;
-                SERVER_ROOMS.setEnabled(true);
+                enableFields();
                 this.status = "Could not connect: Socket closed.";
                 break;
             case STATUS_FAILEDCONNECT:
-                connecting = false;
-                SERVER_ROOMS.setEnabled(true);
+                enableFields();
                 this.status = "Could not connect: Cannot reach server.";
                 break;
             case STATUS_UNKNOWNHOST:
-                connecting = false;
-                SERVER_ROOMS.setEnabled(true);
+                enableFields();
                 this.status = "Could not connect: Cannot resolve host.";
                 break;
             case STATUS_WRONGVERSION:
-                connecting = false;
-                SERVER_ROOMS.setEnabled(true);
+                enableFields();
                 this.status = "Could not connect: Server is a different version.";
                 break;
             case STATUS_FULLROOM:
-                connecting = false;
-                SERVER_ROOMS.setEnabled(true);
+                enableFields();
                 this.status = "Could not connect: Room is full.";
                 break;
             case STATUS_UIDINROOM:
-                connecting = false;
-                SERVER_ROOMS.setEnabled(true);
+                enableFields();
                 this.status = "Could not connect: This character is already in the room.";
                 break;
             case STATUS_OUTSIDELEVEL:
-                connecting = false;
-                SERVER_ROOMS.setEnabled(true);
+                enableFields();
                 this.status = "Could not connect: This character does not meet the level requirements.";
                 break;
             default:
-                connecting = false;
-                SERVER_ROOMS.setEnabled(true);
+                enableFields();
                 this.status = "Could not connect: Unkown Status";
         }
+    }
+
+    public void enableFields() {
+        connecting = false;
+        SERVERADDRESS_FIELD.setVisible(true);
+        SERVERADDRESS_FIELD.setEnabled(true);
+        SERVER_ROOMS.setEnabled(true);
     }
 }
