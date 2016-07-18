@@ -13,9 +13,16 @@ An multiplayer action 2D sidescrolling platformer coded in pure Java.
 ### Server Changes
 * Added batched packet sending. Disabled by default.
 * Fixed some items not dropping.
+* Moved getItemType from Player to Item class.
 
 ### Credits
+#### Developers
+[KenOfNZ](https://github.com/kenofnz)
 
+### Game Designers
+[KenOfNZ](https://github.com/kenofnz)
+
+### Music
 Title & Menu Tracks
 
 * Hero - [geluf](https://soundcloud.com/geluf)

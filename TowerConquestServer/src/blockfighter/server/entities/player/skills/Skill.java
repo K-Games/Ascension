@@ -2,6 +2,7 @@ package blockfighter.server.entities.player.skills;
 
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
+import blockfighter.server.entities.items.Items;
 import blockfighter.server.entities.player.Player;
 import java.util.HashMap;
 
@@ -182,7 +183,7 @@ public abstract class Skill {
      * @return True if weapon is same as required weapon and cooldown is <= 0
      */
     public boolean canCast(final Player player) {
-        return !isPassive && (this.reqWeapon == -1 || Player.getItemType(player.getEquips()[SKILL_REQSLOT.get(this.skillCode)]) == this.reqWeapon)
+        return !isPassive && (this.reqWeapon == -1 || Items.getItemType(player.getEquips()[SKILL_REQSLOT.get(this.skillCode)]) == this.reqWeapon)
                 && canCast();
     }
 

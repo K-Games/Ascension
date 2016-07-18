@@ -752,15 +752,15 @@ public class Player extends Thread implements GameEntity {
 
                 // Defender Mastery Passive Reduction
                 if (hasSkill(Skill.PASSIVE_SHIELDMASTERY)
-                        && getItemType(this.equips[Globals.ITEM_WEAPON]) == Globals.ITEM_SWORD
-                        && getItemType(this.equips[Globals.ITEM_OFFHAND]) == Globals.ITEM_SHIELD) {
+                        && Items.getItemType(this.equips[Globals.ITEM_WEAPON]) == Globals.ITEM_SWORD
+                        && Items.getItemType(this.equips[Globals.ITEM_OFFHAND]) == Globals.ITEM_SHIELD) {
                     amount = (int) (amount * (1 - (0.05 + 0.005 * getSkillLevel(Skill.PASSIVE_SHIELDMASTERY))));
                 }
 
                 // Dual Wield Passive Reduction
                 if (hasSkill(Skill.PASSIVE_DUALSWORD)
-                        && getItemType(this.equips[Globals.ITEM_WEAPON]) == Globals.ITEM_SWORD
-                        && getItemType(this.equips[Globals.ITEM_OFFHAND]) == Globals.ITEM_SWORD) {
+                        && Items.getItemType(this.equips[Globals.ITEM_WEAPON]) == Globals.ITEM_SWORD
+                        && Items.getItemType(this.equips[Globals.ITEM_OFFHAND]) == Globals.ITEM_SWORD) {
                     amount = (int) (amount * (1 - (0.01 * getSkillLevel(Skill.PASSIVE_DUALSWORD))));
                 }
 
@@ -973,8 +973,8 @@ public class Player extends Thread implements GameEntity {
         }
         // Defender Mastery Passive
         if (hasSkill(Skill.PASSIVE_SHIELDMASTERY)
-                && getItemType(this.equips[Globals.ITEM_WEAPON]) == Globals.ITEM_SWORD
-                && getItemType(this.equips[Globals.ITEM_OFFHAND]) == Globals.ITEM_SHIELD) {
+                && Items.getItemType(this.equips[Globals.ITEM_WEAPON]) == Globals.ITEM_SWORD
+                && Items.getItemType(this.equips[Globals.ITEM_OFFHAND]) == Globals.ITEM_SHIELD) {
             mult += 0.09 + 0.002 * getSkillLevel(Skill.PASSIVE_SHIELDMASTERY);
         }
         // Power of Will Passive
@@ -1008,8 +1008,8 @@ public class Player extends Thread implements GameEntity {
         double totalCritChance = this.stats[Globals.STAT_CRITCHANCE] + bonusCritChance;
         // Dual Sword Passive
         if (hasSkill(Skill.PASSIVE_DUALSWORD)
-                && getItemType(this.equips[Globals.ITEM_WEAPON]) == Globals.ITEM_SWORD
-                && getItemType(this.equips[Globals.ITEM_OFFHAND]) == Globals.ITEM_SWORD) {
+                && Items.getItemType(this.equips[Globals.ITEM_WEAPON]) == Globals.ITEM_SWORD
+                && Items.getItemType(this.equips[Globals.ITEM_OFFHAND]) == Globals.ITEM_SWORD) {
             // Check if has Dual Sword passive AND Mainhand/Offhand are both Swords.
             totalCritChance += 0.04 + 0.002 * getSkillLevel(Skill.PASSIVE_DUALSWORD);
         }
@@ -1028,8 +1028,8 @@ public class Player extends Thread implements GameEntity {
         double totalCritDmg = 1 + this.stats[Globals.STAT_CRITDMG] + bonusCritDmg;
         // Bow Mastery Passive
         if (hasSkill(Skill.PASSIVE_BOWMASTERY)
-                && getItemType(this.equips[Globals.ITEM_WEAPON]) == Globals.ITEM_BOW
-                && getItemType(this.equips[Globals.ITEM_OFFHAND]) == Globals.ITEM_ARROW) {
+                && Items.getItemType(this.equips[Globals.ITEM_WEAPON]) == Globals.ITEM_BOW
+                && Items.getItemType(this.equips[Globals.ITEM_OFFHAND]) == Globals.ITEM_ARROW) {
             totalCritDmg += 0.3 + 0.04 * getSkillLevel(Skill.PASSIVE_BOWMASTERY);
         }
         // Keen Eye Passive
@@ -1828,44 +1828,6 @@ public class Player extends Thread implements GameEntity {
      */
     public boolean isConnected() {
         return this.connected;
-    }
-
-    /**
-     * Get the item type of an item code.
-     *
-     * @param i Item Code
-     * @return Byte - Item Type
-     */
-    public static byte getItemType(final int i) {
-        if (i >= 100000 && i <= 109999) { // Swords
-            return Globals.ITEM_WEAPON;
-        } else if (i >= 110000 && i <= 119999) { // Shields
-            return Globals.ITEM_SHIELD;
-        } else if (i >= 120000 && i <= 129999) { // Bows
-            return Globals.ITEM_BOW;
-        } else if (i >= 130000 && i <= 199999) {
-            return Globals.ITEM_ARROW;
-        } else if (i >= 200000 && i <= 209999) {
-            return Globals.ITEM_HEAD;
-        } else if (i >= 300000 && i <= 309999) {
-            return Globals.ITEM_CHEST;
-        } else if (i >= 400000 && i <= 409999) {
-            return Globals.ITEM_PANTS;
-        } else if (i >= 500000 && i <= 509999) {
-            return Globals.ITEM_SHOULDER;
-        } else if (i >= 600000 && i <= 609999) {
-            return Globals.ITEM_GLOVE;
-        } else if (i >= 700000 && i <= 709999) {
-            return Globals.ITEM_SHOE;
-        } else if (i >= 800000 && i <= 809999) {
-            return Globals.ITEM_BELT;
-        } else if (i >= 900000 && i <= 909999) {
-            return Globals.ITEM_RING;
-        } else if (i >= 1000000 && i <= 1009999) {
-            return Globals.ITEM_AMULET;
-        }
-        return -1;
-
     }
 
     public static void sendParticle(final byte room, final byte particleID, final double x, final double y, final byte facing) {
