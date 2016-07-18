@@ -18,11 +18,11 @@ import org.apache.commons.io.FileUtils;
  */
 public class Globals {
 
-    public static boolean customPort = false;
+    public static boolean SKIP_TITLE = false;
     public static int SERVER_PORT = 25565;
     public static String SERVER_ADDRESS;
 
-    public final static boolean TEST_MAX_LEVEL = false,
+    public final static boolean TEST_MAX_LEVEL = true,
             DEBUG_MODE = false;
 
     public final static byte GAME_MAJOR_VERSION = 0,

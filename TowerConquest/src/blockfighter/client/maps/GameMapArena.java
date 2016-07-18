@@ -64,7 +64,7 @@ public class GameMapArena extends GameMap {
                 this.bgm = Globals.BGM_ARENA1;
                 break;
             case 1:
-                this.bgm = Globals.BGM_ARENA3;
+                this.bgm = Globals.BGM_ARENA2;
                 break;
         }
     }

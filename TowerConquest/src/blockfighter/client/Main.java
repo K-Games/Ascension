@@ -74,23 +74,25 @@ public class Main {
      */
     public static void main(final String[] args) {
         if (args.length > 0) {
-            int port = -1;
             for (int i = 0; i < args.length; i++) {
                 switch (args[i]) {
                     case "-port":
-                        if (port == -1) {
-                            try {
-                                port = Integer.parseInt(args[i + 1]);
-                                if (port > 0 || port <= 65535) {
-                                    System.out.println("Setting server connection port to " + port);
-                                    Globals.SERVER_PORT = port;
-                                    Globals.customPort = true;
-                                }
-                            } catch (Exception e) {
+                        try {
+                            int port = Integer.parseInt(args[i + 1]);
+                            if (port > 0 && port <= 65535) {
+                                System.out.println("Setting server connection port to " + port);
+                                Globals.SERVER_PORT = port;
+                            } else {
                                 System.err.println("-port Specify a valid port between 1 to 65535");
-                                System.exit(201);
+                                System.exit(202);
                             }
+                        } catch (Exception e) {
+                            System.err.println("-port Specify a valid port between 1 to 65535");
+                            System.exit(201);
                         }
+                        break;
+                    case "-skiptitle":
+                        Globals.SKIP_TITLE = true;
                         break;
                 }
             }
@@ -144,7 +146,7 @@ public class Main {
                 .daemon(true)
                 .priority(Thread.NORM_PRIORITY)
                 .build());
-        LOGIC_MODULE.setScreen(new ScreenTitle());
+        LOGIC_MODULE.setScreen((!Globals.SKIP_TITLE) ? new ScreenTitle() : new ScreenSelectChar());
         service.scheduleAtFixedRate(LOGIC_MODULE, 0, 1, TimeUnit.MILLISECONDS);
         service.scheduleAtFixedRate(render, 0, Globals.RENDER_UPDATE, TimeUnit.MICROSECONDS);
     }

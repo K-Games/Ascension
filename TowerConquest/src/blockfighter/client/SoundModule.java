@@ -48,7 +48,7 @@ public class SoundModule implements Runnable {
             }
             this.soundModule.backgroundMusic(Globals.SOUND_BGM[bgmID], Globals.SOUND_BGM[bgmID]);
             currentBGM = bgmID;
-            this.soundModule.setVolume("bgm", .7f);
+            this.soundModule.setVolume("bgm", 1f);
             System.out.println("Playing " + Globals.SOUND_BGM[bgmID]);
         }
     }

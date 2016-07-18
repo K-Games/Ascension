@@ -171,7 +171,7 @@ public class ScreenServerList extends ScreenMenu {
 
     @Override
     public void mouseReleased(final MouseEvent e) {
-        if (connecting) {
+        if (connecting || !enabledInput) {
             return;
         }
         super.mouseReleased(e);

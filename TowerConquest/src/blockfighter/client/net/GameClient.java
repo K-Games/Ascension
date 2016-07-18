@@ -14,7 +14,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class GameClient {
+public class GameClient extends Thread {
 
     private Client client;
     private PacketReceiver receiver;
@@ -27,7 +27,8 @@ public class GameClient {
         Globals.SERVER_ADDRESS = server;
     }
 
-    public void start() {
+    @Override
+    public void run() {
         if (this.receiver != null && this.receiver.isConnected()) {
             return;
         }

@@ -48,8 +48,8 @@ public class ScreenSelectChar extends ScreenMenu {
         PROMPT_BOX[1] = new Rectangle(665, 400, 214, 112);
     }
 
-    public ScreenSelectChar(final boolean title) {
-        super(title);
+    public ScreenSelectChar(final boolean fadeIn) {
+        super(fadeIn);
         loadSaveData();
     }
 
