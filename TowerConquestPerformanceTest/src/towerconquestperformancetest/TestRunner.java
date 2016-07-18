@@ -35,15 +35,20 @@ public class TestRunner implements Runnable {
                 }
             }
         }
-        service.scheduleAtFixedRate(this, 0, 200, TimeUnit.MILLISECONDS);
+        service.scheduleAtFixedRate(this, 0, 500, TimeUnit.MILLISECONDS);
     }
 
     @Override
     public void run() {
+        int avgPing = 0;
+        int testers = 0;
         for (TestLogicModule lm : logic) {
             if (lm != null) {
                 lm.run();
+                avgPing += lm.getPing();
+                testers++;
             }
         }
+        System.out.println("Avg Ping: " + (avgPing / testers));
     }
 }

@@ -1,10 +1,6 @@
 package towerconquestperformancetest;
 
-import java.util.concurrent.ConcurrentLinkedQueue;
-
 public class TestPacketHandler {
-
-    private static final ConcurrentLinkedQueue<byte[]> PACKET_QUEUE = new ConcurrentLinkedQueue<>();
 
     public static void process(final byte[] data, final TestGameClient gameClient) {
         final byte dataType = data[0];
@@ -14,6 +10,9 @@ public class TestPacketHandler {
                 break;
             case Globals.DATA_PLAYER_CREATE:
                 receiveCreate(data, gameClient);
+                break;
+            case Globals.DATA_PING:
+                receiveGetPing(data, gameClient);
                 break;
         }
     }
@@ -34,7 +33,7 @@ public class TestPacketHandler {
         }.start();
     }
 
-    public static void clearDataQueue() {
-        PACKET_QUEUE.clear();
+    private static void receiveGetPing(final byte[] data, final TestGameClient gameClient) {
+        gameClient.setPing(data[1]);
     }
 }
