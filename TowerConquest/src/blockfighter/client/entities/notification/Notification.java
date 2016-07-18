@@ -3,6 +3,7 @@ package blockfighter.client.entities.notification;
 import blockfighter.client.Globals;
 import blockfighter.client.LogicModule;
 import blockfighter.client.Main;
+import blockfighter.client.entities.items.Item;
 import blockfighter.client.entities.items.ItemEquip;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -15,15 +16,24 @@ public class Notification extends Thread {
 
     private static LogicModule logic;
     private final byte type;
-    private final int number;
+    private final int exp;
     private long startTime = 0;
     private final int duration = 5000;
     private Color colour, border;
+    private Item item;
 
-    public Notification(final int num, final byte t) {
+    public Notification(final int EXP) {
         this.startTime = logic.getTime();
-        this.number = num;
-        this.type = t;
+        this.exp = EXP;
+        this.type = Globals.NOTIFICATION_EXP;
+        setDaemon(true);
+    }
+
+    public Notification(final Item i) {
+        this.startTime = logic.getTime();
+        this.exp = 0;
+        this.item = i;
+        this.type = Globals.NOTIFICATION_ITEM;
         setDaemon(true);
     }
 
@@ -49,13 +59,10 @@ public class Notification extends Thread {
         String output = "";
         switch (this.type) {
             case Globals.NOTIFICATION_EXP:
-                output = "Gained " + Integer.toString(this.number) + " EXP";
+                output = "Gained " + Integer.toString(this.exp) + " EXP";
                 break;
-            case Globals.NOTIFICATION_ITEMEQUIP:
-                output = "Received " + ItemEquip.getItemName(this.number);
-                break;
-            case Globals.NOTIFICATION_ITEMUPGRADE:
-                output = "Received Tome of Enhancement";
+            case Globals.NOTIFICATION_ITEM:
+                output = "Received " + item.getItemName();
                 break;
         }
         g.setColor(this.colour);

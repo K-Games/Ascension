@@ -3,6 +3,7 @@ package blockfighter.client.screen;
 import blockfighter.client.Globals;
 import blockfighter.client.SaveData;
 import blockfighter.client.entities.ingamenumber.IngameNumber;
+import blockfighter.client.entities.items.Item;
 import blockfighter.client.entities.items.ItemEquip;
 import blockfighter.client.entities.items.ItemUpgrade;
 import blockfighter.client.entities.mob.Mob;
@@ -493,19 +494,25 @@ public class ScreenIngame extends Screen {
     private void dataPlayerGiveDrop(final byte[] data) {
         final int lvl = Globals.bytesToInt(Arrays.copyOfRange(data, 1, 5));
         final int dropCode = Globals.bytesToInt(Arrays.copyOfRange(data, 5, 9));
-        //TODO - Add drop gained notification
-        if (ItemEquip.isValidItem(dropCode)) {
-            this.notifications.add(new Notification(dropCode, Globals.NOTIFICATION_ITEMEQUIP));
-        }
+        Item dropItem = null;
+
         if (ItemUpgrade.isValidItem(dropCode)) {
-            this.notifications.add(new Notification(dropCode, Globals.NOTIFICATION_ITEMUPGRADE));
+            dropItem = new ItemUpgrade(dropCode, lvl + Globals.rng(6));
         }
-        this.c.addDrops(lvl, dropCode);
+
+        if (ItemEquip.isValidItem(dropCode)) {
+            dropItem = new ItemEquip(dropCode, lvl, Globals.rng(100) < 20);
+        }
+
+        if (dropItem != null) {
+            this.notifications.add(new Notification(dropItem));
+            this.c.addDrops(lvl, dropItem);
+        }
     }
 
     private void dataPlayerGiveEXP(final byte[] data) {
         final int amount = Globals.bytesToInt(Arrays.copyOfRange(data, 1, 5));
-        this.notifications.add(new Notification(amount, Globals.NOTIFICATION_EXP));
+        this.notifications.add(new Notification(amount));
         this.c.addExp(amount);
     }
 

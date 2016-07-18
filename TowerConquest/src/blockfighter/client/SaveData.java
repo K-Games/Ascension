@@ -1,5 +1,6 @@
 package blockfighter.client;
 
+import blockfighter.client.entities.items.Item;
 import blockfighter.client.entities.items.ItemEquip;
 import static blockfighter.client.entities.items.ItemEquip.ITEM_CODES;
 import blockfighter.client.entities.items.ItemUpgrade;
@@ -494,15 +495,12 @@ public class SaveData {
         return this.uniqueID;
     }
 
-    public void addDrops(final int lvl, final int dropItemCode) {
-        if (ItemUpgrade.isValidItem(dropItemCode)) {
-            addItem(new ItemUpgrade(dropItemCode, lvl + Globals.rng(6)));
-            return;
+    public void addDrops(final int lvl, final Item dropItemCode) {
+        if (dropItemCode instanceof ItemEquip) {
+            addItem((ItemEquip) dropItemCode);
         }
-
-        if (ItemEquip.isValidItem(dropItemCode)) {
-            final ItemEquip e = new ItemEquip(dropItemCode, lvl, Globals.rng(100) < 20);
-            addItem(e);
+        if (dropItemCode instanceof ItemUpgrade) {
+            addItem((ItemUpgrade) dropItemCode);
         }
     }
 

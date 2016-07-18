@@ -315,8 +315,7 @@ public class Globals {
             NUMBER_TYPE_MOB = 2;
 
     public static final byte NOTIFICATION_EXP = 0,
-            NOTIFICATION_ITEMEQUIP = 1,
-            NOTIFICATION_ITEMUPGRADE = 2;
+            NOTIFICATION_ITEM = 1;
 
     static {
         PLAYER_ANIM_FRAMES[PLAYER_ANIM_STATE_ATTACK] = 7;
