@@ -7,6 +7,7 @@ An multiplayer action 2D sidescrolling platformer coded in pure Java.
 ### Client Changes
 * Fixed never timing out when trying to login to a live server with an invalid room.
 * New Soundtrack!
+* Text changes in Connect menu
 
 ### Server Changes
 * Added batched packet sending. Disabled by default.

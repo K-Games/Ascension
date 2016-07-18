@@ -34,7 +34,7 @@ public class ScreenServerList extends ScreenMenu {
     private static final JTextField SERVERADDRESS_FIELD = new JTextField();
     private static final JComboBox<String> SERVER_ROOMS;
     private static final Rectangle CONNECT_BOX = new Rectangle(650, 230, 200, 70);
-    private String status = "Waiting to connect...";
+    private String status = "Waiting to login...";
     private boolean connecting = false, enabledInput = false;
     private byte statusCode = -1;
 
@@ -113,15 +113,20 @@ public class ScreenServerList extends ScreenMenu {
                 RenderingHints.KEY_TEXT_ANTIALIASING,
                 RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
 
+        String title = "Login to Server";
         g.setFont(Globals.ARIAL_30PT);
-        drawStringOutline(g, "Connect To Server", 600, 90, 2);
-        g.setColor(Color.WHITE);
-        g.drawString("Connect To Server", 600, 90);
+        final int titleX = 750 - g.getFontMetrics().stringWidth(title) / 2, titleY = 90;
 
-        g.setFont(Globals.ARIAL_24PT);
-        drawStringOutline(g, "Host: ", 490, 177, 2);
+        drawStringOutline(g, title, titleX, titleY, 2);
         g.setColor(Color.WHITE);
-        g.drawString("Host: ", 490, 177);
+        g.drawString(title, titleX, titleY);
+
+        String label = "Server:";
+        g.setFont(Globals.ARIAL_24PT);
+        final int labelX = 550 - g.getFontMetrics().stringWidth(label) - 5, labelY = 177;
+        drawStringOutline(g, label, labelX, labelY, 2);
+        g.setColor(Color.WHITE);
+        g.drawString(label, labelX, labelY);
 
         g.drawRect(CONNECT_BOX.x, CONNECT_BOX.y, CONNECT_BOX.width, CONNECT_BOX.height);
         g.setColor(new Color(30, 30, 30, 255));
@@ -132,7 +137,8 @@ public class ScreenServerList extends ScreenMenu {
 
         g.setFont(Globals.ARIAL_24PT);
         g.setColor(Color.WHITE);
-        g.drawString("Connect", CONNECT_BOX.x + 55, CONNECT_BOX.y + 40);
+        String buttonLabel = "Login";
+        g.drawString(buttonLabel, CONNECT_BOX.x + CONNECT_BOX.width / 2 - g.getFontMetrics().stringWidth(buttonLabel) / 2, CONNECT_BOX.y + CONNECT_BOX.height / 2 + g.getFontMetrics().getHeight() / 3);
 
         g.setFont(Globals.ARIAL_24PT);
         final int strWidth = g.getFontMetrics().stringWidth(this.status);
