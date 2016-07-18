@@ -1,30 +1,22 @@
 package blockfighter.client.net;
 
 import blockfighter.client.Globals;
-import blockfighter.client.LogicModule;
-import blockfighter.client.Main;
-import java.net.DatagramPacket;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  *
  * @author Ken Kwan
  */
-public class PacketHandler implements Runnable {
+public class PacketHandler {
 
-    private DatagramPacket r = null;
-    private static LogicModule logic;
+    private static ConcurrentLinkedQueue<byte[]> packetQueue = new ConcurrentLinkedQueue<>();
+    private static GameClient gameClient;
 
-    public PacketHandler(final DatagramPacket response) {
-        this.r = response;
+    public static void setGameClient(final GameClient cl) {
+        gameClient = cl;
     }
 
-    public static void init() {
-        logic = Main.getLogicModule();
-    }
-
-    @Override
-    public void run() {
-        final byte[] data = this.r.getData();
+    public static void process(final byte[] data) {
         final byte dataType = data[0];
         switch (dataType) {
             case Globals.DATA_PLAYER_LOGIN:
@@ -42,23 +34,32 @@ public class PacketHandler implements Runnable {
         }
     }
 
-    private void receiveCreate(final byte[] data) {
+    private static void receiveCreate(final byte[] data) {
         final byte mapID = data[1],
                 key = data[2],
                 size = data[3];
-        logic.receiveCreate(mapID, key, size);
+        gameClient.receiveCreate(mapID, key, size);
     }
 
-    private void receiveLogin(final byte[] data) {
-        logic.receiveLogin(data);
+    private static void receiveLogin(final byte[] data) {
+        new Thread() {
+            @Override
+            public void run() {
+                gameClient.receiveLogin(data);
+            }
+        }.start();
     }
 
-    private void receiveGetPing(final byte[] data) {
-        logic.setPing(data[1]);
+    private static void receiveGetPing(final byte[] data) {
+        gameClient.setPing(data[1]);
     }
 
-    private void receiveData(final byte[] data) {
-        logic.queueData(data);
+    private static void receiveData(final byte[] data) {
+        gameClient.queueData(data);
+    }
+
+    public static void clearDataQueue() {
+        packetQueue.clear();
     }
 
 }

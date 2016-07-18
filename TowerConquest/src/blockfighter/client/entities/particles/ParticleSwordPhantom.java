@@ -10,8 +10,8 @@ public class ParticleSwordPhantom extends Particle {
     public ParticleSwordPhantom(final int x, final int y, final byte f) {
         super(x, y, f);
         this.frame = 0;
-        this.frameDuration = 50;
-        this.duration = 400;
+        this.frameDuration = 25;
+        this.duration = 200;
     }
 
     @Override
@@ -19,8 +19,8 @@ public class ParticleSwordPhantom extends Particle {
         super.update();
 
         if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
-            this.frameDuration = 50;
-            if (PARTICLE_SPRITE != null && this.frame < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_PHANTOM].length) {
+            this.frameDuration = 25;
+            if (PARTICLE_SPRITE != null && this.frame < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_PHANTOM].length - 1) {
                 this.frame++;
             }
             this.lastFrameTime = logic.getTime();

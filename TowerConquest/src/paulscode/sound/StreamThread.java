@@ -5,7 +5,8 @@ import java.util.List;
 import java.util.ListIterator;
 
 /**
- * The StreamThread class is used to process all streaming sources. This thread starts out asleep, and it sleeps when all streaming sources are finished playing, so it is necessary to call interrupt() after adding new streaming sources to the list.
+ * The StreamThread class is used to process all streaming sources. This thread starts out asleep, and it sleeps when all streaming sources are finished playing, so it is necessary to call interrupt()
+ * after adding new streaming sources to the list.
  * <br><br>
  * <b><i> SoundSystem License:</b></i><br><b><br>
  * You are free to use this library for any purpose, commercial or otherwise. You may modify this library or source code, and distribute it any way you like, provided the following conditions are met:

@@ -18,22 +18,23 @@ import org.apache.commons.io.FileUtils;
  */
 public class Globals {
 
-    public final static int SERVER_PORT = 25565;
+    public static boolean customPort = false;
+    public static int SERVER_PORT = 25565;
     public static String SERVER_ADDRESS;
 
-    public final static boolean TEST_MAX_LEVEL = true,
+    public final static boolean TEST_MAX_LEVEL = false,
             DEBUG_MODE = false;
 
     public final static byte GAME_MAJOR_VERSION = 0,
-            GAME_MINOR_VERSION = 17,
-            GAME_UPDATE_NUMBER = 1;
+            GAME_MINOR_VERSION = 18,
+            GAME_UPDATE_NUMBER = 0;
 
     private final static String GAME_DEV_STATE = "ALPHA";
 
     public final static String GAME_RELEASE_VERSION = GAME_DEV_STATE + " " + GAME_MAJOR_VERSION + "." + GAME_MINOR_VERSION + "."
             + GAME_UPDATE_NUMBER;
 
-    public final static String WINDOW_TITLE = "Tower Conquest " + GAME_RELEASE_VERSION;
+    public final static String WINDOW_TITLE = "Ascenion " + GAME_RELEASE_VERSION;
     public final static int WINDOW_WIDTH = 1280;
     public final static int WINDOW_HEIGHT = 720;
 
@@ -44,8 +45,8 @@ public class Globals {
     public final static Font ARIAL_15PTITALIC = new Font("Arial", Font.ITALIC, 15);
     public final static Font ARIAL_24PT = new Font("Arial", Font.PLAIN, 24);
     public final static Font ARIAL_18PT = new Font("Arial", Font.PLAIN, 18);
-    public final static Font ARIALBLACK_18P = new Font("Arial", Font.BOLD, 18); 
-    
+    public final static Font ARIAL_18PTBOLD = new Font("Arial", Font.BOLD, 18);
+
     public final static byte MAX_NAME_LENGTH = 15;
 
     private final static Random RNG = new Random();
@@ -198,7 +199,7 @@ public class Globals {
             STAT_PER_LEVEL = 7,
             SP_PER_LEVEL = 3;
 
-    public final static int NUM_PLAYER_ANIM_STATE = 8;
+    public final static int NUM_PLAYER_ANIM_STATE = 9;
     public final static byte PLAYER_ANIM_STATE_STAND = 0x00,
             PLAYER_ANIM_STATE_WALK = 0x01,
             PLAYER_ANIM_STATE_JUMP = 0x02,
@@ -206,10 +207,11 @@ public class Globals {
             PLAYER_ANIM_STATE_ATTACKBOW = 0x04,
             PLAYER_ANIM_STATE_BUFF = 0x05,
             PLAYER_ANIM_STATE_DEAD = 0x06,
-            PLAYER_ANIM_STATE_INVIS = 0x07;
+            PLAYER_ANIM_STATE_INVIS = 0x07,
+            PLAYER_ANIM_STATE_ROLL = 0x08;
 
     // Packet globals
-    public final static int PACKET_MAX_SIZE = 512;
+    public final static int PACKET_MAX_SIZE = 256;
     public final static int PACKET_BYTE = 1;
     public final static int PACKET_INT = 4;
     public final static int PACKET_LONG = 8;
@@ -242,10 +244,16 @@ public class Globals {
             DATA_PLAYER_GIVEDROP = 0x17,
             DATA_PLAYER_CREATE = 0x18;
 
+    public static final byte LOGIN_SUCCESS = 0x00,
+            LOGIN_FAIL_UID_IN_ROOM = 0x01,
+            LOGIN_FAIL_FULL_ROOM = 0x02,
+            LOGIN_FAIL_OUTSIDE_LEVEL_RANGE = 0x03;
+
     public final static BufferedImage[][] CHAR_SPRITE = new BufferedImage[NUM_PLAYER_ANIM_STATE][];
     public final static BufferedImage[] HUD = new BufferedImage[2];
+    public static BufferedImage TITLE;
 
-    public final static BufferedImage[] MENU_BG = new BufferedImage[5];
+    public final static BufferedImage[] MENU_BG = new BufferedImage[3];
     public final static BufferedImage[] MENU_SMOKE = new BufferedImage[1];
     public final static BufferedImage[] MENU_UPGRADEPARTICLE = new BufferedImage[4];
     public final static BufferedImage[] MENU_BUTTON = new BufferedImage[16];
@@ -259,11 +267,12 @@ public class Globals {
 
     public final static BufferedImage[] SKILL_ICON = new BufferedImage[Skill.NUM_SKILLS];
 
-    public final static byte NUM_BGM = 4,
+    public final static byte NUM_BGM = 5,
             BGM_MENU = 0x00,
             BGM_ARENA1 = 0x01,
             BGM_ARENA2 = 0x02,
-            BGM_ARENA3 = 0x03;
+            BGM_ARENA3 = 0x03,
+            BGM_TITLE = 0x04;
 
     public final static byte NUM_SFX = 9,
             SFX_SLASH = 0x00,
@@ -303,26 +312,31 @@ public class Globals {
 
     public static final byte NUMBER_TYPE_PLAYER = 0,
             NUMBER_TYPE_PLAYERCRIT = 1,
-            NUMBER_TYPE_MOB = 2,
-            NUMBER_TYPE_EXP = 3;
+            NUMBER_TYPE_MOB = 2;
+
+    public static final byte NOTIFICATION_EXP = 0,
+            NOTIFICATION_ITEMEQUIP = 1,
+            NOTIFICATION_ITEMUPGRADE = 2;
 
     static {
-        PLAYER_ANIM_FRAMES[PLAYER_ANIM_STATE_ATTACK] = 11;
+        PLAYER_ANIM_FRAMES[PLAYER_ANIM_STATE_ATTACK] = 7;
         PLAYER_ANIM_FRAMES[PLAYER_ANIM_STATE_ATTACKBOW] = 6;
-        PLAYER_ANIM_FRAMES[PLAYER_ANIM_STATE_STAND] = 6;
-        PLAYER_ANIM_FRAMES[PLAYER_ANIM_STATE_WALK] = 16;
+        PLAYER_ANIM_FRAMES[PLAYER_ANIM_STATE_STAND] = 4;
+        PLAYER_ANIM_FRAMES[PLAYER_ANIM_STATE_WALK] = 8;
         PLAYER_ANIM_FRAMES[PLAYER_ANIM_STATE_BUFF] = 7;
         PLAYER_ANIM_FRAMES[PLAYER_ANIM_STATE_DEAD] = 10;
-        PLAYER_ANIM_FRAMES[PLAYER_ANIM_STATE_JUMP] = 1;
+        PLAYER_ANIM_FRAMES[PLAYER_ANIM_STATE_ROLL] = 10;
+        PLAYER_ANIM_FRAMES[PLAYER_ANIM_STATE_JUMP] = 3;
         loadSound();
         loadGFX();
     }
 
     private static void loadSound() {
-        SOUND_BGM[BGM_MENU] = "theme.ogg";
+        SOUND_BGM[BGM_MENU] = "hero.ogg";
         SOUND_BGM[BGM_ARENA1] = "bgm/0.ogg";
         SOUND_BGM[BGM_ARENA2] = "bgm/1.ogg";
         SOUND_BGM[BGM_ARENA3] = "bgm/2.ogg";
+        SOUND_BGM[BGM_TITLE] = "Through the Forest in Midwinter.ogg";
 
         SOUND_SFX[SFX_SLASH] = "sfx/sword/slash/0.wav";
         SOUND_SFX[SFX_GASH] = "sfx/sword/gash/0.wav";
@@ -463,6 +477,9 @@ public class Globals {
                         case PLAYER_ANIM_STATE_JUMP:
                             folder = "jump";
                             break;
+                        case PLAYER_ANIM_STATE_ROLL:
+                            folder = "roll";
+                            break;
                     }
                     CHAR_SPRITE[state][frames] = Globals.loadTextureResource("sprites/character/" + folder + "/" + frames + ".png");
                 }
@@ -474,6 +491,8 @@ public class Globals {
         for (byte i = 0; i < MENU_BG.length; i++) {
             MENU_BG[i] = Globals.loadTextureResource("sprites/ui/menu/bg" + (i + 1) + ".png");
         }
+
+        TITLE = Globals.loadTextureResource("sprites/ui/menu/title.png");
 
         for (byte i = 0; i < MENU_BUTTON.length; i++) {
             MENU_BUTTON[i] = Globals.loadTextureResource("sprites/ui/menu/button" + (i + 1) + ".png");
@@ -495,12 +514,12 @@ public class Globals {
             SKILL_ICON[i] = Globals.loadTextureResource("sprites/skillicon/" + i + ".png");
         }
 
-        for (byte i = 0; i < 10; i++) {
-            DAMAGE_FONT[NUMBER_TYPE_MOB][i] = Globals.loadTextureResource("sprites/number/boss/" + i + ".png");
-            DAMAGE_FONT[NUMBER_TYPE_PLAYER][i] = Globals.loadTextureResource("sprites/number/player/" + i + ".png");
-            DAMAGE_FONT[NUMBER_TYPE_PLAYERCRIT][i] = Globals.loadTextureResource("sprites/number/playercrit/" + i + ".png");
-            DAMAGE_FONT[NUMBER_TYPE_EXP][i] = Globals.loadTextureResource("sprites/number/exp/" + i + ".png");
-        }
+//        for (byte i = 0; i < 10; i++) {
+//            DAMAGE_FONT[NUMBER_TYPE_MOB][i] = Globals.loadTextureResource("sprites/number/boss/" + i + ".png");
+//            DAMAGE_FONT[NUMBER_TYPE_PLAYER][i] = Globals.loadTextureResource("sprites/number/player/" + i + ".png");
+//            DAMAGE_FONT[NUMBER_TYPE_PLAYERCRIT][i] = Globals.loadTextureResource("sprites/number/playercrit/" + i + ".png");
+//            DAMAGE_FONT[NUMBER_TYPE_EXP][i] = Globals.loadTextureResource("sprites/number/exp/" + i + ".png");
+//        }
         EXP_WORD[0] = Globals.loadTextureResource("sprites/number/exp/exp.png");
     }
 

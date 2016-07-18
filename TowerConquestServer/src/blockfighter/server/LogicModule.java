@@ -5,8 +5,6 @@ import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.proj.Projectile;
 import blockfighter.server.maps.GameMap;
 import blockfighter.server.maps.GameMapArena;
-import blockfighter.server.maps.GameMapFloor1;
-import blockfighter.server.net.PacketSender;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Map;
@@ -25,7 +23,6 @@ import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 public class LogicModule extends Thread {
 
     private long currentTime = 0;
-    private static PacketSender sender;
     private byte room = -1;
 
     private ConcurrentHashMap<Byte, Player> players = new ConcurrentHashMap<>(Globals.SERVER_MAX_PLAYERS, 0.9f,
@@ -36,6 +33,7 @@ public class LogicModule extends Thread {
     private GameMap map;
     private int projMaxKeys = 500;
     private int mobMaxKeys = 255;
+    private int minLevel = 0, maxLevel = 0;
 
     private ConcurrentLinkedQueue<Byte> playerKeys = new ConcurrentLinkedQueue<>();
     private ConcurrentLinkedQueue<Integer> projKeys = new ConcurrentLinkedQueue<>();
@@ -68,25 +66,19 @@ public class LogicModule extends Thread {
      */
     public LogicModule(final byte r) {
         this.room = r;
-        if (r == 0) {
-            this.map = new GameMapArena();
-        } else {
-            this.map = new GameMapFloor1();
-        }
         reset();
-    }
-
-    /**
-     * Set a reference to the Server PacketSender.
-     *
-     * @param ps Server PacketSender
-     */
-    public static void setPacketSender(final PacketSender ps) {
-        sender = ps;
     }
 
     public long getTime() {
         return this.currentTime;
+    }
+
+    public boolean isFull() {
+        return this.playerKeys.isEmpty();
+    }
+
+    public boolean isInLevelRange(int level) {
+        return level >= this.minLevel && level <= this.maxLevel;
     }
 
     private void resetKeys() {
@@ -119,11 +111,13 @@ public class LogicModule extends Thread {
 
         this.projMaxKeys = 500;
         this.resetStartTime = 0;
-        if (this.room == 0) {
-            this.setMap(new GameMapArena());
-        } else {
-            this.setMap(new GameMapFloor1());
-        }
+        //if (this.room == 0) {
+        this.setMap(new GameMapArena());
+        this.setMinLevel(this.room * 10 + 1);
+        this.setMaxLevel((this.room + 1) * 10);
+        //} else {
+        //    this.setMap(new GameMapFloor1());
+        //}
         resetKeys();
         this.map.spawnMapMobs(this);
     }
@@ -207,10 +201,6 @@ public class LogicModule extends Thread {
                 player.getValue().join();
                 if (!(player.getValue().isConnected())) {
                     remove.add(player.getValue().getKey());
-                    final byte[] bytes = new byte[2];
-                    bytes[0] = Globals.DATA_PLAYER_DISCONNECT;
-                    bytes[1] = player.getValue().getKey();
-                    sender.sendAll(bytes, this.room);
                 }
             } catch (final InterruptedException ex) {
                 Globals.logError(ex.getLocalizedMessage(), ex, true);
@@ -618,5 +608,19 @@ public class LogicModule extends Thread {
      */
     public void setMap(GameMap map) {
         this.map = map;
+    }
+
+    /**
+     * @param minLevel the minLevel to set
+     */
+    public void setMinLevel(int minLevel) {
+        this.minLevel = minLevel;
+    }
+
+    /**
+     * @param maxLevel the maxLevel to set
+     */
+    public void setMaxLevel(int maxLevel) {
+        this.maxLevel = maxLevel;
     }
 }

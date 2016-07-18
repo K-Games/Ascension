@@ -50,8 +50,8 @@ public class SkillSwordPhantom extends Skill {
                 }
                 if (!playersInRange.isEmpty()) {
                     target = playersInRange.get(Globals.rng(playersInRange.size()));
-                    double teleX = (Globals.rng(2) == 0) ? target.getHitbox().x + target.getHitbox().width + 100 : target.getHitbox().x - 100;
-                    player.setPos(teleX, target.getY());
+                    double teleX = (Globals.rng(2) == 0) ? target.getHitbox().x + target.getHitbox().width + 100 + Globals.rng(50) : target.getHitbox().x - 100 - Globals.rng(50);
+                    player.setPos(teleX, target.getY() - 10 * Globals.rng(5));
                     if (target.getX() < player.getX()) {
                         player.setFacing(Globals.LEFT);
                     } else if (target.getX() > player.getX()) {
@@ -72,8 +72,8 @@ public class SkillSwordPhantom extends Skill {
                 }
                 if (!enemyInRange.isEmpty()) {
                     target = enemyInRange.get(Globals.rng(enemyInRange.size()));
-                    double teleX = (Globals.rng(2) == 0) ? target.getHitbox().x + target.getHitbox().width + 100 : target.getHitbox().x - 100;
-                    player.setPos(teleX, target.getY());
+                    double teleX = (Globals.rng(2) == 0) ? target.getHitbox().x + target.getHitbox().width + 100 + Globals.rng(50) : target.getHitbox().x - 100 - Globals.rng(50);
+                    player.setPos(teleX, target.getY() - 10 * Globals.rng(5));
                     if (target.getX() < player.getX()) {
                         player.setFacing(Globals.LEFT);
                     } else if (target.getX() > player.getX()) {

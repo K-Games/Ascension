@@ -60,6 +60,15 @@ public abstract class GameMap {
         return true;
     }
 
+    public boolean isWithinDistanceToGround(final double x, final double y, final double distance) {
+        for (final Rectangle2D.Double platform : this.platforms) {
+            if (platform.intersects(x - 25, y, 50, distance)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * Return the nearest valid Y
      *

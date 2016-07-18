@@ -58,15 +58,12 @@ public class GameMapArena extends GameMap {
                 throw new NullPointerException("Failed to load platform texture. Map " + getMapID() + " Plat " + i + ".");
             }
         }
-        int random = Globals.rng(3);
+        int random = Globals.rng(2);
         switch (random) {
             case 0:
                 this.bgm = Globals.BGM_ARENA1;
                 break;
             case 1:
-                this.bgm = Globals.BGM_ARENA2;
-                break;
-            case 2:
                 this.bgm = Globals.BGM_ARENA3;
                 break;
         }

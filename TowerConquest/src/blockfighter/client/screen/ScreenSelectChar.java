@@ -20,43 +20,50 @@ import javax.swing.SwingUtilities;
  */
 public class ScreenSelectChar extends ScreenMenu {
 
-    private final SaveData[] charsData = new SaveData[3];
+    private static final SaveData[] CHARACTER_DATA = new SaveData[3];
 
     private boolean createPrompt = false;
-    private final JTextField CREATE_NAMEFIELD = new JTextField();
+    private static final JTextField CREATE_NAMEFIELD = new JTextField();
     private String CREATE_ERR = "";
 
-    private final Rectangle[] promptBox = new Rectangle[2];
-    private final Rectangle[] selectBox = new Rectangle[3];
+    private static final Rectangle[] PROMPT_BOX = new Rectangle[2];
+    private static final Rectangle[] SELECT_BOX = new Rectangle[3];
 
     private byte selectNum = -1;
 
-    public ScreenSelectChar() {
+    static {
         final FocusHandler focusHandler = new FocusHandler();
-        this.CREATE_NAMEFIELD.addFocusListener(focusHandler);
-        this.CREATE_NAMEFIELD.setBounds(440, 300, 400, 50);
-        this.CREATE_NAMEFIELD.setFont(Globals.ARIAL_30PT);
-        this.CREATE_NAMEFIELD.setForeground(Color.WHITE);
-        this.CREATE_NAMEFIELD.setOpaque(false);
-        this.CREATE_NAMEFIELD.setCaretColor(Color.WHITE);
-        this.CREATE_NAMEFIELD.setBorder(BorderFactory.createEmptyBorder());
-
-        loadSaveData();
-        for (byte i = 0; i < this.charsData.length; i++) {
-            this.selectBox[i] = new Rectangle(20 + 420 * i, 60, 400, 500);
+        CREATE_NAMEFIELD.addFocusListener(focusHandler);
+        CREATE_NAMEFIELD.setBounds(440, 300, 400, 50);
+        CREATE_NAMEFIELD.setFont(Globals.ARIAL_30PT);
+        CREATE_NAMEFIELD.setForeground(Color.WHITE);
+        CREATE_NAMEFIELD.setOpaque(false);
+        CREATE_NAMEFIELD.setCaretColor(Color.WHITE);
+        CREATE_NAMEFIELD.setBorder(BorderFactory.createEmptyBorder());
+        for (byte i = 0; i < CHARACTER_DATA.length; i++) {
+            SELECT_BOX[i] = new Rectangle(20 + 420 * i, 60, 400, 500);
         }
 
-        this.promptBox[0] = new Rectangle(401, 400, 214, 112);
-        this.promptBox[1] = new Rectangle(665, 400, 214, 112);
+        PROMPT_BOX[0] = new Rectangle(401, 400, 214, 112);
+        PROMPT_BOX[1] = new Rectangle(665, 400, 214, 112);
+    }
+
+    public ScreenSelectChar(final boolean title) {
+        super(title);
+        loadSaveData();
+    }
+
+    public ScreenSelectChar() {
+        this(false);
     }
 
     private void loadSaveData() {
-        for (byte i = 0; i < this.charsData.length; i++) {
+        for (byte i = 0; i < CHARACTER_DATA.length; i++) {
             try {
-                this.charsData[i] = SaveData.readData(i);
+                CHARACTER_DATA[i] = SaveData.readData(i);
             } catch (final Exception e) {
                 System.err.println("Corrupted savefile: " + i);
-                this.charsData[i] = null;
+                CHARACTER_DATA[i] = null;
             }
         }
     }
@@ -76,7 +83,7 @@ public class ScreenSelectChar extends ScreenMenu {
                 RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
 
         for (int j = 0; j < 3; j++) {
-            if (this.charsData[j] == null) {
+            if (CHARACTER_DATA[j] == null) {
                 g.setFont(Globals.ARIAL_30PT);
                 drawStringOutline(g, "Create", 170 + 420 * j, 260, 2);
                 drawStringOutline(g, "New", 185 + 420 * j, 310, 2);
@@ -86,11 +93,11 @@ public class ScreenSelectChar extends ScreenMenu {
                 g.drawString("New", 185 + 420 * j, 310);
                 g.drawString("Character", 150 + 420 * j, 360);
             } else {
-                final double[] stats = this.charsData[j].getBaseStats(), bonus = this.charsData[j].getBonusStats();
+                final double[] stats = CHARACTER_DATA[j].getBaseStats(), bonus = CHARACTER_DATA[j].getBonusStats();
                 g.setFont(Globals.ARIAL_30PT);
-                drawStringOutline(g, this.charsData[j].getPlayerName(), 120 + 420 * j, 380, 2);
+                drawStringOutline(g, CHARACTER_DATA[j].getPlayerName(), 120 + 420 * j, 380, 2);
                 g.setColor(Color.WHITE);
-                g.drawString(this.charsData[j].getPlayerName(), 120 + 420 * j, 380);
+                g.drawString(CHARACTER_DATA[j].getPlayerName(), 120 + 420 * j, 380);
 
                 g.setFont(Globals.ARIAL_24PT);
                 drawStringOutline(g, "Level: " + (int) stats[Globals.STAT_LEVEL], 120 + 420 * j, 415, 2);
@@ -108,7 +115,7 @@ public class ScreenSelectChar extends ScreenMenu {
                         475);
                 g.drawString("Spirit: " + (int) stats[Globals.STAT_SPIRIT] + " + " + (int) bonus[Globals.STAT_SPIRIT], 120 + 420 * j, 505);
                 if (Globals.DEBUG_MODE) {
-                    g.drawString("ID: " + this.charsData[j].getUniqueID(), 120 + 420 * j, 535);
+                    g.drawString("ID: " + CHARACTER_DATA[j].getUniqueID(), 120 + 420 * j, 535);
                 }
             }
         }
@@ -160,19 +167,19 @@ public class ScreenSelectChar extends ScreenMenu {
 
     private void mouseReleased_Create(final MouseEvent e) {
         panel.requestFocus();
-        for (byte i = 0; i < this.promptBox.length; i++) {
-            if (this.promptBox[i].contains(e.getPoint())) {
+        for (byte i = 0; i < PROMPT_BOX.length; i++) {
+            if (PROMPT_BOX[i].contains(e.getPoint())) {
                 if (i == 0) {
-                    this.CREATE_NAMEFIELD.setText(this.CREATE_NAMEFIELD.getText().trim());
-                    if (this.CREATE_NAMEFIELD.getText().length() <= 15 && this.CREATE_NAMEFIELD.getText().length() > 0) {
-                        final SaveData newChar = new SaveData(this.CREATE_NAMEFIELD.getText().trim(), this.selectNum);
+                    CREATE_NAMEFIELD.setText(CREATE_NAMEFIELD.getText().trim());
+                    if (CREATE_NAMEFIELD.getText().length() <= 15 && CREATE_NAMEFIELD.getText().length() > 0) {
+                        final SaveData newChar = new SaveData(CREATE_NAMEFIELD.getText().trim(), this.selectNum);
                         newChar.newCharacter(Globals.TEST_MAX_LEVEL);
                         SaveData.saveData(this.selectNum, newChar);
                         loadSaveData();
                     } else {
-                        if (this.CREATE_NAMEFIELD.getText().length() <= 0) {
+                        if (CREATE_NAMEFIELD.getText().length() <= 0) {
                             this.CREATE_ERR = "Name must have at least 1 character!";
-                        } else if (this.CREATE_NAMEFIELD.getText().length() > 15) {
+                        } else if (CREATE_NAMEFIELD.getText().length() > 15) {
                             this.CREATE_ERR = "Name must be less than 15 characters!";
                         }
                         break;
@@ -181,9 +188,9 @@ public class ScreenSelectChar extends ScreenMenu {
                 this.createPrompt = false;
                 this.selectNum = -1;
                 this.CREATE_ERR = "";
-                this.CREATE_NAMEFIELD.setText("");
+                CREATE_NAMEFIELD.setText("");
                 if (panel != null) {
-                    panel.remove(this.CREATE_NAMEFIELD);
+                    panel.remove(CREATE_NAMEFIELD);
                     panel.revalidate();
                 }
                 break;
@@ -203,28 +210,31 @@ public class ScreenSelectChar extends ScreenMenu {
 
     @Override
     public void mouseReleased(final MouseEvent e) {
+        if (this.fadeIn && !this.finishedFadeIn) {
+            return;
+        }
         if (SwingUtilities.isLeftMouseButton(e)) {
             if (this.createPrompt) {
                 mouseReleased_Create(e);
                 return;
             }
-            for (byte i = 0; i < this.selectBox.length; i++) {
-                if (this.selectBox[i].contains(e.getPoint())) {
-                    if (this.charsData[i] == null) {
+            for (byte i = 0; i < SELECT_BOX.length; i++) {
+                if (SELECT_BOX[i].contains(e.getPoint())) {
+                    if (CHARACTER_DATA[i] == null) {
                         this.createPrompt = true;
-                        this.CREATE_NAMEFIELD.setBounds(440, 300, 400, 50);
-                        this.CREATE_NAMEFIELD.setFont(Globals.ARIAL_30PT);
-                        this.CREATE_NAMEFIELD.setForeground(Color.WHITE);
-                        this.CREATE_NAMEFIELD.setOpaque(false);
-                        this.CREATE_NAMEFIELD.setBorder(BorderFactory.createEmptyBorder());
+                        CREATE_NAMEFIELD.setBounds(440, 300, 400, 50);
+                        CREATE_NAMEFIELD.setFont(Globals.ARIAL_30PT);
+                        CREATE_NAMEFIELD.setForeground(Color.WHITE);
+                        CREATE_NAMEFIELD.setOpaque(false);
+                        CREATE_NAMEFIELD.setBorder(BorderFactory.createEmptyBorder());
                         if (panel != null) {
-                            panel.add(this.CREATE_NAMEFIELD);
+                            panel.add(CREATE_NAMEFIELD);
                             panel.revalidate();
                         }
                         this.selectNum = i;
                         break;
                     } else {
-                        logic.setSelectedChar(this.charsData[i]);
+                        logic.setSelectedChar(CHARACTER_DATA[i]);
                         logic.setScreen(new ScreenStats());
                     }
                 }
@@ -255,7 +265,7 @@ public class ScreenSelectChar extends ScreenMenu {
     @Override
     public void unload() {
         if (panel != null) {
-            panel.remove(this.CREATE_NAMEFIELD);
+            panel.remove(CREATE_NAMEFIELD);
         }
     }
 

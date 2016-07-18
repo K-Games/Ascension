@@ -23,6 +23,8 @@ import java.util.concurrent.ExecutorService;
  */
 public abstract class Screen implements KeyListener, MouseListener, MouseMotionListener, FocusListener {
 
+    protected static final Color SKILL_BOX_BG_COLOR = new Color(0, 0, 0, 115);
+
     public abstract void update();
 
     public abstract void draw(Graphics2D g);
@@ -92,6 +94,10 @@ public abstract class Screen implements KeyListener, MouseListener, MouseMotionL
     @Override
     public void focusLost(FocusEvent e) {
         logic.disableSound();
+    }
+
+    public byte getBGM() {
+        return -1;
     }
 
     public int getNextParticleKey() {

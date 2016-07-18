@@ -22,16 +22,15 @@ public class IngameNumber extends Thread {
     private final double speedY;
     private final int number;
     private long startTime = 0;
-    private long lastUpdateTime = 0;
-    private int duration = 700;
+    private final int duration = 700;
 
     public IngameNumber(final int num, final byte t, final Point loc) {
         this.startTime = logic.getTime();
         this.number = num;
         this.type = t;
         this.x = loc.x;
-        this.y = loc.y;
-        this.speedY = -3;
+        this.y = loc.y - 18;
+        this.speedY = -2;
         this.speedX = 0;
         setDaemon(true);
     }
@@ -42,11 +41,8 @@ public class IngameNumber extends Thread {
 
     @Override
     public void run() {
-        if (Globals.nsToMs(logic.getTime() - lastUpdateTime) >= Globals.INGAME_NUMBER_UPDATE) {
-            this.y += this.speedY;
-            this.x += this.speedX;
-            lastUpdateTime = logic.getTime();
-        }
+        this.y += this.speedY;
+        this.x += this.speedX;
     }
 
     public boolean isExpired() {
@@ -55,13 +51,12 @@ public class IngameNumber extends Thread {
 
     public void draw(final Graphics2D g) {
         //final char[] decimalArray = Integer.toString(this.number).toCharArray();
-        g.setFont(Globals.ARIALBLACK_18P);
+        g.setFont(Globals.ARIAL_18PTBOLD);
 
         //for (int i = 0; i < decimalArray.length; i++) {
         //    g.drawImage(Globals.DAMAGE_FONT[this.type][decimalArray[i] - 48], (int) (this.x + i * 17), (int) this.y, null);
         //}
-        String output = (this.type == Globals.NUMBER_TYPE_EXP)
-                ? Integer.toString(this.number) + "EXP" : Integer.toString(this.number);
+        String output = Integer.toString(this.number);
 
         int outputWidth = g.getFontMetrics().stringWidth(output);
         for (int i = 0; i < 2; i++) {
@@ -78,9 +73,6 @@ public class IngameNumber extends Thread {
                 break;
             case Globals.NUMBER_TYPE_MOB:
                 g.setColor(Color.MAGENTA);
-                break;
-            case Globals.NUMBER_TYPE_EXP:
-                g.setColor(Color.YELLOW);
                 break;
         }
         g.drawString(output, (float) this.x - outputWidth / 2, (float) this.y);

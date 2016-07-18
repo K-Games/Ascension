@@ -3,7 +3,6 @@ package blockfighter.client.entities.particles;
 import blockfighter.client.Globals;
 import static blockfighter.client.entities.particles.Particle.logic;
 import blockfighter.client.entities.player.Player;
-import blockfighter.client.screen.ScreenIngame;
 import java.awt.Point;
 
 public class ParticleSwordTauntBuffEmitter extends Particle {
@@ -26,10 +25,8 @@ public class ParticleSwordTauntBuffEmitter extends Particle {
                 this.y = p.y;
             }
             for (int i = 0; i < 2; i++) {
-                if (logic.getScreen() instanceof ScreenIngame) {
-                    final ParticleSwordTauntAuraParticle b = new ParticleSwordTauntAuraParticle(this.x, this.y, this.facing);
-                    logic.getScreen().addParticle(b);
-                }
+                final ParticleSwordTauntAuraParticle b = new ParticleSwordTauntAuraParticle(this.x, this.y, this.facing);
+                logic.getScreen().addParticle(b);
             }
             lastParticleTime = logic.getTime();
         }

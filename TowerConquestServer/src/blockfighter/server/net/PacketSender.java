@@ -3,12 +3,9 @@ package blockfighter.server.net;
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.player.Player;
-import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
+import com.esotericsoftware.kryonet.Server;
+import com.esotericsoftware.kryonet.Connection;
 import java.util.Map;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -18,7 +15,7 @@ import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 /**
  * The server Packet Sender.
  * <p>
- * <div>Sends bytes packaged in a DatagramPacket via a DatagramSocket.</div>
+ * <div>Sends data packaged in a DatagramPacket via a DatagramSocket.</div>
  * <p>
  * The Packet Sender does not create the datagram packet. DatagramPackets are created outside this class. Client-side Packet Sender
  * <b>DOES</b> construct the datagram packet.
@@ -29,14 +26,13 @@ import org.apache.commons.lang3.concurrent.BasicThreadFactory;
  *
  * @author Ken Kwan
  */
-public class PacketSender implements Runnable {
+public class PacketSender {
 
     private static LogicModule[] logic;
-    private static DatagramSocket socket = null;
-    private int bytesSent = 0;
-    private final ConcurrentLinkedQueue<ServerPacket> outPacketQueue = new ConcurrentLinkedQueue<>();
+    private static Server server;
+    private int dataSent = 0;
 
-    private static final ExecutorService SENDER_THREAD_POOL = new ThreadPoolExecutor(0, Globals.SERVER_PACKETSENDER_THREADS,
+    private static final ExecutorService SENDER_THREAD_POOL = new ThreadPoolExecutor(Globals.SERVER_PACKETSENDER_THREADS, Globals.SERVER_PACKETSENDER_THREADS,
             10L, TimeUnit.SECONDS,
             new LinkedBlockingQueue<>(),
             new BasicThreadFactory.Builder()
@@ -45,44 +41,33 @@ public class PacketSender implements Runnable {
             .priority(Thread.MAX_PRIORITY)
             .build());
 
-    ;
-
-    @Override
-    public void run() {
-        while (!this.outPacketQueue.isEmpty()) {
-            final ServerPacket p = this.outPacketQueue.poll();
-            if (p != null) {
-                SENDER_THREAD_POOL.execute(() -> {
-                    try {
-                        if ((p.getPlayer() == null && p.getAddress() != null) || p.getPlayer().isConnected()) {
-                            socket.send(p.getDatagram());
-                        }
-                    } catch (final IOException ex) {
-                        if (p.getPlayer() != null) {
-                            p.getPlayer().disconnect();
-                            Globals.log(PacketSender.class.getSimpleName(), "Disconnecting <" + p.getPlayer().getPlayerName() + "> due to unreachable network.", Globals.LOG_TYPE_ERR, true);
-                        }
-                        Globals.logError(ex.getLocalizedMessage(), ex, true);
-                    }
-                });
-            }
-        }
-    }
-
+//    @Override
+//    public void run() {
+//        while (!this.outPacketQueue.isEmpty()) {
+//            final ServerPacket p = this.outPacketQueue.poll();
+//            if (p != null) {
+//                SENDER_THREAD_POOL.execute(() -> {
+//                    if ((p.getPlayer() == null && p.getConnection() != null) || p.getPlayer().isConnected()) {
+//                        server.sendToTCP(p.getConnection().getID(), p.getData());
+//                    }
+//                });
+//            }
+//        }
+//    }
     /**
      * Reset sent byte count.
      */
     public void resetByte() {
-        this.bytesSent = 0;
+        this.dataSent = 0;
     }
 
     /**
-     * Return number of bytes sent so far
+     * Return number of data sent so far
      *
-     * @return Number of bytes sent
+     * @return Number of data sent
      */
     public int getBytes() {
-        return this.bytesSent;
+        return this.dataSent;
     }
 
     /**
@@ -99,42 +84,45 @@ public class PacketSender implements Runnable {
      *
      * @param s The DatagramSocket that was initialized in the Packet Receiver
      */
-    public static void setSocket(final DatagramSocket s) {
-        socket = s;
+    public static void setServer(final Server s) {
+        server = s;
     }
 
     /**
-     * Send bytes to a specific player.
+     * Send data to a specific player.
      * <p>
      * Get destination IP address and port from the Player object.
      * </p>
      *
-     * @param bytes Data to be sent in byte array
-     * @param address IP address of destination player
-     * @param port Port of destination player
+     * @param data Data to be sent in byte array
+     * @param c Connection to send to
      */
-    public void sendAddress(final byte[] bytes, final InetAddress address, final int port) {
-        final DatagramPacket packet = createPacket(bytes, address, port);
-        this.outPacketQueue.add(new ServerPacket(packet, address));
-        //socket.send(packet);
+    public static void sendConnection(final byte[] data, final Connection c) {
+        server.sendToTCP(c.getID(), data);
+        //this.outPacketQueue.add(new ServerPacket(data, c));
     }
 
-    public void sendPlayer(final byte[] bytes, final Player p) {
-        final DatagramPacket packet = createPacket(bytes, p.getAddress(), p.getPort());
-        this.outPacketQueue.add(new ServerPacket(packet, p));
+    public static void sendPlayer(final byte[] data, final Player p) {
+        if (p.isConnected()) {
+            try {
+                server.sendToTCP(p.getConnection().getID(), data);
+            } catch (Exception e) {
+            }
+        }
+        //this.outPacketQueue.add(new ServerPacket(data, p));
     }
 
     /**
-     * Queue bytes to be sent to every connected player.
+     * Queue data to be sent to every connected player.
      *
-     * @param bytes Data to be sent in byte array
+     * @param data Data to be sent in byte array
      * @param room Room(Logic Module index) that contains the players
      */
-    public void sendAll(final byte[] bytes, final byte room) {
-        for (final Map.Entry<Byte, Player> pEntry : logic[room].getPlayers().entrySet()) {
-            final DatagramPacket packet = createPacket(bytes, pEntry.getValue());
-            this.outPacketQueue.add(new ServerPacket(packet, pEntry.getValue()));
+    public static void sendAll(final byte[] data, final byte room) {
+        for (final Map.Entry<Byte, Player> pEntry : logic[Globals.SERVER_ROOMS.get(room)].getPlayers().entrySet()) {
+            sendPlayer(data, pEntry.getValue());
         }
+//        server.sendToAllTCP(data);
     }
 
     /**
@@ -142,19 +130,10 @@ public class PacketSender implements Runnable {
      *
      * @param room Room(Logic Module index) which is broadcasting the all player update.
      */
-    public void broadcastAllPlayersUpdate(final byte room) {
+    public static void broadcastAllPlayersUpdate(final byte room) {
         for (final Map.Entry<Byte, Player> pEntry : logic[room].getPlayers().entrySet()) {
             final Player player = pEntry.getValue();
             player.sendData();
         }
     }
-
-    private DatagramPacket createPacket(final byte[] bytes, final InetAddress address, final int port) {
-        return new DatagramPacket(bytes, bytes.length, address, port);
-    }
-
-    private DatagramPacket createPacket(final byte[] bytes, final Player p) {
-        return createPacket(bytes, p.getAddress(), p.getPort());
-    }
-
 }

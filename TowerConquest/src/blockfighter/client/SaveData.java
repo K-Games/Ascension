@@ -10,6 +10,7 @@ import blockfighter.client.entities.player.skills.SkillBowPower;
 import blockfighter.client.entities.player.skills.SkillBowRapid;
 import blockfighter.client.entities.player.skills.SkillBowStorm;
 import blockfighter.client.entities.player.skills.SkillBowVolley;
+import blockfighter.client.entities.player.skills.SkillPassive11;
 import blockfighter.client.entities.player.skills.SkillPassive12;
 import blockfighter.client.entities.player.skills.SkillPassiveBarrier;
 import blockfighter.client.entities.player.skills.SkillPassiveBowMastery;
@@ -38,7 +39,6 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -102,7 +102,7 @@ public class SaveData {
         this.skills[Skill.PASSIVE_BOWMASTERY] = new SkillPassiveBowMastery();
         this.skills[Skill.PASSIVE_WILLPOWER] = new SkillPassiveWillpower();
         this.skills[Skill.PASSIVE_TACTICAL] = new SkillPassiveTactical();
-        this.skills[Skill.PASSIVE_REVIVE] = new SkillPassiveRevive();
+        this.skills[Skill.PASSIVE_11] = new SkillPassive11();
         this.skills[Skill.PASSIVE_SHADOWATTACK] = new SkillPassiveShadowAttack();
         this.skills[Skill.PASSIVE_12] = new SkillPassive12();
     }
@@ -125,8 +125,7 @@ public class SaveData {
             addItem(new ItemUpgrade(ItemUpgrade.ITEM_TOME, (int) this.baseStats[Globals.STAT_LEVEL]));
         }
 
-        for (final Map.Entry<Integer, Integer> itemEntry : ITEM_CODES.entrySet()) {
-            final int itemCode = itemEntry.getValue();
+        for (final int itemCode : ITEM_CODES) {
             final ItemEquip startEq = new ItemEquip(itemCode, this.baseStats[Globals.STAT_LEVEL], Globals.TEST_MAX_LEVEL);
             addItem(startEq);
         }
@@ -332,7 +331,7 @@ public class SaveData {
             Globals.STAT_DEFENSE,
             Globals.STAT_SPIRIT,
             Globals.STAT_SKILLPOINTS};
-        
+
         temp = new byte[4];
         for (final int i : statIDs) {
             System.arraycopy(data, pos, temp, 0, temp.length);
@@ -495,19 +494,15 @@ public class SaveData {
         return this.uniqueID;
     }
 
-    public void addDrops(final int lvl) {
-        for (int i = 1; i <= 3; i++) {
-            if (Globals.rng(100) < 30 * i) {
-                addItem(new ItemUpgrade(1, lvl + Globals.rng(6)));
-            }
+    public void addDrops(final int lvl, final int dropItemCode) {
+        if (ItemUpgrade.isValidItem(dropItemCode)) {
+            addItem(new ItemUpgrade(dropItemCode, lvl + Globals.rng(6)));
+            return;
         }
 
-        for (final Map.Entry<Integer, Integer> itemEntry : ITEM_CODES.entrySet()) {
-            final int itemCode = itemEntry.getValue();
-            if (Globals.rng(100) < 50) {
-                final ItemEquip e = new ItemEquip(itemCode, lvl, Globals.rng(100) < 20);
-                addItem(e);
-            }
+        if (ItemEquip.isValidItem(dropItemCode)) {
+            final ItemEquip e = new ItemEquip(dropItemCode, lvl, Globals.rng(100) < 20);
+            addItem(e);
         }
     }
 

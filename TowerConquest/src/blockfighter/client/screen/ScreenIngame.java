@@ -4,53 +4,14 @@ import blockfighter.client.Globals;
 import blockfighter.client.SaveData;
 import blockfighter.client.entities.ingamenumber.IngameNumber;
 import blockfighter.client.entities.items.ItemEquip;
+import blockfighter.client.entities.items.ItemUpgrade;
 import blockfighter.client.entities.mob.Mob;
-import blockfighter.client.entities.particles.Particle;
-import blockfighter.client.entities.particles.ParticleBloodEmitter;
-import blockfighter.client.entities.particles.ParticleBowArc;
-import blockfighter.client.entities.particles.ParticleBowFrostArrow;
-import blockfighter.client.entities.particles.ParticleBowPower;
-import blockfighter.client.entities.particles.ParticleBowPowerCharge;
-import blockfighter.client.entities.particles.ParticleBowRapid;
-import blockfighter.client.entities.particles.ParticleBowRapid2;
-import blockfighter.client.entities.particles.ParticleBowStormEmitter;
-import blockfighter.client.entities.particles.ParticleBowVolleyArrow;
-import blockfighter.client.entities.particles.ParticleBowVolleyBow;
-import blockfighter.client.entities.particles.ParticleBowVolleyBuffEmitter;
-import blockfighter.client.entities.particles.ParticleBurnBuffEmitter;
-import blockfighter.client.entities.particles.ParticlePassiveBarrier;
-import blockfighter.client.entities.particles.ParticlePassiveResist;
-import blockfighter.client.entities.particles.ParticlePassiveShadowAttack;
-import blockfighter.client.entities.particles.ParticleShieldCharge;
-import blockfighter.client.entities.particles.ParticleShieldDashBuffEmitter;
-import blockfighter.client.entities.particles.ParticleShieldDashEmitter;
-import blockfighter.client.entities.particles.ParticleShieldFortify;
-import blockfighter.client.entities.particles.ParticleShieldFortifyEmitter;
-import blockfighter.client.entities.particles.ParticleShieldIron;
-import blockfighter.client.entities.particles.ParticleShieldIronAlly;
-import blockfighter.client.entities.particles.ParticleShieldReflectCast;
-import blockfighter.client.entities.particles.ParticleShieldReflectEmitter;
-import blockfighter.client.entities.particles.ParticleShieldReflectHit;
-import blockfighter.client.entities.particles.ParticleShieldToss;
-import blockfighter.client.entities.particles.ParticleSwordCinder;
-import blockfighter.client.entities.particles.ParticleSwordGash;
-import blockfighter.client.entities.particles.ParticleSwordGash2;
-import blockfighter.client.entities.particles.ParticleSwordGash3;
-import blockfighter.client.entities.particles.ParticleSwordGash4;
-import blockfighter.client.entities.particles.ParticleSwordMulti;
-import blockfighter.client.entities.particles.ParticleSwordPhantom;
-import blockfighter.client.entities.particles.ParticleSwordPhantom2;
-import blockfighter.client.entities.particles.ParticleSwordSlash1;
-import blockfighter.client.entities.particles.ParticleSwordSlash2;
-import blockfighter.client.entities.particles.ParticleSwordSlash3;
-import blockfighter.client.entities.particles.ParticleSwordSlashBuffEmitter;
-import blockfighter.client.entities.particles.ParticleSwordTaunt;
-import blockfighter.client.entities.particles.ParticleSwordTauntAura;
-import blockfighter.client.entities.particles.ParticleSwordTauntBuffEmitter;
-import blockfighter.client.entities.particles.ParticleSwordVorpal;
+import blockfighter.client.entities.notification.Notification;
+import blockfighter.client.entities.particles.*;
 import blockfighter.client.entities.player.Player;
 import blockfighter.client.entities.player.skills.Skill;
 import blockfighter.client.maps.GameMap;
+import blockfighter.client.net.GameClient;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -74,6 +35,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 public class ScreenIngame extends Screen {
 
+    private final GameClient client;
     private final Rectangle2D.Double[] hotkeySlots = new Rectangle2D.Double[12];
     // Ingame Data
     private final ConcurrentLinkedQueue<byte[]> dataQueue = new ConcurrentLinkedQueue<>();
@@ -81,21 +43,23 @@ public class ScreenIngame extends Screen {
     private final ConcurrentHashMap<Byte, Player> players;
     private final ConcurrentHashMap<Byte, Mob> mobs = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Integer, Particle> particles = new ConcurrentHashMap<>(500, 0.9f, 1);
-    private final ConcurrentHashMap<Integer, IngameNumber> dmgNum = new ConcurrentHashMap<>(500, 0.9f, 1);
+    private final ConcurrentHashMap<Integer, IngameNumber> ingameNumber = new ConcurrentHashMap<>(500, 0.9f, 1);
+    private final ConcurrentLinkedQueue<Notification> notifications = new ConcurrentLinkedQueue<>();
 
-    private final ConcurrentLinkedQueue<Integer> dmgKeys = new ConcurrentLinkedQueue<>();
-    private int numDmgKeys = 500;
+    private final ConcurrentLinkedQueue<Integer> ingameNumKeys = new ConcurrentLinkedQueue<>();
+    private int numIngameNumKeys = 500;
 
     private double screenShakeX = 0, screenShakeY = 0;
     private boolean screenShake = false;
 
     private byte myKey = -1;
+    private Rectangle2D logoutBox;
 
     private long pingTime = 0;
     private int ping = 0;
-    private byte pID = 0;
+    private byte pingID = 0;
 
-    private long lastUpdateTime = 0, lastNumberUpdateTime = 0;
+    private long lastUpdateTime = 0;
     private long lastRequestTime = 50;
     private long lastQueueTime = 0;
     private long lastPingTime = 0;
@@ -109,7 +73,8 @@ public class ScreenIngame extends Screen {
 
     private int drawInfoHotkey = -1;
 
-    public ScreenIngame(final byte i, final byte numPlayer, final GameMap m) {
+    public ScreenIngame(final byte i, final byte numPlayer, final GameMap m, final GameClient cl) {
+        this.client = cl;
         this.myKey = i;
         this.c = logic.getSelectedChar();
         this.players = new ConcurrentHashMap<>(numPlayer);
@@ -124,7 +89,11 @@ public class ScreenIngame extends Screen {
             }
         }
         this.map = m;
-        logic.playBGM(this.map.getBGM());
+    }
+
+    @Override
+    public byte getBGM() {
+        return this.map.getBGM();
     }
 
     @Override
@@ -138,25 +107,23 @@ public class ScreenIngame extends Screen {
 
         if (now - this.lastSendKeyTime >= Globals.SEND_KEYDOWN_UPDATE) {
             for (byte i = 0; i < this.moveKeyDown.length; i++) {
-                logic.sendMoveKey(this.myKey, i, this.moveKeyDown[i]);
+                client.sendMoveKey(this.myKey, i, this.moveKeyDown[i]);
             }
             for (int i = 0; i < this.skillKeyDown.length; i++) {
                 if (this.skillKeyDown[i]) {
-                    logic.sendUseSkill(this.myKey, this.c.getHotkeys()[i].getSkillCode());
+                    client.sendUseSkill(this.myKey, this.c.getHotkeys()[i].getSkillCode());
                 }
             }
             this.lastSendKeyTime = now;
         }
 
-        if (now - this.lastNumberUpdateTime >= Globals.INGAME_NUMBER_UPDATE) {
-            updateIngameNumber();
-            this.lastNumberUpdateTime = now;
-        }
-
         if (now - this.lastUpdateTime >= Globals.LOGIC_UPDATE) {
+            updateIngameNumber();
             updateParticles(this.particles);
             updatePlayers();
             updateMobs();
+            updateNotifications();
+
             if (this.players.containsKey(this.myKey)) {
                 logic.setSoundLisenterPos(this.players.get(this.myKey).getX(), this.players.get(this.myKey).getY());
             }
@@ -164,23 +131,23 @@ public class ScreenIngame extends Screen {
         }
 
         if (now - this.lastRequestTime >= Globals.REQUESTALL_UPDATE) {
-            logic.sendGetAll(this.myKey);
+            client.sendGetAll(this.myKey);
             this.lastRequestTime = now;
         }
         if (now - this.lastPingTime >= Globals.PING_UPDATE) {
-            this.pID = (byte) (Globals.rng(256));
+            this.pingID = (byte) (Globals.rng(256));
             this.pingTime = System.currentTimeMillis();
-            logic.sendGetPing(this.myKey, this.pID);
+            client.sendGetPing(this.myKey, this.pingID);
             this.lastPingTime = now;
         }
     }
 
     private void updateIngameNumber() {
-        for (final Map.Entry<Integer, IngameNumber> pEntry : this.dmgNum.entrySet()) {
+        for (final Map.Entry<Integer, IngameNumber> pEntry : this.ingameNumber.entrySet()) {
             threadPool.execute(pEntry.getValue());
         }
         final LinkedList<Integer> remove = new LinkedList<>();
-        for (final Map.Entry<Integer, IngameNumber> pEntry : this.dmgNum.entrySet()) {
+        for (final Map.Entry<Integer, IngameNumber> pEntry : this.ingameNumber.entrySet()) {
             try {
                 pEntry.getValue().join();
                 if (pEntry.getValue().isExpired()) {
@@ -189,14 +156,14 @@ public class ScreenIngame extends Screen {
             } catch (final InterruptedException ex) {
             }
         }
-        removeDmgNum(remove);
+        removeIngameNumber(remove);
     }
 
-    private void removeDmgNum(final LinkedList<Integer> remove) {
+    private void removeIngameNumber(final LinkedList<Integer> remove) {
         while (!remove.isEmpty()) {
             final int p = remove.pop();
             returnDmgKey(p);
-            this.dmgNum.remove(p);
+            this.ingameNumber.remove(p);
         }
     }
 
@@ -228,6 +195,21 @@ public class ScreenIngame extends Screen {
 
     public void spawnParticle() {
         final int key = getNextParticleKey();
+    }
+
+    private void updateNotifications() {
+        for (Notification n : this.notifications) {
+            threadPool.execute(n);
+        }
+        for (Notification n : this.notifications) {
+            try {
+                n.join();
+            } catch (final InterruptedException ex) {
+            }
+        }
+        if (this.notifications.peek() != null && this.notifications.peek().isExpired()) {
+            this.notifications.remove();
+        }
     }
 
     private void updateMobs() {
@@ -292,7 +274,7 @@ public class ScreenIngame extends Screen {
         for (final Map.Entry<Integer, Particle> pEntry : this.particles.entrySet()) {
             pEntry.getValue().draw(g);
         }
-        for (final Map.Entry<Integer, IngameNumber> pEntry : this.dmgNum.entrySet()) {
+        for (final Map.Entry<Integer, IngameNumber> pEntry : this.ingameNumber.entrySet()) {
             pEntry.getValue().draw(g);
         }
 
@@ -305,17 +287,37 @@ public class ScreenIngame extends Screen {
         final BufferedImage hud = Globals.HUD[0];
         g.drawImage(hud, Globals.WINDOW_WIDTH / 2 - hud.getWidth() / 2, Globals.WINDOW_HEIGHT - hud.getHeight(), null);
 
-        drawHPbar(g, hud);
+        drawHUD(g, hud);
         drawHotkeys(g);
 
         if (this.drawInfoHotkey != -1) {
             drawSkillInfo(g, this.hotkeySlots[this.drawInfoHotkey], this.c.getHotkeys()[this.drawInfoHotkey]);
         }
+
+        drawNotifications(g);
+
         g.setColor(new Color(25, 25, 25, 150));
         g.fillRect(1210, 5, 65, 45);
         g.setFont(Globals.ARIAL_12PT);
         g.setColor(Color.WHITE);
         g.drawString("Ping: " + this.ping, 1220, 40);
+
+        g.setColor(Color.BLACK);
+        g.setFont(Globals.ARIAL_15PT);
+
+        this.logoutBox = g.getFontMetrics().getStringBounds("Leave", g);
+        g.fillRect(10, 10, (int) this.logoutBox.getWidth() + 6, (int) this.logoutBox.getHeight() + 6);
+        g.setColor(Color.WHITE);
+        g.drawString("Leave", 13, (int) (9 + this.logoutBox.getHeight()));
+        g.drawRect(10, 10, (int) this.logoutBox.getWidth() + 6, (int) this.logoutBox.getHeight() + 6);
+    }
+
+    private void drawNotifications(final Graphics2D g) {
+        int x = 10, y = 710 + g.getFontMetrics(Globals.ARIAL_15PT).getHeight() - this.notifications.size() * (5 + g.getFontMetrics(Globals.ARIAL_15PT).getHeight());
+        for (Notification n : this.notifications) {
+            n.draw(g, x, y);
+            y += (5 + g.getFontMetrics(Globals.ARIAL_15PT).getHeight());
+        }
     }
 
     private void drawHotkeys(final Graphics2D g) {
@@ -350,7 +352,7 @@ public class ScreenIngame extends Screen {
         }
     }
 
-    private void drawHPbar(final Graphics2D g, final BufferedImage hud) {
+    private void drawHUD(final Graphics2D g, final BufferedImage hud) {
         if (this.players.containsKey(this.myKey)) {
             final BufferedImage hpbar = Globals.HUD[1];
             final double hpbarWidth;
@@ -396,17 +398,17 @@ public class ScreenIngame extends Screen {
     }
 
     public void returnDmgKey(final int key) {
-        this.dmgKeys.add(key);
+        this.ingameNumKeys.add(key);
     }
 
-    public int getNextDmgKey() {
-        if (this.dmgKeys.isEmpty()) {
-            for (int i = this.numDmgKeys; i < this.numDmgKeys + 500; i++) {
-                this.dmgKeys.add(i);
+    public int getNextIngameNumKey() {
+        if (this.ingameNumKeys.isEmpty()) {
+            for (int i = this.numIngameNumKeys; i < this.numIngameNumKeys + 500; i++) {
+                this.ingameNumKeys.add(i);
             }
-            this.numDmgKeys += 500;
+            this.numIngameNumKeys += 500;
         }
-        return this.dmgKeys.remove();
+        return this.ingameNumKeys.remove();
     }
 
     private void processDataQueue() {
@@ -445,7 +447,7 @@ public class ScreenIngame extends Screen {
                     dataPlayerSetCooldown(data);
                     break;
                 case Globals.DATA_NUMBER:
-                    dataDamage(data);
+                    dataIngameNumber(data);
                     break;
                 case Globals.DATA_PLAYER_GIVEEXP:
                     dataPlayerGiveEXP(data);
@@ -482,16 +484,28 @@ public class ScreenIngame extends Screen {
         final byte sfxID = data[1];
         final int x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
         final int y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
-        logic.playSound(sfxID, x, y);
+
+        if (Point.distance(this.players.get(this.myKey).getX(), this.players.get(this.myKey).getY(), x, y) <= 800) {
+            logic.playSound(sfxID, x, y);
+        }
     }
 
     private void dataPlayerGiveDrop(final byte[] data) {
         final int lvl = Globals.bytesToInt(Arrays.copyOfRange(data, 1, 5));
-        this.c.addDrops(lvl);
+        final int dropCode = Globals.bytesToInt(Arrays.copyOfRange(data, 5, 9));
+        //TODO - Add drop gained notification
+        if (ItemEquip.isValidItem(dropCode)) {
+            this.notifications.add(new Notification(dropCode, Globals.NOTIFICATION_ITEMEQUIP));
+        }
+        if (ItemUpgrade.isValidItem(dropCode)) {
+            this.notifications.add(new Notification(dropCode, Globals.NOTIFICATION_ITEMUPGRADE));
+        }
+        this.c.addDrops(lvl, dropCode);
     }
 
     private void dataPlayerGiveEXP(final byte[] data) {
         final int amount = Globals.bytesToInt(Arrays.copyOfRange(data, 1, 5));
+        this.notifications.add(new Notification(amount, Globals.NOTIFICATION_EXP));
         this.c.addExp(amount);
     }
 
@@ -561,15 +575,18 @@ public class ScreenIngame extends Screen {
         if (this.players.containsKey(key) && key != this.myKey) {
             this.players.get(key).disconnect();
         }
+        if (key == this.myKey) {
+            client.shutdownClient();
+        }
     }
 
-    private void dataDamage(final byte[] data) {
+    private void dataIngameNumber(final byte[] data) {
         final byte type = data[1];
         final int x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
         final int y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
-        final int dmg = Globals.bytesToInt(Arrays.copyOfRange(data, 10, 14));
-        final int key = getNextDmgKey();
-        this.dmgNum.put(key, new IngameNumber(dmg, type, new Point(x, y)));
+        final int value = Globals.bytesToInt(Arrays.copyOfRange(data, 10, 14));
+        final int key = getNextIngameNumKey();
+        this.ingameNumber.put(key, new IngameNumber(value, type, new Point(x, y)));
     }
 
     private void dataParticleEffect(final byte[] data) {
@@ -842,7 +859,7 @@ public class ScreenIngame extends Screen {
         final byte key = data[1];
         spawnPlayer(key);
         final byte[] temp = new byte[Globals.MAX_NAME_LENGTH];
-        System.arraycopy(data, 2, temp, 0, temp.length);
+        System.arraycopy(data, 2, temp, 0, data.length - 2);
         this.players.get(key).setPlayerName(new String(temp, StandardCharsets.UTF_8).trim());
     }
 
@@ -858,7 +875,7 @@ public class ScreenIngame extends Screen {
         if (!this.mobs.containsKey(key)) {
             final int x = Globals.bytesToInt(Arrays.copyOfRange(data, 3, 7));
             final int y = Globals.bytesToInt(Arrays.copyOfRange(data, 7, 11));
-            this.mobs.put(key, Mob.spawnMob(type, key, x, y));
+            this.mobs.put(key, Mob.spawnMob(type, key, x, y, this.client));
         }
     }
 
@@ -900,7 +917,7 @@ public class ScreenIngame extends Screen {
     }
 
     public void addDmgNum(final IngameNumber d) {
-        this.dmgNum.put(getNextDmgKey(), d);
+        this.ingameNumber.put(getNextIngameNumKey(), d);
     }
 
     @Override
@@ -913,11 +930,11 @@ public class ScreenIngame extends Screen {
     }
 
     public void disconnect() {
-        logic.sendDisconnect(this.myKey);
+        client.sendDisconnect(this.myKey);
     }
 
     public void setPing(final byte rID) {
-        if (rID != this.pID) {
+        if (rID != this.pingID) {
             return;
         }
         this.ping = (int) (System.currentTimeMillis() - this.pingTime);
@@ -940,7 +957,7 @@ public class ScreenIngame extends Screen {
 
     private boolean isExistingMob(final byte key) {
         if (!this.mobs.containsKey(key)) {
-            logic.sendSetMobType(key);
+            client.sendSetMobType(key);
             return false;
         }
         return true;
@@ -948,7 +965,7 @@ public class ScreenIngame extends Screen {
 
     private void spawnPlayer(final byte key, final int x, final int y) {
         if (!this.players.containsKey(key)) {
-            this.players.put(key, new Player(x, y, key));
+            this.players.put(key, new Player(x, y, key, this.client));
         }
     }
 
@@ -1033,68 +1050,68 @@ public class ScreenIngame extends Screen {
         } else if (key == this.c.getKeyBind()[Globals.KEYBIND_SKILL1]) {
             if (this.c.getHotkeys()[0] != null) {
                 setSkillKeyDown(0, false);
-                logic.sendUseSkill(this.myKey, this.c.getHotkeys()[0].getSkillCode());
+                client.sendUseSkill(this.myKey, this.c.getHotkeys()[0].getSkillCode());
             }
         } else if (key == this.c.getKeyBind()[Globals.KEYBIND_SKILL2]) {
             if (this.c.getHotkeys()[1] != null) {
                 setSkillKeyDown(1, false);
-                logic.sendUseSkill(this.myKey, this.c.getHotkeys()[1].getSkillCode());
+                client.sendUseSkill(this.myKey, this.c.getHotkeys()[1].getSkillCode());
             }
         } else if (key == this.c.getKeyBind()[Globals.KEYBIND_SKILL3]) {
             if (this.c.getHotkeys()[2] != null) {
                 setSkillKeyDown(2, false);
-                logic.sendUseSkill(this.myKey, this.c.getHotkeys()[2].getSkillCode());
+                client.sendUseSkill(this.myKey, this.c.getHotkeys()[2].getSkillCode());
             }
         } else if (key == this.c.getKeyBind()[Globals.KEYBIND_SKILL4]) {
             if (this.c.getHotkeys()[3] != null) {
                 setSkillKeyDown(3, false);
-                logic.sendUseSkill(this.myKey, this.c.getHotkeys()[3].getSkillCode());
+                client.sendUseSkill(this.myKey, this.c.getHotkeys()[3].getSkillCode());
             }
         } else if (key == this.c.getKeyBind()[Globals.KEYBIND_SKILL5]) {
             if (this.c.getHotkeys()[4] != null) {
                 setSkillKeyDown(4, false);
-                logic.sendUseSkill(this.myKey, this.c.getHotkeys()[4].getSkillCode());
+                client.sendUseSkill(this.myKey, this.c.getHotkeys()[4].getSkillCode());
             }
         } else if (key == this.c.getKeyBind()[Globals.KEYBIND_SKILL6]) {
             if (this.c.getHotkeys()[5] != null) {
                 setSkillKeyDown(5, false);
-                logic.sendUseSkill(this.myKey, this.c.getHotkeys()[5].getSkillCode());
+                client.sendUseSkill(this.myKey, this.c.getHotkeys()[5].getSkillCode());
             }
         } else if (key == this.c.getKeyBind()[Globals.KEYBIND_SKILL7]) {
             if (this.c.getHotkeys()[6] != null) {
                 setSkillKeyDown(6, false);
-                logic.sendUseSkill(this.myKey, this.c.getHotkeys()[6].getSkillCode());
+                client.sendUseSkill(this.myKey, this.c.getHotkeys()[6].getSkillCode());
             }
         } else if (key == this.c.getKeyBind()[Globals.KEYBIND_SKILL8]) {
             if (this.c.getHotkeys()[7] != null) {
                 setSkillKeyDown(7, false);
-                logic.sendUseSkill(this.myKey, this.c.getHotkeys()[7].getSkillCode());
+                client.sendUseSkill(this.myKey, this.c.getHotkeys()[7].getSkillCode());
             }
         } else if (key == this.c.getKeyBind()[Globals.KEYBIND_SKILL9]) {
             if (this.c.getHotkeys()[8] != null) {
                 setSkillKeyDown(8, false);
-                logic.sendUseSkill(this.myKey, this.c.getHotkeys()[8].getSkillCode());
+                client.sendUseSkill(this.myKey, this.c.getHotkeys()[8].getSkillCode());
             }
         } else if (key == this.c.getKeyBind()[Globals.KEYBIND_SKILL10]) {
             if (this.c.getHotkeys()[9] != null) {
                 setSkillKeyDown(9, false);
-                logic.sendUseSkill(this.myKey, this.c.getHotkeys()[9].getSkillCode());
+                client.sendUseSkill(this.myKey, this.c.getHotkeys()[9].getSkillCode());
             }
         } else if (key == this.c.getKeyBind()[Globals.KEYBIND_SKILL11]) {
             if (this.c.getHotkeys()[10] != null) {
                 setSkillKeyDown(10, false);
-                logic.sendUseSkill(this.myKey, this.c.getHotkeys()[10].getSkillCode());
+                client.sendUseSkill(this.myKey, this.c.getHotkeys()[10].getSkillCode());
             }
         } else if (key == this.c.getKeyBind()[Globals.KEYBIND_SKILL12]) {
             if (this.c.getHotkeys()[11] != null) {
                 setSkillKeyDown(11, false);
-                logic.sendUseSkill(this.myKey, this.c.getHotkeys()[11].getSkillCode());
+                client.sendUseSkill(this.myKey, this.c.getHotkeys()[11].getSkillCode());
             }
         }
 
         switch (e.getKeyCode()) {
             case KeyEvent.VK_ESCAPE:
-                logic.sendDisconnect(this.myKey);
+                client.sendDisconnect(this.myKey);
                 break;
         }
     }
@@ -1111,7 +1128,10 @@ public class ScreenIngame extends Screen {
 
     @Override
     public void mouseReleased(final MouseEvent e) {
-
+        Rectangle2D.Double box = new Rectangle2D.Double(10, 10, this.logoutBox.getWidth() + 6, this.logoutBox.getHeight() + 6);
+        if (box.contains(e.getPoint())) {
+            client.sendDisconnect(this.myKey);
+        }
     }
 
     @Override

@@ -4,6 +4,7 @@ import blockfighter.client.Globals;
 import blockfighter.client.LogicModule;
 import blockfighter.client.Main;
 import blockfighter.client.entities.items.ItemEquip;
+import blockfighter.client.net.GameClient;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -26,8 +27,10 @@ public class Player extends Thread {
     private long lastUpdateTime;
     private static LogicModule logic;
     private boolean disconnect = false;
+    private GameClient client;
 
-    public Player(final int x, final int y, final byte k) {
+    public Player(final int x, final int y, final byte k, final GameClient cl) {
+        this.client = cl;
         this.x = x;
         this.y = y;
         this.key = k;
@@ -39,8 +42,8 @@ public class Player extends Thread {
         setDaemon(true);
     }
 
-    public Player(final int x, final int y, final byte k, final byte f) {
-        this(x, y, k);
+    public Player(final int x, final int y, final byte k, final byte f, final GameClient cl) {
+        this(x, y, k, cl);
         this.facing = f;
     }
 
@@ -161,15 +164,15 @@ public class Player extends Thread {
         g.drawString(this.name, this.x - width / 2, this.y + 21);
         g.setColor(Color.WHITE);
         g.drawString(this.name, this.x - width / 2, this.y + 20);
-        
+
         if (this.getStat(Globals.STAT_MAXHP) > 0) {
             int hpBarWidth = 80, hpBarHeight = 7;
             g.setColor(Color.GRAY);
-            g.fillRect(this.x - (hpBarWidth + 2) / 2, y - 110, hpBarWidth, hpBarHeight);
+            g.fillRect(this.x - (hpBarWidth + 2) / 2, y - 130, hpBarWidth, hpBarHeight);
             g.setColor(Color.RED);
-            g.fillRect(this.x - hpBarWidth / 2, y - 110, (int) (hpBarWidth * this.getStat(Globals.STAT_MINHP) / this.getStat(Globals.STAT_MAXHP)), hpBarHeight);
+            g.fillRect(this.x - hpBarWidth / 2, y - 130, (int) (hpBarWidth * this.getStat(Globals.STAT_MINHP) / this.getStat(Globals.STAT_MAXHP)), hpBarHeight);
             g.setColor(Color.BLACK);
-            g.drawRect(this.x - (hpBarWidth + 2) / 2, y - 110, hpBarWidth, hpBarHeight);
+            g.drawRect(this.x - (hpBarWidth + 2) / 2, y - 130, hpBarWidth, hpBarHeight);
         }
 
     }
@@ -177,16 +180,16 @@ public class Player extends Thread {
     @Override
     public void run() {
         if (this.name.length() <= 0) {
-            logic.sendGetName(this.key);
+            client.sendGetName(this.key);
         }
         for (final ItemEquip e : this.equips) {
             if (e == null) {
-                logic.sendGetEquip(this.key);
+                client.sendGetEquip(this.key);
                 break;
             }
         }
         if (this.stats[Globals.STAT_MAXHP] <= 0) {
-            logic.sendGetStat(this.key, Globals.STAT_MAXHP);
+            client.sendGetStat(this.key, Globals.STAT_MAXHP);
         }
     }
 

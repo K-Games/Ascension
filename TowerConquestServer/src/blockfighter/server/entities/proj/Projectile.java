@@ -5,7 +5,6 @@ import blockfighter.server.LogicModule;
 import blockfighter.server.entities.GameEntity;
 import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
-import blockfighter.server.net.PacketSender;
 import java.awt.geom.Rectangle2D;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -65,11 +64,6 @@ public abstract class Projectile extends Thread implements GameEntity {
      * Hit boxes of this projectile
      */
     protected Rectangle2D.Double[] hitbox;
-
-    /**
-     * Reference to Server PacketSender
-     */
-    protected static PacketSender sender;
 
     /**
      * Checks if this projectile has already been queued to have effects to be applied
@@ -149,15 +143,6 @@ public abstract class Projectile extends Thread implements GameEntity {
 
     public double getY() {
         return this.y;
-    }
-
-    /**
-     * Set the static packet sender.
-     *
-     * @param ps Server PacketSender.
-     */
-    public static void setPacketSender(final PacketSender ps) {
-        sender = ps;
     }
 
     public void setOwner(final Player owner) {

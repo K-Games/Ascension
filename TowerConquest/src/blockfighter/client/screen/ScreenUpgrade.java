@@ -21,6 +21,9 @@ import javax.swing.SwingUtilities;
  */
 public class ScreenUpgrade extends ScreenMenu {
 
+    private static final int EQUIP_BOX_X = 980, EQUIP_BOX_Y = 40;
+    private static final int UPGRADE_BOX_X = 980, UPGRADE_BOX_Y = 430;
+
     private final SaveData c;
     private boolean destroy = false, destroyConfirm = false;
 
@@ -30,12 +33,12 @@ public class ScreenUpgrade extends ScreenMenu {
 
     private long lastFrameTime = 0;
 
-    private final Rectangle2D.Double[] inventSlots = new Rectangle2D.Double[100],
-            equipSlots = new Rectangle2D.Double[Globals.NUM_EQUIP_SLOTS],
-            destroyBox = new Rectangle2D.Double[2],
-            upgradeBox = new Rectangle2D.Double[2],
-            promptBox = new Rectangle2D.Double[2];
-    private final Rectangle2D.Double combineBox;
+    private static final Rectangle2D.Double[] INVENTORY_SLOTS = new Rectangle2D.Double[100],
+            EQUIP_SLOTS = new Rectangle2D.Double[Globals.NUM_EQUIP_SLOTS],
+            DESTROY_BOX = new Rectangle2D.Double[2],
+            UPGRADE_BOX = new Rectangle2D.Double[2],
+            PROMPT_BOX = new Rectangle2D.Double[2];
+    private static final Rectangle2D.Double COMBINE_BOX;
 
     private Point mousePos;
 
@@ -46,34 +49,36 @@ public class ScreenUpgrade extends ScreenMenu {
     private boolean upgrading = false;
     private int upPart = 0;
 
+    static {
+        EQUIP_SLOTS[Globals.ITEM_AMULET] = new Rectangle2D.Double(EQUIP_BOX_X + 160, EQUIP_BOX_Y, 60, 60);
+        EQUIP_SLOTS[Globals.ITEM_BELT] = new Rectangle2D.Double(EQUIP_BOX_X + 160, EQUIP_BOX_Y + 210, 60, 60);
+        EQUIP_SLOTS[Globals.ITEM_OFFHAND] = new Rectangle2D.Double(EQUIP_BOX_X + 160, EQUIP_BOX_Y + 140, 60, 60);
+        EQUIP_SLOTS[Globals.ITEM_CHEST] = new Rectangle2D.Double(EQUIP_BOX_X + 160, EQUIP_BOX_Y + 70, 60, 60);
+        EQUIP_SLOTS[Globals.ITEM_HEAD] = new Rectangle2D.Double(EQUIP_BOX_X + 80, EQUIP_BOX_Y, 60, 60);
+        EQUIP_SLOTS[Globals.ITEM_RING] = new Rectangle2D.Double(EQUIP_BOX_X, 40, EQUIP_BOX_Y + 20, 60);
+        EQUIP_SLOTS[Globals.ITEM_SHOULDER] = new Rectangle2D.Double(EQUIP_BOX_X, EQUIP_BOX_Y + 70, 60, 60);
+        EQUIP_SLOTS[Globals.ITEM_GLOVE] = new Rectangle2D.Double(EQUIP_BOX_X, EQUIP_BOX_Y + 210, 60, 60);
+        EQUIP_SLOTS[Globals.ITEM_WEAPON] = new Rectangle2D.Double(EQUIP_BOX_X, EQUIP_BOX_Y + 140, 60, 60);
+        EQUIP_SLOTS[Globals.ITEM_PANTS] = new Rectangle2D.Double(EQUIP_BOX_X + 45, EQUIP_BOX_Y + 280, 60, 60);
+        EQUIP_SLOTS[Globals.ITEM_SHOE] = new Rectangle2D.Double(EQUIP_BOX_X + 115, EQUIP_BOX_Y + 280, 60, 60);
+
+        UPGRADE_BOX[0] = new Rectangle2D.Double(UPGRADE_BOX_X, UPGRADE_BOX_Y + 30, 60, 60);
+        UPGRADE_BOX[1] = new Rectangle2D.Double(UPGRADE_BOX_X + 160, UPGRADE_BOX_Y + 30, 60, 60);
+        COMBINE_BOX = new Rectangle2D.Double(UPGRADE_BOX_X + 20, UPGRADE_BOX_Y + 130, 180, 30);
+
+        for (int i = 0; i < DESTROY_BOX.length; i++) {
+            DESTROY_BOX[i] = new Rectangle2D.Double(520 + i * 185, 655, 180, 30);
+        }
+        PROMPT_BOX[0] = new Rectangle2D.Double(401, 400, 214, 112);
+        PROMPT_BOX[1] = new Rectangle2D.Double(665, 400, 214, 112);
+
+    }
+
     public ScreenUpgrade() {
         this.c = logic.getSelectedChar();
-        for (int i = 0; i < this.inventSlots.length; i++) {
-            this.inventSlots[i] = new Rectangle2D.Double(255 + (i * 62) - (i / 10 * 620), 30 + i / 10 * 62, 60, 60);
+        for (int i = 0; i < INVENTORY_SLOTS.length; i++) {
+            INVENTORY_SLOTS[i] = new Rectangle2D.Double(255 + (i * 62) - (i / 10 * 620), 30 + i / 10 * 62, 60, 60);
         }
-
-        this.equipSlots[Globals.ITEM_AMULET] = new Rectangle2D.Double(1140, 40, 60, 60);
-        this.equipSlots[Globals.ITEM_BELT] = new Rectangle2D.Double(1140, 250, 60, 60);
-        this.equipSlots[Globals.ITEM_OFFHAND] = new Rectangle2D.Double(1140, 180, 60, 60);
-        this.equipSlots[Globals.ITEM_CHEST] = new Rectangle2D.Double(1140, 110, 60, 60);
-        this.equipSlots[Globals.ITEM_HEAD] = new Rectangle2D.Double(1060, 40, 60, 60);
-        this.equipSlots[Globals.ITEM_RING] = new Rectangle2D.Double(980, 40, 60, 60);
-        this.equipSlots[Globals.ITEM_SHOULDER] = new Rectangle2D.Double(980, 110, 60, 60);
-        this.equipSlots[Globals.ITEM_GLOVE] = new Rectangle2D.Double(980, 250, 60, 60);
-        this.equipSlots[Globals.ITEM_WEAPON] = new Rectangle2D.Double(980, 180, 60, 60);
-        this.equipSlots[Globals.ITEM_PANTS] = new Rectangle2D.Double(1025, 320, 60, 60);
-        this.equipSlots[Globals.ITEM_SHOE] = new Rectangle2D.Double(1095, 320, 60, 60);
-
-        this.upgradeBox[0] = new Rectangle2D.Double(980, 450, 60, 60);
-        this.upgradeBox[1] = new Rectangle2D.Double(1140, 450, 60, 60);
-
-        for (int i = 0; i < this.destroyBox.length; i++) {
-            this.destroyBox[i] = new Rectangle2D.Double(520 + i * 185, 655, 180, 30);
-        }
-        this.promptBox[0] = new Rectangle2D.Double(401, 400, 214, 112);
-        this.promptBox[1] = new Rectangle2D.Double(665, 400, 214, 112);
-
-        this.combineBox = new Rectangle2D.Double(1000, 580, 180, 30);
     }
 
     @Override
@@ -84,14 +89,14 @@ public class ScreenUpgrade extends ScreenMenu {
                 if (ItemUpgrade.rollUpgrade(this.c.getUpgrades()[this.selectUpgrade], this.c.getEquip()[this.selectEquip])) {
                     this.c.getEquip()[this.selectEquip].addUpgrade(1);
                     for (int i = 0; i < 20; i++) {
-                        particles.put(i + 2, new ParticleMenuUpgrade(this.upPart + 2, (int) this.upgradeBox[1].x + 30,
-                                (int) this.upgradeBox[1].y + 30, 3,
+                        particles.put(i + 2, new ParticleMenuUpgrade(this.upPart + 2, (int) UPGRADE_BOX[1].x + 30,
+                                (int) UPGRADE_BOX[1].y + 30, 3,
                                 Globals.rng(10) - 5, -5 - Globals.rng(3)));
                     }
                 } else {
                     for (int i = 0; i < 20; i++) {
-                        particles.put(i + 2, new ParticleMenuUpgrade(this.upPart + 2, (int) this.upgradeBox[1].x + 30,
-                                (int) this.upgradeBox[1].y + 30, 2,
+                        particles.put(i + 2, new ParticleMenuUpgrade(this.upPart + 2, (int) UPGRADE_BOX[1].x + 30,
+                                (int) UPGRADE_BOX[1].y + 30, 2,
                                 Globals.rng(10) - 5, -5 - Globals.rng(3)));
                     }
                 }
@@ -115,50 +120,27 @@ public class ScreenUpgrade extends ScreenMenu {
             } else {
                 this.charFrame++;
             }
-            this.nextFrameTime = 150000000;
+            this.nextFrameTime = 250000000;
             this.lastFrameTime = now;
         }
     }
 
     @Override
     public void draw(final Graphics2D g) {
-        final BufferedImage bg = Globals.MENU_BG[2];
+        final BufferedImage bg = Globals.MENU_BG[1];
         g.drawImage(bg, 0, 0, null);
 
         final Graphics2D g2d = g;
         g2d.setRenderingHint(
                 RenderingHints.KEY_TEXT_ANTIALIASING,
                 RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
-        BufferedImage button = Globals.MENU_BUTTON[Globals.BUTTON_SMALLRECT];
-        g.drawImage(button, (int) this.destroyBox[0].x, (int) this.destroyBox[0].y, null);
-        g.drawImage(button, (int) this.destroyBox[1].x, (int) this.destroyBox[1].y, null);
-        g.drawImage(button, (int) this.combineBox.x, (int) this.combineBox.y, null);
 
-        g.setFont(Globals.ARIAL_18PT);
-        drawStringOutline(g, "Destroy Item", 560, 682, 1);
-        drawStringOutline(g, "Destroy All", 750, 682, 1);
-        drawStringOutline(g, "Enhance", 1053, 607, 1);
-        g.setColor(Color.WHITE);
-        g.drawString("Destroy Item", 560, 682);
-        g.drawString("Destroy All", 750, 682);
-        g.drawString("Enhance", 1053, 607);
-
-        final int selTemp1 = this.selectUpgrade, selTemp2 = this.selectEquip;
-        if (selTemp1 >= 0 && selTemp2 >= 0) {
-            g.setFont(Globals.ARIAL_15PT);
-            drawStringOutline(g, "Chance of Success: "
-                    + this.df.format(ItemUpgrade.upgradeChance(this.c.getUpgrades()[selTemp1], this.c.getEquip()[selTemp2]) * 100) + "%",
-                    1000, 550, 1);
-            g.setColor(Color.WHITE);
-            g.drawString("Chance of Success: "
-                    + this.df.format(ItemUpgrade.upgradeChance(this.c.getUpgrades()[selTemp1], this.c.getEquip()[selTemp2]) * 100) + "%",
-                    1000, 550);
-        }
-
-        drawSlots(g);
+        drawEquipSlots(g);
+        drawUpgradeBox(g);
+        drawInventory(g);
         drawDestroyConfirm(g);
         if (this.destroy) {
-            button = Globals.MENU_ITEMDELETE[0];
+            BufferedImage button = Globals.MENU_ITEMDELETE[0];
             g.drawImage(button, this.mousePos.x + 10, this.mousePos.y + 15, null);
         }
         drawMenuButton(g);
@@ -192,11 +174,11 @@ public class ScreenUpgrade extends ScreenMenu {
         }
     }
 
-    private void drawSlots(final Graphics2D g) {
-        final BufferedImage button = Globals.MENU_BUTTON[Globals.BUTTON_SLOT];
+    private void drawEquipSlots(final Graphics2D g) {
+        g.setColor(SKILL_BOX_BG_COLOR);
+        g.fillRoundRect(EQUIP_BOX_X - 10, EQUIP_BOX_Y - 10, 240, 360, 15, 15);
         final BufferedImage character = Globals.CHAR_SPRITE[Globals.PLAYER_ANIM_STATE_STAND][this.charFrame];
-
-        final int x = 1070 + character.getWidth() / 2, y = 200 + character.getHeight();
+        final int x = EQUIP_BOX_X + 90 + character.getWidth() / 2, y = EQUIP_BOX_Y + 160 + character.getHeight();
         if (this.c.getEquip()[Globals.ITEM_OFFHAND] != null) {
             this.c.getEquip()[Globals.ITEM_OFFHAND].drawIngame(g, x, y, Globals.PLAYER_ANIM_STATE_STAND, this.charFrame, Globals.RIGHT, true);
         }
@@ -222,19 +204,12 @@ public class ScreenUpgrade extends ScreenMenu {
             this.c.getEquip()[Globals.ITEM_GLOVE].drawIngame(g, x, y, Globals.PLAYER_ANIM_STATE_STAND, this.charFrame, Globals.RIGHT);
         }
 
-        // Inventory
-        for (int i = 0; i < this.c.getUpgrades().length; i++) {
-            g.drawImage(button, (int) this.inventSlots[i].x, (int) this.inventSlots[i].y, null);
-            if (this.c.getUpgrades()[i] != null) {
-                this.c.getUpgrades()[i].draw(g, (int) this.inventSlots[i].x, (int) this.inventSlots[i].y);
-            }
-        }
-
+        final BufferedImage button = Globals.MENU_BUTTON[Globals.BUTTON_SLOT];
         // Equipment
-        for (int i = 0; i < this.equipSlots.length; i++) {
-            g.drawImage(button, (int) this.equipSlots[i].x, (int) this.equipSlots[i].y, null);
+        for (int i = 0; i < EQUIP_SLOTS.length; i++) {
+            g.drawImage(button, (int) EQUIP_SLOTS[i].x, (int) EQUIP_SLOTS[i].y, null);
             if (this.c.getEquip()[i] != null) {
-                this.c.getEquip()[i].draw(g, (int) this.equipSlots[i].x, (int) this.equipSlots[i].y);
+                this.c.getEquip()[i].draw(g, (int) EQUIP_SLOTS[i].x, (int) EQUIP_SLOTS[i].y);
             }
             String s = "";
             switch (i) {
@@ -283,26 +258,80 @@ public class ScreenUpgrade extends ScreenMenu {
                     break;
             }
             g.setFont(Globals.ARIAL_12PT);
-            drawStringOutline(g, s, (int) this.equipSlots[i].x + 2, (int) this.equipSlots[i].y + 58, 1);
+            drawStringOutline(g, s, (int) EQUIP_SLOTS[i].x + 2, (int) EQUIP_SLOTS[i].y + 58, 1);
             g.setColor(Color.WHITE);
-            g.drawString(s, (int) this.equipSlots[i].x + 2, (int) this.equipSlots[i].y + 58);
+            g.drawString(s, (int) EQUIP_SLOTS[i].x + 2, (int) EQUIP_SLOTS[i].y + 58);
         }
+    }
 
+    private void drawUpgradeBox(final Graphics2D g) {
+        g.setColor(SKILL_BOX_BG_COLOR);
+        g.fillRoundRect(UPGRADE_BOX_X - 20, UPGRADE_BOX_Y - 10, 260, 190, 15, 15);
+
+        g.setFont(Globals.ARIAL_15PT);
+        drawStringOutline(g, "Equipment Upgrade", UPGRADE_BOX_X + 40, UPGRADE_BOX_Y + 15, 1);
+        g.setColor(Color.WHITE);
+        g.drawString("Equipment Upgrade", UPGRADE_BOX_X + 40, UPGRADE_BOX_Y + 15);
+
+        BufferedImage button = Globals.MENU_BUTTON[Globals.BUTTON_SLOT];
         // upgrades
-        for (final Rectangle2D.Double box : this.upgradeBox) {
+        for (final Rectangle2D.Double box : UPGRADE_BOX) {
             g.drawImage(button, (int) box.x, (int) box.y, null);
         }
 
         if (this.selectUpgrade > -1) {
             if (this.c.getUpgrades()[this.selectUpgrade] != null) {
-                this.c.getUpgrades()[this.selectUpgrade].draw(g, (int) this.upgradeBox[0].x, (int) this.upgradeBox[0].y);
+                this.c.getUpgrades()[this.selectUpgrade].draw(g, (int) UPGRADE_BOX[0].x, (int) UPGRADE_BOX[0].y);
             }
         }
         if (this.selectEquip > -1) {
             if (this.c.getEquip()[this.selectEquip] != null) {
-                this.c.getEquip()[this.selectEquip].draw(g, (int) this.upgradeBox[1].x, (int) this.upgradeBox[1].y);
+                this.c.getEquip()[this.selectEquip].draw(g, (int) UPGRADE_BOX[1].x, (int) UPGRADE_BOX[1].y);
             }
         }
+        button = Globals.MENU_BUTTON[Globals.BUTTON_SMALLRECT];
+        g.drawImage(button, (int) DESTROY_BOX[0].x, (int) DESTROY_BOX[0].y, null);
+        g.drawImage(button, (int) DESTROY_BOX[1].x, (int) DESTROY_BOX[1].y, null);
+        g.drawImage(button, (int) COMBINE_BOX.x, (int) COMBINE_BOX.y, null);
+
+        final int selTemp1 = this.selectUpgrade, selTemp2 = this.selectEquip;
+        if (selTemp1 >= 0 && selTemp2 >= 0) {
+            g.setFont(Globals.ARIAL_15PT);
+            drawStringOutline(g, "Chance of Success: "
+                    + this.df.format(ItemUpgrade.upgradeChance(this.c.getUpgrades()[selTemp1], this.c.getEquip()[selTemp2]) * 100) + "%",
+                    UPGRADE_BOX_X + 20, UPGRADE_BOX_Y + 115, 1);
+            g.setColor(Color.WHITE);
+            g.drawString("Chance of Success: "
+                    + this.df.format(ItemUpgrade.upgradeChance(this.c.getUpgrades()[selTemp1], this.c.getEquip()[selTemp2]) * 100) + "%",
+                    UPGRADE_BOX_X + 20, UPGRADE_BOX_Y + 115);
+        }
+
+        g.setFont(Globals.ARIAL_18PT);
+        drawStringOutline(g, "Enhance", (int) COMBINE_BOX.x + 55, (int) COMBINE_BOX.y + 25, 1);
+        g.setColor(Color.WHITE);
+        g.drawString("Enhance", (int) COMBINE_BOX.x + 55, (int) COMBINE_BOX.y + 25);
+    }
+
+    private void drawInventory(final Graphics2D g) {
+        BufferedImage button = Globals.MENU_BUTTON[Globals.BUTTON_SLOT];
+        // Inventory
+        for (int i = 0; i < this.c.getUpgrades().length; i++) {
+            g.drawImage(button, (int) INVENTORY_SLOTS[i].x, (int) INVENTORY_SLOTS[i].y, null);
+            if (this.c.getUpgrades()[i] != null) {
+                this.c.getUpgrades()[i].draw(g, (int) INVENTORY_SLOTS[i].x, (int) INVENTORY_SLOTS[i].y);
+            }
+        }
+        button = Globals.MENU_BUTTON[Globals.BUTTON_SMALLRECT];
+        g.drawImage(button, (int) DESTROY_BOX[0].x, (int) DESTROY_BOX[0].y, null);
+        g.drawImage(button, (int) DESTROY_BOX[1].x, (int) DESTROY_BOX[1].y, null);
+
+        g.setFont(Globals.ARIAL_18PT);
+        drawStringOutline(g, "Destroy Item", 560, 682, 1);
+        drawStringOutline(g, "Destroy All", 750, 682, 1);
+        g.setColor(Color.WHITE);
+        g.drawString("Destroy Item", 560, 682);
+        g.drawString("Destroy All", 750, 682);
+
     }
 
     private void drawItemInfo(final Graphics2D g) {
@@ -310,13 +339,13 @@ public class ScreenUpgrade extends ScreenMenu {
             return;
         }
         if (this.drawItem > -1) {
-            drawItemInfo(g, this.inventSlots[this.drawItem], this.c.getUpgrades()[this.drawItem]);
+            drawItemInfo(g, INVENTORY_SLOTS[this.drawItem], this.c.getUpgrades()[this.drawItem]);
         } else if (this.drawEquip > -1) {
-            drawItemInfo(g, this.equipSlots[this.drawEquip], this.c.getEquip()[this.drawEquip]);
+            drawItemInfo(g, EQUIP_SLOTS[this.drawEquip], this.c.getEquip()[this.drawEquip]);
         } else if (this.drawSelect == 0 && this.selectUpgrade > -1) {
-            drawItemInfo(g, this.upgradeBox[0], this.c.getUpgrades()[this.selectUpgrade]);
+            drawItemInfo(g, UPGRADE_BOX[0], this.c.getUpgrades()[this.selectUpgrade]);
         } else if (this.drawSelect == 1 && this.selectEquip > -1) {
-            drawItemInfo(g, this.upgradeBox[1], this.c.getEquip()[this.selectEquip]);
+            drawItemInfo(g, UPGRADE_BOX[1], this.c.getEquip()[this.selectEquip]);
         }
     }
 
@@ -324,28 +353,7 @@ public class ScreenUpgrade extends ScreenMenu {
         if (e == null) {
             return;
         }
-        g.setColor(new Color(30, 30, 30, 185));
-        int y = (int) box.y;
-        int x = (int) box.x;
-        final int boxHeight = 60, boxWidth = 280;
-
-        if (y + boxHeight > 720) {
-            y = 700 - boxHeight;
-        }
-
-        if (x + 30 + boxWidth > 1280) {
-            x = 1240 - boxWidth;
-        }
-        g.fillRect(x + 30, y, boxWidth, boxHeight);
-        g.setColor(Color.BLACK);
-        g.drawRect(x + 30, y, boxWidth, boxHeight);
-        g.drawRect(x + 31, y + 1, boxWidth - 2, boxHeight - 2);
-
-        g.setFont(Globals.ARIAL_15PT);
-        g.setColor(Color.WHITE);
-        g.drawString("Level " + e.getLevel() + " " + e.getItemName(), x + 40, y + 20);
-        g.drawString("Use this to enhance any equipment.", x + 40, y + 40);
-
+        e.drawInfo(g, box);
     }
 
     private void drawItemInfo(final Graphics2D g, final Rectangle2D.Double box, final ItemEquip e) {
@@ -396,8 +404,8 @@ public class ScreenUpgrade extends ScreenMenu {
             return;
         }
         if (SwingUtilities.isLeftMouseButton(e)) {
-            for (int i = 0; i < this.inventSlots.length; i++) {
-                if (this.inventSlots[i].contains(e.getPoint())) {
+            for (int i = 0; i < INVENTORY_SLOTS.length; i++) {
+                if (INVENTORY_SLOTS[i].contains(e.getPoint())) {
                     if (!this.destroy) {
                         if (drItem != -1) {
                             if (drItem == selectUpgrade) {
@@ -426,7 +434,7 @@ public class ScreenUpgrade extends ScreenMenu {
                     }
                 }
             }
-            if (this.upgradeBox[0].contains(e.getPoint())) {
+            if (UPGRADE_BOX[0].contains(e.getPoint())) {
                 if (!this.destroy) {
                     if (drItem != -1) {
                         this.selectUpgrade = drItem;
@@ -435,16 +443,16 @@ public class ScreenUpgrade extends ScreenMenu {
                 }
             }
 
-            for (int i = 0; !this.destroy && i < this.equipSlots.length; i++) {
-                if (this.equipSlots[i].contains(e.getPoint()) && this.c.getEquip()[i] != null) {
+            for (int i = 0; !this.destroy && i < EQUIP_SLOTS.length; i++) {
+                if (EQUIP_SLOTS[i].contains(e.getPoint()) && this.c.getEquip()[i] != null) {
                     // Set upgrading item
                     this.selectEquip = i;
                     return;
                 }
             }
 
-            for (int i = 0; i < this.destroyBox.length; i++) {
-                if (this.destroyBox[i].contains(e.getPoint())) {
+            for (int i = 0; i < DESTROY_BOX.length; i++) {
+                if (DESTROY_BOX[i].contains(e.getPoint())) {
                     switch (i) {
                         case 0:
                             this.destroy = !this.destroy;
@@ -458,7 +466,7 @@ public class ScreenUpgrade extends ScreenMenu {
                 }
             }
 
-            if (!this.upgrading && this.combineBox.contains(e.getPoint())) {
+            if (!this.upgrading && COMBINE_BOX.contains(e.getPoint())) {
                 if (this.selectUpgrade >= 0 && this.selectEquip >= 0) {
                     this.upPart = 0;
                     this.upgrading = true;
@@ -468,8 +476,8 @@ public class ScreenUpgrade extends ScreenMenu {
     }
 
     private void mouseReleased_destroyConfirm(final MouseEvent e) {
-        for (byte i = 0; i < this.promptBox.length; i++) {
-            if (this.promptBox[i].contains(e.getPoint())) {
+        for (byte i = 0; i < PROMPT_BOX.length; i++) {
+            if (PROMPT_BOX[i].contains(e.getPoint())) {
                 if (i == 0) {
                     this.selectUpgrade = -1;
                     this.c.destroyAllUpgrade();
@@ -497,8 +505,8 @@ public class ScreenUpgrade extends ScreenMenu {
         }
         if (SwingUtilities.isLeftMouseButton(e)) {
             if (this.dragItem == -1) {
-                for (int i = 0; i < this.inventSlots.length; i++) {
-                    if (this.inventSlots[i].contains(e.getPoint()) && this.c.getUpgrades()[i] != null) {
+                for (int i = 0; i < INVENTORY_SLOTS.length; i++) {
+                    if (INVENTORY_SLOTS[i].contains(e.getPoint()) && this.c.getUpgrades()[i] != null) {
                         this.dragItem = i;
                         return;
                     }
@@ -514,25 +522,25 @@ public class ScreenUpgrade extends ScreenMenu {
         this.drawEquip = -1;
         this.drawSelect = -1;
 
-        if (this.upgradeBox[0].contains(e.getPoint()) && this.selectUpgrade > -1) {
+        if (UPGRADE_BOX[0].contains(e.getPoint()) && this.selectUpgrade > -1) {
             this.drawSelect = 0;
             return;
         }
 
-        if (this.upgradeBox[1].contains(e.getPoint()) && this.selectEquip > -1) {
+        if (UPGRADE_BOX[1].contains(e.getPoint()) && this.selectEquip > -1) {
             this.drawSelect = 1;
             return;
         }
 
-        for (int i = 0; i < this.inventSlots.length; i++) {
-            if (this.inventSlots[i].contains(e.getPoint()) && this.c.getUpgrades()[i] != null) {
+        for (int i = 0; i < INVENTORY_SLOTS.length; i++) {
+            if (INVENTORY_SLOTS[i].contains(e.getPoint()) && this.c.getUpgrades()[i] != null) {
                 this.drawItem = i;
                 return;
             }
         }
 
-        for (int i = 0; this.drawItem < 0 && i < this.equipSlots.length; i++) {
-            if (this.equipSlots[i].contains(e.getPoint()) && this.c.getEquip()[i] != null) {
+        for (int i = 0; this.drawItem < 0 && i < EQUIP_SLOTS.length; i++) {
+            if (EQUIP_SLOTS[i].contains(e.getPoint()) && this.c.getEquip()[i] != null) {
                 this.drawEquip = i;
                 return;
             }

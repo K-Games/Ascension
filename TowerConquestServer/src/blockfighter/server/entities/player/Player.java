@@ -14,6 +14,7 @@ import blockfighter.server.entities.buff.BuffShieldReflect;
 import blockfighter.server.entities.buff.BuffStun;
 import blockfighter.server.entities.buff.BuffSwordSlash;
 import blockfighter.server.entities.damage.Damage;
+import blockfighter.server.entities.items.Items;
 import blockfighter.server.entities.player.skills.Skill;
 import blockfighter.server.entities.player.skills.SkillBowArc;
 import blockfighter.server.entities.player.skills.SkillBowFrost;
@@ -46,14 +47,16 @@ import blockfighter.server.entities.player.skills.SkillSwordSlash;
 import blockfighter.server.entities.player.skills.SkillSwordTaunt;
 import blockfighter.server.entities.player.skills.SkillSwordVorpal;
 import blockfighter.server.maps.GameMap;
+import blockfighter.server.net.GameServer;
 import blockfighter.server.net.PacketSender;
+import com.esotericsoftware.kryonet.Connection;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.net.InetAddress;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.UUID;
@@ -67,8 +70,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 public class Player extends Thread implements GameEntity {
 
-    private static final HashMap<Byte, Object> VALID_PLAYER_SKILL_STATES = new HashMap<>(18);
-    private static final HashMap<Byte, Object> IMMOVABLE_PLAYER_SKILL_STATES = new HashMap<>(18);
+    private static HashSet<Byte> VALID_PLAYER_SKILL_STATES;
+    private static HashSet<Byte> IMMOVABLE_PLAYER_SKILL_STATES;
     private static final HashMap<Byte, Byte> PLAYER_STATE_SKILLCODE = new HashMap<>(18);
 
     public final static byte PLAYER_STATE_STAND = 0x00,
@@ -112,9 +115,7 @@ public class Player extends Thread implements GameEntity {
     private double dmgReduct, dmgAmp;
     private double barrierDmgTaken = 0, tacticalDmgMult = 0;
 
-    private final InetAddress address;
-    private final int port;
-    private static PacketSender sender;
+    private final Connection connection;
     private final GameMap map;
     private final double[] stats = new double[Globals.NUM_STATS], bonusStats = new double[Globals.NUM_STATS];
 
@@ -143,38 +144,44 @@ public class Player extends Thread implements GameEntity {
     }
 
     public static void initializeValidPlayerSkillStates() {
-        VALID_PLAYER_SKILL_STATES.put(PLAYER_STATE_SWORD_VORPAL, null);
-        VALID_PLAYER_SKILL_STATES.put(PLAYER_STATE_SWORD_PHANTOM, null);
-        VALID_PLAYER_SKILL_STATES.put(PLAYER_STATE_SWORD_CINDER, null);
-        VALID_PLAYER_SKILL_STATES.put(PLAYER_STATE_SWORD_GASH, null);
-        VALID_PLAYER_SKILL_STATES.put(PLAYER_STATE_SWORD_SLASH, null);
-        VALID_PLAYER_SKILL_STATES.put(PLAYER_STATE_SWORD_TAUNT, null);
-        VALID_PLAYER_SKILL_STATES.put(PLAYER_STATE_BOW_ARC, null);
-        VALID_PLAYER_SKILL_STATES.put(PLAYER_STATE_BOW_POWER, null);
-        VALID_PLAYER_SKILL_STATES.put(PLAYER_STATE_BOW_RAPID, null);
-        VALID_PLAYER_SKILL_STATES.put(PLAYER_STATE_BOW_FROST, null);
-        VALID_PLAYER_SKILL_STATES.put(PLAYER_STATE_BOW_STORM, null);
-        VALID_PLAYER_SKILL_STATES.put(PLAYER_STATE_BOW_VOLLEY, null);
-        VALID_PLAYER_SKILL_STATES.put(PLAYER_STATE_SHIELD_CHARGE, null);
-        VALID_PLAYER_SKILL_STATES.put(PLAYER_STATE_SHIELD_DASH, null);
-        VALID_PLAYER_SKILL_STATES.put(PLAYER_STATE_SHIELD_FORTIFY, null);
-        VALID_PLAYER_SKILL_STATES.put(PLAYER_STATE_SHIELD_IRON, null);
-        VALID_PLAYER_SKILL_STATES.put(PLAYER_STATE_SHIELD_REFLECT, null);
-        VALID_PLAYER_SKILL_STATES.put(PLAYER_STATE_SHIELD_TOSS, null);
+        Byte[] validSkillStates = {
+            PLAYER_STATE_SWORD_VORPAL,
+            PLAYER_STATE_SWORD_PHANTOM,
+            PLAYER_STATE_SWORD_CINDER,
+            PLAYER_STATE_SWORD_GASH,
+            PLAYER_STATE_SWORD_SLASH,
+            PLAYER_STATE_SWORD_TAUNT,
+            PLAYER_STATE_BOW_ARC,
+            PLAYER_STATE_BOW_POWER,
+            PLAYER_STATE_BOW_RAPID,
+            PLAYER_STATE_BOW_FROST,
+            PLAYER_STATE_BOW_STORM,
+            PLAYER_STATE_BOW_VOLLEY,
+            PLAYER_STATE_SHIELD_CHARGE,
+            PLAYER_STATE_SHIELD_DASH,
+            PLAYER_STATE_SHIELD_FORTIFY,
+            PLAYER_STATE_SHIELD_IRON,
+            PLAYER_STATE_SHIELD_REFLECT,
+            PLAYER_STATE_SHIELD_TOSS
+        };
+        VALID_PLAYER_SKILL_STATES = new HashSet<>(Arrays.asList(validSkillStates));
 
-        IMMOVABLE_PLAYER_SKILL_STATES.put(PLAYER_STATE_SWORD_VORPAL, null);
-        IMMOVABLE_PLAYER_SKILL_STATES.put(PLAYER_STATE_SWORD_PHANTOM, null);
-        IMMOVABLE_PLAYER_SKILL_STATES.put(PLAYER_STATE_BOW_ARC, null);
-        IMMOVABLE_PLAYER_SKILL_STATES.put(PLAYER_STATE_BOW_POWER, null);
-        IMMOVABLE_PLAYER_SKILL_STATES.put(PLAYER_STATE_BOW_RAPID, null);
-        IMMOVABLE_PLAYER_SKILL_STATES.put(PLAYER_STATE_BOW_FROST, null);
-        IMMOVABLE_PLAYER_SKILL_STATES.put(PLAYER_STATE_BOW_VOLLEY, null);
-        IMMOVABLE_PLAYER_SKILL_STATES.put(PLAYER_STATE_SHIELD_CHARGE, null);
-        IMMOVABLE_PLAYER_SKILL_STATES.put(PLAYER_STATE_SHIELD_DASH, null);
-        IMMOVABLE_PLAYER_SKILL_STATES.put(PLAYER_STATE_SHIELD_FORTIFY, null);
-        IMMOVABLE_PLAYER_SKILL_STATES.put(PLAYER_STATE_SHIELD_IRON, null);
-        IMMOVABLE_PLAYER_SKILL_STATES.put(PLAYER_STATE_SHIELD_REFLECT, null);
-        IMMOVABLE_PLAYER_SKILL_STATES.put(PLAYER_STATE_SHIELD_TOSS, null);
+        Byte[] immovableSkills = {
+            PLAYER_STATE_SWORD_VORPAL,
+            PLAYER_STATE_SWORD_PHANTOM,
+            PLAYER_STATE_BOW_ARC,
+            PLAYER_STATE_BOW_POWER,
+            PLAYER_STATE_BOW_RAPID,
+            PLAYER_STATE_BOW_FROST,
+            PLAYER_STATE_BOW_VOLLEY,
+            PLAYER_STATE_SHIELD_CHARGE,
+            PLAYER_STATE_SHIELD_DASH,
+            PLAYER_STATE_SHIELD_FORTIFY,
+            PLAYER_STATE_SHIELD_IRON,
+            PLAYER_STATE_SHIELD_REFLECT,
+            PLAYER_STATE_SHIELD_TOSS
+        };
+        IMMOVABLE_PLAYER_SKILL_STATES = new HashSet<>(Arrays.asList(immovableSkills));
 
         PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SWORD_VORPAL, Skill.SWORD_VORPAL);
         PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SWORD_PHANTOM, Skill.SWORD_PHANTOM);
@@ -201,17 +208,15 @@ public class Player extends Thread implements GameEntity {
      * Create a new player entity in the server.
      *
      * @param key The key of this player in the player array in logic module
-     * @param address IP address of player
-     * @param port Connected port
      * @param map Reference to server's loaded map
+     * @param c Player connection
      * @param l Reference to Logic module
      */
-    public Player(final LogicModule l, final byte key, final InetAddress address, final int port, final GameMap map) {
+    public Player(final LogicModule l, final byte key, final Connection c, final GameMap map) {
         this.logic = l;
         this.lastActionTime = l.getTime();
         this.key = key;
-        this.address = address;
-        this.port = port;
+        this.connection = c;
         Point2D.Double spawn = map.getRandomSpawnPoint();
         this.x = spawn.x;
         this.y = spawn.y;
@@ -228,15 +233,6 @@ public class Player extends Thread implements GameEntity {
             this.buffKeys.add(i);
         }
         this.maxBuffKeys += 150;
-    }
-
-    /**
-     * Set the static packet sender for Player class
-     *
-     * @param ps Server PacketSender
-     */
-    public static void setPacketSender(final PacketSender ps) {
-        sender = ps;
     }
 
     /**
@@ -305,28 +301,8 @@ public class Player extends Thread implements GameEntity {
         return this.animState;
     }
 
-    /**
-     * Return this player's IP address.
-     * <p>
-     * Used for broadcasting to player with UDP.
-     * </p>
-     *
-     * @return The player's IP
-     */
-    public InetAddress getAddress() {
-        return this.address;
-    }
-
-    /**
-     * Return this player's connected port.
-     * <p>
-     * Used for broadcasting to player with UDP.
-     * </p>
-     *
-     * @return The player's port in int
-     */
-    public int getPort() {
-        return this.port;
+    public Connection getConnection() {
+        return this.connection;
     }
 
     /**
@@ -644,7 +620,7 @@ public class Player extends Thread implements GameEntity {
         }
 
         if (this.connected && Globals.nsToMs(this.logic.getTime() - this.lastActionTime) >= Globals.SERVER_MAX_IDLE) {
-            Globals.log(Player.class.getName(), this.address + ":" + this.port + " Idle disconnected Key: " + this.key, Globals.LOG_TYPE_DATA, true);
+            Globals.log(Player.class, this.connection + " Disconnecting <" + this.name + "> due to idling.", Globals.LOG_TYPE_DATA, true);
             disconnect();
         }
     }
@@ -855,6 +831,7 @@ public class Player extends Thread implements GameEntity {
         if (this.stats[Globals.STAT_MINHP] <= 0) {
             if (lastHitter != null) {
                 lastHitter.giveEXP(Globals.calcEXPtoNxtLvl(this.stats[Globals.STAT_LEVEL]) / 20);
+                lastHitter.giveDrop(this.stats[Globals.STAT_LEVEL]);
             }
             die();
         }
@@ -867,7 +844,7 @@ public class Player extends Thread implements GameEntity {
             bytes[1] = this.key;
             bytes[2] = Globals.STAT_MINHP;
             System.arraycopy(stat, 0, bytes, 3, stat.length);
-            sender.sendAll(bytes, this.logic.getRoom());
+            PacketSender.sendAll(bytes, this.logic.getRoom());
             //this.nextHPSend = 150;
             this.lastHPSendTime = this.logic.getTime();
         }
@@ -1088,14 +1065,37 @@ public class Player extends Thread implements GameEntity {
     }
 
     public void giveDrop(final double lvl) {
-        final byte[] bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_INT];
-        bytes[0] = Globals.DATA_PLAYER_GIVEDROP;
-        final byte[] lev = Globals.intToBytes((int) lvl);
-        bytes[1] = lev[0];
-        bytes[2] = lev[1];
-        bytes[3] = lev[2];
-        bytes[4] = lev[3];
-        sender.sendPlayer(bytes, this);
+        for (int equipCode : Items.ITEM_CODES) {
+            if (Globals.rng(100) < 10) {
+                final byte[] bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_INT * 2];
+                bytes[0] = Globals.DATA_PLAYER_GIVEDROP;
+
+                final byte[] level = Globals.intToBytes((int) lvl);
+                System.arraycopy(level, 0, bytes, 1, level.length);
+
+                final byte[] itemCode = Globals.intToBytes(equipCode);
+                System.arraycopy(itemCode, 0, bytes, 5, itemCode.length);
+
+                PacketSender.sendPlayer(bytes, this);
+            }
+            break;
+        }
+
+        for (int upgradeCode : Items.ITEM_UPGRADE_CODES) {
+            if (Globals.rng(100) < 10) {
+                final byte[] bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_INT * 2];
+                bytes[0] = Globals.DATA_PLAYER_GIVEDROP;
+
+                final byte[] level = Globals.intToBytes((int) lvl);
+                System.arraycopy(level, 0, bytes, 1, level.length);
+
+                final byte[] itemCode = Globals.intToBytes(upgradeCode);
+                System.arraycopy(itemCode, 0, bytes, 5, itemCode.length);
+
+                PacketSender.sendPlayer(bytes, this);
+            }
+            break;
+        }
     }
 
     public void giveEXP(final double amount) {
@@ -1106,27 +1106,7 @@ public class Player extends Thread implements GameEntity {
         bytes[2] = exp[1];
         bytes[3] = exp[2];
         bytes[4] = exp[3];
-        sender.sendPlayer(bytes, this);
-
-        bytes = new byte[Globals.PACKET_BYTE * 2 + Globals.PACKET_INT * 3];
-        bytes[0] = Globals.DATA_NUMBER;
-        bytes[1] = Globals.NUMBER_TYPE_EXP;
-        final byte[] posXInt = Globals.intToBytes((int) this.x);
-        bytes[2] = posXInt[0];
-        bytes[3] = posXInt[1];
-        bytes[4] = posXInt[2];
-        bytes[5] = posXInt[3];
-        final byte[] posYInt = Globals.intToBytes((int) this.y);
-        bytes[6] = posYInt[0];
-        bytes[7] = posYInt[1];
-        bytes[8] = posYInt[2];
-        bytes[9] = posYInt[3];
-        final byte[] d = Globals.intToBytes((int) amount);
-        bytes[10] = d[0];
-        bytes[11] = d[1];
-        bytes[12] = d[2];
-        bytes[13] = d[3];
-        sender.sendPlayer(bytes, this);
+        PacketSender.sendPlayer(bytes, this);
     }
 
     /**
@@ -1167,11 +1147,11 @@ public class Player extends Thread implements GameEntity {
      * @return True if player is in a skill use state.
      */
     public boolean isUsingSkill() {
-        return VALID_PLAYER_SKILL_STATES.containsKey(this.playerState);
+        return VALID_PLAYER_SKILL_STATES.contains(this.playerState);
     }
 
     public boolean isImmovableUsingSkill() {
-        return IMMOVABLE_PLAYER_SKILL_STATES.containsKey(this.playerState);
+        return IMMOVABLE_PLAYER_SKILL_STATES.contains(this.playerState);
     }
 
     /**
@@ -1364,13 +1344,13 @@ public class Player extends Thread implements GameEntity {
 
     private void updateAnimState() {
         final byte prevAnimState = this.animState, prevFrame = this.frame;
-        final int duration = Globals.nsToMs(this.logic.getTime() - this.skillCastTime);
+        final int skillDuration = Globals.nsToMs(this.logic.getTime() - this.skillCastTime);
         final int frameDuration = Globals.nsToMs(this.logic.getTime() - this.lastFrameTime);
         switch (this.playerState) {
             case PLAYER_STATE_STAND:
                 this.animState = Globals.PLAYER_ANIM_STATE_STAND;
-                if (frameDuration >= 150) {
-                    if (this.frame == 5) {
+                if (frameDuration >= 250) {
+                    if (this.frame == 3) {
                         this.frame = 0;
                     } else {
                         this.frame++;
@@ -1380,7 +1360,7 @@ public class Player extends Thread implements GameEntity {
                 break;
             case PLAYER_STATE_DEAD:
                 this.animState = Globals.PLAYER_ANIM_STATE_DEAD;
-                if (frameDuration >= 50) {
+                if ((this.frame == 2 && frameDuration >= 250) || (this.frame != 2 && frameDuration >= 50)) {
                     if (this.frame < 10) {
                         this.frame++;
                     }
@@ -1389,8 +1369,8 @@ public class Player extends Thread implements GameEntity {
                 break;
             case PLAYER_STATE_WALK:
                 this.animState = Globals.PLAYER_ANIM_STATE_WALK;
-                if (frameDuration >= 40) {
-                    if (this.frame == 15) {
+                if (frameDuration >= 70) {
+                    if (this.frame == 7) {
                         this.frame = 0;
                     } else {
                         this.frame++;
@@ -1400,29 +1380,29 @@ public class Player extends Thread implements GameEntity {
                 break;
             case PLAYER_STATE_JUMP:
                 this.animState = Globals.PLAYER_ANIM_STATE_JUMP;
-                if (this.frame != 0) {
-                    this.frame = 0;
+                if (frameDuration >= 30) {
+                    if (this.isFalling && this.map.isWithinDistanceToGround(this.x, this.y, 110)) {
+                        this.frame = 2;
+                    } else if (this.frame < 1) {
+                        this.frame++;
+                    } else {
+                        this.frame = 1;
+                    }
+                    this.lastFrameTime = this.logic.getTime();
                 }
                 break;
             case PLAYER_STATE_SWORD_SLASH:
-                if (frameDuration >= 10) {
-                    if (duration < 200 && duration > 100) {
-                        this.animState = Globals.PLAYER_ANIM_STATE_ATTACK;
-                        if (this.frame > 0) {
-                            this.frame--;
-                        }
-                    } else {
-                        this.animState = Globals.PLAYER_ANIM_STATE_ATTACK;
-                        if (this.frame < 10) {
-                            this.frame++;
-                        }
+                if (frameDuration >= 20) {
+                    this.animState = Globals.PLAYER_ANIM_STATE_ATTACK;
+                    if (this.frame < 5) {
+                        this.frame++;
                     }
                     this.lastFrameTime = this.logic.getTime();
                 }
                 break;
             case PLAYER_STATE_SWORD_GASH:
                 this.animState = Globals.PLAYER_ANIM_STATE_ATTACK;
-                if (frameDuration >= ((this.frame == 1) ? 150 : 40) && this.frame < 10) {
+                if (frameDuration >= ((this.frame == 4) ? 150 : 20) && this.frame < 5) {
                     this.frame++;
 
                     this.lastFrameTime = this.logic.getTime();
@@ -1433,21 +1413,21 @@ public class Player extends Thread implements GameEntity {
                 break;
             case PLAYER_STATE_SWORD_VORPAL:
                 this.animState = Globals.PLAYER_ANIM_STATE_ATTACK;
-                if (frameDuration >= 40 && this.frame < 10) {
+                if (frameDuration >= 20 && this.frame < 5) {
                     this.frame++;
                     this.lastFrameTime = this.logic.getTime();
                 }
                 break;
             case PLAYER_STATE_SWORD_CINDER:
                 this.animState = Globals.PLAYER_ANIM_STATE_ATTACK;
-                if (frameDuration >= ((this.frame == 1) ? 40 : 30) && this.frame < 10) {
+                if (frameDuration >= ((this.frame == 4) ? 40 : 30) && this.frame < 5) {
                     this.frame++;
                     this.lastFrameTime = this.logic.getTime();
                 }
                 break;
             case PLAYER_STATE_SWORD_TAUNT:
                 this.animState = Globals.PLAYER_ANIM_STATE_ATTACK;
-                if (frameDuration >= ((this.frame == 1) ? 150 : 30) && this.frame < 10) {
+                if (frameDuration >= ((this.frame == 4) ? 150 : 30) && this.frame < 5) {
                     this.frame++;
                     this.lastFrameTime = this.logic.getTime();
                 }
@@ -1469,7 +1449,7 @@ public class Player extends Thread implements GameEntity {
             case PLAYER_STATE_BOW_POWER:
                 this.animState = Globals.PLAYER_ANIM_STATE_ATTACKBOW;
                 if (frameDuration >= ((this.frame < 5) ? 20 : 70)) {
-                    if (duration < 800) {
+                    if (skillDuration < 800) {
                         if (this.frame != 5) {
                             this.frame++;
                         }
@@ -1498,14 +1478,15 @@ public class Player extends Thread implements GameEntity {
                 }
                 break;
             case PLAYER_STATE_SHIELD_DASH:
-                this.animState = Globals.PLAYER_ANIM_STATE_ATTACK;
-                if (frameDuration >= 20 && this.frame < 2) {
+                this.animState = Globals.PLAYER_ANIM_STATE_ROLL;
+                if (frameDuration >= 40 && this.frame < 9) {
                     this.frame++;
+                    this.lastFrameTime = this.logic.getTime();
                 }
                 break;
             case PLAYER_STATE_SHIELD_CHARGE:
                 this.animState = Globals.PLAYER_ANIM_STATE_ATTACK;
-                if (frameDuration >= ((this.frame == 1) ? 600 : 20) && this.frame < 10) {
+                if (frameDuration >= ((this.frame == 1) ? 4 : 20) && this.frame < 4) {
                     this.frame++;
                     this.lastFrameTime = this.logic.getTime();
                 }
@@ -1532,7 +1513,7 @@ public class Player extends Thread implements GameEntity {
                 break;
             case PLAYER_STATE_SHIELD_TOSS:
                 this.animState = Globals.PLAYER_ANIM_STATE_ATTACK;
-                if (frameDuration >= 40 && this.frame < 10) {
+                if (frameDuration >= 40 && this.frame < 5) {
                     this.frame++;
                     this.lastFrameTime = this.logic.getTime();
                 }
@@ -1557,7 +1538,7 @@ public class Player extends Thread implements GameEntity {
         bytes[7] = posYInt[1];
         bytes[8] = posYInt[2];
         bytes[9] = posYInt[3];
-        sender.sendAll(bytes, room);
+        PacketSender.sendAll(bytes, room);
     }
 
     public void sendData() {
@@ -1582,7 +1563,7 @@ public class Player extends Thread implements GameEntity {
             bytes[12] = this.frame;
         }
 
-        sender.sendAll(bytes, this.logic.getRoom());
+        PacketSender.sendAll(bytes, this.logic.getRoom());
         this.updatePos = false;
         this.updateFacing = false;
         this.updateAnimState = false;
@@ -1609,7 +1590,7 @@ public class Player extends Thread implements GameEntity {
         bytes[8] = posYInt[2];
         bytes[9] = posYInt[3];
         bytes[10] = this.facing;
-        sender.sendAll(bytes, this.logic.getRoom());
+        PacketSender.sendAll(bytes, this.logic.getRoom());
         this.updatePos = false;
     }
 
@@ -1624,7 +1605,7 @@ public class Player extends Thread implements GameEntity {
         bytes[0] = Globals.DATA_PLAYER_SET_FACING;
         bytes[1] = this.key;
         bytes[2] = this.facing;
-        sender.sendAll(bytes, this.logic.getRoom());
+        PacketSender.sendAll(bytes, this.logic.getRoom());
         this.updateFacing = false;
     }
 
@@ -1644,7 +1625,7 @@ public class Player extends Thread implements GameEntity {
         } else {
             bytes[3] = this.frame;
         }
-        sender.sendAll(bytes, this.logic.getRoom());
+        PacketSender.sendAll(bytes, this.logic.getRoom());
         this.updateAnimState = false;
     }
 
@@ -1657,26 +1638,26 @@ public class Player extends Thread implements GameEntity {
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 2];
         bytes[0] = Globals.DATA_PLAYER_SET_COOLDOWN;
         bytes[1] = data[3];
-        sender.sendPlayer(bytes, this);
+        PacketSender.sendPlayer(bytes, this);
     }
 
     public void sendCooldown(final byte skillCode) {
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 2];
         bytes[0] = Globals.DATA_PLAYER_SET_COOLDOWN;
         bytes[1] = skillCode;
-        sender.sendPlayer(bytes, this);
+        PacketSender.sendPlayer(bytes, this);
     }
 
     public void sendDamage(final Damage dmg, final int dmgDealt) {
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 2 + Globals.PACKET_INT * 3];
         bytes[0] = Globals.DATA_NUMBER;
         bytes[1] = dmg.getDamageType();
-        final byte[] posXInt = Globals.intToBytes((int)this.x);
+        final byte[] posXInt = Globals.intToBytes((int) this.x);
         bytes[2] = posXInt[0];
         bytes[3] = posXInt[1];
         bytes[4] = posXInt[2];
         bytes[5] = posXInt[3];
-        final byte[] posYInt = Globals.intToBytes((int)this.y - 20);
+        final byte[] posYInt = Globals.intToBytes((int) this.y - 20);
         bytes[6] = posYInt[0];
         bytes[7] = posYInt[1];
         bytes[8] = posYInt[2];
@@ -1687,13 +1668,13 @@ public class Player extends Thread implements GameEntity {
         bytes[12] = d[2];
         bytes[13] = d[3];
         if (map.isPvP()) {
-            sender.sendPlayer(bytes, dmg.getOwner());
+            PacketSender.sendPlayer(bytes, dmg.getOwner());
 
             final byte[] pvpBytes = Arrays.copyOf(bytes, bytes.length);
             pvpBytes[1] = Globals.NUMBER_TYPE_MOB;
-            sender.sendPlayer(pvpBytes, this);
+            PacketSender.sendPlayer(pvpBytes, this);
         } else {
-            sender.sendAll(bytes, this.logic.getRoom());
+            PacketSender.sendAll(bytes, this.logic.getRoom());
         }
     }
 
@@ -1706,7 +1687,7 @@ public class Player extends Thread implements GameEntity {
         bytes[0] = Globals.DATA_PLAYER_GET_NAME;
         bytes[1] = this.key;
         System.arraycopy(data, 0, bytes, 2, data.length);
-        sender.sendAll(bytes, this.logic.getRoom());
+        PacketSender.sendAll(bytes, this.logic.getRoom());
     }
 
     public void sendStat(final byte statID) {
@@ -1716,7 +1697,7 @@ public class Player extends Thread implements GameEntity {
         bytes[1] = this.key;
         bytes[2] = statID;
         System.arraycopy(stat, 0, bytes, 3, stat.length);
-        sender.sendAll(bytes, this.logic.getRoom());
+        PacketSender.sendAll(bytes, this.logic.getRoom());
     }
 
     public void setInvulnerable(final boolean set) {
@@ -1829,7 +1810,16 @@ public class Player extends Thread implements GameEntity {
      * Disconnect a player in the next tick.
      */
     public void disconnect() {
-        this.connected = false;
+        if (isConnected()) {
+            this.connected = false;
+            final byte[] bytes = new byte[2];
+            bytes[0] = Globals.DATA_PLAYER_DISCONNECT;
+            bytes[1] = this.key;
+            PacketSender.sendAll(bytes, logic.getRoom());
+            this.connection.close();
+            GameServer.removeConnectionPlayer(this.connection);
+            Globals.log(Player.class, "Disconnected <" + getPlayerName() + ">", Globals.LOG_TYPE_DATA, true);
+        }
     }
 
     /**
@@ -1894,7 +1884,7 @@ public class Player extends Thread implements GameEntity {
         bytes[8] = posYInt[2];
         bytes[9] = posYInt[3];
         bytes[10] = facing;
-        sender.sendAll(bytes, room);
+        PacketSender.sendAll(bytes, room);
     }
 
     public static void sendParticle(final byte room, final byte particleID, final double x, final double y) {
@@ -1911,7 +1901,7 @@ public class Player extends Thread implements GameEntity {
         bytes[7] = posYInt[1];
         bytes[8] = posYInt[2];
         bytes[9] = posYInt[3];
-        sender.sendAll(bytes, room);
+        PacketSender.sendAll(bytes, room);
     }
 
     public static void sendParticle(final byte room, final byte particleID, final byte key) {
@@ -1919,7 +1909,7 @@ public class Player extends Thread implements GameEntity {
         bytes[0] = Globals.DATA_PARTICLE_EFFECT;
         bytes[1] = particleID;
         bytes[2] = key;
-        sender.sendAll(bytes, room);
+        PacketSender.sendAll(bytes, room);
     }
 
     public static void sendParticle(final byte room, final byte particleID, final byte key, final byte facing) {
@@ -1928,7 +1918,7 @@ public class Player extends Thread implements GameEntity {
         bytes[1] = particleID;
         bytes[2] = facing;
         bytes[3] = key;
-        sender.sendAll(bytes, room);
+        PacketSender.sendAll(bytes, room);
     }
 
 }

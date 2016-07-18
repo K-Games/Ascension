@@ -8,8 +8,8 @@ public class ParticleSwordTauntAuraParticle extends Particle {
 
     public ParticleSwordTauntAuraParticle(final int x, final int y, final byte f) {
         super(x, y, f);
-        this.x += Globals.rng(100) - 60;
-        this.y -= Globals.rng(40);
+        this.x += Globals.rng(50) - 35;
+        this.y -= Globals.rng(40) + 15;
         this.frame = 0;
         this.frameDuration = 50;
         this.duration = 500;
@@ -19,7 +19,7 @@ public class ParticleSwordTauntAuraParticle extends Particle {
     public void update() {
         super.update();
 
-        this.y -= 9;
+        this.y -= 6;
         if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
             this.frameDuration = 50;
             if (PARTICLE_SPRITE != null && this.frame < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_TAUNTAURA2].length - 1) {

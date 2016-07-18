@@ -36,7 +36,7 @@ public class ParticlePassiveBarrier extends Particle {
         }
         final BufferedImage sprite = PARTICLE_SPRITE[Globals.PARTICLE_PASSIVE_BARRIER][this.frame];
         final int drawSrcX = this.x - sprite.getWidth() / 2;
-        final int drawSrcY = this.y - sprite.getHeight() / 2 - 20;
+        final int drawSrcY = this.y - sprite.getHeight() / 2;
         final int drawDscY = drawSrcY + sprite.getHeight();
         final int drawDscX = drawSrcX + sprite.getWidth();
         g.drawImage(sprite, drawSrcX, drawSrcY, drawDscX, drawDscY, 0, 0, sprite.getWidth(), sprite.getHeight(), null);

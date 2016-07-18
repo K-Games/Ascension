@@ -1,29 +1,42 @@
 ```
- __ __|                                 ___|                                          |   
-    |   _ \ \ \  \   /  _ \   __|      |       _ \   __ \    _` |  |   |   _ \   __|  __| 
-    |  (   | \ \  \ /   __/  |         |      (   |  |   |  (   |  |   |   __/ \__ \  |   
-   _| \___/   \_/\_/  \___| _|        \____| \___/  _|  _| \__, | \__,_| \___| ____/ \__| 
-                                                               _|                         
+     \                                   _)               
+    _ \     __|   __|   _ \  __ \    __|  |   _ \   __ \  
+   ___ \  \__ \  (      __/  |   | \__ \  |  (   |  |   | 
+ _/    _\ ____/ \___| \___| _|  _| ____/ _| \___/  _|  _|                                             _|                         
 ```
 
 # Description
 An multiplayer action 2D sidescrolling platformer coded in pure Java.
 
-## v0.17 Client Update 1
+## Version 0.18
 ### Client Changes
-* Fixed loading into map before loading completed.
-* Buff Particles are less visible. Less visual cluttering around players.
-* Player/Save Data are now uniquely identified with UUIDs.
-* Added visual effects when player is critically hit.
-* Ingame number changed for less visual clutter.
-* Added HP Bar for players.
+* Minor adjustments to sound effects.
+* Minor adjust to some particle visuals.
+* Added `-port` launch parameter to specify port to connect.
+* Added responses when failing to login to a room.
+* Added a leave button in game - Can still leave a room with ESC button.
+* Map Levels removed - Replaced with Arena Level Selection.
+* New sprites for Dash, Walk, Stand and Death.
+* Notifications when receiving EXP or items.
+* Complete Netcode rework.
+* UI Overhaul
+* Added Title Screen
 
-## v0.17 Server Update 1
 ### Server Changes
-* Mob(Monster) System improved - MobSkill is now it's own type, Mob Skills were subtypes of Skill before.
-* Mob Buffs now parity Player buffs - Mobs now correctly take Damage Amplification and Reduction buffs.
-* Slight change in Damage Reduction calculation.
-* Added a 5 second grace period between clearing a level and resetting.
-* Fixed rare case where a level would not reset when finished. 
-* Arena - When a player is killed, 20% of their required experience to level up is awarded to the killer.
-* Fixed a bug not denying login request when a player is logging in with the same character from the same IP.
+* Dash distance decreased from 375 over 0.25s to 340 over 0.4s.
+* Dash Damage Buff is now applied at the end instead of the beginning.
+* Standardized logging format - Format is now [TIMESTAMP] Log Type:Class:Info
+* Player state valid hash maps changed to use hash sets for performance.
+* All maps are now Arenas - Restricted between levels.
+* Players now have a chance to get an item when killing another player.
+* Item drops are defined by server itemcode.txt list.
+* Servers can now setup with different room numbers. Doesn't have to boot with sequential room numbers.
+* Complete Netcode rework. Now backed by Kyronet TCP.
+
+# Credits
+
+## Title & Menu Tracks
+Hero - [geluf](https://soundcloud.com/geluf)
+
+Through the Forest in Midwinter - [geluf](https://soundcloud.com/geluf)
+

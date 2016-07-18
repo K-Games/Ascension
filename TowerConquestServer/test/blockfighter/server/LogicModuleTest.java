@@ -71,7 +71,7 @@ public class LogicModuleTest {
         byte result = this.logic.getNextMobKey();
 
         System.out.println("Expected: <" + expResult + ">, Result: <" + result + ">");
-        
+
         assertEquals(expResult, result);
     }
 
@@ -86,7 +86,7 @@ public class LogicModuleTest {
         byte result = this.logic.getNextMobKey();
 
         System.out.println("Expected: <" + expResult + ">, Result: <" + result + ">");
-        
+
         assertEquals(expResult, result);
     }
 
@@ -115,12 +115,12 @@ public class LogicModuleTest {
             this.logic.returnProjKey(i);
         }
         verify(spy, atLeast(200)).add(any());
-        
+
         int expResult = 200;
         int result = spy.size();
-        
+
         System.out.println("Expected: <" + expResult + ">, Result: <" + result + ">");
-        
+
         assertEquals(expResult, result);
     }
 
@@ -139,9 +139,9 @@ public class LogicModuleTest {
 
         int expResult = 200;
         int result = spy.size();
-        
+
         System.out.println("Expected: <" + expResult + ">, Result: <" + result + ">");
-        
+
         assertEquals(expResult, result);
     }
 
@@ -157,7 +157,7 @@ public class LogicModuleTest {
         UUID id = UUID.randomUUID();
 
         when(mockPlayer.getUniqueID()).thenReturn(id);
-        
+
         assertTrue(this.logic.containsPlayerID(id));
     }
 
@@ -174,7 +174,7 @@ public class LogicModuleTest {
         UUID id2 = UUID.randomUUID();
 
         when(mockPlayer.getUniqueID()).thenReturn(id1);
-        
+
         assertFalse(this.logic.containsPlayerID(id2));
     }
 
@@ -195,9 +195,9 @@ public class LogicModuleTest {
 
         byte expResult = playerKey;
         byte result = this.logic.getPlayerKey(id);
-        
+
         System.out.println("Expected: <" + expResult + ">, Result: <" + result + ">");
-        
+
         assertEquals(expResult, result);
     }
 
@@ -218,9 +218,9 @@ public class LogicModuleTest {
 
         byte expResult = -1;
         byte result = this.logic.getPlayerKey(UUID.randomUUID());
-        
+
         System.out.println("Expected: <" + expResult + ">, Result: <" + result + ">");
-        
+
         assertEquals(expResult, result);
     }
 
@@ -229,9 +229,49 @@ public class LogicModuleTest {
         System.out.println("getPlayerKey: Return -1 when no players exist");
         byte expResult = -1;
         byte result = this.logic.getPlayerKey(UUID.randomUUID());
-        
+
         System.out.println("Expected: <" + expResult + ">, Result: <" + result + ">");
-        
+
         assertEquals(expResult, result);
+    }
+
+    @Test
+    public void testIsFullTrueWhenPlayerKeysIsEmpty() {
+        System.out.println("isFull: Return true when there are no player keys in queue");
+        this.logic.setPlayerKeys(this.playerKeys);
+        when(this.playerKeys.isEmpty()).thenReturn(true);
+
+        boolean expResult = true;
+        boolean result = this.logic.isFull();
+
+        System.out.println("Expected: <" + expResult + ">, Result: <" + result + ">");
+
+        assertEquals(expResult, result);
+    }
+
+    @Test
+    public void testIsInLevelRangeTrueWhenInRange() {
+        System.out.println("isFull: Return true when there are level is in room's level range");
+        this.logic.setMinLevel(1);
+        this.logic.setMaxLevel(30);
+
+        for (int i = 1; i <= 30; i++) {
+            assertTrue(this.logic.isInLevelRange(i));
+        }
+    }
+
+    @Test
+    public void testIsInLevelRangeFalseWhenOutOfRange() {
+        System.out.println("isFull: Return false when there are level is not in room's level range");
+        this.logic.setMinLevel(1);
+        this.logic.setMaxLevel(30);
+
+        for (int i = -20; i <= 0; i++) {
+            assertFalse(this.logic.isInLevelRange(i));
+        }
+
+        for (int i = 31; i <= 100; i++) {
+            assertFalse(this.logic.isInLevelRange(i));
+        }
     }
 }

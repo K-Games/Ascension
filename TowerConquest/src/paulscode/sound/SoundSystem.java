@@ -11,7 +11,12 @@ import java.util.Set;
 import javax.sound.sampled.AudioFormat;
 
 /**
- * The SoundSystem class is the core class for the SoundSystem library. It is capable of interfacing with external sound library and codec library pluggins. This core class is stripped down to give it a smaller memory footprint and to make it more customizable. This library was created to provide a simple, common interface to a variety of 3rd-party sound and codec libraries, and to simplify switching between them on the fly. If no external pluggins are loaded, this core class by itself is only capable of playing MIDI files. Specific implementations (such as SoundSystemJPCT) will extend this core class. They will automatically link with popular external pluggins and provide extra methods for ease of use. There should be only one instance of this class in any program! The SoundSystem can be constructed by defining which sound library to use, or by allowing SoundSystem to perform its own library compatibility checking. See {@link paulscode.sound.SoundSystemConfig SoundSystemConfig} for information about changing default settings and linking with external pluggins.
+ * The SoundSystem class is the core class for the SoundSystem library. It is capable of interfacing with external sound library and codec library pluggins. This core class is stripped down to give it
+ * a smaller memory footprint and to make it more customizable. This library was created to provide a simple, common interface to a variety of 3rd-party sound and codec libraries, and to simplify
+ * switching between them on the fly. If no external pluggins are loaded, this core class by itself is only capable of playing MIDI files. Specific implementations (such as SoundSystemJPCT) will
+ * extend this core class. They will automatically link with popular external pluggins and provide extra methods for ease of use. There should be only one instance of this class in any program! The
+ * SoundSystem can be constructed by defining which sound library to use, or by allowing SoundSystem to perform its own library compatibility checking. See
+ * {@link paulscode.sound.SoundSystemConfig SoundSystemConfig} for information about changing default settings and linking with external pluggins.
  * <br><br>
  * <b><i> SoundSystem License:</b></i><br><b><br>
  * You are free to use this library for any purpose, commercial or otherwise. You may modify this library or source code, and distribute it any way you like, provided the following conditions are met:
@@ -64,7 +69,8 @@ public class SoundSystem {
     protected List<CommandObject> commandQueue;
 
     /**
-     * Used internally by SoundSystem to keep track of play/pause/stop/rewind commands. This prevents source management (culling and activating) from being adversely affected by the quickPlay, quickStream, and backgroundMusic methods.
+     * Used internally by SoundSystem to keep track of play/pause/stop/rewind commands. This prevents source management (culling and activating) from being adversely affected by the quickPlay,
+     * quickStream, and backgroundMusic methods.
      */
     private List<CommandObject> sourcePlayList;
 
@@ -99,7 +105,8 @@ public class SoundSystem {
     private static SoundSystemException lastException = null;
 
     /**
-     * Constructor: Create the sound system using the default library. If the default library is not compatible, another library type will be loaded instead, in the order of library preference. See {@link paulscode.sound.SoundSystemConfig SoundSystemConfig} for information about sound library types.
+     * Constructor: Create the sound system using the default library. If the default library is not compatible, another library type will be loaded instead, in the order of library preference. See
+     * {@link paulscode.sound.SoundSystemConfig SoundSystemConfig} for information about sound library types.
      */
     public SoundSystem() {
         // create the message logger:
@@ -154,7 +161,8 @@ public class SoundSystem {
     }
 
     /**
-     * Links with any default libraries or codecs should be made in this method. This method is empty in the core SoundSystem class, and should be overriden by classes which extend SoundSystem. See {@link paulscode.sound.SoundSystemConfig SoundSystemConfig} for information about linking with sound libraries and codecs.
+     * Links with any default libraries or codecs should be made in this method. This method is empty in the core SoundSystem class, and should be overriden by classes which extend SoundSystem. See
+     * {@link paulscode.sound.SoundSystemConfig SoundSystemConfig} for information about linking with sound libraries and codecs.
      */
     protected void linkDefaultLibrariesAndCodecs() {
     }
@@ -261,7 +269,8 @@ public class SoundSystem {
     }
 
     /**
-     * Wakes up the Command Thread to process commands. This method should be used if there is a need to call methods 'ManageSources' and 'CommandQueue' externally. In most cases, this method will not be needed, since SoundSystem automatically wakes the Command Thread every time commands are placed into either the ManageSources queue or CommandQueue to be processed.
+     * Wakes up the Command Thread to process commands. This method should be used if there is a need to call methods 'ManageSources' and 'CommandQueue' externally. In most cases, this method will not
+     * be needed, since SoundSystem automatically wakes the Command Thread every time commands are placed into either the ManageSources queue or CommandQueue to be processed.
      */
     public void interruptCommandThread() {
         if (commandThread == null) {
@@ -274,7 +283,8 @@ public class SoundSystem {
     }
 
     /**
-     * Pre-loads a sound into memory. The file may either be located within the JAR or at an online location. If the file is online, filename must begin with "http://", since that is how SoundSystem recognizes URL's. If the file is located within the compiled JAR, the package in which sound files are located may be set by calling SoundSystemConfig.setSoundFilesPackage().
+     * Pre-loads a sound into memory. The file may either be located within the JAR or at an online location. If the file is online, filename must begin with "http://", since that is how SoundSystem
+     * recognizes URL's. If the file is located within the compiled JAR, the package in which sound files are located may be set by calling SoundSystemConfig.setSoundFilesPackage().
      *
      * @param filename Filename of the sound file to load.
      */
@@ -287,7 +297,8 @@ public class SoundSystem {
     }
 
     /**
-     * Pre-loads a sound specified by the given URL into memory. The second parameter 'identifier' should look like a filename, and it must have the correct extension so SoundSystem knows what codec to use for the file referenced by the URL instance.
+     * Pre-loads a sound specified by the given URL into memory. The second parameter 'identifier' should look like a filename, and it must have the correct extension so SoundSystem knows what codec
+     * to use for the file referenced by the URL instance.
      *
      * @param url URL handle to the sound file to load.
      * @param identifier Filename/identifier of the file referenced by the URL.
@@ -317,7 +328,9 @@ public class SoundSystem {
     }
 
     /**
-     * Removes a pre-loaded sound from memory. This is a good method to use for freeing up memory after a large sound file is no longer needed. NOTE: the source will remain in memory after calling this method as long as the sound is attached to an existing source. When calling this method, calls should also be made to method removeSource( String ) for all sources which this sound is bound to.
+     * Removes a pre-loaded sound from memory. This is a good method to use for freeing up memory after a large sound file is no longer needed. NOTE: the source will remain in memory after calling
+     * this method as long as the sound is attached to an existing source. When calling this method, calls should also be made to method removeSource( String ) for all sources which this sound is
+     * bound to.
      *
      * @param filename Filename/identifier of the sound file to unload.
      */
@@ -329,7 +342,9 @@ public class SoundSystem {
     }
 
     /**
-     * If the specified source is a streaming source or MIDI source, this method queues up the next sound to play when the previous playback ends. The file may either be located within the JAR or at an online location. If the file is online, filename must begin with "http://", since that is how SoundSystem recognizes URL paths. If the file is located within the compiled JAR, the package in which sound files are located may be set by calling SoundSystemConfig.setSoundFilesPackage(). This method has no effect on non-streaming sources.
+     * If the specified source is a streaming source or MIDI source, this method queues up the next sound to play when the previous playback ends. The file may either be located within the JAR or at
+     * an online location. If the file is online, filename must begin with "http://", since that is how SoundSystem recognizes URL paths. If the file is located within the compiled JAR, the package in
+     * which sound files are located may be set by calling SoundSystemConfig.setSoundFilesPackage(). This method has no effect on non-streaming sources.
      *
      * @param sourcename Source identifier.
      * @param filename Name of the sound file to play next.
@@ -343,7 +358,8 @@ public class SoundSystem {
     }
 
     /**
-     * If the specified source is a streaming source or MIDI source, this method queues up the next sound to play when the previous playback ends. The third parameter 'identifier' should look like a filename, and it must have the correct extension so SoundSystem knows what codec to use for the file referenced by the URL instance. This method has no effect on non-streaming sources.
+     * If the specified source is a streaming source or MIDI source, this method queues up the next sound to play when the previous playback ends. The third parameter 'identifier' should look like a
+     * filename, and it must have the correct extension so SoundSystem knows what codec to use for the file referenced by the URL instance. This method has no effect on non-streaming sources.
      *
      * @param sourcename Source identifier.
      * @param url URL handle to the sound file to load.
@@ -358,7 +374,8 @@ public class SoundSystem {
     }
 
     /**
-     * Removes the first occurrence of the specified filename/identifier from the specified source's list of sounds to play when previous playback ends. This method has no effect on non-streaming sources.
+     * Removes the first occurrence of the specified filename/identifier from the specified source's list of sounds to play when previous playback ends. This method has no effect on non-streaming
+     * sources.
      *
      * @param sourcename Source identifier.
      * @param filename Filename/identifier of the sound file to play next.
@@ -372,7 +389,11 @@ public class SoundSystem {
     }
 
     /**
-     * Fades out the volume of whatever the specified source is currently playing, then begins playing the specified file at the source's previously assigned volume level. The file may either be located within the JAR or at an online location. If the file is online, filename must begin with "http://", since that is how SoundSystem recognizes URL paths. If the file is located within the compiled JAR, the package in which sound files are located may be set by calling SoundSystemConfig.setSoundFilesPackage(). If the filename parameter is null or empty, the specified source will simply fade out and stop. The miliseconds parameter must be non-negative or zero. This method will remove anything that is currently in the specified source's list of queued sounds that would have played next when the current sound finished playing. This method may only be used for streaming and MIDI sources.
+     * Fades out the volume of whatever the specified source is currently playing, then begins playing the specified file at the source's previously assigned volume level. The file may either be
+     * located within the JAR or at an online location. If the file is online, filename must begin with "http://", since that is how SoundSystem recognizes URL paths. If the file is located within the
+     * compiled JAR, the package in which sound files are located may be set by calling SoundSystemConfig.setSoundFilesPackage(). If the filename parameter is null or empty, the specified source will
+     * simply fade out and stop. The miliseconds parameter must be non-negative or zero. This method will remove anything that is currently in the specified source's list of queued sounds that would
+     * have played next when the current sound finished playing. This method may only be used for streaming and MIDI sources.
      *
      * @param sourcename Name of the source to fade out.
      * @param filename Name of a sound file to play next, or null for none.
@@ -391,7 +412,10 @@ public class SoundSystem {
     }
 
     /**
-     * Fades out the volume of whatever the specified source is currently playing, then begins playing the specified file at the source's previously assigned volume level. If the url parameter is null or empty, the specified source will simply fade out and stop. The third parameter 'identifier' should look like a filename, and it must have the correct extension so SoundSystem knows what codec to use for the file referenced by the URL instance. The miliseconds parameter must be non-negative or zero. This method will remove anything that is currently in the specified source's list of queued sounds that would have played next when the current sound finished playing. This method may only be used for streaming and MIDI sources.
+     * Fades out the volume of whatever the specified source is currently playing, then begins playing the specified file at the source's previously assigned volume level. If the url parameter is null
+     * or empty, the specified source will simply fade out and stop. The third parameter 'identifier' should look like a filename, and it must have the correct extension so SoundSystem knows what
+     * codec to use for the file referenced by the URL instance. The miliseconds parameter must be non-negative or zero. This method will remove anything that is currently in the specified source's
+     * list of queued sounds that would have played next when the current sound finished playing. This method may only be used for streaming and MIDI sources.
      *
      * @param sourcename Name of the source to fade out.
      * @param url URL handle to the sound file to play next, or null for none.
@@ -412,7 +436,11 @@ public class SoundSystem {
     }
 
     /**
-     * Fades out the volume of whatever the specified source is currently playing, then fades the volume back in playing the specified filename. Final volume after fade-in completes will be equal to the source's previously assigned volume level. The filename parameter may not be null or empty. The file may either be located within the JAR or at an online location. If the file is online, filename must begin with "http://", since that is how SoundSystem recognizes URL paths. If the file is located within the compiled JAR, the package in which sound files are located may be set by calling SoundSystemConfig.setSoundFilesPackage(). The miliseconds parameters must be non-negative or zero. This method will remove anything that is currently in the specified source's list of queued sounds that would have played next when the current sound finished playing. This method may only be used for streaming and MIDI sources.
+     * Fades out the volume of whatever the specified source is currently playing, then fades the volume back in playing the specified filename. Final volume after fade-in completes will be equal to
+     * the source's previously assigned volume level. The filename parameter may not be null or empty. The file may either be located within the JAR or at an online location. If the file is online,
+     * filename must begin with "http://", since that is how SoundSystem recognizes URL paths. If the file is located within the compiled JAR, the package in which sound files are located may be set
+     * by calling SoundSystemConfig.setSoundFilesPackage(). The miliseconds parameters must be non-negative or zero. This method will remove anything that is currently in the specified source's list
+     * of queued sounds that would have played next when the current sound finished playing. This method may only be used for streaming and MIDI sources.
      *
      * @param sourcename Name of the source to fade out/in.
      * @param filename Name of a sound file to play next, or null for none.
@@ -431,7 +459,10 @@ public class SoundSystem {
     }
 
     /**
-     * Fades out the volume of whatever the specified source is currently playing, then fades the volume back in playing the specified file. Final volume after fade-in completes will be equal to the source's previously assigned volume level. The url parameter may not be null or empty. The third parameter 'identifier' should look like a filename, and it must have the correct extension so SoundSystem knows what codec to use for the file referenced by the URL instance. The miliseconds parameters must be non-negative or zero. This method will remove anything that is currently in the specified source's list of queued sounds that would have played next when the current sound finished playing. This method may only be used for streaming and MIDI sources.
+     * Fades out the volume of whatever the specified source is currently playing, then fades the volume back in playing the specified file. Final volume after fade-in completes will be equal to the
+     * source's previously assigned volume level. The url parameter may not be null or empty. The third parameter 'identifier' should look like a filename, and it must have the correct extension so
+     * SoundSystem knows what codec to use for the file referenced by the URL instance. The miliseconds parameters must be non-negative or zero. This method will remove anything that is currently in
+     * the specified source's list of queued sounds that would have played next when the current sound finished playing. This method may only be used for streaming and MIDI sources.
      *
      * @param sourcename Name of the source to fade out/in.
      * @param url URL handle to the sound file to play next.
@@ -451,7 +482,10 @@ public class SoundSystem {
     }
 
     /**
-     * Makes sure the current volume levels of streaming sources and MIDI are correct. This method is designed to help reduce the "jerky" fading behavior that happens when using some library and codec pluggins (such as LibraryJavaSound and CodecJOrbis). This method has no effect on normal "non-streaming" sources. It would normally be called somewhere in the main "game loop". IMPORTANT: To optimize frame-rates, do not call this method for every frame. It is better to just call this method at some acceptable "granularity" (play around with different granularities to find what sounds acceptable for a particular situation).
+     * Makes sure the current volume levels of streaming sources and MIDI are correct. This method is designed to help reduce the "jerky" fading behavior that happens when using some library and codec
+     * pluggins (such as LibraryJavaSound and CodecJOrbis). This method has no effect on normal "non-streaming" sources. It would normally be called somewhere in the main "game loop". IMPORTANT: To
+     * optimize frame-rates, do not call this method for every frame. It is better to just call this method at some acceptable "granularity" (play around with different granularities to find what
+     * sounds acceptable for a particular situation).
      */
     public void checkFadeVolumes() {
         // Queue a command to load check fading source volumes:
@@ -461,7 +495,9 @@ public class SoundSystem {
     }
 
     /**
-     * Creates a new permanant, streaming, priority source with zero attenuation. The file may either be located within the JAR or at an online location. If the file is online, filename must begin with "http://", since that is how SoundSystem recognizes URL paths. If the file is located within the compiled JAR, the package in which sound files are located may be set by calling SoundSystemConfig.setSoundFilesPackage().
+     * Creates a new permanant, streaming, priority source with zero attenuation. The file may either be located within the JAR or at an online location. If the file is online, filename must begin
+     * with "http://", since that is how SoundSystem recognizes URL paths. If the file is located within the compiled JAR, the package in which sound files are located may be set by calling
+     * SoundSystemConfig.setSoundFilesPackage().
      *
      * @param sourcename A unique identifier for this source. Two sources may not use the same sourcename.
      * @param filename Filename of the sound file to stream at this source.
@@ -480,7 +516,8 @@ public class SoundSystem {
     }
 
     /**
-     * Creates a new permanant, streaming, priority source with zero attenuation. The third parameter 'identifier' should look like a filename, and it must have the correct extension so SoundSystem knows what codec to use for the file referenced by the URL instance.
+     * Creates a new permanant, streaming, priority source with zero attenuation. The third parameter 'identifier' should look like a filename, and it must have the correct extension so SoundSystem
+     * knows what codec to use for the file referenced by the URL instance.
      *
      * @param sourcename A unique identifier for this source. Two sources may not use the same sourcename.
      * @param url URL handle to the sound file to stream at this source.
@@ -550,7 +587,8 @@ public class SoundSystem {
     }
 
     /**
-     * Creates a new streaming source. The file may either be located within the JAR or at an online location. If the file is online, filename must begin with "http://", since that is how SoundSystem recognizes URL paths. If the file is located within the compiled JAR, the package in which sound files are located may be set by calling SoundSystemConfig.setSoundFilesPackage().
+     * Creates a new streaming source. The file may either be located within the JAR or at an online location. If the file is online, filename must begin with "http://", since that is how SoundSystem
+     * recognizes URL paths. If the file is located within the compiled JAR, the package in which sound files are located may be set by calling SoundSystemConfig.setSoundFilesPackage().
      *
      * @param priority Setting this to true will prevent other sounds from overriding this one.
      * @param sourcename A unique identifier for this source. Two sources may not use the same sourcename.
@@ -574,7 +612,8 @@ public class SoundSystem {
     }
 
     /**
-     * Creates a new streaming source. The fourth parameter 'identifier' should look like a filename, and it must have the correct extension so SoundSystem knows what codec to use for the file referenced by the URL instance.
+     * Creates a new streaming source. The fourth parameter 'identifier' should look like a filename, and it must have the correct extension so SoundSystem knows what codec to use for the file
+     * referenced by the URL instance.
      *
      * @param priority Setting this to true will prevent other sounds from overriding this one.
      * @param sourcename A unique identifier for this source. Two sources may not use the same sourcename.
@@ -599,7 +638,8 @@ public class SoundSystem {
     }
 
     /**
-     * Opens a direct line for streaming audio data. This method creates a new streaming source to play the data at. The resulting streaming source can be manipulated the same as any other streaming source. Raw data can be sent to the new streaming source using the feedRawAudioData() method.
+     * Opens a direct line for streaming audio data. This method creates a new streaming source to play the data at. The resulting streaming source can be manipulated the same as any other streaming
+     * source. Raw data can be sent to the new streaming source using the feedRawAudioData() method.
      *
      * @param audioFormat Format that the data will be in.
      * @param priority Setting this to true will prevent other sounds from overriding this one.
@@ -620,7 +660,8 @@ public class SoundSystem {
     }
 
     /**
-     * Creates a temporary source and plays it. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
+     * Creates a temporary source and plays it. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method
+     * permanant, call the setActive() method using the return value for sourcename.
      *
      * @param priority Setting this to true will prevent other sounds from overriding this one.
      * @param filename Filename/identifier of the sound file to play at this source.
@@ -654,7 +695,8 @@ public class SoundSystem {
     }
 
     /**
-     * Creates a temporary source and plays it. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
+     * Creates a temporary source and plays it. After the source finishes playing, it is removed. Returns a randomly generated name for the new source. NOTE: to make a source created by this method
+     * permanant, call the setActive() method using the return value for sourcename.
      *
      * @param priority Setting this to true will prevent other sounds from overriding this one.
      * @param url URL handle to the sound file to stream at this source.
@@ -690,7 +732,10 @@ public class SoundSystem {
     }
 
     /**
-     * Creates a temporary source and streams it. After the source finishes playing, it is removed. The file may either be located within the JAR or at an online location. If the file is online, filename must begin with "http://", since that is how SoundSystem recognizes URL paths. If the file is located within the compiled JAR, the package in which sound files are located may be set by calling SoundSystemConfig.setSoundFilesPackage(). Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
+     * Creates a temporary source and streams it. After the source finishes playing, it is removed. The file may either be located within the JAR or at an online location. If the file is online,
+     * filename must begin with "http://", since that is how SoundSystem recognizes URL paths. If the file is located within the compiled JAR, the package in which sound files are located may be set
+     * by calling SoundSystemConfig.setSoundFilesPackage(). Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method
+     * using the return value for sourcename.
      *
      * @param priority Setting this to true will prevent other sounds from overriding this one.
      * @param filename Filename of the sound file to stream at this source.
@@ -724,7 +769,9 @@ public class SoundSystem {
     }
 
     /**
-     * Creates a temporary source and streams it. After the source finishes playing, it is removed. The third parameter 'identifier' should look like a filename, and it must have the correct extension so SoundSystem knows what codec to use for the file referenced by the URL instance. Returns a randomly generated name for the new source. NOTE: to make a source created by this method permanant, call the setActive() method using the return value for sourcename.
+     * Creates a temporary source and streams it. After the source finishes playing, it is removed. The third parameter 'identifier' should look like a filename, and it must have the correct extension
+     * so SoundSystem knows what codec to use for the file referenced by the URL instance. Returns a randomly generated name for the new source. NOTE: to make a source created by this method
+     * permanant, call the setActive() method using the return value for sourcename.
      *
      * @param priority Setting this to true will prevent other sounds from overriding this one.
      * @param url URL handle to the sound file to stream at this source.
@@ -936,7 +983,10 @@ public class SoundSystem {
     }
 
     /**
-     * Feeds raw data through the specified source. The source must be a streaming source and it can not be already associated with a file or URL to stream from. Only use this for streaming sources created with the rawDataStream() method. NOTE: Be carefull how much data you send to a source to stream. The data will be processed at playback speed, so if you queue up 1 hour worth of data, it will take 1 hour to play (not to mention hogging a ton of memory). To clear out all queued data from the source, use the flush() method. Also note: if there is a break in the data stream, you will hear clicks and studders, so ensure that the data flow is steady.
+     * Feeds raw data through the specified source. The source must be a streaming source and it can not be already associated with a file or URL to stream from. Only use this for streaming sources
+     * created with the rawDataStream() method. NOTE: Be carefull how much data you send to a source to stream. The data will be processed at playback speed, so if you queue up 1 hour worth of data,
+     * it will take 1 hour to play (not to mention hogging a ton of memory). To clear out all queued data from the source, use the flush() method. Also note: if there is a break in the data stream,
+     * you will hear clicks and studders, so ensure that the data flow is steady.
      *
      * @param sourcename Name of the streaming source to play from.
      * @param buffer Byte buffer containing raw audio data to stream.
@@ -1018,7 +1068,9 @@ public class SoundSystem {
     }
 
     /**
-     * Sets a flag for a source indicating whether it should be used or if it should be removed after it finishes playing. One possible use for this method is to make temporary sources that were created with quickPlay() permanant. Another use could be to have a source automatically removed after it finishes playing. NOTE: Setting a source to temporary does not stop it, and setting a source to permanant does not play it. It is also important to note that a looping temporary source will not be removed as long as it keeps playing.
+     * Sets a flag for a source indicating whether it should be used or if it should be removed after it finishes playing. One possible use for this method is to make temporary sources that were
+     * created with quickPlay() permanant. Another use could be to have a source automatically removed after it finishes playing. NOTE: Setting a source to temporary does not stop it, and setting a
+     * source to permanant does not play it. It is also important to note that a looping temporary source will not be removed as long as it keeps playing.
      *
      * @param sourcename Identifier for the source.
      * @param temporary True = temporary, False = permanant.
@@ -1257,7 +1309,8 @@ public class SoundSystem {
     }
 
     /**
-     * Switches to the specified library, loosing all sources. This method is used internally by SoundSystem for thread synchronization, and it can not be called directly - please use the newLibrary() method instead.
+     * Switches to the specified library, loosing all sources. This method is used internally by SoundSystem for thread synchronization, and it can not be called directly - please use the newLibrary()
+     * method instead.
      *
      * @param libraryClass Library to use. See {@link paulscode.sound.SoundSystemConfig SoundSystemConfig} for information about chosing a sound library.
      */
@@ -1340,7 +1393,8 @@ public class SoundSystem {
     }
 
     /**
-     * Loads sample data from a sound file or URL into memory. This method is used internally by SoundSystem for thread synchronization, and it can not be called directly - please use the loadSound() method instead.
+     * Loads sample data from a sound file or URL into memory. This method is used internally by SoundSystem for thread synchronization, and it can not be called directly - please use the loadSound()
+     * method instead.
      *
      * @param filenameURL Filename/URL of the sound file to load.
      */
@@ -1354,7 +1408,8 @@ public class SoundSystem {
     }
 
     /**
-     * Saves the specified sample data, under the specified identifier. This identifier can be later used in place of 'filename' parameters to reference the sample data. This method is used internally by SoundSystem for thread synchronization, and it can not be called directly - please use the loadSound() method instead.
+     * Saves the specified sample data, under the specified identifier. This identifier can be later used in place of 'filename' parameters to reference the sample data. This method is used internally
+     * by SoundSystem for thread synchronization, and it can not be called directly - please use the loadSound() method instead.
      *
      * @param buffer the sample data and audio format to save.
      * @param identifier What to call the sample.
@@ -1369,7 +1424,8 @@ public class SoundSystem {
     }
 
     /**
-     * Removes previously loaded sampled data from memory. This method is used internally by SoundSystem for thread synchronization, and it can not be called directly - please use the unloadSound() method instead.
+     * Removes previously loaded sampled data from memory. This method is used internally by SoundSystem for thread synchronization, and it can not be called directly - please use the unloadSound()
+     * method instead.
      *
      * @param filename Filename or string identifyer of sound to unload.
      */
@@ -1383,7 +1439,8 @@ public class SoundSystem {
     }
 
     /**
-     * If the specified source is a streaming source or MIDI source, this method queues up the next sound to play when the previous playback ends. This method has no effect on non-streaming sources. This method is used internally by SoundSystem for thread synchronization, and it can not be called directly - please use the queueSound() method instead.
+     * If the specified source is a streaming source or MIDI source, this method queues up the next sound to play when the previous playback ends. This method has no effect on non-streaming sources.
+     * This method is used internally by SoundSystem for thread synchronization, and it can not be called directly - please use the queueSound() method instead.
      *
      * @param sourcename Source identifier.
      * @param filenameURL Filename/URL of the sound file to play next.
@@ -1399,7 +1456,8 @@ public class SoundSystem {
     }
 
     /**
-     * Removes the first occurrence of the specified filename/identifier from the specified source's list of sounds to play when previous playback ends. This method has no effect on non-streaming sources. This method is used internally by SoundSystem for thread synchronization, and it can not be called directly - please use the dequeueSound() method instead.
+     * Removes the first occurrence of the specified filename/identifier from the specified source's list of sounds to play when previous playback ends. This method has no effect on non-streaming
+     * sources. This method is used internally by SoundSystem for thread synchronization, and it can not be called directly - please use the dequeueSound() method instead.
      *
      * @param sourcename Source identifier.
      * @param filename Filename/identifier of the sound file to remove from the queue.
@@ -1414,7 +1472,10 @@ public class SoundSystem {
     }
 
     /**
-     * Fades out the volume of whatever the specified source is currently playing, then begins playing the specified file at the source's previously assigned volume level. If the filenameURL parameter is null or empty, the specified source will simply fade out and stop. The miliseconds parameter must be non-negative or zero. This method will remove anything that is currently in the specified source's list of queued sounds that would have played next when the current sound finished playing. This method may only be used for streaming and MIDI sources. This method is used internally by SoundSystem for thread synchronization, and it can not be called directly - please use the fadeOut() method instead.
+     * Fades out the volume of whatever the specified source is currently playing, then begins playing the specified file at the source's previously assigned volume level. If the filenameURL parameter
+     * is null or empty, the specified source will simply fade out and stop. The miliseconds parameter must be non-negative or zero. This method will remove anything that is currently in the specified
+     * source's list of queued sounds that would have played next when the current sound finished playing. This method may only be used for streaming and MIDI sources. This method is used internally
+     * by SoundSystem for thread synchronization, and it can not be called directly - please use the fadeOut() method instead.
      *
      * @param sourcename Name of the source to fade out.
      * @param filenameURL Filename/URL of a sound file to play next, or null for none.
@@ -1431,7 +1492,10 @@ public class SoundSystem {
     }
 
     /**
-     * Fades out the volume of whatever the specified source is currently playing, then fades the volume back in playing the specified file. Final volume after fade-in completes will be equal to the source's previously assigned volume level. The filenameURL parameter may not be null or empty. The miliseconds parameters must be non-negative or zero. This method will remove anything that is currently in the specified source's list of queued sounds that would have played next when the current sound finished playing. This method may only be used for streaming and MIDI sources. This method is used internally by SoundSystem for thread synchronization, and it can not be called directly - please use the fadeOutIn() method instead.
+     * Fades out the volume of whatever the specified source is currently playing, then fades the volume back in playing the specified file. Final volume after fade-in completes will be equal to the
+     * source's previously assigned volume level. The filenameURL parameter may not be null or empty. The miliseconds parameters must be non-negative or zero. This method will remove anything that is
+     * currently in the specified source's list of queued sounds that would have played next when the current sound finished playing. This method may only be used for streaming and MIDI sources. This
+     * method is used internally by SoundSystem for thread synchronization, and it can not be called directly - please use the fadeOutIn() method instead.
      *
      * @param sourcename Name of the source to fade out/in.
      * @param filenameURL Filename/URL of a sound file to play next, or null for none.
@@ -1450,7 +1514,11 @@ public class SoundSystem {
     }
 
     /**
-     * Makes sure the current volume levels of streaming sources and MIDI are correct. This method is designed to help reduce the "jerky" fading behavior that happens when using some library and codec pluggins (such as LibraryJavaSound and CodecJOrbis). This method has no effect on normal "non-streaming" sources. It would normally be called somewhere in the main "game loop". IMPORTANT: To optimize frame-rates, do not call this method for every frame. It is better to just call this method at some acceptable "granularity" (play around with different granularities to find what sounds acceptable for a particular situation). This method is used internally by SoundSystem for thread synchronization, and it can not be called directly - please use the checkFadeVolumes() method instead.
+     * Makes sure the current volume levels of streaming sources and MIDI are correct. This method is designed to help reduce the "jerky" fading behavior that happens when using some library and codec
+     * pluggins (such as LibraryJavaSound and CodecJOrbis). This method has no effect on normal "non-streaming" sources. It would normally be called somewhere in the main "game loop". IMPORTANT: To
+     * optimize frame-rates, do not call this method for every frame. It is better to just call this method at some acceptable "granularity" (play around with different granularities to find what
+     * sounds acceptable for a particular situation). This method is used internally by SoundSystem for thread synchronization, and it can not be called directly - please use the checkFadeVolumes()
+     * method instead.
      */
     private void CommandCheckFadeVolumes() {
         if (soundLibrary != null) {
@@ -1522,7 +1590,8 @@ public class SoundSystem {
     }
 
     /**
-     * Creates a temporary source and either plays or streams it. After the source finishes playing, it is removed. This method is used internally by SoundSystem for thread synchronization, and it can not be called directly - please use the quickPlay() method instead.
+     * Creates a temporary source and either plays or streams it. After the source finishes playing, it is removed. This method is used internally by SoundSystem for thread synchronization, and it can
+     * not be called directly - please use the quickPlay() method instead.
      *
      * @param priority Setting this to true will prevent other sounds from overriding this one.
      * @param toStream Whether or not to stream the source.
@@ -1557,7 +1626,8 @@ public class SoundSystem {
     }
 
     /**
-     * Moves a source to the specified coordinates. This method is used internally by SoundSystem for thread synchronization, and it can not be called directly - please use the setPosition() method instead.
+     * Moves a source to the specified coordinates. This method is used internally by SoundSystem for thread synchronization, and it can not be called directly - please use the setPosition() method
+     * instead.
      *
      * @param sourcename Source to move.
      * @param x Destination X coordinate.
@@ -1575,7 +1645,8 @@ public class SoundSystem {
     }
 
     /**
-     * Manually sets the specified source's volume. This method is used internally by SoundSystem for thread synchronization, and it can not be called directly - please use the setVolume() method instead.
+     * Manually sets the specified source's volume. This method is used internally by SoundSystem for thread synchronization, and it can not be called directly - please use the setVolume() method
+     * instead.
      *
      * @param sourcename Source to change the volume of.
      * @param value New volume, float value ( 0.0f - 1.0f ).
@@ -1590,7 +1661,8 @@ public class SoundSystem {
     }
 
     /**
-     * Manually sets the specified source's pitch. This method is used internally by SoundSystem for thread synchronization, and it can not be called directly - please use the setPitch() method instead.
+     * Manually sets the specified source's pitch. This method is used internally by SoundSystem for thread synchronization, and it can not be called directly - please use the setPitch() method
+     * instead.
      *
      * @param sourcename Source to change the pitch of.
      * @param value New pitch, float value ( 0.5f - 2.0f ).
@@ -1605,7 +1677,8 @@ public class SoundSystem {
     }
 
     /**
-     * Set a source's priority factor. A priority source will not be overriden when too many sources are playing at once. This method is used internally by SoundSystem for thread synchronization, and it can not be called directly - please use the setPriority() method instead.
+     * Set a source's priority factor. A priority source will not be overriden when too many sources are playing at once. This method is used internally by SoundSystem for thread synchronization, and
+     * it can not be called directly - please use the setPriority() method instead.
      *
      * @param sourcename Identifier for the source.
      * @param pri Setting this to true makes this source a priority source.
@@ -1620,7 +1693,8 @@ public class SoundSystem {
     }
 
     /**
-     * Changes a source to looping or non-looping. This method is used internally by SoundSystem for thread synchronization, and it can not be called directly - please use the setLooping() method instead.
+     * Changes a source to looping or non-looping. This method is used internally by SoundSystem for thread synchronization, and it can not be called directly - please use the setLooping() method
+     * instead.
      *
      * @param sourcename Identifier for the source.
      * @param lp This source should loop.
@@ -1635,7 +1709,8 @@ public class SoundSystem {
     }
 
     /**
-     * Changes a source's attenuation model. This method is used internally by SoundSystem for thread synchronization, and it can not be called directly - please use the setAttenuation() method instead. See {@link paulscode.sound.SoundSystemConfig SoundSystemConfig} for more information about Attenuation.
+     * Changes a source's attenuation model. This method is used internally by SoundSystem for thread synchronization, and it can not be called directly - please use the setAttenuation() method
+     * instead. See {@link paulscode.sound.SoundSystemConfig SoundSystemConfig} for more information about Attenuation.
      *
      * @param sourcename Identifier for the source.
      * @param model Attenuation model to use.
@@ -1667,7 +1742,8 @@ public class SoundSystem {
     }
 
     /**
-     * Changes the Doppler factor. This method is used internally by SoundSystem for thread synchronization, and it can not be called directly - please use the setDopplerFactor() method instead. See {@link paulscode.sound.SoundSystemConfig SoundSystemConfig} for more information about Doppler effect.
+     * Changes the Doppler factor. This method is used internally by SoundSystem for thread synchronization, and it can not be called directly - please use the setDopplerFactor() method instead. See
+     * {@link paulscode.sound.SoundSystemConfig SoundSystemConfig} for more information about Doppler effect.
      *
      * @param dopplerFactor New Doppler factor, for determining Doppler effect scale.
      */
@@ -1683,7 +1759,8 @@ public class SoundSystem {
     }
 
     /**
-     * Changes the Doppler velocity. This method is used internally by SoundSystem for thread synchronization, and it can not be called directly - please use the setDopplerVelocity() method instead. See {@link paulscode.sound.SoundSystemConfig SoundSystemConfig} for more information about Doppler effect.
+     * Changes the Doppler velocity. This method is used internally by SoundSystem for thread synchronization, and it can not be called directly - please use the setDopplerVelocity() method instead.
+     * See {@link paulscode.sound.SoundSystemConfig SoundSystemConfig} for more information about Doppler effect.
      *
      * @param dopplerVelocity New Doppler velocity, for use in Doppler effect.
      */
@@ -1699,7 +1776,8 @@ public class SoundSystem {
     }
 
     /**
-     * Changes a source's velocity, for use in Doppler effect. This method is used internally by SoundSystem for thread synchronization, and it can not be called directly - please use the setVelocity() method instead. See {@link paulscode.sound.SoundSystemConfig SoundSystemConfig} for more information about Doppler effect.
+     * Changes a source's velocity, for use in Doppler effect. This method is used internally by SoundSystem for thread synchronization, and it can not be called directly - please use the
+     * setVelocity() method instead. See {@link paulscode.sound.SoundSystemConfig SoundSystemConfig} for more information about Doppler effect.
      *
      * @param sourcename Identifier for the source.
      * @param x Source's velocity along the world x-axis.
@@ -1717,7 +1795,8 @@ public class SoundSystem {
     }
 
     /**
-     * Changes the listener's velocity, for use in Doppler effect. This method is used internally by SoundSystem for thread synchronization, and it can not be called directly - please use the setListenerVelocity() method instead. See {@link paulscode.sound.SoundSystemConfig SoundSystemConfig} for more information about Doppler effect.
+     * Changes the listener's velocity, for use in Doppler effect. This method is used internally by SoundSystem for thread synchronization, and it can not be called directly - please use the
+     * setListenerVelocity() method instead. See {@link paulscode.sound.SoundSystemConfig SoundSystemConfig} for more information about Doppler effect.
      *
      * @param x Velocity along the world x-axis.
      * @param y Velocity along the world y-axis.
@@ -1748,7 +1827,8 @@ public class SoundSystem {
     }
 
     /**
-     * Feeds raw data through the specified source. The source must be a streaming source and it can not be already associated with a file or URL to stream from. This method is used internally by SoundSystem for thread synchronization, and it can not be called directly - please use the feedRawAudioData() method instead.
+     * Feeds raw data through the specified source. The source must be a streaming source and it can not be already associated with a file or URL to stream from. This method is used internally by
+     * SoundSystem for thread synchronization, and it can not be called directly - please use the feedRawAudioData() method instead.
      *
      * @param sourcename Name of the streaming source to play from.
      * @param buffer Byte buffer containing raw audio data to stream.
@@ -1805,7 +1885,8 @@ public class SoundSystem {
     }
 
     /**
-     * Flushes all previously queued audio data from a streaming source. This method is used internally by SoundSystem for thread synchronization, and it can not be called directly - please use the flush() method instead.
+     * Flushes all previously queued audio data from a streaming source. This method is used internally by SoundSystem for thread synchronization, and it can not be called directly - please use the
+     * flush() method instead.
      *
      * @param sourcename Identifier for the source.
      */
@@ -1819,7 +1900,10 @@ public class SoundSystem {
     }
 
     /**
-     * Sets a flag for a source indicating whether it should be used or if it should be removed after it finishes playing. One possible use for this method is to make temporary sources that were created with quickPlay() permanant. Another use could be to have a source automatically removed after it finishes playing. NOTE: Setting a source to inactive does not stop it, and setting a source to active does not play it. It is also important to note that a looping inactive source will not be removed as long as it keeps playing. This method is used internally by SoundSystem for thread synchronization, and it can not be called directly - please use the setTemporary() method instead.
+     * Sets a flag for a source indicating whether it should be used or if it should be removed after it finishes playing. One possible use for this method is to make temporary sources that were
+     * created with quickPlay() permanant. Another use could be to have a source automatically removed after it finishes playing. NOTE: Setting a source to inactive does not stop it, and setting a
+     * source to active does not play it. It is also important to note that a looping inactive source will not be removed as long as it keeps playing. This method is used internally by SoundSystem for
+     * thread synchronization, and it can not be called directly - please use the setTemporary() method instead.
      *
      * @param sourcename Identifier for the source.
      * @param temporary True or False.
@@ -1834,7 +1918,8 @@ public class SoundSystem {
     }
 
     /**
-     * Removes the specified source and clears up any memory it used. This method is used internally by SoundSystem for thread synchronization, and it can not be called directly - please use the removeSource() method instead.
+     * Removes the specified source and clears up any memory it used. This method is used internally by SoundSystem for thread synchronization, and it can not be called directly - please use the
+     * removeSource() method instead.
      *
      * @param sourcename Identifier for the source.
      */
@@ -1848,7 +1933,8 @@ public class SoundSystem {
     }
 
     /**
-     * Moves the listener relative to the current location. This method is used internally by SoundSystem for thread synchronization, and it can not be called directly - please use the moveListener() method instead.
+     * Moves the listener relative to the current location. This method is used internally by SoundSystem for thread synchronization, and it can not be called directly - please use the moveListener()
+     * method instead.
      *
      * @param x X offset.
      * @param y Y offset.
@@ -1864,7 +1950,8 @@ public class SoundSystem {
     }
 
     /**
-     * Moves the listener to the specified location. This method is used internally by SoundSystem for thread synchronization, and it can not be called directly - please use the setListenerPosition() method instead.
+     * Moves the listener to the specified location. This method is used internally by SoundSystem for thread synchronization, and it can not be called directly - please use the setListenerPosition()
+     * method instead.
      *
      * @param x Destination X coordinate.
      * @param y Destination Y coordinate.
@@ -1881,7 +1968,8 @@ public class SoundSystem {
     }
 
     /**
-     * Turns the listener counterclockwise by "angle" radians around the y-axis, relative to the current angle. This method is used internally by SoundSystem for thread synchronization, and it can not be called directly - please use the turnListener() method instead.
+     * Turns the listener counterclockwise by "angle" radians around the y-axis, relative to the current angle. This method is used internally by SoundSystem for thread synchronization, and it can not
+     * be called directly - please use the turnListener() method instead.
      *
      * @param angle radian offset.
      */
@@ -1896,7 +1984,8 @@ public class SoundSystem {
     }
 
     /**
-     * Sets the listener's angle in radians around the y-axis. This method is used internally by SoundSystem for thread synchronization, and it can not be called directly - please use the setListenerAngle() method instead.
+     * Sets the listener's angle in radians around the y-axis. This method is used internally by SoundSystem for thread synchronization, and it can not be called directly - please use the
+     * setListenerAngle() method instead.
      *
      * @param angle radians.
      */
@@ -1911,7 +2000,8 @@ public class SoundSystem {
     }
 
     /**
-     * Sets the listener's orientation. This method is used internally by SoundSystem for thread synchronization, and it can not be called directly - please use the setListenerOrientation() method instead.
+     * Sets the listener's orientation. This method is used internally by SoundSystem for thread synchronization, and it can not be called directly - please use the setListenerOrientation() method
+     * instead.
      *
      * @param lookX X coordinate of the (normalized) look-at vector.
      * @param lookY Y coordinate of the (normalized) look-at vector.
@@ -1934,7 +2024,8 @@ public class SoundSystem {
     }
 
     /**
-     * Culls the specified source. A culled source can not be played until it has been activated again. This method is used internally by SoundSystem for thread synchronization, and it can not be called directly - please use the cull() method instead.
+     * Culls the specified source. A culled source can not be played until it has been activated again. This method is used internally by SoundSystem for thread synchronization, and it can not be
+     * called directly - please use the cull() method instead.
      *
      * @param sourcename Identifier for the source.
      */
@@ -1948,7 +2039,8 @@ public class SoundSystem {
     }
 
     /**
-     * Activates a previously culled source, so it can be played again. This method is used internally by SoundSystem for thread synchronization, and it can not be called directly - please use the activate() method instead.
+     * Activates a previously culled source, so it can be played again. This method is used internally by SoundSystem for thread synchronization, and it can not be called directly - please use the
+     * activate() method instead.
      *
      * @param sourcename Identifier for the source.
      */
@@ -1963,7 +2055,8 @@ public class SoundSystem {
     }
 
     /**
-     * Sets the overall volume, affecting all sources. This method is used internally by SoundSystem for thread synchronization, and it can not be called directly - please use the setMasterVolume() method instead.
+     * Sets the overall volume, affecting all sources. This method is used internally by SoundSystem for thread synchronization, and it can not be called directly - please use the setMasterVolume()
+     * method instead.
      *
      * @param value New volume, float value ( 0.0f - 1.0f ).
      */
@@ -1978,7 +2071,10 @@ public class SoundSystem {
     }
 
     /**
-     * This method can be overridden by extended classes to be used for source management (culling and activating sources based on established rules). One possible use for this method is sorting sources by distance, culling the furthest, and activating the closest. This method is automatically called on the CommandThread before processing queued commands, so you do not need to call it anywhere else. Note: use methods cull() and activate() here, NOT CommandCull() and CommandActivate() (thread safety issue). IMPORTANT: Always use synchronized( SoundSystemConfig.THREAD_SYNC ) when manually manipulating sources from outside the Command Thread!
+     * This method can be overridden by extended classes to be used for source management (culling and activating sources based on established rules). One possible use for this method is sorting
+     * sources by distance, culling the furthest, and activating the closest. This method is automatically called on the CommandThread before processing queued commands, so you do not need to call it
+     * anywhere else. Note: use methods cull() and activate() here, NOT CommandCull() and CommandActivate() (thread safety issue). IMPORTANT: Always use synchronized( SoundSystemConfig.THREAD_SYNC )
+     * when manually manipulating sources from outside the Command Thread!
      */
     protected void ManageSources() {
         // OVERRIDDEN METHODS MUST USE THIS:
@@ -1990,7 +2086,8 @@ public class SoundSystem {
     }
 
     /**
-     * Queues a command. If newCommand is null, all commands are dequeued and executed. This is automatically used by the sound system, so it is not likely that a user would ever need to use this method. See {@link paulscode.sound.CommandObject CommandObject} for more information about commands.
+     * Queues a command. If newCommand is null, all commands are dequeued and executed. This is automatically used by the sound system, so it is not likely that a user would ever need to use this
+     * method. See {@link paulscode.sound.CommandObject CommandObject} for more information about commands.
      *
      * @param newCommand Command to queue, or null to execute commands.
      * @return True if more commands exist, false if queue is empty.

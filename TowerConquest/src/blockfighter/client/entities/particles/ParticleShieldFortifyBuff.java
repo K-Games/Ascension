@@ -10,8 +10,8 @@ public class ParticleShieldFortifyBuff extends Particle {
 
     public ParticleShieldFortifyBuff(final int x, final int y, final byte f) {
         super(x, y, f);
-        this.x += Globals.rng(10) * 10 - 60;
-        this.y += -30 - Globals.rng(100);
+        this.x += Globals.rng(50) - 35;
+        this.y += -30 - Globals.rng(80);
         this.frameDuration = 25;
         this.duration = 200;
     }

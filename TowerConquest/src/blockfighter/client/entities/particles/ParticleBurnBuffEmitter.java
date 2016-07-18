@@ -18,13 +18,13 @@ public class ParticleBurnBuffEmitter extends Particle {
     @Override
     public void update() {
         super.update();
-        if (!isExpired() && Globals.nsToMs(logic.getTime() - lastParticleTime) >= 50) {
+        if (!isExpired() && Globals.nsToMs(logic.getTime() - lastParticleTime) >= 500) {
             final Point p = this.owner.getPos();
             if (p != null) {
                 this.x = p.x;
                 this.y = p.y;
             }
-            for (int i = 0; i < 2; i++) {
+            for (int i = 0; i < 15; i++) {
                 final ParticleBurnBuffParticle b = new ParticleBurnBuffParticle(this.x, this.y, this.facing);
                 logic.getScreen().addParticle(b);
             }

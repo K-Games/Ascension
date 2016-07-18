@@ -23,18 +23,31 @@ public abstract class ScreenMenu extends Screen {
 
     protected long lastUpdateTime = 0;
     protected static ConcurrentHashMap<Integer, Particle> particles = new ConcurrentHashMap<>(3);
-    private final Rectangle2D.Double[] menuBox = new Rectangle2D.Double[7];
+    private static final Rectangle2D.Double[] MENU_BOX = new Rectangle2D.Double[7];
+    protected boolean fadeIn = false;
+
+    private long fadeInStart = System.nanoTime();
+    private Color fadeInColor;
+    protected boolean finishedFadeIn = false;
 
     protected DecimalFormat df = new DecimalFormat("###,###,##0.##");
 
+    static {
+        for (int i = 0; i < MENU_BOX.length; i++) {
+            MENU_BOX[i] = new Rectangle2D.Double(20, 27 + 50 * i, 180, 50);
+        }
+    }
+
     public ScreenMenu() {
+        this(false);
+    }
+
+    public ScreenMenu(final boolean fadeIn) {
         if (!particles.containsKey(0)) {
             particles.put(0, new ParticleMenuSmoke(0, 0, 0));
             particles.put(1, new ParticleMenuSmoke(1, 1280, 0));
         }
-        for (int i = 0; i < this.menuBox.length; i++) {
-            this.menuBox[i] = new Rectangle2D.Double(20, 27 + 50 * i, 180, 50);
-        }
+        this.fadeIn = fadeIn;
     }
 
     @Override
@@ -43,11 +56,25 @@ public abstract class ScreenMenu extends Screen {
     }
 
     @Override
+    public byte getBGM() {
+        return Globals.BGM_MENU;
+    }
+
+    @Override
     public void update() {
         final long now = logic.getTime(); // Get time now
         if (now - this.lastUpdateTime >= Globals.LOGIC_UPDATE) {
             updateParticles(particles);
             this.lastUpdateTime = now;
+            if (fadeIn) {
+                if (!finishedFadeIn && Globals.nsToMs(now - fadeInStart) < 2000) {
+                    int transparency = (int) (255 * (1f - Globals.nsToMs(now - fadeInStart) / 2000f));
+                    fadeInColor = new Color(0, 0, 0, (transparency < 0) ? 0 : transparency);
+                } else {
+                    fadeInColor = new Color(0, 0, 0, 0);
+                    finishedFadeIn = true;
+                }
+            }
         }
     }
 
@@ -61,6 +88,10 @@ public abstract class ScreenMenu extends Screen {
         for (final Map.Entry<Integer, Particle> pEntry : particles.entrySet()) {
             pEntry.getValue().draw(g);
         }
+        if (this.fadeIn && !this.finishedFadeIn) {
+            g.setColor(fadeInColor);
+            g.fillRect(0, 0, Globals.WINDOW_WIDTH, Globals.WINDOW_HEIGHT);
+        }
     }
 
     public void drawMenuButton(final Graphics2D g) {
@@ -69,7 +100,7 @@ public abstract class ScreenMenu extends Screen {
                 RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
 
         final BufferedImage button = Globals.MENU_BUTTON[Globals.BUTTON_MENUS];
-        for (final Rectangle2D.Double menuBox1 : this.menuBox) {
+        for (final Rectangle2D.Double menuBox1 : MENU_BOX) {
             g.drawImage(button, (int) menuBox1.x, (int) menuBox1.y, null);
         }
         g.setFont(Globals.ARIAL_24PT);
@@ -95,32 +126,45 @@ public abstract class ScreenMenu extends Screen {
     public void mouseReleased(final MouseEvent e) {
         panel.requestFocus();
         if (SwingUtilities.isLeftMouseButton(e)) {
-            for (int i = 0; i < this.menuBox.length; i++) {
-                if (this.menuBox[i].contains(e.getPoint())) {
+            for (byte i = 0; i < MENU_BOX.length; i++) {
+                if (MENU_BOX[i].contains(e.getPoint())) {
                     SaveData.saveData(logic.getSelectedChar().getSaveNum(), logic.getSelectedChar());
                     switch (i) {
                         case 0:
-                            logic.setScreen(new ScreenStats());
+                            if (!(logic.getScreen() instanceof ScreenStats)) {
+                                logic.setScreen(new ScreenStats());
+                            }
                             break;
                         case 1:
-                            logic.setScreen(new ScreenInventory());
+                            if (!(logic.getScreen() instanceof ScreenInventory)) {
+                                logic.setScreen(new ScreenInventory());
+                            }
                             break;
                         case 2:
-                            logic.setScreen(new ScreenUpgrade());
+                            if (!(logic.getScreen() instanceof ScreenUpgrade)) {
+                                logic.setScreen(new ScreenUpgrade());
+                            }
                             break;
                         case 3:
-                            logic.setScreen(new ScreenSkills());
+                            if (!(logic.getScreen() instanceof ScreenSkills)) {
+                                logic.setScreen(new ScreenSkills());
+                            }
                             break;
                         case 4:
-                            logic.setScreen(new ScreenServerList());
-                            // logic.sendLogin();
+                            if (!(logic.getScreen() instanceof ScreenServerList)) {
+                                logic.setScreen(new ScreenServerList());
+                            }
                             break;
                         case 5:
-                            logic.setScreen(new ScreenKeyBind());
+                            if (!(logic.getScreen() instanceof ScreenKeyBind)) {
+                                logic.setScreen(new ScreenKeyBind());
+                            }
                             break;
                         case 6:
-                            logic.setSelectedChar(null);
-                            logic.setScreen(new ScreenSelectChar());
+                            if (!(logic.getScreen() instanceof ScreenSelectChar)) {
+                                logic.setSelectedChar(null);
+                                logic.setScreen(new ScreenSelectChar());
+                            }
                             break;
                     }
                 }

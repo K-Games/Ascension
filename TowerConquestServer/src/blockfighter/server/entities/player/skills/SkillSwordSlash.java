@@ -33,6 +33,7 @@ public class SkillSwordSlash extends Skill {
             Player.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_SLASHBUFF, player.getKey());
         }
         if (Globals.hasPastDuration(duration, (30 + 110 * player.getSkillCounter())) && player.getSkillCounter() < numHits) {
+            player.setFrame((byte) 0);
             player.incrementSkillCounter();
             final ProjSwordSlash proj = new ProjSwordSlash(this.logic, player, player.getX(), player.getY(),
                     player.getSkillCounter());

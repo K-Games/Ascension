@@ -105,7 +105,8 @@ public class ChannelJavaSound extends Channel {
     private boolean toLoop = false;
 
     /**
-     * Constructor: takes channelType identifier and a handle to the Mixer as paramaters. Possible values for channel type can be found in the {@link paulscode.sound.SoundSystemConfig SoundSystemConfig} class.
+     * Constructor: takes channelType identifier and a handle to the Mixer as paramaters. Possible values for channel type can be found in the
+     * {@link paulscode.sound.SoundSystemConfig SoundSystemConfig} class.
      *
      * @param type Type of channel (normal or streaming).
      * @param mixer Handle to the JavaSound Mixer.

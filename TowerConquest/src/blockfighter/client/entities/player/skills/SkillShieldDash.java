@@ -42,7 +42,7 @@ public class SkillShieldDash extends Skill {
         g.drawString("Level: " + this.level, drawX + 80, drawY + 50);
         g.drawString("Cooldown: " + this.maxCooldown / 1000 + " Seconds", drawX + 80, drawY + 70);
 
-        g.drawString("Dash a short distance over 0.25 seconds.", drawX + 10, drawY + 90);
+        g.drawString("Dash a short distance over 0.4 seconds.", drawX + 10, drawY + 90);
         g.drawString("Increases damage dealt for 5 seconds.", drawX + 10, drawY + 110);
 
         g.drawString("[Level " + this.level + "]", drawX + 10, drawY + 135);
