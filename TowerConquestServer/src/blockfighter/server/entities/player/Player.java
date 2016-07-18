@@ -1066,7 +1066,7 @@ public class Player extends Thread implements GameEntity {
 
     public void giveDrop(final double lvl) {
         for (int equipCode : Items.ITEM_CODES) {
-            if (Globals.rng(100) < 10) {
+            if (Globals.rng(100) < 2) {
                 final byte[] bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_INT * 2];
                 bytes[0] = Globals.DATA_PLAYER_GIVEDROP;
 
@@ -1078,11 +1078,10 @@ public class Player extends Thread implements GameEntity {
 
                 PacketSender.sendPlayer(bytes, this);
             }
-            break;
         }
 
         for (int upgradeCode : Items.ITEM_UPGRADE_CODES) {
-            if (Globals.rng(100) < 10) {
+            if (Globals.rng(100) < 2) {
                 final byte[] bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_INT * 2];
                 bytes[0] = Globals.DATA_PLAYER_GIVEDROP;
 

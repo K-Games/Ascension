@@ -14,6 +14,7 @@ An multiplayer action 2D sidescrolling platformer coded in pure Java.
 
 ### Server Changes
 * Added batched packet sending. Disabled by default.
+* Fixed some items not dropping.
 
 # Credits
 
