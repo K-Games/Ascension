@@ -1,9 +1,4 @@
-```
-     \                                   _)               
-    _ \     __|   __|   _ \  __ \    __|  |   _ \   __ \ 
-   ___ \  \__ \  (      __/  |   | \__ \  |  (   |  |   |
- _/    _\ ____/ \___| \___| _|  _| ____/ _| \___/  _|  _|                       
-```
+![KryoNet](https://github.com/kenofnz/TowerConquest/raw/master/TowerConquest/resources/sprites/ui/menu/title.png)
 
 # Description
 An multiplayer action 2D sidescrolling platformer coded in pure Java.
@@ -17,17 +12,20 @@ An multiplayer action 2D sidescrolling platformer coded in pure Java.
 * Added batched packet sending. Disabled by default.
 * Fixed some items not dropping.
 
-# Credits
+### Credits
 
-## Title & Menu Tracks
+Title & Menu Tracks
+
 * Hero - [geluf](https://soundcloud.com/geluf)
 * Through the Forest in Midwinter - [geluf](https://soundcloud.com/geluf)
 
-## Arena Tracks
+Arena Tracks
+
 ```
 Music from the “JRPG Essentials” Series by Dibur
 Copyright (c) 2016 Dibur
 http://dibur.moe
 ```
+
 * Redemption (Orchestral Style) - [Dibur](http://dibur.moe)
 * Graceful Resistance - [Dibur](http://dibur.moe)
