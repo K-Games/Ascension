@@ -9,6 +9,7 @@ import blockfighter.server.entities.buff.BuffDmgReduct;
 import blockfighter.server.entities.buff.BuffDmgTakenAmp;
 import blockfighter.server.entities.buff.BuffKnockback;
 import blockfighter.server.entities.buff.BuffPassiveBarrier;
+import blockfighter.server.entities.buff.BuffPassiveResist;
 import blockfighter.server.entities.buff.BuffShieldDash;
 import blockfighter.server.entities.buff.BuffShieldReflect;
 import blockfighter.server.entities.buff.BuffStun;
@@ -110,7 +111,7 @@ public class Player extends Thread implements GameEntity {
     private final Rectangle2D.Double hitbox;
 
     private final ConcurrentHashMap<Integer, Buff> buffs = new ConcurrentHashMap<>(150, 0.9f, 1);
-    private Buff stunDebuff, knockbackDebuff, barrierBuff;
+    private Buff stunDebuff, knockbackDebuff, barrierBuff, resistBuff;
     private final ArrayList<Buff> reflects = new ArrayList<>(10);
     private double dmgReduct, dmgAmp;
     private double barrierDmgTaken = 0, tacticalDmgMult = 0;
@@ -129,6 +130,8 @@ public class Player extends Thread implements GameEntity {
     private final ConcurrentLinkedQueue<Buff> buffQueue = new ConcurrentLinkedQueue<>();
 
     private final ConcurrentLinkedQueue<Integer> buffKeys = new ConcurrentLinkedQueue<>();
+    private final LinkedList<Double> resistDamageSum = new LinkedList<>();
+
     private int maxBuffKeys = 0;
     private Byte nextState;
 
@@ -724,11 +727,12 @@ public class Player extends Thread implements GameEntity {
             this.damageQueue.clear();
         }
         Player lastHitter = null;
+        double totalDamageInTick = 0;
         while (!this.damageQueue.isEmpty()) {
             final Damage dmg = this.damageQueue.poll();
             if (dmg != null) {
                 lastHitter = dmg.getOwner();
-                int amount = (int) (dmg.getDamage() * this.dmgAmp);
+                double finalDamage = dmg.getDamage() * this.dmgAmp;
                 // Proc stuff like shadow attack
                 dmg.proc();
 
@@ -738,62 +742,58 @@ public class Player extends Thread implements GameEntity {
                         if (b instanceof BuffShieldReflect) {
                             Player reflectOwner = ((BuffShieldReflect) b).getOwner();
                             SkillShieldReflect reflectSkill = (SkillShieldReflect) reflectOwner.getSkill(Skill.SHIELD_REFLECT);
-                            reflectSkill.updateSkillReflectHit(amount, ((BuffShieldReflect) b).getMultiplier(), reflectOwner);
+                            reflectSkill.updateSkillReflectHit(finalDamage, ((BuffShieldReflect) b).getMultiplier(), reflectOwner);
                         }
                     }
                 }
                 // If it isnt true damage do reduction
                 if (!dmg.isTrueDamage()) {
-                    amount = (int) (amount * this.stats[Globals.STAT_DAMAGEREDUCT]);
+                    finalDamage = finalDamage * this.stats[Globals.STAT_DAMAGEREDUCT];
                 }
 
                 // Buff Reductions
-                amount = (int) (amount * this.dmgReduct);
+                finalDamage = finalDamage * this.dmgReduct;
 
                 // Defender Mastery Passive Reduction
                 if (hasSkill(Skill.PASSIVE_SHIELDMASTERY)
                         && Items.getItemType(this.equips[Globals.ITEM_WEAPON]) == Globals.ITEM_SWORD
                         && Items.getItemType(this.equips[Globals.ITEM_OFFHAND]) == Globals.ITEM_SHIELD) {
-                    amount = (int) (amount * (1 - (0.05 + 0.005 * getSkillLevel(Skill.PASSIVE_SHIELDMASTERY))));
+                    finalDamage = finalDamage * (1 - (0.05 + 0.005 * getSkillLevel(Skill.PASSIVE_SHIELDMASTERY)));
                 }
 
                 // Dual Wield Passive Reduction
                 if (hasSkill(Skill.PASSIVE_DUALSWORD)
                         && Items.getItemType(this.equips[Globals.ITEM_WEAPON]) == Globals.ITEM_SWORD
                         && Items.getItemType(this.equips[Globals.ITEM_OFFHAND]) == Globals.ITEM_SWORD) {
-                    amount = (int) (amount * (1 - (0.01 * getSkillLevel(Skill.PASSIVE_DUALSWORD))));
+                    finalDamage = finalDamage * (1 - (0.01 * getSkillLevel(Skill.PASSIVE_DUALSWORD)));
                 }
 
-                // Resistance Passive
-                if (hasSkill(Skill.PASSIVE_RESIST) && this.stats[Globals.STAT_MINHP] > this.stats[Globals.STAT_MAXHP] * 0.5
-                        && this.skills.get(Skill.PASSIVE_RESIST).canCast()) {
-                    if (amount > this.stats[Globals.STAT_MAXHP] * 0.5) {
-                        amount = (int) (this.stats[Globals.STAT_MAXHP] * 0.5);
-                        this.skills.get(Skill.PASSIVE_RESIST).setCooldown();
-                        sendCooldown(Skill.PASSIVE_RESIST);
-                        sendParticle(this.logic.getRoom(), Globals.PARTICLE_PASSIVE_RESIST, this.x, this.y);
-                    }
-                }
                 // Barrier reduction
                 if (this.barrierBuff != null) {
-                    amount = (int) ((BuffPassiveBarrier) this.barrierBuff).reduceDmg(amount);
+                    finalDamage = ((BuffPassiveBarrier) this.barrierBuff).reduceDmg(finalDamage);
                     sendParticle(this.logic.getRoom(), Globals.PARTICLE_PASSIVE_BARRIER, dmg.getDmgPoint().x, dmg.getDmgPoint().y);
                 }
+
+                if (this.resistBuff != null) {
+                    sendParticle(this.logic.getRoom(), Globals.PARTICLE_PASSIVE_RESIST, dmg.getDmgPoint().x, dmg.getDmgPoint().y);
+                }
+
                 this.tacticalDmgMult = 0;
                 // Send client damage display
                 if (!dmg.isHidden()) {
                     if (dmg.getOwner() != null && dmg.isCrit()) {
                         sendParticle(this.logic.getRoom(), Globals.PARTICLE_BLOOD_HIT, dmg.getOwner().getKey(), this.key);
                     }
-                    sendDamage(dmg, amount);
+                    sendDamage(dmg, (int) finalDamage);
                 }
                 // Final damage taken
-                this.stats[Globals.STAT_MINHP] -= amount;
-                if (amount > 0) {
+                this.stats[Globals.STAT_MINHP] -= (int) finalDamage;
+                totalDamageInTick += finalDamage;
+                if (finalDamage > 0) {
                     sinceLastHPSend = 150;
                 }
                 if (hasSkill(Skill.PASSIVE_BARRIER) && this.skills.get(Skill.PASSIVE_BARRIER).canCast()) {
-                    this.barrierDmgTaken += amount;
+                    this.barrierDmgTaken += finalDamage;
                     if (this.barrierDmgTaken >= this.stats[Globals.STAT_MAXHP] * 0.5) {
                         this.barrierDmgTaken = 0;
                         queueBuff(new BuffPassiveBarrier(this.logic,
@@ -809,6 +809,24 @@ public class Player extends Thread implements GameEntity {
                 //        + " | Damage Amp: " + this.dmgAmp
                 //        + " | Raw: " + dmg.getDamage()
                 //        + " | Taken: " + amount, Globals.LOG_TYPE_DATA, true);
+            }
+        }
+
+        // Resistance Passive Snapshot HP 
+        if (hasSkill(Skill.PASSIVE_RESIST) && this.skills.get(Skill.PASSIVE_RESIST).canCast()) {
+            if (resistDamageSum.size() >= Globals.LOGIC_TICKS_PER_SEC * 2) {
+                resistDamageSum.pop();
+            }
+            resistDamageSum.add(totalDamageInTick);
+            double damageSum = 0;
+            for (double resistDmg : this.resistDamageSum) {
+                damageSum += resistDmg;
+            }
+            if (damageSum >= 0.25 * this.stats[Globals.STAT_MAXHP]) {
+                queueBuff(new BuffPassiveResist(this.logic, 2000, 1));
+                this.skills.get(Skill.PASSIVE_RESIST).setCooldown();
+                sendCooldown(Skill.PASSIVE_RESIST);
+                resistDamageSum.clear();
             }
         }
         // Empty healing queued
@@ -855,6 +873,7 @@ public class Player extends Thread implements GameEntity {
         this.stunDebuff = null;
         this.knockbackDebuff = null;
         this.barrierBuff = null;
+        this.resistBuff = null;
         this.reflects.clear();
         this.dmgReduct = 1;
         this.dmgAmp = 1;
@@ -907,6 +926,10 @@ public class Player extends Thread implements GameEntity {
                 if (this.barrierBuff == null) {
                     this.barrierBuff = b;
                 }
+            } else if (b instanceof BuffPassiveResist) {
+                if (this.resistBuff == null) {
+                    this.resistBuff = b;
+                }
             }
 
             // Add all the damage reduction buffs(Multiplicative)
@@ -941,6 +964,7 @@ public class Player extends Thread implements GameEntity {
         this.skillUseQueue.clear();
         this.buffQueue.clear();
         this.barrierDmgTaken = 0;
+        this.resistDamageSum.clear();
         this.deathTime = this.logic.getTime();
     }
 

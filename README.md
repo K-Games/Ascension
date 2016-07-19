@@ -9,6 +9,8 @@ An multiplayer action 2D sidescrolling platformer coded in pure Java.
 * New Soundtrack!
 * Text changes in Connect menu
 * Item drop notifications now also describe the Item Tier.
+* Rapid Fire damage increased from 75 + 2% to 80 + 2%.
+* Resistance Passive reworked.
 
 ### Server Changes
 * Added batched packet sending. Disabled by default.

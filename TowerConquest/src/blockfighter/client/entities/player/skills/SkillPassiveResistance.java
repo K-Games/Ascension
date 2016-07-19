@@ -52,8 +52,8 @@ public class SkillPassiveResistance extends Skill {
         g.drawString("Level: " + this.level, drawX + 80, drawY + 50);
         g.drawString("Cooldown: " + (this.maxCooldown / 1000 - this.level) + " Seconds", drawX + 80, drawY + 70);
 
-        g.drawString("When taking damage over 50% of your HP, reduce", drawX + 10, drawY + 90);
-        g.drawString("damage taken to 50% of your HP.", drawX + 10, drawY + 110);
+        g.drawString("When taking damage over 25% of your HP in 2", drawX + 10, drawY + 90);
+        g.drawString("seconds, block all damage for 2 seconds.", drawX + 10, drawY + 110);
 
         g.setColor(new Color(255, 190, 0));
         g.drawString("Assign this passive to a hotkey to gain its effects.", drawX + 10, drawY + 130);
