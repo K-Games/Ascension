@@ -69,6 +69,25 @@ public class LogicModule extends Thread {
         reset();
     }
 
+    public LogicModule(ConcurrentLinkedQueue<Byte> playerKeys, ConcurrentLinkedQueue<Byte> mobKeys) {
+        this.playerKeys = playerKeys;
+        this.mobKeys = mobKeys;
+    }
+
+    public LogicModule(ConcurrentLinkedQueue<Integer> projKeys) {
+        this.projKeys = projKeys;
+        this.projMaxKeys = this.projKeys.size();
+    }
+
+    public LogicModule(final int minlvl, final int maxlvl) {
+        this.minLevel = minlvl;
+        this.maxLevel = maxlvl;
+    }
+
+    public LogicModule(ConcurrentHashMap<Byte, Player> players) {
+        this.players = players;
+    }
+
     public long getTime() {
         return this.currentTime;
     }
