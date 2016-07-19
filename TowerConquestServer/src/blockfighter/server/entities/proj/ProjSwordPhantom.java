@@ -48,7 +48,7 @@ public class ProjSwordPhantom extends Projectile {
                 int damage = (int) (owner.rollDamage());
                 final boolean crit = owner.rollCrit();
                 if (crit) {
-                    damage = (int) owner.criticalDamage(damage * (1.1 + owner.getSkillLevel(Skill.SWORD_PHANTOM) * .03));
+                    damage = (int) owner.criticalDamage(damage * (.75 + owner.getSkillLevel(Skill.SWORD_PHANTOM) * .02));
                 }
                 p.queueDamage(new Damage(damage, true, owner, p, crit, this.hitbox[0], p.getHitbox()));
             }
@@ -60,7 +60,7 @@ public class ProjSwordPhantom extends Projectile {
                 int damage = (int) (owner.rollDamage());
                 final boolean crit = owner.rollCrit();
                 if (crit) {
-                    damage = (int) owner.criticalDamage(damage * (1.1 + owner.getSkillLevel(Skill.SWORD_PHANTOM) * .03));
+                    damage = (int) owner.criticalDamage(damage * (.75 + owner.getSkillLevel(Skill.SWORD_PHANTOM) * .02));
                 }
                 b.queueDamage(new Damage(damage, true, owner, b, crit, this.hitbox[0], b.getHitbox()));
             }
