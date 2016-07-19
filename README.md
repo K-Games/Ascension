@@ -11,7 +11,9 @@ An multiplayer action 2D sidescrolling platformer coded in pure Java.
 * Item drop notifications now also describe the Item Tier.
 * Rapid Fire damage increased from 75 + 2/Lvl% to 80 + 2/Lvl%.
 * Resistance Passive reworked.
-* Phantom Reaper damage decreased from 110 + 3/lvl%
+* Phantom Reaper damage decreased from 110 + 3/Lvl%
+* Volley damage increased from 75 + 3/Lvl% to 85% + 3/Lvl%
+
 ### Server Changes
 * Added batched packet sending. Disabled by default.
 * Fixed some items not dropping.

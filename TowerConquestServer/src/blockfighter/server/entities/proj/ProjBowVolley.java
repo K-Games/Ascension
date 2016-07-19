@@ -43,7 +43,7 @@ public class ProjBowVolley extends Projectile {
         while (!this.playerQueue.isEmpty()) {
             final Player p = this.playerQueue.poll(), owner = getOwner();
             if (p != null && !p.isDead()) {
-                int damage = (int) (owner.rollDamage() * (.75 + owner.getSkillLevel(Skill.BOW_VOLLEY) * .03));
+                int damage = (int) (owner.rollDamage() * (.85 + owner.getSkillLevel(Skill.BOW_VOLLEY) * .03));
                 final boolean crit = owner.rollCrit();
                 if (crit) {
                     damage = (int) owner.criticalDamage(damage);
@@ -68,7 +68,7 @@ public class ProjBowVolley extends Projectile {
             final Mob b = this.mobQueue.poll();
             final Player owner = getOwner();
             if (b != null && !b.isDead()) {
-                int damage = (int) (owner.rollDamage() * (.75 + owner.getSkillLevel(Skill.BOW_VOLLEY) * .03));
+                int damage = (int) (owner.rollDamage() * (.85 + owner.getSkillLevel(Skill.BOW_VOLLEY) * .03));
                 final boolean crit = owner.rollCrit();
                 if (crit) {
                     damage = (int) owner.criticalDamage(damage);
