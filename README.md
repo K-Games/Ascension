@@ -13,12 +13,14 @@ An multiplayer action 2D sidescrolling platformer coded in pure Java.
 * Resistance Passive reworked.
 * Phantom Reaper damage decreased from 110 + 3/Lvl%
 * Volley damage increased from 75 + 3/Lvl% to 85% + 3/Lvl%
+* Aggression damage increased from 600 + 20/Lvl% to 800 + 20/Lvl%
 
 ### Server Changes
 * Added batched packet sending. Disabled by default.
 * Fixed some items not dropping.
 * Moved getItemType from Player to Item class.
 * Fixed Dual Sword not being considered a passive.
+* Phantom delay between strikes increased from 0.08s to 0.1s
 
 ### Credits
 #### Developers

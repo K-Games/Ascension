@@ -40,7 +40,7 @@ public class ProjSwordTaunt extends Projectile {
         while (!this.playerQueue.isEmpty()) {
             final Player p = this.playerQueue.poll(), owner = getOwner();
             if (p != null && !p.isDead()) {
-                int damage = (int) (owner.rollDamage() * (6 + 0.2 * owner.getSkillLevel(Skill.SWORD_TAUNT)));
+                int damage = (int) (owner.rollDamage() * (8 + 0.2 * owner.getSkillLevel(Skill.SWORD_TAUNT)));
                 final boolean crit = owner.rollCrit();
                 if (crit) {
                     damage = (int) owner.criticalDamage(damage);
@@ -53,7 +53,7 @@ public class ProjSwordTaunt extends Projectile {
             final Mob b = this.mobQueue.poll();
             final Player owner = getOwner();
             if (b != null && !b.isDead()) {
-                int damage = (int) (owner.rollDamage() * (6 + 0.2 * owner.getSkillLevel(Skill.SWORD_TAUNT)));
+                int damage = (int) (owner.rollDamage() * (8 + 0.2 * owner.getSkillLevel(Skill.SWORD_TAUNT)));
                 final boolean crit = owner.rollCrit();
                 if (crit) {
                     damage = (int) owner.criticalDamage(damage);

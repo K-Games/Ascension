@@ -16,7 +16,7 @@ public class SkillSwordTaunt extends Skill {
         this.skillCode = SWORD_TAUNT;
         this.maxCooldown = 25000;
         this.reqWeapon = Globals.ITEM_SWORD;
-        this.skillName = "Taunt";
+        this.skillName = "Aggression";
     }
 
     @Override
@@ -43,13 +43,13 @@ public class SkillSwordTaunt extends Skill {
         g.drawString("Level: " + this.level + " - Requires " + ItemEquip.getItemTypeName(this.reqWeapon), drawX + 80, drawY + 50);
         g.drawString("Cooldown: " + this.maxCooldown / 1000 + " Seconds", drawX + 80, drawY + 70);
 
-        g.drawString("Deal damage and aggro equal to 15x damage dealt.", drawX + 10, drawY + 90);
+        g.drawString("Deal a single deadly blow.", drawX + 10, drawY + 90);
 
         g.drawString("[Level " + this.level + "]", drawX + 10, drawY + 115);
-        g.drawString("Deals " + (20 * this.level + 600) + "% damage.", drawX + 10, drawY + 135);
+        g.drawString("Deals " + (20 * this.level + 800) + "% damage.", drawX + 10, drawY + 135);
         if (this.level < 30) {
             g.drawString("[Level " + (this.level + 1) + "]", drawX + 10, drawY + 160);
-            g.drawString("Deals " + (20 * (this.level + 1) + 600) + "% damage.", drawX + 10, drawY + 180);
+            g.drawString("Deals " + (20 * (this.level + 1) + 800) + "% damage.", drawX + 10, drawY + 180);
 
             g.drawString("[Level 30 Bonus]", drawX + 10, drawY + 205);
             g.drawString("Take 20% less damage for 10 seconds.", drawX + 10, drawY + 225);

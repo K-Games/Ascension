@@ -12,7 +12,6 @@ public class SkillPassiveBowMastery extends Skill {
         super(l);
         this.skillCode = PASSIVE_BOWMASTERY;
         this.isPassive = true;
-        this.isPassive = true;
     }
 
 }
