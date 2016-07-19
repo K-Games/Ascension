@@ -11,6 +11,7 @@ public class SkillPassiveDualSword extends Skill {
     public SkillPassiveDualSword(final LogicModule l) {
         super(l);
         this.skillCode = PASSIVE_DUALSWORD;
+        this.isPassive = true;
     }
 
 }
