@@ -20,7 +20,6 @@ public class ProjBowArc extends Projectile {
      * Projectile of Bow Skill Arcshot.
      *
      * @param l Room/Logic Module
-     * @param k Projectile Key
      * @param o Owning player
      * @param x Spawn x-coordinate
      * @param y Spawn y-coordinate
@@ -29,9 +28,9 @@ public class ProjBowArc extends Projectile {
         super(l, o, x, y, 100);
         this.hitbox = new Rectangle2D.Double[1];
         if (o.getFacing() == Globals.RIGHT) {
-            this.hitbox[0] = new Rectangle2D.Double(this.x + 50, this.y - 130, 445, 108);
+            this.hitbox[0] = new Rectangle2D.Double(this.x + 35, this.y - 125, 445, 108);
         } else {
-            this.hitbox[0] = new Rectangle2D.Double(this.x - 445 - 50, this.y - 130, 445, 108);
+            this.hitbox[0] = new Rectangle2D.Double(this.x - 445 - 35, this.y - 125, 445, 108);
         }
     }
 

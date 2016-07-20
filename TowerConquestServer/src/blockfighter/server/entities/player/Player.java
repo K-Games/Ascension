@@ -130,7 +130,7 @@ public class Player extends Thread implements GameEntity {
     private final ConcurrentLinkedQueue<Buff> buffQueue = new ConcurrentLinkedQueue<>();
 
     private final ConcurrentLinkedQueue<Integer> buffKeys = new ConcurrentLinkedQueue<>();
-    private final LinkedList<Double> resistDamageSum = new LinkedList<>();
+    private final LinkedList<Double> resistDamageSum;
 
     private int maxBuffKeys = 0;
     private Byte nextState;
@@ -216,6 +216,7 @@ public class Player extends Thread implements GameEntity {
      * @param l Reference to Logic module
      */
     public Player(final LogicModule l, final byte key, final Connection c, final GameMap map) {
+        this.resistDamageSum = new LinkedList<>();
         this.logic = l;
         this.lastActionTime = l.getTime();
         this.key = key;
@@ -1457,45 +1458,46 @@ public class Player extends Thread implements GameEntity {
                 break;
             case PLAYER_STATE_BOW_ARC:
                 this.animState = Globals.PLAYER_ANIM_STATE_ATTACKBOW;
-                if (this.frame < 5 && frameDuration >= ((this.frame < 5) ? 20 : 70)) {
+                if (this.frame < 7 && frameDuration >= 30) {
                     this.frame++;
                     this.lastFrameTime = this.logic.getTime();
                 }
                 break;
             case PLAYER_STATE_BOW_RAPID:
                 this.animState = Globals.PLAYER_ANIM_STATE_ATTACKBOW;
-                if (this.frame < 5 && frameDuration >= 20) {
+                if (this.frame < 7 && frameDuration >= 30) {
                     this.frame++;
                     this.lastFrameTime = this.logic.getTime();
                 }
                 break;
             case PLAYER_STATE_BOW_POWER:
                 this.animState = Globals.PLAYER_ANIM_STATE_ATTACKBOW;
-                if (frameDuration >= ((this.frame < 5) ? 20 : 70)) {
-                    if (skillDuration < 800) {
-                        if (this.frame != 5) {
-                            this.frame++;
-                        }
+                if (frameDuration >= ((this.frame < 3) ? 30 : 70)) {
+                    if (getSkillCounter() < 20 && this.frame != 3) {
+                        this.frame++;
+                    } else if (getSkillCounter() == 21 && this.frame < 7) {
+                        this.frame++;
                     }
                     this.lastFrameTime = this.logic.getTime();
                 }
                 break;
             case PLAYER_STATE_BOW_VOLLEY:
                 this.animState = Globals.PLAYER_ANIM_STATE_ATTACKBOW;
-                if (this.frame != 5) {
-                    this.frame = 5;
+                if (this.frame < 3 && frameDuration >= 30) {
+                    this.frame++;
+                    this.lastFrameTime = this.logic.getTime();
                 }
                 break;
             case PLAYER_STATE_BOW_STORM:
                 this.animState = Globals.PLAYER_ANIM_STATE_ATTACKBOW;
-                if (this.frame < 5 && frameDuration >= ((this.frame < 5) ? 20 : 70)) {
+                if (this.frame < 7 && frameDuration >= 30) {
                     this.frame++;
                     this.lastFrameTime = this.logic.getTime();
                 }
                 break;
             case PLAYER_STATE_BOW_FROST:
                 this.animState = Globals.PLAYER_ANIM_STATE_ATTACKBOW;
-                if (this.frame < 5 && frameDuration >= ((this.frame < 5) ? 20 : 70)) {
+                if (this.frame < 7 && frameDuration >= 30) {
                     this.frame++;
                     this.lastFrameTime = this.logic.getTime();
                 }

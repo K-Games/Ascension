@@ -714,7 +714,9 @@ public class ScreenIngame extends Screen {
                 x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
                 y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
                 facing = data[10];
-                addParticle(new ParticleBowPowerCharge(x, y, facing));
+                for (byte i = 0; i < 6; i++) {
+                    addParticle(new ParticleBowPowerCharge(x, y, facing));
+                }
                 break;
             case Globals.PARTICLE_BOW_VOLLEYBOW:
                 x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));

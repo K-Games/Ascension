@@ -33,7 +33,7 @@ public class SkillBowVolley extends Skill {
             this.logic.queueAddProj(proj);
             Player.sendParticle(this.logic.getRoom(), Globals.PARTICLE_BOW_VOLLEYARROW, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
                     player.getFacing());
-            Player.sendParticle(this.logic.getRoom(), Globals.PARTICLE_BOW_VOLLEYBOW, player.getX(), player.getY() + 30, player.getFacing());
+            Player.sendParticle(this.logic.getRoom(), Globals.PARTICLE_BOW_VOLLEYBOW, player.getX(), player.getY() - 75, player.getFacing());
             player.incrementSkillCounter();
             Player.sendSFX(this.logic.getRoom(), Globals.SFX_VOLLEY, player.getX(), player.getY());
         }

@@ -24,7 +24,6 @@ public class ProjBowFrost extends Projectile {
      * Projectile of Bow Skill Frost Bind.
      *
      * @param l Room/Logic Module
-     * @param k Projectile Key
      * @param o Owning player
      * @param x Spawn x-coordinate
      * @param y Spawn y-coordinate
@@ -35,10 +34,10 @@ public class ProjBowFrost extends Projectile {
         this.isSecondary = isSec;
         this.hitbox = new Rectangle2D.Double[1];
         if (o.getFacing() == Globals.RIGHT) {
-            this.hitbox[0] = new Rectangle2D.Double(this.x + 80, this.y - 160, 300, 148);
+            this.hitbox[0] = new Rectangle2D.Double(this.x + 35, this.y - 150, 300, 148);
             this.speedX = 20;
         } else {
-            this.hitbox[0] = new Rectangle2D.Double(this.x - 300 - 80, this.y - 160, 300, 148);
+            this.hitbox[0] = new Rectangle2D.Double(this.x - 300 - 35, this.y - 150, 300, 148);
             this.speedX = -20;
         }
     }
