@@ -42,7 +42,7 @@ public class ItemEquip implements Item {
             TIER_RARE = 2, //70-84%
             TIER_RUNIC = 3, //85-89%
             TIER_LEGENDARY = 4, //90-94%
-            TIER_ARCHAIC = 5, //95-109%
+            TIER_MYSTIC = 5, //95-109%
             TIER_DIVINE = 6;    //110%+
 
     protected double[] baseStats = new double[Globals.NUM_STATS],
@@ -69,7 +69,7 @@ public class ItemEquip implements Item {
         TIER_COLOURS.put(TIER_RARE, new Color(255, 225, 0));
         TIER_COLOURS.put(TIER_RUNIC, new Color(255, 130, 0));
         TIER_COLOURS.put(TIER_LEGENDARY, new Color(205, 15, 0));
-        TIER_COLOURS.put(TIER_ARCHAIC, new Color(0, 220, 0));
+        TIER_COLOURS.put(TIER_MYSTIC, new Color(0, 220, 0));
         TIER_COLOURS.put(TIER_DIVINE, new Color(0, 255, 160));
     }
 
@@ -588,7 +588,7 @@ public class ItemEquip implements Item {
         if (this.bonusMult + this.upgrades * UPGRADE_MULT >= 1.1) {
             this.tier = TIER_DIVINE;
         } else if (this.bonusMult + this.upgrades * UPGRADE_MULT >= .95) {
-            this.tier = TIER_ARCHAIC;
+            this.tier = TIER_MYSTIC;
         } else if (this.bonusMult + this.upgrades * UPGRADE_MULT >= 0.9) {
             this.tier = TIER_LEGENDARY;
         } else if (this.bonusMult + this.upgrades * UPGRADE_MULT >= 0.85) {
@@ -619,8 +619,8 @@ public class ItemEquip implements Item {
                 return "Runic";
             case ItemEquip.TIER_LEGENDARY:
                 return "Legendary";
-            case ItemEquip.TIER_ARCHAIC:
-                return "Archaic";
+            case ItemEquip.TIER_MYSTIC:
+                return "Mystic";
             case ItemEquip.TIER_DIVINE:
                 return "Divine";
             default:

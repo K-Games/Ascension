@@ -4,17 +4,24 @@
 An multiplayer action 2D sidescrolling platformer coded in pure Java.
 
 ## Version 0.18 Update 1
+### Gameplay Changes
+* Passives Removed: Tactical Execution
+* New Passive - Tough Skin - Boost your natural resilience to damage.
+* New Passive - Harmony - Achieve harmony to gain damage base on Max HP.
+* Rapid Fire damage increased from 75 + 2/Lvl% to 80 + 2/Lvl%.
+* Resistance Passive reworked - When taking damage over 25% of your HP in 2 seconds, block all damage for 2 seconds.
+* Phantom Reaper damage decreased from 110 + 3/Lvl%
+* Volley damage increased from 75 + 3/Lvl% to 85% + 3/Lvl%
+* Aggression damage increased from 600 + 20/Lvl% to 800 + 20/Lvl%
+
 ### Client Changes
 * Fixed never timing out when trying to login to a live server with an invalid room.
 * New Soundtrack!
 * Text changes in Connect menu
 * Item drop notifications now also describe the Item Tier.
-* Rapid Fire damage increased from 75 + 2/Lvl% to 80 + 2/Lvl%.
-* Resistance Passive reworked.
-* Phantom Reaper damage decreased from 110 + 3/Lvl%
-* Volley damage increased from 75 + 3/Lvl% to 85% + 3/Lvl%
-* Aggression damage increased from 600 + 20/Lvl% to 800 + 20/Lvl%
 * Various visual changes.
+* Volley Renamed to Vortex Bolts
+* New Skill Icons - Power of Will, Flurry
 
 ### Server Changes
 * Added batched packet sending. Disabled by default.

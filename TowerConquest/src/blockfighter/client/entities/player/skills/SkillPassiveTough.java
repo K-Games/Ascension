@@ -1,6 +1,7 @@
 package blockfighter.client.entities.player.skills;
 
 import blockfighter.client.Globals;
+import static blockfighter.client.entities.player.skills.Skill.PASSIVE_SHIELDMASTERY;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
@@ -8,17 +9,17 @@ import java.awt.Graphics2D;
  *
  * @author Ken Kwan
  */
-public class SkillPassiveTactical extends Skill {
+public class SkillPassiveTough extends Skill {
 
-    public SkillPassiveTactical() {
-        this.skillName = "Tactical Execution";
-        this.skillCode = PASSIVE_TACTICAL;
-        this.icon = Globals.SKILL_ICON[PASSIVE_TACTICAL];
+    public SkillPassiveTough() {
+        this.skillName = "Tough Skin";
+        this.skillCode = PASSIVE_TOUGH;
+        this.icon = Globals.SKILL_ICON[PASSIVE_TOUGH];
     }
 
     @Override
     public void drawInfo(final Graphics2D g, final int x, final int y) {
-        final int boxHeight = (this.level < 30) ? 230 : 185, boxWidth = 370;
+        final int boxHeight = (this.level < 30) ? 210 : 165, boxWidth = 365;
         int drawX = x, drawY = y;
         if (drawY + boxHeight > 700) {
             drawY = 700 - boxHeight;
@@ -39,20 +40,18 @@ public class SkillPassiveTactical extends Skill {
         g.setFont(Globals.ARIAL_15PT);
         g.drawString("Level: " + this.level, drawX + 80, drawY + 50);
 
-        g.drawString("Each successful skill used without taking damage", drawX + 10, drawY + 90);
-        g.drawString("increases damage dealt by 1%.", drawX + 10, drawY + 110);
+        g.drawString("Boost your natural resilience to damage.", drawX + 10, drawY + 90);
 
         g.setColor(new Color(255, 190, 0));
-        g.drawString("Assign this passive to a hotkey to gain its effects.", drawX + 10, drawY + 130);
+        g.drawString("Assign this passive to a hotkey to gain its effects.", drawX + 10, drawY + 110);
 
         g.setColor(Color.WHITE);
-        g.drawString("[Level " + this.level + "]", drawX + 10, drawY + 155);
-        g.drawString("Increases damage dealt up to " + (this.level + 1) + "%.", drawX + 10, drawY + 175);
+        g.drawString("[Level " + this.level + "]", drawX + 10, drawY + 135);
+        g.drawString("Take " + this.df.format(6 + this.level * 0.3) + "% reduced damage.", drawX + 10, drawY + 155);
 
         if (this.level < 30) {
-            g.drawString("[Level " + (this.level + 1) + "]", drawX + 10, drawY + 200);
-            g.drawString("Increases damage dealt up to " + ((this.level + 1) + 1) + "%.", drawX + 10, drawY + 220);
+            g.drawString("[Level " + (this.level + 1) + "]", drawX + 10, drawY + 180);
+            g.drawString("Take " + this.df.format(6 + (this.level + 1) * 0.3) + "% reduced damage.", drawX + 10, drawY + 200);
         }
     }
-
 }

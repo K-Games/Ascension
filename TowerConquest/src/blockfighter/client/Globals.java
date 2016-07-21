@@ -197,7 +197,7 @@ public class Globals {
             MINDMG_BASE = 20,
             MAXDMG_BASE = 40,
             STAT_PER_LEVEL = 7,
-            SP_PER_LEVEL = 3;
+            SP_PER_LEVEL = 2;
 
     public final static int NUM_PLAYER_ANIM_STATE = 9;
     public final static byte PLAYER_ANIM_STATE_STAND = 0x00,

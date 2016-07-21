@@ -6,12 +6,11 @@ import blockfighter.server.LogicModule;
  *
  * @author Ken Kwan
  */
-public class SkillPassiveRevive extends Skill {
+public class SkillPassiveHarmony extends Skill {
 
-    public SkillPassiveRevive(final LogicModule l) {
+    public SkillPassiveHarmony(final LogicModule l) {
         super(l);
-        this.skillCode = PASSIVE_REVIVE;
-        this.maxCooldown = 120000;
+        this.skillCode = PASSIVE_HARMONY;
         this.isPassive = true;
     }
 

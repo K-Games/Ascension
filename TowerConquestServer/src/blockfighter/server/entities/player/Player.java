@@ -29,10 +29,10 @@ import blockfighter.server.entities.player.skills.SkillPassiveBowMastery;
 import blockfighter.server.entities.player.skills.SkillPassiveDualSword;
 import blockfighter.server.entities.player.skills.SkillPassiveKeenEye;
 import blockfighter.server.entities.player.skills.SkillPassiveResistance;
-import blockfighter.server.entities.player.skills.SkillPassiveRevive;
+import blockfighter.server.entities.player.skills.SkillPassiveTough;
 import blockfighter.server.entities.player.skills.SkillPassiveShadowAttack;
 import blockfighter.server.entities.player.skills.SkillPassiveShieldMastery;
-import blockfighter.server.entities.player.skills.SkillPassiveTactical;
+import blockfighter.server.entities.player.skills.SkillPassiveHarmony;
 import blockfighter.server.entities.player.skills.SkillPassiveVitalHit;
 import blockfighter.server.entities.player.skills.SkillPassiveWillpower;
 import blockfighter.server.entities.player.skills.SkillShieldCharge;
@@ -114,7 +114,7 @@ public class Player extends Thread implements GameEntity {
     private Buff stunDebuff, knockbackDebuff, barrierBuff, resistBuff;
     private final ArrayList<Buff> reflects = new ArrayList<>(10);
     private double dmgReduct, dmgAmp;
-    private double barrierDmgTaken = 0, tacticalDmgMult = 0;
+    private double barrierDmgTaken = 0;
 
     private final Connection connection;
     private final GameMap map;
@@ -537,11 +537,11 @@ public class Player extends Thread implements GameEntity {
             case Skill.PASSIVE_WILLPOWER:
                 newSkill = new SkillPassiveWillpower(this.logic);
                 break;
-            case Skill.PASSIVE_TACTICAL:
-                newSkill = new SkillPassiveTactical(this.logic);
+            case Skill.PASSIVE_HARMONY:
+                newSkill = new SkillPassiveHarmony(this.logic);
                 break;
-            case Skill.PASSIVE_REVIVE:
-                newSkill = new SkillPassiveRevive(this.logic);
+            case Skill.PASSIVE_TOUGH:
+                newSkill = new SkillPassiveTough(this.logic);
                 break;
             case Skill.PASSIVE_SHADOWATTACK:
                 newSkill = new SkillPassiveShadowAttack(this.logic);
@@ -667,12 +667,6 @@ public class Player extends Thread implements GameEntity {
         queuePlayerState(this.skills.get(skillCode).castPlayerState());
         this.skills.get(skillCode).setCooldown();
         sendCooldown(skillCode);
-
-        // Tactical Execution Passive
-        // Add after being able to cast skill
-        if (hasSkill(Skill.PASSIVE_TACTICAL) && this.tacticalDmgMult < 0.01 + 0.01 * getSkillLevel(Skill.PASSIVE_TACTICAL)) {
-            this.tacticalDmgMult += 0.01;
-        }
     }
 
     private void updateSkillCast() {
@@ -754,20 +748,27 @@ public class Player extends Thread implements GameEntity {
 
                 // Buff Reductions
                 finalDamage = finalDamage * this.dmgReduct;
-
+                //Passive damage reduction
+                double passiveReduct = 0;
                 // Defender Mastery Passive Reduction
                 if (hasSkill(Skill.PASSIVE_SHIELDMASTERY)
                         && Items.getItemType(this.equips[Globals.ITEM_WEAPON]) == Globals.ITEM_SWORD
                         && Items.getItemType(this.equips[Globals.ITEM_OFFHAND]) == Globals.ITEM_SHIELD) {
-                    finalDamage = finalDamage * (1 - (0.05 + 0.005 * getSkillLevel(Skill.PASSIVE_SHIELDMASTERY)));
+                    passiveReduct += 0.05 + 0.005 * getSkillLevel(Skill.PASSIVE_SHIELDMASTERY);
+                }
+
+                //Passive Tough Skin
+                if (hasSkill(Skill.PASSIVE_TOUGH)) {
+                    passiveReduct += 0.06 + 0.003 * getSkillLevel(Skill.PASSIVE_TOUGH);
                 }
 
                 // Dual Wield Passive Reduction
                 if (hasSkill(Skill.PASSIVE_DUALSWORD)
                         && Items.getItemType(this.equips[Globals.ITEM_WEAPON]) == Globals.ITEM_SWORD
                         && Items.getItemType(this.equips[Globals.ITEM_OFFHAND]) == Globals.ITEM_SWORD) {
-                    finalDamage = finalDamage * (1 - (0.01 * getSkillLevel(Skill.PASSIVE_DUALSWORD)));
+                    passiveReduct += 0.01 * getSkillLevel(Skill.PASSIVE_DUALSWORD);
                 }
+                finalDamage = finalDamage * (1 - passiveReduct);
 
                 // Barrier reduction
                 if (this.barrierBuff != null) {
@@ -779,7 +780,6 @@ public class Player extends Thread implements GameEntity {
                     sendParticle(this.logic.getRoom(), Globals.PARTICLE_PASSIVE_RESIST, dmg.getDmgPoint().x, dmg.getDmgPoint().y);
                 }
 
-                this.tacticalDmgMult = 0;
                 // Send client damage display
                 if (!dmg.isHidden()) {
                     if (dmg.getOwner() != null && dmg.isCrit()) {
@@ -1008,8 +1008,12 @@ public class Player extends Thread implements GameEntity {
             mult += (0.05 + 0.005 * getSkillLevel(Skill.PASSIVE_WILLPOWER))
                     * (this.stats[Globals.STAT_MINHP] / this.stats[Globals.STAT_MAXHP]);
         }
-        // Tactical Execution Passive
-        mult += this.tacticalDmgMult;
+
+        //Passive Harmony
+        if (hasSkill(Skill.PASSIVE_HARMONY)) {
+            dmg += this.stats[Globals.STAT_MAXHP] * (0.001 + 0.001 * getSkillLevel(Skill.PASSIVE_HARMONY));
+        }
+
         dmg *= mult;
         return dmg;
     }
