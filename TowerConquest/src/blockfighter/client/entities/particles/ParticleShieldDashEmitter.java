@@ -6,7 +6,7 @@ import java.awt.Point;
 public class ParticleShieldDashEmitter extends Particle {
 
     public ParticleShieldDashEmitter(final byte f, final Player p) {
-        super(0, 0, f, p);
+        super(f, p);
         this.frame = 0;
         this.duration = 50;
     }

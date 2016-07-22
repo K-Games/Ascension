@@ -62,7 +62,7 @@ public class SkillSwordPhantom extends Skill {
                 }
             } else {
                 Mob target;
-                ArrayList<Mob> enemyInRange = new ArrayList<>(Globals.SERVER_MAX_PLAYERS);
+                ArrayList<Mob> enemyInRange = new ArrayList<>(this.logic.getMobs().size());
                 for (final Map.Entry<Byte, Mob> bEntry : this.logic.getMobs().entrySet()) {
                     final Mob b = bEntry.getValue();
                     double distance = Math.sqrt(Math.pow((player.getX() - b.getX()), 2) + Math.pow((player.getY() - b.getY()), 2));

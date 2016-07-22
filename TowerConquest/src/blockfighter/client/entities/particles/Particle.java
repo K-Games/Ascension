@@ -207,8 +207,8 @@ public abstract class Particle extends Thread {
         this.facing = f;
     }
 
-    public Particle(final int x, final int y, final byte f, final Player owner) {
-        this(x, y, owner);
+    public Particle(final byte f, final Player owner) {
+        this(owner.getX(), owner.getY(), owner);
         this.facing = f;
     }
 
@@ -216,7 +216,15 @@ public abstract class Particle extends Thread {
         this(logic.getScreen().getNextParticleKey(), x, y, owner);
     }
 
-    @SuppressWarnings("unused")
+    public Particle(final Player owner) {
+        this(owner.getX(), owner.getY(), owner);
+    }
+    
+    public Particle(final Player owner, final byte f) {
+        this(owner.getX(), owner.getY(), owner);
+        this.facing = f;
+    }
+    
     public void draw(final Graphics2D g) {
     }
 

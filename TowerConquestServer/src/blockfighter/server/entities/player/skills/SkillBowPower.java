@@ -19,7 +19,7 @@ public class SkillBowPower extends Skill {
     public SkillBowPower(final LogicModule l) {
         super(l);
         this.skillCode = BOW_POWER;
-        this.maxCooldown = 16000;
+        this.maxCooldown = 0;
         this.reqWeapon = Globals.ITEM_BOW;
     }
 
@@ -30,8 +30,7 @@ public class SkillBowPower extends Skill {
             Player.sendSFX(this.logic.getRoom(), Globals.SFX_POWER2, player.getX(), player.getY());
         }
         if (duration <= 400 && Globals.hasPastDuration(duration, player.getSkillCounter() * 20) && player.getSkillCounter() < 20) {
-            Player.sendParticle(this.logic.getRoom(), Globals.PARTICLE_BOW_POWERCHARGE, player.getX() + ((player.getFacing() == Globals.RIGHT) ? 5 : -5),
-                    player.getY() - 80, player.getFacing());
+            Player.sendParticle(this.logic.getRoom(), Globals.PARTICLE_BOW_POWERCHARGE, player.getKey());
             player.incrementSkillCounter();
         }
         if (Globals.hasPastDuration(duration, 800) && player.getSkillCounter() < 21) {

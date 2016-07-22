@@ -10,7 +10,7 @@ public class ParticleShieldReflectEmitter extends Particle {
     private long lastParticleTime = 0;
 
     public ParticleShieldReflectEmitter(final Player p) {
-        super(0, 0, p);
+        super(p);
         this.frame = 0;
         this.duration = 3000;
     }

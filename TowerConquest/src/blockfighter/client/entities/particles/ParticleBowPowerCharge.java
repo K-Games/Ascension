@@ -1,32 +1,39 @@
 package blockfighter.client.entities.particles;
 
 import blockfighter.client.Globals;
+import blockfighter.client.entities.player.Player;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 public class ParticleBowPowerCharge extends Particle {
 
-    private final double speedX, speedY;
+    private double speedX, speedY;
 
-    public ParticleBowPowerCharge(final int x, final int y, final byte f) {
-        super(x, y, f);
+    public ParticleBowPowerCharge(final Player owner) {
+        super(owner);
         this.frame = 0;
         this.frameDuration = 25;
         this.duration = 400;
-        double numberOfTicks = this.duration / 25f;
-        this.x = x + Globals.rng(300) - 150;
-        this.y = (int) (y + (Globals.rng(2) == 0 ? 1 : -1) * Math.sqrt(150 * 150 - (x - this.x) * (x - this.x)));
-        this.speedX = (x - this.x) / numberOfTicks;
-        this.speedY = (y - this.y) / numberOfTicks;
+        this.x = owner.getX() + Globals.rng(300) - 150;
+        this.y = (int) ((owner.getY() - 75) + (Globals.rng(2) == 0 ? 1 : -1) * Math.sqrt(150 * 150 - (owner.getX() - this.x) * (owner.getX() - this.x)));
     }
 
     @Override
     public void update() {
         super.update();
         if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
-            this.x += this.speedX;
-            this.y += this.speedY;
+            long durationLeft = this.duration - Globals.nsToMs(logic.getTime() - this.particleStartTime);
+            double numberOfTicks = durationLeft / 25f;
+            if (numberOfTicks <= 1) {
+                this.x = owner.getX();
+                this.y = owner.getY() - 75;
+            } else {
+                this.speedX = (owner.getX() - this.x) / numberOfTicks;
+                this.speedY = ((owner.getY() - 75) - this.y) / numberOfTicks;
+                this.x += this.speedX;
+                this.y += this.speedY;
+            }
             this.frameDuration = 25;
             this.lastFrameTime = logic.getTime();
         }

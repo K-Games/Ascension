@@ -77,7 +77,7 @@ public class Globals {
 
     public final static int NUM_SOUND_EFFECTS = 0;
 
-    public final static int NUM_PARTICLE_EFFECTS = 46;
+    public final static int NUM_PARTICLE_EFFECTS = 47;
     public final static byte PARTICLE_SWORD_SLASH1 = 0x00,
             PARTICLE_SWORD_SLASH2 = 0x01,
             PARTICLE_SWORD_SLASH3 = 0x02,
@@ -123,7 +123,8 @@ public class Globals {
             PARTICLE_SWORD_GASH2 = 0x2B,
             PARTICLE_SWORD_GASH3 = 0x2C,
             PARTICLE_SWORD_GASH4 = 0x2D,
-            PARTICLE_BLOOD_HIT = 0x2E;
+            PARTICLE_BLOOD_HIT = 0x2E,
+            PARTICLE_PASSIVE_STATIC = 0x2F;
 
     public final static int NUM_KEYBINDS = 16,
             KEYBIND_SKILL1 = 0,
@@ -197,7 +198,7 @@ public class Globals {
             MINDMG_BASE = 20,
             MAXDMG_BASE = 40,
             STAT_PER_LEVEL = 7,
-            SP_PER_LEVEL = 2;
+            SP_PER_LEVEL = 3;
 
     public final static int NUM_PLAYER_ANIM_STATE = 9;
     public final static byte PLAYER_ANIM_STATE_STAND = 0x00,

@@ -12,7 +12,7 @@ import blockfighter.client.entities.player.skills.SkillBowRapid;
 import blockfighter.client.entities.player.skills.SkillBowStorm;
 import blockfighter.client.entities.player.skills.SkillBowVolley;
 import blockfighter.client.entities.player.skills.SkillPassiveTough;
-import blockfighter.client.entities.player.skills.SkillPassive12;
+import blockfighter.client.entities.player.skills.SkillPassiveStatic;
 import blockfighter.client.entities.player.skills.SkillPassiveBarrier;
 import blockfighter.client.entities.player.skills.SkillPassiveBowMastery;
 import blockfighter.client.entities.player.skills.SkillPassiveDualSword;
@@ -105,7 +105,7 @@ public class SaveData {
         this.skills[Skill.PASSIVE_HARMONY] = new SkillPassiveHarmony();
         this.skills[Skill.PASSIVE_TOUGH] = new SkillPassiveTough();
         this.skills[Skill.PASSIVE_SHADOWATTACK] = new SkillPassiveShadowAttack();
-        this.skills[Skill.PASSIVE_12] = new SkillPassive12();
+        this.skills[Skill.PASSIVE_STATIC] = new SkillPassiveStatic();
     }
 
     public void newCharacter(final boolean testMax) {
@@ -638,7 +638,11 @@ public class SaveData {
             this.baseStats[Globals.STAT_SKILLPOINTS]--;
             this.skills[skillCode].addLevel((byte) 1);
         } else {
-            final byte amount = (byte) (30 - this.skills[skillCode].getLevel());
+            double max = 30;
+            if (this.baseStats[Globals.STAT_SKILLPOINTS] < 30) {
+                max = this.baseStats[Globals.STAT_SKILLPOINTS];
+            }
+            final byte amount = (byte) (max - this.skills[skillCode].getLevel());
             this.baseStats[Globals.STAT_SKILLPOINTS] -= amount;
             this.skills[skillCode].addLevel(amount);
         }

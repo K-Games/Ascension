@@ -599,7 +599,7 @@ public class ScreenIngame extends Screen {
     private void dataParticleEffect(final byte[] data) {
         final byte particleID = data[1];
         int x, y;
-        byte facing, playerKey;
+        byte facing, playerKey, targetKey;
 
         switch (particleID) {
             case Globals.PARTICLE_SWORD_SLASH1:
@@ -711,11 +711,9 @@ public class ScreenIngame extends Screen {
                 addParticle(new ParticleBowPower(x, y, facing));
                 break;
             case Globals.PARTICLE_BOW_POWERCHARGE:
-                x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
-                y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
-                facing = data[10];
-                for (byte i = 0; i < 6; i++) {
-                    addParticle(new ParticleBowPowerCharge(x, y, facing));
+                playerKey = data[2];
+                for (byte i = 0; i < 4; i++) {
+                    addParticle(new ParticleBowPowerCharge(this.players.get(playerKey)));
                 }
                 break;
             case Globals.PARTICLE_BOW_VOLLEYBOW:
@@ -859,6 +857,13 @@ public class ScreenIngame extends Screen {
                 byte sourceKey = data[3];
                 if (this.players.containsKey(playerKey)) {
                     addParticle(new ParticleBloodEmitter(this.players.get(playerKey), this.players.get(sourceKey), true));
+                }
+                break;
+            case Globals.PARTICLE_PASSIVE_STATIC:
+                playerKey = data[2];
+                targetKey = data[3];
+                if (this.players.containsKey(playerKey)) {
+                    addParticle(new ParticlePassiveStatic(this.players.get(playerKey), this.players.get(targetKey)));
                 }
                 break;
         }
@@ -1137,9 +1142,11 @@ public class ScreenIngame extends Screen {
 
     @Override
     public void mouseReleased(final MouseEvent e) {
-        Rectangle2D.Double box = new Rectangle2D.Double(10, 10, this.logoutBox.getWidth() + 6, this.logoutBox.getHeight() + 6);
-        if (box.contains(e.getPoint())) {
-            client.sendDisconnect(this.myKey);
+        if (this.logoutBox != null) {
+            Rectangle2D.Double box = new Rectangle2D.Double(10, 10, this.logoutBox.getWidth() + 6, this.logoutBox.getHeight() + 6);
+            if (box.contains(e.getPoint())) {
+                client.sendDisconnect(this.myKey);
+            }
         }
     }
 

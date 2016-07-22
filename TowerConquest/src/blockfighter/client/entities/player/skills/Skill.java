@@ -55,7 +55,7 @@ public abstract class Skill {
             PASSIVE_REVIVE = 0x1B,
             PASSIVE_TOUGH = 0x1B,
             PASSIVE_SHADOWATTACK = 0x1C,
-            PASSIVE_12 = 0x1D;
+            PASSIVE_STATIC = 0x1D;
 
     public static void init() {
         logic = Main.getLogicModule();

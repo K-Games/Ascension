@@ -6,11 +6,11 @@ import blockfighter.server.LogicModule;
  *
  * @author Ken Kwan
  */
-public class SkillPassive12 extends Skill {
+public class SkillPassiveStatic extends Skill {
 
-    public SkillPassive12(final LogicModule l) {
+    public SkillPassiveStatic(final LogicModule l) {
         super(l);
-        this.skillCode = PASSIVE_12;
+        this.skillCode = PASSIVE_STATIC;
         this.isPassive = true;
     }
 

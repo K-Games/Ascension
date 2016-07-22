@@ -368,7 +368,7 @@ public class ItemEquip implements Item {
                 newStats[Globals.STAT_POWER] = level + 0.25D * level + Globals.rng(6);
                 break;
             case Globals.ITEM_AMULET:
-                newStats[Globals.STAT_CRITDMG] = level * 0.02 + Globals.rng(20) * 0.01;
+                newStats[Globals.STAT_CRITDMG] = level * 0.02 + Globals.rng(11) * 0.01;
                 newStats[Globals.STAT_REGEN] = level * 5 + Globals.rng(11) * 5;
                 break;
             case Globals.ITEM_RING:
@@ -574,10 +574,10 @@ public class ItemEquip implements Item {
                 .round(this.baseStats[Globals.STAT_SPIRIT] * (1 + this.bonusMult + this.upgrades * UPGRADE_MULT));
 
         if (this.baseStats[Globals.STAT_CRITCHANCE] > 0) {
-            this.totalStats[Globals.STAT_CRITCHANCE] = this.baseStats[Globals.STAT_CRITCHANCE] * (1 + this.bonusMult / 3) + this.upgrades * UPGRADE_CRITCHANCE;
+            this.totalStats[Globals.STAT_CRITCHANCE] = this.baseStats[Globals.STAT_CRITCHANCE] + (0.003 * (this.bonusMult / 0.1)) + this.upgrades * UPGRADE_CRITCHANCE;
         }
         if (this.baseStats[Globals.STAT_CRITDMG] > 0) {
-            this.totalStats[Globals.STAT_CRITDMG] = this.baseStats[Globals.STAT_CRITDMG] * (1 + this.bonusMult / 4)
+            this.totalStats[Globals.STAT_CRITDMG] = this.baseStats[Globals.STAT_CRITDMG] + (0.04 * (this.bonusMult / 0.05))
                     + this.upgrades * UPGRADE_CRITDMG;
         }
         if (this.baseStats[Globals.STAT_ARMOR] > 0) {

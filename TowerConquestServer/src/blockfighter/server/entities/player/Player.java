@@ -16,6 +16,7 @@ import blockfighter.server.entities.buff.BuffStun;
 import blockfighter.server.entities.buff.BuffSwordSlash;
 import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.items.Items;
+import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.skills.Skill;
 import blockfighter.server.entities.player.skills.SkillBowArc;
 import blockfighter.server.entities.player.skills.SkillBowFrost;
@@ -23,7 +24,7 @@ import blockfighter.server.entities.player.skills.SkillBowPower;
 import blockfighter.server.entities.player.skills.SkillBowRapid;
 import blockfighter.server.entities.player.skills.SkillBowStorm;
 import blockfighter.server.entities.player.skills.SkillBowVolley;
-import blockfighter.server.entities.player.skills.SkillPassive12;
+import blockfighter.server.entities.player.skills.SkillPassiveStatic;
 import blockfighter.server.entities.player.skills.SkillPassiveBarrier;
 import blockfighter.server.entities.player.skills.SkillPassiveBowMastery;
 import blockfighter.server.entities.player.skills.SkillPassiveDualSword;
@@ -546,8 +547,8 @@ public class Player extends Thread implements GameEntity {
             case Skill.PASSIVE_SHADOWATTACK:
                 newSkill = new SkillPassiveShadowAttack(this.logic);
                 break;
-            case Skill.PASSIVE_12:
-                newSkill = new SkillPassive12(this.logic);
+            case Skill.PASSIVE_STATIC:
+                newSkill = new SkillPassiveStatic(this.logic);
                 break;
         }
         if (newSkill != null) {
@@ -1341,6 +1342,51 @@ public class Player extends Thread implements GameEntity {
                             dmg.getDmgPoint());
                     shadow.setHidden(true);
                     dmg.getMobTarget().queueDamage(shadow);
+                }
+            }
+        }
+
+        if (hasSkill(Skill.PASSIVE_STATIC)) {
+            if (Globals.rng(100) + 1 <= 20) {
+                if (this.logic.getMap().isPvP()) {
+                    ArrayList<Player> playersInRange = new ArrayList<>(Globals.SERVER_MAX_PLAYERS);
+                    for (final Map.Entry<Byte, Player> pEntry : this.logic.getPlayers().entrySet()) {
+                        final Player p = pEntry.getValue();
+                        if (p != this && !p.isDead() && !p.isInvulnerable()) {
+                            double distance = Math.sqrt(Math.pow((this.getX() - p.getX()), 2) + Math.pow((this.getY() - p.getY()), 2));
+                            if (distance <= 250) {
+                                playersInRange.add(p);
+                            }
+                        }
+                    }
+                    if (!playersInRange.isEmpty()) {
+                        Player target = playersInRange.get(Globals.rng(playersInRange.size()));
+                        int damage = (int) (this.stats[Globals.STAT_ARMOR] * (0.5 + 0.15 * this.getSkillLevel(Skill.PASSIVE_STATIC)));
+                        final boolean crit = this.rollCrit();
+                        if (crit) {
+                            damage = (int) this.criticalDamage(damage);
+                        }
+                        target.queueDamage(new Damage(damage, false, this, target, crit, dmg.getDmgPoint()));
+                        sendParticle(this.logic.getRoom(), Globals.PARTICLE_PASSIVE_STATIC, this.getKey(), target.getKey());
+                    }
+                } else {
+                    ArrayList<Mob> enemyInRange = new ArrayList<>(this.logic.getMobs().size());
+                    for (final Map.Entry<Byte, Mob> bEntry : this.logic.getMobs().entrySet()) {
+                        final Mob b = bEntry.getValue();
+                        double distance = Math.sqrt(Math.pow((this.getX() - b.getX()), 2) + Math.pow((this.getY() - b.getY()), 2));
+                        if (distance <= 100) {
+                            enemyInRange.add(b);
+                        }
+                    }
+                    if (!enemyInRange.isEmpty()) {
+                        Mob target = enemyInRange.get(Globals.rng(enemyInRange.size()));
+                        int damage = (int) (this.stats[Globals.STAT_ARMOR] * (0.5 + 0.1 * this.getSkillLevel(Skill.PASSIVE_STATIC)));
+                        final boolean crit = this.rollCrit();
+                        if (crit) {
+                            damage = (int) this.criticalDamage(damage);
+                        }
+                        target.queueDamage(new Damage(damage, false, this, target, crit, dmg.getDmgPoint()));
+                    }
                 }
             }
         }
