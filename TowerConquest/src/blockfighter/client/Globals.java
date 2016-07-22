@@ -288,7 +288,7 @@ public class Globals {
     public final static String[] SOUND_BGM = new String[NUM_BGM];
     public final static String[] SOUND_SFX = new String[NUM_SFX];
 
-    public final static int[] PLAYER_ANIM_FRAMES = new int[NUM_PLAYER_ANIM_STATE];
+    public final static int[] PLAYER_NUM_ANIM_FRAMES = new int[NUM_PLAYER_ANIM_STATE];
 
     public final static byte BUTTON_BIGRECT = 0,
             BUTTON_SELECTCHAR = 1,
@@ -318,14 +318,14 @@ public class Globals {
             NOTIFICATION_ITEM = 1;
 
     static {
-        PLAYER_ANIM_FRAMES[PLAYER_ANIM_STATE_ATTACK] = 7;
-        PLAYER_ANIM_FRAMES[PLAYER_ANIM_STATE_ATTACKBOW] = 8;
-        PLAYER_ANIM_FRAMES[PLAYER_ANIM_STATE_STAND] = 4;
-        PLAYER_ANIM_FRAMES[PLAYER_ANIM_STATE_WALK] = 8;
-        PLAYER_ANIM_FRAMES[PLAYER_ANIM_STATE_BUFF] = 7;
-        PLAYER_ANIM_FRAMES[PLAYER_ANIM_STATE_DEAD] = 10;
-        PLAYER_ANIM_FRAMES[PLAYER_ANIM_STATE_ROLL] = 10;
-        PLAYER_ANIM_FRAMES[PLAYER_ANIM_STATE_JUMP] = 3;
+        PLAYER_NUM_ANIM_FRAMES[PLAYER_ANIM_STATE_ATTACK] = 7;
+        PLAYER_NUM_ANIM_FRAMES[PLAYER_ANIM_STATE_ATTACKBOW] = 8;
+        PLAYER_NUM_ANIM_FRAMES[PLAYER_ANIM_STATE_STAND] = 4;
+        PLAYER_NUM_ANIM_FRAMES[PLAYER_ANIM_STATE_WALK] = 8;
+        PLAYER_NUM_ANIM_FRAMES[PLAYER_ANIM_STATE_BUFF] = 7;
+        PLAYER_NUM_ANIM_FRAMES[PLAYER_ANIM_STATE_DEAD] = 10;
+        PLAYER_NUM_ANIM_FRAMES[PLAYER_ANIM_STATE_ROLL] = 10;
+        PLAYER_NUM_ANIM_FRAMES[PLAYER_ANIM_STATE_JUMP] = 3;
         loadSound();
         loadGFX();
     }
@@ -450,8 +450,8 @@ public class Globals {
 
     private static void loadGFX() {
         for (int state = 0; state < CHAR_SPRITE.length; state++) {
-            if (PLAYER_ANIM_FRAMES[state] > 0) {
-                CHAR_SPRITE[state] = new BufferedImage[PLAYER_ANIM_FRAMES[state]];
+            if (PLAYER_NUM_ANIM_FRAMES[state] > 0) {
+                CHAR_SPRITE[state] = new BufferedImage[PLAYER_NUM_ANIM_FRAMES[state]];
                 for (int frames = 0; frames < CHAR_SPRITE[state].length; frames++) {
                     String folder = "";
                     switch (state) {
