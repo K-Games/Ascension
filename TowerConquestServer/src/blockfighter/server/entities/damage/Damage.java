@@ -24,19 +24,19 @@ public class Damage {
     private Mob mobOwner, mobTarget;
     private final Point dmgPoint;
 
-    public Damage(final int dmg, final boolean proc, final Player o, final Player t, final boolean crit, final Point p) {
+    public Damage(final int dmg, final boolean canProc, final Player o, final Player t, final boolean isCrit, final Point p) {
         this.damage = dmg;
-        this.canProc = proc;
+        this.canProc = canProc;
         this.owner = o;
         this.target = t;
         this.dmgPoint = p;
-        this.isCrit = crit;
+        this.isCrit = isCrit;
         this.type = (this.isCrit) ? Globals.NUMBER_TYPE_PLAYERCRIT : Globals.NUMBER_TYPE_PLAYER;
     }
 
-    public Damage(final int dmg, final boolean trueDmg, final Mob o, final Player t, final Point p) {
+    public Damage(final int dmg, final boolean isTrueDamage, final Mob o, final Player t, final Point p) {
         this.damage = dmg;
-        this.isTrueDamage = trueDmg;
+        this.isTrueDamage = isTrueDamage;
         this.mobOwner = o;
         this.target = t;
         this.dmgPoint = p;
@@ -51,42 +51,42 @@ public class Damage {
         this.type = Globals.NUMBER_TYPE_MOB;
     }
 
-    public Damage(final int dmg, final boolean proc, final Player o, final Mob t, final boolean crit, final Point p) {
+    public Damage(final int dmg, final boolean canProc, final Player o, final Mob t, final boolean isCrit, final Point p) {
         this.damage = dmg;
-        this.canProc = proc;
+        this.canProc = canProc;
         this.owner = o;
         this.mobTarget = t;
         this.dmgPoint = p;
-        this.isCrit = crit;
+        this.isCrit = isCrit;
         this.type = (this.isCrit) ? Globals.NUMBER_TYPE_PLAYERCRIT : Globals.NUMBER_TYPE_PLAYER;
     }
 
-    public Damage(final int dmg, final Player o, final Mob t, final boolean crit, final Point p) {
+    public Damage(final int dmg, final Player o, final Mob t, final boolean isCrit, final Point p) {
         this.damage = dmg;
         this.canProc = true;
         this.owner = o;
         this.mobTarget = t;
         this.dmgPoint = p;
-        this.isCrit = crit;
+        this.isCrit = isCrit;
         this.type = (this.isCrit) ? Globals.NUMBER_TYPE_PLAYERCRIT : Globals.NUMBER_TYPE_PLAYER;
     }
 
-    public Damage(final int dmg, final boolean proc, final Player o, final Player t, final boolean crit, final Rectangle2D.Double box1,
+    public Damage(final int dmg, final boolean canProc, final Player o, final Player t, final boolean isCrit, final Rectangle2D.Double box1,
             final Rectangle2D.Double box2) {
         this.damage = dmg;
-        this.canProc = proc;
+        this.canProc = canProc;
         this.owner = o;
         this.target = t;
         final Rectangle2D box = box1.createIntersection(box2);
         this.dmgPoint = new Point((int) (box.getX() + box.getWidth() / 2), (int) (box.getY() + box.getHeight() / 2));
-        this.isCrit = crit;
+        this.isCrit = isCrit;
         this.type = (this.isCrit) ? Globals.NUMBER_TYPE_PLAYERCRIT : Globals.NUMBER_TYPE_PLAYER;
     }
 
-    public Damage(final int dmg, final boolean trueDmg, final Mob o, final Player t, final Rectangle2D.Double box1,
+    public Damage(final int dmg, final boolean isTrueDamage, final Mob o, final Player t, final Rectangle2D.Double box1,
             final Rectangle2D.Double box2) {
         this.damage = dmg;
-        this.isTrueDamage = trueDmg;
+        this.isTrueDamage = isTrueDamage;
         this.mobOwner = o;
         this.target = t;
         final Rectangle2D box = box1.createIntersection(box2);
@@ -103,19 +103,19 @@ public class Damage {
         this.type = Globals.NUMBER_TYPE_MOB;
     }
 
-    public Damage(final int dmg, final boolean proc, final Player o, final Mob t, final boolean crit, final Rectangle2D.Double box1,
+    public Damage(final int dmg, final boolean canProc, final Player o, final Mob t, final boolean isCrit, final Rectangle2D.Double box1,
             final Rectangle2D.Double box2) {
         this.damage = dmg;
-        this.canProc = proc;
+        this.canProc = canProc;
         this.owner = o;
         this.mobTarget = t;
         final Rectangle2D box = box1.createIntersection(box2);
         this.dmgPoint = new Point((int) (box.getX() + box.getWidth() / 2), (int) (box.getY() + box.getHeight() / 2));
-        this.isCrit = crit;
+        this.isCrit = isCrit;
         this.type = (this.isCrit) ? Globals.NUMBER_TYPE_PLAYERCRIT : Globals.NUMBER_TYPE_PLAYER;
     }
 
-    public Damage(final int dmg, final Player o, final Mob t, final boolean crit, final Rectangle2D.Double box1,
+    public Damage(final int dmg, final Player o, final Mob t, final boolean isCrit, final Rectangle2D.Double box1,
             final Rectangle2D.Double box2) {
         this.damage = dmg;
         this.canProc = true;
@@ -123,7 +123,7 @@ public class Damage {
         this.mobTarget = t;
         final Rectangle2D box = box1.createIntersection(box2);
         this.dmgPoint = new Point((int) (box.getX() + box.getWidth() / 2), (int) (box.getY() + box.getHeight() / 2));
-        this.isCrit = crit;
+        this.isCrit = isCrit;
         this.type = (this.isCrit) ? Globals.NUMBER_TYPE_PLAYERCRIT : Globals.NUMBER_TYPE_PLAYER;
     }
 

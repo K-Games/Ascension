@@ -1327,68 +1327,12 @@ public class Player extends Thread implements GameEntity {
     }
 
     public void damageProc(final Damage dmg) {
-        if (hasSkill(Skill.PASSIVE_SHADOWATTACK) && this.skills.get(Skill.PASSIVE_SHADOWATTACK).canCast()) {
-            if (Globals.rng(100) + 1 <= 20 + getSkillLevel(Skill.PASSIVE_SHADOWATTACK)) {
-                this.skills.get(Skill.PASSIVE_SHADOWATTACK).setCooldown();
-                sendCooldown(Skill.PASSIVE_SHADOWATTACK);
-                sendParticle(this.logic.getRoom(), Globals.PARTICLE_PASSIVE_SHADOWATTACK, dmg.getDmgPoint().x, dmg.getDmgPoint().y);
-                if (dmg.getTarget() != null) {
-                    final Damage shadow = new Damage((int) (dmg.getDamage() * 0.5D), false, dmg.getOwner(), dmg.getTarget(), false,
-                            dmg.getDmgPoint());
-                    shadow.setHidden(true);
-                    dmg.getTarget().queueDamage(shadow);
-                } else if (dmg.getMobTarget() != null) {
-                    final Damage shadow = new Damage((int) (dmg.getDamage() * 0.5D), false, dmg.getOwner(), dmg.getMobTarget(), false,
-                            dmg.getDmgPoint());
-                    shadow.setHidden(true);
-                    dmg.getMobTarget().queueDamage(shadow);
-                }
-            }
+        if (hasSkill(Skill.PASSIVE_SHADOWATTACK) && getSkill(Skill.PASSIVE_SHADOWATTACK).canCast()) {
+            ((SkillPassiveShadowAttack) getSkill(Skill.PASSIVE_SHADOWATTACK)).updateSkillUse(this, dmg);
         }
 
         if (hasSkill(Skill.PASSIVE_STATIC)) {
-            if (Globals.rng(100) + 1 <= 20) {
-                if (this.logic.getMap().isPvP()) {
-                    ArrayList<Player> playersInRange = new ArrayList<>(Globals.SERVER_MAX_PLAYERS);
-                    for (final Map.Entry<Byte, Player> pEntry : this.logic.getPlayers().entrySet()) {
-                        final Player p = pEntry.getValue();
-                        if (p != this && !p.isDead() && !p.isInvulnerable()) {
-                            double distance = Math.sqrt(Math.pow((this.getX() - p.getX()), 2) + Math.pow((this.getY() - p.getY()), 2));
-                            if (distance <= 250) {
-                                playersInRange.add(p);
-                            }
-                        }
-                    }
-                    if (!playersInRange.isEmpty()) {
-                        Player target = playersInRange.get(Globals.rng(playersInRange.size()));
-                        int damage = (int) (this.stats[Globals.STAT_ARMOR] * (0.5 + 0.15 * this.getSkillLevel(Skill.PASSIVE_STATIC)));
-                        final boolean crit = this.rollCrit();
-                        if (crit) {
-                            damage = (int) this.criticalDamage(damage);
-                        }
-                        target.queueDamage(new Damage(damage, false, this, target, crit, dmg.getDmgPoint()));
-                        sendParticle(this.logic.getRoom(), Globals.PARTICLE_PASSIVE_STATIC, this.getKey(), target.getKey());
-                    }
-                } else {
-                    ArrayList<Mob> enemyInRange = new ArrayList<>(this.logic.getMobs().size());
-                    for (final Map.Entry<Byte, Mob> bEntry : this.logic.getMobs().entrySet()) {
-                        final Mob b = bEntry.getValue();
-                        double distance = Math.sqrt(Math.pow((this.getX() - b.getX()), 2) + Math.pow((this.getY() - b.getY()), 2));
-                        if (distance <= 100) {
-                            enemyInRange.add(b);
-                        }
-                    }
-                    if (!enemyInRange.isEmpty()) {
-                        Mob target = enemyInRange.get(Globals.rng(enemyInRange.size()));
-                        int damage = (int) (this.stats[Globals.STAT_ARMOR] * (0.5 + 0.1 * this.getSkillLevel(Skill.PASSIVE_STATIC)));
-                        final boolean crit = this.rollCrit();
-                        if (crit) {
-                            damage = (int) this.criticalDamage(damage);
-                        }
-                        target.queueDamage(new Damage(damage, false, this, target, crit, dmg.getDmgPoint()));
-                    }
-                }
-            }
+           getSkill(Skill.PASSIVE_STATIC).updateSkillUse(this);
         }
     }
 

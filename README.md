@@ -1,17 +1,18 @@
 ![KryoNet](https://github.com/kenofnz/TowerConquest/raw/master/TowerConquest/resources/sprites/ui/menu/title.png)
 
 # Description
-An multiplayer action 2D sidescrolling platformer coded in pure Java.
+An multiplayer action 2D sidescrolling brawler coded in pure Java.
 
 ## Version 0.18 Update 1
 ### Gameplay Changes
 * Passives Removed: Tactical Execution
 * New Passive - Tough Skin - Boost your natural resilience to damage.
 * New Passive - Harmony - Achieve harmony to gain damage base on Max HP.
+* New Passive - Static Charge - Chance to shock a nearby enemy when dealing damage.
 * Rapid Fire damage increased from 75 + 2/Lvl% to 80 + 2/Lvl%.
 * Resistance Passive reworked - When taking damage over 25% of your HP in 2 seconds, block all damage for 2 seconds.
-* Phantom Reaper damage decreased from 110 + 3/Lvl%
-* Volley damage increased from 75 + 3/Lvl% to 85% + 3/Lvl%
+* Phantom Reaper damage decreased from 110 + 3/Lvl% to 75 + 2/Lvl%
+* Vortex Bolts damage increased from 75 + 3/Lvl% to 85% + 3/Lvl%
 * Aggression damage increased from 600 + 20/Lvl% to 800 + 20/Lvl%
 
 ### Client Changes
@@ -22,6 +23,7 @@ An multiplayer action 2D sidescrolling platformer coded in pure Java.
 * Various visual changes.
 * Volley Renamed to Vortex Bolts
 * New Skill Icons - Power of Will, Flurry
+* Improved standards for Equipment sprite file structure.
 
 ### Server Changes
 * Added batched packet sending. Disabled by default.
