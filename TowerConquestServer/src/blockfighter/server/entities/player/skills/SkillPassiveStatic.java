@@ -5,7 +5,7 @@ import blockfighter.server.LogicModule;
 import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
-import static blockfighter.server.entities.player.Player.sendParticle;
+import blockfighter.server.net.PacketSender;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -43,7 +43,7 @@ public class SkillPassiveStatic extends Skill {
                         damage = (int) player.criticalDamage(damage);
                     }
                     target.queueDamage(new Damage(damage, false, player, target, crit, target.getHitbox(), target.getHitbox()));
-                    Player.sendParticle(this.logic.getRoom(), Globals.PARTICLE_PASSIVE_STATIC, player.getKey(), target.getKey());
+                    PacketSender.sendParticle(this.logic.getRoom(), Globals.PARTICLE_PASSIVE_STATIC, player.getKey(), target.getKey());
                 }
             } else {
                 ArrayList<Mob> enemyInRange = new ArrayList<>(this.logic.getMobs().size());

@@ -4,6 +4,7 @@ import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.buff.BuffShieldIron;
 import blockfighter.server.entities.player.Player;
+import blockfighter.server.net.PacketSender;
 import java.util.Map;
 
 /**
@@ -28,7 +29,7 @@ public class SkillShieldIron extends Skill {
     public void updateSkillUse(Player player) {
         final int duration = Globals.nsToMs(this.logic.getTime() - this.skillCastTime);
         if (duration == 0) {
-            Player.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SHIELD_IRON, player.getKey());
+            PacketSender.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SHIELD_IRON, player.getKey());
             Player.sendSFX(this.logic.getRoom(), Globals.SFX_IRON, player.getX(), player.getY());
         }
         if (Globals.hasPastDuration(duration, 100) && player.getSkillCounter() < 1) {
@@ -40,7 +41,7 @@ public class SkillShieldIron extends Skill {
                     final Player p = pEntry.getValue();
                     if (p != player && !p.isDead()) {
                         p.queueBuff(new BuffShieldIron(this.logic, 2000, 0.4));
-                        Player.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SHIELD_IRONALLY, p.getKey());
+                        PacketSender.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SHIELD_IRONALLY, p.getKey());
                     }
                 }
             }

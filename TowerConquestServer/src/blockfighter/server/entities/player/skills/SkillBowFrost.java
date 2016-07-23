@@ -4,6 +4,7 @@ import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.proj.ProjBowFrost;
+import blockfighter.server.net.PacketSender;
 
 /**
  *
@@ -31,7 +32,7 @@ public class SkillBowFrost extends Skill {
             player.incrementSkillCounter();
             final ProjBowFrost proj = new ProjBowFrost(this.logic, player, player.getX(), player.getY(), false);
             this.logic.queueAddProj(proj);
-            Player.sendParticle(this.logic.getRoom(), Globals.PARTICLE_BOW_FROSTARROW, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
+            PacketSender.sendParticle(this.logic.getRoom(), Globals.PARTICLE_BOW_FROSTARROW, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
                     player.getFacing());
         }
 

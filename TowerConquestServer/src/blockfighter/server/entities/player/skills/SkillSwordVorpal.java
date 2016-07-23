@@ -4,6 +4,7 @@ import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.proj.ProjSwordVorpal;
+import blockfighter.server.net.PacketSender;
 
 /**
  *
@@ -32,7 +33,7 @@ public class SkillSwordVorpal extends Skill {
             final ProjSwordVorpal proj = new ProjSwordVorpal(this.logic, player, player.getX(), player.getY());
             this.logic.queueAddProj(proj);
             player.setFrame((byte) 0);
-            Player.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_VORPAL, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
+            PacketSender.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_VORPAL, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
                     player.getFacing());
             player.incrementSkillCounter();
         }

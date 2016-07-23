@@ -5,6 +5,7 @@ import blockfighter.server.LogicModule;
 import blockfighter.server.entities.buff.BuffSwordSlash;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.proj.ProjSwordSlash;
+import blockfighter.server.net.PacketSender;
 
 /**
  *
@@ -30,7 +31,7 @@ public class SkillSwordSlash extends Skill {
         final int duration = Globals.nsToMs(this.logic.getTime() - player.getSkillCastTime());
         if (player.isSkillMaxed(Skill.SWORD_SLASH) && duration == 0) {
             player.queueBuff(new BuffSwordSlash(this.logic, 2000, .1, player));
-            Player.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_SLASHBUFF, player.getKey());
+            PacketSender.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_SLASHBUFF, player.getKey());
         }
         if (Globals.hasPastDuration(duration, (30 + 110 * player.getSkillCounter())) && player.getSkillCounter() < numHits) {
             player.setFrame((byte) 0);
@@ -40,17 +41,17 @@ public class SkillSwordSlash extends Skill {
             this.logic.queueAddProj(proj);
             switch (player.getSkillCounter()) {
                 case 1:
-                    Player.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_SLASH1, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
+                    PacketSender.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_SLASH1, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
                             player.getFacing());
                     Player.sendSFX(this.logic.getRoom(), Globals.SFX_SLASH, player.getX(), player.getY());
                     break;
                 case 2:
-                    Player.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_SLASH2, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
+                    PacketSender.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_SLASH2, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
                             player.getFacing());
                     Player.sendSFX(this.logic.getRoom(), Globals.SFX_SLASH, player.getX(), player.getY());
                     break;
                 case 3:
-                    Player.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_SLASH3, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
+                    PacketSender.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_SLASH3, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
                             player.getFacing());
                     Player.sendSFX(this.logic.getRoom(), Globals.SFX_SLASH, player.getX(), player.getY());
                     break;

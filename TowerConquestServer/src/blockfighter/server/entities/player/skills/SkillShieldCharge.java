@@ -4,6 +4,7 @@ import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.proj.ProjShieldCharge;
+import blockfighter.server.net.PacketSender;
 
 /**
  *
@@ -30,7 +31,7 @@ public class SkillShieldCharge extends Skill {
         if (duration == 0) {
             final ProjShieldCharge proj = new ProjShieldCharge(this.logic, player, player.getX(), player.getY());
             this.logic.queueAddProj(proj);
-            player.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SHIELD_CHARGE, player.getKey(), player.getFacing());
+            PacketSender.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SHIELD_CHARGE, player.getKey(), player.getFacing());
         }
         player.updateSkillEnd(duration, 750, false, false);
     }

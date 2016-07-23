@@ -4,6 +4,7 @@ import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.buff.BuffShieldDash;
 import blockfighter.server.entities.player.Player;
+import blockfighter.server.net.PacketSender;
 
 /**
  *
@@ -28,14 +29,14 @@ public class SkillShieldDash extends Skill {
         }
 
         if (duration == 0) {
-            Player.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SHIELD_DASH, player.getKey(), player.getFacing());
+            PacketSender.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SHIELD_DASH, player.getKey(), player.getFacing());
             player.setYSpeed(-5.5);
         }
 
         if (player.getSkillCounter() == 0 && duration >= 400) {
             player.incrementSkillCounter();
             player.queueBuff(new BuffShieldDash(this.logic, 5000, 0.01 + 0.003 * player.getSkillLevel(Skill.SHIELD_DASH), player));
-            Player.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SHIELD_DASHBUFF, player.getKey());
+            PacketSender.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SHIELD_DASHBUFF, player.getKey());
         }
         player.updateSkillEnd(duration >= 400 || player.isStunned() || player.isKnockback());
     }

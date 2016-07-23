@@ -4,6 +4,7 @@ import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.proj.ProjBowStorm;
+import blockfighter.server.net.PacketSender;
 
 /**
  *
@@ -30,7 +31,7 @@ public class SkillBowStorm extends Skill {
             player.incrementSkillCounter();
             final ProjBowStorm proj = new ProjBowStorm(this.logic, player, player.getX(), player.getY());
             this.logic.queueAddProj(proj);
-            Player.sendParticle(this.logic.getRoom(), Globals.PARTICLE_BOW_STORM, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
+            PacketSender.sendParticle(this.logic.getRoom(), Globals.PARTICLE_BOW_STORM, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
                     player.getFacing());
         }
         player.updateSkillEnd(duration, 200, false, false);

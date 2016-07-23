@@ -5,6 +5,7 @@ import blockfighter.server.LogicModule;
 import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.proj.ProjSwordPhantom;
+import blockfighter.server.net.PacketSender;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -32,7 +33,7 @@ public class SkillSwordPhantom extends Skill {
 
         //Send initial phase effect
         if (duration == 0) {
-            Player.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_PHANTOM, player.getX(), player.getY(), player.getFacing());
+            PacketSender.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_PHANTOM, player.getX(), player.getY(), player.getFacing());
         }
 
         if (Globals.hasPastDuration(duration, 100 + 100 * player.getSkillCounter()) && player.getSkillCounter() < numHits) {
@@ -86,8 +87,8 @@ public class SkillSwordPhantom extends Skill {
             if (!endPhantom) {
                 final ProjSwordPhantom proj = new ProjSwordPhantom(this.logic, player, player.getX(), player.getY());
                 this.logic.queueAddProj(proj);
-                Player.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_PHANTOM, player.getX(), player.getY(), player.getFacing());
-                Player.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_PHANTOM2, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(), player.getFacing());
+                PacketSender.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_PHANTOM, player.getX(), player.getY(), player.getFacing());
+                PacketSender.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_PHANTOM2, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(), player.getFacing());
                 player.incrementSkillCounter();
             }
         }

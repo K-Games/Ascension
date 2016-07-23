@@ -31,6 +31,42 @@ public class PacketSender implements Runnable {
 
     private static LogicModule[] logic;
     private static Server server;
+
+    public static void sendParticle(final byte room, final byte particleID, final double x, final double y, final byte facing) {
+        final byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT * 2];
+        bytes[0] = Globals.DATA_PARTICLE_EFFECT;
+        bytes[1] = particleID;
+
+        final byte[] posXInt = Globals.intToBytes((int) x);
+        System.arraycopy(posXInt, 0, bytes, 2, posXInt.length);
+
+        final byte[] posYInt = Globals.intToBytes((int) y);
+        System.arraycopy(posYInt, 0, bytes, 6, posYInt.length);
+
+        bytes[10] = facing;
+        sendAll(bytes, room);
+    }
+
+    public static void sendParticle(final byte room, final byte particleID, final double x, final double y) {
+        sendParticle(room, particleID, x, y, Globals.RIGHT);
+    }
+
+    public static void sendParticle(final byte room, final byte particleID, final byte key) {
+        final byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
+        bytes[0] = Globals.DATA_PARTICLE_EFFECT;
+        bytes[1] = particleID;
+        bytes[2] = key;
+        sendAll(bytes, room);
+    }
+
+    public static void sendParticle(final byte room, final byte particleID, final byte key, final byte facing) {
+        final byte[] bytes = new byte[Globals.PACKET_BYTE * 4];
+        bytes[0] = Globals.DATA_PARTICLE_EFFECT;
+        bytes[1] = particleID;
+        bytes[2] = facing;
+        bytes[3] = key;
+        sendAll(bytes, room);
+    }
     private int dataSent = 0;
     private static final ConcurrentLinkedQueue<GamePacket> OUT_PACKET_QUEUE = new ConcurrentLinkedQueue<>();
 

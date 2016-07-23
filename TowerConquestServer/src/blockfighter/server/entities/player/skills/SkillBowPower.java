@@ -4,6 +4,7 @@ import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.proj.ProjBowPower;
+import blockfighter.server.net.PacketSender;
 
 /**
  *
@@ -19,7 +20,7 @@ public class SkillBowPower extends Skill {
     public SkillBowPower(final LogicModule l) {
         super(l);
         this.skillCode = BOW_POWER;
-        this.maxCooldown = 0;
+        this.maxCooldown = 16000;
         this.reqWeapon = Globals.ITEM_BOW;
     }
 
@@ -30,14 +31,14 @@ public class SkillBowPower extends Skill {
             Player.sendSFX(this.logic.getRoom(), Globals.SFX_POWER2, player.getX(), player.getY());
         }
         if (duration <= 400 && Globals.hasPastDuration(duration, player.getSkillCounter() * 20) && player.getSkillCounter() < 20) {
-            Player.sendParticle(this.logic.getRoom(), Globals.PARTICLE_BOW_POWERCHARGE, player.getKey());
+            PacketSender.sendParticle(this.logic.getRoom(), Globals.PARTICLE_BOW_POWERCHARGE, player.getKey());
             player.incrementSkillCounter();
         }
         if (Globals.hasPastDuration(duration, 800) && player.getSkillCounter() < 21) {
             player.incrementSkillCounter();
             final ProjBowPower proj = new ProjBowPower(this.logic, player, player.getX(), player.getY());
             this.logic.queueAddProj(proj);
-            Player.sendParticle(this.logic.getRoom(), Globals.PARTICLE_BOW_POWER, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
+            PacketSender.sendParticle(this.logic.getRoom(), Globals.PARTICLE_BOW_POWER, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
                     player.getFacing());
             Player.sendSFX(this.logic.getRoom(), Globals.SFX_POWER, player.getX(), player.getY());
         }

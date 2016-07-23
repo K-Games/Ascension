@@ -188,7 +188,7 @@ public abstract class Skill {
     }
 
     public boolean canCast() {
-        return this.getCooldown() >= this.getMaxCooldown();
+        return Globals.DEBUG_MODE || this.getCooldown() >= this.getMaxCooldown();
     }
 
     public byte castPlayerState() {

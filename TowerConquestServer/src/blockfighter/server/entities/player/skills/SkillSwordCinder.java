@@ -4,6 +4,7 @@ import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.proj.ProjSwordCinder;
+import blockfighter.server.net.PacketSender;
 
 /**
  *
@@ -30,7 +31,7 @@ public class SkillSwordCinder extends Skill {
             player.incrementSkillCounter();
             final ProjSwordCinder proj = new ProjSwordCinder(this.logic, player, player.getX(), player.getY());
             this.logic.queueAddProj(proj);
-            Player.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_CINDER, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
+            PacketSender.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_CINDER, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
                     player.getFacing());
         }
         player.updateSkillEnd(duration, 250, true, false);

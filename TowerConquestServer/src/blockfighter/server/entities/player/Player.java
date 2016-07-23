@@ -774,17 +774,17 @@ public class Player extends Thread implements GameEntity {
                 // Barrier reduction
                 if (this.barrierBuff != null) {
                     finalDamage = ((BuffPassiveBarrier) this.barrierBuff).reduceDmg(finalDamage);
-                    sendParticle(this.logic.getRoom(), Globals.PARTICLE_PASSIVE_BARRIER, dmg.getDmgPoint().x, dmg.getDmgPoint().y);
+                    PacketSender.sendParticle(this.logic.getRoom(), Globals.PARTICLE_PASSIVE_BARRIER, dmg.getDmgPoint().x, dmg.getDmgPoint().y);
                 }
 
                 if (this.resistBuff != null) {
-                    sendParticle(this.logic.getRoom(), Globals.PARTICLE_PASSIVE_RESIST, dmg.getDmgPoint().x, dmg.getDmgPoint().y);
+                    PacketSender.sendParticle(this.logic.getRoom(), Globals.PARTICLE_PASSIVE_RESIST, dmg.getDmgPoint().x, dmg.getDmgPoint().y);
                 }
 
                 // Send client damage display
                 if (!dmg.isHidden()) {
                     if (dmg.getOwner() != null && dmg.isCrit()) {
-                        sendParticle(this.logic.getRoom(), Globals.PARTICLE_BLOOD_HIT, dmg.getOwner().getKey(), this.key);
+                        PacketSender.sendParticle(this.logic.getRoom(), Globals.PARTICLE_BLOOD_HIT, dmg.getOwner().getKey(), this.key);
                     }
                     sendDamage(dmg, (int) finalDamage);
                 }
@@ -801,7 +801,7 @@ public class Player extends Thread implements GameEntity {
                         queueBuff(new BuffPassiveBarrier(this.logic,
                                 this.stats[Globals.STAT_MAXHP] * (0.1 + 0.005 * getSkillLevel(Skill.PASSIVE_BARRIER)),
                                 this));
-                        sendParticle(this.logic.getRoom(), Globals.PARTICLE_PASSIVE_BARRIER, dmg.getDmgPoint().x, dmg.getDmgPoint().y);
+                        PacketSender.sendParticle(this.logic.getRoom(), Globals.PARTICLE_PASSIVE_BARRIER, dmg.getDmgPoint().x, dmg.getDmgPoint().y);
                         this.skills.get(Skill.PASSIVE_BARRIER).setCooldown();
                         sendCooldown(Skill.PASSIVE_BARRIER);
                     }
@@ -956,7 +956,7 @@ public class Player extends Thread implements GameEntity {
     }
 
     private void die() {
-        sendParticle(this.logic.getRoom(), Globals.PARTICLE_BLOOD, this.key);
+        PacketSender.sendParticle(this.logic.getRoom(), Globals.PARTICLE_BLOOD, this.key);
         setInvulnerable(false);
         setRemovingDebuff(false);
         setDead(true);
@@ -1332,7 +1332,7 @@ public class Player extends Thread implements GameEntity {
         }
 
         if (hasSkill(Skill.PASSIVE_STATIC)) {
-           getSkill(Skill.PASSIVE_STATIC).updateSkillUse(this);
+            getSkill(Skill.PASSIVE_STATIC).updateSkillUse(this);
         }
     }
 
@@ -1671,21 +1671,16 @@ public class Player extends Thread implements GameEntity {
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 2 + Globals.PACKET_INT * 3];
         bytes[0] = Globals.DATA_NUMBER;
         bytes[1] = dmg.getDamageType();
+        
         final byte[] posXInt = Globals.intToBytes((int) this.x);
-        bytes[2] = posXInt[0];
-        bytes[3] = posXInt[1];
-        bytes[4] = posXInt[2];
-        bytes[5] = posXInt[3];
+        System.arraycopy(posXInt, 0, bytes, 2, posXInt.length);
+
         final byte[] posYInt = Globals.intToBytes((int) this.y - 20);
-        bytes[6] = posYInt[0];
-        bytes[7] = posYInt[1];
-        bytes[8] = posYInt[2];
-        bytes[9] = posYInt[3];
+        System.arraycopy(posYInt, 0, bytes, 6, posYInt.length);
+
         final byte[] d = Globals.intToBytes(dmgDealt);
-        bytes[10] = d[0];
-        bytes[11] = d[1];
-        bytes[12] = d[2];
-        bytes[13] = d[3];
+        System.arraycopy(d, 0, bytes, 10, d.length);
+
         if (map.isPvP()) {
             PacketSender.sendPlayer(bytes, dmg.getOwner());
 
@@ -1848,58 +1843,6 @@ public class Player extends Thread implements GameEntity {
      */
     public boolean isConnected() {
         return this.connected;
-    }
-
-    public static void sendParticle(final byte room, final byte particleID, final double x, final double y, final byte facing) {
-        final byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT * 2];
-        bytes[0] = Globals.DATA_PARTICLE_EFFECT;
-        bytes[1] = particleID;
-        final byte[] posXInt = Globals.intToBytes((int) x);
-        bytes[2] = posXInt[0];
-        bytes[3] = posXInt[1];
-        bytes[4] = posXInt[2];
-        bytes[5] = posXInt[3];
-        final byte[] posYInt = Globals.intToBytes((int) y);
-        bytes[6] = posYInt[0];
-        bytes[7] = posYInt[1];
-        bytes[8] = posYInt[2];
-        bytes[9] = posYInt[3];
-        bytes[10] = facing;
-        PacketSender.sendAll(bytes, room);
-    }
-
-    public static void sendParticle(final byte room, final byte particleID, final double x, final double y) {
-        final byte[] bytes = new byte[Globals.PACKET_BYTE * 2 + Globals.PACKET_INT * 2];
-        bytes[0] = Globals.DATA_PARTICLE_EFFECT;
-        bytes[1] = particleID;
-        final byte[] posXInt = Globals.intToBytes((int) x);
-        bytes[2] = posXInt[0];
-        bytes[3] = posXInt[1];
-        bytes[4] = posXInt[2];
-        bytes[5] = posXInt[3];
-        final byte[] posYInt = Globals.intToBytes((int) y);
-        bytes[6] = posYInt[0];
-        bytes[7] = posYInt[1];
-        bytes[8] = posYInt[2];
-        bytes[9] = posYInt[3];
-        PacketSender.sendAll(bytes, room);
-    }
-
-    public static void sendParticle(final byte room, final byte particleID, final byte key) {
-        final byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
-        bytes[0] = Globals.DATA_PARTICLE_EFFECT;
-        bytes[1] = particleID;
-        bytes[2] = key;
-        PacketSender.sendAll(bytes, room);
-    }
-
-    public static void sendParticle(final byte room, final byte particleID, final byte key, final byte facing) {
-        final byte[] bytes = new byte[Globals.PACKET_BYTE * 4];
-        bytes[0] = Globals.DATA_PARTICLE_EFFECT;
-        bytes[1] = particleID;
-        bytes[2] = facing;
-        bytes[3] = key;
-        PacketSender.sendAll(bytes, room);
     }
 
 }

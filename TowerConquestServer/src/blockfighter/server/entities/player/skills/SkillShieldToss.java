@@ -4,6 +4,7 @@ import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.proj.ProjShieldToss;
+import blockfighter.server.net.PacketSender;
 
 /**
  *
@@ -32,7 +33,7 @@ public class SkillShieldToss extends Skill {
             player.incrementSkillCounter();
             final ProjShieldToss proj = new ProjShieldToss(this.logic, player, player.getX(), player.getY());
             this.logic.queueAddProj(proj);
-            Player.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SHIELD_TOSS, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
+            PacketSender.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SHIELD_TOSS, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
                     player.getFacing());
         }
         player.updateSkillEnd(duration, 700, true, false);

@@ -17,7 +17,7 @@ public class SoundModule implements Runnable {
     @Override
     public void run() {
         this.soundModule = new SoundSystemJPCT();
-        this.soundModule.setMasterVolume(0.35f);
+        this.soundModule.setMasterVolume(0.5f);
         SoundSystemConfig.setSoundFilesPackage("resources/sounds/");
     }
 

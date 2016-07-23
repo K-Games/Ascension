@@ -4,6 +4,7 @@ import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.proj.ProjBowRapid;
+import blockfighter.server.net.PacketSender;
 
 /**
  *
@@ -41,9 +42,9 @@ public class SkillBowRapid extends Skill {
             }
             final ProjBowRapid proj = new ProjBowRapid(this.logic, player, player.getX(), projY);
             this.logic.queueAddProj(proj);
-            Player.sendParticle(this.logic.getRoom(), Globals.PARTICLE_BOW_RAPID, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
+            PacketSender.sendParticle(this.logic.getRoom(), Globals.PARTICLE_BOW_RAPID, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
                     player.getFacing());
-            Player.sendParticle(this.logic.getRoom(), Globals.PARTICLE_BOW_RAPID2, (player.getFacing() == Globals.LEFT) ? player.getX() - 20 : player.getX() - 40, proj.getHitbox()[0].getY() - 40,
+            PacketSender.sendParticle(this.logic.getRoom(), Globals.PARTICLE_BOW_RAPID2, (player.getFacing() == Globals.LEFT) ? player.getX() - 20 : player.getX() - 40, proj.getHitbox()[0].getY() - 40,
                     player.getFacing());
             Player.sendSFX(this.logic.getRoom(), Globals.SFX_RAPID, player.getX(), player.getY());
         }
