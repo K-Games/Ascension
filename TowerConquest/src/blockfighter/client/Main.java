@@ -75,7 +75,7 @@ public class Main {
     public static void main(final String[] args) {
         if (args.length > 0) {
             for (int i = 0; i < args.length; i++) {
-                switch (args[i]) {
+                switch (args[i].toLowerCase()) {
                     case "-port":
                         try {
                             int port = Integer.parseInt(args[i + 1]);

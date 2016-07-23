@@ -42,6 +42,7 @@ public abstract class Skill {
             SHIELD_CHARGE = 0x0E,
             SHIELD_REFLECT = 0x0F,
             SHIELD_TOSS = 0x10,
+            SHIELD_MAGNETIZE = 0x10,
             SHIELD_DASH = 0x11,
             PASSIVE_DUALSWORD = 0x12,
             PASSIVE_KEENEYE = 0x13,

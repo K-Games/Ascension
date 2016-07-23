@@ -50,7 +50,7 @@ public class Globals {
     public final static String GAME_RELEASE_VERSION = GAME_DEV_STATE + " " + GAME_MAJOR_VERSION + "." + GAME_MINOR_VERSION + "."
             + GAME_UPDATE_NUMBER;
 
-    public final static String WINDOW_TITLE = "Tower Conquest Server " + GAME_RELEASE_VERSION;
+    public final static String WINDOW_TITLE = "Ascension Server " + GAME_RELEASE_VERSION;
 
     private static final Random RNG = new Random();
 
@@ -127,7 +127,7 @@ public class Globals {
             PARTICLE_SHIELD_IRON = 0x1C,
             PARTICLE_SHIELD_IRONALLY = 0x1D,
             PARTICLE_SHIELD_FORTIFYBUFF = 0x1E,
-            PARTICLE_SHIELD_TOSS = 0x1F,
+            PARTICLE_SHIELD_MAGNETIZE = 0x1F,
             PARTICLE_SWORD_TAUNTBUFF = 0x20,
             PARTICLE_SWORD_SLASHBUFF = 0x21,
             PARTICLE_SHIELD_DASHBUFF = 0x22,

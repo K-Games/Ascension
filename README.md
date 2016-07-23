@@ -6,6 +6,8 @@ An multiplayer action 2D sidescrolling brawler coded in pure Java.
 ## Version 0.18 Update 1
 ### Gameplay Changes
 * Passives Removed: Tactical Execution
+* Shield Skill Removed: Shield Toss
+* New Shield Skill - Magnetize - Pull nearby enemies towards you.
 * New Passive - Tough Skin - Boost your natural resilience to damage.
 * New Passive - Harmony - Achieve harmony to gain damage base on Max HP.
 * New Passive - Static Charge - Chance to shock a nearby enemy when dealing damage.

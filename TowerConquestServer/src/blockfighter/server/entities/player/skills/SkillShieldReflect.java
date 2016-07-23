@@ -3,9 +3,11 @@ package blockfighter.server.entities.player.skills;
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.buff.BuffShieldReflect;
+import blockfighter.server.entities.damage.Damage;
+import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
-import blockfighter.server.entities.proj.ProjShieldReflect;
 import blockfighter.server.net.PacketSender;
+import java.util.ArrayList;
 import java.util.Map;
 
 /**
@@ -16,6 +18,8 @@ public class SkillShieldReflect extends Skill {
 
     /**
      * Constructor for Shield Skill Reflect.
+     *
+     * @param l
      */
     public SkillShieldReflect(final LogicModule l) {
         super(l);
@@ -47,9 +51,26 @@ public class SkillShieldReflect extends Skill {
     }
 
     public void updateSkillReflectHit(final double dmgTaken, final double mult, final Player player) {
-        final ProjShieldReflect proj = new ProjShieldReflect(this.logic, player, player.getX(), player.getY(),
-                dmgTaken * mult);
-        this.logic.queueAddProj(proj);
+        double radius = 300;
+        if (this.logic.getMap().isPvP()) {
+            ArrayList<Player> playersInRange = this.logic.getPlayersInRange(player, radius);
+            if (!playersInRange.isEmpty()) {
+                for (Player p : playersInRange) {
+                    final Damage dmgEntity = new Damage((int) (dmgTaken * mult), true, player, p, false, p.getHitbox(), p.getHitbox());
+                    dmgEntity.setCanReflect(false);
+                    p.queueDamage(dmgEntity);
+                }
+            }
+        } else {
+            ArrayList<Mob> mobsInRange = this.logic.getMobsInRange(player, radius);
+            if (!mobsInRange.isEmpty()) {
+                for (Mob mob : mobsInRange) {
+                    final Damage dmgEntity = new Damage((int) (dmgTaken * mult), true, player, mob, false, mob.getHitbox(), mob.getHitbox());
+                    dmgEntity.setCanReflect(false);
+                    mob.queueDamage(dmgEntity);
+                }
+            }
+        }
         PacketSender.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SHIELD_REFLECTHIT, player.getX(), player.getY());
     }
 }

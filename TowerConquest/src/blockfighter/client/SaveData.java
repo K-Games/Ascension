@@ -18,7 +18,6 @@ import blockfighter.client.entities.player.skills.SkillPassiveBowMastery;
 import blockfighter.client.entities.player.skills.SkillPassiveDualSword;
 import blockfighter.client.entities.player.skills.SkillPassiveKeenEye;
 import blockfighter.client.entities.player.skills.SkillPassiveResistance;
-import blockfighter.client.entities.player.skills.SkillPassiveRevive;
 import blockfighter.client.entities.player.skills.SkillPassiveShadowAttack;
 import blockfighter.client.entities.player.skills.SkillPassiveShieldMastery;
 import blockfighter.client.entities.player.skills.SkillPassiveHarmony;
@@ -28,8 +27,8 @@ import blockfighter.client.entities.player.skills.SkillShieldCharge;
 import blockfighter.client.entities.player.skills.SkillShieldDash;
 import blockfighter.client.entities.player.skills.SkillShieldFortify;
 import blockfighter.client.entities.player.skills.SkillShieldIron;
+import blockfighter.client.entities.player.skills.SkillShieldMagnetize;
 import blockfighter.client.entities.player.skills.SkillShieldReflect;
-import blockfighter.client.entities.player.skills.SkillShieldToss;
 import blockfighter.client.entities.player.skills.SkillSwordCinder;
 import blockfighter.client.entities.player.skills.SkillSwordGash;
 import blockfighter.client.entities.player.skills.SkillSwordPhantom;
@@ -74,7 +73,6 @@ public class SaveData {
         // initalize skill list
         this.skills[Skill.SWORD_CINDER] = new SkillSwordCinder();
         this.skills[Skill.SWORD_GASH] = new SkillSwordGash();
-        //this.skills[Skill.SWORD_MULTI] = new SkillSwordMulti();
         this.skills[Skill.SWORD_PHANTOM] = new SkillSwordPhantom();
         this.skills[Skill.SWORD_SLASH] = new SkillSwordSlash();
         this.skills[Skill.SWORD_TAUNT] = new SkillSwordTaunt();
@@ -91,7 +89,7 @@ public class SaveData {
         this.skills[Skill.SHIELD_IRON] = new SkillShieldIron();
         this.skills[Skill.SHIELD_CHARGE] = new SkillShieldCharge();
         this.skills[Skill.SHIELD_REFLECT] = new SkillShieldReflect();
-        this.skills[Skill.SHIELD_TOSS] = new SkillShieldToss();
+        this.skills[Skill.SHIELD_MAGNETIZE] = new SkillShieldMagnetize();
         this.skills[Skill.SHIELD_DASH] = new SkillShieldDash();
 
         this.skills[Skill.PASSIVE_DUALSWORD] = new SkillPassiveDualSword();

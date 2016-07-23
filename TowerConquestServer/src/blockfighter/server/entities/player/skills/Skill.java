@@ -37,7 +37,7 @@ public abstract class Skill {
             SHIELD_IRON = 0x0D,
             SHIELD_CHARGE = 0x0E,
             SHIELD_REFLECT = 0x0F,
-            SHIELD_TOSS = 0x10,
+            SHIELD_MAGNETIZE = 0x10,
             SHIELD_DASH = 0x11,
             PASSIVE_DUALSWORD = 0x12,
             PASSIVE_KEENEYE = 0x13,
@@ -77,7 +77,7 @@ public abstract class Skill {
         SKILL_REQSLOT.put(SHIELD_IRON, Globals.ITEM_OFFHAND);
         SKILL_REQSLOT.put(SHIELD_CHARGE, Globals.ITEM_OFFHAND);
         SKILL_REQSLOT.put(SHIELD_REFLECT, Globals.ITEM_OFFHAND);
-        SKILL_REQSLOT.put(SHIELD_TOSS, Globals.ITEM_OFFHAND);
+        SKILL_REQSLOT.put(SHIELD_MAGNETIZE, Globals.ITEM_OFFHAND);
     }
 
     public static void initializeSkillPlayerState() {
@@ -97,7 +97,7 @@ public abstract class Skill {
         SKILL_PLAYER_STATE.put(SHIELD_IRON, Player.PLAYER_STATE_SHIELD_IRON);
         SKILL_PLAYER_STATE.put(SHIELD_CHARGE, Player.PLAYER_STATE_SHIELD_CHARGE);
         SKILL_PLAYER_STATE.put(SHIELD_REFLECT, Player.PLAYER_STATE_SHIELD_REFLECT);
-        SKILL_PLAYER_STATE.put(SHIELD_TOSS, Player.PLAYER_STATE_SHIELD_TOSS);
+        SKILL_PLAYER_STATE.put(SHIELD_MAGNETIZE, Player.PLAYER_STATE_SHIELD_MAGNETIZE);
         SKILL_PLAYER_STATE.put(SHIELD_DASH, Player.PLAYER_STATE_SHIELD_DASH);
 
     }

@@ -16,7 +16,6 @@ import blockfighter.server.entities.buff.BuffStun;
 import blockfighter.server.entities.buff.BuffSwordSlash;
 import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.items.Items;
-import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.skills.Skill;
 import blockfighter.server.entities.player.skills.SkillBowArc;
 import blockfighter.server.entities.player.skills.SkillBowFrost;
@@ -40,8 +39,8 @@ import blockfighter.server.entities.player.skills.SkillShieldCharge;
 import blockfighter.server.entities.player.skills.SkillShieldDash;
 import blockfighter.server.entities.player.skills.SkillShieldFortify;
 import blockfighter.server.entities.player.skills.SkillShieldIron;
+import blockfighter.server.entities.player.skills.SkillShieldMagnetize;
 import blockfighter.server.entities.player.skills.SkillShieldReflect;
-import blockfighter.server.entities.player.skills.SkillShieldToss;
 import blockfighter.server.entities.player.skills.SkillSwordCinder;
 import blockfighter.server.entities.player.skills.SkillSwordGash;
 import blockfighter.server.entities.player.skills.SkillSwordPhantom;
@@ -96,7 +95,7 @@ public class Player extends Thread implements GameEntity {
             PLAYER_STATE_SHIELD_FORTIFY = 0x11,
             PLAYER_STATE_SHIELD_IRON = 0x12,
             PLAYER_STATE_SHIELD_REFLECT = 0x13,
-            PLAYER_STATE_SHIELD_TOSS = 0x14,
+            PLAYER_STATE_SHIELD_MAGNETIZE = 0x14,
             PLAYER_STATE_DEAD = 0x15;
 
     private final byte key;
@@ -166,7 +165,7 @@ public class Player extends Thread implements GameEntity {
             PLAYER_STATE_SHIELD_FORTIFY,
             PLAYER_STATE_SHIELD_IRON,
             PLAYER_STATE_SHIELD_REFLECT,
-            PLAYER_STATE_SHIELD_TOSS
+            PLAYER_STATE_SHIELD_MAGNETIZE
         };
         VALID_PLAYER_SKILL_STATES = new HashSet<>(Arrays.asList(validSkillStates));
 
@@ -182,8 +181,7 @@ public class Player extends Thread implements GameEntity {
             PLAYER_STATE_SHIELD_DASH,
             PLAYER_STATE_SHIELD_FORTIFY,
             PLAYER_STATE_SHIELD_IRON,
-            PLAYER_STATE_SHIELD_REFLECT,
-            PLAYER_STATE_SHIELD_TOSS
+            PLAYER_STATE_SHIELD_MAGNETIZE
         };
         IMMOVABLE_PLAYER_SKILL_STATES = new HashSet<>(Arrays.asList(immovableSkills));
 
@@ -204,7 +202,7 @@ public class Player extends Thread implements GameEntity {
         PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SHIELD_FORTIFY, Skill.SHIELD_FORTIFY);
         PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SHIELD_IRON, Skill.SHIELD_IRON);
         PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SHIELD_REFLECT, Skill.SHIELD_REFLECT);
-        PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SHIELD_TOSS, Skill.SHIELD_TOSS);
+        PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SHIELD_MAGNETIZE, Skill.SHIELD_MAGNETIZE);
 
     }
 
@@ -508,8 +506,8 @@ public class Player extends Thread implements GameEntity {
             case Skill.SHIELD_REFLECT:
                 newSkill = new SkillShieldReflect(this.logic);
                 break;
-            case Skill.SHIELD_TOSS:
-                newSkill = new SkillShieldToss(this.logic);
+            case Skill.SHIELD_MAGNETIZE:
+                newSkill = new SkillShieldMagnetize(this.logic);
                 break;
             case Skill.SHIELD_DASH:
                 newSkill = new SkillShieldDash(this.logic);
@@ -1530,9 +1528,9 @@ public class Player extends Thread implements GameEntity {
                     this.lastFrameTime = this.logic.getTime();
                 }
                 break;
-            case PLAYER_STATE_SHIELD_TOSS:
+            case PLAYER_STATE_SHIELD_MAGNETIZE:
                 this.animState = Globals.PLAYER_ANIM_STATE_ATTACK;
-                if (frameDuration >= 40 && this.frame < 5) {
+                if (frameDuration >= 30 && this.frame < 5) {
                     this.frame++;
                     this.lastFrameTime = this.logic.getTime();
                 }

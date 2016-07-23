@@ -9,19 +9,19 @@ import java.awt.Graphics2D;
  *
  * @author Ken Kwan
  */
-public class SkillSwordMulti extends Skill {
+public class SkillShieldMagnetize extends Skill {
 
-    public SkillSwordMulti() {
-        this.icon = Globals.SKILL_ICON[SWORD_MULTI];
-        this.skillCode = SWORD_MULTI;
-        this.maxCooldown = 18000;
-        this.reqWeapon = Globals.ITEM_SWORD;
-        this.skillName = "Whirlwind";
+    public SkillShieldMagnetize() {
+        this.icon = Globals.SKILL_ICON[SHIELD_MAGNETIZE];
+        this.skillCode = SHIELD_MAGNETIZE;
+        this.maxCooldown = 15000;
+        this.reqWeapon = Globals.ITEM_SHIELD;
+        this.skillName = "Magnetize";
     }
 
     @Override
     public void drawInfo(final Graphics2D g, final int x, final int y) {
-        final int boxHeight = (this.level < 30) ? 255 : 210, boxWidth = 300;
+        final int boxHeight = (this.level < 30) ? 235 : 190, boxWidth = 395;
         int drawX = x, drawY = y;
         if (drawY + boxHeight > 700) {
             drawY = 700 - boxHeight;
@@ -43,20 +43,22 @@ public class SkillSwordMulti extends Skill {
         g.drawString("Level: " + this.level + " - Requires " + ItemEquip.getItemTypeName(this.reqWeapon), drawX + 80, drawY + 50);
         g.drawString("Cooldown: " + this.maxCooldown / 1000 + " Seconds", drawX + 80, drawY + 70);
 
-        g.drawString("Perform numerous consecutive attacks.", drawX + 10, drawY + 90);
-        g.drawString("Deals 100% damage per hit.", drawX + 10, drawY + 110);
+        g.drawString("Pull enemies within 350 range towards you.", drawX + 10, drawY + 90);
 
-        g.drawString("[Level " + this.level + "]", drawX + 10, drawY + 135);
-        g.drawString("Perform " + (6 + this.level) + " attacks.", drawX + 10, drawY + 155);
+        g.drawString("[Level " + this.level + "]", drawX + 10, drawY + 115);
+        g.drawString("Deals " + (150 + 15 * this.level) + "% damage + Defense multiplied by " + this.df.format(15 + this.level) + ".",
+                drawX + 10, drawY + 135);
         if (this.level < 30) {
-            g.drawString("[Level " + (this.level + 1) + "]", drawX + 10, drawY + 180);
-            g.drawString("Perform " + (6 + (this.level + 1)) + " attacks.", drawX + 10, drawY + 200);
+            g.drawString("[Level " + (this.level + 1) + "]", drawX + 10, drawY + 160);
+            g.drawString("Deals " + (150 + 15 * (this.level + 1)) + "% damage + Defense multiplied by "
+                    + this.df.format(15 + (this.level + 1)) + ".",
+                    drawX + 10, drawY + 180);
 
-            g.drawString("[Level 30 Bonus]", drawX + 10, drawY + 225);
-            g.drawString("Invulnerable during the attack duration.", drawX + 10, drawY + 245);
+            g.drawString("[Level 30 Bonus]", drawX + 10, drawY + 205);
+            g.drawString("Deals 3x damage.", drawX + 10, drawY + 225);
         } else {
-            g.drawString("[Level 30 Bonus]", drawX + 10, drawY + 180);
-            g.drawString("Invulnerable during the attack duration.", drawX + 10, drawY + 200);
+            g.drawString("[Level 30 Bonus]", drawX + 10, drawY + 160);
+            g.drawString("Deals 3x damage.", drawX + 10, drawY + 180);
         }
     }
 

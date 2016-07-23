@@ -775,7 +775,9 @@ public class ScreenIngame extends Screen {
             case Globals.PARTICLE_SHIELD_REFLECTHIT:
                 x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
                 y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
-                addParticle(new ParticleShieldReflectHit(x, y));
+                for (byte i = 0; i < 20; i++) {
+                    addParticle(new ParticleShieldReflectHit(x, y, i));
+                }
                 break;
             case Globals.PARTICLE_SHIELD_IRON:
                 playerKey = data[2];
@@ -795,11 +797,12 @@ public class ScreenIngame extends Screen {
                     addParticle(new ParticleShieldFortifyEmitter(this.players.get(playerKey)));
                 }
                 break;
-            case Globals.PARTICLE_SHIELD_TOSS:
-                x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
-                y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
-                facing = data[10];
-                addParticle(new ParticleShieldToss(x, y, facing));
+            case Globals.PARTICLE_SHIELD_MAGNETIZE:
+                playerKey = data[2];
+                targetKey = data[3];
+                if (this.players.containsKey(playerKey)) {
+                    addParticle(new ParticleShieldMagnetize(this.players.get(playerKey), this.players.get(targetKey)));
+                }
                 break;
             case Globals.PARTICLE_SWORD_TAUNTBUFF:
                 playerKey = data[2];

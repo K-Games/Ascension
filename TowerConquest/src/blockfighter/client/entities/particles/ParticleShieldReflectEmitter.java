@@ -24,7 +24,7 @@ public class ParticleShieldReflectEmitter extends Particle {
                 this.x = p.x;
                 this.y = p.y;
             }
-            for (int i = 0; i < 5; i++) {
+            for (int i = 0; i < 3; i++) {
                 final ParticleShieldReflectBuff b = new ParticleShieldReflectBuff(this.x, this.y, this.facing);
                 logic.getScreen().addParticle(b);
             }

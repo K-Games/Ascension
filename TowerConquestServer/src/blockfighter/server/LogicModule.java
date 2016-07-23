@@ -1,10 +1,13 @@
 package blockfighter.server;
 
+import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
+import blockfighter.server.entities.player.skills.Skill;
 import blockfighter.server.entities.proj.Projectile;
 import blockfighter.server.maps.GameMap;
 import blockfighter.server.maps.GameMapArena;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Map;
@@ -535,6 +538,32 @@ public class LogicModule extends Thread {
             }
         }
         return -1;
+    }
+
+    public ArrayList<Player> getPlayersInRange(final Player player, final double radius) {
+        ArrayList<Player> playersInRange = new ArrayList<>(Globals.SERVER_MAX_PLAYERS);
+        for (final Map.Entry<Byte, Player> pEntry : getPlayers().entrySet()) {
+            final Player p = pEntry.getValue();
+            if (p != player && !p.isDead() && !p.isInvulnerable()) {
+                double distance = Math.sqrt(Math.pow((player.getX() - p.getX()), 2) + Math.pow((player.getY() - p.getY()), 2));
+                if (distance <= radius) {
+                    playersInRange.add(p);
+                }
+            }
+        }
+        return playersInRange;
+    }
+
+    public ArrayList<Mob> getMobsInRange(final Player player, final double radius) {
+        ArrayList<Mob> mobInRange = new ArrayList<>(getMobs().size());
+        for (final Map.Entry<Byte, Mob> bEntry : getMobs().entrySet()) {
+            final Mob b = bEntry.getValue();
+            double distance = Math.sqrt(Math.pow((player.getX() - b.getX()), 2) + Math.pow((player.getY() - b.getY()), 2));
+            if (distance <= 100) {
+                mobInRange.add(b);
+            }
+        }
+        return mobInRange;
     }
 
     /**
