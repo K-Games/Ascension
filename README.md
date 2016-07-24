@@ -58,3 +58,4 @@ http://dibur.moe
 
 * Redemption (Orchestral Style) - [Dibur](http://dibur.moe)
 * Graceful Resistance - [Dibur](http://dibur.moe)
+* Dibur - Inevitable Bloodshed (Rock Style) - [Dibur](http://dibur.moe)
