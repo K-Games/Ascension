@@ -128,6 +128,8 @@ public class ScreenIngame extends Screen {
             if (this.players.containsKey(this.myKey)) {
                 logic.setSoundLisenterPos(this.players.get(this.myKey).getX(), this.players.get(this.myKey).getY());
             }
+
+            this.ping = this.client.getPing();
             this.lastUpdateTime = now;
         }
 

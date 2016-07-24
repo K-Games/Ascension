@@ -163,7 +163,7 @@ public class GameClient extends Thread {
     }
 
     public void sendGetPing(final byte k, final byte pID) {
-        PacketSender.sendGetPing(logic.getSelectedRoom(), k, pID);
+        this.client.updateReturnTripTime();
     }
 
     public void sendGetAll(final byte k) {
@@ -206,6 +206,10 @@ public class GameClient extends Thread {
         if (logic.getScreen() instanceof ScreenIngame) {
             ((ScreenIngame) logic.getScreen()).setPing(data);
         }
+    }
+
+    public int getPing() {
+        return this.client.getReturnTripTime();
     }
 
     public void queueData(final byte[] data) {

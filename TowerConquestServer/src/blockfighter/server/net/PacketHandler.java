@@ -166,8 +166,8 @@ public class PacketHandler {
         if (p == null) {
             return;
         }
-        p.disconnect();
         Globals.log(PacketHandler.class, "DATA_PLAYER_DISCONNECT", "Disconnecting <" + p.getPlayerName() + "> Key: " + data[2], Globals.LOG_TYPE_DATA, true);
+        p.disconnect();
     }
 
     private static void receivePing(final byte[] data, final byte index, final Connection c) {

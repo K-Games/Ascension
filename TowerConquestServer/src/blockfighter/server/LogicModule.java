@@ -234,6 +234,7 @@ public class LogicModule extends Thread {
             final byte key = remove.pop();
             this.players.remove(key);
             this.playerKeys.add(key);
+            Globals.log(LogicModule.class, "Room: " + this.room + " Returned player key: " + key + " Keys Remaining: " + this.playerKeys.size(), Globals.LOG_TYPE_DATA, true);
         }
     }
 

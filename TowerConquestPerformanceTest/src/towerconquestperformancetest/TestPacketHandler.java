@@ -11,9 +11,6 @@ public class TestPacketHandler {
             case Globals.DATA_PLAYER_CREATE:
                 receiveCreate(data, gameClient);
                 break;
-            case Globals.DATA_PING:
-                receiveGetPing(data, gameClient);
-                break;
         }
     }
 
@@ -31,9 +28,5 @@ public class TestPacketHandler {
                 gameClient.receiveLogin(data);
             }
         }.start();
-    }
-
-    private static void receiveGetPing(final byte[] data, final TestGameClient gameClient) {
-        gameClient.setPing(data[1]);
     }
 }

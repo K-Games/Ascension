@@ -1,7 +1,7 @@
 package blockfighter.client.screen;
 
-import blockfighter.client.FocusHandler;
 import blockfighter.client.Globals;
+import blockfighter.client.Main;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -45,9 +45,8 @@ public class ScreenServerList extends ScreenMenu {
             listItems[i] = "Lvl " + (i * 10 + 1) + "-" + ((i + 1) * 10);
         }
         SERVER_ROOMS = new JComboBox<>(listItems);
-        final FocusHandler focusHandler = new FocusHandler();
-        SERVERADDRESS_FIELD.addFocusListener(focusHandler);
-        SERVER_ROOMS.addFocusListener(focusHandler);
+        SERVERADDRESS_FIELD.addFocusListener(Main.FOCUS_HANDLER);
+        SERVER_ROOMS.addFocusListener(Main.FOCUS_HANDLER);
 
         SERVERADDRESS_FIELD.setBounds(550, 150, 400, 40);
         SERVERADDRESS_FIELD.setFont(Globals.ARIAL_24PT);

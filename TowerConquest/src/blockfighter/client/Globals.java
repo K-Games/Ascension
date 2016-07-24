@@ -67,7 +67,7 @@ public class Globals {
     // public final static double REQUESTALL_TICKS_PER_SEC = 1D;
     public final static double REQUESTALL_UPDATE = 10000000000D;
 
-    public final static double PINGS_PER_SEC = 1D;
+    public final static double PINGS_PER_SEC = 2D;
     public final static double PING_UPDATE = 1000000000D / PINGS_PER_SEC;
 
     public final static double PROCESS_QUEUES_PER_SEC = 100D;

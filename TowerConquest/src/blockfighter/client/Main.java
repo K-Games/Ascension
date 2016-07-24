@@ -31,6 +31,9 @@ import org.apache.commons.lang3.concurrent.BasicThreadFactory;
  */
 public class Main {
 
+    public static final KeyHandler KEY_HANDLER = new KeyHandler();
+    public static final MouseHandler MOUSE_HANDLER = new MouseHandler();
+    public static final FocusHandler FOCUS_HANDLER = new FocusHandler();
     private static final SoundModule SOUND_MODULE = new SoundModule();
 
     private static final LogicModule LOGIC_MODULE = new LogicModule(SOUND_MODULE);
@@ -114,9 +117,6 @@ public class Main {
         Screen.setThreadPool(SHARED_THREADPOOL);
         GameMap.setThreadPool(SHARED_THREADPOOL);
 
-        final KeyHandler keyHandler = new KeyHandler();
-        final MouseHandler mouseHandler = new MouseHandler();
-        final FocusHandler focusHandler = new FocusHandler();
         // frame.setUndecorated(true);
         frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -128,10 +128,10 @@ public class Main {
 
         panel.setLayout(null);
         panel.setFocusable(true);
-        panel.addKeyListener(keyHandler);
-        panel.addMouseMotionListener(mouseHandler);
-        panel.addMouseListener(mouseHandler);
-        panel.addFocusListener(focusHandler);
+        panel.addKeyListener(KEY_HANDLER);
+        panel.addMouseMotionListener(MOUSE_HANDLER);
+        panel.addMouseListener(MOUSE_HANDLER);
+        panel.addFocusListener(FOCUS_HANDLER);
         panel.requestFocus();
 
         Runtime.getRuntime().addShutdownHook(new Thread() {

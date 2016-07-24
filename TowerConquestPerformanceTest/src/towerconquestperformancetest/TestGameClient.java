@@ -99,11 +99,13 @@ public class TestGameClient {
     public void sendMoveKey(final byte k, final byte dir, final boolean b) {
         TestPacketSender.sendMove(logic.getSelectedRoom(), k, dir, b, this.client);
     }
-    public void sendGetPing(final byte k, final byte pID) {
-        TestPacketSender.sendGetPing(logic.getSelectedRoom(), k, pID, client);
+
+    public void sendGetPing() {
+        this.client.updateReturnTripTime();
     }
-    
-    public void setPing(final byte data) {
-        logic.setPing(data);
+
+    public int getPing() {
+        return this.client.getReturnTripTime();
     }
+
 }

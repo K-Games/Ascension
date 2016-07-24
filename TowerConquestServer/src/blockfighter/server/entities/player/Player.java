@@ -48,7 +48,6 @@ import blockfighter.server.entities.player.skills.SkillSwordSlash;
 import blockfighter.server.entities.player.skills.SkillSwordTaunt;
 import blockfighter.server.entities.player.skills.SkillSwordVorpal;
 import blockfighter.server.maps.GameMap;
-import blockfighter.server.net.GameServer;
 import blockfighter.server.net.PacketSender;
 import com.esotericsoftware.kryonet.Connection;
 import java.awt.geom.Point2D;
@@ -1820,7 +1819,6 @@ public class Player extends Thread implements GameEntity {
             bytes[1] = this.key;
             PacketSender.sendAll(bytes, logic.getRoom());
             this.connection.close();
-            GameServer.removeConnectionPlayer(this.connection);
             Globals.log(Player.class, "Disconnected <" + getPlayerName() + ">", Globals.LOG_TYPE_DATA, true);
         }
     }
