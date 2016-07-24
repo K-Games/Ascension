@@ -4,7 +4,6 @@ import blockfighter.client.Globals;
 import blockfighter.client.LogicModule;
 import blockfighter.client.Main;
 import blockfighter.client.entities.items.Item;
-import blockfighter.client.entities.items.ItemEquip;
 import java.awt.Color;
 import java.awt.Graphics2D;
 

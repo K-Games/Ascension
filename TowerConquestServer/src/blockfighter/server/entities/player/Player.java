@@ -23,16 +23,16 @@ import blockfighter.server.entities.player.skills.SkillBowPower;
 import blockfighter.server.entities.player.skills.SkillBowRapid;
 import blockfighter.server.entities.player.skills.SkillBowStorm;
 import blockfighter.server.entities.player.skills.SkillBowVolley;
-import blockfighter.server.entities.player.skills.SkillPassiveStatic;
 import blockfighter.server.entities.player.skills.SkillPassiveBarrier;
 import blockfighter.server.entities.player.skills.SkillPassiveBowMastery;
 import blockfighter.server.entities.player.skills.SkillPassiveDualSword;
+import blockfighter.server.entities.player.skills.SkillPassiveHarmony;
 import blockfighter.server.entities.player.skills.SkillPassiveKeenEye;
 import blockfighter.server.entities.player.skills.SkillPassiveResistance;
-import blockfighter.server.entities.player.skills.SkillPassiveTough;
 import blockfighter.server.entities.player.skills.SkillPassiveShadowAttack;
 import blockfighter.server.entities.player.skills.SkillPassiveShieldMastery;
-import blockfighter.server.entities.player.skills.SkillPassiveHarmony;
+import blockfighter.server.entities.player.skills.SkillPassiveStatic;
+import blockfighter.server.entities.player.skills.SkillPassiveTough;
 import blockfighter.server.entities.player.skills.SkillPassiveVitalHit;
 import blockfighter.server.entities.player.skills.SkillPassiveWillpower;
 import blockfighter.server.entities.player.skills.SkillShieldCharge;
@@ -179,7 +179,6 @@ public class Player extends Thread implements GameEntity {
             PLAYER_STATE_BOW_VOLLEY,
             PLAYER_STATE_SHIELD_CHARGE,
             PLAYER_STATE_SHIELD_DASH,
-            PLAYER_STATE_SHIELD_FORTIFY,
             PLAYER_STATE_SHIELD_IRON,
             PLAYER_STATE_SHIELD_MAGNETIZE
         };
@@ -750,9 +749,7 @@ public class Player extends Thread implements GameEntity {
                 //Passive damage reduction
                 double passiveReduct = 0;
                 // Defender Mastery Passive Reduction
-                if (hasSkill(Skill.PASSIVE_SHIELDMASTERY)
-                        && Items.getItemType(this.equips[Globals.ITEM_WEAPON]) == Globals.ITEM_SWORD
-                        && Items.getItemType(this.equips[Globals.ITEM_OFFHAND]) == Globals.ITEM_SHIELD) {
+                if (hasSkill(Skill.PASSIVE_SHIELDMASTERY) && getSkill(Skill.PASSIVE_SHIELDMASTERY).canCast(this)) {
                     passiveReduct += 0.05 + 0.005 * getSkillLevel(Skill.PASSIVE_SHIELDMASTERY);
                 }
 
@@ -762,9 +759,7 @@ public class Player extends Thread implements GameEntity {
                 }
 
                 // Dual Wield Passive Reduction
-                if (hasSkill(Skill.PASSIVE_DUALSWORD)
-                        && Items.getItemType(this.equips[Globals.ITEM_WEAPON]) == Globals.ITEM_SWORD
-                        && Items.getItemType(this.equips[Globals.ITEM_OFFHAND]) == Globals.ITEM_SWORD) {
+                if (hasSkill(Skill.PASSIVE_DUALSWORD) && getSkill(Skill.PASSIVE_DUALSWORD).canCast(this)) {
                     passiveReduct += 0.01 * getSkillLevel(Skill.PASSIVE_DUALSWORD);
                 }
                 finalDamage = finalDamage * (1 - passiveReduct);
@@ -996,9 +991,7 @@ public class Player extends Thread implements GameEntity {
             }
         }
         // Defender Mastery Passive
-        if (hasSkill(Skill.PASSIVE_SHIELDMASTERY)
-                && Items.getItemType(this.equips[Globals.ITEM_WEAPON]) == Globals.ITEM_SWORD
-                && Items.getItemType(this.equips[Globals.ITEM_OFFHAND]) == Globals.ITEM_SHIELD) {
+        if (hasSkill(Skill.PASSIVE_SHIELDMASTERY) && getSkill(Skill.PASSIVE_SHIELDMASTERY).canCast(this)) {
             mult += 0.09 + 0.002 * getSkillLevel(Skill.PASSIVE_SHIELDMASTERY);
         }
         // Power of Will Passive
@@ -1055,9 +1048,7 @@ public class Player extends Thread implements GameEntity {
     public double criticalDamage(final double dmg, final double bonusCritDmg) {
         double totalCritDmg = 1 + this.stats[Globals.STAT_CRITDMG] + bonusCritDmg;
         // Bow Mastery Passive
-        if (hasSkill(Skill.PASSIVE_BOWMASTERY)
-                && Items.getItemType(this.equips[Globals.ITEM_WEAPON]) == Globals.ITEM_BOW
-                && Items.getItemType(this.equips[Globals.ITEM_OFFHAND]) == Globals.ITEM_ARROW) {
+        if (hasSkill(Skill.PASSIVE_BOWMASTERY) && getSkill(Skill.PASSIVE_BOWMASTERY).canCast(this)) {
             totalCritDmg += 0.3 + 0.04 * getSkillLevel(Skill.PASSIVE_BOWMASTERY);
         }
         // Keen Eye Passive
@@ -1669,7 +1660,7 @@ public class Player extends Thread implements GameEntity {
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 2 + Globals.PACKET_INT * 3];
         bytes[0] = Globals.DATA_NUMBER;
         bytes[1] = dmg.getDamageType();
-        
+
         final byte[] posXInt = Globals.intToBytes((int) this.x);
         System.arraycopy(posXInt, 0, bytes, 2, posXInt.length);
 

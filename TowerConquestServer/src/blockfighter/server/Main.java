@@ -117,8 +117,7 @@ public class Main {
         DATA_LOG.setLineWrap(true);
         DATA_LOG.setEditable(false);
         DATA_LOG.setText("Data Log");
-        
-        
+
         final JScrollPane errLogPane = new JScrollPane(ERROR_LOG);
         errLogPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         errLogPane.setBounds(0, 300, 500, 300);

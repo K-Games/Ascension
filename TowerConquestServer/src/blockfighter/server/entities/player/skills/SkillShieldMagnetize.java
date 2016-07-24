@@ -8,13 +8,7 @@ import blockfighter.server.entities.player.Player;
 import blockfighter.server.net.PacketSender;
 import java.util.ArrayList;
 
-/**
- *
- * @author Ken Kwan
- */
 public class SkillShieldMagnetize extends Skill {
-
-    final int endDuration = 200;
 
     ArrayList<Player> playersCaught;
     ArrayList<Mob> mobsCaught;
@@ -24,12 +18,15 @@ public class SkillShieldMagnetize extends Skill {
         this.skillCode = SHIELD_MAGNETIZE;
         this.maxCooldown = 15000;
         this.reqWeapon = Globals.ITEM_SHIELD;
+        this.endDuration = 200;
+        this.playerState = Player.PLAYER_STATE_SHIELD_MAGNETIZE;
+        this.reqEquipSlot = Globals.ITEM_OFFHAND;
     }
 
     @Override
     public void updateSkillUse(Player player) {
         final int duration = Globals.nsToMs(this.logic.getTime() - player.getSkillCastTime());
-        final int radius = 350;
+        final int radius = 400;
 
         if (player.getSkillCounter() == 0) {
             if (this.logic.getMap().isPvP()) {
@@ -97,6 +94,6 @@ public class SkillShieldMagnetize extends Skill {
                 }
             }
         }
-        player.updateSkillEnd(duration, endDuration, false, false);
+        player.updateSkillEnd(duration, this.endDuration, false, false);
     }
 }

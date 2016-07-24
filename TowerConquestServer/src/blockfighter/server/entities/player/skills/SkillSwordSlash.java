@@ -7,10 +7,6 @@ import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.proj.ProjSwordSlash;
 import blockfighter.server.net.PacketSender;
 
-/**
- *
- * @author Ken Kwan
- */
 public class SkillSwordSlash extends Skill {
 
     /**
@@ -23,6 +19,9 @@ public class SkillSwordSlash extends Skill {
         this.skillCode = SWORD_SLASH;
         this.maxCooldown = 400;
         this.reqWeapon = Globals.ITEM_SWORD;
+        this.endDuration = 350;
+        this.playerState = Player.PLAYER_STATE_SWORD_SLASH;
+        this.reqEquipSlot = Globals.ITEM_WEAPON;
     }
 
     @Override
@@ -60,6 +59,6 @@ public class SkillSwordSlash extends Skill {
             }
         }
 
-        player.updateSkillEnd(duration, 350, true, false);
+        player.updateSkillEnd(duration, this.endDuration, true, false);
     }
 }

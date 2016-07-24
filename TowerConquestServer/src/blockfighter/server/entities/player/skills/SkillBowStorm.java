@@ -6,10 +6,6 @@ import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.proj.ProjBowStorm;
 import blockfighter.server.net.PacketSender;
 
-/**
- *
- * @author Ken Kwan
- */
 public class SkillBowStorm extends Skill {
 
     /**
@@ -22,6 +18,9 @@ public class SkillBowStorm extends Skill {
         this.skillCode = BOW_STORM;
         this.maxCooldown = 20000;
         this.reqWeapon = Globals.ITEM_BOW;
+        this.endDuration = 200;
+        this.playerState = Player.PLAYER_STATE_BOW_STORM;
+        this.reqEquipSlot = Globals.ITEM_WEAPON;
     }
 
     @Override
@@ -34,7 +33,7 @@ public class SkillBowStorm extends Skill {
             PacketSender.sendParticle(this.logic.getRoom(), Globals.PARTICLE_BOW_STORM, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
                     player.getFacing());
         }
-        player.updateSkillEnd(duration, 200, false, false);
+        player.updateSkillEnd(duration, this.endDuration, false, false);
     }
 
 }

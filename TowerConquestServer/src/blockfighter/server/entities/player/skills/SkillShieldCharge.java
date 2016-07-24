@@ -6,10 +6,6 @@ import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.proj.ProjShieldCharge;
 import blockfighter.server.net.PacketSender;
 
-/**
- *
- * @author Ken Kwan
- */
 public class SkillShieldCharge extends Skill {
 
     /**
@@ -22,6 +18,9 @@ public class SkillShieldCharge extends Skill {
         this.skillCode = SHIELD_CHARGE;
         this.maxCooldown = 17000;
         this.reqWeapon = Globals.ITEM_SHIELD;
+        this.endDuration = 750;
+        this.playerState = Player.PLAYER_STATE_SHIELD_CHARGE;
+        this.reqEquipSlot = Globals.ITEM_OFFHAND;
     }
 
     @Override
@@ -33,6 +32,6 @@ public class SkillShieldCharge extends Skill {
             this.logic.queueAddProj(proj);
             PacketSender.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SHIELD_CHARGE, player.getKey(), player.getFacing());
         }
-        player.updateSkillEnd(duration, 750, false, false);
+        player.updateSkillEnd(duration, this.endDuration, false, false);
     }
 }

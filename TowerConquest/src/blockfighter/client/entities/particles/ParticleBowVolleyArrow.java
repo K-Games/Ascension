@@ -38,7 +38,7 @@ public class ParticleBowVolleyArrow extends Particle {
                         } else {
                             this.lightningPointsY[j][i] = this.y;
                         }
-                        
+
                         if (nextX >= 465) {
                             nextX = 465;
                         }

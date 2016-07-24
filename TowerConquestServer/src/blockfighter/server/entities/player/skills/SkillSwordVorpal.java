@@ -6,10 +6,6 @@ import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.proj.ProjSwordVorpal;
 import blockfighter.server.net.PacketSender;
 
-/**
- *
- * @author Ken Kwan
- */
 public class SkillSwordVorpal extends Skill {
 
     /**
@@ -22,6 +18,9 @@ public class SkillSwordVorpal extends Skill {
         this.skillCode = SWORD_VORPAL;
         this.maxCooldown = 14000;
         this.reqWeapon = Globals.ITEM_SWORD;
+        this.endDuration = 800;
+        this.playerState = Player.PLAYER_STATE_SWORD_VORPAL;
+        this.reqEquipSlot = Globals.ITEM_WEAPON;
     }
 
     @Override
@@ -38,6 +37,6 @@ public class SkillSwordVorpal extends Skill {
             player.incrementSkillCounter();
         }
 
-        player.updateSkillEnd(duration, 800, true, false);
+        player.updateSkillEnd(duration, this.endDuration, true, false);
     }
 }

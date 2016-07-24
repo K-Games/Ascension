@@ -1,6 +1,5 @@
 package blockfighter.client;
 
-import com.threed.jpct.SimpleVector;
 import paulscode.sound.SoundSystemConfig;
 import paulscode.sound.SoundSystemJPCT;
 

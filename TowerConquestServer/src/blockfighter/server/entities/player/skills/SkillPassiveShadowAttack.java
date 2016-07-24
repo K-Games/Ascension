@@ -6,10 +6,6 @@ import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.net.PacketSender;
 
-/**
- *
- * @author Ken Kwan
- */
 public class SkillPassiveShadowAttack extends Skill {
 
     public SkillPassiveShadowAttack(final LogicModule l) {

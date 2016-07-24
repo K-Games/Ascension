@@ -7,12 +7,7 @@ import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.proj.ProjSwordPhantom;
 import blockfighter.server.net.PacketSender;
 import java.util.ArrayList;
-import java.util.Map;
 
-/**
- *
- * @author Ken Kwan
- */
 public class SkillSwordPhantom extends Skill {
 
     public SkillSwordPhantom(final LogicModule l) {
@@ -20,6 +15,8 @@ public class SkillSwordPhantom extends Skill {
         this.skillCode = SWORD_PHANTOM;
         this.maxCooldown = 20000;
         this.reqWeapon = Globals.ITEM_SWORD;
+        this.playerState = Player.PLAYER_STATE_SWORD_PHANTOM;
+        this.reqEquipSlot = Globals.ITEM_WEAPON;
     }
 
     @Override
@@ -40,7 +37,7 @@ public class SkillSwordPhantom extends Skill {
             if (this.logic.getMap().isPvP()) {
                 Player target;
                 ArrayList<Player> playersInRange = this.logic.getPlayersInRange(player, radius);
-                
+
                 if (!playersInRange.isEmpty()) {
                     target = playersInRange.get(Globals.rng(playersInRange.size()));
                     double teleX = (Globals.rng(2) == 0) ? target.getHitbox().x + target.getHitbox().width + 100 + Globals.rng(50) : target.getHitbox().x - 100 - Globals.rng(50);
@@ -56,7 +53,7 @@ public class SkillSwordPhantom extends Skill {
             } else {
                 Mob target;
                 ArrayList<Mob> mobsInRange = this.logic.getMobsInRange(player, radius);
-                
+
                 if (!mobsInRange.isEmpty()) {
                     target = mobsInRange.get(Globals.rng(mobsInRange.size()));
                     double teleX = (Globals.rng(2) == 0) ? target.getHitbox().x + target.getHitbox().width + 100 + Globals.rng(50) : target.getHitbox().x - 100 - Globals.rng(50);

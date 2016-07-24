@@ -1,9 +1,7 @@
 package blockfighter.server;
 
-import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
-import blockfighter.server.entities.player.skills.Skill;
 import blockfighter.server.entities.proj.Projectile;
 import blockfighter.server.maps.GameMap;
 import blockfighter.server.maps.GameMapArena;

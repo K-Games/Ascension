@@ -6,10 +6,6 @@ import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.proj.ProjBowPower;
 import blockfighter.server.net.PacketSender;
 
-/**
- *
- * @author Ken Kwan
- */
 public class SkillBowPower extends Skill {
 
     /**
@@ -22,6 +18,9 @@ public class SkillBowPower extends Skill {
         this.skillCode = BOW_POWER;
         this.maxCooldown = 16000;
         this.reqWeapon = Globals.ITEM_BOW;
+        this.endDuration = 1400;
+        this.playerState = Player.PLAYER_STATE_BOW_POWER;
+        this.reqEquipSlot = Globals.ITEM_WEAPON;
     }
 
     @Override
@@ -42,7 +41,7 @@ public class SkillBowPower extends Skill {
                     player.getFacing());
             Player.sendSFX(this.logic.getRoom(), Globals.SFX_POWER, player.getX(), player.getY());
         }
-        player.updateSkillEnd(duration >= 1400 || (!player.isSkillMaxed(Skill.BOW_POWER) && duration < 800 && (player.isStunned() || player.isKnockback())));
+        player.updateSkillEnd(duration >= this.endDuration || (!player.isSkillMaxed(Skill.BOW_POWER) && duration < 800 && (player.isStunned() || player.isKnockback())));
     }
 
 }

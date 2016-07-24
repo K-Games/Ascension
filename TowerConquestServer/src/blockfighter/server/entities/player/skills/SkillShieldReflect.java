@@ -10,10 +10,6 @@ import blockfighter.server.net.PacketSender;
 import java.util.ArrayList;
 import java.util.Map;
 
-/**
- *
- * @author Ken Kwan
- */
 public class SkillShieldReflect extends Skill {
 
     /**
@@ -26,6 +22,9 @@ public class SkillShieldReflect extends Skill {
         this.skillCode = SHIELD_REFLECT;
         this.maxCooldown = 15000;
         this.reqWeapon = Globals.ITEM_SHIELD;
+        this.endDuration = 250;
+        this.playerState = Player.PLAYER_STATE_SHIELD_REFLECT;
+        this.reqEquipSlot = Globals.ITEM_OFFHAND;
     }
 
     @Override
@@ -47,7 +46,7 @@ public class SkillShieldReflect extends Skill {
                 }
             }
         }
-        player.updateSkillEnd(duration, 250, false, false);
+        player.updateSkillEnd(duration, this.endDuration, false, false);
     }
 
     public void updateSkillReflectHit(final double dmgTaken, final double mult, final Player player) {

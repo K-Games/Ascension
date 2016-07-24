@@ -28,7 +28,6 @@ public class LogicModuleTest {
 
         when(playerKeys.isEmpty()).thenReturn(true);
 
-
         byte expResult = -1;
         byte result = logic.getNextPlayerKey();
 
@@ -45,7 +44,6 @@ public class LogicModuleTest {
         when(playerKeys.isEmpty()).thenReturn(false);
         when(playerKeys.poll()).thenReturn((byte) 1);
 
-
         byte expResult = 1;
         byte result = logic.getNextPlayerKey();
 
@@ -60,7 +58,6 @@ public class LogicModuleTest {
 
         logic = new LogicModule(null, mobKeys);
         when(mobKeys.isEmpty()).thenReturn(true);
-
 
         byte expResult = -1;
         byte result = logic.getNextMobKey();
@@ -77,7 +74,6 @@ public class LogicModuleTest {
         logic = new LogicModule(null, mobKeys);
         when(mobKeys.isEmpty()).thenReturn(false);
         when(mobKeys.poll()).thenReturn((byte) 1);
-
 
         byte expResult = 1;
         byte result = logic.getNextMobKey();
@@ -104,7 +100,6 @@ public class LogicModuleTest {
         ConcurrentLinkedQueue<Integer> spy = spy(projKeys);
 
         logic = new LogicModule(spy);
-
 
         for (int i = 0; i < 200; i++) {
             int result = logic.getNextProjKey();
@@ -200,7 +195,6 @@ public class LogicModuleTest {
 
         logic = new LogicModule(mockPlayers);
 
-
         UUID id = UUID.randomUUID();
 
         when(mockPlayer.getUniqueID()).thenReturn(id);
@@ -224,7 +218,6 @@ public class LogicModuleTest {
         mockPlayers.put(playerKey, mockPlayer);
 
         logic = new LogicModule(mockPlayers);
-
 
         UUID id = UUID.randomUUID();
 
@@ -257,7 +250,6 @@ public class LogicModuleTest {
 
         logic = new LogicModule(playerKeys, null);
         when(playerKeys.isEmpty()).thenReturn(true);
-
 
         boolean expResult = true;
         boolean result = logic.isFull();

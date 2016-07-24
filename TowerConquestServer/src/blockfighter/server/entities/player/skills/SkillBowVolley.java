@@ -6,10 +6,6 @@ import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.proj.ProjBowVolley;
 import blockfighter.server.net.PacketSender;
 
-/**
- *
- * @author Ken Kwan
- */
 public class SkillBowVolley extends Skill {
 
     /**
@@ -22,6 +18,9 @@ public class SkillBowVolley extends Skill {
         this.skillCode = BOW_VOLLEY;
         this.maxCooldown = 17000;
         this.reqWeapon = Globals.ITEM_BOW;
+        this.endDuration = 1900;
+        this.playerState = Player.PLAYER_STATE_BOW_VOLLEY;
+        this.reqEquipSlot = Globals.ITEM_WEAPON;
     }
 
     @Override
@@ -38,6 +37,6 @@ public class SkillBowVolley extends Skill {
             player.incrementSkillCounter();
             Player.sendSFX(this.logic.getRoom(), Globals.SFX_VOLLEY, player.getX(), player.getY());
         }
-        player.updateSkillEnd(duration, 1900, true, true);
+        player.updateSkillEnd(duration, this.endDuration, true, true);
     }
 }

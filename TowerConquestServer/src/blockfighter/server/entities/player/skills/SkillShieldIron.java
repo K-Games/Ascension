@@ -7,10 +7,6 @@ import blockfighter.server.entities.player.Player;
 import blockfighter.server.net.PacketSender;
 import java.util.Map;
 
-/**
- *
- * @author Ken Kwan
- */
 public class SkillShieldIron extends Skill {
 
     /**
@@ -23,6 +19,9 @@ public class SkillShieldIron extends Skill {
         this.skillCode = SHIELD_IRON;
         this.maxCooldown = 20000;
         this.reqWeapon = Globals.ITEM_SHIELD;
+        this.endDuration = 2100;
+        this.playerState = Player.PLAYER_STATE_SHIELD_IRON;
+        this.reqEquipSlot = Globals.ITEM_OFFHAND;
     }
 
     @Override
@@ -46,7 +45,7 @@ public class SkillShieldIron extends Skill {
                 }
             }
         }
-        if (player.updateSkillEnd(duration >= 2100)) {
+        if (player.updateSkillEnd(duration, this.endDuration, false, false)) {
             player.setRemovingDebuff(false);
         }
     }

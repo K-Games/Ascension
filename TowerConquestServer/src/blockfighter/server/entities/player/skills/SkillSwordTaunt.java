@@ -7,10 +7,6 @@ import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.proj.ProjSwordTaunt;
 import blockfighter.server.net.PacketSender;
 
-/**
- *
- * @author Ken Kwan
- */
 public class SkillSwordTaunt extends Skill {
 
     /**
@@ -23,6 +19,9 @@ public class SkillSwordTaunt extends Skill {
         this.skillCode = SWORD_TAUNT;
         this.maxCooldown = 25000;
         this.reqWeapon = Globals.ITEM_SWORD;
+        this.endDuration = 350;
+        this.playerState = Player.PLAYER_STATE_SWORD_TAUNT;
+        this.reqEquipSlot = Globals.ITEM_WEAPON;
     }
 
     @Override
@@ -42,7 +41,7 @@ public class SkillSwordTaunt extends Skill {
             PacketSender.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_TAUNT, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
                     player.getFacing());
         }
-        player.updateSkillEnd(duration, 350, false, false);
+        player.updateSkillEnd(duration, this.endDuration, false, false);
     }
 
 }

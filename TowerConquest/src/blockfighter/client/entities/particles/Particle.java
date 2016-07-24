@@ -217,12 +217,12 @@ public abstract class Particle extends Thread {
     public Particle(final Player owner) {
         this(owner.getX(), owner.getY(), owner);
     }
-    
+
     public Particle(final Player owner, final byte f) {
         this(owner.getX(), owner.getY(), owner);
         this.facing = f;
     }
-    
+
     public void draw(final Graphics2D g) {
     }
 

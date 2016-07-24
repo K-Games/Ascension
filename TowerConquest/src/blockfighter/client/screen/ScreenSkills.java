@@ -85,7 +85,7 @@ public class ScreenSkills extends ScreenMenu {
         SKILL_SLOTS[Skill.PASSIVE_WILLPOWER] = new Rectangle2D.Double(PASSIVE_BOX_X + 110, PASSIVE_BOX_Y + 255, 60, 60);
         SKILL_SLOTS[Skill.PASSIVE_HARMONY] = new Rectangle2D.Double(PASSIVE_BOX_X + 110, PASSIVE_BOX_Y + 340, 60, 60);
         SKILL_SLOTS[Skill.PASSIVE_STATIC] = new Rectangle2D.Double(PASSIVE_BOX_X + 110, PASSIVE_BOX_Y + 425, 60, 60);
-        
+
         for (int i = 0; i < HOTKEY_SLOTS.length; i++) {
             HOTKEY_SLOTS[i] = new Rectangle2D.Double(HOTKEY_BOX_X + (i * 64), HOTKEY_BOX_Y, 60, 60);
         }

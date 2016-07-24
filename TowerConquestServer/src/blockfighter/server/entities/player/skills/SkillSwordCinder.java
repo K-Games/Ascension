@@ -6,10 +6,6 @@ import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.proj.ProjSwordCinder;
 import blockfighter.server.net.PacketSender;
 
-/**
- *
- * @author Ken Kwan
- */
 public class SkillSwordCinder extends Skill {
 
     /**
@@ -22,6 +18,9 @@ public class SkillSwordCinder extends Skill {
         this.skillCode = SWORD_CINDER;
         this.maxCooldown = 20000;
         this.reqWeapon = Globals.ITEM_SWORD;
+        this.endDuration = 250;
+        this.playerState = Player.PLAYER_STATE_SWORD_CINDER;
+        this.reqEquipSlot = Globals.ITEM_WEAPON;
     }
 
     @Override
@@ -34,6 +33,6 @@ public class SkillSwordCinder extends Skill {
             PacketSender.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_CINDER, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
                     player.getFacing());
         }
-        player.updateSkillEnd(duration, 250, true, false);
+        player.updateSkillEnd(duration, this.endDuration, true, false);
     }
 }

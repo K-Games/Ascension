@@ -6,10 +6,6 @@ import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.proj.ProjBowArc;
 import blockfighter.server.net.PacketSender;
 
-/**
- *
- * @author Ken Kwan
- */
 public class SkillBowArc extends Skill {
 
     /**
@@ -22,6 +18,9 @@ public class SkillBowArc extends Skill {
         this.skillCode = BOW_ARC;
         this.maxCooldown = 500;
         this.reqWeapon = Globals.ITEM_BOW;
+        this.endDuration = 300;
+        this.reqEquipSlot = Globals.ITEM_WEAPON;
+        this.playerState = Player.PLAYER_STATE_BOW_ARC;
     }
 
     @Override
@@ -38,6 +37,6 @@ public class SkillBowArc extends Skill {
                 Player.sendSFX(this.logic.getRoom(), Globals.SFX_ARC, player.getX(), player.getY());
             }
         }
-        player.updateSkillEnd(duration, 300, false, false);
+        player.updateSkillEnd(duration, this.endDuration, false, false);
     }
 }

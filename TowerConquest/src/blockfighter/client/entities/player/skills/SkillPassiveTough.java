@@ -1,7 +1,6 @@
 package blockfighter.client.entities.player.skills;
 
 import blockfighter.client.Globals;
-import static blockfighter.client.entities.player.skills.Skill.PASSIVE_SHIELDMASTERY;
 import java.awt.Color;
 import java.awt.Graphics2D;
 

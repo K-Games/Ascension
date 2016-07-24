@@ -6,10 +6,6 @@ import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.proj.ProjBowRapid;
 import blockfighter.server.net.PacketSender;
 
-/**
- *
- * @author Ken Kwan
- */
 public class SkillBowRapid extends Skill {
 
     /**
@@ -22,6 +18,9 @@ public class SkillBowRapid extends Skill {
         this.skillCode = BOW_RAPID;
         this.maxCooldown = 700;
         this.reqWeapon = Globals.ITEM_BOW;
+        this.endDuration = 550;
+        this.playerState = Player.PLAYER_STATE_BOW_RAPID;
+        this.reqEquipSlot = Globals.ITEM_WEAPON;
     }
 
     @Override
@@ -48,7 +47,7 @@ public class SkillBowRapid extends Skill {
                     player.getFacing());
             Player.sendSFX(this.logic.getRoom(), Globals.SFX_RAPID, player.getX(), player.getY());
         }
-        player.updateSkillEnd(duration, 550, true, false);
+        player.updateSkillEnd(duration, this.endDuration, true, false);
     }
 
 }

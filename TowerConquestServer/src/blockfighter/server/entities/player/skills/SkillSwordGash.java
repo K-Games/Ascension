@@ -6,10 +6,6 @@ import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.proj.ProjSwordGash;
 import blockfighter.server.net.PacketSender;
 
-/**
- *
- * @author Ken Kwan
- */
 public class SkillSwordGash extends Skill {
 
     /**
@@ -22,6 +18,9 @@ public class SkillSwordGash extends Skill {
         this.skillCode = SWORD_GASH;
         this.maxCooldown = 500;
         this.reqWeapon = Globals.ITEM_SWORD;
+        this.endDuration = 450;
+        this.playerState = Player.PLAYER_STATE_SWORD_GASH;
+        this.reqEquipSlot = Globals.ITEM_WEAPON;
     }
 
     @Override
@@ -52,6 +51,6 @@ public class SkillSwordGash extends Skill {
                     break;
             }
         }
-        player.updateSkillEnd(duration, 450, true, false);
+        player.updateSkillEnd(duration, this.endDuration, true, false);
     }
 }

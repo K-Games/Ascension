@@ -43,7 +43,7 @@ public class SkillShieldMagnetize extends Skill {
         g.drawString("Level: " + this.level + " - Requires " + ItemEquip.getItemTypeName(this.reqWeapon), drawX + 80, drawY + 50);
         g.drawString("Cooldown: " + this.maxCooldown / 1000 + " Seconds", drawX + 80, drawY + 70);
 
-        g.drawString("Pull enemies within 350 range towards you.", drawX + 10, drawY + 90);
+        g.drawString("Pull enemies within 400 range towards you.", drawX + 10, drawY + 90);
 
         g.drawString("[Level " + this.level + "]", drawX + 10, drawY + 115);
         g.drawString("Deals " + (150 + 15 * this.level) + "% damage + Defense multiplied by " + this.df.format(15 + this.level) + ".",

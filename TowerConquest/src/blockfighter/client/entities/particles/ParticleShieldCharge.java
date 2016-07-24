@@ -16,8 +16,8 @@ public class ParticleShieldCharge extends Particle {
         this.duration = 750;
         final Point point = this.owner.getPos();
         if (point != null) {
-            this.x = point.x;
-            this.y = point.y;
+            this.x = (this.facing == Globals.RIGHT) ? point.x - 150 : point.x - 253 + 150;
+            this.y = point.y - 170;
         }
     }
 
@@ -37,19 +37,13 @@ public class ParticleShieldCharge extends Particle {
         if (PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_CHARGE] == null) {
             return;
         }
-        if (this.frame >= PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_CHARGE].length) {
-            return;
-        }
         final Point p = this.owner.getPos();
         if (p != null) {
-            if (this.facing == Globals.RIGHT) {
-                this.x = p.x - 150;
-            } else {
-                this.x = p.x - 253 + 150;
-            }
-        }
-        if (p != null) {
+            this.x = (this.facing == Globals.RIGHT) ? p.x - 150 : p.x - 253 + 150;
             this.y = p.y - 170;
+        }
+        if (this.frame >= PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_CHARGE].length) {
+            return;
         }
         final BufferedImage sprite = PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_CHARGE][this.frame];
         final int drawSrcX = this.x + ((this.facing == Globals.RIGHT) ? 0 : sprite.getWidth());

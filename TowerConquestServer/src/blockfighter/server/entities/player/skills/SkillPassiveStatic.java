@@ -7,12 +7,7 @@ import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.net.PacketSender;
 import java.util.ArrayList;
-import java.util.Map;
 
-/**
- *
- * @author Ken Kwan
- */
 public class SkillPassiveStatic extends Skill {
 
     public SkillPassiveStatic(final LogicModule l) {

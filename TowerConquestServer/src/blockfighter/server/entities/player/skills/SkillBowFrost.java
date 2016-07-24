@@ -6,10 +6,6 @@ import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.proj.ProjBowFrost;
 import blockfighter.server.net.PacketSender;
 
-/**
- *
- * @author Ken Kwan
- */
 public class SkillBowFrost extends Skill {
 
     /**
@@ -22,6 +18,9 @@ public class SkillBowFrost extends Skill {
         this.skillCode = BOW_FROST;
         this.maxCooldown = 22000;
         this.reqWeapon = Globals.ITEM_BOW;
+        this.endDuration = 380;
+        this.playerState = Player.PLAYER_STATE_BOW_FROST;
+        this.reqEquipSlot = Globals.ITEM_WEAPON;
     }
 
     @Override
@@ -36,7 +35,7 @@ public class SkillBowFrost extends Skill {
                     player.getFacing());
         }
 
-        player.updateSkillEnd(duration, 380, false, false);
+        player.updateSkillEnd(duration, this.endDuration, false, false);
     }
 
 }
