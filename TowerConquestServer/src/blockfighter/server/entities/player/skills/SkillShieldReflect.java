@@ -30,7 +30,8 @@ public class SkillShieldReflect extends Skill {
     @Override
     public void updateSkillUse(Player player) {
         final int duration = Globals.nsToMs(this.logic.getTime() - this.skillCastTime);
-        if (duration == 0) {
+        if (player.getSkillCounter() == 0) {
+            player.incrementSkillCounter();
             player.queueBuff(new BuffShieldReflect(this.logic, 3000, .4 + 0.02 * player.getSkillLevel(Skill.SHIELD_REFLECT), player, player));
             PacketSender.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SHIELD_REFLECTCAST, player.getKey());
             PacketSender.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SHIELD_REFLECTBUFF, player.getKey());

@@ -27,12 +27,13 @@ public class SkillShieldDash extends Skill {
             player.setInvulnerable(true);
         }
 
-        if (duration == 0) {
+        if (player.getSkillCounter() == 0) {
             PacketSender.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SHIELD_DASH, player.getKey(), player.getFacing());
             player.setYSpeed(-5.5);
+            player.incrementSkillCounter();
         }
 
-        if (player.getSkillCounter() == 0 && duration >= this.endDuration) {
+        if (player.getSkillCounter() == 1 && duration >= this.endDuration) {
             player.incrementSkillCounter();
             player.queueBuff(new BuffShieldDash(this.logic, 5000, 0.01 + 0.003 * player.getSkillLevel(Skill.SHIELD_DASH), player));
             PacketSender.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SHIELD_DASHBUFF, player.getKey());

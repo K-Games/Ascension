@@ -29,11 +29,12 @@ public class SkillSwordPhantom extends Skill {
         player.setYSpeed(0);
 
         //Send initial phase effect
-        if (duration == 0) {
+        if (player.getSkillCounter() == 0) {
             PacketSender.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_PHANTOM, player.getX(), player.getY(), player.getFacing());
+            player.incrementSkillCounter();
         }
 
-        if (Globals.hasPastDuration(duration, 100 + 100 * player.getSkillCounter()) && player.getSkillCounter() < numHits) {
+        if (Globals.hasPastDuration(duration, 100 + 100 * (player.getSkillCounter() - 1)) && (player.getSkillCounter() - 1) < numHits) {
             if (this.logic.getMap().isPvP()) {
                 Player target;
                 ArrayList<Player> playersInRange = this.logic.getPlayersInRange(player, radius);
@@ -75,6 +76,6 @@ public class SkillSwordPhantom extends Skill {
                 player.incrementSkillCounter();
             }
         }
-        player.updateSkillEnd(endPhantom || player.getSkillCounter() >= numHits);
+        player.updateSkillEnd(endPhantom || (player.getSkillCounter()-1) >= numHits);
     }
 }

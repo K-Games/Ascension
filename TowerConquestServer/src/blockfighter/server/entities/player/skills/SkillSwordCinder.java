@@ -26,7 +26,7 @@ public class SkillSwordCinder extends Skill {
     @Override
     public void updateSkillUse(Player player) {
         final int duration = Globals.nsToMs(this.logic.getTime() - player.getSkillCastTime());
-        if (Globals.hasPastDuration(duration, 50) && player.getSkillCounter() < 1) {
+        if (Globals.hasPastDuration(duration, 50) && player.getSkillCounter() == 0) {
             player.incrementSkillCounter();
             final ProjSwordCinder proj = new ProjSwordCinder(this.logic, player, player.getX(), player.getY());
             this.logic.queueAddProj(proj);

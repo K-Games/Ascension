@@ -27,11 +27,12 @@ public class SkillShieldIron extends Skill {
     @Override
     public void updateSkillUse(Player player) {
         final int duration = Globals.nsToMs(this.logic.getTime() - this.skillCastTime);
-        if (duration == 0) {
+        if (player.getSkillCounter() == 0) {
             PacketSender.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SHIELD_IRON, player.getKey());
-            Player.sendSFX(this.logic.getRoom(), Globals.SFX_IRON, player.getX(), player.getY());
+            player.incrementSkillCounter();
+            //Player.sendSFX(this.logic.getRoom(), Globals.SFX_IRON, player.getX(), player.getY());
         }
-        if (Globals.hasPastDuration(duration, 100) && player.getSkillCounter() < 1) {
+        if (Globals.hasPastDuration(duration, 100) && player.getSkillCounter() == 1) {
             player.incrementSkillCounter();
             player.setRemovingDebuff(true);
             player.queueBuff(new BuffShieldIron(this.logic, 2000, 0.55 + 0.01 * player.getSkillLevel(Skill.SHIELD_IRON)));

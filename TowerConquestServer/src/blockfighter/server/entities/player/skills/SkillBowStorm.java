@@ -26,7 +26,7 @@ public class SkillBowStorm extends Skill {
     @Override
     public void updateSkillUse(Player player) {
         final int duration = Globals.nsToMs(this.logic.getTime() - player.getSkillCastTime());
-        if (Globals.hasPastDuration(duration, 100) && player.getSkillCounter() < 1) {
+        if (Globals.hasPastDuration(duration, 100) && player.getSkillCounter() == 0) {
             player.incrementSkillCounter();
             final ProjBowStorm proj = new ProjBowStorm(this.logic, player, player.getX(), player.getY());
             this.logic.queueAddProj(proj);

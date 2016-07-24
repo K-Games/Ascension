@@ -1535,16 +1535,13 @@ public class Player extends Thread implements GameEntity {
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 2 + Globals.PACKET_INT * 2];
         bytes[0] = Globals.DATA_SOUND_EFFECT;
         bytes[1] = sfxID;
+
         final byte[] posXInt = Globals.intToBytes((int) soundX);
-        bytes[2] = posXInt[0];
-        bytes[3] = posXInt[1];
-        bytes[4] = posXInt[2];
-        bytes[5] = posXInt[3];
+        System.arraycopy(posXInt, 0, bytes, 2, posXInt.length);
+
         final byte[] posYInt = Globals.intToBytes((int) soundY);
-        bytes[6] = posYInt[0];
-        bytes[7] = posYInt[1];
-        bytes[8] = posYInt[2];
-        bytes[9] = posYInt[3];
+        System.arraycopy(posYInt, 0, bytes, 6, posYInt.length);
+
         PacketSender.sendAll(bytes, room);
     }
 
@@ -1553,15 +1550,11 @@ public class Player extends Thread implements GameEntity {
         bytes[0] = Globals.DATA_PLAYER_GET_ALL;
         bytes[1] = this.key;
         final byte[] posXInt = Globals.intToBytes((int) this.x);
-        bytes[2] = posXInt[0];
-        bytes[3] = posXInt[1];
-        bytes[4] = posXInt[2];
-        bytes[5] = posXInt[3];
+        System.arraycopy(posXInt, 0, bytes, 2, posXInt.length);
+
         final byte[] posYInt = Globals.intToBytes((int) this.y);
-        bytes[6] = posYInt[0];
-        bytes[7] = posYInt[1];
-        bytes[8] = posYInt[2];
-        bytes[9] = posYInt[3];
+        System.arraycopy(posYInt, 0, bytes, 6, posYInt.length);
+
         bytes[10] = this.facing;
         bytes[11] = this.animState;
         if (this.frame < 0) {
@@ -1587,15 +1580,10 @@ public class Player extends Thread implements GameEntity {
         bytes[0] = Globals.DATA_PLAYER_SET_POS;
         bytes[1] = this.key;
         final byte[] posXInt = Globals.intToBytes((int) this.x);
-        bytes[2] = posXInt[0];
-        bytes[3] = posXInt[1];
-        bytes[4] = posXInt[2];
-        bytes[5] = posXInt[3];
+        System.arraycopy(posXInt, 0, bytes, 2, posXInt.length);
+
         final byte[] posYInt = Globals.intToBytes((int) this.y);
-        bytes[6] = posYInt[0];
-        bytes[7] = posYInt[1];
-        bytes[8] = posYInt[2];
-        bytes[9] = posYInt[3];
+        System.arraycopy(posYInt, 0, bytes, 6, posYInt.length);
         bytes[10] = this.facing;
         PacketSender.sendAll(bytes, this.logic.getRoom());
         this.updatePos = false;

@@ -28,17 +28,18 @@ public class SkillSwordSlash extends Skill {
     public void updateSkillUse(Player player) {
         final int numHits = 3;
         final int duration = Globals.nsToMs(this.logic.getTime() - player.getSkillCastTime());
-        if (player.isSkillMaxed(Skill.SWORD_SLASH) && duration == 0) {
+        if (player.isSkillMaxed(Skill.SWORD_SLASH) && player.getSkillCounter() == 0) {
             player.queueBuff(new BuffSwordSlash(this.logic, 2000, .1, player));
             PacketSender.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_SLASHBUFF, player.getKey());
+            player.incrementSkillCounter();
         }
-        if (Globals.hasPastDuration(duration, (30 + 110 * player.getSkillCounter())) && player.getSkillCounter() < numHits) {
+        if (Globals.hasPastDuration(duration, (30 + 110 * (player.getSkillCounter() - 1))) && (player.getSkillCounter() - 1) < numHits) {
             player.setFrame((byte) 0);
             player.incrementSkillCounter();
             final ProjSwordSlash proj = new ProjSwordSlash(this.logic, player, player.getX(), player.getY(),
-                    player.getSkillCounter());
+                    player.getSkillCounter() - 1);
             this.logic.queueAddProj(proj);
-            switch (player.getSkillCounter()) {
+            switch (player.getSkillCounter() - 1) {
                 case 1:
                     PacketSender.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_SLASH1, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
                             player.getFacing());

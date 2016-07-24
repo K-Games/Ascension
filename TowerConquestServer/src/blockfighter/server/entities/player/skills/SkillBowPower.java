@@ -26,7 +26,7 @@ public class SkillBowPower extends Skill {
     @Override
     public void updateSkillUse(Player player) {
         final int duration = Globals.nsToMs(this.logic.getTime() - player.getSkillCastTime());
-        if (duration == 0) {
+        if (player.getSkillCounter() == 0) {
             Player.sendSFX(this.logic.getRoom(), Globals.SFX_POWER2, player.getX(), player.getY());
         }
         if (duration <= 400 && Globals.hasPastDuration(duration, player.getSkillCounter() * 20) && player.getSkillCounter() < 20) {
