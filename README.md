@@ -26,6 +26,7 @@ An multiplayer action 2D sidescrolling brawler coded in pure Java.
 * Volley Renamed to Vortex Bolts
 * New Skill Icons - Power of Will, Flurry
 * Improved standards for Equipment sprite file structure.
+* Fixed a rare bug where Charge not showing visuals.
 
 ### Server Changes
 * Added batched packet sending. Disabled by default.
@@ -34,6 +35,8 @@ An multiplayer action 2D sidescrolling brawler coded in pure Java.
 * Fixed Dual Sword not being considered a passive.
 * Phantom delay between strikes increased from 0.08s to 0.1s
 * Update bow attack animation values.
+* Fixed some skills rarely not activating and would go on cooldown.
+* Fixed rare bug where player would take damage after respawning if there was a damage source on their death location at the time of respawn.
 
 ### Credits
 #### Developers

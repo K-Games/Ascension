@@ -959,11 +959,11 @@ public class Player extends Thread implements GameEntity {
         this.buffQueue.clear();
         this.barrierDmgTaken = 0;
         this.resistDamageSum.clear();
+        this.buffs.clear();
         this.deathTime = this.logic.getTime();
     }
 
     private void respawn() {
-        this.buffs.clear();
         this.stats[Globals.STAT_MINHP] = this.stats[Globals.STAT_MAXHP];
         setXSpeed(0);
         Point2D.Double spawn = map.getRandomSpawnPoint();
@@ -972,6 +972,13 @@ public class Player extends Thread implements GameEntity {
         setRemovingDebuff(false);
         setDead(false);
         queuePlayerState(PLAYER_STATE_STAND);
+        this.buffs.clear();
+        this.damageQueue.clear();
+        this.healQueue.clear();
+        this.skillUseQueue.clear();
+        this.buffQueue.clear();
+        this.barrierDmgTaken = 0;
+        this.resistDamageSum.clear();
     }
 
     /**
