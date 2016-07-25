@@ -131,7 +131,7 @@ public abstract class Skill {
      * @return True if weapon is same as required weapon and cooldown is <= 0
      */
     public boolean canCast(final Player player) {
-        return (isPassive || (!isPassive && (this.reqWeapon == null || this.reqEquipSlot == null || Items.getItemType(player.getEquips()[this.reqEquipSlot]) == this.reqWeapon)))
+        return !isPassive && (this.reqWeapon == null || this.reqEquipSlot == null || Items.getItemType(player.getEquips()[this.reqEquipSlot]) == this.reqWeapon)
                 && canCast();
     }
 

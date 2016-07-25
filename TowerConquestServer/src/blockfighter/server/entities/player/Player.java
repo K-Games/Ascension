@@ -676,7 +676,7 @@ public class Player extends Thread implements GameEntity {
         }
 
         byte[] data = this.skillUseQueue.poll();
-        while (!this.skillUseQueue.isEmpty() && this.skills.get(data[3]).getCooldown() < this.skills.get(data[3]).getMaxCooldown()) {
+        while (!this.skillUseQueue.isEmpty()) {
             data = this.skillUseQueue.poll();
         }
 
@@ -1255,7 +1255,7 @@ public class Player extends Thread implements GameEntity {
      */
     public void queueSkillUse(final byte[] data) {
         this.lastActionTime = this.logic.getTime();
-        if (!isDead()) {
+        if (!isDead() && this.skills.get(data[3]).canCast(this) && !isUsingSkill()) {
             this.skillUseQueue.add(data);
         }
     }

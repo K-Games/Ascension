@@ -37,6 +37,7 @@ An multiplayer action 2D sidescrolling brawler coded in pure Java.
 * Update bow attack animation values.
 * Fixed some skills rarely not activating and would go on cooldown.
 * Fixed rare bug where player would take damage after respawning if there was a damage source on their death location at the time of respawn.
+* Fixed not casting active skills when a passive skill hotkey is being held down.
 
 ### Credits
 #### Developers
