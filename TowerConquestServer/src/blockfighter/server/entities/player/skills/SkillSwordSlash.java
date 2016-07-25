@@ -43,17 +43,17 @@ public class SkillSwordSlash extends Skill {
                 case 1:
                     PacketSender.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_SLASH1, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
                             player.getFacing());
-                    Player.sendSFX(this.logic.getRoom(), Globals.SFX_SLASH, player.getX(), player.getY());
+                    PacketSender.sendSFX(this.logic.getRoom(), Globals.SFX_SLASH, player.getX(), player.getY());
                     break;
                 case 2:
                     PacketSender.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_SLASH2, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
                             player.getFacing());
-                    Player.sendSFX(this.logic.getRoom(), Globals.SFX_SLASH, player.getX(), player.getY());
+                    PacketSender.sendSFX(this.logic.getRoom(), Globals.SFX_SLASH, player.getX(), player.getY());
                     break;
                 case 3:
                     PacketSender.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_SLASH3, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
                             player.getFacing());
-                    Player.sendSFX(this.logic.getRoom(), Globals.SFX_SLASH, player.getX(), player.getY());
+                    PacketSender.sendSFX(this.logic.getRoom(), Globals.SFX_SLASH, player.getX(), player.getY());
                     break;
                 default:
                     break;

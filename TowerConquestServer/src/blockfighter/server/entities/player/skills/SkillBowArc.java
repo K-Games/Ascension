@@ -34,7 +34,7 @@ public class SkillBowArc extends Skill {
             if (player.getSkillCounter() == 1) {
                 PacketSender.sendParticle(this.logic.getRoom(), Globals.PARTICLE_BOW_ARC, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
                         player.getFacing());
-                Player.sendSFX(this.logic.getRoom(), Globals.SFX_ARC, player.getX(), player.getY());
+                PacketSender.sendSFX(this.logic.getRoom(), Globals.SFX_ARC, player.getX(), player.getY());
             }
         }
         player.updateSkillEnd(duration, this.endDuration, false, false);

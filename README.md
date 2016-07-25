@@ -3,8 +3,8 @@
 # Description
 An multiplayer action 2D sidescrolling brawler coded in pure Java.
 
-## Version 0.18 Update 1
-### Gameplay Changes
+# Version 0.18 Update 1
+## Gameplay Changes
 * Passives Removed: Tactical Execution
 * Shield Skill Removed: Shield Toss
 * New Shield Skill - Magnetize - Pull nearby enemies towards you.
@@ -17,7 +17,7 @@ An multiplayer action 2D sidescrolling brawler coded in pure Java.
 * Vortex Bolts damage increased from 75 + 3/Lvl% to 85% + 3/Lvl%
 * Aggression damage increased from 600 + 20/Lvl% to 800 + 20/Lvl%
 
-### Client Changes
+## Client Changes
 * Fixed never timing out when trying to login to a live server with an invalid room.
 * New Soundtrack!
 * Text changes in Connect menu
@@ -28,10 +28,11 @@ An multiplayer action 2D sidescrolling brawler coded in pure Java.
 * Improved standards for Equipment sprite file structure.
 * Fixed a rare bug where Charge not showing visuals.
 
-### Server Changes
+## Server Changes
 * Added batched packet sending. Disabled by default.
 * Fixed some items not dropping.
 * Moved getItemType from Player to Item class.
+* Moved sendParticle, sendSfx from Player to PacketSender class.
 * Fixed Dual Sword not being considered a passive.
 * Phantom delay between strikes increased from 0.08s to 0.1s
 * Update bow attack animation values.
@@ -39,8 +40,8 @@ An multiplayer action 2D sidescrolling brawler coded in pure Java.
 * Fixed rare bug where player would take damage after respawning if there was a damage source on their death location at the time of respawn.
 * Fixed not casting active skills when a passive skill hotkey is being held down.
 
-### Credits
-#### Developers
+## Credits
+### Developers
 [KenOfNZ](https://github.com/kenofnz)
 
 ### Game Designers

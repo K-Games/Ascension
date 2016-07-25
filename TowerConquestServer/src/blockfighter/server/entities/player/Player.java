@@ -1538,20 +1538,6 @@ public class Player extends Thread implements GameEntity {
         }
     }
 
-    public static void sendSFX(final byte room, final byte sfxID, final double soundX, final double soundY) {
-        final byte[] bytes = new byte[Globals.PACKET_BYTE * 2 + Globals.PACKET_INT * 2];
-        bytes[0] = Globals.DATA_SOUND_EFFECT;
-        bytes[1] = sfxID;
-
-        final byte[] posXInt = Globals.intToBytes((int) soundX);
-        System.arraycopy(posXInt, 0, bytes, 2, posXInt.length);
-
-        final byte[] posYInt = Globals.intToBytes((int) soundY);
-        System.arraycopy(posYInt, 0, bytes, 6, posYInt.length);
-
-        PacketSender.sendAll(bytes, room);
-    }
-
     public void sendData() {
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 5 + Globals.PACKET_INT * 2];
         bytes[0] = Globals.DATA_PLAYER_GET_ALL;

@@ -31,7 +31,7 @@ public class SkillSwordGash extends Skill {
             player.incrementSkillCounter();
             final ProjSwordGash proj = new ProjSwordGash(this.logic, player, player.getX(), player.getY(), (byte) player.getSkillCounter());
             this.logic.queueAddProj(proj);
-            Player.sendSFX(this.logic.getRoom(), Globals.SFX_GASH, player.getX(), player.getY());
+            PacketSender.sendSFX(this.logic.getRoom(), Globals.SFX_GASH, player.getX(), player.getY());
             switch (player.getSkillCounter()) {
                 case 1:
                     PacketSender.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_GASH1, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),

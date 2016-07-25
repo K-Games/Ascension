@@ -76,6 +76,6 @@ public class SkillSwordPhantom extends Skill {
                 player.incrementSkillCounter();
             }
         }
-        player.updateSkillEnd(endPhantom || (player.getSkillCounter()-1) >= numHits);
+        player.updateSkillEnd(endPhantom || (player.getSkillCounter() - 1) >= numHits);
     }
 }

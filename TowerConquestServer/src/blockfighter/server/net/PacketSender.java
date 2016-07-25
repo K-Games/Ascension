@@ -67,6 +67,17 @@ public class PacketSender implements Runnable {
         bytes[3] = key;
         sendAll(bytes, room);
     }
+
+    public static void sendSFX(final byte room, final byte sfxID, final double soundX, final double soundY) {
+        final byte[] bytes = new byte[Globals.PACKET_BYTE * 2 + Globals.PACKET_INT * 2];
+        bytes[0] = Globals.DATA_SOUND_EFFECT;
+        bytes[1] = sfxID;
+        final byte[] posXInt = Globals.intToBytes((int) soundX);
+        System.arraycopy(posXInt, 0, bytes, 2, posXInt.length);
+        final byte[] posYInt = Globals.intToBytes((int) soundY);
+        System.arraycopy(posYInt, 0, bytes, 6, posYInt.length);
+        sendAll(bytes, room);
+    }
     private int dataSent = 0;
     private static final ConcurrentLinkedQueue<GamePacket> OUT_PACKET_QUEUE = new ConcurrentLinkedQueue<>();
 

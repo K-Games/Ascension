@@ -27,7 +27,7 @@ public class SkillShieldFortify extends Skill {
         if (player.getSkillCounter() == 0) {
             player.incrementSkillCounter();
             PacketSender.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SHIELD_FORTIFY, player.getKey());
-            Player.sendSFX(this.logic.getRoom(), Globals.SFX_FORTIFY, player.getX(), player.getY());
+            PacketSender.sendSFX(this.logic.getRoom(), Globals.SFX_FORTIFY, player.getX(), player.getY());
         }
 
         if (Globals.hasPastDuration(duration, this.endDuration) && player.getSkillCounter() == 1) {
