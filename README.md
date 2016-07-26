@@ -39,6 +39,8 @@ An multiplayer action 2D sidescrolling brawler coded in pure Java.
 * Fixed some skills rarely not activating and would go on cooldown.
 * Fixed rare bug where player would take damage after respawning if there was a damage source on their death location at the time of respawn.
 * Fixed not casting active skills when a passive skill hotkey is being held down.
+* More consistent workflow for disconnecting player.
+* Only player connection originated action commands are accepted by the server - Player hijacking prevention.
 
 ## Credits
 ### Developers
