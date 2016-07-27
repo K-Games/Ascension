@@ -9,7 +9,7 @@ public class SkillPassiveStatic extends Skill {
     public SkillPassiveStatic() {
         this.skillName = "Static Charge";
         this.skillCode = PASSIVE_STATIC;
-        //this.icon = Globals.SKILL_ICON[PASSIVE_STATIC];
+        this.icon = Globals.SKILL_ICON[PASSIVE_STATIC];
     }
 
     @Override

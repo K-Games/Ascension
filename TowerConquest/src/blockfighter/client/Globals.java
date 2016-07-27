@@ -512,7 +512,7 @@ public class Globals {
         MENU_TABPOINTER[1] = Globals.loadTextureResource("sprites/ui/menu/pointer2.png");
         MENU_ITEMDELETE[0] = Globals.loadTextureResource("sprites/ui/menu/delete.png");
         MENU_SMOKE[0] = Globals.loadTextureResource("sprites/ui/menu/smoke.png");
-        for (byte i = 0; i < 29; i++) {
+        for (byte i = 0; i < 30; i++) {
             SKILL_ICON[i] = Globals.loadTextureResource("sprites/skillicon/" + i + ".png");
         }
 

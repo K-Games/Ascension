@@ -1,4 +1,4 @@
-![KryoNet](https://github.com/kenofnz/TowerConquest/raw/master/TowerConquest/resources/sprites/ui/menu/title.png)
+![Ascension](https://github.com/kenofnz/TowerConquest/raw/master/TowerConquest/resources/sprites/ui/menu/title.png)
 
 # Description
 An multiplayer action 2D sidescrolling brawler coded in pure Java.
@@ -9,7 +9,7 @@ An multiplayer action 2D sidescrolling brawler coded in pure Java.
 * Shield Skill Removed: Shield Toss
 * New Shield Skill - Magnetize - Pull nearby enemies towards you.
 * New Passive - Tough Skin - Boost your natural resilience to damage.
-* New Passive - Harmony - Achieve harmony to gain damage base on Max HP.
+* New Passive - Vigor - Gain additional damage base on Max HP.
 * New Passive - Static Charge - Chance to shock a nearby enemy when dealing damage.
 * Rapid Fire damage increased from 75 + 2/Lvl% to 80 + 2/Lvl%.
 * Resistance Passive reworked - When taking damage over 25% of your HP in 2 seconds, block all damage for 2 seconds.
@@ -43,11 +43,11 @@ An multiplayer action 2D sidescrolling brawler coded in pure Java.
 * Only player connection originated action commands are accepted by the server - Player hijacking prevention.
 
 ## Credits
-### Developers
+### Developer/Game Designer/Visual Designs
 [KenOfNZ](https://github.com/kenofnz)
 
-### Game Designers
-[KenOfNZ](https://github.com/kenofnz)
+### Character Base
+[TradnuxGames](http://tradnux.com/)
 
 ### Music
 Title & Menu Tracks
