@@ -3,8 +3,8 @@
     <dontWrapJar>true</dontWrapJar>
     <headerType>gui</headerType>
     <jar>bin/bin.jar</jar>
-    <outfile>../../TowerConquest-Release-Win/TowerConquest.exe</outfile>
-    <errTitle>Tower Conquest</errTitle>
+    <outfile>../../Ascension-Release-Win/Ascension.exe</outfile>
+    <errTitle>Ascension</errTitle>
     <cmdLine></cmdLine>
     <chdir>.</chdir>
     <priority>normal</priority>

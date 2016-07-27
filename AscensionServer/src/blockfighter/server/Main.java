@@ -46,7 +46,7 @@ public class Main {
     }
 
     public static void main(final String[] args) {
-        System.out.println("Tower Conquest Server " + Globals.GAME_RELEASE_VERSION);
+        System.out.println("Ascension Server " + Globals.GAME_RELEASE_VERSION);
 
         boolean isGUI = true, isDefault = false;
 

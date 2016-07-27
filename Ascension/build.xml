@@ -7,8 +7,8 @@
 <!-- the Compile on Save feature is turned off for the project. -->
 <!-- You can turn off the Compile on Save (or Deploy on Save) setting -->
 <!-- in the project's Project Properties dialog box.-->
-<project name="TowerConquest" default="default" basedir=".">
-    <description>Builds, tests, and runs the project TowerConquest.</description>
+<project name="Ascension" default="default" basedir=".">
+    <description>Builds, tests, and runs the project Ascension.</description>
     <import file="nbproject/build-impl.xml"/>
         <target name="-post-compile">
             <copy todir="${dist.dir}/windows/resources" >  
@@ -21,7 +21,7 @@
         <target name="-post-jar">
             <delete file="${dist.dir}/README.TXT"/>
             <copy file="${dist.dir}/bin.jar" tofile="${dist.dir}/windows/bin/bin.jar" />
-            <move file="${dist.dir}/bin.jar" tofile="${dist.dir}/macosx/TowerConquest.jar" />
+            <move file="${dist.dir}/bin.jar" tofile="${dist.dir}/macosx/Ascension.jar" />
             <copy todir="${dist.dir}/windows/bin/lib" >  
                 <fileset dir="${dist.dir}/lib" includes="**"/>
             </copy>
@@ -75,7 +75,7 @@
 
     An example of overriding the target for project execution could look like this:
 
-        <target name="run" depends="TowerConquest-impl.jar">
+        <target name="run" depends="Ascension-impl.jar">
             <exec dir="bin" executable="launcher.exe">
                 <arg file="${dist.jar}"/>
             </exec>

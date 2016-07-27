@@ -1,4 +1,4 @@
-![Ascension](https://github.com/kenofnz/TowerConquest/raw/master/TowerConquest/resources/sprites/ui/menu/title.png)
+![Ascension](https://github.com/kenofnz/Ascension/raw/master/Ascension/resources/sprites/ui/menu/title.png)
 
 # Description
 An multiplayer action 2D sidescrolling brawler coded in pure Java.
