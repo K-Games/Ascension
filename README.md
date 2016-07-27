@@ -7,6 +7,7 @@ An multiplayer action 2D sidescrolling brawler coded in pure Java.
 ## Gameplay Changes
 
 ## Client Changes
+* Critical hit damage in the Stats screen now match with the Inventory screen.
 
 ## Server Changes
 

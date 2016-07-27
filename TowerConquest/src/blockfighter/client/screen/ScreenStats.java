@@ -122,9 +122,9 @@ public class ScreenStats extends ScreenMenu {
             "Critical Hit Chance: " + this.df.format(baseStats[Globals.STAT_CRITCHANCE] * 100)
             + " + " + this.df.format(bonusStats[Globals.STAT_CRITCHANCE] * 100) + "% ("
             + this.df.format(totalStats[Globals.STAT_CRITCHANCE] * 100) + "%)",
-            "Critical Hit Damage: " + this.df.format(baseStats[Globals.STAT_CRITDMG] * 100)
+            "Critical Hit Damage: " + this.df.format((1 + baseStats[Globals.STAT_CRITDMG]) * 100)
             + " + " + this.df.format(bonusStats[Globals.STAT_CRITDMG] * 100) + "% ("
-            + this.df.format(totalStats[Globals.STAT_CRITDMG] * 100) + "%)"
+            + this.df.format((1 + totalStats[Globals.STAT_CRITDMG]) * 100) + "%)"
         };
 
         g.setFont(Globals.ARIAL_18PT);
