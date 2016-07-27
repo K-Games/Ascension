@@ -7,7 +7,7 @@ import java.awt.Graphics2D;
 public class SkillPassiveHarmony extends Skill {
 
     public SkillPassiveHarmony() {
-        this.skillName = "Harmony";
+        this.skillName = "Vigor";
         this.skillCode = PASSIVE_HARMONY;
         this.icon = Globals.SKILL_ICON[PASSIVE_HARMONY];
     }
@@ -35,7 +35,7 @@ public class SkillPassiveHarmony extends Skill {
         g.setFont(Globals.ARIAL_15PT);
         g.drawString("Level: " + this.level, drawX + 80, drawY + 50);
 
-        g.drawString("Achieve harmony to gain damage base on Max HP.", drawX + 10, drawY + 90);
+        g.drawString("Gain additional damage base on Max HP.", drawX + 10, drawY + 90);
 
         g.setColor(new Color(255, 190, 0));
         g.drawString("Assign this passive to a hotkey to gain its effects.", drawX + 10, drawY + 110);
