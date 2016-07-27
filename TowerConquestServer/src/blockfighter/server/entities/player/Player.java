@@ -1327,29 +1327,29 @@ public class Player extends Thread implements GameEntity {
                 break;
             case PLAYER_STATE_SHIELD_FORTIFY:
                 this.animState = Globals.PLAYER_ANIM_STATE_BUFF;
-                if (frameDuration >= 30 && this.frame < 6) {
+                if (frameDuration >= 30 && this.frame < 4) {
                     this.frame++;
                     this.lastFrameTime = this.room.getTime();
                 }
                 break;
             case PLAYER_STATE_SHIELD_REFLECT:
                 this.animState = Globals.PLAYER_ANIM_STATE_BUFF;
-                if (frameDuration >= 20 && this.frame < 6) {
+                if (frameDuration >= 20 && this.frame < 4) {
                     this.frame++;
                 }
                 break;
             case PLAYER_STATE_SHIELD_IRON:
                 this.animState = Globals.PLAYER_ANIM_STATE_BUFF;
-                if (frameDuration >= 30 && this.frame < 6) {
+                if (frameDuration >= 30 && this.frame < 4) {
                     this.frame++;
                     this.lastFrameTime = this.room.getTime();
                 }
                 break;
             case PLAYER_STATE_SHIELD_MAGNETIZE:
-                this.animState = Globals.PLAYER_ANIM_STATE_ATTACK;
+                this.animState = Globals.PLAYER_ANIM_STATE_BUFF;
                 if (getSkillCounter() == 1) {
-                    this.frame = 2;
-                } else if (frameDuration >= 30 && this.frame < 5) {
+                    this.frame = 0;
+                } else if (frameDuration >= 30 && this.frame < 4) {
                     this.frame++;
                     this.lastFrameTime = this.room.getTime();
                 }

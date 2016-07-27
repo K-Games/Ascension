@@ -22,7 +22,7 @@ public class Globals {
     public static int SERVER_PORT = 25565;
     public static String SERVER_ADDRESS;
 
-    public final static boolean TEST_MAX_LEVEL = true,
+    public final static boolean TEST_MAX_LEVEL = false,
             DEBUG_MODE = false;
 
     public final static byte GAME_MAJOR_VERSION = 0,
@@ -325,7 +325,7 @@ public class Globals {
         PLAYER_NUM_ANIM_FRAMES[PLAYER_ANIM_STATE_ATTACKBOW] = 8;
         PLAYER_NUM_ANIM_FRAMES[PLAYER_ANIM_STATE_STAND] = 4;
         PLAYER_NUM_ANIM_FRAMES[PLAYER_ANIM_STATE_WALK] = 8;
-        PLAYER_NUM_ANIM_FRAMES[PLAYER_ANIM_STATE_BUFF] = 7;
+        PLAYER_NUM_ANIM_FRAMES[PLAYER_ANIM_STATE_BUFF] = 5;
         PLAYER_NUM_ANIM_FRAMES[PLAYER_ANIM_STATE_DEAD] = 10;
         PLAYER_NUM_ANIM_FRAMES[PLAYER_ANIM_STATE_ROLL] = 10;
         PLAYER_NUM_ANIM_FRAMES[PLAYER_ANIM_STATE_JUMP] = 3;
