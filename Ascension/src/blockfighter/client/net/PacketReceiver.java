@@ -35,7 +35,6 @@ public class PacketReceiver extends Listener {
             logic.returnMenu();
         }
         if (logic.getScreen() instanceof ScreenServerList) {
-            ((ScreenServerList) logic.getScreen()).enableFields();
             ((ScreenServerList) logic.getScreen()).setStatus(ScreenServerList.STATUS_FAILEDCONNECT);
         }
         this.isConnected = false;
