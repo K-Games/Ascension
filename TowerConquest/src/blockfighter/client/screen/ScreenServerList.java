@@ -25,11 +25,13 @@ public class ScreenServerList extends ScreenMenu {
     public static final byte STATUS_CONNECTING = 0,
             STATUS_SOCKETCLOSED = 1,
             STATUS_FAILEDCONNECT = 2,
-            STATUS_UNKNOWNHOST = 3,
+            STATUS_NOSKILL = 3,
             STATUS_WRONGVERSION = 4,
             STATUS_FULLROOM = 5,
             STATUS_UIDINROOM = 6,
-            STATUS_OUTSIDELEVEL = 7;
+            STATUS_OUTSIDELEVEL = 7,
+            STATUS_NOEQUIP = 8,
+            STATUS_NOSKILL_NOEQUIP = 9;
 
     private static final JTextField SERVERADDRESS_FIELD = new JTextField();
     private static final JComboBox<String> SERVER_ROOMS;
@@ -241,10 +243,6 @@ public class ScreenServerList extends ScreenMenu {
                 enableFields();
                 this.status = "Could not connect: Cannot reach server.";
                 break;
-            case STATUS_UNKNOWNHOST:
-                enableFields();
-                this.status = "Could not connect: Cannot resolve host.";
-                break;
             case STATUS_WRONGVERSION:
                 enableFields();
                 this.status = "Could not connect: Server is a different version.";
@@ -260,6 +258,18 @@ public class ScreenServerList extends ScreenMenu {
             case STATUS_OUTSIDELEVEL:
                 enableFields();
                 this.status = "Could not connect: This character does not meet the level requirements.";
+                break;
+            case STATUS_NOSKILL:
+                enableFields();
+                this.status = "Character is not ready: You don't have any Skills assigned!";
+                break;
+            case STATUS_NOEQUIP:
+                enableFields();
+                this.status = "Character is not ready: You haven't equipped a Weapon!";
+                break;
+            case STATUS_NOSKILL_NOEQUIP:
+                enableFields();
+                this.status = "Character is not ready: You haven't equipped any Skills or Weapons!";
                 break;
             default:
                 enableFields();

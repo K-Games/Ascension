@@ -1,5 +1,7 @@
 package blockfighter.client;
 
+import blockfighter.client.entities.items.ItemEquip;
+import blockfighter.client.entities.player.skills.Skill;
 import blockfighter.client.net.GameClient;
 import blockfighter.client.screen.Screen;
 import blockfighter.client.screen.ScreenIngame;
@@ -43,8 +45,34 @@ public class LogicModule implements Runnable {
 
     public void connect(final String server, final byte r) {
         this.selectedRoom = r;
-        client = new GameClient(this, server);
-        client.start();
+        boolean skillReady = false;
+        boolean equipReady = false;
+        for (Skill s : this.selectedChar.getHotkeys()) {
+            if (s != null) {
+                skillReady = true;
+            }
+        }
+
+        if (this.selectedChar.getEquip()[Globals.ITEM_WEAPON] != null) {
+            equipReady = true;
+        }
+
+        if (skillReady && equipReady) {
+            client = new GameClient(this, server);
+            client.start();
+        } else if (!skillReady && !equipReady) {
+            if (getScreen() instanceof ScreenServerList) {
+                ((ScreenServerList) getScreen()).setStatus(ScreenServerList.STATUS_NOSKILL_NOEQUIP);
+            }
+        } else if (!skillReady) {
+            if (getScreen() instanceof ScreenServerList) {
+                ((ScreenServerList) getScreen()).setStatus(ScreenServerList.STATUS_NOSKILL);
+            }
+        } else if (!equipReady) {
+            if (getScreen() instanceof ScreenServerList) {
+                ((ScreenServerList) getScreen()).setStatus(ScreenServerList.STATUS_NOEQUIP);
+            }
+        }
     }
 
     public void disconnect() {
