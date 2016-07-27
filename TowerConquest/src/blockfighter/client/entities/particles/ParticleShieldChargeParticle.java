@@ -11,9 +11,9 @@ public class ParticleShieldChargeParticle extends Particle {
         this.frame = 0;
         this.frameDuration = 75;
         this.duration = 400;
-        this.y += Globals.rng(11) * 15;
+        this.y += Globals.rng(11) * 15 - 170;
         if (this.facing == Globals.RIGHT) {
-            this.x += 253 - 179;
+            this.x -= 179;
         }
     }
 
