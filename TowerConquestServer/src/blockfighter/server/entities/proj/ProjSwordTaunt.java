@@ -9,21 +9,8 @@ import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.player.skills.Skill;
 import java.awt.geom.Rectangle2D;
 
-/**
- * This is the base projectile class. Create projectile classes off this.
- *
- * @author Ken Kwan
- */
 public class ProjSwordTaunt extends Projectile {
 
-    /**
-     * Projectile of Sword Skill Taunt.
-     *
-     * @param l Room/Logic Module
-     * @param o Owning player
-     * @param x Spawn x-coordinate
-     * @param y Spawn y-coordinate
-     */
     public ProjSwordTaunt(final LogicModule l, final Player o, final double x, final double y) {
         super(l, o, x, y, 200);
         this.hitbox = new Rectangle2D.Double[1];
@@ -40,20 +27,20 @@ public class ProjSwordTaunt extends Projectile {
         while (!this.playerQueue.isEmpty()) {
             final Player p = this.playerQueue.poll(), owner = getOwner();
             if (p != null && !p.isDead()) {
-                int damage = (int) (owner.rollDamage() * (6 + 0.2 * owner.getSkillLevel(Skill.SWORD_TAUNT)));
+                int damage = (int) (owner.rollDamage() * (8 + 0.2 * owner.getSkillLevel(Skill.SWORD_TAUNT)));
                 final boolean crit = owner.rollCrit();
                 if (crit) {
                     damage = (int) owner.criticalDamage(damage);
                 }
                 p.queueDamage(new Damage(damage, true, owner, p, crit, this.hitbox[0], p.getHitbox()));
-                p.queueBuff(new BuffKnockback(this.logic, 300, (owner.getFacing() == Globals.RIGHT) ? 1 : -1, -4, owner, p));
+                p.queueBuff(new BuffKnockback(this.room, 300, (owner.getFacing() == Globals.RIGHT) ? 1 : -1, -4, owner, p));
             }
         }
         while (!this.mobQueue.isEmpty()) {
             final Mob b = this.mobQueue.poll();
             final Player owner = getOwner();
             if (b != null && !b.isDead()) {
-                int damage = (int) (owner.rollDamage() * (6 + 0.2 * owner.getSkillLevel(Skill.SWORD_TAUNT)));
+                int damage = (int) (owner.rollDamage() * (8 + 0.2 * owner.getSkillLevel(Skill.SWORD_TAUNT)));
                 final boolean crit = owner.rollCrit();
                 if (crit) {
                     damage = (int) owner.criticalDamage(damage);

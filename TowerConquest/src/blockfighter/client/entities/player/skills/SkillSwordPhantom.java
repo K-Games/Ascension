@@ -5,10 +5,6 @@ import blockfighter.client.entities.items.ItemEquip;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-/**
- *
- * @author Ken Kwan
- */
 public class SkillSwordPhantom extends Skill {
 
     public SkillSwordPhantom() {
@@ -48,10 +44,10 @@ public class SkillSwordPhantom extends Skill {
         g.drawString("Invulnerable during the skill duration.", drawX + 10, drawY + 130);
 
         g.drawString("[Level " + this.level + "]", drawX + 10, drawY + 155);
-        g.drawString("Perform " + (5 + (this.level / 2)) + " attacks for " + (110 + (this.level * 3)) + "% damage.", drawX + 10, drawY + 175);
+        g.drawString("Perform " + (5 + (this.level / 2)) + " attacks for " + (75 + (this.level * 2)) + "% damage.", drawX + 10, drawY + 175);
         if (this.level < 30) {
             g.drawString("[Level " + (this.level + 1) + "]", drawX + 10, drawY + 200);
-            g.drawString("Perform " + (5 + ((this.level + 1) / 2)) + " attacks for " + (110 + ((this.level + 1) * 3)) + "% damage.", drawX + 10, drawY + 220);
+            g.drawString("Perform " + (5 + ((this.level + 1) / 2)) + " attacks for " + (75 + ((this.level + 1) * 2)) + "% damage.", drawX + 10, drawY + 220);
 
             g.drawString("[Level 30 Bonus]", drawX + 10, drawY + 245);
             g.drawString("", drawX + 10, drawY + 265);

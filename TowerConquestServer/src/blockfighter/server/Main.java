@@ -1,11 +1,7 @@
 package blockfighter.server;
 
-import blockfighter.server.entities.mob.Mob;
-import blockfighter.server.entities.player.Player;
-import blockfighter.server.entities.proj.Projectile;
 import blockfighter.server.net.GameServer;
 import blockfighter.server.net.PacketHandler;
-import blockfighter.server.net.PacketReceiver;
 import blockfighter.server.net.PacketSender;
 import java.awt.Dimension;
 import java.util.Arrays;
@@ -21,11 +17,6 @@ import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
-/**
- * Start module of server
- *
- * @author Ken Kwan
- */
 public class Main {
 
     private final static ScheduledExecutorService PACKETSENDER_SCHEDULER = Executors.newSingleThreadScheduledExecutor(new BasicThreadFactory.Builder()
@@ -34,7 +25,7 @@ public class Main {
             .priority(Thread.NORM_PRIORITY)
             .build());
 
-    private final static ScheduledExecutorService LOGIC_SCHEDULER = Executors.newScheduledThreadPool(Math.max(Globals.SERVER_ROOMS.size() / 30, 1),
+    private final static ScheduledExecutorService LOGIC_SCHEDULER = Executors.newScheduledThreadPool(Math.max(Globals.SERVER_ROOMNUM_TO_ROOMINDEX.size() / 30, 1),
             new BasicThreadFactory.Builder()
             .namingPattern("LOGIC_SCHEDULER-%d")
             .daemon(false)
@@ -54,9 +45,6 @@ public class Main {
         Globals.setGUILog(DATA_LOG, ERROR_LOG);
     }
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(final String[] args) {
         System.out.println("Tower Conquest Server " + Globals.GAME_RELEASE_VERSION);
 
@@ -80,7 +68,7 @@ public class Main {
         }
         try {
 
-            final LogicModule[] server_rooms = new LogicModule[Globals.SERVER_ROOMS.size()];
+            final LogicModule[] server_rooms = new LogicModule[Globals.SERVER_ROOMNUM_TO_ROOMINDEX.size()];
             PacketSender.setLogic(server_rooms);
             PacketHandler.setLogic(server_rooms);
             final GameServer server = new GameServer();
@@ -88,10 +76,12 @@ public class Main {
 
             Globals.log(Main.class, "Server started ", Globals.LOG_TYPE_ERR, false);
             Globals.log(Main.class, "Server started", Globals.LOG_TYPE_DATA, true);
-
-            //PACKETSENDER_SCHEDULER.scheduleAtFixedRate(packetSender, 0, 2, TimeUnit.MILLISECONDS);
+            if (Globals.SERVER_BATCH_PACKETSEND) {
+                PacketSender.init();
+                PACKETSENDER_SCHEDULER.scheduleAtFixedRate(new PacketSender(), 0, 5, TimeUnit.MICROSECONDS);
+            }
             //PACKETHANDLER_SCHEDULER.scheduleAtFixedRate(packetHandler, 0, 10, TimeUnit.MICROSECONDS);
-            for (final Map.Entry<Byte, Byte> b : Globals.SERVER_ROOMS.entrySet()) {
+            for (final Map.Entry<Byte, Byte> b : Globals.SERVER_ROOMNUM_TO_ROOMINDEX.entrySet()) {
                 server_rooms[b.getValue()] = new LogicModule(b.getKey());
                 LOGIC_SCHEDULER.scheduleAtFixedRate(server_rooms[b.getValue()], 0, 750, TimeUnit.MICROSECONDS);
             }
@@ -116,6 +106,7 @@ public class Main {
         final JScrollPane dataLogPane = new JScrollPane(DATA_LOG);
         dataLogPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         dataLogPane.setBounds(0, 0, 500, 300);
+        DATA_LOG.setLineWrap(true);
         DATA_LOG.setEditable(false);
         DATA_LOG.setText("Data Log");
 

@@ -1,10 +1,6 @@
 package towerconquestperformancetest;
 
-import java.util.concurrent.ConcurrentLinkedQueue;
-
 public class TestPacketHandler {
-
-    private static ConcurrentLinkedQueue<byte[]> packetQueue = new ConcurrentLinkedQueue<>();
 
     public static void process(final byte[] data, final TestGameClient gameClient) {
         final byte dataType = data[0];
@@ -32,9 +28,5 @@ public class TestPacketHandler {
                 gameClient.receiveLogin(data);
             }
         }.start();
-    }
-
-    public static void clearDataQueue() {
-        packetQueue.clear();
     }
 }

@@ -8,11 +8,6 @@ import blockfighter.server.maps.GameMap;
 import java.util.LinkedList;
 import java.util.Map;
 
-/**
- * Debug_Lightning boss Work in progress
- *
- * @author Ken
- */
 public class BossLightning extends Mob {
 
     private static final byte NUM_SKILLS = 4;
@@ -50,10 +45,10 @@ public class BossLightning extends Mob {
         super.addValidMobSkillState(STATE_BOLT);
         super.addValidMobSkillState(STATE_BALL);
 
-        super.addSkill(SKILL_BOLT, new SkillBolt(this.logic));
-        super.addSkill(SKILL_BALL, new SkillBall(this.logic));
-        super.addSkill(SKILL_ATT1, new SkillAttack1(this.logic));
-        super.addSkill(SKILL_ATT2, new SkillAttack2(this.logic));
+        super.addSkill(SKILL_BOLT, new SkillBolt(this.room));
+        super.addSkill(SKILL_BALL, new SkillBall(this.room));
+        super.addSkill(SKILL_ATT1, new SkillAttack1(this.room));
+        super.addSkill(SKILL_ATT2, new SkillAttack2(this.room));
         //this.logic.queueAddProj(new ProjTouch(this.logic, this));
     }
 
@@ -132,24 +127,24 @@ public class BossLightning extends Mob {
             queueMobState(STATE_BOLT);
             setCooldown(SKILL_BOLT);
             this.skillCounter = 0;
-            this.skillCastTime = this.logic.getTime();
+            this.skillCastTime = this.room.getTime();
         } else if (canCast(SKILL_BALL)) {
             queueMobState(STATE_BALL);
             setCooldown(SKILL_BALL);
             this.skillCounter = 0;
-            this.skillCastTime = this.logic.getTime();
+            this.skillCastTime = this.room.getTime();
         } else if (Math.abs(this.x - t.getX()) > 450) {
             queueMobState(STATE_WALK);
         } else if (canCast(SKILL_ATT1)) {
             queueMobState(STATE_ATTACK1);
             setCooldown(SKILL_ATT1);
             this.skillCounter = 0;
-            this.skillCastTime = this.logic.getTime();
+            this.skillCastTime = this.room.getTime();
         } else if (canCast(SKILL_ATT2)) {
             queueMobState(STATE_ATTACK2);
             setCooldown(SKILL_ATT2);
             this.skillCounter = 0;
-            this.skillCastTime = this.logic.getTime();
+            this.skillCastTime = this.room.getTime();
         } else {
             queueMobState(STATE_STAND);
         }
@@ -165,7 +160,7 @@ public class BossLightning extends Mob {
             phase = 1;
         }
 
-        int duration = Globals.nsToMs(this.logic.getTime() - this.skillCastTime);
+        long duration = Globals.nsToMs(this.room.getTime() - this.skillCastTime);
         switch (this.mobState) {
             case STATE_STAND:
                 nextAIstate(t);
@@ -189,9 +184,9 @@ public class BossLightning extends Mob {
                     byte count;
                     switch (phase) {
                         case 0:
-                            proj = new ProjBolt(this.logic, this, t.getX(), t.getY());
-                            this.logic.queueAddProj(proj);
-                            sendMobParticle(this.key, this.logic.getRoom(), PARTICLE_BOLT, proj.getHitbox()[0].getX(),
+                            proj = new ProjBolt(this.room, this, t.getX(), t.getY());
+                            this.room.queueAddProj(proj);
+                            sendMobParticle(this.key, this.room.getRoom(), PARTICLE_BOLT, proj.getHitbox()[0].getX(),
                                     proj.getHitbox()[0].getY());
                             break;
                         case 1:
@@ -200,20 +195,20 @@ public class BossLightning extends Mob {
                                 if (count == 2) {
                                     break;
                                 }
-                                proj = new ProjBolt(this.logic, this, player.getKey().getX(),
+                                proj = new ProjBolt(this.room, this, player.getKey().getX(),
                                         player.getKey().getY());
-                                this.logic.queueAddProj(proj);
-                                sendMobParticle(this.key, this.logic.getRoom(), PARTICLE_BOLT, proj.getHitbox()[0].getX(),
+                                this.room.queueAddProj(proj);
+                                sendMobParticle(this.key, this.room.getRoom(), PARTICLE_BOLT, proj.getHitbox()[0].getX(),
                                         proj.getHitbox()[0].getY());
                                 count++;
                             }
                             break;
                         case 2:
                             for (final Map.Entry<Player, Double> player : this.aggroCounter.entrySet()) {
-                                proj = new ProjBolt(this.logic, this, player.getKey().getX(),
+                                proj = new ProjBolt(this.room, this, player.getKey().getX(),
                                         player.getKey().getY());
-                                this.logic.queueAddProj(proj);
-                                sendMobParticle(this.key, this.logic.getRoom(), PARTICLE_BOLT, proj.getHitbox()[0].getX(),
+                                this.room.queueAddProj(proj);
+                                sendMobParticle(this.key, this.room.getRoom(), PARTICLE_BOLT, proj.getHitbox()[0].getX(),
                                         proj.getHitbox()[0].getY());
                                 reduceCooldown(SKILL_BOLT, 5000);
                             }
@@ -230,24 +225,24 @@ public class BossLightning extends Mob {
                     this.animState = ANIM_ATTACK2;
                     this.frame = 0;
                     this.skillCounter++;
-                    final ProjBall proj = new ProjBall(this.logic, this, this.x, this.y);
-                    this.logic.queueAddProj(proj);
-                    sendMobParticle(this.key, this.logic.getRoom(), PARTICLE_BALL1, proj.getHitbox()[0].getX(),
+                    final ProjBall proj = new ProjBall(this.room, this, this.x, this.y);
+                    this.room.queueAddProj(proj);
+                    sendMobParticle(this.key, this.room.getRoom(), PARTICLE_BALL1, proj.getHitbox()[0].getX(),
                             proj.getHitbox()[0].getY());
                 }
                 if ((phase == 1 || phase == 2) && Globals.hasPastDuration(duration, 1550) && this.skillCounter == 1) {
                     this.skillCounter++;
-                    final ProjBall proj = new ProjBall(this.logic, this, this.x, this.y);
-                    this.logic.queueAddProj(proj);
-                    sendMobParticle(this.key, this.logic.getRoom(), PARTICLE_BALL1, proj.getHitbox()[0].getX(),
+                    final ProjBall proj = new ProjBall(this.room, this, this.x, this.y);
+                    this.room.queueAddProj(proj);
+                    sendMobParticle(this.key, this.room.getRoom(), PARTICLE_BALL1, proj.getHitbox()[0].getX(),
                             proj.getHitbox()[0].getY());
                     reduceCooldown(SKILL_BALL, 2000);
                 }
                 if (phase == 2 && Globals.hasPastDuration(duration, 2000) && this.skillCounter == 2) {
                     this.skillCounter++;
-                    final ProjBall proj = new ProjBall(this.logic, this, this.x, this.y);
-                    this.logic.queueAddProj(proj);
-                    sendMobParticle(this.key, this.logic.getRoom(), PARTICLE_BALL1, proj.getHitbox()[0].getX(),
+                    final ProjBall proj = new ProjBall(this.room, this, this.x, this.y);
+                    this.room.queueAddProj(proj);
+                    sendMobParticle(this.key, this.room.getRoom(), PARTICLE_BALL1, proj.getHitbox()[0].getX(),
                             proj.getHitbox()[0].getY());
                     reduceCooldown(SKILL_BALL, 1000);
                 }
@@ -259,9 +254,9 @@ public class BossLightning extends Mob {
                 setXSpeed(0);
                 if (Globals.hasPastDuration(duration, 50) && this.skillCounter == 0) {
                     this.skillCounter++;
-                    final ProjAttack proj = new ProjAttack(this.logic, this, this.x, this.y);
-                    this.logic.queueAddProj(proj);
-                    sendMobParticle(this.key, this.logic.getRoom(), PARTICLE_ATT1, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY());
+                    final ProjAttack proj = new ProjAttack(this.room, this, this.x, this.y);
+                    this.room.queueAddProj(proj);
+                    sendMobParticle(this.key, this.room.getRoom(), PARTICLE_ATT1, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY());
                     if (phase == 1) {
                         reduceCooldown(SKILL_ATT1, 500);
                     } else if (phase == 2) {
@@ -276,9 +271,9 @@ public class BossLightning extends Mob {
                 setXSpeed(0);
                 if (Globals.hasPastDuration(duration, 50) && this.skillCounter == 0) {
                     this.skillCounter++;
-                    final ProjAttack proj = new ProjAttack(this.logic, this, this.x, this.y);
-                    this.logic.queueAddProj(proj);
-                    sendMobParticle(this.key, this.logic.getRoom(), PARTICLE_ATT1, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY());
+                    final ProjAttack proj = new ProjAttack(this.room, this, this.x, this.y);
+                    this.room.queueAddProj(proj);
+                    sendMobParticle(this.key, this.room.getRoom(), PARTICLE_ATT1, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY());
                     if (phase == 1) {
                         reduceCooldown(SKILL_ATT2, 500);
                     } else if (phase == 2) {
@@ -295,8 +290,8 @@ public class BossLightning extends Mob {
     private void updateAnimState() {
         final byte prevAnimState = this.animState, prevFrame = this.frame;
 
-        final int duration = Globals.nsToMs(this.logic.getTime() - this.skillCastTime);
-        final int frameDuration = Globals.nsToMs(this.logic.getTime() - this.lastFrameTime);
+        final long duration = Globals.nsToMs(this.room.getTime() - this.skillCastTime);
+        final long frameDuration = Globals.nsToMs(this.room.getTime() - this.lastFrameTime);
         switch (this.mobState) {
             case STATE_STAND:
                 this.animState = STATE_STAND;
@@ -305,7 +300,7 @@ public class BossLightning extends Mob {
                     if (this.frame == 10) {
                         this.frame = 0;
                     }
-                    this.lastFrameTime = this.logic.getTime();
+                    this.lastFrameTime = this.room.getTime();
                 }
                 break;
             case STATE_WALK:
@@ -315,7 +310,7 @@ public class BossLightning extends Mob {
                     if (this.frame == 10) {
                         this.frame = 0;
                     }
-                    this.lastFrameTime = this.logic.getTime();
+                    this.lastFrameTime = this.room.getTime();
                 }
                 break;
             case STATE_BOLT:
@@ -329,7 +324,7 @@ public class BossLightning extends Mob {
                     } else if (this.frame != 9) {
                         this.frame++;
                     }
-                    this.lastFrameTime = this.logic.getTime();
+                    this.lastFrameTime = this.room.getTime();
                 }
                 break;
             case STATE_BALL:
@@ -343,7 +338,7 @@ public class BossLightning extends Mob {
                     } else if (this.frame < 9) {
                         this.frame++;
                     }
-                    this.lastFrameTime = this.logic.getTime();
+                    this.lastFrameTime = this.room.getTime();
                 }
                 break;
             case STATE_ATTACK1:
@@ -352,7 +347,7 @@ public class BossLightning extends Mob {
                     if (this.frame < 9) {
                         this.frame++;
                     }
-                    this.lastFrameTime = this.logic.getTime();
+                    this.lastFrameTime = this.room.getTime();
                 }
                 break;
             case STATE_ATTACK2:
@@ -361,7 +356,7 @@ public class BossLightning extends Mob {
                     if (this.frame < 9) {
                         this.frame++;
                     }
-                    this.lastFrameTime = this.logic.getTime();
+                    this.lastFrameTime = this.room.getTime();
                 }
                 break;
         }

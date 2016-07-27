@@ -10,14 +10,14 @@ public class ParticleBloodEmitter extends Particle {
     private long lastParticleTime = 0;
 
     public ParticleBloodEmitter(final Player p) {
-        super(0, 0, p);
+        super(p);
         this.frame = 0;
         this.duration = 500;
 
     }
 
     public ParticleBloodEmitter(final Player p, final Player source, final boolean damage) {
-        super(0, 0, p);
+        super(p);
         this.frame = 0;
         this.duration = 50;
         this.source = source;

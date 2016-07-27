@@ -4,7 +4,7 @@ public class Main {
 
     public static void main(final String[] args) {
         TestRunner test = new TestRunner();
-        test.runTest("52.63.162.240");
+        test.runTest("localhost");
     }
 
 }

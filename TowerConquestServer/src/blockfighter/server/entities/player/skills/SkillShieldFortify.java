@@ -4,38 +4,34 @@ import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.buff.BuffShieldFortify;
 import blockfighter.server.entities.player.Player;
+import blockfighter.server.net.PacketSender;
 
-/**
- *
- * @author Ken Kwan
- */
 public class SkillShieldFortify extends Skill {
 
-    /**
-     * Constructor for Shield Skill Fortify.
-     *
-     * @param l
-     */
     public SkillShieldFortify(final LogicModule l) {
         super(l);
         this.skillCode = SHIELD_FORTIFY;
         this.maxCooldown = 24000;
-        // reqWeapon = Globals.ITEM_SHIELD;
+        this.endDuration = 350;
+        this.playerState = Player.PLAYER_STATE_SHIELD_FORTIFY;
     }
 
     @Override
     public void updateSkillUse(Player player) {
-        final int duration = Globals.nsToMs(this.logic.getTime() - player.getSkillCastTime());
-        if (duration == 0) {
-            Player.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SHIELD_FORTIFY, player.getKey());
-            Player.sendSFX(this.logic.getRoom(), Globals.SFX_FORTIFY, player.getX(), player.getY());
+        final long duration = Globals.nsToMs(this.room.getTime() - player.getSkillCastTime());
+        if (player.getSkillCounter() == 0) {
+            player.incrementSkillCounter();
+            PacketSender.sendParticle(this.room.getRoom(), Globals.PARTICLE_SHIELD_FORTIFY, player.getKey());
+            PacketSender.sendSFX(this.room.getRoom(), Globals.SFX_FORTIFY, player.getX(), player.getY());
         }
 
-        if (player.updateSkillEnd(Globals.hasPastDuration(duration, 350) && player.getSkillCounter() < 1)) {
+        if (Globals.hasPastDuration(duration, this.endDuration) && player.getSkillCounter() == 1) {
             player.incrementSkillCounter();
-            player.queueBuff(new BuffShieldFortify(this.logic, 5000, 0.01 + 0.005 * player.getSkillLevel(Skill.SHIELD_FORTIFY), player));
-            Player.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SHIELD_FORTIFYBUFF, player.getKey());
+            player.queueBuff(new BuffShieldFortify(this.room, 5000, 0.01 + 0.005 * player.getSkillLevel(Skill.SHIELD_FORTIFY), player));
+            PacketSender.sendParticle(this.room.getRoom(), Globals.PARTICLE_SHIELD_FORTIFYBUFF, player.getKey());
         }
+
+        player.updateSkillEnd(duration, this.endDuration, false, false);
     }
 
 }

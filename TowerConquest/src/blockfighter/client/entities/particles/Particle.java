@@ -75,7 +75,6 @@ public abstract class Particle extends Thread {
         PARTICLE_SPRITE_FOLDER[Globals.PARTICLE_SHIELD_REFLECTHIT] = "reflecthit";
         PARTICLE_SPRITE_FOLDER[Globals.PARTICLE_SHIELD_IRON] = "ironfort";
         PARTICLE_SPRITE_FOLDER[Globals.PARTICLE_SHIELD_IRONALLY] = "ironfortally";
-        PARTICLE_SPRITE_FOLDER[Globals.PARTICLE_SHIELD_TOSS] = "toss";
         PARTICLE_SPRITE_FOLDER[Globals.PARTICLE_SWORD_SLASHBUFF] = "slashbuff";
         PARTICLE_SPRITE_FOLDER[Globals.PARTICLE_SHIELD_DASHBUFF] = "dashbuff";
         PARTICLE_SPRITE_FOLDER[Globals.PARTICLE_BOW_VOLLEYBUFF] = "volleybuff";
@@ -83,6 +82,8 @@ public abstract class Particle extends Thread {
         PARTICLE_SPRITE_FOLDER[Globals.PARTICLE_PASSIVE_BARRIER] = "barrier";
         PARTICLE_SPRITE_FOLDER[Globals.PARTICLE_PASSIVE_SHADOWATTACK] = "shadowattack";
         PARTICLE_SPRITE_FOLDER[Globals.PARTICLE_BOW_RAPID2] = "rapid2";
+        PARTICLE_SPRITE_FOLDER[Globals.PARTICLE_SHIELD_MAGNETIZESTART] = "magnetizestart";
+        PARTICLE_SPRITE_FOLDER[Globals.PARTICLE_SHIELD_MAGNETIZEBURST] = "magnetizeburst";
 
         PARTICLE_FRAMES[Globals.PARTICLE_SWORD_SLASH1] = 5;
         PARTICLE_FRAMES[Globals.PARTICLE_SWORD_SLASH2] = 5;
@@ -103,9 +104,9 @@ public abstract class Particle extends Thread {
         PARTICLE_FRAMES[Globals.PARTICLE_BOW_RAPID] = 6;
         PARTICLE_FRAMES[Globals.PARTICLE_BOW_POWER] = 24;
         PARTICLE_FRAMES[Globals.PARTICLE_BOW_POWERPARTICLE] = 10;
-        PARTICLE_FRAMES[Globals.PARTICLE_BOW_POWERCHARGE] = 24;
-        PARTICLE_FRAMES[Globals.PARTICLE_BOW_VOLLEYBOW] = 1;
-        PARTICLE_FRAMES[Globals.PARTICLE_BOW_VOLLEYARROW] = 6;
+        PARTICLE_FRAMES[Globals.PARTICLE_BOW_POWERCHARGE] = 1;
+        PARTICLE_FRAMES[Globals.PARTICLE_BOW_VOLLEYBOW] = 10;
+        PARTICLE_FRAMES[Globals.PARTICLE_BOW_VOLLEYARROW] = 0;
         PARTICLE_FRAMES[Globals.PARTICLE_BOW_STORM] = 20;
         PARTICLE_FRAMES[Globals.PARTICLE_BOW_FROSTARROW] = 12;
         PARTICLE_FRAMES[Globals.PARTICLE_SHIELD_DASH] = 8;
@@ -115,10 +116,9 @@ public abstract class Particle extends Thread {
         PARTICLE_FRAMES[Globals.PARTICLE_SHIELD_CHARGEPARTICLE] = 5;
         PARTICLE_FRAMES[Globals.PARTICLE_SHIELD_REFLECTCAST] = 16;
         PARTICLE_FRAMES[Globals.PARTICLE_SHIELD_REFLECTBUFF] = 16;
-        PARTICLE_FRAMES[Globals.PARTICLE_SHIELD_REFLECTHIT] = 16;
+        PARTICLE_FRAMES[Globals.PARTICLE_SHIELD_REFLECTHIT] = 10;
         PARTICLE_FRAMES[Globals.PARTICLE_SHIELD_IRON] = 12;
         PARTICLE_FRAMES[Globals.PARTICLE_SHIELD_IRONALLY] = 12;
-        PARTICLE_FRAMES[Globals.PARTICLE_SHIELD_TOSS] = 16;
         PARTICLE_FRAMES[Globals.PARTICLE_SWORD_SLASHBUFF] = 6;
         PARTICLE_FRAMES[Globals.PARTICLE_SHIELD_DASHBUFF] = 1;
         PARTICLE_FRAMES[Globals.PARTICLE_BOW_VOLLEYBUFF] = 6;
@@ -126,6 +126,8 @@ public abstract class Particle extends Thread {
         PARTICLE_FRAMES[Globals.PARTICLE_PASSIVE_BARRIER] = 7;
         PARTICLE_FRAMES[Globals.PARTICLE_PASSIVE_SHADOWATTACK] = 16;
         PARTICLE_FRAMES[Globals.PARTICLE_BOW_RAPID2] = 3;
+        PARTICLE_FRAMES[Globals.PARTICLE_SHIELD_MAGNETIZESTART] = 13;
+        PARTICLE_FRAMES[Globals.PARTICLE_SHIELD_MAGNETIZEBURST] = 11;
     }
 
     public static void unloadParticles() {
@@ -207,8 +209,8 @@ public abstract class Particle extends Thread {
         this.facing = f;
     }
 
-    public Particle(final int x, final int y, final byte f, final Player owner) {
-        this(x, y, owner);
+    public Particle(final byte f, final Player owner) {
+        this(owner.getX(), owner.getY(), owner);
         this.facing = f;
     }
 
@@ -216,7 +218,15 @@ public abstract class Particle extends Thread {
         this(logic.getScreen().getNextParticleKey(), x, y, owner);
     }
 
-    @SuppressWarnings("unused")
+    public Particle(final Player owner) {
+        this(owner.getX(), owner.getY(), owner);
+    }
+
+    public Particle(final Player owner, final byte f) {
+        this(owner.getX(), owner.getY(), owner);
+        this.facing = f;
+    }
+
     public void draw(final Graphics2D g) {
     }
 

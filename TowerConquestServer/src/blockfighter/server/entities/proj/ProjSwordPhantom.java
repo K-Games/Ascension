@@ -8,21 +8,8 @@ import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.player.skills.Skill;
 import java.awt.geom.Rectangle2D;
 
-/**
- * This is the base projectile class. Create projectile classes off this.
- *
- * @author Ken Kwan
- */
 public class ProjSwordPhantom extends Projectile {
 
-    /**
-     * Projectile of Sword Skill Defensive Impact.
-     *
-     * @param l Room/Logic Module
-     * @param o Owning player
-     * @param x Spawn x-coordinate
-     * @param y Spawn y-coordinate
-     */
     public ProjSwordPhantom(final LogicModule l, final Player o, final double x, final double y) {
         super(l, o, x, y, 200);
         this.hitbox = new Rectangle2D.Double[1];
@@ -35,7 +22,7 @@ public class ProjSwordPhantom extends Projectile {
 
     @Override
     public void update() {
-        if (Globals.nsToMs(logic.getTime() - this.projStartTime) >= 100) {
+        if (Globals.nsToMs(room.getTime() - this.projStartTime) >= 100) {
             super.update();
         }
     }
@@ -48,7 +35,7 @@ public class ProjSwordPhantom extends Projectile {
                 int damage = (int) (owner.rollDamage());
                 final boolean crit = owner.rollCrit();
                 if (crit) {
-                    damage = (int) owner.criticalDamage(damage * (1.1 + owner.getSkillLevel(Skill.SWORD_PHANTOM) * .03));
+                    damage = (int) owner.criticalDamage(damage * (.75 + owner.getSkillLevel(Skill.SWORD_PHANTOM) * .02));
                 }
                 p.queueDamage(new Damage(damage, true, owner, p, crit, this.hitbox[0], p.getHitbox()));
             }
@@ -60,7 +47,7 @@ public class ProjSwordPhantom extends Projectile {
                 int damage = (int) (owner.rollDamage());
                 final boolean crit = owner.rollCrit();
                 if (crit) {
-                    damage = (int) owner.criticalDamage(damage * (1.1 + owner.getSkillLevel(Skill.SWORD_PHANTOM) * .03));
+                    damage = (int) owner.criticalDamage(damage * (.75 + owner.getSkillLevel(Skill.SWORD_PHANTOM) * .02));
                 }
                 b.queueDamage(new Damage(damage, true, owner, b, crit, this.hitbox[0], b.getHitbox()));
             }

@@ -9,7 +9,7 @@ import java.awt.image.BufferedImage;
 public class ParticleShieldIronAlly extends Particle {
 
     public ParticleShieldIronAlly(final Player p) {
-        super(0, 0, p);
+        super(p);
         this.frame = 0;
         this.frameDuration = 25;
         this.duration = 300;

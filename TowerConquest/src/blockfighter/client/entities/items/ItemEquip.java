@@ -42,7 +42,7 @@ public class ItemEquip implements Item {
             TIER_RARE = 2, //70-84%
             TIER_RUNIC = 3, //85-89%
             TIER_LEGENDARY = 4, //90-94%
-            TIER_ARCHAIC = 5, //95-109%
+            TIER_MYSTIC = 5, //95-109%
             TIER_DIVINE = 6;    //110%+
 
     protected double[] baseStats = new double[Globals.NUM_STATS],
@@ -69,7 +69,7 @@ public class ItemEquip implements Item {
         TIER_COLOURS.put(TIER_RARE, new Color(255, 225, 0));
         TIER_COLOURS.put(TIER_RUNIC, new Color(255, 130, 0));
         TIER_COLOURS.put(TIER_LEGENDARY, new Color(205, 15, 0));
-        TIER_COLOURS.put(TIER_ARCHAIC, new Color(0, 220, 0));
+        TIER_COLOURS.put(TIER_MYSTIC, new Color(0, 220, 0));
         TIER_COLOURS.put(TIER_DIVINE, new Color(0, 255, 160));
     }
 
@@ -132,48 +132,102 @@ public class ItemEquip implements Item {
                         } else if (data[i].trim().equalsIgnoreCase("[desc]")) {
                             final String desc = data[i + 1];
                             ITEM_DESC.put(itemCode, desc);
-                        } else if (data[i].trim().equalsIgnoreCase("[attackoffset]")) {
+                        } else if (data[i].trim().equalsIgnoreCase("[attackswingoffset]")) {
                             final String[] offsetData = data[i + 1].split(" ", 2);
                             final int x = Integer.parseInt(offsetData[0]),
                                     y = Integer.parseInt(offsetData[1]);
                             final Point offset = new Point(x, y);
-                            ITEM_DRAWOFFSET.put(itemCode + "_" + Globals.PLAYER_ANIM_STATE_ATTACK, offset);
-                        } else if (data[i].trim().equalsIgnoreCase("[standoffset]")) {
-                            final String[] offsetData = data[i + 1].split(" ", 2);
-                            final int x = Integer.parseInt(offsetData[0]),
-                                    y = Integer.parseInt(offsetData[1]);
-                            final Point offset = new Point(x, y);
-                            ITEM_DRAWOFFSET.put(itemCode + "_" + Globals.PLAYER_ANIM_STATE_STAND, offset);
+                            ITEM_DRAWOFFSET.put(itemCode + "_mainhand_" + Globals.PLAYER_ANIM_STATE_ATTACK, offset);
                         } else if (data[i].trim().equalsIgnoreCase("[attackbowoffset]")) {
                             final String[] offsetData = data[i + 1].split(" ", 2);
                             final int x = Integer.parseInt(offsetData[0]),
                                     y = Integer.parseInt(offsetData[1]);
                             final Point offset = new Point(x, y);
-                            ITEM_DRAWOFFSET.put(itemCode + "_" + Globals.PLAYER_ANIM_STATE_ATTACKBOW, offset);
+                            ITEM_DRAWOFFSET.put(itemCode + "_mainhand_" + Globals.PLAYER_ANIM_STATE_ATTACKBOW, offset);
+                        } else if (data[i].trim().equalsIgnoreCase("[standoffset]")) {
+                            final String[] offsetData = data[i + 1].split(" ", 2);
+                            final int x = Integer.parseInt(offsetData[0]),
+                                    y = Integer.parseInt(offsetData[1]);
+                            final Point offset = new Point(x, y);
+                            ITEM_DRAWOFFSET.put(itemCode + "_mainhand_" + Globals.PLAYER_ANIM_STATE_STAND, offset);
                         } else if (data[i].trim().equalsIgnoreCase("[walkoffset]")) {
                             final String[] offsetData = data[i + 1].split(" ", 2);
                             final int x = Integer.parseInt(offsetData[0]),
                                     y = Integer.parseInt(offsetData[1]);
                             final Point offset = new Point(x, y);
-                            ITEM_DRAWOFFSET.put(itemCode + "_" + Globals.PLAYER_ANIM_STATE_WALK, offset);
+                            ITEM_DRAWOFFSET.put(itemCode + "_mainhand_" + Globals.PLAYER_ANIM_STATE_WALK, offset);
                         } else if (data[i].trim().equalsIgnoreCase("[buffoffset]")) {
                             final String[] offsetData = data[i + 1].split(" ", 2);
                             final int x = Integer.parseInt(offsetData[0]),
                                     y = Integer.parseInt(offsetData[1]);
                             final Point offset = new Point(x, y);
-                            ITEM_DRAWOFFSET.put(itemCode + "_" + Globals.PLAYER_ANIM_STATE_BUFF, offset);
+                            ITEM_DRAWOFFSET.put(itemCode + "_mainhand_" + Globals.PLAYER_ANIM_STATE_BUFF, offset);
                         } else if (data[i].trim().equalsIgnoreCase("[deadoffset]")) {
                             final String[] offsetData = data[i + 1].split(" ", 2);
                             final int x = Integer.parseInt(offsetData[0]),
                                     y = Integer.parseInt(offsetData[1]);
                             final Point offset = new Point(x, y);
-                            ITEM_DRAWOFFSET.put(itemCode + "_" + Globals.PLAYER_ANIM_STATE_DEAD, offset);
+                            ITEM_DRAWOFFSET.put(itemCode + "_mainhand_" + Globals.PLAYER_ANIM_STATE_DEAD, offset);
                         } else if (data[i].trim().equalsIgnoreCase("[jumpoffset]")) {
                             final String[] offsetData = data[i + 1].split(" ", 2);
                             final int x = Integer.parseInt(offsetData[0]),
                                     y = Integer.parseInt(offsetData[1]);
                             final Point offset = new Point(x, y);
-                            ITEM_DRAWOFFSET.put(itemCode + "_" + Globals.PLAYER_ANIM_STATE_JUMP, offset);
+                            ITEM_DRAWOFFSET.put(itemCode + "_mainhand_" + Globals.PLAYER_ANIM_STATE_JUMP, offset);
+                        } else if (data[i].trim().equalsIgnoreCase("[rolloffset]")) {
+                            final String[] offsetData = data[i + 1].split(" ", 2);
+                            final int x = Integer.parseInt(offsetData[0]),
+                                    y = Integer.parseInt(offsetData[1]);
+                            final Point offset = new Point(x, y);
+                            ITEM_DRAWOFFSET.put(itemCode + "_mainhand_" + Globals.PLAYER_ANIM_STATE_ROLL, offset);
+                        } else if (data[i].trim().equalsIgnoreCase("[attackswingoffhandoffset]")) {
+                            final String[] offsetData = data[i + 1].split(" ", 2);
+                            final int x = Integer.parseInt(offsetData[0]),
+                                    y = Integer.parseInt(offsetData[1]);
+                            final Point offset = new Point(x, y);
+                            ITEM_DRAWOFFSET.put(itemCode + "_offhand_" + Globals.PLAYER_ANIM_STATE_ATTACK, offset);
+                        } else if (data[i].trim().equalsIgnoreCase("[attackbowoffhandoffset]")) {
+                            final String[] offsetData = data[i + 1].split(" ", 2);
+                            final int x = Integer.parseInt(offsetData[0]),
+                                    y = Integer.parseInt(offsetData[1]);
+                            final Point offset = new Point(x, y);
+                            ITEM_DRAWOFFSET.put(itemCode + "_offhand_" + Globals.PLAYER_ANIM_STATE_ATTACKBOW, offset);
+                        } else if (data[i].trim().equalsIgnoreCase("[standoffhandoffset]")) {
+                            final String[] offsetData = data[i + 1].split(" ", 2);
+                            final int x = Integer.parseInt(offsetData[0]),
+                                    y = Integer.parseInt(offsetData[1]);
+                            final Point offset = new Point(x, y);
+                            ITEM_DRAWOFFSET.put(itemCode + "_offhand_" + Globals.PLAYER_ANIM_STATE_STAND, offset);
+                        } else if (data[i].trim().equalsIgnoreCase("[walkoffhandoffset]")) {
+                            final String[] offsetData = data[i + 1].split(" ", 2);
+                            final int x = Integer.parseInt(offsetData[0]),
+                                    y = Integer.parseInt(offsetData[1]);
+                            final Point offset = new Point(x, y);
+                            ITEM_DRAWOFFSET.put(itemCode + "_offhand_" + Globals.PLAYER_ANIM_STATE_WALK, offset);
+                        } else if (data[i].trim().equalsIgnoreCase("[buffoffhandoffset]")) {
+                            final String[] offsetData = data[i + 1].split(" ", 2);
+                            final int x = Integer.parseInt(offsetData[0]),
+                                    y = Integer.parseInt(offsetData[1]);
+                            final Point offset = new Point(x, y);
+                            ITEM_DRAWOFFSET.put(itemCode + "_offhand_" + Globals.PLAYER_ANIM_STATE_BUFF, offset);
+                        } else if (data[i].trim().equalsIgnoreCase("[deadoffhandoffset]")) {
+                            final String[] offsetData = data[i + 1].split(" ", 2);
+                            final int x = Integer.parseInt(offsetData[0]),
+                                    y = Integer.parseInt(offsetData[1]);
+                            final Point offset = new Point(x, y);
+                            ITEM_DRAWOFFSET.put(itemCode + "_offhand_" + Globals.PLAYER_ANIM_STATE_DEAD, offset);
+                        } else if (data[i].trim().equalsIgnoreCase("[jumpoffhandoffset]")) {
+                            final String[] offsetData = data[i + 1].split(" ", 2);
+                            final int x = Integer.parseInt(offsetData[0]),
+                                    y = Integer.parseInt(offsetData[1]);
+                            final Point offset = new Point(x, y);
+                            ITEM_DRAWOFFSET.put(itemCode + "_offhand_" + Globals.PLAYER_ANIM_STATE_JUMP, offset);
+                        } else if (data[i].trim().equalsIgnoreCase("[rolloffhandoffset]")) {
+                            final String[] offsetData = data[i + 1].split(" ", 2);
+                            final int x = Integer.parseInt(offsetData[0]),
+                                    y = Integer.parseInt(offsetData[1]);
+                            final Point offset = new Point(x, y);
+                            ITEM_DRAWOFFSET.put(itemCode + "_offhand_" + Globals.PLAYER_ANIM_STATE_ROLL, offset);
                         }
                     }
                 }
@@ -198,78 +252,45 @@ public class ItemEquip implements Item {
         ITEM_ICONS.put(code, icon);
     }
 
-    public static void loadItemSprite(final int code) {
+    public static void loadItemSprite(final int code, final boolean offhand) {
         final BufferedImage[][] load = new BufferedImage[Globals.NUM_PLAYER_ANIM_STATE][];
+        String hand = (!offhand) ? "mainhand" : "offhand";
         for (int state = 0; state < load.length; state++) {
-            if (Globals.PLAYER_ANIM_FRAMES[state] > 0) {
-                load[state] = new BufferedImage[Globals.PLAYER_ANIM_FRAMES[state]];
+            if (Globals.PLAYER_NUM_ANIM_FRAMES[state] > 0) {
+                load[state] = new BufferedImage[Globals.PLAYER_NUM_ANIM_FRAMES[state]];
                 for (int frames = 0; frames < load[state].length; frames++) {
-                    String folder = "";
+                    String stateFolder = "";
                     switch (state) {
                         case Globals.PLAYER_ANIM_STATE_ATTACK:
-                            folder = "attack/mainhand";
+                            stateFolder = "attack/swing";
                             break;
                         case Globals.PLAYER_ANIM_STATE_ATTACKBOW:
-                            folder = "attack/bow";
+                            stateFolder = "attack/bow";
                             break;
                         case Globals.PLAYER_ANIM_STATE_STAND:
-                            folder = "stand";
+                            stateFolder = "stand";
                             break;
                         case Globals.PLAYER_ANIM_STATE_WALK:
-                            folder = "walk";
+                            stateFolder = "walk";
                             break;
                         case Globals.PLAYER_ANIM_STATE_BUFF:
-                            folder = "buff";
+                            stateFolder = "buff";
                             break;
                         case Globals.PLAYER_ANIM_STATE_DEAD:
-                            folder = "dead";
+                            stateFolder = "dead";
                             break;
                         case Globals.PLAYER_ANIM_STATE_JUMP:
-                            folder = "jump";
+                            stateFolder = "jump";
+                            break;
+                        case Globals.PLAYER_ANIM_STATE_ROLL:
+                            stateFolder = "roll";
                             break;
                     }
-                    load[state][frames] = Globals.loadTextureResource("sprites/equip/" + code + "/mainhand/" + folder + "/" + frames + ".png");
+                    load[state][frames] = Globals.loadTextureResource("sprites/equip/" + code + "/" + hand + "/" + stateFolder + "/" + frames + ".png");
                 }
             }
         }
-        ITEM_SPRITES.put(Integer.toString(code), load);
-    }
-
-    public static void loadOffhandSprite(final int code) {
-        final BufferedImage[][] load = new BufferedImage[Globals.NUM_PLAYER_ANIM_STATE][];
-        for (int state = 0; state < load.length; state++) {
-            if (Globals.PLAYER_ANIM_FRAMES[state] > 0) {
-                load[state] = new BufferedImage[Globals.PLAYER_ANIM_FRAMES[state]];
-                for (int frames = 0; frames < load[state].length; frames++) {
-                    String folder = "";
-                    switch (state) {
-                        case Globals.PLAYER_ANIM_STATE_ATTACK:
-                            folder = "attack/mainhand";
-                            break;
-                        case Globals.PLAYER_ANIM_STATE_ATTACKBOW:
-                            folder = "attack/bow";
-                            break;
-                        case Globals.PLAYER_ANIM_STATE_STAND:
-                            folder = "stand";
-                            break;
-                        case Globals.PLAYER_ANIM_STATE_WALK:
-                            folder = "walk";
-                            break;
-                        case Globals.PLAYER_ANIM_STATE_BUFF:
-                            folder = "buff";
-                            break;
-                        case Globals.PLAYER_ANIM_STATE_DEAD:
-                            folder = "dead";
-                            break;
-                        case Globals.PLAYER_ANIM_STATE_JUMP:
-                            folder = "jump";
-                            break;
-                    }
-                    load[state][frames] = Globals.loadTextureResource("sprites/equip/" + code + "/offhand/" + folder + "/" + frames + ".png");
-                }
-            }
-        }
-        ITEM_SPRITES.put(code + "_offhand", load);
+        ITEM_SPRITES.put(Integer.toString(code) + "_" + hand, load);
     }
 
     public double[] getTotalStats() {
@@ -347,7 +368,7 @@ public class ItemEquip implements Item {
                 newStats[Globals.STAT_POWER] = level + 0.25D * level + Globals.rng(6);
                 break;
             case Globals.ITEM_AMULET:
-                newStats[Globals.STAT_CRITDMG] = level * 0.02 + Globals.rng(20) * 0.01;
+                newStats[Globals.STAT_CRITDMG] = level * 0.02 + Globals.rng(11) * 0.01;
                 newStats[Globals.STAT_REGEN] = level * 5 + Globals.rng(11) * 5;
                 break;
             case Globals.ITEM_RING:
@@ -515,22 +536,7 @@ public class ItemEquip implements Item {
     }
 
     public void drawIngame(final Graphics2D g, final int x, final int y, final byte state, final byte frame, final byte facing) {
-        if (!isValidItem(this.itemCode)) {
-            return;
-        }
-        if (ITEM_SPRITES.containsKey(Integer.toString(this.itemCode))) {
-            BufferedImage sprite = ITEM_SPRITES.get(Integer.toString(this.itemCode))[state][frame];
-            if (sprite != null) {
-                int sX = x + ((facing == Globals.RIGHT) ? 1 : -1) * ITEM_DRAWOFFSET.get(this.itemCode + "_" + state).x;
-                int sY = y + ITEM_DRAWOFFSET.get(this.itemCode + "_" + state).y;
-                int dX = sX + ((facing == Globals.RIGHT) ? 1 : -1) * sprite.getWidth();
-                int dY = sY + sprite.getHeight();
-                g.drawImage(sprite, sX, sY, dX, dY, 0, 0, sprite.getWidth(), sprite.getHeight(), null);
-            }
-        } else {
-            ItemEquip.loadItemSprite(this.itemCode);
-        }
-
+        drawIngame(g, x, y, state, frame, facing, false);
     }
 
     public void drawIngame(final Graphics2D g, final int x, final int y, final byte state, final byte frame, final byte facing,
@@ -538,21 +544,18 @@ public class ItemEquip implements Item {
         if (!isValidItem(this.itemCode)) {
             return;
         }
-        if (getItemType(this.itemCode) == Globals.ITEM_SHIELD) {
-            drawIngame(g, x, y, state, frame, facing);
-        } else if (getItemType(this.itemCode) == Globals.ITEM_SWORD) {
-            if (ITEM_SPRITES.containsKey(this.itemCode + "_offhand")) {
-                BufferedImage sprite = ITEM_SPRITES.get(this.itemCode + "_offhand")[state][frame];
-                if (sprite != null) {
-                    int sX = x + ((facing == Globals.RIGHT) ? 1 : -1) * ITEM_DRAWOFFSET.get(this.itemCode + "_offhand_" + state).x;
-                    int sY = y + ITEM_DRAWOFFSET.get(this.itemCode + "_offhand_" + state).y;
-                    int dX = sX + ((facing == Globals.RIGHT) ? 1 : -1) * sprite.getWidth();
-                    int dY = sY + sprite.getHeight();
-                    g.drawImage(sprite, sX, sY, dX, dY, 0, 0, sprite.getWidth(), sprite.getHeight(), null);
-                }
-            } else {
-                ItemEquip.loadOffhandSprite(this.itemCode);
+        String hand = (!offhand) ? "mainhand" : "offhand";
+        if (ITEM_SPRITES.containsKey(this.itemCode + "_" + hand)) {
+            BufferedImage sprite = ITEM_SPRITES.get(this.itemCode + "_" + hand)[state][frame];
+            if (sprite != null) {
+                int sX = x + ((facing == Globals.RIGHT) ? 1 : -1) * ITEM_DRAWOFFSET.get(this.itemCode + "_" + hand + "_" + state).x;
+                int sY = y + ITEM_DRAWOFFSET.get(this.itemCode + "_" + hand + "_" + state).y;
+                int dX = sX + ((facing == Globals.RIGHT) ? 1 : -1) * sprite.getWidth();
+                int dY = sY + sprite.getHeight();
+                g.drawImage(sprite, sX, sY, dX, dY, 0, 0, sprite.getWidth(), sprite.getHeight(), null);
             }
+        } else {
+            ItemEquip.loadItemSprite(this.itemCode, offhand);
         }
 
     }
@@ -571,10 +574,10 @@ public class ItemEquip implements Item {
                 .round(this.baseStats[Globals.STAT_SPIRIT] * (1 + this.bonusMult + this.upgrades * UPGRADE_MULT));
 
         if (this.baseStats[Globals.STAT_CRITCHANCE] > 0) {
-            this.totalStats[Globals.STAT_CRITCHANCE] = this.baseStats[Globals.STAT_CRITCHANCE] * (1 + this.bonusMult / 3) + this.upgrades * UPGRADE_CRITCHANCE;
+            this.totalStats[Globals.STAT_CRITCHANCE] = this.baseStats[Globals.STAT_CRITCHANCE] + (0.003 * (this.bonusMult / 0.1)) + this.upgrades * UPGRADE_CRITCHANCE;
         }
         if (this.baseStats[Globals.STAT_CRITDMG] > 0) {
-            this.totalStats[Globals.STAT_CRITDMG] = this.baseStats[Globals.STAT_CRITDMG] * (1 + this.bonusMult / 4)
+            this.totalStats[Globals.STAT_CRITDMG] = this.baseStats[Globals.STAT_CRITDMG] + (0.04 * (this.bonusMult / 0.05))
                     + this.upgrades * UPGRADE_CRITDMG;
         }
         if (this.baseStats[Globals.STAT_ARMOR] > 0) {
@@ -588,7 +591,7 @@ public class ItemEquip implements Item {
         if (this.bonusMult + this.upgrades * UPGRADE_MULT >= 1.1) {
             this.tier = TIER_DIVINE;
         } else if (this.bonusMult + this.upgrades * UPGRADE_MULT >= .95) {
-            this.tier = TIER_ARCHAIC;
+            this.tier = TIER_MYSTIC;
         } else if (this.bonusMult + this.upgrades * UPGRADE_MULT >= 0.9) {
             this.tier = TIER_LEGENDARY;
         } else if (this.bonusMult + this.upgrades * UPGRADE_MULT >= 0.85) {
@@ -619,8 +622,8 @@ public class ItemEquip implements Item {
                 return "Runic";
             case ItemEquip.TIER_LEGENDARY:
                 return "Legendary";
-            case ItemEquip.TIER_ARCHAIC:
-                return "Archaic";
+            case ItemEquip.TIER_MYSTIC:
+                return "Mystic";
             case ItemEquip.TIER_DIVINE:
                 return "Divine";
             default:

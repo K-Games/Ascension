@@ -7,10 +7,6 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.text.DecimalFormat;
 
-/**
- *
- * @author Ken Kwan
- */
 public abstract class Skill {
 
     protected static LogicModule logic;
@@ -42,6 +38,7 @@ public abstract class Skill {
             SHIELD_CHARGE = 0x0E,
             SHIELD_REFLECT = 0x0F,
             SHIELD_TOSS = 0x10,
+            SHIELD_MAGNETIZE = 0x10,
             SHIELD_DASH = 0x11,
             PASSIVE_DUALSWORD = 0x12,
             PASSIVE_KEENEYE = 0x13,
@@ -51,11 +48,11 @@ public abstract class Skill {
             PASSIVE_RESIST = 0x17,
             PASSIVE_BOWMASTERY = 0x18,
             PASSIVE_WILLPOWER = 0x19,
-            PASSIVE_TACTICAL = 0x1A,
+            PASSIVE_HARMONY = 0x1A,
             PASSIVE_REVIVE = 0x1B,
-            PASSIVE_11 = 0x1B,
+            PASSIVE_TOUGH = 0x1B,
             PASSIVE_SHADOWATTACK = 0x1C,
-            PASSIVE_12 = 0x1D;
+            PASSIVE_STATIC = 0x1D;
 
     public static void init() {
         logic = Main.getLogicModule();
@@ -87,9 +84,9 @@ public abstract class Skill {
         this.skillCastTime = logic.getTime();
     }
 
-    public int getCooldown() {
-        int elapsed = Globals.nsToMs(logic.getTime() - this.skillCastTime);
-        int cd = this.maxCooldown - elapsed;
+    public long getCooldown() {
+        long elapsed = Globals.nsToMs(logic.getTime() - this.skillCastTime);
+        long cd = this.maxCooldown - elapsed;
         return (cd > 0) ? cd : 0;
     }
 

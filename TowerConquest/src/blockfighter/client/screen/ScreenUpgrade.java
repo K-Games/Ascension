@@ -15,10 +15,6 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import javax.swing.SwingUtilities;
 
-/**
- *
- * @author Ken Kwan
- */
 public class ScreenUpgrade extends ScreenMenu {
 
     private static final int EQUIP_BOX_X = 980, EQUIP_BOX_Y = 40;

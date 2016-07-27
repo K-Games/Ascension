@@ -24,14 +24,10 @@ import javax.swing.JTextArea;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
-/**
- * All the server globals constants and helper methods.
- *
- * @author Ken Kwan
- */
 public class Globals {
 
-    public final static boolean LOGGING = true;
+    public final static boolean LOGGING = true,
+            DEBUG_MODE = false;
     private final static String SERVER_ID = String.format("%1$td-%1$tb-%1$tY %1$tH-%1$tM-%1$tS", System.currentTimeMillis());
     private final static String LOG_DIR = "logs/" + SERVER_ID,
             ERRLOG_FILE = "ErrorLog.log",
@@ -43,13 +39,13 @@ public class Globals {
 
     public final static byte GAME_MAJOR_VERSION = 0,
             GAME_MINOR_VERSION = 18,
-            GAME_UPDATE_NUMBER = 0;
+            GAME_UPDATE_NUMBER = 1;
     private final static String GAME_DEV_STATE = "ALPHA";
 
     public final static String GAME_RELEASE_VERSION = GAME_DEV_STATE + " " + GAME_MAJOR_VERSION + "." + GAME_MINOR_VERSION + "."
             + GAME_UPDATE_NUMBER;
 
-    public final static String WINDOW_TITLE = "Tower Conquest Server " + GAME_RELEASE_VERSION;
+    public final static String WINDOW_TITLE = "Ascension Server " + GAME_RELEASE_VERSION;
 
     private static final Random RNG = new Random();
 
@@ -63,8 +59,9 @@ public class Globals {
 
     public static int SERVER_PORT = 25565;
     public static byte SERVER_MAX_PLAYERS = 10;
-    public static HashMap<Byte, Byte> SERVER_ROOMS = new HashMap<>();
-    public static int SERVER_MAX_IDLE = 1200000;
+    public static boolean SERVER_BATCH_PACKETSEND = false;
+    public static HashMap<Byte, Byte> SERVER_ROOMNUM_TO_ROOMINDEX = new HashMap<>();
+    public static int SERVER_MAX_IDLE = 120000;
     public static byte SERVER_LOGIC_THREADS = 3,
             SERVER_PACKETSENDER_THREADS = 5;
 
@@ -94,7 +91,7 @@ public class Globals {
             PLAYER_ANIM_STATE_INVIS = 0x07,
             PLAYER_ANIM_STATE_ROLL = 0x08;
 
-    public final static int NUM_PARTICLE_EFFECTS = 46;
+    public final static int NUM_PARTICLE_EFFECTS = 50;
     public final static byte PARTICLE_SWORD_SLASH1 = 0x00,
             PARTICLE_SWORD_SLASH2 = 0x01,
             PARTICLE_SWORD_SLASH3 = 0x02,
@@ -125,7 +122,7 @@ public class Globals {
             PARTICLE_SHIELD_IRON = 0x1C,
             PARTICLE_SHIELD_IRONALLY = 0x1D,
             PARTICLE_SHIELD_FORTIFYBUFF = 0x1E,
-            PARTICLE_SHIELD_TOSS = 0x1F,
+            PARTICLE_SHIELD_MAGNETIZE = 0x1F,
             PARTICLE_SWORD_TAUNTBUFF = 0x20,
             PARTICLE_SWORD_SLASHBUFF = 0x21,
             PARTICLE_SHIELD_DASHBUFF = 0x22,
@@ -140,7 +137,10 @@ public class Globals {
             PARTICLE_SWORD_GASH2 = 0x2B,
             PARTICLE_SWORD_GASH3 = 0x2C,
             PARTICLE_SWORD_GASH4 = 0x2D,
-            PARTICLE_BLOOD_HIT = 0x2E;
+            PARTICLE_BLOOD_HIT = 0x2E,
+            PARTICLE_PASSIVE_STATIC = 0x2F,
+            PARTICLE_SHIELD_MAGNETIZESTART = 0x30,
+            PARTICLE_SHIELD_MAGNETIZEBURST = 0x31;
 
     public final static byte NUM_SFX = 9,
             SFX_SLASH = 0x00,
@@ -255,7 +255,7 @@ public class Globals {
 
     public final static void setServerProp() {
         for (byte i = 0; i < 10; i++) {
-            SERVER_ROOMS.put(i, i);
+            SERVER_ROOMNUM_TO_ROOMINDEX.put(i, i);
         }
         InputStream inputStream = null;
         try {
@@ -270,11 +270,11 @@ public class Globals {
                 SERVER_MAX_PLAYERS = Byte.parseByte(prop.getProperty("maxplayers"));
             }
             if (prop.getProperty("rooms") != null) {
-                SERVER_ROOMS.clear();
+                SERVER_ROOMNUM_TO_ROOMINDEX.clear();
                 String[] rooms = prop.getProperty("rooms").split(",");
                 Object[] roomNums = Arrays.asList(rooms).stream().map(Byte::parseByte).toArray();
                 for (byte i = 0; i < roomNums.length; i++) {
-                    SERVER_ROOMS.put((Byte) roomNums[i], i);
+                    SERVER_ROOMNUM_TO_ROOMINDEX.put((Byte) roomNums[i], i);
                 }
             }
             if (prop.getProperty("logicthreads") != null) {
@@ -297,7 +297,7 @@ public class Globals {
             }
             log(Globals.class, "Config", "Server Port: " + SERVER_PORT, Globals.LOG_TYPE_DATA, true);
             log(Globals.class, "Config", "Max Players per Room: " + SERVER_MAX_PLAYERS, Globals.LOG_TYPE_DATA, true);
-            log(Globals.class, "Config", "Rooms: " + SERVER_ROOMS, Globals.LOG_TYPE_DATA, true);
+            log(Globals.class, "Config", "Rooms: " + SERVER_ROOMNUM_TO_ROOMINDEX, Globals.LOG_TYPE_DATA, true);
             log(Globals.class, "Config", "Logic Module Threads: " + SERVER_LOGIC_THREADS, Globals.LOG_TYPE_DATA, true);
             log(Globals.class, "Config", "Max Packet Sender Threads: " + SERVER_PACKETSENDER_THREADS, Globals.LOG_TYPE_DATA, true);
 
@@ -509,7 +509,7 @@ public class Globals {
         return buffer.getInt();
     }
 
-    public static final int nsToMs(final long time) {
+    public static final long nsToMs(final long time) {
         return (int) TimeUnit.MILLISECONDS.convert(time, TimeUnit.NANOSECONDS);
     }
 
@@ -524,7 +524,7 @@ public class Globals {
         return -1;
     }
 
-    public static boolean hasPastDuration(final int currentDuration, final int durationToPast) {
+    public static boolean hasPastDuration(final long currentDuration, final long durationToPast) {
         if (durationToPast <= 0) {
             return true;
         }

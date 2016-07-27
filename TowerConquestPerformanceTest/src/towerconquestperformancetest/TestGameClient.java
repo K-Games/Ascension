@@ -5,11 +5,11 @@ import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Listener;
 import java.io.IOException;
 
-public class TestGameClient extends Thread {
+public class TestGameClient {
 
     private Client client;
     private TestPacketReceiver receiver;
-    private TestLogicModule logic;
+    private final TestLogicModule logic;
     private boolean loggedIn = false;
 
     private final String server;
@@ -21,7 +21,6 @@ public class TestGameClient extends Thread {
         this.port = port;
     }
 
-    @Override
     public void run() {
         if (this.receiver != null && this.receiver.isConnected()) {
             return;
@@ -47,7 +46,6 @@ public class TestGameClient extends Thread {
     public void shutdownClient() {
         client.close();
         if (this.receiver != null) {
-            this.receiver.shutdown();
             this.receiver = null;
         }
     }
@@ -100,6 +98,14 @@ public class TestGameClient extends Thread {
 
     public void sendMoveKey(final byte k, final byte dir, final boolean b) {
         TestPacketSender.sendMove(logic.getSelectedRoom(), k, dir, b, this.client);
+    }
+
+    public void sendGetPing() {
+        this.client.updateReturnTripTime();
+    }
+
+    public int getPing() {
+        return this.client.getReturnTripTime();
     }
 
 }

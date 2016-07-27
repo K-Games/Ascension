@@ -10,7 +10,7 @@ public class ParticleShieldReflectEmitter extends Particle {
     private long lastParticleTime = 0;
 
     public ParticleShieldReflectEmitter(final Player p) {
-        super(0, 0, p);
+        super(p);
         this.frame = 0;
         this.duration = 3000;
     }
@@ -24,7 +24,7 @@ public class ParticleShieldReflectEmitter extends Particle {
                 this.x = p.x;
                 this.y = p.y;
             }
-            for (int i = 0; i < 5; i++) {
+            for (int i = 0; i < 3; i++) {
                 final ParticleShieldReflectBuff b = new ParticleShieldReflectBuff(this.x, this.y, this.facing);
                 logic.getScreen().addParticle(b);
             }

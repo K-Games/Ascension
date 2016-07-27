@@ -4,10 +4,6 @@ import blockfighter.client.Globals;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-/**
- *
- * @author Ken Kwan
- */
 public class SkillPassiveVitalHit extends Skill {
 
     public SkillPassiveVitalHit() {

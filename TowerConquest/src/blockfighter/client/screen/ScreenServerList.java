@@ -1,7 +1,7 @@
 package blockfighter.client.screen;
 
-import blockfighter.client.FocusHandler;
 import blockfighter.client.Globals;
+import blockfighter.client.Main;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -34,8 +34,9 @@ public class ScreenServerList extends ScreenMenu {
     private static final JTextField SERVERADDRESS_FIELD = new JTextField();
     private static final JComboBox<String> SERVER_ROOMS;
     private static final Rectangle CONNECT_BOX = new Rectangle(650, 230, 200, 70);
-    private String status = "Waiting to connect...";
+    private String status = "Waiting to login...";
     private boolean connecting = false, enabledInput = false;
+    private byte statusCode = -1;
 
     static {
         String[] listItems = new String[10];
@@ -44,9 +45,8 @@ public class ScreenServerList extends ScreenMenu {
             listItems[i] = "Lvl " + (i * 10 + 1) + "-" + ((i + 1) * 10);
         }
         SERVER_ROOMS = new JComboBox<>(listItems);
-        final FocusHandler focusHandler = new FocusHandler();
-        SERVERADDRESS_FIELD.addFocusListener(focusHandler);
-        SERVER_ROOMS.addFocusListener(focusHandler);
+        SERVERADDRESS_FIELD.addFocusListener(Main.FOCUS_HANDLER);
+        SERVER_ROOMS.addFocusListener(Main.FOCUS_HANDLER);
 
         SERVERADDRESS_FIELD.setBounds(550, 150, 400, 40);
         SERVERADDRESS_FIELD.setFont(Globals.ARIAL_24PT);
@@ -75,18 +75,14 @@ public class ScreenServerList extends ScreenMenu {
             panel.add(SERVER_ROOMS);
             panel.revalidate();
         });
-        SERVERADDRESS_FIELD.setVisible(!fadeIn);
-        SERVER_ROOMS.setEnabled(!fadeIn);
         this.enabledInput = !fadeIn;
-
     }
 
     @Override
     public void update() {
         super.update();
         if (this.fadeIn && this.finishedFadeIn && !this.enabledInput) {
-            SERVERADDRESS_FIELD.setVisible(true);
-            SERVER_ROOMS.setEnabled(true);
+            enableFields();
             this.enabledInput = true;
         }
     }
@@ -116,15 +112,20 @@ public class ScreenServerList extends ScreenMenu {
                 RenderingHints.KEY_TEXT_ANTIALIASING,
                 RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
 
+        String title = "Login to Server";
         g.setFont(Globals.ARIAL_30PT);
-        drawStringOutline(g, "Connect To Server", 600, 90, 2);
-        g.setColor(Color.WHITE);
-        g.drawString("Connect To Server", 600, 90);
+        final int titleX = 750 - g.getFontMetrics().stringWidth(title) / 2, titleY = 90;
 
-        g.setFont(Globals.ARIAL_24PT);
-        drawStringOutline(g, "Host: ", 490, 177, 2);
+        drawStringOutline(g, title, titleX, titleY, 2);
         g.setColor(Color.WHITE);
-        g.drawString("Host: ", 490, 177);
+        g.drawString(title, titleX, titleY);
+
+        String label = "Server:";
+        g.setFont(Globals.ARIAL_24PT);
+        final int labelX = 550 - g.getFontMetrics().stringWidth(label) - 5, labelY = 177;
+        drawStringOutline(g, label, labelX, labelY, 2);
+        g.setColor(Color.WHITE);
+        g.drawString(label, labelX, labelY);
 
         g.drawRect(CONNECT_BOX.x, CONNECT_BOX.y, CONNECT_BOX.width, CONNECT_BOX.height);
         g.setColor(new Color(30, 30, 30, 255));
@@ -135,7 +136,8 @@ public class ScreenServerList extends ScreenMenu {
 
         g.setFont(Globals.ARIAL_24PT);
         g.setColor(Color.WHITE);
-        g.drawString("Connect", CONNECT_BOX.x + 55, CONNECT_BOX.y + 40);
+        String buttonLabel = "Login";
+        g.drawString(buttonLabel, CONNECT_BOX.x + CONNECT_BOX.width / 2 - g.getFontMetrics().stringWidth(buttonLabel) / 2, CONNECT_BOX.y + CONNECT_BOX.height / 2 + g.getFontMetrics().getHeight() / 3);
 
         g.setFont(Globals.ARIAL_24PT);
         final int strWidth = g.getFontMetrics().stringWidth(this.status);
@@ -174,7 +176,7 @@ public class ScreenServerList extends ScreenMenu {
 
     @Override
     public void mouseReleased(final MouseEvent e) {
-        if (connecting) {
+        if (connecting || !enabledInput) {
             return;
         }
         super.mouseReleased(e);
@@ -184,6 +186,7 @@ public class ScreenServerList extends ScreenMenu {
                 if (SERVERADDRESS_FIELD.getText().trim().length() > 0) {
                     connecting = true;
                     SERVER_ROOMS.setEnabled(false);
+                    SERVERADDRESS_FIELD.setEnabled(false);
                     saveServerList(SERVERADDRESS_FIELD.getText().trim());
                     logic.connect(SERVERADDRESS_FIELD.getText().trim(), (byte) SERVER_ROOMS.getSelectedIndex());
                 }
@@ -222,49 +225,52 @@ public class ScreenServerList extends ScreenMenu {
     }
 
     public void setStatus(final byte code) {
+        if (code == STATUS_FAILEDCONNECT && this.statusCode != 0) {
+            return;
+        }
+        this.statusCode = code;
         switch (code) {
             case STATUS_CONNECTING:
                 this.status = "Connecting...";
                 break;
             case STATUS_SOCKETCLOSED:
-                connecting = false;
-                SERVER_ROOMS.setEnabled(true);
+                enableFields();
                 this.status = "Could not connect: Socket closed.";
                 break;
             case STATUS_FAILEDCONNECT:
-                connecting = false;
-                SERVER_ROOMS.setEnabled(true);
+                enableFields();
                 this.status = "Could not connect: Cannot reach server.";
                 break;
             case STATUS_UNKNOWNHOST:
-                connecting = false;
-                SERVER_ROOMS.setEnabled(true);
+                enableFields();
                 this.status = "Could not connect: Cannot resolve host.";
                 break;
             case STATUS_WRONGVERSION:
-                connecting = false;
-                SERVER_ROOMS.setEnabled(true);
+                enableFields();
                 this.status = "Could not connect: Server is a different version.";
                 break;
             case STATUS_FULLROOM:
-                connecting = false;
-                SERVER_ROOMS.setEnabled(true);
+                enableFields();
                 this.status = "Could not connect: Room is full.";
                 break;
             case STATUS_UIDINROOM:
-                connecting = false;
-                SERVER_ROOMS.setEnabled(true);
+                enableFields();
                 this.status = "Could not connect: This character is already in the room.";
                 break;
             case STATUS_OUTSIDELEVEL:
-                connecting = false;
-                SERVER_ROOMS.setEnabled(true);
+                enableFields();
                 this.status = "Could not connect: This character does not meet the level requirements.";
                 break;
             default:
-                connecting = false;
-                SERVER_ROOMS.setEnabled(true);
+                enableFields();
                 this.status = "Could not connect: Unkown Status";
         }
+    }
+
+    public void enableFields() {
+        connecting = false;
+        SERVERADDRESS_FIELD.setVisible(true);
+        SERVERADDRESS_FIELD.setEnabled(true);
+        SERVER_ROOMS.setEnabled(true);
     }
 }

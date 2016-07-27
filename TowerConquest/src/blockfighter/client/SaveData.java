@@ -1,5 +1,6 @@
 package blockfighter.client;
 
+import blockfighter.client.entities.items.Item;
 import blockfighter.client.entities.items.ItemEquip;
 import static blockfighter.client.entities.items.ItemEquip.ITEM_CODES;
 import blockfighter.client.entities.items.ItemUpgrade;
@@ -10,25 +11,24 @@ import blockfighter.client.entities.player.skills.SkillBowPower;
 import blockfighter.client.entities.player.skills.SkillBowRapid;
 import blockfighter.client.entities.player.skills.SkillBowStorm;
 import blockfighter.client.entities.player.skills.SkillBowVolley;
-import blockfighter.client.entities.player.skills.SkillPassive11;
-import blockfighter.client.entities.player.skills.SkillPassive12;
 import blockfighter.client.entities.player.skills.SkillPassiveBarrier;
 import blockfighter.client.entities.player.skills.SkillPassiveBowMastery;
 import blockfighter.client.entities.player.skills.SkillPassiveDualSword;
+import blockfighter.client.entities.player.skills.SkillPassiveHarmony;
 import blockfighter.client.entities.player.skills.SkillPassiveKeenEye;
 import blockfighter.client.entities.player.skills.SkillPassiveResistance;
-import blockfighter.client.entities.player.skills.SkillPassiveRevive;
 import blockfighter.client.entities.player.skills.SkillPassiveShadowAttack;
 import blockfighter.client.entities.player.skills.SkillPassiveShieldMastery;
-import blockfighter.client.entities.player.skills.SkillPassiveTactical;
+import blockfighter.client.entities.player.skills.SkillPassiveStatic;
+import blockfighter.client.entities.player.skills.SkillPassiveTough;
 import blockfighter.client.entities.player.skills.SkillPassiveVitalHit;
 import blockfighter.client.entities.player.skills.SkillPassiveWillpower;
 import blockfighter.client.entities.player.skills.SkillShieldCharge;
 import blockfighter.client.entities.player.skills.SkillShieldDash;
 import blockfighter.client.entities.player.skills.SkillShieldFortify;
 import blockfighter.client.entities.player.skills.SkillShieldIron;
+import blockfighter.client.entities.player.skills.SkillShieldMagnetize;
 import blockfighter.client.entities.player.skills.SkillShieldReflect;
-import blockfighter.client.entities.player.skills.SkillShieldToss;
 import blockfighter.client.entities.player.skills.SkillSwordCinder;
 import blockfighter.client.entities.player.skills.SkillSwordGash;
 import blockfighter.client.entities.player.skills.SkillSwordPhantom;
@@ -73,7 +73,6 @@ public class SaveData {
         // initalize skill list
         this.skills[Skill.SWORD_CINDER] = new SkillSwordCinder();
         this.skills[Skill.SWORD_GASH] = new SkillSwordGash();
-        //this.skills[Skill.SWORD_MULTI] = new SkillSwordMulti();
         this.skills[Skill.SWORD_PHANTOM] = new SkillSwordPhantom();
         this.skills[Skill.SWORD_SLASH] = new SkillSwordSlash();
         this.skills[Skill.SWORD_TAUNT] = new SkillSwordTaunt();
@@ -90,7 +89,7 @@ public class SaveData {
         this.skills[Skill.SHIELD_IRON] = new SkillShieldIron();
         this.skills[Skill.SHIELD_CHARGE] = new SkillShieldCharge();
         this.skills[Skill.SHIELD_REFLECT] = new SkillShieldReflect();
-        this.skills[Skill.SHIELD_TOSS] = new SkillShieldToss();
+        this.skills[Skill.SHIELD_MAGNETIZE] = new SkillShieldMagnetize();
         this.skills[Skill.SHIELD_DASH] = new SkillShieldDash();
 
         this.skills[Skill.PASSIVE_DUALSWORD] = new SkillPassiveDualSword();
@@ -101,10 +100,10 @@ public class SaveData {
         this.skills[Skill.PASSIVE_RESIST] = new SkillPassiveResistance();
         this.skills[Skill.PASSIVE_BOWMASTERY] = new SkillPassiveBowMastery();
         this.skills[Skill.PASSIVE_WILLPOWER] = new SkillPassiveWillpower();
-        this.skills[Skill.PASSIVE_TACTICAL] = new SkillPassiveTactical();
-        this.skills[Skill.PASSIVE_11] = new SkillPassive11();
+        this.skills[Skill.PASSIVE_HARMONY] = new SkillPassiveHarmony();
+        this.skills[Skill.PASSIVE_TOUGH] = new SkillPassiveTough();
         this.skills[Skill.PASSIVE_SHADOWATTACK] = new SkillPassiveShadowAttack();
-        this.skills[Skill.PASSIVE_12] = new SkillPassive12();
+        this.skills[Skill.PASSIVE_STATIC] = new SkillPassiveStatic();
     }
 
     public void newCharacter(final boolean testMax) {
@@ -494,15 +493,12 @@ public class SaveData {
         return this.uniqueID;
     }
 
-    public void addDrops(final int lvl, final int dropItemCode) {
-        if (ItemUpgrade.isValidItem(dropItemCode)) {
-            addItem(new ItemUpgrade(dropItemCode, lvl + Globals.rng(6)));
-            return;
+    public void addDrops(final int lvl, final Item dropItemCode) {
+        if (dropItemCode instanceof ItemEquip) {
+            addItem((ItemEquip) dropItemCode);
         }
-
-        if (ItemEquip.isValidItem(dropItemCode)) {
-            final ItemEquip e = new ItemEquip(dropItemCode, lvl, Globals.rng(100) < 20);
-            addItem(e);
+        if (dropItemCode instanceof ItemUpgrade) {
+            addItem((ItemUpgrade) dropItemCode);
         }
     }
 
@@ -640,7 +636,11 @@ public class SaveData {
             this.baseStats[Globals.STAT_SKILLPOINTS]--;
             this.skills[skillCode].addLevel((byte) 1);
         } else {
-            final byte amount = (byte) (30 - this.skills[skillCode].getLevel());
+            double max = 30;
+            if (this.baseStats[Globals.STAT_SKILLPOINTS] < 30) {
+                max = this.baseStats[Globals.STAT_SKILLPOINTS];
+            }
+            final byte amount = (byte) (max - this.skills[skillCode].getLevel());
             this.baseStats[Globals.STAT_SKILLPOINTS] -= amount;
             this.skills[skillCode].addLevel(amount);
         }

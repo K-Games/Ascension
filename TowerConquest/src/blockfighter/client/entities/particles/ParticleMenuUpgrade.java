@@ -4,10 +4,6 @@ import blockfighter.client.Globals;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
-/**
- *
- * @author Ken Kwan
- */
 public class ParticleMenuUpgrade extends Particle {
 
     private final int color, deltaX;

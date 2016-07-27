@@ -18,7 +18,7 @@ import org.apache.commons.io.FileUtils;
  */
 public class Globals {
 
-    public static boolean customPort = false;
+    public static boolean SKIP_TITLE = false;
     public static int SERVER_PORT = 25565;
     public static String SERVER_ADDRESS;
 
@@ -27,7 +27,7 @@ public class Globals {
 
     public final static byte GAME_MAJOR_VERSION = 0,
             GAME_MINOR_VERSION = 18,
-            GAME_UPDATE_NUMBER = 0;
+            GAME_UPDATE_NUMBER = 1;
 
     private final static String GAME_DEV_STATE = "ALPHA";
 
@@ -67,7 +67,7 @@ public class Globals {
     // public final static double REQUESTALL_TICKS_PER_SEC = 1D;
     public final static double REQUESTALL_UPDATE = 10000000000D;
 
-    public final static double PINGS_PER_SEC = 1D;
+    public final static double PINGS_PER_SEC = 2D;
     public final static double PING_UPDATE = 1000000000D / PINGS_PER_SEC;
 
     public final static double PROCESS_QUEUES_PER_SEC = 100D;
@@ -77,7 +77,7 @@ public class Globals {
 
     public final static int NUM_SOUND_EFFECTS = 0;
 
-    public final static int NUM_PARTICLE_EFFECTS = 46;
+    public final static int NUM_PARTICLE_EFFECTS = 50;
     public final static byte PARTICLE_SWORD_SLASH1 = 0x00,
             PARTICLE_SWORD_SLASH2 = 0x01,
             PARTICLE_SWORD_SLASH3 = 0x02,
@@ -108,7 +108,7 @@ public class Globals {
             PARTICLE_SHIELD_IRON = 0x1C,
             PARTICLE_SHIELD_IRONALLY = 0x1D,
             PARTICLE_SHIELD_FORTIFYBUFF = 0x1E,
-            PARTICLE_SHIELD_TOSS = 0x1F,
+            PARTICLE_SHIELD_MAGNETIZE = 0x1F,
             PARTICLE_SWORD_TAUNTBUFF = 0x20,
             PARTICLE_SWORD_SLASHBUFF = 0x21,
             PARTICLE_SHIELD_DASHBUFF = 0x22,
@@ -123,7 +123,10 @@ public class Globals {
             PARTICLE_SWORD_GASH2 = 0x2B,
             PARTICLE_SWORD_GASH3 = 0x2C,
             PARTICLE_SWORD_GASH4 = 0x2D,
-            PARTICLE_BLOOD_HIT = 0x2E;
+            PARTICLE_BLOOD_HIT = 0x2E,
+            PARTICLE_PASSIVE_STATIC = 0x2F,
+            PARTICLE_SHIELD_MAGNETIZESTART = 0x30,
+            PARTICLE_SHIELD_MAGNETIZEBURST = 0x31;
 
     public final static int NUM_KEYBINDS = 16,
             KEYBIND_SKILL1 = 0,
@@ -288,7 +291,7 @@ public class Globals {
     public final static String[] SOUND_BGM = new String[NUM_BGM];
     public final static String[] SOUND_SFX = new String[NUM_SFX];
 
-    public final static int[] PLAYER_ANIM_FRAMES = new int[NUM_PLAYER_ANIM_STATE];
+    public final static int[] PLAYER_NUM_ANIM_FRAMES = new int[NUM_PLAYER_ANIM_STATE];
 
     public final static byte BUTTON_BIGRECT = 0,
             BUTTON_SELECTCHAR = 1,
@@ -315,18 +318,17 @@ public class Globals {
             NUMBER_TYPE_MOB = 2;
 
     public static final byte NOTIFICATION_EXP = 0,
-            NOTIFICATION_ITEMEQUIP = 1,
-            NOTIFICATION_ITEMUPGRADE = 2;
+            NOTIFICATION_ITEM = 1;
 
     static {
-        PLAYER_ANIM_FRAMES[PLAYER_ANIM_STATE_ATTACK] = 7;
-        PLAYER_ANIM_FRAMES[PLAYER_ANIM_STATE_ATTACKBOW] = 6;
-        PLAYER_ANIM_FRAMES[PLAYER_ANIM_STATE_STAND] = 4;
-        PLAYER_ANIM_FRAMES[PLAYER_ANIM_STATE_WALK] = 8;
-        PLAYER_ANIM_FRAMES[PLAYER_ANIM_STATE_BUFF] = 7;
-        PLAYER_ANIM_FRAMES[PLAYER_ANIM_STATE_DEAD] = 10;
-        PLAYER_ANIM_FRAMES[PLAYER_ANIM_STATE_ROLL] = 10;
-        PLAYER_ANIM_FRAMES[PLAYER_ANIM_STATE_JUMP] = 3;
+        PLAYER_NUM_ANIM_FRAMES[PLAYER_ANIM_STATE_ATTACK] = 7;
+        PLAYER_NUM_ANIM_FRAMES[PLAYER_ANIM_STATE_ATTACKBOW] = 8;
+        PLAYER_NUM_ANIM_FRAMES[PLAYER_ANIM_STATE_STAND] = 4;
+        PLAYER_NUM_ANIM_FRAMES[PLAYER_ANIM_STATE_WALK] = 8;
+        PLAYER_NUM_ANIM_FRAMES[PLAYER_ANIM_STATE_BUFF] = 5;
+        PLAYER_NUM_ANIM_FRAMES[PLAYER_ANIM_STATE_DEAD] = 10;
+        PLAYER_NUM_ANIM_FRAMES[PLAYER_ANIM_STATE_ROLL] = 10;
+        PLAYER_NUM_ANIM_FRAMES[PLAYER_ANIM_STATE_JUMP] = 3;
         loadSound();
         loadGFX();
     }
@@ -451,8 +453,8 @@ public class Globals {
 
     private static void loadGFX() {
         for (int state = 0; state < CHAR_SPRITE.length; state++) {
-            if (PLAYER_ANIM_FRAMES[state] > 0) {
-                CHAR_SPRITE[state] = new BufferedImage[PLAYER_ANIM_FRAMES[state]];
+            if (PLAYER_NUM_ANIM_FRAMES[state] > 0) {
+                CHAR_SPRITE[state] = new BufferedImage[PLAYER_NUM_ANIM_FRAMES[state]];
                 for (int frames = 0; frames < CHAR_SPRITE[state].length; frames++) {
                     String folder = "";
                     switch (state) {
@@ -510,7 +512,7 @@ public class Globals {
         MENU_TABPOINTER[1] = Globals.loadTextureResource("sprites/ui/menu/pointer2.png");
         MENU_ITEMDELETE[0] = Globals.loadTextureResource("sprites/ui/menu/delete.png");
         MENU_SMOKE[0] = Globals.loadTextureResource("sprites/ui/menu/smoke.png");
-        for (byte i = 0; i < 29; i++) {
+        for (byte i = 0; i < 30; i++) {
             SKILL_ICON[i] = Globals.loadTextureResource("sprites/skillicon/" + i + ".png");
         }
 
@@ -523,8 +525,8 @@ public class Globals {
         EXP_WORD[0] = Globals.loadTextureResource("sprites/number/exp/exp.png");
     }
 
-    public static final int nsToMs(final long time) {
-        return (int) TimeUnit.MILLISECONDS.convert(time, TimeUnit.NANOSECONDS);
+    public static final long nsToMs(final long time) {
+        return TimeUnit.MILLISECONDS.convert(time, TimeUnit.NANOSECONDS);
     }
 
     public static final long msToNs(final long time) {

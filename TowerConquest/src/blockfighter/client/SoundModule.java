@@ -1,13 +1,8 @@
 package blockfighter.client;
 
-import com.threed.jpct.SimpleVector;
 import paulscode.sound.SoundSystemConfig;
 import paulscode.sound.SoundSystemJPCT;
 
-/**
- *
- * @author Ken Kwan
- */
 public class SoundModule implements Runnable {
 
     private SoundSystemJPCT soundModule;
@@ -17,7 +12,7 @@ public class SoundModule implements Runnable {
     @Override
     public void run() {
         this.soundModule = new SoundSystemJPCT();
-        this.soundModule.setMasterVolume(0.35f);
+        this.soundModule.setMasterVolume(0.5f);
         SoundSystemConfig.setSoundFilesPackage("resources/sounds/");
     }
 
@@ -48,7 +43,7 @@ public class SoundModule implements Runnable {
             }
             this.soundModule.backgroundMusic(Globals.SOUND_BGM[bgmID], Globals.SOUND_BGM[bgmID]);
             currentBGM = bgmID;
-            this.soundModule.setVolume("bgm", .7f);
+            this.soundModule.setVolume("bgm", 1f);
             System.out.println("Playing " + Globals.SOUND_BGM[bgmID]);
         }
     }

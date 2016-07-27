@@ -6,11 +6,6 @@ import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.maps.GameMap;
 
-/**
- * Debug_Lightning boss Work in progress
- *
- * @author Ken
- */
 public class BossShadowFiend extends Mob {
 
     private static final byte NUM_SKILLS = 4;
@@ -41,7 +36,7 @@ public class BossShadowFiend extends Mob {
         super.addValidMobSkillState(STATE_DARKLINES);
         super.addValidMobSkillState(STATE_ORBS);
 
-        super.addSkill(SKILL_RAZE, new SkillRaze(this.logic));
+        super.addSkill(SKILL_RAZE, new SkillRaze(this.room));
         //this.logic.queueAddProj(new ProjTouch(this.logic, this));
     }
 
@@ -107,7 +102,7 @@ public class BossShadowFiend extends Mob {
             queueMobState(STATE_RAZE);
             setCooldown(SKILL_RAZE);
             this.skillCounter = 0;
-            this.skillCastTime = this.logic.getTime();
+            this.skillCastTime = this.room.getTime();
         }
     }
 
@@ -121,7 +116,7 @@ public class BossShadowFiend extends Mob {
             phase = 1;
         }
 
-        int duration = Globals.nsToMs(this.logic.getTime() - this.skillCastTime);
+        long duration = Globals.nsToMs(this.room.getTime() - this.skillCastTime);
         switch (this.mobState) {
             case STATE_STAND:
                 nextAIstate(t);
@@ -145,8 +140,8 @@ public class BossShadowFiend extends Mob {
     private void updateAnimState() {
         final byte prevAnimState = this.animState, prevFrame = this.frame;
 
-        final int duration = Globals.nsToMs(this.logic.getTime() - this.skillCastTime);
-        final int frameDuration = Globals.nsToMs(this.logic.getTime() - this.lastFrameTime);
+        final long duration = Globals.nsToMs(this.room.getTime() - this.skillCastTime);
+        final long frameDuration = Globals.nsToMs(this.room.getTime() - this.lastFrameTime);
         switch (this.mobState) {
             case STATE_STAND:
                 this.animState = STATE_STAND;
@@ -155,7 +150,7 @@ public class BossShadowFiend extends Mob {
                     if (this.frame == 10) {
                         this.frame = 0;
                     }
-                    this.lastFrameTime = this.logic.getTime();
+                    this.lastFrameTime = this.room.getTime();
                 }
                 break;
             case STATE_WALK:
@@ -165,7 +160,7 @@ public class BossShadowFiend extends Mob {
                     if (this.frame == 10) {
                         this.frame = 0;
                     }
-                    this.lastFrameTime = this.logic.getTime();
+                    this.lastFrameTime = this.room.getTime();
                 }
                 break;
         }

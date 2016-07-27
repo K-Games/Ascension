@@ -5,10 +5,6 @@ import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.proj.Projectile;
 import java.util.Map;
 
-/**
- *
- * @author Ken Kwan
- */
 public abstract class MobProjectile extends Projectile {
 
     public MobProjectile(final LogicModule l) {
@@ -29,7 +25,7 @@ public abstract class MobProjectile extends Projectile {
             return;
         }
 
-        for (final Map.Entry<Byte, Player> pEntry : this.logic.getPlayers().entrySet()) {
+        for (final Map.Entry<Byte, Player> pEntry : this.room.getPlayers().entrySet()) {
             final Player p = pEntry.getValue();
             if (p != getOwner() && !this.pHit.containsKey(p.getKey()) && !p.isInvulnerable() && p.intersectHitbox(this.hitbox[0])) {
                 this.playerQueue.add(p);

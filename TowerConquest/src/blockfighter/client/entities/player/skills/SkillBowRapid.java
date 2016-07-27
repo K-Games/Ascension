@@ -5,10 +5,6 @@ import blockfighter.client.entities.items.ItemEquip;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-/**
- *
- * @author Ken Kwan
- */
 public class SkillBowRapid extends Skill {
 
     public SkillBowRapid() {
@@ -46,10 +42,10 @@ public class SkillBowRapid extends Skill {
         g.drawString("Fire 3 shots over 0.5 seconds.", drawX + 10, drawY + 90);
 
         g.drawString("[Level " + this.level + "]", drawX + 10, drawY + 115);
-        g.drawString("Deals " + (75 + this.level * 2) + "% damage per hit.", drawX + 10, drawY + 135);
+        g.drawString("Deals " + (80 + this.level * 2) + "% damage per hit.", drawX + 10, drawY + 135);
         if (this.level < 30) {
             g.drawString("[Level " + (this.level + 1) + "]", drawX + 10, drawY + 160);
-            g.drawString("Deals " + (75 + (this.level + 1) * 2) + "% damage per hit.", drawX + 10, drawY + 180);
+            g.drawString("Deals " + (80 + (this.level + 1) * 2) + "% damage per hit.", drawX + 10, drawY + 180);
 
             g.drawString("[Level 30 Bonus]", drawX + 10, drawY + 205);
             g.drawString("Each shot has 50% Chance to deal 2x damage.", drawX + 10, drawY + 225);

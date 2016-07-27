@@ -5,12 +5,8 @@ import blockfighter.server.LogicModule;
 import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
-import java.awt.Point;
+import java.awt.geom.Point2D;
 
-/**
- *
- * @author Ken Kwan
- */
 public class BuffBurn extends Buff implements BuffDmgTakenAmp {
 
     private final double dmgAmp, dmgPerSec;
@@ -38,17 +34,17 @@ public class BuffBurn extends Buff implements BuffDmgTakenAmp {
     @Override
     public void update() {
         super.update();
-        int sinceLastDamage = Globals.nsToMs(this.logic.getTime() - this.lastDmgTime);
+        long sinceLastDamage = Globals.nsToMs(this.room.getTime() - this.lastDmgTime);
         if (this.dmgPerSec > 0 && sinceLastDamage >= 500) {
-            this.lastDmgTime = this.logic.getTime();
+            this.lastDmgTime = this.room.getTime();
             if (getTarget() != null) {
-                final Point dmgPoint = new Point((int) (getTarget().getHitbox().x),
-                        (int) (getTarget().getHitbox().y + getTarget().getHitbox().height / 2));
+                final Point2D.Double dmgPoint = new Point2D.Double(getTarget().getHitbox().x,
+                        getTarget().getHitbox().y + getTarget().getHitbox().height / 2);
                 getTarget().queueDamage(new Damage((int) (this.dmgPerSec / 2), false, getOwner(), getTarget(), false, dmgPoint));
             }
             if (getMobTarget() != null) {
-                final Point dmgPoint = new Point((int) (getMobTarget().getHitbox().x),
-                        (int) (getMobTarget().getHitbox().y + getMobTarget().getHitbox().height / 2));
+                final Point2D.Double dmgPoint = new Point2D.Double(getMobTarget().getHitbox().x,
+                        getMobTarget().getHitbox().y + getMobTarget().getHitbox().height / 2);
                 getMobTarget().queueDamage(new Damage((int) (this.dmgPerSec / 2), false, getOwner(), getMobTarget(), false, dmgPoint));
             }
         }

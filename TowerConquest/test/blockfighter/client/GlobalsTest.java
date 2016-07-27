@@ -76,7 +76,7 @@ public class GlobalsTest {
         System.out.println("nsToMs: 1,000,000,000 ns converted to 1,000 ms");
         long time = 1000000000L;
         long expResult = TimeUnit.MILLISECONDS.convert(time, TimeUnit.NANOSECONDS);
-        int result = Globals.nsToMs(time);
+        long result = Globals.nsToMs(time);
         System.out.println("Expected: <" + expResult + ">, Result: <" + result + ">");
         assertEquals(expResult, result);
     }

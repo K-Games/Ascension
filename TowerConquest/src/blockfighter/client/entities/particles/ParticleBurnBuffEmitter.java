@@ -10,7 +10,7 @@ public class ParticleBurnBuffEmitter extends Particle {
     private long lastParticleTime = 0;
 
     public ParticleBurnBuffEmitter(final Player p) {
-        super(0, 0, p);
+        super(p);
         this.frame = 0;
         this.duration = 4000;
     }

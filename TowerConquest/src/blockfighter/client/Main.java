@@ -31,6 +31,9 @@ import org.apache.commons.lang3.concurrent.BasicThreadFactory;
  */
 public class Main {
 
+    public static final KeyHandler KEY_HANDLER = new KeyHandler();
+    public static final MouseHandler MOUSE_HANDLER = new MouseHandler();
+    public static final FocusHandler FOCUS_HANDLER = new FocusHandler();
     private static final SoundModule SOUND_MODULE = new SoundModule();
 
     private static final LogicModule LOGIC_MODULE = new LogicModule(SOUND_MODULE);
@@ -74,23 +77,25 @@ public class Main {
      */
     public static void main(final String[] args) {
         if (args.length > 0) {
-            int port = -1;
             for (int i = 0; i < args.length; i++) {
-                switch (args[i]) {
+                switch (args[i].toLowerCase()) {
                     case "-port":
-                        if (port == -1) {
-                            try {
-                                port = Integer.parseInt(args[i + 1]);
-                                if (port > 0 || port <= 65535) {
-                                    System.out.println("Setting server connection port to " + port);
-                                    Globals.SERVER_PORT = port;
-                                    Globals.customPort = true;
-                                }
-                            } catch (Exception e) {
+                        try {
+                            int port = Integer.parseInt(args[i + 1]);
+                            if (port > 0 && port <= 65535) {
+                                System.out.println("Setting server connection port to " + port);
+                                Globals.SERVER_PORT = port;
+                            } else {
                                 System.err.println("-port Specify a valid port between 1 to 65535");
-                                System.exit(201);
+                                System.exit(202);
                             }
+                        } catch (Exception e) {
+                            System.err.println("-port Specify a valid port between 1 to 65535");
+                            System.exit(201);
                         }
+                        break;
+                    case "-skiptitle":
+                        Globals.SKIP_TITLE = true;
                         break;
                 }
             }
@@ -112,9 +117,6 @@ public class Main {
         Screen.setThreadPool(SHARED_THREADPOOL);
         GameMap.setThreadPool(SHARED_THREADPOOL);
 
-        final KeyHandler keyHandler = new KeyHandler();
-        final MouseHandler mouseHandler = new MouseHandler();
-        final FocusHandler focusHandler = new FocusHandler();
         // frame.setUndecorated(true);
         frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -126,10 +128,10 @@ public class Main {
 
         panel.setLayout(null);
         panel.setFocusable(true);
-        panel.addKeyListener(keyHandler);
-        panel.addMouseMotionListener(mouseHandler);
-        panel.addMouseListener(mouseHandler);
-        panel.addFocusListener(focusHandler);
+        panel.addKeyListener(KEY_HANDLER);
+        panel.addMouseMotionListener(MOUSE_HANDLER);
+        panel.addMouseListener(MOUSE_HANDLER);
+        panel.addFocusListener(FOCUS_HANDLER);
         panel.requestFocus();
 
         Runtime.getRuntime().addShutdownHook(new Thread() {
@@ -139,12 +141,12 @@ public class Main {
                 SOUND_MODULE.shutdown();
             }
         });
-        final ScheduledExecutorService service = Executors.newScheduledThreadPool(3, new BasicThreadFactory.Builder()
+        final ScheduledExecutorService service = Executors.newScheduledThreadPool(2, new BasicThreadFactory.Builder()
                 .namingPattern("RunScheduler-%d")
                 .daemon(true)
                 .priority(Thread.NORM_PRIORITY)
                 .build());
-        LOGIC_MODULE.setScreen(new ScreenTitle());
+        LOGIC_MODULE.setScreen((!Globals.SKIP_TITLE) ? new ScreenTitle() : new ScreenSelectChar());
         service.scheduleAtFixedRate(LOGIC_MODULE, 0, 1, TimeUnit.MILLISECONDS);
         service.scheduleAtFixedRate(render, 0, Globals.RENDER_UPDATE, TimeUnit.MICROSECONDS);
     }

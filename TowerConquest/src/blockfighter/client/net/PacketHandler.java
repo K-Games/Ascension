@@ -1,7 +1,6 @@
 package blockfighter.client.net;
 
 import blockfighter.client.Globals;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  *
@@ -9,7 +8,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 public class PacketHandler {
 
-    private static ConcurrentLinkedQueue<byte[]> packetQueue = new ConcurrentLinkedQueue<>();
     private static GameClient gameClient;
 
     public static void setGameClient(final GameClient cl) {
@@ -56,10 +54,6 @@ public class PacketHandler {
 
     private static void receiveData(final byte[] data) {
         gameClient.queueData(data);
-    }
-
-    public static void clearDataQueue() {
-        packetQueue.clear();
     }
 
 }

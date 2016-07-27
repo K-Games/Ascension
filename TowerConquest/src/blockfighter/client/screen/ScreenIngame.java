@@ -3,6 +3,7 @@ package blockfighter.client.screen;
 import blockfighter.client.Globals;
 import blockfighter.client.SaveData;
 import blockfighter.client.entities.ingamenumber.IngameNumber;
+import blockfighter.client.entities.items.Item;
 import blockfighter.client.entities.items.ItemEquip;
 import blockfighter.client.entities.items.ItemUpgrade;
 import blockfighter.client.entities.mob.Mob;
@@ -127,6 +128,8 @@ public class ScreenIngame extends Screen {
             if (this.players.containsKey(this.myKey)) {
                 logic.setSoundLisenterPos(this.players.get(this.myKey).getX(), this.players.get(this.myKey).getY());
             }
+
+            this.ping = this.client.getPing();
             this.lastUpdateTime = now;
         }
 
@@ -493,19 +496,25 @@ public class ScreenIngame extends Screen {
     private void dataPlayerGiveDrop(final byte[] data) {
         final int lvl = Globals.bytesToInt(Arrays.copyOfRange(data, 1, 5));
         final int dropCode = Globals.bytesToInt(Arrays.copyOfRange(data, 5, 9));
-        //TODO - Add drop gained notification
-        if (ItemEquip.isValidItem(dropCode)) {
-            this.notifications.add(new Notification(dropCode, Globals.NOTIFICATION_ITEMEQUIP));
-        }
+        Item dropItem = null;
+
         if (ItemUpgrade.isValidItem(dropCode)) {
-            this.notifications.add(new Notification(dropCode, Globals.NOTIFICATION_ITEMUPGRADE));
+            dropItem = new ItemUpgrade(dropCode, lvl + Globals.rng(6));
         }
-        this.c.addDrops(lvl, dropCode);
+
+        if (ItemEquip.isValidItem(dropCode)) {
+            dropItem = new ItemEquip(dropCode, lvl, Globals.rng(100) < 20);
+        }
+
+        if (dropItem != null) {
+            this.notifications.add(new Notification(dropItem));
+            this.c.addDrops(lvl, dropItem);
+        }
     }
 
     private void dataPlayerGiveEXP(final byte[] data) {
         final int amount = Globals.bytesToInt(Arrays.copyOfRange(data, 1, 5));
-        this.notifications.add(new Notification(amount, Globals.NOTIFICATION_EXP));
+        this.notifications.add(new Notification(amount));
         this.c.addExp(amount);
     }
 
@@ -592,7 +601,7 @@ public class ScreenIngame extends Screen {
     private void dataParticleEffect(final byte[] data) {
         final byte particleID = data[1];
         int x, y;
-        byte facing, playerKey;
+        byte facing, playerKey, targetKey;
 
         switch (particleID) {
             case Globals.PARTICLE_SWORD_SLASH1:
@@ -704,10 +713,10 @@ public class ScreenIngame extends Screen {
                 addParticle(new ParticleBowPower(x, y, facing));
                 break;
             case Globals.PARTICLE_BOW_POWERCHARGE:
-                x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
-                y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
-                facing = data[10];
-                addParticle(new ParticleBowPowerCharge(x, y, facing));
+                playerKey = data[2];
+                for (byte i = 0; i < 4; i++) {
+                    addParticle(new ParticleBowPowerCharge(this.players.get(playerKey)));
+                }
                 break;
             case Globals.PARTICLE_BOW_VOLLEYBOW:
                 x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
@@ -768,7 +777,9 @@ public class ScreenIngame extends Screen {
             case Globals.PARTICLE_SHIELD_REFLECTHIT:
                 x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
                 y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
-                addParticle(new ParticleShieldReflectHit(x, y));
+                for (byte i = 0; i < 20; i++) {
+                    addParticle(new ParticleShieldReflectHit(x, y, i));
+                }
                 break;
             case Globals.PARTICLE_SHIELD_IRON:
                 playerKey = data[2];
@@ -788,11 +799,24 @@ public class ScreenIngame extends Screen {
                     addParticle(new ParticleShieldFortifyEmitter(this.players.get(playerKey)));
                 }
                 break;
-            case Globals.PARTICLE_SHIELD_TOSS:
-                x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
-                y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
-                facing = data[10];
-                addParticle(new ParticleShieldToss(x, y, facing));
+            case Globals.PARTICLE_SHIELD_MAGNETIZE:
+                playerKey = data[2];
+                targetKey = data[3];
+                if (this.players.containsKey(playerKey)) {
+                    addParticle(new ParticleShieldMagnetize(this.players.get(playerKey), this.players.get(targetKey)));
+                }
+                break;
+            case Globals.PARTICLE_SHIELD_MAGNETIZESTART:
+                playerKey = data[2];
+                if (this.players.containsKey(playerKey)) {
+                    addParticle(new ParticleShieldMagnetizeStart(this.players.get(playerKey)));
+                }
+                break;
+            case Globals.PARTICLE_SHIELD_MAGNETIZEBURST:
+                playerKey = data[2];
+                if (this.players.containsKey(playerKey)) {
+                    addParticle(new ParticleShieldMagnetizeBurst(this.players.get(playerKey)));
+                }
                 break;
             case Globals.PARTICLE_SWORD_TAUNTBUFF:
                 playerKey = data[2];
@@ -850,6 +874,13 @@ public class ScreenIngame extends Screen {
                 byte sourceKey = data[3];
                 if (this.players.containsKey(playerKey)) {
                     addParticle(new ParticleBloodEmitter(this.players.get(playerKey), this.players.get(sourceKey), true));
+                }
+                break;
+            case Globals.PARTICLE_PASSIVE_STATIC:
+                playerKey = data[2];
+                targetKey = data[3];
+                if (this.players.containsKey(playerKey)) {
+                    addParticle(new ParticlePassiveStatic(this.players.get(playerKey), this.players.get(targetKey)));
                 }
                 break;
         }
@@ -1128,9 +1159,11 @@ public class ScreenIngame extends Screen {
 
     @Override
     public void mouseReleased(final MouseEvent e) {
-        Rectangle2D.Double box = new Rectangle2D.Double(10, 10, this.logoutBox.getWidth() + 6, this.logoutBox.getHeight() + 6);
-        if (box.contains(e.getPoint())) {
-            client.sendDisconnect(this.myKey);
+        if (this.logoutBox != null) {
+            Rectangle2D.Double box = new Rectangle2D.Double(10, 10, this.logoutBox.getWidth() + 6, this.logoutBox.getHeight() + 6);
+            if (box.contains(e.getPoint())) {
+                client.sendDisconnect(this.myKey);
+            }
         }
     }
 

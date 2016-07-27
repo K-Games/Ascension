@@ -24,7 +24,7 @@ public class TestSaveData {
         // Set level 1
         this.baseStats[Globals.STAT_LEVEL] = lvl;
         this.baseStats[Globals.STAT_POWER] = 0;
-        this.baseStats[Globals.STAT_DEFENSE] = 0;
+        this.baseStats[Globals.STAT_DEFENSE] = 700;
         this.baseStats[Globals.STAT_SPIRIT] = 0;
         this.baseStats[Globals.STAT_EXP] = 0;
         this.baseStats[Globals.STAT_SKILLPOINTS] = 3 * this.baseStats[Globals.STAT_LEVEL];

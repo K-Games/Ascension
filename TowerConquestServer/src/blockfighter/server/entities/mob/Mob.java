@@ -19,10 +19,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-/**
- *
- * @author Ken Kwan
- */
 public abstract class Mob extends Thread implements GameEntity {
 
     public final static int NUM_STATS = 3;
@@ -46,7 +42,7 @@ public abstract class Mob extends Thread implements GameEntity {
             MOB_BOSS_SHADOWFIEND = 0x01;
 
     protected final byte key;
-    protected final LogicModule logic;
+    protected final LogicModule room;
     protected double x, y, ySpeed, xSpeed;
     protected boolean isFalling = false, isDead = false;
     protected boolean updatePos = false, updateFacing = false, updateAnimState = false;
@@ -76,8 +72,8 @@ public abstract class Mob extends Thread implements GameEntity {
     protected int maxBuffKeys = 0;
 
     public Mob(final LogicModule l, final GameMap map, final double x, final double y, final byte numSkills) {
-        this.logic = l;
-        this.key = this.logic.getNextMobKey();
+        this.room = l;
+        this.key = this.room.getNextMobKey();
         this.x = x;
         this.y = y;
         this.hitbox = new Rectangle2D.Double(x - 50, y - 180, 100, 180);
@@ -170,32 +166,14 @@ public abstract class Mob extends Thread implements GameEntity {
         return this.type;
     }
 
-    /**
-     * Return this player's current X position.
-     *
-     * @return The player's X in double
-     */
     public double getX() {
         return this.x;
     }
 
-    /**
-     * Return this player's current Y position.
-     *
-     * @return The player's Y in double
-     */
     public double getY() {
         return this.y;
     }
 
-    /**
-     * Return this player's key.
-     * <p>
-     * This key is the same key in the player array in the logic module.
-     * </p>
-     *
-     * @return The key of this player in byte
-     */
     public byte getKey() {
         return this.key;
     }
@@ -234,20 +212,10 @@ public abstract class Mob extends Thread implements GameEntity {
         this.updatePos = true;
     }
 
-    /**
-     * Set change in Y on the next tick.
-     *
-     * @param speed Distance in double
-     */
     public void setYSpeed(final double speed) {
         this.ySpeed = speed;
     }
 
-    /**
-     * Set change in X on the next tick.
-     *
-     * @param speed Distance in double
-     */
     public void setXSpeed(final double speed) {
         this.xSpeed = speed;
     }
@@ -281,14 +249,14 @@ public abstract class Mob extends Thread implements GameEntity {
         while (!this.damageQueue.isEmpty()) {
             final Damage dmg = this.damageQueue.poll();
             if (dmg != null) {
-                int amount = (int) (dmg.getDamage() * this.dmgAmp);
+                double amount = dmg.getDamage() * this.dmgAmp;
                 // Buff Reductions
-                amount = (int) (amount * this.dmgReduct);
+                amount = amount * this.dmgReduct;
 
                 dmg.proc();
                 addAggro(dmg.getOwner(), amount);
                 if (!dmg.isHidden()) {
-                    sendDamage(dmg, amount);
+                    sendDamage(dmg, (int) amount);
                 }
                 this.stats[STAT_MINHP] -= amount;
                 this.lastHPSend = 0;
@@ -313,20 +281,20 @@ public abstract class Mob extends Thread implements GameEntity {
             die();
         }
 
-        if (Globals.nsToMs(this.logic.getTime() - this.lastHPSend) >= 150) {
+        if (Globals.nsToMs(this.room.getTime() - this.lastHPSend) >= 150) {
             final byte[] minHP = Globals.intToBytes((int) (this.stats[STAT_MINHP] / this.stats[STAT_MAXHP] * 10000));
             final byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT];
             bytes[0] = Globals.DATA_MOB_GET_STAT;
             bytes[1] = this.key;
             bytes[2] = STAT_MINHP;
             System.arraycopy(minHP, 0, bytes, 3, minHP.length);
-            PacketSender.sendAll(bytes, this.logic.getRoom());
-            this.lastHPSend = this.logic.getTime();
+            PacketSender.sendAll(bytes, this.room.getRoom());
+            this.lastHPSend = this.room.getTime();
         }
     }
 
     private void die() {
-        for (final Map.Entry<Byte, Player> player : this.logic.getPlayers().entrySet()) {
+        for (final Map.Entry<Byte, Player> player : this.room.getPlayers().entrySet()) {
             player.getValue().giveEXP(Globals.calcEXPtoNxtLvl(this.stats[STAT_LEVEL]) / 3);
             player.getValue().giveDrop(this.stats[STAT_LEVEL]);
         }
@@ -476,7 +444,7 @@ public abstract class Mob extends Thread implements GameEntity {
         bytes[7] = posYInt[1];
         bytes[8] = posYInt[2];
         bytes[9] = posYInt[3];
-        PacketSender.sendAll(bytes, this.logic.getRoom());
+        PacketSender.sendAll(bytes, this.room.getRoom());
         this.updatePos = false;
     }
 
@@ -485,7 +453,7 @@ public abstract class Mob extends Thread implements GameEntity {
         bytes[0] = Globals.DATA_MOB_SET_FACING;
         bytes[1] = this.key;
         bytes[2] = this.facing;
-        PacketSender.sendAll(bytes, this.logic.getRoom());
+        PacketSender.sendAll(bytes, this.room.getRoom());
         this.updateFacing = false;
     }
 
@@ -495,7 +463,7 @@ public abstract class Mob extends Thread implements GameEntity {
         bytes[1] = this.key;
         bytes[2] = this.animState;
         bytes[3] = this.frame;
-        PacketSender.sendAll(bytes, this.logic.getRoom());
+        PacketSender.sendAll(bytes, this.room.getRoom());
         this.updateAnimState = false;
     }
 
@@ -503,12 +471,12 @@ public abstract class Mob extends Thread implements GameEntity {
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 2 + Globals.PACKET_INT * 3];
         bytes[0] = Globals.DATA_NUMBER;
         bytes[1] = dmg.getDamageType();
-        final byte[] posXInt = Globals.intToBytes(dmg.getDmgPoint().x);
+        final byte[] posXInt = Globals.intToBytes((int) dmg.getDmgPoint().x);
         bytes[2] = posXInt[0];
         bytes[3] = posXInt[1];
         bytes[4] = posXInt[2];
         bytes[5] = posXInt[3];
-        final byte[] posYInt = Globals.intToBytes(dmg.getDmgPoint().y);
+        final byte[] posYInt = Globals.intToBytes((int) dmg.getDmgPoint().y);
         bytes[6] = posYInt[0];
         bytes[7] = posYInt[1];
         bytes[8] = posYInt[2];
@@ -518,7 +486,7 @@ public abstract class Mob extends Thread implements GameEntity {
         bytes[11] = d[1];
         bytes[12] = d[2];
         bytes[13] = d[3];
-        PacketSender.sendAll(bytes, this.logic.getRoom());
+        PacketSender.sendAll(bytes, this.room.getRoom());
     }
 
     public static void sendMobParticle(final byte key, final byte room, final byte particleID, final double x, final double y) {

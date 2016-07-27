@@ -10,88 +10,39 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
-/**
- * Abstract class for projectiles/attacks
- *
- * @author Ken Kwan
- */
 public abstract class Projectile extends Thread implements GameEntity {
 
-    /**
-     * Hash map key paired with this
-     */
     protected final int key;
-    /**
-     * Reference to Logic Module.
-     */
-    protected final LogicModule logic;
 
-    /**
-     * Projectile x position.
-     */
+    protected final LogicModule room;
+
     protected double x,
-            /**
-             * Projectile y position.
-             */
             y;
 
-    /**
-     * Owning Player of Projectile
-     */
     private Player owner;
 
-    /**
-     * Owning Mob of Projectile
-     */
     private Mob mobOwner;
-    /**
-     * Array of players hit by this projectile
-     */
+
     protected HashMap<Byte, Player> pHit = new HashMap<>();
 
-    /**
-     * Queue of players to be hit by projectile
-     */
     protected final LinkedList<Player> playerQueue = new LinkedList<>();
     protected HashMap<Byte, Mob> bHit = new HashMap<>();
     protected final LinkedList<Mob> mobQueue = new LinkedList<>();
-    /**
-     * The duration of this projectile in milliseconds.
-     */
+
     protected int duration;
 
-    /**
-     * Hit boxes of this projectile
-     */
     protected Rectangle2D.Double[] hitbox;
 
-    /**
-     * Checks if this projectile has already been queued to have effects to be applied
-     */
     protected boolean queuedEffect = false;
 
     protected long projStartTime = 0;
 
-    /**
-     * Constructor called by subclasses to reference sender and logic.
-     *
-     * @param l Reference to Logic module
-     */
     public Projectile(final LogicModule l) {
-        this.logic = l;
-        this.key = this.logic.getNextProjKey();
-        projStartTime = this.logic.getTime();
+        this.room = l;
+        this.key = this.room.getNextProjKey();
+        projStartTime = this.room.getTime();
     }
 
-    /**
-     * Constructor for a empty projectile.
-     *
-     * @param l Reference to Logic module
-     * @param o Owning player
-     * @param x Spawning x
-     * @param y Spawning y
-     * @param duration
-     */
     public Projectile(final LogicModule l, final Player o, final double x, final double y, final int duration) {
         this(l);
         this.owner = o;
@@ -116,8 +67,8 @@ public abstract class Projectile extends Thread implements GameEntity {
         if (this.hitbox[0] == null) {
             return;
         }
-        if (this.logic.getMap().isPvP()) {
-            for (final Map.Entry<Byte, Player> pEntry : this.logic.getPlayers().entrySet()) {
+        if (this.room.getMap().isPvP()) {
+            for (final Map.Entry<Byte, Player> pEntry : this.room.getPlayers().entrySet()) {
                 final Player p = pEntry.getValue();
                 if (p != getOwner() && !this.pHit.containsKey(p.getKey()) && !p.isInvulnerable() && p.intersectHitbox(this.hitbox[0])) {
                     this.playerQueue.add(p);
@@ -127,7 +78,7 @@ public abstract class Projectile extends Thread implements GameEntity {
             }
         }
 
-        for (final Map.Entry<Byte, Mob> bEntry : this.logic.getMobs().entrySet()) {
+        for (final Map.Entry<Byte, Mob> bEntry : this.room.getMobs().entrySet()) {
             final Mob b = bEntry.getValue();
             if (!this.bHit.containsKey(b.getKey()) && b.intersectHitbox(this.hitbox[0])) {
                 this.mobQueue.add(b);
@@ -171,7 +122,7 @@ public abstract class Projectile extends Thread implements GameEntity {
     }
 
     public boolean isExpired() {
-        return Globals.nsToMs(this.logic.getTime() - this.projStartTime) >= this.duration;
+        return Globals.nsToMs(this.room.getTime() - this.projStartTime) >= this.duration;
     }
 
     public boolean isQueued() {
@@ -191,7 +142,7 @@ public abstract class Projectile extends Thread implements GameEntity {
 
     public void queueEffect(final Projectile p) {
         if (!isQueued()) {
-            this.logic.queueProjEffect(p);
+            this.room.queueProjEffect(p);
             this.queuedEffect = true;
         }
     }

@@ -5,82 +5,63 @@ import blockfighter.server.LogicModule;
 import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
 import com.esotericsoftware.kryonet.Connection;
-import java.net.DatagramPacket;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
-/**
- * Threads to handle incoming requests.
- *
- * @author Ken Kwan
- */
 public class PacketHandler {
 
-    ConcurrentLinkedQueue<DatagramPacket> packetQueue = new ConcurrentLinkedQueue<>();
+    private static LogicModule[] rooms;
 
-    private static LogicModule[] logic;
-
-    /**
-     * Set the static Logic Module array
-     *
-     * @param l Logic Module array
-     */
     public static void setLogic(final LogicModule[] l) {
-        logic = l;
-    }
-
-    public void queuePacket(DatagramPacket data) {
-        packetQueue.add(data);
+        rooms = l;
     }
 
     public static void process(byte[] data, Connection c) {
         final byte dataType = data[0];
         final byte room = data[1];
 
-        if (!Globals.SERVER_ROOMS.containsKey(room)) {
+        if (!Globals.SERVER_ROOMNUM_TO_ROOMINDEX.containsKey(room)) {
             Globals.log(PacketHandler.class, "DATA_INVALID_ROOM " + c + " Invalid Room Number. Room: " + room, Globals.LOG_TYPE_DATA, true);
             return;
         }
-        final byte index = Globals.SERVER_ROOMS.get(room);
-
+        final byte roomIndex = Globals.SERVER_ROOMNUM_TO_ROOMINDEX.get(room);
         switch (dataType) {
             case Globals.DATA_PLAYER_LOGIN:
-                receivePlayerLogin(data, index, c);
+                receivePlayerLogin(data, roomIndex, c);
                 break;
             case Globals.DATA_PLAYER_CREATE:
-                receivePlayerCreate(data, index, c);
+                receivePlayerCreate(data, roomIndex, c);
                 break;
             case Globals.DATA_PLAYER_GET_ALL:
-                receivePlayerGetAll(data, index);
+                receivePlayerGetAll(data, roomIndex);
                 break;
             case Globals.DATA_PLAYER_SET_MOVE:
-                receivePlayerSetMove(data, index);
+                receivePlayerSetMove(data, roomIndex, c);
                 break;
             case Globals.DATA_PING:
-                receivePing(data, index, c);
+                receivePing(data, roomIndex, c);
                 break;
             case Globals.DATA_PLAYER_USESKILL:
-                receivePlayerUseSkill(data, index);
+                receivePlayerUseSkill(data, roomIndex, c);
                 break;
             case Globals.DATA_PLAYER_DISCONNECT:
-                receivePlayerDisconnect(data, index);
+                receivePlayerDisconnect(data, roomIndex, c);
                 break;
             case Globals.DATA_PLAYER_GET_NAME:
-                receivePlayerGetName(data, index, c);
+                receivePlayerGetName(data, roomIndex, c);
                 break;
             case Globals.DATA_PLAYER_GET_STAT:
-                receivePlayerGetStat(data, index, c);
+                receivePlayerGetStat(data, roomIndex, c);
                 break;
             case Globals.DATA_PLAYER_GET_EQUIP:
-                receivePlayerGetEquip(data, index, c);
+                receivePlayerGetEquip(data, roomIndex, c);
                 break;
             case Globals.DATA_MOB_GET_STAT:
-                receiveMobGetStat(data, index, c);
+                receiveMobGetStat(data, roomIndex, c);
                 break;
             case Globals.DATA_MOB_SET_TYPE:
-                receiveMobSetType(data, index, c);
+                receiveMobSetType(data, roomIndex, c);
                 break;
             default:
                 Globals.log(PacketHandler.class, "DATA_UNKNOWN " + c + " Unknown data type.", Globals.LOG_TYPE_DATA, true);
@@ -88,8 +69,8 @@ public class PacketHandler {
         }
     }
 
-    private static void receiveMobGetStat(final byte[] data, final byte index, final Connection c) {
-        if (!logic[index].getMobs().containsKey(data[2])) {
+    private static void receiveMobGetStat(final byte[] data, final byte roomIndex, final Connection c) {
+        if (!rooms[roomIndex].getMobs().containsKey(data[2])) {
             return;
         }
         byte[] stat;
@@ -98,12 +79,12 @@ public class PacketHandler {
                 stat = Globals.intToBytes(10000);
                 break;
             case Mob.STAT_MINHP:
-                final double[] bStats = logic[index].getMobs().get(data[2]).getStats();
+                final double[] bStats = rooms[roomIndex].getMobs().get(data[2]).getStats();
                 final double hpPercent = bStats[Mob.STAT_MINHP] / bStats[Mob.STAT_MAXHP] * 10000;
                 stat = Globals.intToBytes((int) hpPercent);
                 break;
             default:
-                stat = Globals.intToBytes((int) logic[index].getMobs().get(data[2]).getStats()[data[3]]);
+                stat = Globals.intToBytes((int) rooms[roomIndex].getMobs().get(data[2]).getStats()[data[3]]);
         }
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT];
         bytes[0] = Globals.DATA_MOB_GET_STAT;
@@ -113,20 +94,20 @@ public class PacketHandler {
         PacketSender.sendConnection(bytes, c);
     }
 
-    private static void receiveMobSetType(final byte[] data, final byte index, final Connection c) {
-        if (!logic[index].getMobs().containsKey(data[2])) {
+    private static void receiveMobSetType(final byte[] data, final byte roomIndex, final Connection c) {
+        if (!rooms[roomIndex].getMobs().containsKey(data[2])) {
             return;
         }
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT * 2];
         bytes[0] = Globals.DATA_MOB_SET_TYPE;
         bytes[1] = data[2];
-        bytes[2] = logic[index].getMobs().get(data[2]).getType();
-        final byte[] posXInt = Globals.intToBytes((int) logic[index].getMobs().get(data[2]).getX());
+        bytes[2] = rooms[roomIndex].getMobs().get(data[2]).getType();
+        final byte[] posXInt = Globals.intToBytes((int) rooms[roomIndex].getMobs().get(data[2]).getX());
         bytes[3] = posXInt[0];
         bytes[4] = posXInt[1];
         bytes[5] = posXInt[2];
         bytes[6] = posXInt[3];
-        final byte[] posYInt = Globals.intToBytes((int) logic[index].getMobs().get(data[2]).getY());
+        final byte[] posYInt = Globals.intToBytes((int) rooms[roomIndex].getMobs().get(data[2]).getY());
         bytes[7] = posYInt[0];
         bytes[8] = posYInt[1];
         bytes[9] = posYInt[2];
@@ -134,14 +115,14 @@ public class PacketHandler {
         PacketSender.sendConnection(bytes, c);
     }
 
-    private static void receivePlayerGetEquip(final byte[] data, final byte index, final Connection c) {
-        if (!logic[index].getPlayers().containsKey(data[2])) {
+    private static void receivePlayerGetEquip(final byte[] data, final byte roomIndex, final Connection c) {
+        if (!rooms[roomIndex].getPlayers().containsKey(data[2])) {
             return;
         }
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 2 + Globals.PACKET_INT * Globals.NUM_EQUIP_SLOTS];
         bytes[0] = Globals.DATA_PLAYER_GET_EQUIP;
         bytes[1] = data[2];
-        final int[] e = logic[index].getPlayers().get(data[2]).getEquips();
+        final int[] e = rooms[roomIndex].getPlayers().get(data[2]).getEquips();
         for (int i = 0; i < e.length; i++) {
             final byte[] itemCode = Globals.intToBytes(e[i]);
             System.arraycopy(itemCode, 0, bytes, i * 4 + 2, itemCode.length);
@@ -149,11 +130,11 @@ public class PacketHandler {
         PacketSender.sendConnection(bytes, c);
     }
 
-    private static void receivePlayerGetStat(final byte[] data, final byte index, final Connection c) {
-        if (!logic[index].getPlayers().containsKey(data[2])) {
+    private static void receivePlayerGetStat(final byte[] data, final byte roomIndex, final Connection c) {
+        if (!rooms[roomIndex].getPlayers().containsKey(data[2])) {
             return;
         }
-        final byte[] stat = Globals.intToBytes((int) logic[index].getPlayers().get(data[2]).getStats()[data[3]]);
+        final byte[] stat = Globals.intToBytes((int) rooms[roomIndex].getPlayers().get(data[2]).getStats()[data[3]]);
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT];
         bytes[0] = Globals.DATA_PLAYER_GET_STAT;
         bytes[1] = data[2];
@@ -162,11 +143,11 @@ public class PacketHandler {
         PacketSender.sendConnection(bytes, c);
     }
 
-    private static void receivePlayerGetName(final byte[] data, final byte index, final Connection c) {
-        if (!logic[index].getPlayers().containsKey(data[2])) {
+    private static void receivePlayerGetName(final byte[] data, final byte roomIndex, final Connection c) {
+        if (!rooms[roomIndex].getPlayers().containsKey(data[2])) {
             return;
         }
-        final byte[] name = logic[index].getPlayers().get(data[2]).getPlayerName().getBytes(StandardCharsets.UTF_8);
+        final byte[] name = rooms[roomIndex].getPlayers().get(data[2]).getPlayerName().getBytes(StandardCharsets.UTF_8);
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 2 + name.length];
         bytes[0] = Globals.DATA_PLAYER_GET_NAME;
         bytes[1] = data[2];
@@ -174,18 +155,17 @@ public class PacketHandler {
         PacketSender.sendConnection(bytes, c);
     }
 
-    private static void receivePlayerDisconnect(final byte[] data, final byte index) {
-        Player p = logic[index].getPlayers().get(data[2]);
-        if (p == null) {
-            return;
+    private static void receivePlayerDisconnect(final byte[] data, final byte roomIndex, final Connection c) {
+        Player p = rooms[roomIndex].getPlayers().get(data[2]);
+        if (p != null && p.getConnection() == c) {
+            Globals.log(PacketHandler.class, "DATA_PLAYER_DISCONNECT", "Disconnecting <" + p.getPlayerName() + "> Key: " + data[2], Globals.LOG_TYPE_DATA, true);
+            p.disconnect();
         }
-        p.disconnect();
-        Globals.log(PacketHandler.class, "DATA_PLAYER_DISCONNECT", "Disconnecting <" + p.getPlayerName() + "> Key: " + data[2], Globals.LOG_TYPE_DATA, true);
     }
 
-    private static void receivePing(final byte[] data, final byte index, final Connection c) {
+    private static void receivePing(final byte[] data, final byte roomIndex, final Connection c) {
         // Globals.log("DATA_PING", address.toString(), Globals.LOG_TYPE_DATA, true);
-        if (!logic[index].getPlayers().containsKey(data[2])) {
+        if (!rooms[roomIndex].getPlayers().containsKey(data[2])) {
             return;
         }
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 2];
@@ -194,15 +174,18 @@ public class PacketHandler {
         PacketSender.sendConnection(bytes, c);
     }
 
-    private static void receivePlayerUseSkill(final byte[] data, final byte index) {
-        logic[index].queuePlayerUseSkill(data);
+    private static void receivePlayerUseSkill(final byte[] data, final byte roomIndex, final Connection c) {
+        Player p = rooms[roomIndex].getPlayers().get(data[2]);
+        if (p != null && p.getConnection() == c) {
+            rooms[roomIndex].queuePlayerUseSkill(data);
+        }
     }
 
-    private static void receivePlayerCreate(final byte[] data, final byte index, final Connection c) {
+    private static void receivePlayerCreate(final byte[] data, final byte roomIndex, final Connection c) {
         byte[] temp = new byte[8];
         long leastSigBit, mostSigBit;
         int pos = 17;
-        final LogicModule lm = logic[index];
+        final LogicModule lm = rooms[roomIndex];
 
         System.arraycopy(data, pos, temp, 0, temp.length);
         pos += temp.length;
@@ -294,7 +277,7 @@ public class PacketHandler {
             desc += Globals.getStatName(i) + ": " + newPlayer.getStats()[i] + "\n";
         }
         desc += "Equips=" + Arrays.toString(newPlayer.getEquips()) + "\n";
-        Globals.log(PacketHandler.class, "DATA_PLAYER_CREATE " + c + " Queueing new player <" + newPlayer.getPlayerName() + "> into room " + index + ". Key: " + freeKey + desc, Globals.LOG_TYPE_DATA, true);
+        Globals.log(PacketHandler.class, "DATA_PLAYER_CREATE " + c + " Queueing new player <" + newPlayer.getPlayerName() + "> into room " + roomIndex + ". Key: " + freeKey + desc, Globals.LOG_TYPE_DATA, true);
 
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 4];
         bytes[0] = Globals.DATA_PLAYER_CREATE;
@@ -310,11 +293,11 @@ public class PacketHandler {
         newPlayer.sendStat(Globals.STAT_MAXHP);
     }
 
-    private static void receivePlayerLogin(final byte[] data, final byte index, final Connection c) {
+    private static void receivePlayerLogin(final byte[] data, final byte roomIndex, final Connection c) {
         byte[] temp = new byte[8];
         long leastSigBit, mostSigBit;
         int pos = 2;
-        final LogicModule lm = logic[index];
+        final LogicModule lm = rooms[roomIndex];
         Globals.log(PacketHandler.class, "DATA_PLAYER_LOGIN " + c + " Login Attempt Room: " + lm.getRoom(), Globals.LOG_TYPE_DATA, true);
 
         System.arraycopy(data, pos, temp, 0, temp.length);
@@ -353,7 +336,7 @@ public class PacketHandler {
             bytes[0] = Globals.DATA_PLAYER_LOGIN;
             bytes[1] = Globals.LOGIN_FAIL_OUTSIDE_LEVEL_RANGE;
             PacketSender.sendConnection(bytes, c);
-            Globals.log(PacketHandler.class, "DATA_PLAYER_LOGIN " + c + " Failed to login - Level " + level + " is outside room " + index + " level range.", Globals.LOG_TYPE_DATA, true);
+            Globals.log(PacketHandler.class, "DATA_PLAYER_LOGIN " + c + " Failed to login - Level " + level + " is outside room " + roomIndex + " level range.", Globals.LOG_TYPE_DATA, true);
             return;
         }
 
@@ -366,14 +349,17 @@ public class PacketHandler {
         Globals.log(PacketHandler.class, "DATA_PLAYER_LOGIN " + c + " Logged in. Sent Version Data: " + Globals.GAME_MAJOR_VERSION + "." + Globals.GAME_MINOR_VERSION, Globals.LOG_TYPE_DATA, true);
     }
 
-    private static void receivePlayerGetAll(final byte[] data, final byte index) {
-        if (!logic[index].getPlayers().containsKey(data[2])) {
+    private static void receivePlayerGetAll(final byte[] data, final byte roomIndex) {
+        if (!rooms[roomIndex].getPlayers().containsKey(data[2])) {
             return;
         }
-        PacketSender.broadcastAllPlayersUpdate(index);
+        PacketSender.broadcastAllPlayersUpdate(roomIndex);
     }
 
-    private static void receivePlayerSetMove(final byte[] data, final byte index) {
-        logic[index].queuePlayerDirKeydown(data);
+    private static void receivePlayerSetMove(final byte[] data, final byte roomIndex, final Connection c) {
+        Player p = rooms[roomIndex].getPlayers().get(data[2]);
+        if (p != null && p.getConnection() == c) {
+            rooms[roomIndex].queuePlayerDirKeydown(data);
+        }
     }
 }

@@ -113,6 +113,15 @@ public class TestPacketSender {
         sendPacket(bytes, client);
     }
 
+    public static void sendGetPing(final byte room, final byte myKey, final byte pID, final Client client) {
+        final byte[] bytes = new byte[Globals.PACKET_BYTE * 4];
+        bytes[0] = Globals.DATA_PING;
+        bytes[1] = room;
+        bytes[2] = myKey;
+        bytes[3] = pID;
+        sendPacket(bytes, client);
+    }
+
     private static void sendPacket(final byte[] packet, final Client client) {
         client.sendTCP(packet);
     }

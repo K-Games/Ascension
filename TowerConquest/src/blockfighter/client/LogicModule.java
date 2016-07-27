@@ -29,7 +29,6 @@ public class LogicModule implements Runnable {
             this.currentTime = System.nanoTime();
             this.screen.update();
         } catch (final Exception ex) {
-            ex.printStackTrace();
             System.err.println(this.getClass().getCanonicalName() + ": " + ex.getLocalizedMessage() + "@" + ex.getStackTrace()[0]);
         }
     }
@@ -45,8 +44,6 @@ public class LogicModule implements Runnable {
     public void connect(final String server, final byte r) {
         this.selectedRoom = r;
         client = new GameClient(this, server);
-        client.setName("GameClient");
-        client.setDaemon(true);
         client.start();
     }
 

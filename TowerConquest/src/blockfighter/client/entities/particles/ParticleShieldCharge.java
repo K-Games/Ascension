@@ -11,7 +11,7 @@ public class ParticleShieldCharge extends Particle {
     private long lastParticleTime = 0;
 
     public ParticleShieldCharge(final byte f, final Player p) {
-        super(0, 0, f, p);
+        super(f, p);
         this.frame = 0;
         this.duration = 750;
         final Point point = this.owner.getPos();
@@ -42,20 +42,14 @@ public class ParticleShieldCharge extends Particle {
         }
         final Point p = this.owner.getPos();
         if (p != null) {
-            if (this.facing == Globals.RIGHT) {
-                this.x = p.x - 150;
-            } else {
-                this.x = p.x - 253 + 150;
-            }
-        }
-        if (p != null) {
-            this.y = p.y - 170;
+            this.x = p.x;
+            this.y = p.y;
         }
         final BufferedImage sprite = PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_CHARGE][this.frame];
-        final int drawSrcX = this.x + ((this.facing == Globals.RIGHT) ? 0 : sprite.getWidth());
-        final int drawSrcY = this.y;
+        final int drawSrcX = this.x + ((this.facing == Globals.RIGHT) ? -150 : 150);
+        final int drawSrcY = this.y - 170;
         final int drawDscY = drawSrcY + sprite.getHeight();
-        final int drawDscX = this.x + ((this.facing == Globals.RIGHT) ? sprite.getWidth() : 0);
+        final int drawDscX = drawSrcX + ((this.facing == Globals.RIGHT) ? sprite.getWidth() : -sprite.getWidth());
         g.drawImage(sprite, drawSrcX, drawSrcY, drawDscX, drawDscY, 0, 0, sprite.getWidth(), sprite.getHeight(), null);
     }
 }

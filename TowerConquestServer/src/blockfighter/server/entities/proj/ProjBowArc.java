@@ -9,29 +9,15 @@ import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.player.skills.Skill;
 import java.awt.geom.Rectangle2D;
 
-/**
- * This is the base projectile class. Create projectile classes off this.
- *
- * @author Ken Kwan
- */
 public class ProjBowArc extends Projectile {
 
-    /**
-     * Projectile of Bow Skill Arcshot.
-     *
-     * @param l Room/Logic Module
-     * @param k Projectile Key
-     * @param o Owning player
-     * @param x Spawn x-coordinate
-     * @param y Spawn y-coordinate
-     */
     public ProjBowArc(final LogicModule l, final Player o, final double x, final double y) {
         super(l, o, x, y, 100);
         this.hitbox = new Rectangle2D.Double[1];
         if (o.getFacing() == Globals.RIGHT) {
-            this.hitbox[0] = new Rectangle2D.Double(this.x + 50, this.y - 130, 445, 108);
+            this.hitbox[0] = new Rectangle2D.Double(this.x + 35, this.y - 125, 445, 108);
         } else {
-            this.hitbox[0] = new Rectangle2D.Double(this.x - 445 - 50, this.y - 130, 445, 108);
+            this.hitbox[0] = new Rectangle2D.Double(this.x - 445 - 35, this.y - 125, 445, 108);
         }
     }
 
@@ -53,7 +39,7 @@ public class ProjBowArc extends Projectile {
                     }
                     owner.queueHeal((int) heal);
                 }
-                p.queueBuff(new BuffKnockback(this.logic, 50, (owner.getFacing() == Globals.RIGHT) ? 1 : -1, -0.1, owner, p));
+                p.queueBuff(new BuffKnockback(this.room, 50, (owner.getFacing() == Globals.RIGHT) ? 1 : -1, -0.1, owner, p));
             }
         }
 

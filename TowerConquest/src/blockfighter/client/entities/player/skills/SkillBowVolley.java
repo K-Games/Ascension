@@ -5,10 +5,6 @@ import blockfighter.client.entities.items.ItemEquip;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-/**
- *
- * @author Ken Kwan
- */
 public class SkillBowVolley extends Skill {
 
     public SkillBowVolley() {
@@ -16,7 +12,7 @@ public class SkillBowVolley extends Skill {
         this.skillCode = BOW_VOLLEY;
         this.maxCooldown = 17000;
         this.reqWeapon = Globals.ITEM_BOW;
-        this.skillName = "Volley";
+        this.skillName = "Vortex Bolts";
     }
 
     @Override
@@ -43,14 +39,14 @@ public class SkillBowVolley extends Skill {
         g.drawString("Level: " + this.level + " - Requires " + ItemEquip.getItemTypeName(this.reqWeapon), drawX + 80, drawY + 50);
         g.drawString("Cooldown: " + this.maxCooldown / 1000 + " Seconds", drawX + 80, drawY + 70);
 
-        g.drawString("Fire 20 shots over 2 seconds. Can be interrupted.", drawX + 10, drawY + 90);
+        g.drawString("Fire 20 bolts over 2 seconds. Can be interrupted.", drawX + 10, drawY + 90);
 
         g.drawString("[Level " + this.level + "]", drawX + 10, drawY + 115);
-        g.drawString("Deals " + (75 + 3 * this.level) + "% damage per hit", drawX + 10, drawY + 135);
+        g.drawString("Deals " + (85 + 3 * this.level) + "% damage per hit", drawX + 10, drawY + 135);
 
         if (this.level < 30) {
             g.drawString("[Level " + (this.level + 1) + "]", drawX + 10, drawY + 160);
-            g.drawString("Deals " + (75 + 3 * (this.level + 1)) + "% damage per hit", drawX + 10, drawY + 180);
+            g.drawString("Deals " + (85 + 3 * (this.level + 1)) + "% damage per hit", drawX + 10, drawY + 180);
 
             g.drawString("[Level 30 Bonus]", drawX + 10, drawY + 205);
             g.drawString("Each Critical Hit increases damage by 1% for 4 seconds.", drawX + 10, drawY + 225);

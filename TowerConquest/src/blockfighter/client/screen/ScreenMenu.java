@@ -108,7 +108,7 @@ public abstract class ScreenMenu extends Screen {
         drawStringOutline(g, "Inventory", 40, 112, 2);
         drawStringOutline(g, "Upgrades", 40, 162, 2);
         drawStringOutline(g, "Skills", 40, 212, 2);
-        drawStringOutline(g, "Connect", 40, 262, 2);
+        drawStringOutline(g, "Login", 40, 262, 2);
         drawStringOutline(g, "Key Bindings", 40, 312, 2);
         drawStringOutline(g, "Characters", 40, 362, 2);
 
@@ -117,7 +117,7 @@ public abstract class ScreenMenu extends Screen {
         g.drawString("Inventory", 40, 112);
         g.drawString("Upgrades", 40, 162);
         g.drawString("Skills", 40, 212);
-        g.drawString("Connect", 40, 262);
+        g.drawString("Login", 40, 262);
         g.drawString("Key Bindings", 40, 312);
         g.drawString("Characters", 40, 362);
     }

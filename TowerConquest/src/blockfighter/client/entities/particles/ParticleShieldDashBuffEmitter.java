@@ -10,7 +10,7 @@ public class ParticleShieldDashBuffEmitter extends Particle {
     private long lastParticleTime = 0;
 
     public ParticleShieldDashBuffEmitter(final Player p) {
-        super(0, 0, p);
+        super(p);
         this.frame = 0;
         this.duration = 5000;
     }

@@ -4,11 +4,6 @@ import blockfighter.client.Globals;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
-/**
- * PvP map
- *
- * @author Ken Kwan
- */
 public class GameMapArena extends GameMap {
 
     BufferedImage[] platforms = new BufferedImage[3];
@@ -58,12 +53,15 @@ public class GameMapArena extends GameMap {
                 throw new NullPointerException("Failed to load platform texture. Map " + getMapID() + " Plat " + i + ".");
             }
         }
-        int random = Globals.rng(2);
+        int random = Globals.rng(3);
         switch (random) {
             case 0:
                 this.bgm = Globals.BGM_ARENA1;
                 break;
             case 1:
+                this.bgm = Globals.BGM_ARENA2;
+                break;
+            case 2:
                 this.bgm = Globals.BGM_ARENA3;
                 break;
         }

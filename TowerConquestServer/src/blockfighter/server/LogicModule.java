@@ -5,6 +5,7 @@ import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.proj.Projectile;
 import blockfighter.server.maps.GameMap;
 import blockfighter.server.maps.GameMapArena;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Map;
@@ -15,11 +16,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
-/**
- * Logic module of the server. Updates all objects and their interactions.
- *
- * @author Ken Kwan
- */
 public class LogicModule extends Thread {
 
     private long currentTime = 0;
@@ -56,17 +52,28 @@ public class LogicModule extends Thread {
             .priority(Thread.NORM_PRIORITY)
             .build());
 
-    /**
-     * Create a server logic module
-     * <p>
-     * Servers can have multiple logic modules for multiple instances of levels. When logic is required, it should be referenced and not created
-     * </p>
-     *
-     * @param r Room number
-     */
     public LogicModule(final byte r) {
         this.room = r;
         reset();
+    }
+
+    public LogicModule(ConcurrentLinkedQueue<Byte> playerKeys, ConcurrentLinkedQueue<Byte> mobKeys) {
+        this.playerKeys = playerKeys;
+        this.mobKeys = mobKeys;
+    }
+
+    public LogicModule(ConcurrentLinkedQueue<Integer> projKeys) {
+        this.projKeys = projKeys;
+        this.projMaxKeys = this.projKeys.size();
+    }
+
+    public LogicModule(final int minlvl, final int maxlvl) {
+        this.minLevel = minlvl;
+        this.maxLevel = maxlvl;
+    }
+
+    public LogicModule(ConcurrentHashMap<Byte, Player> players) {
+        this.players = players;
     }
 
     public long getTime() {
@@ -214,6 +221,7 @@ public class LogicModule extends Thread {
             final byte key = remove.pop();
             this.players.remove(key);
             this.playerKeys.add(key);
+            Globals.log(LogicModule.class, "Room: " + this.room + " Returned player key: " + key + " Keys Remaining: " + this.playerKeys.size(), Globals.LOG_TYPE_DATA, true);
         }
     }
 
@@ -243,11 +251,6 @@ public class LogicModule extends Thread {
         }
     }
 
-    /**
-     * Return the array of players.
-     *
-     * @return Hash map of connected players
-     */
     public ConcurrentHashMap<Byte, Player> getPlayers() {
         return this.players;
     }
@@ -256,38 +259,18 @@ public class LogicModule extends Thread {
         return this.mobs;
     }
 
-    /**
-     * Return the hash map of projectiles
-     *
-     * @return Array of connected players
-     */
     public ConcurrentHashMap<Integer, Projectile> getProj() {
         return this.projectiles;
     }
 
-    /**
-     * Return the loaded server map
-     *
-     * @return Server GameMap
-     */
     public GameMap getMap() {
         return this.map;
     }
 
-    /**
-     * Get this logic module's room number
-     *
-     * @return Byte - Room number
-     */
     public byte getRoom() {
         return this.room;
     }
 
-    /**
-     * Return the next key open for connection
-     *
-     * @return returns next open key
-     */
     public byte getNextPlayerKey() {
         if (this.playerKeys.isEmpty()) {
             return -1;
@@ -302,47 +285,18 @@ public class LogicModule extends Thread {
         return this.mobKeys.poll();
     }
 
-    /**
-     * Queue a new player object to be added to the server.
-     * <p>
-     * Queue will be processed later.
-     * </p>
-     *
-     * @param newPlayer New player to be queued
-     */
     public void queueAddPlayer(final Player newPlayer) {
         this.playAddQueue.add(newPlayer);
     }
 
-    /**
-     * Queue move update to be applied for a player.
-     * <p>
-     * Data is only referenced here. Data to be processed in the queue later.
-     * </p>
-     *
-     * @param data Bytes to be processed - 1:Key, 2:direction, 3:1 = true, 0 = false
-     */
     public void queuePlayerDirKeydown(final byte[] data) {
         this.playDirKeydownQueue.add(data);
     }
 
-    /**
-     * Queue a player action to be performed
-     *
-     * @param data 1:key, 2:action type
-     */
     public void queuePlayerUseSkill(final byte[] data) {
         this.playUseSkillQueue.add(data);
     }
 
-    /**
-     * Queue projectile entity to be added to the game.
-     * <p>
-     * Projectile must have been created when calling this.
-     * </p>
-     *
-     * @param projectile New projectile to be added
-     */
     public void queueAddProj(final Projectile projectile) {
         this.projAddQueue.add(projectile);
     }
@@ -353,11 +307,6 @@ public class LogicModule extends Thread {
         }
     }
 
-    /**
-     * Queue project effects to be applied to player.
-     *
-     * @param p Projectile which will have it's effects processed
-     */
     public void queueProjEffect(final Projectile p) {
         this.projEffectQueue.add(p);
     }
@@ -466,11 +415,6 @@ public class LogicModule extends Thread {
 
     }
 
-    /**
-     * Get next available projectile key
-     *
-     * @return key as integer
-     */
     public int getNextProjKey() {
         Integer nextKey = this.projKeys.poll();
         while (nextKey == null) {
@@ -481,11 +425,6 @@ public class LogicModule extends Thread {
         return nextKey;
     }
 
-    /**
-     * Insert freed proj key into queue
-     *
-     * @param key Integer
-     */
     public void returnProjKey(final int key) {
         this.projKeys.add(key);
     }
@@ -494,12 +433,6 @@ public class LogicModule extends Thread {
         this.mobKeys.add(key);
     }
 
-    /**
-     * Check if this room contains this Player's unique ID.
-     *
-     * @param id Player uID
-     * @return True if a player in this room has this uID.
-     */
     public boolean containsPlayerID(final UUID id) {
         for (final Map.Entry<Byte, Player> player : this.players.entrySet()) {
             if (player.getValue().getUniqueID().equals(id)) {
@@ -518,108 +451,89 @@ public class LogicModule extends Thread {
         return -1;
     }
 
-    /**
-     * @param playerKeys the playerKeys to set
-     */
+    public ArrayList<Player> getPlayersInRange(final Player player, final double radius) {
+        ArrayList<Player> playersInRange = new ArrayList<>(Globals.SERVER_MAX_PLAYERS);
+        for (final Map.Entry<Byte, Player> pEntry : getPlayers().entrySet()) {
+            final Player p = pEntry.getValue();
+            if (p != player && !p.isDead() && !p.isInvulnerable()) {
+                double distance = Math.sqrt(Math.pow((player.getX() - p.getX()), 2) + Math.pow((player.getY() - p.getY()), 2));
+                if (distance <= radius) {
+                    playersInRange.add(p);
+                }
+            }
+        }
+        return playersInRange;
+    }
+
+    public ArrayList<Mob> getMobsInRange(final Player player, final double radius) {
+        ArrayList<Mob> mobInRange = new ArrayList<>(getMobs().size());
+        for (final Map.Entry<Byte, Mob> bEntry : getMobs().entrySet()) {
+            final Mob b = bEntry.getValue();
+            double distance = Math.sqrt(Math.pow((player.getX() - b.getX()), 2) + Math.pow((player.getY() - b.getY()), 2));
+            if (distance <= 100) {
+                mobInRange.add(b);
+            }
+        }
+        return mobInRange;
+    }
+
     public void setPlayerKeys(ConcurrentLinkedQueue<Byte> playerKeys) {
         this.playerKeys = playerKeys;
     }
 
-    /**
-     * @param mobKeys the mobKeys to set
-     */
     public void setMobKeys(ConcurrentLinkedQueue<Byte> mobKeys) {
         this.mobKeys = mobKeys;
     }
 
-    /**
-     * @param projKeys the projKeys to set
-     */
     public void setProjKeys(ConcurrentLinkedQueue<Integer> projKeys) {
         this.projKeys = projKeys;
         this.projMaxKeys = this.projKeys.size();
     }
 
-    /**
-     * @param playAddQueue the playAddQueue to set
-     */
     public void setPlayAddQueue(ConcurrentLinkedQueue<Player> playAddQueue) {
         this.playAddQueue = playAddQueue;
     }
 
-    /**
-     * @param playDirKeydownQueue the playDirKeydownQueue to set
-     */
     public void setPlayDirKeydownQueue(ConcurrentLinkedQueue<byte[]> playDirKeydownQueue) {
         this.playDirKeydownQueue = playDirKeydownQueue;
     }
 
-    /**
-     * @param playUseSkillQueue the playUseSkillQueue to set
-     */
     public void setPlayUseSkillQueue(ConcurrentLinkedQueue<byte[]> playUseSkillQueue) {
         this.playUseSkillQueue = playUseSkillQueue;
     }
 
-    /**
-     * @param projEffectQueue the projEffectQueue to set
-     */
     public void setProjEffectQueue(ConcurrentLinkedQueue<Projectile> projEffectQueue) {
         this.projEffectQueue = projEffectQueue;
     }
 
-    /**
-     * @param projAddQueue the projAddQueue to set
-     */
     public void setProjAddQueue(ConcurrentLinkedQueue<Projectile> projAddQueue) {
         this.projAddQueue = projAddQueue;
     }
 
-    /**
-     * @param mobAddQueue the mobAddQueue to set
-     */
     public void setMobAddQueue(ConcurrentLinkedQueue<Mob> mobAddQueue) {
         this.mobAddQueue = mobAddQueue;
     }
 
-    /**
-     * @param players the players to set
-     */
     public void setPlayers(ConcurrentHashMap<Byte, Player> players) {
         this.players = players;
     }
 
-    /**
-     * @param mobs the mobs to set
-     */
     public void setMobs(ConcurrentHashMap<Byte, Mob> mobs) {
         this.mobs = mobs;
     }
 
-    /**
-     * @param projectiles the projectiles to set
-     */
     public void setProjectiles(ConcurrentHashMap<Integer, Projectile> projectiles) {
         this.projectiles = projectiles;
     }
 
-    /**
-     * @param map the map to set
-     */
     public void setMap(GameMap map) {
         this.map = map;
     }
 
-    /**
-     * @param minLevel the minLevel to set
-     */
     public void setMinLevel(int minLevel) {
         this.minLevel = minLevel;
     }
 
-    /**
-     * @param maxLevel the maxLevel to set
-     */
     public void setMaxLevel(int maxLevel) {
         this.maxLevel = maxLevel;
     }

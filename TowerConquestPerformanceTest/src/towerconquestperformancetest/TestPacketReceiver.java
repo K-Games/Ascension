@@ -6,7 +6,7 @@ import com.esotericsoftware.kryonet.Listener;
 public class TestPacketReceiver extends Listener {
 
     private boolean isConnected = true;
-    private TestGameClient gC;
+    private final TestGameClient gC;
 
     public TestPacketReceiver(final TestGameClient g) {
         this.gC = g;
@@ -26,11 +26,6 @@ public class TestPacketReceiver extends Listener {
     @Override
     public void disconnected(Connection connection) {
         this.isConnected = false;
-        shutdown();
-    }
-
-    public void shutdown() {
-        TestPacketHandler.clearDataQueue();
     }
 
     public boolean isConnected() {

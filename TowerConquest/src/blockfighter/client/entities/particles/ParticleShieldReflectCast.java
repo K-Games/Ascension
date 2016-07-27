@@ -9,7 +9,7 @@ import java.awt.image.BufferedImage;
 public class ParticleShieldReflectCast extends Particle {
 
     public ParticleShieldReflectCast(final Player p) {
-        super(0, 0, p);
+        super(p);
         this.frame = 0;
         this.frameDuration = 25;
         this.duration = 400;

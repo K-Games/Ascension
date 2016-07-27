@@ -7,10 +7,6 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 
-/**
- *
- * @author Ken Kwan
- */
 public class IngameNumber extends Thread {
 
     private static LogicModule logic;

@@ -3,10 +3,6 @@ package blockfighter.client;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 
-/**
- *
- * @author Ken Kwan
- */
 public class FocusHandler implements FocusListener {
 
     private static LogicModule logic = null;
