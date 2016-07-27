@@ -9,21 +9,8 @@ import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.player.skills.Skill;
 import java.awt.geom.Rectangle2D;
 
-/**
- * This is the base projectile class. Create projectile classes off this.
- *
- * @author Ken Kwan
- */
 public class ProjBowRapid extends Projectile {
 
-    /**
-     * Projectile of Bow Skill Rapid Fire.
-     *
-     * @param l Room/Logic Module
-     * @param o Owning player
-     * @param x Spawn x-coordinate
-     * @param y Spawn y-coordinate
-     */
     public ProjBowRapid(final LogicModule l, final Player o, final double x, final double y) {
         super(l, o, x, y, 100);
         this.hitbox = new Rectangle2D.Double[1];
@@ -48,7 +35,7 @@ public class ProjBowRapid extends Projectile {
                     damage *= 2;
                 }
                 p.queueDamage(new Damage(damage, true, owner, p, crit, this.hitbox[0], p.getHitbox()));
-                p.queueBuff(new BuffKnockback(this.logic, 50, (owner.getFacing() == Globals.RIGHT) ? 3 : -3, -2, owner, p));
+                p.queueBuff(new BuffKnockback(this.room, 50, (owner.getFacing() == Globals.RIGHT) ? 3 : -3, -2, owner, p));
             }
         }
 

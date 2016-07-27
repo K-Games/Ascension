@@ -8,11 +8,6 @@ import blockfighter.server.net.PacketSender;
 
 public class SkillSwordGash extends Skill {
 
-    /**
-     * Constructor for Sword Skill Gash.
-     *
-     * @param l
-     */
     public SkillSwordGash(final LogicModule l) {
         super(l);
         this.skillCode = SWORD_GASH;
@@ -25,28 +20,28 @@ public class SkillSwordGash extends Skill {
 
     @Override
     public void updateSkillUse(Player player) {
-        final int duration = Globals.nsToMs(this.logic.getTime() - player.getSkillCastTime());
+        final int duration = Globals.nsToMs(this.room.getTime() - player.getSkillCastTime());
         final byte numHits = 4;
         if (Globals.hasPastDuration(duration, (80 * player.getSkillCounter())) && player.getSkillCounter() < numHits) {
             player.incrementSkillCounter();
-            final ProjSwordGash proj = new ProjSwordGash(this.logic, player, player.getX(), player.getY(), (byte) player.getSkillCounter());
-            this.logic.queueAddProj(proj);
-            PacketSender.sendSFX(this.logic.getRoom(), Globals.SFX_GASH, player.getX(), player.getY());
+            final ProjSwordGash proj = new ProjSwordGash(this.room, player, player.getX(), player.getY(), (byte) player.getSkillCounter());
+            this.room.queueAddProj(proj);
+            PacketSender.sendSFX(this.room.getRoom(), Globals.SFX_GASH, player.getX(), player.getY());
             switch (player.getSkillCounter()) {
                 case 1:
-                    PacketSender.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_GASH1, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
+                    PacketSender.sendParticle(this.room.getRoom(), Globals.PARTICLE_SWORD_GASH1, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
                             player.getFacing());
                     break;
                 case 2:
-                    PacketSender.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_GASH2, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
+                    PacketSender.sendParticle(this.room.getRoom(), Globals.PARTICLE_SWORD_GASH2, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
                             player.getFacing());
                     break;
                 case 3:
-                    PacketSender.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_GASH3, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
+                    PacketSender.sendParticle(this.room.getRoom(), Globals.PARTICLE_SWORD_GASH3, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
                             player.getFacing());
                     break;
                 case 4:
-                    PacketSender.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_GASH4, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
+                    PacketSender.sendParticle(this.room.getRoom(), Globals.PARTICLE_SWORD_GASH4, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
                             player.getFacing());
                     break;
             }

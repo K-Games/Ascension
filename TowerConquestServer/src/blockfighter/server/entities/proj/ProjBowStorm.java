@@ -8,26 +8,13 @@ import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.player.skills.Skill;
 import java.awt.geom.Rectangle2D;
 
-/**
- * This is the base projectile class. Create projectile classes off this.
- *
- * @author Ken Kwan
- */
 public class ProjBowStorm extends Projectile {
 
     private long lastDamageTime;
 
-    /**
-     * Projectile of Bow Skill Arrow Storm.
-     *
-     * @param l Room/Logic Module
-     * @param o Owning player
-     * @param x Spawn x-coordinate
-     * @param y Spawn y-coordinate
-     */
     public ProjBowStorm(final LogicModule l, final Player o, final double x, final double y) {
         super(l, o, x, y, 5000);
-        lastDamageTime = this.logic.getTime();
+        lastDamageTime = this.room.getTime();
         this.hitbox = new Rectangle2D.Double[1];
         if (o.getFacing() == Globals.RIGHT) {
             this.hitbox[0] = new Rectangle2D.Double(this.x + 80, this.y - 450, 700, 450);
@@ -40,8 +27,8 @@ public class ProjBowStorm extends Projectile {
     @Override
     public void update() {
         super.update();
-        if (Globals.nsToMs(this.logic.getTime() - lastDamageTime) >= 200) {
-            lastDamageTime = this.logic.getTime();
+        if (Globals.nsToMs(this.room.getTime() - lastDamageTime) >= 200) {
+            lastDamageTime = this.room.getTime();
             this.pHit.clear();
             this.bHit.clear();
         }

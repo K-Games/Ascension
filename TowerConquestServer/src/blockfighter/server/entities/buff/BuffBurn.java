@@ -7,10 +7,6 @@ import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
 import java.awt.Point;
 
-/**
- *
- * @author Ken Kwan
- */
 public class BuffBurn extends Buff implements BuffDmgTakenAmp {
 
     private final double dmgAmp, dmgPerSec;
@@ -38,9 +34,9 @@ public class BuffBurn extends Buff implements BuffDmgTakenAmp {
     @Override
     public void update() {
         super.update();
-        int sinceLastDamage = Globals.nsToMs(this.logic.getTime() - this.lastDmgTime);
+        int sinceLastDamage = Globals.nsToMs(this.room.getTime() - this.lastDmgTime);
         if (this.dmgPerSec > 0 && sinceLastDamage >= 500) {
-            this.lastDmgTime = this.logic.getTime();
+            this.lastDmgTime = this.room.getTime();
             if (getTarget() != null) {
                 final Point dmgPoint = new Point((int) (getTarget().getHitbox().x),
                         (int) (getTarget().getHitbox().y + getTarget().getHitbox().height / 2));

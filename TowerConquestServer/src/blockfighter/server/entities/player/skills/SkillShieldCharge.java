@@ -8,11 +8,6 @@ import blockfighter.server.net.PacketSender;
 
 public class SkillShieldCharge extends Skill {
 
-    /**
-     * Constructor for Shield Skill Charge.
-     *
-     * @param l
-     */
     public SkillShieldCharge(final LogicModule l) {
         super(l);
         this.skillCode = SHIELD_CHARGE;
@@ -25,12 +20,12 @@ public class SkillShieldCharge extends Skill {
 
     @Override
     public void updateSkillUse(Player player) {
-        final int duration = Globals.nsToMs(this.logic.getTime() - player.getSkillCastTime());
+        final int duration = Globals.nsToMs(this.room.getTime() - player.getSkillCastTime());
         player.setXSpeed((player.getFacing() == Globals.RIGHT) ? 18 : -18);
         if (player.getSkillCounter() == 0) {
-            final ProjShieldCharge proj = new ProjShieldCharge(this.logic, player, player.getX(), player.getY());
-            this.logic.queueAddProj(proj);
-            PacketSender.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SHIELD_CHARGE, player.getKey(), player.getFacing());
+            final ProjShieldCharge proj = new ProjShieldCharge(this.room, player, player.getX(), player.getY());
+            this.room.queueAddProj(proj);
+            PacketSender.sendParticle(this.room.getRoom(), Globals.PARTICLE_SHIELD_CHARGE, player.getKey(), player.getFacing());
             player.incrementSkillCounter();
         }
         player.updateSkillEnd(duration, this.endDuration, false, false);

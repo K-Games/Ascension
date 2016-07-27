@@ -8,11 +8,6 @@ import blockfighter.server.net.PacketSender;
 
 public class SkillBowArc extends Skill {
 
-    /**
-     * Constructor for Bow Skill Arcshot.
-     *
-     * @param l Logic(room) this skill owner's belong to
-     */
     public SkillBowArc(final LogicModule l) {
         super(l);
         this.skillCode = BOW_ARC;
@@ -25,16 +20,16 @@ public class SkillBowArc extends Skill {
 
     @Override
     public void updateSkillUse(Player player) {
-        final int duration = Globals.nsToMs(this.logic.getTime() - player.getSkillCastTime());
+        final int duration = Globals.nsToMs(this.room.getTime() - player.getSkillCastTime());
         final int numHits = 3;
         if (player.getSkillCounter() < numHits && Globals.hasPastDuration(duration, 100 + player.getSkillCounter() * 50)) {
             player.incrementSkillCounter();
-            final ProjBowArc proj = new ProjBowArc(this.logic, player, player.getX(), player.getY());
-            this.logic.queueAddProj(proj);
+            final ProjBowArc proj = new ProjBowArc(this.room, player, player.getX(), player.getY());
+            this.room.queueAddProj(proj);
             if (player.getSkillCounter() == 1) {
-                PacketSender.sendParticle(this.logic.getRoom(), Globals.PARTICLE_BOW_ARC, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
+                PacketSender.sendParticle(this.room.getRoom(), Globals.PARTICLE_BOW_ARC, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
                         player.getFacing());
-                PacketSender.sendSFX(this.logic.getRoom(), Globals.SFX_ARC, player.getX(), player.getY());
+                PacketSender.sendSFX(this.room.getRoom(), Globals.SFX_ARC, player.getX(), player.getY());
             }
         }
         player.updateSkillEnd(duration, this.endDuration, false, false);

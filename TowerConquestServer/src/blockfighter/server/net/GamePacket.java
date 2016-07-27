@@ -21,23 +21,14 @@ public class GamePacket {
         this.c = c;
     }
 
-    /**
-     * @return the c
-     */
     public Connection getConnection() {
         return c;
     }
 
-    /**
-     * @return the player
-     */
     public Player getPlayer() {
         return player;
     }
 
-    /**
-     * @return the data
-     */
     public byte[] getData() {
         return data;
     }

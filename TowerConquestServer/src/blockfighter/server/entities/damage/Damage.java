@@ -6,10 +6,6 @@ import blockfighter.server.entities.player.Player;
 import java.awt.Point;
 import java.awt.geom.Rectangle2D;
 
-/**
- *
- * @author Ken Kwan
- */
 public class Damage {
 
     private final byte type;

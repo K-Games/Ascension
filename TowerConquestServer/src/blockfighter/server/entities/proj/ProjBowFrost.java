@@ -10,25 +10,11 @@ import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.player.skills.Skill;
 import java.awt.geom.Rectangle2D;
 
-/**
- * This is the base projectile class. Create projectile classes off this.
- *
- * @author Ken Kwan
- */
 public class ProjBowFrost extends Projectile {
 
     private double speedX = 0;
     private final boolean isSecondary;
 
-    /**
-     * Projectile of Bow Skill Frost Bind.
-     *
-     * @param l Room/Logic Module
-     * @param o Owning player
-     * @param x Spawn x-coordinate
-     * @param y Spawn y-coordinate
-     * @param isSec Is a secondary(non-freezing) shot.
-     */
     public ProjBowFrost(final LogicModule l, final Player o, final double x, final double y, final boolean isSec) {
         super(l, o, x, y, 500);
         this.isSecondary = isSec;
@@ -65,8 +51,8 @@ public class ProjBowFrost extends Projectile {
                     damage = (int) owner.criticalDamage(damage);
                 }
                 p.queueDamage(new Damage(damage, true, owner, p, crit, this.hitbox[0], p.getHitbox()));
-                p.queueBuff(new BuffKnockback(this.logic, 200, (owner.getFacing() == Globals.RIGHT) ? 3 : -3, -4, owner, p));
-                p.queueBuff(new BuffStun(this.logic, owner.isSkillMaxed(Skill.BOW_FROST) ? 2500 : 1500));
+                p.queueBuff(new BuffKnockback(this.room, 200, (owner.getFacing() == Globals.RIGHT) ? 3 : -3, -4, owner, p));
+                p.queueBuff(new BuffStun(this.room, owner.isSkillMaxed(Skill.BOW_FROST) ? 2500 : 1500));
             }
         }
         while (!this.mobQueue.isEmpty()) {
@@ -85,7 +71,7 @@ public class ProjBowFrost extends Projectile {
                 }
                 b.queueDamage(new Damage(damage, true, owner, b, crit, this.hitbox[0], b.getHitbox()));
                 if (!this.isSecondary) {
-                    b.queueBuff(new BuffStun(this.logic, owner.isSkillMaxed(Skill.BOW_FROST) ? 2500 : 1500));
+                    b.queueBuff(new BuffStun(this.room, owner.isSkillMaxed(Skill.BOW_FROST) ? 2500 : 1500));
                 }
             }
         }

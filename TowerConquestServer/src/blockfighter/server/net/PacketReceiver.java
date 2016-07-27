@@ -4,11 +4,6 @@ import blockfighter.server.Globals;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 
-/**
- * Thread to accept incoming connections. Start only one in the server. An instance of this class should not be required to be referenced at any time.
- *
- * @author Ken Kwan
- */
 public class PacketReceiver extends Listener {
 
     @Override

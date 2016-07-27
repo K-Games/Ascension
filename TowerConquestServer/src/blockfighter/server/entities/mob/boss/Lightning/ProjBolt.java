@@ -9,21 +9,8 @@ import blockfighter.server.entities.mob.MobProjectile;
 import blockfighter.server.entities.player.Player;
 import java.awt.geom.Rectangle2D;
 
-/**
- * This is the base projectile class. Create projectile classes off this.
- *
- * @author Ken Kwan
- */
 public class ProjBolt extends MobProjectile {
 
-    /**
-     * Projectile of Sword Skill Defensive Impact.
-     *
-     * @param l Room/Logic Module
-     * @param o Owning player
-     * @param x Spawn x-coordinate
-     * @param y Spawn y-coordinate
-     */
     public ProjBolt(final LogicModule l, final Mob o, final double x, final double y) {
         super(l, o);
         this.x = x;
@@ -40,7 +27,7 @@ public class ProjBolt extends MobProjectile {
             if (p != null && !p.isDead()) {
                 final int damage = (int) (250 * Math.pow(getMobOwner().getStats()[Mob.STAT_LEVEL], 1.7));
                 p.queueDamage(new Damage(damage, false, getMobOwner(), p, this.hitbox[0], p.getHitbox()));
-                p.queueBuff(new BuffKnockback(this.logic, 300, (getMobOwner().getFacing() == Globals.RIGHT) ? 5 : -5, -8, getMobOwner(), p));
+                p.queueBuff(new BuffKnockback(this.room, 300, (getMobOwner().getFacing() == Globals.RIGHT) ? 5 : -5, -8, getMobOwner(), p));
             }
         }
         this.queuedEffect = false;

@@ -7,11 +7,6 @@ import blockfighter.client.entities.mob.boss.Lightning.ParticleBolt;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-/**
- * PvP map
- *
- * @author Ken Kwan
- */
 public class GameMapFloor1 extends GameMap {
 
     public GameMapFloor1() {

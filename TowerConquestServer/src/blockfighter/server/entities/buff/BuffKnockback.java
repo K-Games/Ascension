@@ -4,25 +4,11 @@ import blockfighter.server.LogicModule;
 import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
 
-/**
- *
- * @author Ken Kwan
- */
 public class BuffKnockback extends Buff {
 
     private final double xSpeed, ySpeed;
     private boolean applied = false;
 
-    /**
-     * Constructor for knockback debuff
-     *
-     * @param l
-     * @param d duration in milliseconds
-     * @param x x speed
-     * @param y y speed
-     * @param o owning player
-     * @param t player being knocked
-     */
     public BuffKnockback(final LogicModule l, final int d, final double x, final double y, final Player o, final Player t) {
         super(l, d, o, t);
         this.xSpeed = x;

@@ -4,11 +4,6 @@ import blockfighter.client.Globals;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
-/**
- * PvP map
- *
- * @author Ken Kwan
- */
 public class GameMapArena extends GameMap {
 
     BufferedImage[] platforms = new BufferedImage[3];

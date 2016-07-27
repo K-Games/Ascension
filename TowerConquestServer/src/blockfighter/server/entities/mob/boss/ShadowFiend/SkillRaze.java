@@ -7,10 +7,6 @@ import static blockfighter.server.entities.mob.Mob.STATE_STAND;
 import blockfighter.server.entities.mob.MobSkill;
 import blockfighter.server.entities.proj.Projectile;
 
-/**
- *
- * @author Ken Kwan
- */
 public class SkillRaze extends MobSkill {
 
     public SkillRaze(final LogicModule l) {
@@ -21,13 +17,13 @@ public class SkillRaze extends MobSkill {
 
     @Override
     public void updateSkillUse(Mob mob) {
-        int duration = Globals.nsToMs(this.logic.getTime() - mob.getSkillCastTime());
+        int duration = Globals.nsToMs(this.room.getTime() - mob.getSkillCastTime());
         if (mob.getSkillCounter() == 0) {
             mob.incrementSkillCounter();
-            Projectile proj = new ProjRaze(this.logic, mob, mob.getX(), mob.getY(), true);
-            Projectile proj2 = new ProjRaze(this.logic, mob, mob.getX(), mob.getY(), false);
-            this.logic.queueAddProj(proj2);
-            this.logic.queueAddProj(proj);
+            Projectile proj = new ProjRaze(this.room, mob, mob.getX(), mob.getY(), true);
+            Projectile proj2 = new ProjRaze(this.room, mob, mob.getX(), mob.getY(), false);
+            this.room.queueAddProj(proj2);
+            this.room.queueAddProj(proj);
         }
         if (Globals.hasPastDuration(duration, 1000)) {
             mob.queueMobState(STATE_STAND);

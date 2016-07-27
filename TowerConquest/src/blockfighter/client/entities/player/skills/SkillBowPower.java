@@ -5,10 +5,6 @@ import blockfighter.client.entities.items.ItemEquip;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-/**
- *
- * @author Ken Kwan
- */
 public class SkillBowPower extends Skill {
 
     public SkillBowPower() {

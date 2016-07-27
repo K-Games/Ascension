@@ -9,21 +9,8 @@ import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.player.skills.Skill;
 import java.awt.geom.Rectangle2D;
 
-/**
- * This is the base projectile class. Create projectile classes off this.
- *
- * @author Ken Kwan
- */
 public class ProjSwordTaunt extends Projectile {
 
-    /**
-     * Projectile of Sword Skill Taunt.
-     *
-     * @param l Room/Logic Module
-     * @param o Owning player
-     * @param x Spawn x-coordinate
-     * @param y Spawn y-coordinate
-     */
     public ProjSwordTaunt(final LogicModule l, final Player o, final double x, final double y) {
         super(l, o, x, y, 200);
         this.hitbox = new Rectangle2D.Double[1];
@@ -46,7 +33,7 @@ public class ProjSwordTaunt extends Projectile {
                     damage = (int) owner.criticalDamage(damage);
                 }
                 p.queueDamage(new Damage(damage, true, owner, p, crit, this.hitbox[0], p.getHitbox()));
-                p.queueBuff(new BuffKnockback(this.logic, 300, (owner.getFacing() == Globals.RIGHT) ? 1 : -1, -4, owner, p));
+                p.queueBuff(new BuffKnockback(this.room, 300, (owner.getFacing() == Globals.RIGHT) ? 1 : -1, -4, owner, p));
             }
         }
         while (!this.mobQueue.isEmpty()) {

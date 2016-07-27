@@ -25,15 +25,15 @@ public class SkillShieldMagnetize extends Skill {
 
     @Override
     public void updateSkillUse(Player player) {
-        final int duration = Globals.nsToMs(this.logic.getTime() - player.getSkillCastTime());
+        final int duration = Globals.nsToMs(this.room.getTime() - player.getSkillCastTime());
         final int radius = 400;
 
         if (player.getSkillCounter() == 0) {
-            if (this.logic.getMap().isPvP()) {
-                this.playersCaught = this.logic.getPlayersInRange(player, radius);
+            if (this.room.getMap().isPvP()) {
+                this.playersCaught = this.room.getPlayersInRange(player, radius);
                 if (!this.playersCaught.isEmpty()) {
                     for (Player p : this.playersCaught) {
-                        PacketSender.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SHIELD_MAGNETIZE, player.getKey(), p.getKey());
+                        PacketSender.sendParticle(this.room.getRoom(), Globals.PARTICLE_SHIELD_MAGNETIZE, player.getKey(), p.getKey());
                         int damage = (int) (player.rollDamage() * (1.5 + 0.15 * player.getSkillLevel(Skill.SHIELD_MAGNETIZE))
                                 + (player.getStats()[Globals.STAT_DEFENSE] * (15 + player.getSkillLevel(Skill.SHIELD_MAGNETIZE))));
                         if (player.isSkillMaxed(Skill.SHIELD_MAGNETIZE)) {
@@ -47,10 +47,10 @@ public class SkillShieldMagnetize extends Skill {
                     }
                 }
             } else {
-                this.mobsCaught = this.logic.getMobsInRange(player, radius);
+                this.mobsCaught = this.room.getMobsInRange(player, radius);
                 if (!this.mobsCaught.isEmpty()) {
                     for (Mob mob : this.mobsCaught) {
-                        PacketSender.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SHIELD_MAGNETIZE, player.getKey(), mob.getKey());
+                        PacketSender.sendParticle(this.room.getRoom(), Globals.PARTICLE_SHIELD_MAGNETIZE, player.getKey(), mob.getKey());
                         int damage = (int) (player.rollDamage() * (1.5 + 0.15 * player.getSkillLevel(Skill.SHIELD_MAGNETIZE))
                                 + (player.getStats()[Globals.STAT_DEFENSE] * (15 + player.getSkillLevel(Skill.SHIELD_MAGNETIZE))));
                         if (player.isSkillMaxed(Skill.SHIELD_MAGNETIZE)) {
@@ -68,7 +68,7 @@ public class SkillShieldMagnetize extends Skill {
         }
 
         if (player.getSkillCounter() == 1) {
-            if (this.logic.getMap().isPvP()) {
+            if (this.room.getMap().isPvP()) {
                 if (!this.playersCaught.isEmpty()) {
                     for (Player p : this.playersCaught) {
                         int numOfTicks = (int) ((endDuration - duration) / Globals.nsToMs(Globals.LOGIC_UPDATE));
@@ -84,7 +84,7 @@ public class SkillShieldMagnetize extends Skill {
                     }
                 }
             } else {
-                ArrayList<Mob> mobsInRange = this.logic.getMobsInRange(player, radius);
+                ArrayList<Mob> mobsInRange = this.room.getMobsInRange(player, radius);
                 if (!this.mobsCaught.isEmpty()) {
                     for (Mob mob : this.mobsCaught) {
                         final Damage dmgEntity = new Damage(100, true, player, mob, false, mob.getHitbox(), mob.getHitbox());

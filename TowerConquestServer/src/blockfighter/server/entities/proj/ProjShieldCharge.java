@@ -10,21 +10,8 @@ import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.player.skills.Skill;
 import java.awt.geom.Rectangle2D;
 
-/**
- * This is the base projectile class. Create projectile classes off this.
- *
- * @author Ken Kwan
- */
 public class ProjShieldCharge extends Projectile {
 
-    /**
-     * Projectile of Shield Skill Charge.
-     *
-     * @param l Room/Logic Module
-     * @param o Owning player
-     * @param x Spawn x-coordinate
-     * @param y Spawn y-coordinate
-     */
     public ProjShieldCharge(final LogicModule l, final Player o, final double x, final double y) {
         super(l, o, x, y, 750);
         this.hitbox = new Rectangle2D.Double[1];
@@ -60,9 +47,9 @@ public class ProjShieldCharge extends Projectile {
                     damage = (int) owner.criticalDamage(damage);
                 }
                 p.queueDamage(new Damage(damage, true, owner, p, crit, this.hitbox[0], p.getHitbox()));
-                p.queueBuff(new BuffKnockback(this.logic, 300, (owner.getFacing() == Globals.RIGHT) ? 4 : -4, -5, owner, p));
+                p.queueBuff(new BuffKnockback(this.room, 300, (owner.getFacing() == Globals.RIGHT) ? 4 : -4, -5, owner, p));
                 if (owner.isSkillMaxed(Skill.SHIELD_CHARGE)) {
-                    p.queueBuff(new BuffStun(this.logic, 1000));
+                    p.queueBuff(new BuffStun(this.room, 1000));
                 }
             }
         }
@@ -77,7 +64,7 @@ public class ProjShieldCharge extends Projectile {
                 }
                 b.queueDamage(new Damage(damage, true, owner, b, crit, this.hitbox[0], b.getHitbox()));
                 if (owner.isSkillMaxed(Skill.SHIELD_CHARGE)) {
-                    b.queueBuff(new BuffStun(this.logic, 1000));
+                    b.queueBuff(new BuffStun(this.room, 1000));
                 }
             }
         }

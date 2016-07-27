@@ -21,7 +21,7 @@ public class SkillSwordPhantom extends Skill {
 
     @Override
     public void updateSkillUse(Player player) {
-        final int duration = Globals.nsToMs(this.logic.getTime() - player.getSkillCastTime());
+        final int duration = Globals.nsToMs(this.room.getTime() - player.getSkillCastTime());
         final int numHits = getLevel() / 2 + 5;
         final int radius = 350;
         boolean endPhantom = false;
@@ -30,14 +30,14 @@ public class SkillSwordPhantom extends Skill {
 
         //Send initial phase effect
         if (player.getSkillCounter() == 0) {
-            PacketSender.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_PHANTOM, player.getX(), player.getY(), player.getFacing());
+            PacketSender.sendParticle(this.room.getRoom(), Globals.PARTICLE_SWORD_PHANTOM, player.getX(), player.getY(), player.getFacing());
             player.incrementSkillCounter();
         }
 
         if (Globals.hasPastDuration(duration, 100 + 100 * (player.getSkillCounter() - 1)) && (player.getSkillCounter() - 1) < numHits) {
-            if (this.logic.getMap().isPvP()) {
+            if (this.room.getMap().isPvP()) {
                 Player target;
-                ArrayList<Player> playersInRange = this.logic.getPlayersInRange(player, radius);
+                ArrayList<Player> playersInRange = this.room.getPlayersInRange(player, radius);
 
                 if (!playersInRange.isEmpty()) {
                     target = playersInRange.get(Globals.rng(playersInRange.size()));
@@ -53,7 +53,7 @@ public class SkillSwordPhantom extends Skill {
                 }
             } else {
                 Mob target;
-                ArrayList<Mob> mobsInRange = this.logic.getMobsInRange(player, radius);
+                ArrayList<Mob> mobsInRange = this.room.getMobsInRange(player, radius);
 
                 if (!mobsInRange.isEmpty()) {
                     target = mobsInRange.get(Globals.rng(mobsInRange.size()));
@@ -69,10 +69,10 @@ public class SkillSwordPhantom extends Skill {
                 }
             }
             if (!endPhantom) {
-                final ProjSwordPhantom proj = new ProjSwordPhantom(this.logic, player, player.getX(), player.getY());
-                this.logic.queueAddProj(proj);
-                PacketSender.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_PHANTOM, player.getX(), player.getY(), player.getFacing());
-                PacketSender.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SWORD_PHANTOM2, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(), player.getFacing());
+                final ProjSwordPhantom proj = new ProjSwordPhantom(this.room, player, player.getX(), player.getY());
+                this.room.queueAddProj(proj);
+                PacketSender.sendParticle(this.room.getRoom(), Globals.PARTICLE_SWORD_PHANTOM, player.getX(), player.getY(), player.getFacing());
+                PacketSender.sendParticle(this.room.getRoom(), Globals.PARTICLE_SWORD_PHANTOM2, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(), player.getFacing());
                 player.incrementSkillCounter();
             }
         }

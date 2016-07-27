@@ -24,11 +24,6 @@ import javax.swing.JTextArea;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
-/**
- * All the server globals constants and helper methods.
- *
- * @author Ken Kwan
- */
 public class Globals {
 
     public final static boolean LOGGING = true,
@@ -65,7 +60,7 @@ public class Globals {
     public static int SERVER_PORT = 25565;
     public static byte SERVER_MAX_PLAYERS = 10;
     public static boolean SERVER_BATCH_PACKETSEND = false;
-    public static HashMap<Byte, Byte> SERVER_ROOMS = new HashMap<>();
+    public static HashMap<Byte, Byte> SERVER_ROOMNUM_TO_ROOMINDEX = new HashMap<>();
     public static int SERVER_MAX_IDLE = 120000;
     public static byte SERVER_LOGIC_THREADS = 3,
             SERVER_PACKETSENDER_THREADS = 5;
@@ -258,7 +253,7 @@ public class Globals {
 
     public final static void setServerProp() {
         for (byte i = 0; i < 10; i++) {
-            SERVER_ROOMS.put(i, i);
+            SERVER_ROOMNUM_TO_ROOMINDEX.put(i, i);
         }
         InputStream inputStream = null;
         try {
@@ -273,11 +268,11 @@ public class Globals {
                 SERVER_MAX_PLAYERS = Byte.parseByte(prop.getProperty("maxplayers"));
             }
             if (prop.getProperty("rooms") != null) {
-                SERVER_ROOMS.clear();
+                SERVER_ROOMNUM_TO_ROOMINDEX.clear();
                 String[] rooms = prop.getProperty("rooms").split(",");
                 Object[] roomNums = Arrays.asList(rooms).stream().map(Byte::parseByte).toArray();
                 for (byte i = 0; i < roomNums.length; i++) {
-                    SERVER_ROOMS.put((Byte) roomNums[i], i);
+                    SERVER_ROOMNUM_TO_ROOMINDEX.put((Byte) roomNums[i], i);
                 }
             }
             if (prop.getProperty("logicthreads") != null) {
@@ -300,7 +295,7 @@ public class Globals {
             }
             log(Globals.class, "Config", "Server Port: " + SERVER_PORT, Globals.LOG_TYPE_DATA, true);
             log(Globals.class, "Config", "Max Players per Room: " + SERVER_MAX_PLAYERS, Globals.LOG_TYPE_DATA, true);
-            log(Globals.class, "Config", "Rooms: " + SERVER_ROOMS, Globals.LOG_TYPE_DATA, true);
+            log(Globals.class, "Config", "Rooms: " + SERVER_ROOMNUM_TO_ROOMINDEX, Globals.LOG_TYPE_DATA, true);
             log(Globals.class, "Config", "Logic Module Threads: " + SERVER_LOGIC_THREADS, Globals.LOG_TYPE_DATA, true);
             log(Globals.class, "Config", "Max Packet Sender Threads: " + SERVER_PACKETSENDER_THREADS, Globals.LOG_TYPE_DATA, true);
 

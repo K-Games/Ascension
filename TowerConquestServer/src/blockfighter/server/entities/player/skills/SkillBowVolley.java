@@ -8,11 +8,6 @@ import blockfighter.server.net.PacketSender;
 
 public class SkillBowVolley extends Skill {
 
-    /**
-     * Constructor for Bow Skill Volley.
-     *
-     * @param l
-     */
     public SkillBowVolley(final LogicModule l) {
         super(l);
         this.skillCode = BOW_VOLLEY;
@@ -25,17 +20,17 @@ public class SkillBowVolley extends Skill {
 
     @Override
     public void updateSkillUse(Player player) {
-        final int duration = Globals.nsToMs(this.logic.getTime() - player.getSkillCastTime());
+        final int duration = Globals.nsToMs(this.room.getTime() - player.getSkillCastTime());
         final int numHits = 20;
         if (Globals.hasPastDuration(duration, player.getSkillCounter() * 100) && player.getSkillCounter() < numHits) {
-            final ProjBowVolley proj = new ProjBowVolley(this.logic, player, player.getX(),
+            final ProjBowVolley proj = new ProjBowVolley(this.room, player, player.getX(),
                     player.getY());
-            this.logic.queueAddProj(proj);
-            PacketSender.sendParticle(this.logic.getRoom(), Globals.PARTICLE_BOW_VOLLEYARROW, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
+            this.room.queueAddProj(proj);
+            PacketSender.sendParticle(this.room.getRoom(), Globals.PARTICLE_BOW_VOLLEYARROW, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
                     player.getFacing());
-            PacketSender.sendParticle(this.logic.getRoom(), Globals.PARTICLE_BOW_VOLLEYBOW, player.getX(), player.getY() - 75, player.getFacing());
+            PacketSender.sendParticle(this.room.getRoom(), Globals.PARTICLE_BOW_VOLLEYBOW, player.getX(), player.getY() - 75, player.getFacing());
             player.incrementSkillCounter();
-            PacketSender.sendSFX(this.logic.getRoom(), Globals.SFX_VOLLEY, player.getX(), player.getY());
+            PacketSender.sendSFX(this.room.getRoom(), Globals.SFX_VOLLEY, player.getX(), player.getY());
         }
         player.updateSkillEnd(duration, this.endDuration, true, true);
     }

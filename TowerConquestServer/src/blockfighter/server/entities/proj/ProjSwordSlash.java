@@ -8,22 +8,8 @@ import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.player.skills.Skill;
 import java.awt.geom.Rectangle2D;
 
-/**
- * This is the base projectile class. Create projectile classes off this.
- *
- * @author Ken Kwan
- */
 public class ProjSwordSlash extends Projectile {
 
-    /**
-     * Projectile of Sword Skill Defensive Impact.
-     *
-     * @param l Room/Logic Module
-     * @param o Owning player
-     * @param x Spawn x-coordinate
-     * @param y Spawn y-coordinate
-     * @param hit Hit number to determine hit box.
-     */
     public ProjSwordSlash(final LogicModule l, final Player o, final double x, final double y, final int hit) {
         super(l, o, x, y, 200);
         this.hitbox = new Rectangle2D.Double[1];

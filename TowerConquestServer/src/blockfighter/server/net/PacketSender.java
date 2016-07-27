@@ -13,23 +13,9 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
-/**
- * The server Packet Sender.
- * <p>
- * <div>Sends data packaged in a DatagramPacket via a DatagramSocket.</div>
- * <p>
- * The Packet Sender does not create the datagram packet. DatagramPackets are created outside this class. Client-side Packet Sender
- * <b>DOES</b> construct the datagram packet.
- * </p>
- * <div>Only one PacketSender is created on the server during program entry.</div>
- *
- * </p>
- *
- * @author Ken Kwan
- */
 public class PacketSender implements Runnable {
 
-    private static LogicModule[] logic;
+    private static LogicModule[] rooms;
     private static Server server;
 
     public static void sendParticle(final byte room, final byte particleID, final double x, final double y, final byte facing) {
@@ -110,49 +96,22 @@ public class PacketSender implements Runnable {
         }
     }
 
-    /**
-     * Reset sent byte count.
-     */
     public void resetByte() {
         this.dataSent = 0;
     }
 
-    /**
-     * Return number of data sent so far
-     *
-     * @return Number of data sent
-     */
     public int getBytes() {
         return this.dataSent;
     }
 
-    /**
-     * Set the static Logic Module array
-     *
-     * @param l Logic Module array
-     */
     public static void setLogic(final LogicModule[] l) {
-        logic = l;
+        rooms = l;
     }
 
-    /**
-     * Set the socket of the server.
-     *
-     * @param s The DatagramSocket that was initialized in the Packet Receiver
-     */
     public static void setServer(final Server s) {
         server = s;
     }
 
-    /**
-     * Send data to a specific player.
-     * <p>
-     * Get destination IP address and port from the Player object.
-     * </p>
-     *
-     * @param data Data to be sent in byte array
-     * @param c Connection to send to
-     */
     public static void sendConnection(final byte[] data, final Connection c) {
         if (Globals.SERVER_BATCH_PACKETSEND) {
             OUT_PACKET_QUEUE.add(new GamePacket(data, c));
@@ -174,26 +133,15 @@ public class PacketSender implements Runnable {
         }
     }
 
-    /**
-     * Queue data to be sent to every connected player.
-     *
-     * @param data Data to be sent in byte array
-     * @param room Room(Logic Module index) that contains the players
-     */
     public static void sendAll(final byte[] data, final byte room) {
-        for (final Map.Entry<Byte, Player> pEntry : logic[Globals.SERVER_ROOMS.get(room)].getPlayers().entrySet()) {
+        for (final Map.Entry<Byte, Player> pEntry : rooms[Globals.SERVER_ROOMNUM_TO_ROOMINDEX.get(room)].getPlayers().entrySet()) {
             sendPlayer(data, pEntry.getValue());
         }
 //        server.sendToAllTCP(data);
     }
 
-    /**
-     * Broadcast an update to all players about all player's data.
-     *
-     * @param room Room(Logic Module index) which is broadcasting the all player update.
-     */
     public static void broadcastAllPlayersUpdate(final byte room) {
-        for (final Map.Entry<Byte, Player> pEntry : logic[room].getPlayers().entrySet()) {
+        for (final Map.Entry<Byte, Player> pEntry : rooms[room].getPlayers().entrySet()) {
             final Player player = pEntry.getValue();
             player.sendData();
         }

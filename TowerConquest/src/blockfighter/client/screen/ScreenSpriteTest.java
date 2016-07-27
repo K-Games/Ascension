@@ -8,10 +8,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
-/**
- *
- * @author Ken Kwan
- */
 public class ScreenSpriteTest extends ScreenMenu {
 
     private byte standFrame = 0;

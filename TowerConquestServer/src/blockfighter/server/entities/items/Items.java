@@ -39,12 +39,6 @@ public class Items {
         }
     }
 
-    /**
-     * Get the item type of an item code.
-     *
-     * @param i Item Code
-     * @return Byte - Item Type
-     */
     public static byte getItemType(final int i) {
         if (i >= 100000 && i <= 109999) {
             // Swords

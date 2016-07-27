@@ -11,21 +11,8 @@ import blockfighter.server.entities.player.skills.Skill;
 import blockfighter.server.net.PacketSender;
 import java.awt.geom.Rectangle2D;
 
-/**
- * This is the base projectile class. Create projectile classes off this.
- *
- * @author Ken Kwan
- */
 public class ProjSwordCinder extends Projectile {
 
-    /**
-     * Projectile of Sword Skill Cinder.
-     *
-     * @param l Room/Logic Module
-     * @param o Owning player
-     * @param x Spawn x-coordinate
-     * @param y Spawn y-coordinate
-     */
     public ProjSwordCinder(final LogicModule l, final Player o, final double x, final double y) {
         super(l, o, x, y, 300);
         this.hitbox = new Rectangle2D.Double[1];
@@ -47,14 +34,14 @@ public class ProjSwordCinder extends Projectile {
                     damage = (int) owner.criticalDamage(damage);
                 }
                 p.queueDamage(new Damage(damage, true, owner, p, crit, this.hitbox[0], p.getHitbox()));
-                p.queueBuff(new BuffKnockback(this.logic, 300, (owner.getFacing() == Globals.RIGHT) ? 1 : -1, -4, owner, p));
-                p.queueBuff(new BuffBurn(this.logic, 4000, owner.getSkillLevel(Skill.SWORD_CINDER) * 0.01,
+                p.queueBuff(new BuffKnockback(this.room, 300, (owner.getFacing() == Globals.RIGHT) ? 1 : -1, -4, owner, p));
+                p.queueBuff(new BuffBurn(this.room, 4000, owner.getSkillLevel(Skill.SWORD_CINDER) * 0.01,
                         owner.isSkillMaxed(Skill.SWORD_CINDER) ? owner.rollDamage() : 0, owner, p));
                 final byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
                 bytes[0] = Globals.DATA_PARTICLE_EFFECT;
                 bytes[1] = Globals.PARTICLE_BURN;
                 bytes[2] = p.getKey();
-                PacketSender.sendAll(bytes, this.logic.getRoom());
+                PacketSender.sendAll(bytes, this.room.getRoom());
             }
         }
         while (!this.mobQueue.isEmpty()) {
@@ -67,7 +54,7 @@ public class ProjSwordCinder extends Projectile {
                     damage = (int) owner.criticalDamage(damage);
                 }
                 b.queueDamage(new Damage(damage, true, owner, b, crit, this.hitbox[0], b.getHitbox()));
-                b.queueBuff(new BuffBurn(this.logic, 4000, owner.getSkillLevel(Skill.SWORD_CINDER) * 0.01,
+                b.queueBuff(new BuffBurn(this.room, 4000, owner.getSkillLevel(Skill.SWORD_CINDER) * 0.01,
                         owner.isSkillMaxed(Skill.SWORD_CINDER) ? owner.rollDamage() : 0, owner, b));
                 // Monster buff display
             }

@@ -7,10 +7,6 @@ import blockfighter.client.entities.items.Item;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-/**
- *
- * @author Ken Kwan
- */
 public class Notification extends Thread {
 
     private static LogicModule logic;

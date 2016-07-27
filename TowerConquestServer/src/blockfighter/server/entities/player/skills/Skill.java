@@ -12,7 +12,7 @@ public abstract class Skill {
     protected byte level;
     protected long skillCastTime;
     protected int maxCooldown;
-    protected LogicModule logic;
+    protected LogicModule room;
     protected boolean isPassive = false;
     protected int endDuration;
     protected Byte reqEquipSlot = null;
@@ -51,85 +51,41 @@ public abstract class Skill {
             PASSIVE_STATIC = 0x1D;
 
     public Skill(final LogicModule l) {
-        this.logic = l;
+        this.room = l;
     }
 
-    /**
-     * Get this skill code of this skill.
-     *
-     * @return
-     */
     public byte getSkillCode() {
         return this.skillCode;
     }
 
-    /**
-     * Reduce the cooldown timer of this skill in milliseconds.
-     *
-     * @param ms Amount of milliseconds to reduce.
-     */
     public void reduceCooldown(final int ms) {
         this.skillCastTime -= Globals.msToNs(ms);
     }
 
-    /**
-     * Set the cooldown of this skill to it's maximum.
-     */
     public void setCooldown() {
-        this.skillCastTime = this.logic.getTime();
+        this.skillCastTime = this.room.getTime();
     }
 
-    /**
-     * Get the current cooldown time of this skill.
-     *
-     * @return Cooldown in milliseconds
-     */
     public int getCooldown() {
-        return Globals.nsToMs(this.logic.getTime() - this.skillCastTime);
+        return Globals.nsToMs(this.room.getTime() - this.skillCastTime);
     }
 
-    /**
-     * Get the maximum cooldown of this skill.
-     *
-     * @return Maximum cooldown in milliseconds.
-     */
     public int getMaxCooldown() {
         return this.maxCooldown;
     }
 
-    /**
-     * Set the level of this skill.
-     *
-     * @param lvl Skill level
-     */
     public void setLevel(final byte lvl) {
         this.level = lvl;
     }
 
-    /**
-     * Get the skill level
-     *
-     * @return Byte - Skill level
-     */
     public byte getLevel() {
         return this.level;
     }
 
-    /**
-     * Check if this skill is level 30
-     *
-     * @return True if skill is level 30
-     */
     public boolean isMaxed() {
         return this.level == 30;
     }
 
-    /**
-     * Check if this skill can be cast with this weapon type and is off cooldown.
-     *
-     * @param player The casting player.
-     * @return True if weapon is same as required weapon and cooldown is <= 0
-     */
     public boolean canCast(final Player player) {
         return !isPassive && (this.reqWeapon == null || this.reqEquipSlot == null || Items.getItemType(player.getEquips()[this.reqEquipSlot]) == this.reqWeapon)
                 && canCast();

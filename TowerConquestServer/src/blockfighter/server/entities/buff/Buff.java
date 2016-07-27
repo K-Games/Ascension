@@ -6,35 +6,19 @@ import blockfighter.server.entities.GameEntity;
 import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
 
-/**
- * Abstract class for all buffs/debuffs
- *
- * @author Ken Kwan
- */
 public abstract class Buff implements GameEntity {
 
-    /**
-     * Owning player of buff
-     */
     private Player playerOwner, playerTarget;
     private Mob mobOwner, mobTarget;
     private boolean isDebuff = false;
     private final Byte particleID = null;
-    protected LogicModule logic;
-    /**
-     * Duration of buff/debuff in milliseconds
-     */
+    protected LogicModule room;
+
     protected int duration;
     private long buffStartTime;
 
-    /**
-     * Constructor for buffs
-     *
-     * @param l logic(room) buffs belong to.
-     * @param d duration of buff
-     */
     public Buff(final LogicModule l, final int d) {
-        this.logic = l;
+        this.room = l;
         this.duration = d;
         this.buffStartTime = l.getTime();
     }
@@ -118,7 +102,7 @@ public abstract class Buff implements GameEntity {
     }
 
     public boolean isExpired() {
-        return Globals.nsToMs(this.logic.getTime() - this.buffStartTime) >= this.duration;
+        return Globals.nsToMs(this.room.getTime() - this.buffStartTime) >= this.duration;
     }
 
     public boolean isDebuff() {

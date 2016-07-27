@@ -3,10 +3,6 @@ package blockfighter.server.entities.buff;
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.player.Player;
 
-/**
- *
- * @author Ken Kwan
- */
 public class BuffShieldDash extends Buff implements BuffDmgIncrease {
 
     private final double dmgIncrease;

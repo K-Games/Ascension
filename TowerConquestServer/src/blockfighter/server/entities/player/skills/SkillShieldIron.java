@@ -9,11 +9,6 @@ import java.util.Map;
 
 public class SkillShieldIron extends Skill {
 
-    /**
-     * Constructor for Shield Skill Iron Fortress.
-     *
-     * @param l
-     */
     public SkillShieldIron(final LogicModule l) {
         super(l);
         this.skillCode = SHIELD_IRON;
@@ -26,22 +21,22 @@ public class SkillShieldIron extends Skill {
 
     @Override
     public void updateSkillUse(Player player) {
-        final int duration = Globals.nsToMs(this.logic.getTime() - this.skillCastTime);
+        final int duration = Globals.nsToMs(this.room.getTime() - this.skillCastTime);
         if (player.getSkillCounter() == 0) {
-            PacketSender.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SHIELD_IRON, player.getKey());
+            PacketSender.sendParticle(this.room.getRoom(), Globals.PARTICLE_SHIELD_IRON, player.getKey());
             player.incrementSkillCounter();
             //Player.sendSFX(this.logic.getRoom(), Globals.SFX_IRON, player.getX(), player.getY());
         }
         if (Globals.hasPastDuration(duration, 100) && player.getSkillCounter() == 1) {
             player.incrementSkillCounter();
             player.setRemovingDebuff(true);
-            player.queueBuff(new BuffShieldIron(this.logic, 2000, 0.55 + 0.01 * player.getSkillLevel(Skill.SHIELD_IRON)));
-            if (player.isSkillMaxed(Skill.SHIELD_IRON) && !this.logic.getMap().isPvP()) {
-                for (final Map.Entry<Byte, Player> pEntry : this.logic.getPlayers().entrySet()) {
+            player.queueBuff(new BuffShieldIron(this.room, 2000, 0.55 + 0.01 * player.getSkillLevel(Skill.SHIELD_IRON)));
+            if (player.isSkillMaxed(Skill.SHIELD_IRON) && !this.room.getMap().isPvP()) {
+                for (final Map.Entry<Byte, Player> pEntry : this.room.getPlayers().entrySet()) {
                     final Player p = pEntry.getValue();
                     if (p != player && !p.isDead()) {
-                        p.queueBuff(new BuffShieldIron(this.logic, 2000, 0.4));
-                        PacketSender.sendParticle(this.logic.getRoom(), Globals.PARTICLE_SHIELD_IRONALLY, p.getKey());
+                        p.queueBuff(new BuffShieldIron(this.room, 2000, 0.4));
+                        PacketSender.sendParticle(this.room.getRoom(), Globals.PARTICLE_SHIELD_IRONALLY, p.getKey());
                     }
                 }
             }

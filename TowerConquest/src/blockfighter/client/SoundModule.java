@@ -3,10 +3,6 @@ package blockfighter.client;
 import paulscode.sound.SoundSystemConfig;
 import paulscode.sound.SoundSystemJPCT;
 
-/**
- *
- * @author Ken Kwan
- */
 public class SoundModule implements Runnable {
 
     private SoundSystemJPCT soundModule;

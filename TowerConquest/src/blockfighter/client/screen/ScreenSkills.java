@@ -13,10 +13,6 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import javax.swing.SwingUtilities;
 
-/**
- *
- * @author Ken Kwan
- */
 public class ScreenSkills extends ScreenMenu {
 
     private final SaveData c;

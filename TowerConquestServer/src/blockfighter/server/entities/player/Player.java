@@ -63,11 +63,6 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-/**
- * Player entities on the server.
- *
- * @author Ken Kwan
- */
 public class Player extends Thread implements GameEntity {
 
     private static HashSet<Byte> VALID_PLAYER_SKILL_STATES;
@@ -98,7 +93,7 @@ public class Player extends Thread implements GameEntity {
             PLAYER_STATE_DEAD = 0x15;
 
     private final byte key;
-    private final LogicModule logic;
+    private final LogicModule room;
     private UUID uniqueID;
     private String name = "";
     private double x, y, ySpeed, xSpeed;
@@ -204,17 +199,9 @@ public class Player extends Thread implements GameEntity {
 
     }
 
-    /**
-     * Create a new player entity in the server.
-     *
-     * @param key The key of this player in the player array in logic module
-     * @param map Reference to server's loaded map
-     * @param c Player connection
-     * @param l Reference to Logic module
-     */
     public Player(final LogicModule l, final byte key, final Connection c, final GameMap map) {
         this.resistDamageSum = new LinkedList<>();
-        this.logic = l;
+        this.room = l;
         this.lastActionTime = l.getTime();
         this.key = key;
         this.connection = c;
@@ -236,20 +223,10 @@ public class Player extends Thread implements GameEntity {
         this.maxBuffKeys += 150;
     }
 
-    /**
-     * Return a freed buff key to the queue
-     *
-     * @param bKey Buff key to be queued
-     */
     public void returnBuffKey(final int bKey) {
         this.buffKeys.add(bKey);
     }
 
-    /**
-     * Get the next buff key from queue
-     *
-     * @return Byte - Free buff key, null if none are available.
-     */
     public Integer getNextBuffKey() {
         Integer nextKey = this.buffKeys.poll();
         while (nextKey == null) {
@@ -260,32 +237,14 @@ public class Player extends Thread implements GameEntity {
         return nextKey;
     }
 
-    /**
-     * Return this player's current X position.
-     *
-     * @return The player's X in double
-     */
     public double getX() {
         return this.x;
     }
 
-    /**
-     * Return this player's current Y position.
-     *
-     * @return The player's Y in double
-     */
     public double getY() {
         return this.y;
     }
 
-    /**
-     * Return this player's key.
-     * <p>
-     * This key is the same key in the player array in the logic module.
-     * </p>
-     *
-     * @return The key of this player in byte
-     */
     public byte getKey() {
         return this.key;
     }
@@ -306,23 +265,10 @@ public class Player extends Thread implements GameEntity {
         return this.connection;
     }
 
-    /**
-     * Return this player's facing direction.
-     * <p>
-     * Direction value is found in Globals.
-     * </p>
-     *
-     * @return The player's facing direction in byte
-     */
     public byte getFacing() {
         return this.facing;
     }
 
-    /**
-     * Return this player's current animation frame.
-     *
-     * @return The player's current animation frame
-     */
     public byte getFrame() {
         return this.frame;
     }
@@ -339,11 +285,6 @@ public class Player extends Thread implements GameEntity {
         this.skillCounter++;
     }
 
-    /**
-     * Get the item codes of the equipment on this Player
-     *
-     * @return int[] - Equipment Item Codes
-     */
     public int[] getEquips() {
         return this.equips;
     }
@@ -356,12 +297,6 @@ public class Player extends Thread implements GameEntity {
         this.isDead = set;
     }
 
-    /**
-     * Get the skill level of specific skill using a skill code
-     *
-     * @param skillCode Skill code of skill
-     * @return The level of the skill
-     */
     public int getSkillLevel(final byte skillCode) {
         if (!hasSkill(skillCode)) {
             return -1;
@@ -394,28 +329,13 @@ public class Player extends Thread implements GameEntity {
         return null;
     }
 
-    /**
-     * Set this player's movement when server receives packet that key is pressed.
-     *
-     * @param direction The direction to be set
-     * @param move True when pressed, false when released
-     */
     public void setDirKeydown(final int direction, final boolean move) {
         if (move) {
-            this.lastActionTime = this.logic.getTime();
+            this.lastActionTime = this.room.getTime();
         }
         this.dirKeydown[direction] = move;
     }
 
-    /**
-     * Set the player's x and y position.
-     * <p>
-     * This does not interpolate. The player is instantly moved to this location.
-     * </p>
-     *
-     * @param x New x location in double
-     * @param y New y location in double
-     */
     public void setPos(final double x, final double y) {
         if (this.map.isOutOfBounds(x)) {
             this.x = this.map.getValidX(x);
@@ -426,20 +346,10 @@ public class Player extends Thread implements GameEntity {
         this.updatePos = true;
     }
 
-    /**
-     * Set change in Y on the next tick.
-     *
-     * @param speed Distance in double
-     */
     public void setYSpeed(final double speed) {
         this.ySpeed = speed;
     }
 
-    /**
-     * Set change in X on the next tick.
-     *
-     * @param speed Distance in double
-     */
     public void setXSpeed(final double speed) {
         if (isDead()) {
             this.xSpeed = 0;
@@ -447,104 +357,98 @@ public class Player extends Thread implements GameEntity {
         this.xSpeed = speed;
     }
 
-    /**
-     * Set the level of skill with skill code
-     *
-     * @param skillCode Skill to be set
-     * @param level Level of skill to be set
-     */
     public void setSkill(final byte skillCode, final byte level) {
         Skill newSkill = null;
         switch (skillCode) {
             case Skill.SWORD_CINDER:
-                newSkill = new SkillSwordCinder(this.logic);
+                newSkill = new SkillSwordCinder(this.room);
                 break;
             case Skill.SWORD_GASH:
-                newSkill = new SkillSwordGash(this.logic);
+                newSkill = new SkillSwordGash(this.room);
                 break;
             case Skill.SWORD_PHANTOM:
-                newSkill = new SkillSwordPhantom(this.logic);
+                newSkill = new SkillSwordPhantom(this.room);
                 break;
             case Skill.SWORD_SLASH:
-                newSkill = new SkillSwordSlash(this.logic);
+                newSkill = new SkillSwordSlash(this.room);
                 break;
             case Skill.SWORD_TAUNT:
-                newSkill = new SkillSwordTaunt(this.logic);
+                newSkill = new SkillSwordTaunt(this.room);
                 break;
             case Skill.SWORD_VORPAL:
-                newSkill = new SkillSwordVorpal(this.logic);
+                newSkill = new SkillSwordVorpal(this.room);
                 break;
             case Skill.BOW_ARC:
-                newSkill = new SkillBowArc(this.logic);
+                newSkill = new SkillBowArc(this.room);
                 break;
             case Skill.BOW_FROST:
-                newSkill = new SkillBowFrost(this.logic);
+                newSkill = new SkillBowFrost(this.room);
                 break;
             case Skill.BOW_POWER:
-                newSkill = new SkillBowPower(this.logic);
+                newSkill = new SkillBowPower(this.room);
                 break;
             case Skill.BOW_RAPID:
-                newSkill = new SkillBowRapid(this.logic);
+                newSkill = new SkillBowRapid(this.room);
                 break;
             case Skill.BOW_STORM:
-                newSkill = new SkillBowStorm(this.logic);
+                newSkill = new SkillBowStorm(this.room);
                 break;
             case Skill.BOW_VOLLEY:
-                newSkill = new SkillBowVolley(this.logic);
+                newSkill = new SkillBowVolley(this.room);
                 break;
             case Skill.SHIELD_FORTIFY:
-                newSkill = new SkillShieldFortify(this.logic);
+                newSkill = new SkillShieldFortify(this.room);
                 break;
             case Skill.SHIELD_IRON:
-                newSkill = new SkillShieldIron(this.logic);
+                newSkill = new SkillShieldIron(this.room);
                 break;
             case Skill.SHIELD_CHARGE:
-                newSkill = new SkillShieldCharge(this.logic);
+                newSkill = new SkillShieldCharge(this.room);
                 break;
             case Skill.SHIELD_REFLECT:
-                newSkill = new SkillShieldReflect(this.logic);
+                newSkill = new SkillShieldReflect(this.room);
                 break;
             case Skill.SHIELD_MAGNETIZE:
-                newSkill = new SkillShieldMagnetize(this.logic);
+                newSkill = new SkillShieldMagnetize(this.room);
                 break;
             case Skill.SHIELD_DASH:
-                newSkill = new SkillShieldDash(this.logic);
+                newSkill = new SkillShieldDash(this.room);
                 break;
             case Skill.PASSIVE_DUALSWORD:
-                newSkill = new SkillPassiveDualSword(this.logic);
+                newSkill = new SkillPassiveDualSword(this.room);
                 break;
             case Skill.PASSIVE_KEENEYE:
-                newSkill = new SkillPassiveKeenEye(this.logic);
+                newSkill = new SkillPassiveKeenEye(this.room);
                 break;
             case Skill.PASSIVE_VITALHIT:
-                newSkill = new SkillPassiveVitalHit(this.logic);
+                newSkill = new SkillPassiveVitalHit(this.room);
                 break;
             case Skill.PASSIVE_SHIELDMASTERY:
-                newSkill = new SkillPassiveShieldMastery(this.logic);
+                newSkill = new SkillPassiveShieldMastery(this.room);
                 break;
             case Skill.PASSIVE_BARRIER:
-                newSkill = new SkillPassiveBarrier(this.logic);
+                newSkill = new SkillPassiveBarrier(this.room);
                 break;
             case Skill.PASSIVE_RESIST:
-                newSkill = new SkillPassiveResistance(this.logic);
+                newSkill = new SkillPassiveResistance(this.room);
                 break;
             case Skill.PASSIVE_BOWMASTERY:
-                newSkill = new SkillPassiveBowMastery(this.logic);
+                newSkill = new SkillPassiveBowMastery(this.room);
                 break;
             case Skill.PASSIVE_WILLPOWER:
-                newSkill = new SkillPassiveWillpower(this.logic);
+                newSkill = new SkillPassiveWillpower(this.room);
                 break;
             case Skill.PASSIVE_HARMONY:
-                newSkill = new SkillPassiveHarmony(this.logic);
+                newSkill = new SkillPassiveHarmony(this.room);
                 break;
             case Skill.PASSIVE_TOUGH:
-                newSkill = new SkillPassiveTough(this.logic);
+                newSkill = new SkillPassiveTough(this.room);
                 break;
             case Skill.PASSIVE_SHADOWATTACK:
-                newSkill = new SkillPassiveShadowAttack(this.logic);
+                newSkill = new SkillPassiveShadowAttack(this.room);
                 break;
             case Skill.PASSIVE_STATIC:
-                newSkill = new SkillPassiveStatic(this.logic);
+                newSkill = new SkillPassiveStatic(this.room);
                 break;
         }
         if (newSkill != null) {
@@ -562,12 +466,6 @@ public class Player extends Thread implements GameEntity {
         }
     }
 
-    /**
-     * Updates all logic of this player.
-     * <p>
-     * Must be called every tick. Specific logic updates are separated into other methods. Specific logic updates must be private.
-     * </p>
-     */
     @Override
     public void update() {
         if (!isConnected()) {
@@ -620,14 +518,14 @@ public class Player extends Thread implements GameEntity {
             sendState();
         }
 
-        if (this.connected && Globals.nsToMs(this.logic.getTime() - this.lastActionTime) >= Globals.SERVER_MAX_IDLE) {
+        if (this.connected && Globals.nsToMs(this.room.getTime() - this.lastActionTime) >= Globals.SERVER_MAX_IDLE) {
             Globals.log(Player.class, this.connection + " Disconnecting <" + this.name + "> due to idling.", Globals.LOG_TYPE_DATA, true);
             disconnect();
         }
     }
 
     private void updateDead() {
-        final int deathDuration = Globals.nsToMs(this.logic.getTime() - this.deathTime);
+        final int deathDuration = Globals.nsToMs(this.room.getTime() - this.deathTime);
         this.damageQueue.clear();
         this.healQueue.clear();
         this.skillUseQueue.clear();
@@ -657,7 +555,7 @@ public class Player extends Thread implements GameEntity {
             return;
         }
         this.skillCounter = 0;
-        this.skillCastTime = this.logic.getTime();
+        this.skillCastTime = this.room.getTime();
         // Globals.log("DATA_PLAYER_CASTSKILL", "Key: " + key + " Room: " + logic.getRoom() + " Player: " + getPlayerName() + " Skill: " +
         // data[3], Globals.LOG_TYPE_DATA, true);
 
@@ -712,7 +610,7 @@ public class Player extends Thread implements GameEntity {
     }
 
     private void updateHP() {
-        int sinceLastHPSend = Globals.nsToMs(this.logic.getTime() - this.lastHPSendTime);
+        int sinceLastHPSend = Globals.nsToMs(this.room.getTime() - this.lastHPSendTime);
         // Empty damage queued
         if (isInvulnerable()) {
             // Take no damage
@@ -766,17 +664,17 @@ public class Player extends Thread implements GameEntity {
                 // Barrier reduction
                 if (this.barrierBuff != null) {
                     finalDamage = ((BuffPassiveBarrier) this.barrierBuff).reduceDmg(finalDamage);
-                    PacketSender.sendParticle(this.logic.getRoom(), Globals.PARTICLE_PASSIVE_BARRIER, dmg.getDmgPoint().x, dmg.getDmgPoint().y);
+                    PacketSender.sendParticle(this.room.getRoom(), Globals.PARTICLE_PASSIVE_BARRIER, dmg.getDmgPoint().x, dmg.getDmgPoint().y);
                 }
 
                 if (this.resistBuff != null) {
-                    PacketSender.sendParticle(this.logic.getRoom(), Globals.PARTICLE_PASSIVE_RESIST, dmg.getDmgPoint().x, dmg.getDmgPoint().y);
+                    PacketSender.sendParticle(this.room.getRoom(), Globals.PARTICLE_PASSIVE_RESIST, dmg.getDmgPoint().x, dmg.getDmgPoint().y);
                 }
 
                 // Send client damage display
                 if (!dmg.isHidden()) {
                     if (dmg.getOwner() != null && dmg.isCrit()) {
-                        PacketSender.sendParticle(this.logic.getRoom(), Globals.PARTICLE_BLOOD_HIT, dmg.getOwner().getKey(), this.key);
+                        PacketSender.sendParticle(this.room.getRoom(), Globals.PARTICLE_BLOOD_HIT, dmg.getOwner().getKey(), this.key);
                     }
                     sendDamage(dmg, (int) finalDamage);
                 }
@@ -790,10 +688,10 @@ public class Player extends Thread implements GameEntity {
                     this.barrierDmgTaken += finalDamage;
                     if (this.barrierDmgTaken >= this.stats[Globals.STAT_MAXHP] * 0.5) {
                         this.barrierDmgTaken = 0;
-                        queueBuff(new BuffPassiveBarrier(this.logic,
+                        queueBuff(new BuffPassiveBarrier(this.room,
                                 this.stats[Globals.STAT_MAXHP] * (0.1 + 0.005 * getSkillLevel(Skill.PASSIVE_BARRIER)),
                                 this));
-                        PacketSender.sendParticle(this.logic.getRoom(), Globals.PARTICLE_PASSIVE_BARRIER, dmg.getDmgPoint().x, dmg.getDmgPoint().y);
+                        PacketSender.sendParticle(this.room.getRoom(), Globals.PARTICLE_PASSIVE_BARRIER, dmg.getDmgPoint().x, dmg.getDmgPoint().y);
                         this.skills.get(Skill.PASSIVE_BARRIER).setCooldown();
                         sendCooldown(Skill.PASSIVE_BARRIER);
                     }
@@ -817,7 +715,7 @@ public class Player extends Thread implements GameEntity {
                 damageSum += resistDmg;
             }
             if (damageSum >= 0.25 * this.stats[Globals.STAT_MAXHP]) {
-                queueBuff(new BuffPassiveResist(this.logic, 2000, 1));
+                queueBuff(new BuffPassiveResist(this.room, 2000, 1));
                 this.skills.get(Skill.PASSIVE_RESIST).setCooldown();
                 sendCooldown(Skill.PASSIVE_RESIST);
                 resistDamageSum.clear();
@@ -856,9 +754,9 @@ public class Player extends Thread implements GameEntity {
             bytes[1] = this.key;
             bytes[2] = Globals.STAT_MINHP;
             System.arraycopy(stat, 0, bytes, 3, stat.length);
-            PacketSender.sendAll(bytes, this.logic.getRoom());
+            PacketSender.sendAll(bytes, this.room.getRoom());
             //this.nextHPSend = 150;
-            this.lastHPSendTime = this.logic.getTime();
+            this.lastHPSendTime = this.room.getTime();
         }
     }
 
@@ -948,7 +846,7 @@ public class Player extends Thread implements GameEntity {
     }
 
     private void die() {
-        PacketSender.sendParticle(this.logic.getRoom(), Globals.PARTICLE_BLOOD, this.key);
+        PacketSender.sendParticle(this.room.getRoom(), Globals.PARTICLE_BLOOD, this.key);
         setInvulnerable(false);
         setRemovingDebuff(false);
         setDead(true);
@@ -960,7 +858,7 @@ public class Player extends Thread implements GameEntity {
         this.barrierDmgTaken = 0;
         this.resistDamageSum.clear();
         this.buffs.clear();
-        this.deathTime = this.logic.getTime();
+        this.deathTime = this.room.getTime();
     }
 
     private void respawn() {
@@ -981,11 +879,6 @@ public class Player extends Thread implements GameEntity {
         this.resistDamageSum.clear();
     }
 
-    /**
-     * Roll a damage number between the max and min damage of player.
-     *
-     * @return Randomly rolled damage.
-     */
     public double rollDamage() {
         double dmg = Globals.rng((int) (this.stats[Globals.STAT_MAXDMG] - this.stats[Globals.STAT_MINDMG]))
                 + this.stats[Globals.STAT_MINDMG];
@@ -1016,21 +909,10 @@ public class Player extends Thread implements GameEntity {
         return dmg;
     }
 
-    /**
-     * Roll a chance to do critical hit.
-     *
-     * @return True if rolls a critical chance.
-     */
     public boolean rollCrit() {
         return rollCrit(0);
     }
 
-    /**
-     * Roll a chance to do critical hit with addition critical chance(from skills)
-     *
-     * @param bonusCritChance Bonus chance % in decimal(40% = 0.4).
-     * @return True if rolls a critical chance.
-     */
     public boolean rollCrit(final double bonusCritChance) {
         double totalCritChance = this.stats[Globals.STAT_CRITCHANCE] + bonusCritChance;
         // Dual Sword Passive
@@ -1133,12 +1015,6 @@ public class Player extends Thread implements GameEntity {
         PacketSender.sendPlayer(bytes, this);
     }
 
-    /**
-     * Check if a rectangle intersects with this player's hitbox
-     *
-     * @param box Box to be checked
-     * @return True if the boxes intersect
-     */
     public boolean intersectHitbox(final Rectangle2D.Double box) {
         return this.hitbox.intersects(box);
     }
@@ -1147,29 +1023,14 @@ public class Player extends Thread implements GameEntity {
         return this.hitbox;
     }
 
-    /**
-     * Return if player is stunned
-     *
-     * @return isStun
-     */
     public boolean isStunned() {
         return this.stunDebuff != null;
     }
 
-    /**
-     * Return if player is being knocked back.
-     *
-     * @return isKnockback
-     */
     public boolean isKnockback() {
         return this.knockbackDebuff != null;
     }
 
-    /**
-     * Check if player is in a skill use state
-     *
-     * @return True if player is in a skill use state.
-     */
     public boolean isUsingSkill() {
         return VALID_PLAYER_SKILL_STATES.contains(this.playerState);
     }
@@ -1178,11 +1039,6 @@ public class Player extends Thread implements GameEntity {
         return IMMOVABLE_PLAYER_SKILL_STATES.contains(this.playerState);
     }
 
-    /**
-     * Queue a buff/debuff to this player
-     *
-     * @param b New Buff
-     */
     public void queueBuff(final Buff b) {
         if (!isDead()) {
             this.buffQueue.add(b);
@@ -1248,48 +1104,25 @@ public class Player extends Thread implements GameEntity {
         }
     }
 
-    /**
-     * Queue skill to be use. Processed in the next tick.
-     *
-     * @param data
-     */
     public void queueSkillUse(final byte[] data) {
-        this.lastActionTime = this.logic.getTime();
+        this.lastActionTime = this.room.getTime();
         if (!isDead() && this.skills.get(data[3]).canCast(this) && !isUsingSkill()) {
             this.skillUseQueue.add(data);
         }
     }
 
-    /**
-     * Queue damage to be dealt. Processed in HP updated in the next tick.
-     *
-     * @param damage
-     */
     public void queueDamage(final Damage damage) {
         if (!isDead()) {
             this.damageQueue.add(damage);
         }
     }
 
-    /**
-     * Queue heal to be applied. Processed in HP updated in the next tick.
-     *
-     * @param heal
-     */
     public void queueHeal(final int heal) {
         if (!isDead()) {
             this.healQueue.add(heal);
         }
     }
 
-    /**
-     * Set player facing direction.
-     * <p>
-     * Direction constants in Globals
-     * </p>
-     *
-     * @param f Direction in byte
-     */
     public void setFacing(final byte f) {
         this.facing = f;
         this.updateFacing = true;
@@ -1331,23 +1164,10 @@ public class Player extends Thread implements GameEntity {
         }
     }
 
-    /**
-     * Queue player state to be set.
-     * <p>
-     * States constants in Globals
-     * </p>
-     *
-     * @param newState New state the player is in
-     */
     public void queuePlayerState(final byte newState) {
         this.nextState = newState;
     }
 
-    /**
-     * Force set a player state.
-     *
-     * @param newState State to be set
-     */
     public void setPlayerState(final byte newState) {
         this.playerState = newState;
         this.frame = -1;
@@ -1357,8 +1177,8 @@ public class Player extends Thread implements GameEntity {
 
     private void updateAnimState() {
         final byte prevAnimState = this.animState, prevFrame = this.frame;
-        final int skillDuration = Globals.nsToMs(this.logic.getTime() - this.skillCastTime);
-        final int frameDuration = Globals.nsToMs(this.logic.getTime() - this.lastFrameTime);
+        final int skillDuration = Globals.nsToMs(this.room.getTime() - this.skillCastTime);
+        final int frameDuration = Globals.nsToMs(this.room.getTime() - this.lastFrameTime);
         switch (this.playerState) {
             case PLAYER_STATE_STAND:
                 this.animState = Globals.PLAYER_ANIM_STATE_STAND;
@@ -1368,7 +1188,7 @@ public class Player extends Thread implements GameEntity {
                     } else {
                         this.frame++;
                     }
-                    this.lastFrameTime = this.logic.getTime();
+                    this.lastFrameTime = this.room.getTime();
                 }
                 break;
             case PLAYER_STATE_DEAD:
@@ -1377,7 +1197,7 @@ public class Player extends Thread implements GameEntity {
                     if (this.frame < 10) {
                         this.frame++;
                     }
-                    this.lastFrameTime = this.logic.getTime();
+                    this.lastFrameTime = this.room.getTime();
                 }
                 break;
             case PLAYER_STATE_WALK:
@@ -1388,7 +1208,7 @@ public class Player extends Thread implements GameEntity {
                     } else {
                         this.frame++;
                     }
-                    this.lastFrameTime = this.logic.getTime();
+                    this.lastFrameTime = this.room.getTime();
                 }
                 break;
             case PLAYER_STATE_JUMP:
@@ -1401,7 +1221,7 @@ public class Player extends Thread implements GameEntity {
                     } else {
                         this.frame = 1;
                     }
-                    this.lastFrameTime = this.logic.getTime();
+                    this.lastFrameTime = this.room.getTime();
                 }
                 break;
             case PLAYER_STATE_SWORD_SLASH:
@@ -1410,7 +1230,7 @@ public class Player extends Thread implements GameEntity {
                     if (this.frame < 5) {
                         this.frame++;
                     }
-                    this.lastFrameTime = this.logic.getTime();
+                    this.lastFrameTime = this.room.getTime();
                 }
                 break;
             case PLAYER_STATE_SWORD_GASH:
@@ -1418,7 +1238,7 @@ public class Player extends Thread implements GameEntity {
                 if (frameDuration >= ((this.frame == 4) ? 150 : 20) && this.frame < 5) {
                     this.frame++;
 
-                    this.lastFrameTime = this.logic.getTime();
+                    this.lastFrameTime = this.room.getTime();
                 }
                 break;
             case PLAYER_STATE_SWORD_PHANTOM:
@@ -1428,35 +1248,35 @@ public class Player extends Thread implements GameEntity {
                 this.animState = Globals.PLAYER_ANIM_STATE_ATTACK;
                 if (frameDuration >= 20 && this.frame < 5) {
                     this.frame++;
-                    this.lastFrameTime = this.logic.getTime();
+                    this.lastFrameTime = this.room.getTime();
                 }
                 break;
             case PLAYER_STATE_SWORD_CINDER:
                 this.animState = Globals.PLAYER_ANIM_STATE_ATTACK;
                 if (frameDuration >= ((this.frame == 4) ? 40 : 30) && this.frame < 5) {
                     this.frame++;
-                    this.lastFrameTime = this.logic.getTime();
+                    this.lastFrameTime = this.room.getTime();
                 }
                 break;
             case PLAYER_STATE_SWORD_TAUNT:
                 this.animState = Globals.PLAYER_ANIM_STATE_ATTACK;
                 if (frameDuration >= ((this.frame == 4) ? 150 : 30) && this.frame < 5) {
                     this.frame++;
-                    this.lastFrameTime = this.logic.getTime();
+                    this.lastFrameTime = this.room.getTime();
                 }
                 break;
             case PLAYER_STATE_BOW_ARC:
                 this.animState = Globals.PLAYER_ANIM_STATE_ATTACKBOW;
                 if (this.frame < 7 && frameDuration >= 30) {
                     this.frame++;
-                    this.lastFrameTime = this.logic.getTime();
+                    this.lastFrameTime = this.room.getTime();
                 }
                 break;
             case PLAYER_STATE_BOW_RAPID:
                 this.animState = Globals.PLAYER_ANIM_STATE_ATTACKBOW;
                 if (this.frame < 7 && frameDuration >= 30) {
                     this.frame++;
-                    this.lastFrameTime = this.logic.getTime();
+                    this.lastFrameTime = this.room.getTime();
                 }
                 break;
             case PLAYER_STATE_BOW_POWER:
@@ -1467,49 +1287,49 @@ public class Player extends Thread implements GameEntity {
                     } else if (getSkillCounter() == 21 && this.frame < 7) {
                         this.frame++;
                     }
-                    this.lastFrameTime = this.logic.getTime();
+                    this.lastFrameTime = this.room.getTime();
                 }
                 break;
             case PLAYER_STATE_BOW_VOLLEY:
                 this.animState = Globals.PLAYER_ANIM_STATE_ATTACKBOW;
                 if (this.frame < 3 && frameDuration >= 30) {
                     this.frame++;
-                    this.lastFrameTime = this.logic.getTime();
+                    this.lastFrameTime = this.room.getTime();
                 }
                 break;
             case PLAYER_STATE_BOW_STORM:
                 this.animState = Globals.PLAYER_ANIM_STATE_ATTACKBOW;
                 if (this.frame < 7 && frameDuration >= 30) {
                     this.frame++;
-                    this.lastFrameTime = this.logic.getTime();
+                    this.lastFrameTime = this.room.getTime();
                 }
                 break;
             case PLAYER_STATE_BOW_FROST:
                 this.animState = Globals.PLAYER_ANIM_STATE_ATTACKBOW;
                 if (this.frame < 7 && frameDuration >= 30) {
                     this.frame++;
-                    this.lastFrameTime = this.logic.getTime();
+                    this.lastFrameTime = this.room.getTime();
                 }
                 break;
             case PLAYER_STATE_SHIELD_DASH:
                 this.animState = Globals.PLAYER_ANIM_STATE_ROLL;
                 if (frameDuration >= 40 && this.frame < 9) {
                     this.frame++;
-                    this.lastFrameTime = this.logic.getTime();
+                    this.lastFrameTime = this.room.getTime();
                 }
                 break;
             case PLAYER_STATE_SHIELD_CHARGE:
                 this.animState = Globals.PLAYER_ANIM_STATE_ATTACK;
                 if (frameDuration >= ((this.frame == 1) ? 4 : 20) && this.frame < 4) {
                     this.frame++;
-                    this.lastFrameTime = this.logic.getTime();
+                    this.lastFrameTime = this.room.getTime();
                 }
                 break;
             case PLAYER_STATE_SHIELD_FORTIFY:
                 this.animState = Globals.PLAYER_ANIM_STATE_BUFF;
                 if (frameDuration >= 30 && this.frame < 6) {
                     this.frame++;
-                    this.lastFrameTime = this.logic.getTime();
+                    this.lastFrameTime = this.room.getTime();
                 }
                 break;
             case PLAYER_STATE_SHIELD_REFLECT:
@@ -1522,14 +1342,14 @@ public class Player extends Thread implements GameEntity {
                 this.animState = Globals.PLAYER_ANIM_STATE_BUFF;
                 if (frameDuration >= 30 && this.frame < 6) {
                     this.frame++;
-                    this.lastFrameTime = this.logic.getTime();
+                    this.lastFrameTime = this.room.getTime();
                 }
                 break;
             case PLAYER_STATE_SHIELD_MAGNETIZE:
                 this.animState = Globals.PLAYER_ANIM_STATE_ATTACK;
                 if (frameDuration >= 30 && this.frame < 5) {
                     this.frame++;
-                    this.lastFrameTime = this.logic.getTime();
+                    this.lastFrameTime = this.room.getTime();
                 }
                 break;
         }
@@ -1556,18 +1376,12 @@ public class Player extends Thread implements GameEntity {
             bytes[12] = this.frame;
         }
 
-        PacketSender.sendAll(bytes, this.logic.getRoom());
+        PacketSender.sendAll(bytes, this.room.getRoom());
         this.updatePos = false;
         this.updateFacing = false;
         this.updateAnimState = false;
     }
 
-    /**
-     * Send the player's current position to every connected player
-     * <p>
-     * X and y are casted and sent as integer. Uses Server PacketSender to send to all Byte sent: 0 - Data type 1 - Key 2,3,4,5 - x 6,7,8,9 - y
-     * </p>
-     */
     public void sendPos() {
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT * 2];
         bytes[0] = Globals.DATA_PLAYER_SET_POS;
@@ -1578,31 +1392,19 @@ public class Player extends Thread implements GameEntity {
         final byte[] posYInt = Globals.intToBytes((int) this.y);
         System.arraycopy(posYInt, 0, bytes, 6, posYInt.length);
         bytes[10] = this.facing;
-        PacketSender.sendAll(bytes, this.logic.getRoom());
+        PacketSender.sendAll(bytes, this.room.getRoom());
         this.updatePos = false;
     }
 
-    /**
-     * Send the player's current facing direction to every connected player
-     * <p>
-     * Facing uses direction constants in Globals. Uses Server PacketSender to send to all Byte sent: 0 - Data type 1 - Key 2 - Facing direction
-     * </p>
-     */
     public void sendFacing() {
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
         bytes[0] = Globals.DATA_PLAYER_SET_FACING;
         bytes[1] = this.key;
         bytes[2] = this.facing;
-        PacketSender.sendAll(bytes, this.logic.getRoom());
+        PacketSender.sendAll(bytes, this.room.getRoom());
         this.updateFacing = false;
     }
 
-    /**
-     * Send the player's current state(for animation) and current frame of animation to every connected player
-     * <p>
-     * State constants are in Globals. Uses Server PacketSender to send to all Byte sent: 0 - Data type 1 - Key 2 - Player state 3 - Current frame
-     * </p>
-     */
     public void sendState() {
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 4];
         bytes[0] = Globals.DATA_PLAYER_SET_STATE;
@@ -1613,15 +1415,10 @@ public class Player extends Thread implements GameEntity {
         } else {
             bytes[3] = this.frame;
         }
-        PacketSender.sendAll(bytes, this.logic.getRoom());
+        PacketSender.sendAll(bytes, this.room.getRoom());
         this.updateAnimState = false;
     }
 
-    /**
-     * Send set cooldown to player client.
-     *
-     * @param data
-     */
     public void sendCooldown(final byte[] data) {
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 2];
         bytes[0] = Globals.DATA_PLAYER_SET_COOLDOWN;
@@ -1657,20 +1454,17 @@ public class Player extends Thread implements GameEntity {
             pvpBytes[1] = Globals.NUMBER_TYPE_MOB;
             PacketSender.sendPlayer(pvpBytes, this);
         } else {
-            PacketSender.sendAll(bytes, this.logic.getRoom());
+            PacketSender.sendAll(bytes, this.room.getRoom());
         }
     }
 
-    /**
-     * Send name to all clients.
-     */
     public void sendName() {
         final byte[] data = this.name.getBytes(StandardCharsets.UTF_8);
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 2 + data.length];
         bytes[0] = Globals.DATA_PLAYER_GET_NAME;
         bytes[1] = this.key;
         System.arraycopy(data, 0, bytes, 2, data.length);
-        PacketSender.sendAll(bytes, this.logic.getRoom());
+        PacketSender.sendAll(bytes, this.room.getRoom());
     }
 
     public void sendStat(final byte statID) {
@@ -1680,7 +1474,7 @@ public class Player extends Thread implements GameEntity {
         bytes[1] = this.key;
         bytes[2] = statID;
         System.arraycopy(stat, 0, bytes, 3, stat.length);
-        PacketSender.sendAll(bytes, this.logic.getRoom());
+        PacketSender.sendAll(bytes, this.room.getRoom());
     }
 
     public void setInvulnerable(final boolean set) {
@@ -1703,112 +1497,56 @@ public class Player extends Thread implements GameEntity {
         return !isInvulnerable() && !isRemovingDebuff();
     }
 
-    /**
-     * Set the uID of this player.
-     *
-     * @param id uID
-     */
     public void setUniqueID(final UUID id) {
         this.uniqueID = id;
     }
 
-    /**
-     * Get the uID of this player.
-     *
-     * @return
-     */
     public UUID getUniqueID() {
         return this.uniqueID;
     }
 
-    /**
-     * Set the name of this player.
-     *
-     * @param s
-     */
     public void setPlayerName(final String s) {
         this.name = s;
     }
 
-    /**
-     * Get the name of this player.
-     *
-     * @return
-     */
     public String getPlayerName() {
         return this.name;
     }
 
-    /**
-     * Set an amount of a specific stat.
-     *
-     * @param stat Stat Type
-     * @param amount Amount of stats
-     */
     public void setStat(final byte stat, final double amount) {
         this.stats[stat] = amount;
         updateStats();
     }
 
-    /**
-     * Get the stats of this player.
-     *
-     * @return double[] - Player Stats
-     */
     public double[] getStats() {
         return this.stats;
     }
 
-    /**
-     * Set bonus stats of this player(CRITCHANCE, CRITDMG, REGEN, ARMOR).
-     *
-     * @param stat Stat Type
-     * @param amount Amount of stats.
-     */
     public void setBonusStat(final byte stat, final double amount) {
         this.bonusStats[stat] = amount;
         updateStats();
     }
 
-    /**
-     * Get the bonus stats of this player(CRITCHANCE, CRITDMG, REGEN, ARMOR).
-     *
-     * @return double[] - Player Bonus Stats
-     */
     public double[] getBonusStats() {
         return this.bonusStats;
     }
 
-    /**
-     * Set the item code in a specific equipment slot
-     *
-     * @param slot Equipment Slot
-     * @param itemCode Item Code
-     */
     public void setEquip(final int slot, final int itemCode) {
         this.equips[slot] = itemCode;
     }
 
-    /**
-     * Disconnect a player in the next tick.
-     */
     public void disconnect() {
         if (isConnected()) {
             this.connected = false;
             final byte[] bytes = new byte[2];
             bytes[0] = Globals.DATA_PLAYER_DISCONNECT;
             bytes[1] = this.key;
-            PacketSender.sendAll(bytes, logic.getRoom());
+            PacketSender.sendAll(bytes, room.getRoom());
             this.connection.close();
             Globals.log(Player.class, "Disconnected <" + getPlayerName() + ">", Globals.LOG_TYPE_DATA, true);
         }
     }
 
-    /**
-     * Check if player is still connected
-     *
-     * @return True if connected
-     */
     public boolean isConnected() {
         return this.connected;
     }

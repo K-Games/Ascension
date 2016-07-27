@@ -7,10 +7,6 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.text.DecimalFormat;
 
-/**
- *
- * @author Ken Kwan
- */
 public abstract class Skill {
 
     protected static LogicModule logic;
