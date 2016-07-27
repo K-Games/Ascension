@@ -806,6 +806,18 @@ public class ScreenIngame extends Screen {
                     addParticle(new ParticleShieldMagnetize(this.players.get(playerKey), this.players.get(targetKey)));
                 }
                 break;
+            case Globals.PARTICLE_SHIELD_MAGNETIZESTART:
+                playerKey = data[2];
+                if (this.players.containsKey(playerKey)) {
+                    addParticle(new ParticleShieldMagnetizeStart(this.players.get(playerKey)));
+                }
+                break;
+            case Globals.PARTICLE_SHIELD_MAGNETIZEBURST:
+                playerKey = data[2];
+                if (this.players.containsKey(playerKey)) {
+                    addParticle(new ParticleShieldMagnetizeBurst(this.players.get(playerKey)));
+                }
+                break;
             case Globals.PARTICLE_SWORD_TAUNTBUFF:
                 playerKey = data[2];
                 if (this.players.containsKey(playerKey)) {

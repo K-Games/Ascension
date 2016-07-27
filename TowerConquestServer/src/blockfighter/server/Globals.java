@@ -91,7 +91,7 @@ public class Globals {
             PLAYER_ANIM_STATE_INVIS = 0x07,
             PLAYER_ANIM_STATE_ROLL = 0x08;
 
-    public final static int NUM_PARTICLE_EFFECTS = 47;
+    public final static int NUM_PARTICLE_EFFECTS = 50;
     public final static byte PARTICLE_SWORD_SLASH1 = 0x00,
             PARTICLE_SWORD_SLASH2 = 0x01,
             PARTICLE_SWORD_SLASH3 = 0x02,
@@ -138,7 +138,9 @@ public class Globals {
             PARTICLE_SWORD_GASH3 = 0x2C,
             PARTICLE_SWORD_GASH4 = 0x2D,
             PARTICLE_BLOOD_HIT = 0x2E,
-            PARTICLE_PASSIVE_STATIC = 0x2F;
+            PARTICLE_PASSIVE_STATIC = 0x2F,
+            PARTICLE_SHIELD_MAGNETIZESTART = 0x30,
+            PARTICLE_SHIELD_MAGNETIZEBURST = 0x31;
 
     public final static byte NUM_SFX = 9,
             SFX_SLASH = 0x00,

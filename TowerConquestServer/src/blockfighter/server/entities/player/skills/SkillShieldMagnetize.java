@@ -18,7 +18,7 @@ public class SkillShieldMagnetize extends Skill {
         this.skillCode = SHIELD_MAGNETIZE;
         this.maxCooldown = 15000;
         this.reqWeapon = Globals.ITEM_SHIELD;
-        this.endDuration = 200;
+        this.endDuration = 450;
         this.playerState = Player.PLAYER_STATE_SHIELD_MAGNETIZE;
         this.reqEquipSlot = Globals.ITEM_OFFHAND;
     }
@@ -27,8 +27,12 @@ public class SkillShieldMagnetize extends Skill {
     public void updateSkillUse(Player player) {
         final long duration = Globals.nsToMs(this.room.getTime() - player.getSkillCastTime());
         final int radius = 400;
-
         if (player.getSkillCounter() == 0) {
+            PacketSender.sendParticle(this.room.getRoom(), Globals.PARTICLE_SHIELD_MAGNETIZESTART, player.getKey());
+            player.incrementSkillCounter();
+        }
+        if (Globals.hasPastDuration(duration, 200) && player.getSkillCounter() == 1) {
+            PacketSender.sendParticle(this.room.getRoom(), Globals.PARTICLE_SHIELD_MAGNETIZEBURST, player.getKey());
             if (this.room.getMap().isPvP()) {
                 this.playersCaught = this.room.getPlayersInRange(player, radius);
                 if (!this.playersCaught.isEmpty()) {
@@ -67,7 +71,7 @@ public class SkillShieldMagnetize extends Skill {
             player.incrementSkillCounter();
         }
 
-        if (player.getSkillCounter() == 1) {
+        if (player.getSkillCounter() == 2) {
             if (this.room.getMap().isPvP()) {
                 if (!this.playersCaught.isEmpty()) {
                     for (Player p : this.playersCaught) {

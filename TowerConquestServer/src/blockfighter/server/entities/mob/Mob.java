@@ -251,7 +251,7 @@ public abstract class Mob extends Thread implements GameEntity {
             if (dmg != null) {
                 double amount = dmg.getDamage() * this.dmgAmp;
                 // Buff Reductions
-                amount =  amount * this.dmgReduct;
+                amount = amount * this.dmgReduct;
 
                 dmg.proc();
                 addAggro(dmg.getOwner(), amount);

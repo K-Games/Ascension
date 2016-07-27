@@ -1347,7 +1347,9 @@ public class Player extends Thread implements GameEntity {
                 break;
             case PLAYER_STATE_SHIELD_MAGNETIZE:
                 this.animState = Globals.PLAYER_ANIM_STATE_ATTACK;
-                if (frameDuration >= 30 && this.frame < 5) {
+                if (getSkillCounter() == 1) {
+                    this.frame = 2;
+                } else if (frameDuration >= 30 && this.frame < 5) {
                     this.frame++;
                     this.lastFrameTime = this.room.getTime();
                 }
