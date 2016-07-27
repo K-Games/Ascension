@@ -249,14 +249,14 @@ public abstract class Mob extends Thread implements GameEntity {
         while (!this.damageQueue.isEmpty()) {
             final Damage dmg = this.damageQueue.poll();
             if (dmg != null) {
-                int amount = (int) (dmg.getDamage() * this.dmgAmp);
+                double amount = dmg.getDamage() * this.dmgAmp;
                 // Buff Reductions
-                amount = (int) (amount * this.dmgReduct);
+                amount =  amount * this.dmgReduct;
 
                 dmg.proc();
                 addAggro(dmg.getOwner(), amount);
                 if (!dmg.isHidden()) {
-                    sendDamage(dmg, amount);
+                    sendDamage(dmg, (int) amount);
                 }
                 this.stats[STAT_MINHP] -= amount;
                 this.lastHPSend = 0;
@@ -471,12 +471,12 @@ public abstract class Mob extends Thread implements GameEntity {
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 2 + Globals.PACKET_INT * 3];
         bytes[0] = Globals.DATA_NUMBER;
         bytes[1] = dmg.getDamageType();
-        final byte[] posXInt = Globals.intToBytes(dmg.getDmgPoint().x);
+        final byte[] posXInt = Globals.intToBytes((int) dmg.getDmgPoint().x);
         bytes[2] = posXInt[0];
         bytes[3] = posXInt[1];
         bytes[4] = posXInt[2];
         bytes[5] = posXInt[3];
-        final byte[] posYInt = Globals.intToBytes(dmg.getDmgPoint().y);
+        final byte[] posYInt = Globals.intToBytes((int) dmg.getDmgPoint().y);
         bytes[6] = posYInt[0];
         bytes[7] = posYInt[1];
         bytes[8] = posYInt[2];

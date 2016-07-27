@@ -66,7 +66,7 @@ public abstract class Skill {
         this.skillCastTime = this.room.getTime();
     }
 
-    public int getCooldown() {
+    public long getCooldown() {
         return Globals.nsToMs(this.room.getTime() - this.skillCastTime);
     }
 

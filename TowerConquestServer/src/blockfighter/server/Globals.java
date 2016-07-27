@@ -507,7 +507,7 @@ public class Globals {
         return buffer.getInt();
     }
 
-    public static final int nsToMs(final long time) {
+    public static final long nsToMs(final long time) {
         return (int) TimeUnit.MILLISECONDS.convert(time, TimeUnit.NANOSECONDS);
     }
 
@@ -522,7 +522,7 @@ public class Globals {
         return -1;
     }
 
-    public static boolean hasPastDuration(final int currentDuration, final int durationToPast) {
+    public static boolean hasPastDuration(final long currentDuration, final long durationToPast) {
         if (durationToPast <= 0) {
             return true;
         }

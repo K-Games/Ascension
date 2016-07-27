@@ -20,7 +20,7 @@ public class SkillSwordVorpal extends Skill {
 
     @Override
     public void updateSkillUse(Player player) {
-        final int duration = Globals.nsToMs(this.room.getTime() - player.getSkillCastTime());
+        final long duration = Globals.nsToMs(this.room.getTime() - player.getSkillCastTime());
         int skillTime = player.isSkillMaxed(Skill.SWORD_VORPAL) ? 150 : 170,
                 numHits = player.isSkillMaxed(Skill.SWORD_VORPAL) ? 5 : 3;
         if (Globals.hasPastDuration(duration, skillTime * player.getSkillCounter()) && player.getSkillCounter() < numHits) {

@@ -19,7 +19,7 @@ public class SkillShieldDash extends Skill {
 
     @Override
     public void updateSkillUse(Player player) {
-        final int duration = Globals.nsToMs(this.room.getTime() - player.getSkillCastTime());
+        final long duration = Globals.nsToMs(this.room.getTime() - player.getSkillCastTime());
         if (!player.isStunned() && !player.isKnockback()) {
             player.setXSpeed((player.getFacing() == Globals.RIGHT) ? 8.5 : -8.5);
         }

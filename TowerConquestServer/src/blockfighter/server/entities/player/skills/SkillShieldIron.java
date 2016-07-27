@@ -21,7 +21,7 @@ public class SkillShieldIron extends Skill {
 
     @Override
     public void updateSkillUse(Player player) {
-        final int duration = Globals.nsToMs(this.room.getTime() - this.skillCastTime);
+        final long duration = Globals.nsToMs(this.room.getTime() - this.skillCastTime);
         if (player.getSkillCounter() == 0) {
             PacketSender.sendParticle(this.room.getRoom(), Globals.PARTICLE_SHIELD_IRON, player.getKey());
             player.incrementSkillCounter();

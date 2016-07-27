@@ -523,8 +523,8 @@ public class Globals {
         EXP_WORD[0] = Globals.loadTextureResource("sprites/number/exp/exp.png");
     }
 
-    public static final int nsToMs(final long time) {
-        return (int) TimeUnit.MILLISECONDS.convert(time, TimeUnit.NANOSECONDS);
+    public static final long nsToMs(final long time) {
+        return TimeUnit.MILLISECONDS.convert(time, TimeUnit.NANOSECONDS);
     }
 
     public static final long msToNs(final long time) {

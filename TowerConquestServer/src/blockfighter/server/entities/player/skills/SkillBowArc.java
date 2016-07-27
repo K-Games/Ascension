@@ -20,7 +20,7 @@ public class SkillBowArc extends Skill {
 
     @Override
     public void updateSkillUse(Player player) {
-        final int duration = Globals.nsToMs(this.room.getTime() - player.getSkillCastTime());
+        final long duration = Globals.nsToMs(this.room.getTime() - player.getSkillCastTime());
         final int numHits = 3;
         if (player.getSkillCounter() < numHits && Globals.hasPastDuration(duration, 100 + player.getSkillCounter() * 50)) {
             player.incrementSkillCounter();

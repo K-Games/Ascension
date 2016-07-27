@@ -116,7 +116,7 @@ public class BossShadowFiend extends Mob {
             phase = 1;
         }
 
-        int duration = Globals.nsToMs(this.room.getTime() - this.skillCastTime);
+        long duration = Globals.nsToMs(this.room.getTime() - this.skillCastTime);
         switch (this.mobState) {
             case STATE_STAND:
                 nextAIstate(t);
@@ -140,8 +140,8 @@ public class BossShadowFiend extends Mob {
     private void updateAnimState() {
         final byte prevAnimState = this.animState, prevFrame = this.frame;
 
-        final int duration = Globals.nsToMs(this.room.getTime() - this.skillCastTime);
-        final int frameDuration = Globals.nsToMs(this.room.getTime() - this.lastFrameTime);
+        final long duration = Globals.nsToMs(this.room.getTime() - this.skillCastTime);
+        final long frameDuration = Globals.nsToMs(this.room.getTime() - this.lastFrameTime);
         switch (this.mobState) {
             case STATE_STAND:
                 this.animState = STATE_STAND;

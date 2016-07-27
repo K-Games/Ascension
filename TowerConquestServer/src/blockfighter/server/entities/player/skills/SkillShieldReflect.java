@@ -24,7 +24,7 @@ public class SkillShieldReflect extends Skill {
 
     @Override
     public void updateSkillUse(Player player) {
-        final int duration = Globals.nsToMs(this.room.getTime() - this.skillCastTime);
+        final long duration = Globals.nsToMs(this.room.getTime() - this.skillCastTime);
         if (player.getSkillCounter() == 0) {
             player.incrementSkillCounter();
             player.queueBuff(new BuffShieldReflect(this.room, 3000, .4 + 0.02 * player.getSkillLevel(Skill.SHIELD_REFLECT), player, player));

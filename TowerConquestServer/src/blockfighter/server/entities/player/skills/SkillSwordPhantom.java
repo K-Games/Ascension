@@ -21,7 +21,7 @@ public class SkillSwordPhantom extends Skill {
 
     @Override
     public void updateSkillUse(Player player) {
-        final int duration = Globals.nsToMs(this.room.getTime() - player.getSkillCastTime());
+        final long duration = Globals.nsToMs(this.room.getTime() - player.getSkillCastTime());
         final int numHits = getLevel() / 2 + 5;
         final int radius = 350;
         boolean endPhantom = false;

@@ -20,7 +20,7 @@ public class SkillBowVolley extends Skill {
 
     @Override
     public void updateSkillUse(Player player) {
-        final int duration = Globals.nsToMs(this.room.getTime() - player.getSkillCastTime());
+        final long duration = Globals.nsToMs(this.room.getTime() - player.getSkillCastTime());
         final int numHits = 20;
         if (Globals.hasPastDuration(duration, player.getSkillCounter() * 100) && player.getSkillCounter() < numHits) {
             final ProjBowVolley proj = new ProjBowVolley(this.room, player, player.getX(),

@@ -525,7 +525,7 @@ public class Player extends Thread implements GameEntity {
     }
 
     private void updateDead() {
-        final int deathDuration = Globals.nsToMs(this.room.getTime() - this.deathTime);
+        final long deathDuration = Globals.nsToMs(this.room.getTime() - this.deathTime);
         this.damageQueue.clear();
         this.healQueue.clear();
         this.skillUseQueue.clear();
@@ -605,12 +605,12 @@ public class Player extends Thread implements GameEntity {
         return false;
     }
 
-    public boolean updateSkillEnd(final int currentSkillDuration, final int skillEndDuration, final boolean isCanceledByStun, final boolean isCanceledByKnockback) {
+    public boolean updateSkillEnd(final long currentSkillDuration, final int skillEndDuration, final boolean isCanceledByStun, final boolean isCanceledByKnockback) {
         return updateSkillEnd(currentSkillDuration >= skillEndDuration || (isCanceledByStun && isStunned() || (isCanceledByKnockback && isKnockback())));
     }
 
     private void updateHP() {
-        int sinceLastHPSend = Globals.nsToMs(this.room.getTime() - this.lastHPSendTime);
+        long sinceLastHPSend = Globals.nsToMs(this.room.getTime() - this.lastHPSendTime);
         // Empty damage queued
         if (isInvulnerable()) {
             // Take no damage
@@ -1177,8 +1177,8 @@ public class Player extends Thread implements GameEntity {
 
     private void updateAnimState() {
         final byte prevAnimState = this.animState, prevFrame = this.frame;
-        final int skillDuration = Globals.nsToMs(this.room.getTime() - this.skillCastTime);
-        final int frameDuration = Globals.nsToMs(this.room.getTime() - this.lastFrameTime);
+        final long skillDuration = Globals.nsToMs(this.room.getTime() - this.skillCastTime);
+        final long frameDuration = Globals.nsToMs(this.room.getTime() - this.lastFrameTime);
         switch (this.playerState) {
             case PLAYER_STATE_STAND:
                 this.animState = Globals.PLAYER_ANIM_STATE_STAND;

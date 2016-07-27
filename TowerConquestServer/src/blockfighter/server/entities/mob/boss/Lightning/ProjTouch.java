@@ -26,7 +26,7 @@ public class ProjTouch extends MobProjectile {
             return;
         }
 
-        int sinceLastDamage = Globals.nsToMs(this.room.getTime() - this.lastTouchDamage);
+        long sinceLastDamage = Globals.nsToMs(this.room.getTime() - this.lastTouchDamage);
         if (sinceLastDamage >= 500) {
             this.pHit.clear();
             this.lastTouchDamage = this.room.getTime();

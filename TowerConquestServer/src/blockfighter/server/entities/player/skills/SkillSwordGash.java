@@ -20,7 +20,7 @@ public class SkillSwordGash extends Skill {
 
     @Override
     public void updateSkillUse(Player player) {
-        final int duration = Globals.nsToMs(this.room.getTime() - player.getSkillCastTime());
+        final long duration = Globals.nsToMs(this.room.getTime() - player.getSkillCastTime());
         final byte numHits = 4;
         if (Globals.hasPastDuration(duration, (80 * player.getSkillCounter())) && player.getSkillCounter() < numHits) {
             player.incrementSkillCounter();

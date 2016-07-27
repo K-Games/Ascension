@@ -21,7 +21,7 @@ public class SkillSwordTaunt extends Skill {
 
     @Override
     public void updateSkillUse(Player player) {
-        final int duration = Globals.nsToMs(this.room.getTime() - player.getSkillCastTime());
+        final long duration = Globals.nsToMs(this.room.getTime() - player.getSkillCastTime());
         if (player.getSkillCounter() == 0) {
             player.incrementSkillCounter();
             if (player.isSkillMaxed(Skill.SWORD_TAUNT)) {

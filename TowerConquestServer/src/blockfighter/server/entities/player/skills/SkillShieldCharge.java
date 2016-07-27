@@ -20,7 +20,7 @@ public class SkillShieldCharge extends Skill {
 
     @Override
     public void updateSkillUse(Player player) {
-        final int duration = Globals.nsToMs(this.room.getTime() - player.getSkillCastTime());
+        final long duration = Globals.nsToMs(this.room.getTime() - player.getSkillCastTime());
         player.setXSpeed((player.getFacing() == Globals.RIGHT) ? 18 : -18);
         if (player.getSkillCounter() == 0) {
             final ProjShieldCharge proj = new ProjShieldCharge(this.room, player, player.getX(), player.getY());

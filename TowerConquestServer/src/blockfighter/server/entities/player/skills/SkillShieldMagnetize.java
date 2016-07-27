@@ -25,7 +25,7 @@ public class SkillShieldMagnetize extends Skill {
 
     @Override
     public void updateSkillUse(Player player) {
-        final int duration = Globals.nsToMs(this.room.getTime() - player.getSkillCastTime());
+        final long duration = Globals.nsToMs(this.room.getTime() - player.getSkillCastTime());
         final int radius = 400;
 
         if (player.getSkillCounter() == 0) {

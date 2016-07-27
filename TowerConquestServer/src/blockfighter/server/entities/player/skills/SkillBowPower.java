@@ -20,7 +20,7 @@ public class SkillBowPower extends Skill {
 
     @Override
     public void updateSkillUse(Player player) {
-        final int duration = Globals.nsToMs(this.room.getTime() - player.getSkillCastTime());
+        final long duration = Globals.nsToMs(this.room.getTime() - player.getSkillCastTime());
         if (player.getSkillCounter() == 0) {
             PacketSender.sendSFX(this.room.getRoom(), Globals.SFX_POWER2, player.getX(), player.getY());
         }

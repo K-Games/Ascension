@@ -84,9 +84,9 @@ public abstract class Skill {
         this.skillCastTime = logic.getTime();
     }
 
-    public int getCooldown() {
-        int elapsed = Globals.nsToMs(logic.getTime() - this.skillCastTime);
-        int cd = this.maxCooldown - elapsed;
+    public long getCooldown() {
+        long elapsed = Globals.nsToMs(logic.getTime() - this.skillCastTime);
+        long cd = this.maxCooldown - elapsed;
         return (cd > 0) ? cd : 0;
     }
 

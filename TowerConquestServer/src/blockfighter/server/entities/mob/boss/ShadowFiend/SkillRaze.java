@@ -17,7 +17,7 @@ public class SkillRaze extends MobSkill {
 
     @Override
     public void updateSkillUse(Mob mob) {
-        int duration = Globals.nsToMs(this.room.getTime() - mob.getSkillCastTime());
+        long duration = Globals.nsToMs(this.room.getTime() - mob.getSkillCastTime());
         if (mob.getSkillCounter() == 0) {
             mob.incrementSkillCounter();
             Projectile proj = new ProjRaze(this.room, mob, mob.getX(), mob.getY(), true);
