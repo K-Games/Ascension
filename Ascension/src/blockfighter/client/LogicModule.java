@@ -1,6 +1,5 @@
 package blockfighter.client;
 
-import blockfighter.client.entities.items.ItemEquip;
 import blockfighter.client.entities.player.skills.Skill;
 import blockfighter.client.net.GameClient;
 import blockfighter.client.screen.Screen;

@@ -140,8 +140,8 @@ public class PacketSender implements Runnable {
 //        server.sendToAllTCP(data);
     }
 
-    public static void broadcastAllPlayersUpdate(final byte room) {
-        for (final Map.Entry<Byte, Player> pEntry : rooms[room].getPlayers().entrySet()) {
+    public static void broadcastAllPlayersUpdate(final byte roomIndex) {
+        for (final Map.Entry<Byte, Player> pEntry : rooms[roomIndex].getPlayers().entrySet()) {
             final Player player = pEntry.getValue();
             player.sendData();
         }

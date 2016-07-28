@@ -33,9 +33,9 @@ public class PacketHandler {
             case Globals.DATA_PLAYER_CREATE:
                 receivePlayerCreate(data, roomIndex, c);
                 break;
-            case Globals.DATA_PLAYER_GET_ALL:
-                receivePlayerGetAll(data, roomIndex);
-                break;
+//            case Globals.DATA_PLAYER_GET_ALL:
+//                receivePlayerGetAll(data, roomIndex);
+//                break;
             case Globals.DATA_PLAYER_SET_MOVE:
                 receivePlayerSetMove(data, roomIndex, c);
                 break;
@@ -64,7 +64,7 @@ public class PacketHandler {
                 receiveMobSetType(data, roomIndex, c);
                 break;
             default:
-                Globals.log(PacketHandler.class, "DATA_UNKNOWN " + c + " Unknown data type.", Globals.LOG_TYPE_DATA, true);
+                Globals.log(PacketHandler.class, "DATA_UNKNOWN " + c + " Unknown data type: " + dataType, Globals.LOG_TYPE_DATA, true);
                 break;
         }
     }
@@ -336,7 +336,7 @@ public class PacketHandler {
             bytes[0] = Globals.DATA_PLAYER_LOGIN;
             bytes[1] = Globals.LOGIN_FAIL_OUTSIDE_LEVEL_RANGE;
             PacketSender.sendConnection(bytes, c);
-            Globals.log(PacketHandler.class, "DATA_PLAYER_LOGIN " + c + " Failed to login - Level " + level + " is outside room " + roomIndex + " level range.", Globals.LOG_TYPE_DATA, true);
+            Globals.log(PacketHandler.class, "DATA_PLAYER_LOGIN " + c + " Failed to login - Level " + level + " is outside room " + lm.getRoom() + "[Index=" + roomIndex + "] level range.", Globals.LOG_TYPE_DATA, true);
             return;
         }
 
