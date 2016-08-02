@@ -14,6 +14,7 @@ An multiplayer action 2D sidescrolling brawler coded in pure Java.
 * Minor visual bug fix in the Login screen when logging out.
 
 ## Server Changes
+* Fixed a rare concurrentcy bug with Reflect and Resist.
 
 # Credits
 ### Developer/Game Designer/Visual Designs

@@ -53,7 +53,6 @@ import com.esotericsoftware.kryonet.Connection;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -106,7 +105,7 @@ public class Player extends Thread implements GameEntity {
 
     private final ConcurrentHashMap<Integer, Buff> buffs = new ConcurrentHashMap<>(150, 0.9f, 1);
     private Buff stunDebuff, knockbackDebuff, barrierBuff, resistBuff;
-    private final ArrayList<Buff> reflects = new ArrayList<>(10);
+    private final ConcurrentHashMap<Integer, Buff> reflects = new ConcurrentHashMap<>(10, 0.9f, 1);
     private double dmgReduct, dmgAmp;
     private double barrierDmgTaken = 0;
 
@@ -124,7 +123,7 @@ public class Player extends Thread implements GameEntity {
     private final ConcurrentLinkedQueue<Buff> buffQueue = new ConcurrentLinkedQueue<>();
 
     private final ConcurrentLinkedQueue<Integer> buffKeys = new ConcurrentLinkedQueue<>();
-    private final LinkedList<Double> resistDamageSum;
+    private final ConcurrentLinkedQueue<Double> resistDamageSum;
 
     private int maxBuffKeys = 0;
     private Byte nextState;
@@ -200,7 +199,7 @@ public class Player extends Thread implements GameEntity {
     }
 
     public Player(final LogicModule l, final byte key, final Connection c, final GameMap map) {
-        this.resistDamageSum = new LinkedList<>();
+        this.resistDamageSum = new ConcurrentLinkedQueue<>();
         this.room = l;
         this.lastActionTime = l.getTime();
         this.key = key;
@@ -628,7 +627,8 @@ public class Player extends Thread implements GameEntity {
 
                 // Check if I have reflect damage buff and reflect off owner
                 if (dmg.canReflect()) {
-                    for (final Buff b : this.reflects) {
+                    for (final Map.Entry<Integer, Buff> bEntry : this.buffs.entrySet()) {
+                        final Buff b = bEntry.getValue();
                         if (b instanceof BuffShieldReflect) {
                             Player reflectOwner = ((BuffShieldReflect) b).getOwner();
                             SkillShieldReflect reflectSkill = (SkillShieldReflect) reflectOwner.getSkill(Skill.SHIELD_REFLECT);
@@ -707,7 +707,7 @@ public class Player extends Thread implements GameEntity {
         // Resistance Passive Snapshot HP 
         if (hasSkill(Skill.PASSIVE_RESIST) && this.skills.get(Skill.PASSIVE_RESIST).canCast()) {
             if (resistDamageSum.size() >= Globals.LOGIC_TICKS_PER_SEC * 2) {
-                resistDamageSum.pop();
+                resistDamageSum.poll();
             }
             resistDamageSum.add(totalDamageInTick);
             double damageSum = 0;
@@ -813,7 +813,7 @@ public class Player extends Thread implements GameEntity {
                     this.knockbackDebuff = b;
                 }
             } else if (b instanceof BuffShieldReflect) {
-                this.reflects.add(b);
+                this.reflects.put(bEntry.getKey(), b);
             } else if (b instanceof BuffPassiveBarrier) {
                 if (this.barrierBuff == null) {
                     this.barrierBuff = b;
