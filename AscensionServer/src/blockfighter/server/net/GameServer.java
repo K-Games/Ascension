@@ -19,7 +19,6 @@ public class GameServer {
     public void start() {
         try {
             this.server = new Server(Globals.PACKET_MAX_SIZE * 1000, Globals.PACKET_MAX_SIZE);
-            PacketSender.setServer(server);
             Kryo kyro = this.server.getKryo();
             kyro.register(byte[].class);
             this.receiver = new PacketReceiver();

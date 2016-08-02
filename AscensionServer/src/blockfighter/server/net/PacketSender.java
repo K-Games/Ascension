@@ -16,7 +16,6 @@ import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 public class PacketSender implements Runnable {
 
     private static LogicModule[] rooms;
-    private static Server server;
 
     public static void sendParticle(final byte room, final byte particleID, final double x, final double y, final byte facing) {
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT * 2];
@@ -83,13 +82,13 @@ public class PacketSender implements Runnable {
     @Override
     public void run() {
         while (!OUT_PACKET_QUEUE.isEmpty()) {
-            final GamePacket p = OUT_PACKET_QUEUE.poll();
-            if (p != null) {
+            final GamePacket packet = OUT_PACKET_QUEUE.poll();
+            if (packet != null) {
                 SENDER_THREAD_POOL.execute(() -> {
-                    if (p.getPlayer() != null) {
-                        server.sendToTCP(p.getPlayer().getConnection().getID(), p.getData());
-                    } else if (p.getConnection() != null) {
-                        server.sendToTCP(p.getConnection().getID(), p.getData());
+                    if (packet.getPlayer() != null) {
+                        packet.getPlayer().getConnection().sendTCP(packet.getData());
+                    } else if (packet.getConnection() != null) {
+                        packet.getConnection().sendTCP(packet.getData());
                     }
                 });
             }
@@ -108,25 +107,21 @@ public class PacketSender implements Runnable {
         rooms = l;
     }
 
-    public static void setServer(final Server s) {
-        server = s;
-    }
-
     public static void sendConnection(final byte[] data, final Connection c) {
         if (Globals.SERVER_BATCH_PACKETSEND) {
             OUT_PACKET_QUEUE.add(new GamePacket(data, c));
         } else {
-            server.sendToTCP(c.getID(), data);
+            c.sendTCP(data);
         }
     }
 
-    public static void sendPlayer(final byte[] data, final Player p) {
-        if (p.isConnected()) {
+    public static void sendPlayer(final byte[] data, final Player player) {
+        if (player.isConnected()) {
             try {
                 if (Globals.SERVER_BATCH_PACKETSEND) {
-                    OUT_PACKET_QUEUE.add(new GamePacket(data, p));
+                    OUT_PACKET_QUEUE.add(new GamePacket(data, player));
                 } else {
-                    server.sendToTCP(p.getConnection().getID(), data);
+                    player.getConnection().sendTCP(data);
                 }
             } catch (Exception e) {
                 Globals.logError(e.getLocalizedMessage(), e, true);
@@ -138,7 +133,6 @@ public class PacketSender implements Runnable {
         for (final Map.Entry<Byte, Player> pEntry : rooms[Globals.SERVER_ROOMNUM_TO_ROOMINDEX.get(room)].getPlayers().entrySet()) {
             sendPlayer(data, pEntry.getValue());
         }
-//        server.sendToAllTCP(data);
     }
 
     public static void sendAllPlayerData(final byte room) {
