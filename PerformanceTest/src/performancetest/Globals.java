@@ -1,7 +1,6 @@
-package towerconquestperformancetest;
+package performancetest;
 
 import java.awt.Font;
-import java.awt.image.BufferedImage;
 import java.nio.ByteBuffer;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -12,15 +11,17 @@ import java.util.concurrent.TimeUnit;
  */
 public class Globals {
 
-    public static int SERVER_PORT = 25565;
+    public static boolean SKIP_TITLE = false;
+    public static int SERVER_TCP_PORT = 25565;
+    public static int SERVER_UDP_PORT = 25566;
     public static String SERVER_ADDRESS;
 
     public final static boolean TEST_MAX_LEVEL = true,
             DEBUG_MODE = false;
 
     public final static byte GAME_MAJOR_VERSION = 0,
-            GAME_MINOR_VERSION = 18,
-            GAME_UPDATE_NUMBER = 1;
+            GAME_MINOR_VERSION = 19,
+            GAME_UPDATE_NUMBER = 0;
 
     private final static String GAME_DEV_STATE = "ALPHA";
 
@@ -38,7 +39,7 @@ public class Globals {
     public final static Font ARIAL_15PTITALIC = new Font("Arial", Font.ITALIC, 15);
     public final static Font ARIAL_24PT = new Font("Arial", Font.PLAIN, 24);
     public final static Font ARIAL_18PT = new Font("Arial", Font.PLAIN, 18);
-    public final static Font ARIAL_18P = new Font("Arial", Font.BOLD, 18);
+    public final static Font ARIAL_18PTBOLD = new Font("Arial", Font.BOLD, 18);
 
     public final static byte MAX_NAME_LENGTH = 15;
 
@@ -55,12 +56,12 @@ public class Globals {
     public final static int INGAME_NUMBER_UPDATE = 20;
 
     // public final static double SEND_KEYDOWN_PER_SEC = 10D;
-    public final static long SEND_KEYDOWN_UPDATE = 100000000;
+    public final static double SEND_KEYDOWN_UPDATE = 100000000D;
 
     // public final static double REQUESTALL_TICKS_PER_SEC = 1D;
     public final static double REQUESTALL_UPDATE = 10000000000D;
 
-    public final static double PINGS_PER_SEC = 1D;
+    public final static double PINGS_PER_SEC = 2D;
     public final static double PING_UPDATE = 1000000000D / PINGS_PER_SEC;
 
     public final static double PROCESS_QUEUES_PER_SEC = 100D;
@@ -70,7 +71,7 @@ public class Globals {
 
     public final static int NUM_SOUND_EFFECTS = 0;
 
-    public final static int NUM_PARTICLE_EFFECTS = 46;
+    public final static int NUM_PARTICLE_EFFECTS = 50;
     public final static byte PARTICLE_SWORD_SLASH1 = 0x00,
             PARTICLE_SWORD_SLASH2 = 0x01,
             PARTICLE_SWORD_SLASH3 = 0x02,
@@ -101,7 +102,7 @@ public class Globals {
             PARTICLE_SHIELD_IRON = 0x1C,
             PARTICLE_SHIELD_IRONALLY = 0x1D,
             PARTICLE_SHIELD_FORTIFYBUFF = 0x1E,
-            PARTICLE_SHIELD_TOSS = 0x1F,
+            PARTICLE_SHIELD_MAGNETIZE = 0x1F,
             PARTICLE_SWORD_TAUNTBUFF = 0x20,
             PARTICLE_SWORD_SLASHBUFF = 0x21,
             PARTICLE_SHIELD_DASHBUFF = 0x22,
@@ -116,7 +117,10 @@ public class Globals {
             PARTICLE_SWORD_GASH2 = 0x2B,
             PARTICLE_SWORD_GASH3 = 0x2C,
             PARTICLE_SWORD_GASH4 = 0x2D,
-            PARTICLE_BLOOD_HIT = 0x2E;
+            PARTICLE_BLOOD_HIT = 0x2E,
+            PARTICLE_PASSIVE_STATIC = 0x2F,
+            PARTICLE_SHIELD_MAGNETIZESTART = 0x30,
+            PARTICLE_SHIELD_MAGNETIZEBURST = 0x31;
 
     public final static int NUM_KEYBINDS = 16,
             KEYBIND_SKILL1 = 0,
@@ -204,7 +208,7 @@ public class Globals {
             PLAYER_ANIM_STATE_ROLL = 0x08;
 
     // Packet globals
-    public final static int PACKET_MAX_SIZE = 512;
+    public final static int PACKET_MAX_SIZE = 256;
     public final static int PACKET_BYTE = 1;
     public final static int PACKET_INT = 4;
     public final static int PACKET_LONG = 8;
@@ -242,26 +246,12 @@ public class Globals {
             LOGIN_FAIL_FULL_ROOM = 0x02,
             LOGIN_FAIL_OUTSIDE_LEVEL_RANGE = 0x03;
 
-    public final static BufferedImage[][] CHAR_SPRITE = new BufferedImage[NUM_PLAYER_ANIM_STATE][];
-    public final static BufferedImage[] HUD = new BufferedImage[2];
-
-    public final static BufferedImage[] MENU_BG = new BufferedImage[5];
-    public final static BufferedImage[] MENU_SMOKE = new BufferedImage[1];
-    public final static BufferedImage[] MENU_UPGRADEPARTICLE = new BufferedImage[4];
-    public final static BufferedImage[] MENU_BUTTON = new BufferedImage[16];
-    public final static BufferedImage[] MENU_WINDOW = new BufferedImage[2];
-    public final static BufferedImage[] MENU_TABPOINTER = new BufferedImage[2];
-    public final static BufferedImage[] MENU_ITEMDELETE = new BufferedImage[1];
-
-    // Use Cooper Std Black size 25
-    public final static BufferedImage[][] DAMAGE_FONT = new BufferedImage[4][10];
-    public final static BufferedImage[] EXP_WORD = new BufferedImage[1];
-
-    public final static byte NUM_BGM = 4,
+    public final static byte NUM_BGM = 5,
             BGM_MENU = 0x00,
             BGM_ARENA1 = 0x01,
             BGM_ARENA2 = 0x02,
-            BGM_ARENA3 = 0x03;
+            BGM_ARENA3 = 0x03,
+            BGM_TITLE = 0x04;
 
     public final static byte NUM_SFX = 9,
             SFX_SLASH = 0x00,
@@ -273,39 +263,6 @@ public class Globals {
             SFX_ARC = 0x06,
             SFX_POWER2 = 0x07,
             SFX_GASH = 0x08;
-
-    public final static String[] SOUND_BGM = new String[NUM_BGM];
-    public final static String[] SOUND_SFX = new String[NUM_SFX];
-
-    public final static int[] PLAYER_ANIM_FRAMES = new int[NUM_PLAYER_ANIM_STATE];
-
-    public final static byte BUTTON_BIGRECT = 0,
-            BUTTON_SELECTCHAR = 1,
-            BUTTON_ADDSTAT = 2,
-            BUTTON_SLOT = 3,
-            BUTTON_MENUS = 4,
-            BUTTON_WEAPONTAB = 5,
-            BUTTON_HEADTAB = 6,
-            BUTTON_CHESTTAB = 7,
-            BUTTON_PANTSTAB = 8,
-            BUTTON_SHOULDERTAB = 9,
-            BUTTON_GLOVETAB = 10,
-            BUTTON_SHOETAB = 11,
-            BUTTON_BELTTAB = 12,
-            BUTTON_RINGTAB = 13,
-            BUTTON_AMULETTAB = 14,
-            BUTTON_SMALLRECT = 15;
-
-    public final static byte WINDOW_CREATECHAR = 0,
-            WINDOW_DESTROYCONFIRM = 1;
-
-    public static final byte NUMBER_TYPE_PLAYER = 0,
-            NUMBER_TYPE_PLAYERCRIT = 1,
-            NUMBER_TYPE_MOB = 2;
-
-    public static final byte NOTIFICATION_EXP = 0,
-            NOTIFICATION_ITEMEQUIP = 1,
-            NOTIFICATION_ITEMUPGRADE = 2;
 
     public static final String getStatName(final byte statID) {
         switch (statID) {

@@ -1,4 +1,4 @@
-package towerconquestperformancetest;
+package performancetest;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Client;
@@ -13,12 +13,13 @@ public class TestGameClient {
     private boolean loggedIn = false;
 
     private final String server;
-    private final int port;
+    private final int tcpPort, udpPort;
 
-    public TestGameClient(final TestLogicModule lm, final String server, final int port) {
+    public TestGameClient(final TestLogicModule lm, final String server, final int tcpport, final int udpport) {
         this.logic = lm;
         this.server = server;
-        this.port = port;
+        this.tcpPort = tcpport;
+        this.udpPort = udpport;
     }
 
     public void run() {
@@ -33,9 +34,9 @@ public class TestGameClient {
         this.receiver = new TestPacketReceiver(this);
         this.client.addListener(new Listener.ThreadedListener(this.receiver));
 
-        System.out.println("Connecting to " + server + ":" + port + " with " + logic.getSelectedChar().getPlayerName());
+        System.out.println("Connecting to " + server + ":" + tcpPort + " with " + logic.getSelectedChar().getPlayerName());
         try {
-            client.connect(5000, server, port);
+            client.connect(5000, server, tcpPort);
             TestPacketSender.sendPlayerLogin(logic.getSelectedRoom(), logic.getSelectedChar(), this.client);
         } catch (IOException ex) {
             client.close();
@@ -57,9 +58,6 @@ public class TestGameClient {
         byte loginResponse = data[1];
         switch (loginResponse) {
             case Globals.LOGIN_SUCCESS:
-                if (data[2] != Globals.GAME_MAJOR_VERSION || data[3] != Globals.GAME_MINOR_VERSION) {
-                    shutdownClient();
-                }
                 break;
             default:
                 shutdownClient();

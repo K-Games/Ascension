@@ -1,4 +1,4 @@
-package towerconquestperformancetest;
+package performancetest;
 
 import java.util.UUID;
 
@@ -6,7 +6,7 @@ public class TestSaveData {
 
     private final double[] baseStats = new double[Globals.NUM_STATS];
     private UUID uniqueID;
-    private String name;
+    private final String name;
 
     public TestSaveData(String n) {
         name = n;

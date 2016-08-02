@@ -1,4 +1,4 @@
-package towerconquestperformancetest;
+package performancetest;
 
 public class TestLogicModule {
     // Shared Data
@@ -9,23 +9,24 @@ public class TestLogicModule {
     private byte myKey = -1;
     private int ping = 0;
 
-    public TestLogicModule(final byte num, final byte room) {
+    public TestLogicModule(final int num, final byte room) {
         this.selectedChar = new TestSaveData("TestNum" + num);
         this.selectedChar.newCharacter(room * 10 + 1);
     }
 
     public void run() {
         if (myKey != -1) {
-            client.sendMoveKey(this.myKey, (byte) Globals.rng(4), Globals.rng(2) == 0);
+            client.sendMoveKey(this.myKey, Globals.UP, Globals.rng(2) == 0);
+            client.sendMoveKey(this.myKey, (Globals.rng(2) == 0) ? Globals.LEFT : Globals.RIGHT, Globals.rng(2) == 0);
             client.sendGetPing();
             this.ping = client.getPing();
         }
     }
 
-    public void connect(final String server, final int port, final byte r) {
+    public void connect(final String server, final int tcpPort, final int udpPort, final byte r) {
         this.selectedRoom = r;
 
-        client = new TestGameClient(this, server, port);
+        client = new TestGameClient(this, server, tcpPort, udpPort);
         client.run();
     }
 

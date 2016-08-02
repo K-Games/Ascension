@@ -1,4 +1,4 @@
-package towerconquestperformancetest;
+package performancetest;
 
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;

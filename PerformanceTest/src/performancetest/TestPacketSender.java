@@ -1,4 +1,4 @@
-package towerconquestperformancetest;
+package performancetest;
 
 import com.esotericsoftware.kryonet.Client;
 import java.nio.charset.StandardCharsets;

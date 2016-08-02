@@ -1,4 +1,4 @@
-package towerconquestperformancetest;
+package performancetest;
 
 public class TestPacketHandler {
 
