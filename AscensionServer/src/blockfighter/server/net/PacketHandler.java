@@ -7,6 +7,7 @@ import blockfighter.server.entities.player.Player;
 import com.esotericsoftware.kryonet.Connection;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.Map;
 import java.util.UUID;
 
 public class PacketHandler {
@@ -33,9 +34,9 @@ public class PacketHandler {
             case Globals.DATA_PLAYER_CREATE:
                 receivePlayerCreate(data, roomIndex, c);
                 break;
-//            case Globals.DATA_PLAYER_GET_ALL:
-//                receivePlayerGetAll(data, roomIndex);
-//                break;
+            case Globals.DATA_PLAYER_GET_ALL:
+                receivePlayerGetAll(data, roomIndex, c);
+                break;
             case Globals.DATA_PLAYER_SET_MOVE:
                 receivePlayerSetMove(data, roomIndex, c);
                 break;
@@ -349,11 +350,14 @@ public class PacketHandler {
         Globals.log(PacketHandler.class, "DATA_PLAYER_LOGIN " + c + " Logged in. Sent Version Data: " + Globals.GAME_MAJOR_VERSION + "." + Globals.GAME_MINOR_VERSION, Globals.LOG_TYPE_DATA, true);
     }
 
-    private static void receivePlayerGetAll(final byte[] data, final byte roomIndex) {
-        if (!rooms[roomIndex].getPlayers().containsKey(data[2])) {
-            return;
+    private static void receivePlayerGetAll(final byte[] data, final byte roomIndex, final Connection c) {
+        Player p = rooms[roomIndex].getPlayers().get(data[2]);
+        if (p != null && p.getConnection() == c) {
+            for (final Map.Entry<Byte, Player> pEntry : rooms[roomIndex].getPlayers().entrySet()) {
+                final Player player = pEntry.getValue();
+                player.sendData(p);
+            }
         }
-        PacketSender.broadcastAllPlayersUpdate(roomIndex);
     }
 
     private static void receivePlayerSetMove(final byte[] data, final byte roomIndex, final Connection c) {
