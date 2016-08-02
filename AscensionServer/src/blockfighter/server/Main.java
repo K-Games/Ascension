@@ -32,12 +32,6 @@ public class Main {
             .priority(Thread.NORM_PRIORITY)
             .build());
 
-    private final static ScheduledExecutorService PACKETHANDLER_SCHEDULER = Executors.newSingleThreadScheduledExecutor(new BasicThreadFactory.Builder()
-            .namingPattern("PACKETHANDLER_SCHEDULER-%d")
-            .daemon(false)
-            .priority(Thread.NORM_PRIORITY)
-            .build());
-
     private static final JTextArea DATA_LOG = new JTextArea(),
             ERROR_LOG = new JTextArea();
 
@@ -78,9 +72,8 @@ public class Main {
             Globals.log(Main.class, "Server started", Globals.LOG_TYPE_DATA, true);
             if (Globals.SERVER_BATCH_PACKETSEND) {
                 PacketSender.init();
-                PACKETSENDER_SCHEDULER.scheduleAtFixedRate(new PacketSender(), 0, 5, TimeUnit.MICROSECONDS);
+                PACKETSENDER_SCHEDULER.scheduleAtFixedRate(new PacketSender(), 0, 100, TimeUnit.MICROSECONDS);
             }
-            //PACKETHANDLER_SCHEDULER.scheduleAtFixedRate(packetHandler, 0, 10, TimeUnit.MICROSECONDS);
             for (final Map.Entry<Byte, Byte> b : Globals.SERVER_ROOMNUM_TO_ROOMINDEX.entrySet()) {
                 server_rooms[b.getValue()] = new LogicModule(b.getKey());
                 LOGIC_SCHEDULER.scheduleAtFixedRate(server_rooms[b.getValue()], 0, 750, TimeUnit.MICROSECONDS);

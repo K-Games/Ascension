@@ -24,7 +24,6 @@ public abstract class Projectile extends Thread implements GameEntity {
     private Mob mobOwner;
 
     protected HashMap<Byte, Player> pHit = new HashMap<>();
-
     protected final LinkedList<Player> playerQueue = new LinkedList<>();
     protected HashMap<Byte, Mob> bHit = new HashMap<>();
     protected final LinkedList<Mob> mobQueue = new LinkedList<>();

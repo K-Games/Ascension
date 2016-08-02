@@ -22,7 +22,7 @@ public class PacketReceiver extends Listener {
             }
             Globals.log(PacketReceiver.class, "Disconnected " + c, Globals.LOG_TYPE_DATA, true);
         } catch (Exception e) {
-            Globals.log(PacketReceiver.class, "Exception while disconnecting a connection", Globals.LOG_TYPE_ERR, true);
+            Globals.logError(e.getLocalizedMessage(), e, true);
         }
     }
 }

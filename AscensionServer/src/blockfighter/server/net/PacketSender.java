@@ -129,6 +129,7 @@ public class PacketSender implements Runnable {
                     server.sendToTCP(p.getConnection().getID(), data);
                 }
             } catch (Exception e) {
+                Globals.logError(e.getLocalizedMessage(), e, true);
             }
         }
     }
