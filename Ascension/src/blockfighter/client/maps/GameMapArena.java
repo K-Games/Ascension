@@ -12,31 +12,37 @@ public class GameMapArena extends GameMap {
     public GameMapArena() {
         super.setMapID(0);
         this.mapHeight = 1600;
-        this.mapWidth = 3700;
+        this.mapWidth = 3400;
         this.mapYOrigin = -1000;
     }
 
     @Override
     public void draw(final Graphics2D g) {
-        g.drawImage(this.platforms[2], 0, 600, 3700, 30, null);
+        for (int i = 0; i < Math.ceil(1D * this.mapWidth / this.platforms[2].getWidth()); i++) {
+            if ((i + 1) * this.platforms[2].getWidth() <= this.mapWidth) {
+                g.drawImage(this.platforms[2], i * this.platforms[2].getWidth(), 600, null);
+            } else {
+                g.drawImage(this.platforms[2], i * this.platforms[2].getWidth(), 600, this.platforms[2].getWidth() + (this.mapWidth - ((i + 1) * this.platforms[2].getWidth())), 30, null);
+            }
+        }
 
-        g.drawImage(this.platforms[0], 700, 350, null);
-        g.drawImage(this.platforms[1], 1700, 350, null);
-        g.drawImage(this.platforms[1], 2700, 350, null);
+        g.drawImage(this.platforms[0], 650, 350, null);
+        g.drawImage(this.platforms[1], 1550, 350, null);
+        g.drawImage(this.platforms[1], 2450, 350, null);
 
         g.drawImage(this.platforms[0], 200, 100, null);
-        g.drawImage(this.platforms[0], 1200, 100, null);
-        g.drawImage(this.platforms[1], 2200, 100, null);
-        g.drawImage(this.platforms[0], 3200, 100, null);
+        g.drawImage(this.platforms[0], 1100, 100, null);
+        g.drawImage(this.platforms[1], 2000, 100, null);
+        g.drawImage(this.platforms[0], 2900, 100, null);
 
-        g.drawImage(this.platforms[0], 700, -150, null);
-        g.drawImage(this.platforms[0], 1700, -150, null);
-        g.drawImage(this.platforms[1], 2700, -150, null);
+        g.drawImage(this.platforms[0], 650, -150, null);
+        g.drawImage(this.platforms[0], 1550, -150, null);
+        g.drawImage(this.platforms[1], 2450, -150, null);
 
         g.drawImage(this.platforms[1], 200, -400, null);
-        g.drawImage(this.platforms[0], 1200, -400, null);
-        g.drawImage(this.platforms[0], 2200, -400, null);
-        g.drawImage(this.platforms[1], 3200, -400, null);
+        g.drawImage(this.platforms[0], 1100, -400, null);
+        g.drawImage(this.platforms[0], 2000, -400, null);
+        g.drawImage(this.platforms[1], 2900, -400, null);
         super.draw(g);
 
     }

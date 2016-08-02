@@ -6,12 +6,14 @@ An multiplayer action 2D sidescrolling brawler coded in pure Java.
 # Version 0.19 Release
 ## Gameplay Changes
 * Players can now control their direction in midair.
+* Map - Moved platforms slightly closer.
 
 ## Client Changes
 * Fixed a typo in the Title in the title screen.
 * Critical hit damage in the Stats screen now match with the Inventory screen.
 * Players cannot login with no weapon or skills equipped.
 * Minor visual bug fix in the Login screen when logging out.
+* Update map visuals.
 
 ## Server Changes
 * Fixed a rare concurrentcy bug with Reflect and Resist.
