@@ -492,8 +492,8 @@ public class Player extends Thread implements GameEntity {
 
             if (!isImmovableUsingSkill() && !isStunned() && !isKnockback()) {
                 updateFacing();
+                updateWalk(movedX);
                 if (!this.isJumping && !this.isFalling) {
-                    updateWalk(movedX);
                     updateJump();
                 }
             }

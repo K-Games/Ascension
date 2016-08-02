@@ -3,8 +3,9 @@
 # Description
 An multiplayer action 2D sidescrolling brawler coded in pure Java.
 
-# Version 0.18 Update 2
+# Version 0.19 Release
 ## Gameplay Changes
+* Players can now control their direction in midair.
 
 ## Client Changes
 * Fixed a typo in the Title in the title screen.
@@ -14,14 +15,14 @@ An multiplayer action 2D sidescrolling brawler coded in pure Java.
 
 ## Server Changes
 
-## Credits
+# Credits
 ### Developer/Game Designer/Visual Designs
 [KenOfNZ](https://github.com/kenofnz)
 
-### Character Base
+## Character Base
 [TradnuxGames](http://tradnux.com/)
 
-### Music
+## Music
 Title & Menu Tracks
 
 * Hero - [geluf](https://soundcloud.com/geluf)
@@ -30,7 +31,7 @@ Title & Menu Tracks
 Arena Tracks
 
 ```
-Music from the ìJRPG Essentialsî Series by Dibur
+Music from the ‚ÄúJRPG Essentials‚Äù Series by Dibur
 Copyright (c) 2016 Dibur
 http://dibur.moe
 ```
