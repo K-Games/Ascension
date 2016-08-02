@@ -4,7 +4,6 @@ import blockfighter.client.LogicModule;
 import blockfighter.client.Main;
 import blockfighter.client.screen.ScreenIngame;
 import blockfighter.client.screen.ScreenLoading;
-import blockfighter.client.screen.ScreenServerList;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 
@@ -33,9 +32,6 @@ public class PacketReceiver extends Listener {
     public void disconnected(Connection connection) {
         if (logic.getScreen() instanceof ScreenIngame || logic.getScreen() instanceof ScreenLoading) {
             logic.returnMenu();
-        }
-        if (logic.getScreen() instanceof ScreenServerList) {
-            ((ScreenServerList) logic.getScreen()).setStatus(ScreenServerList.STATUS_FAILEDCONNECT);
         }
         this.isConnected = false;
     }
