@@ -37,7 +37,7 @@ public class PacketSender {
         temp = Globals.intToBytes((int) stats[Globals.STAT_LEVEL]);
         System.arraycopy(temp, 0, bytes, 18, temp.length);
 
-        sendPacket(bytes);
+        sendTCPPacket(bytes);
     }
 
     public static void sendPlayerCreate(final byte room, final SaveData c) {
@@ -126,7 +126,7 @@ public class PacketSender {
             System.arraycopy(temp, 0, bytes, pos, temp.length);
             pos += temp.length;
         }
-        sendPacket(bytes);
+        sendTCPPacket(bytes);
     }
 
     public static void sendSetMobType(final byte room, final byte mobKey) {
@@ -134,7 +134,7 @@ public class PacketSender {
         bytes[0] = Globals.DATA_MOB_SET_TYPE;
         bytes[1] = room;
         bytes[2] = mobKey;
-        sendPacket(bytes);
+        sendTCPPacket(bytes);
     }
 
     public static void sendGetMobStat(final byte room, final byte key, final byte stat) {
@@ -143,7 +143,7 @@ public class PacketSender {
         bytes[1] = room;
         bytes[2] = key;
         bytes[3] = stat;
-        sendPacket(bytes);
+        sendTCPPacket(bytes);
     }
 
     public static void sendGetAll(final byte room, final byte myKey) {
@@ -151,7 +151,7 @@ public class PacketSender {
         bytes[0] = Globals.DATA_PLAYER_GET_ALL;
         bytes[1] = room;
         bytes[2] = myKey;
-        sendPacket(bytes);
+        sendTCPPacket(bytes);
     }
 
     public static void sendMove(final byte room, final byte key, final byte direction, final boolean move) {
@@ -161,7 +161,7 @@ public class PacketSender {
         bytes[2] = key;
         bytes[3] = direction;
         bytes[4] = (byte) (move ? 1 : 0);
-        sendPacket(bytes);
+        sendTCPPacket(bytes);
     }
 
     public static void sendUseSkill(final byte room, final byte key, final byte skillCode) {
@@ -170,7 +170,7 @@ public class PacketSender {
         bytes[1] = room;
         bytes[2] = key;
         bytes[3] = skillCode;
-        sendPacket(bytes);
+        sendTCPPacket(bytes);
     }
 
     public static void sendGetPing(final byte room, final byte myKey, final byte pID) {
@@ -179,7 +179,7 @@ public class PacketSender {
         bytes[1] = room;
         bytes[2] = myKey;
         bytes[3] = pID;
-        sendPacket(bytes);
+        sendTCPPacket(bytes);
     }
 
     public static void sendDisconnect(final byte room, final byte myKey) {
@@ -187,7 +187,7 @@ public class PacketSender {
         bytes[0] = Globals.DATA_PLAYER_DISCONNECT;
         bytes[1] = room;
         bytes[2] = myKey;
-        sendPacket(bytes);
+        sendTCPPacket(bytes);
     }
 
     public static void sendGetName(final byte room, final byte key) {
@@ -195,7 +195,7 @@ public class PacketSender {
         bytes[0] = Globals.DATA_PLAYER_GET_NAME;
         bytes[1] = room;
         bytes[2] = key;
-        sendPacket(bytes);
+        sendTCPPacket(bytes);
     }
 
     public static void sendGetStat(final byte room, final byte key, final byte stat) {
@@ -204,7 +204,7 @@ public class PacketSender {
         bytes[1] = room;
         bytes[2] = key;
         bytes[3] = stat;
-        sendPacket(bytes);
+        sendTCPPacket(bytes);
     }
 
     public static void sendGetEquip(final byte room, final byte key) {
@@ -212,10 +212,14 @@ public class PacketSender {
         bytes[0] = Globals.DATA_PLAYER_GET_EQUIP;
         bytes[1] = room;
         bytes[2] = key;
-        sendPacket(bytes);
+        sendTCPPacket(bytes);
     }
 
-    private static void sendPacket(final byte[] packet) {
+    private static void sendTCPPacket(final byte[] packet) {
         client.sendTCP(packet);
+    }
+    
+    private static void sendUDPPacket(final byte[] packet) {
+        client.sendUDP(packet);
     }
 }

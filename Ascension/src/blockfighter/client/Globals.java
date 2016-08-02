@@ -19,15 +19,16 @@ import org.apache.commons.io.FileUtils;
 public class Globals {
 
     public static boolean SKIP_TITLE = false;
-    public static int SERVER_PORT = 25565;
+    public static int SERVER_TCP_PORT = 25565;
+    public static int SERVER_UDP_PORT = 25566;
     public static String SERVER_ADDRESS;
 
     public final static boolean TEST_MAX_LEVEL = true,
             DEBUG_MODE = false;
 
     public final static byte GAME_MAJOR_VERSION = 0,
-            GAME_MINOR_VERSION = 18,
-            GAME_UPDATE_NUMBER = 2;
+            GAME_MINOR_VERSION = 19,
+            GAME_UPDATE_NUMBER = 0;
 
     private final static String GAME_DEV_STATE = "ALPHA";
 

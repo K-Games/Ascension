@@ -38,8 +38,8 @@ public class Globals {
             LOG_TYPE_DATA = 0x01;
 
     public final static byte GAME_MAJOR_VERSION = 0,
-            GAME_MINOR_VERSION = 18,
-            GAME_UPDATE_NUMBER = 2;
+            GAME_MINOR_VERSION = 19,
+            GAME_UPDATE_NUMBER = 0;
     private final static String GAME_DEV_STATE = "ALPHA";
 
     public final static String GAME_RELEASE_VERSION = GAME_DEV_STATE + " " + GAME_MAJOR_VERSION + "." + GAME_MINOR_VERSION + "."
@@ -55,9 +55,10 @@ public class Globals {
             .daemon(true)
             .priority(Thread.MIN_PRIORITY)
             .build());
-    ;
-
-    public static int SERVER_PORT = 25565;
+    
+    public static int SERVER_TCP_PORT = 25565;
+    public static int SERVER_UDP_PORT = 25566;
+    
     public static byte SERVER_MAX_PLAYERS = 10;
     public static boolean SERVER_BATCH_PACKETSEND = false;
     public static HashMap<Byte, Byte> SERVER_ROOMNUM_TO_ROOMINDEX = new HashMap<>();
@@ -72,7 +73,10 @@ public class Globals {
 
     public final static long LOGIC_TICKS_PER_SEC = 100;
     public final static long LOGIC_UPDATE = 1000000000 / LOGIC_TICKS_PER_SEC;
-
+    
+    public final static long SENDALL_TICKS_PER_SEC = 80;
+    public final static long SENDALL_UPDATE = 1000000000 / SENDALL_TICKS_PER_SEC;
+    
     public final static long REFRESH_ALL_UPDATE = 100;
 
     public final static byte RIGHT = 0, LEFT = 1, DOWN = 2, UP = 3;
@@ -264,8 +268,11 @@ public class Globals {
 
             inputStream = new FileInputStream("config.properties");
             prop.load(inputStream);
-            if (prop.getProperty("port") != null) {
-                SERVER_PORT = Integer.parseInt(prop.getProperty("port"));
+            if (prop.getProperty("tcpport") != null) {
+                SERVER_TCP_PORT = Integer.parseInt(prop.getProperty("tcpport"));
+            }
+            if (prop.getProperty("udpport") != null) {
+                SERVER_UDP_PORT = Integer.parseInt(prop.getProperty("udpport"));
             }
             if (prop.getProperty("maxplayers") != null) {
                 SERVER_MAX_PLAYERS = Byte.parseByte(prop.getProperty("maxplayers"));
@@ -299,7 +306,8 @@ public class Globals {
                     Logger.getLogger(Globals.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-            log(Globals.class, "Config", "Server Port: " + SERVER_PORT, Globals.LOG_TYPE_DATA, true);
+            log(Globals.class, "Config", "Server TCP Port: " + SERVER_TCP_PORT, Globals.LOG_TYPE_DATA, true);
+            log(Globals.class, "Config", "Server UDP Port: " + SERVER_UDP_PORT, Globals.LOG_TYPE_DATA, true);
             log(Globals.class, "Config", "Max Players per Room: " + SERVER_MAX_PLAYERS, Globals.LOG_TYPE_DATA, true);
             log(Globals.class, "Config", "Rooms: " + SERVER_ROOMNUM_TO_ROOMINDEX, Globals.LOG_TYPE_DATA, true);
             log(Globals.class, "Config", "EXP Multiplier: " + EXP_MULTIPLIER, Globals.LOG_TYPE_DATA, true);

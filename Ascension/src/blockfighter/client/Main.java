@@ -79,12 +79,12 @@ public class Main {
         if (args.length > 0) {
             for (int i = 0; i < args.length; i++) {
                 switch (args[i].toLowerCase()) {
-                    case "-port":
+                    case "-tcpport":
                         try {
                             int port = Integer.parseInt(args[i + 1]);
                             if (port > 0 && port <= 65535) {
-                                System.out.println("Setting server connection port to " + port);
-                                Globals.SERVER_PORT = port;
+                                System.out.println("Setting server connection TCP port to " + port);
+                                Globals.SERVER_TCP_PORT = port;
                             } else {
                                 System.err.println("-port Specify a valid port between 1 to 65535");
                                 System.exit(202);
@@ -92,6 +92,21 @@ public class Main {
                         } catch (Exception e) {
                             System.err.println("-port Specify a valid port between 1 to 65535");
                             System.exit(201);
+                        }
+                        break;
+                    case "-udpport":
+                        try {
+                            int port = Integer.parseInt(args[i + 1]);
+                            if (port > 0 && port <= 65535) {
+                                System.out.println("Setting server connection UDP port to " + port);
+                                Globals.SERVER_UDP_PORT = port;
+                            } else {
+                                System.err.println("-port Specify a valid port between 1 to 65535");
+                                System.exit(203);
+                            }
+                        } catch (Exception e) {
+                            System.err.println("-port Specify a valid port between 1 to 65535");
+                            System.exit(204);
                         }
                         break;
                     case "-skiptitle":

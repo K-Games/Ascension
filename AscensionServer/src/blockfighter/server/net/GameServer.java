@@ -24,9 +24,10 @@ public class GameServer {
             kyro.register(byte[].class);
             this.receiver = new PacketReceiver();
             this.server.addListener(new Listener.ThreadedListener(this.receiver));
-            server.bind(Globals.SERVER_PORT);
+            server.bind(Globals.SERVER_TCP_PORT);
             server.start();
-            Globals.log(GameServer.class, "Server listening on port " + Globals.SERVER_PORT, Globals.LOG_TYPE_DATA, true);
+            Globals.log(GameServer.class, "Server listening on port TCP: " + Globals.SERVER_TCP_PORT, Globals.LOG_TYPE_DATA, true);
+            //Globals.log(GameServer.class, "Server listening on port UDP: " + Globals.SERVER_UDP_PORT, Globals.LOG_TYPE_DATA, true);
         } catch (IOException ex) {
             Globals.logError(ex.getLocalizedMessage(), ex, true);
             System.exit(1);

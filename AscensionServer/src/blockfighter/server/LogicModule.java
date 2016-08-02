@@ -149,12 +149,14 @@ public class LogicModule extends Thread {
                 this.lastUpdateTime = currentTime;
             }
 
-            /*if (nowMs - this.lastRefreshAll >= 30000) {
-                // sender.broadcastAllPlayersUpdate(room);
-                // System.out.println(sender.getBytes()/1024D);
-                // sender.resetByte();
-                this.lastRefreshAll = nowMs;
-            }*/
+//            if (currentTime - this.lastRefreshAll >= Globals.SENDALL_UPDATE) {
+//                for (final Map.Entry<Byte, Player> pEntry : getPlayers().entrySet()) {
+//                    final Player player = pEntry.getValue();
+//                    player.sendData();
+//                }
+//                this.lastRefreshAll = currentTime;
+//            }
+
             if (!this.getMap().isPvP() && currentTime - this.lastResetCheckTime >= Globals.msToNs(1000)) {
                 if (this.resetStartTime == 0) {
                     if (this.mobs.isEmpty()) {
