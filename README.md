@@ -14,6 +14,7 @@ An multiplayer action 2D sidescrolling brawler coded in pure Java.
 * Players cannot login with no weapon or skills equipped.
 * Minor visual bug fix in the Login screen when logging out.
 * Update map visuals.
+* Fixed being disconnected if loading took too long.
 
 ## Server Changes
 * Fixed a rare concurrentcy bug with Reflect and Resist.

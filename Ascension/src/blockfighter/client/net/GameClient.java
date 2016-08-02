@@ -38,7 +38,7 @@ public class GameClient extends Thread {
 
         this.client = new Client(Globals.PACKET_MAX_SIZE * 200, Globals.PACKET_MAX_SIZE);
         this.client.setTimeout(5000);
-        this.client.setKeepAliveTCP(0);
+        this.client.setKeepAliveTCP(500);
         PacketSender.setClient(this.client);
         PacketHandler.setGameClient(this);
         this.client.start();
@@ -50,7 +50,7 @@ public class GameClient extends Thread {
 
         System.out.println("Connecting to " + Globals.SERVER_ADDRESS);
         try {
-            client.connect(5000, Globals.SERVER_ADDRESS, Globals.SERVER_PORT);
+            client.connect(5000, Globals.SERVER_ADDRESS, Globals.SERVER_TCP_PORT);
             PacketSender.sendPlayerLogin(logic.getSelectedRoom(), logic.getSelectedChar());
         } catch (IOException ex) {
             client.close();

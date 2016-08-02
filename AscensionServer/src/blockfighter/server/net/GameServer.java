@@ -34,7 +34,7 @@ public class GameServer {
     }
 
     public static void addPlayerConnection(final Connection c, final Player p) {
-        c.setKeepAliveTCP(0);
+        c.setKeepAliveTCP(1500);
         c.setTimeout(15000);
         connectionPlayerMap.put(c, p);
     }
