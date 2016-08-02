@@ -79,6 +79,7 @@ public class Globals {
     public final static byte MAP_LEFT = 0, MAP_RIGHT = 1;
 
     public final static double GRAVITY = 0.35, MAX_FALLSPEED = 12.5;
+    public static double EXP_MULTIPLIER = 0.05;
 
     public final static int NUM_PLAYER_ANIM_STATE = 9;
     public final static byte PLAYER_ANIM_STATE_STAND = 0x00,
@@ -269,6 +270,9 @@ public class Globals {
             if (prop.getProperty("maxplayers") != null) {
                 SERVER_MAX_PLAYERS = Byte.parseByte(prop.getProperty("maxplayers"));
             }
+            if (prop.getProperty("expmult") != null) {
+                EXP_MULTIPLIER = Double.parseDouble(prop.getProperty("expmult"));
+            }
             if (prop.getProperty("rooms") != null) {
                 SERVER_ROOMNUM_TO_ROOMINDEX.clear();
                 String[] rooms = prop.getProperty("rooms").split(",");
@@ -298,6 +302,7 @@ public class Globals {
             log(Globals.class, "Config", "Server Port: " + SERVER_PORT, Globals.LOG_TYPE_DATA, true);
             log(Globals.class, "Config", "Max Players per Room: " + SERVER_MAX_PLAYERS, Globals.LOG_TYPE_DATA, true);
             log(Globals.class, "Config", "Rooms: " + SERVER_ROOMNUM_TO_ROOMINDEX, Globals.LOG_TYPE_DATA, true);
+            log(Globals.class, "Config", "EXP Multiplier: " + EXP_MULTIPLIER, Globals.LOG_TYPE_DATA, true);
             log(Globals.class, "Config", "Logic Module Threads: " + SERVER_LOGIC_THREADS, Globals.LOG_TYPE_DATA, true);
             log(Globals.class, "Config", "Max Packet Sender Threads: " + SERVER_PACKETSENDER_THREADS, Globals.LOG_TYPE_DATA, true);
 

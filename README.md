@@ -15,6 +15,7 @@ An multiplayer action 2D sidescrolling brawler coded in pure Java.
 
 ## Server Changes
 * Fixed a rare concurrentcy bug with Reflect and Resist.
+* EXP gains is a modifiable property in config using `expmult`. Defaults to 0.05.
 
 # Credits
 ### Developer/Game Designer/Visual Designs

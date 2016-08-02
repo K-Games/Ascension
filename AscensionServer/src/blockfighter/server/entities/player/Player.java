@@ -739,11 +739,7 @@ public class Player extends Thread implements GameEntity {
         }
 
         if (this.stats[Globals.STAT_MINHP] <= 0) {
-            if (lastHitter != null) {
-                lastHitter.giveEXP(Globals.calcEXPtoNxtLvl(this.stats[Globals.STAT_LEVEL]) / 20);
-                lastHitter.giveDrop(this.stats[Globals.STAT_LEVEL]);
-            }
-            die();
+            die(lastHitter);
         }
 
         // Update client hp every 150ms or if damaged/healed(excluding regen).
@@ -845,7 +841,11 @@ public class Player extends Thread implements GameEntity {
         }
     }
 
-    private void die() {
+    private void die(final Player killer) {
+        if (killer != null) {
+            killer.giveEXP(Globals.calcEXPtoNxtLvl(this.stats[Globals.STAT_LEVEL]) * Globals.EXP_MULTIPLIER);
+            killer.giveDrop(this.stats[Globals.STAT_LEVEL]);
+        }
         PacketSender.sendParticle(this.room.getRoom(), Globals.PARTICLE_BLOOD, this.key);
         setInvulnerable(false);
         setRemovingDebuff(false);
