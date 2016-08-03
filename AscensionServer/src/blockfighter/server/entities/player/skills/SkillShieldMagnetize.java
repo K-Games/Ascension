@@ -18,7 +18,7 @@ public class SkillShieldMagnetize extends Skill {
         this.skillCode = SHIELD_MAGNETIZE;
         this.maxCooldown = 15000;
         this.reqWeapon = Globals.ITEM_SHIELD;
-        this.endDuration = 450;
+        this.endDuration = 550;
         this.playerState = Player.PLAYER_STATE_SHIELD_MAGNETIZE;
         this.reqEquipSlot = Globals.ITEM_OFFHAND;
     }

@@ -8,6 +8,7 @@ An multiplayer action 2D sidescrolling brawler coded in pure Java.
 * Players can now control their direction in midair.
 * Map - Moved platforms slightly closer.
 * Fixed Firebrand burn damage missing one tick.
+* Magnetize now pulls time increased from 0.2s to 0.35s.
 
 ## Client Changes
 * Fixed a typo in the Title in the title screen.

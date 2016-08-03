@@ -19,7 +19,7 @@ public class ParticleShieldMagnetize extends Particle {
         this.target = target;
         this.frame = 0;
         this.frameDuration = 25;
-        this.duration = 200;
+        this.duration = 350;
         this.lightningPointsX = new int[3][20];
         this.lightningPointsY = new int[3][20];
     }
