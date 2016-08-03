@@ -15,14 +15,12 @@ public class BuffBurn extends Buff implements BuffDmgTakenAmp {
     public BuffBurn(final LogicModule l, final int d, final double amp, final double dmg, final Player o, final Player t) {
         super(l, d, o, t);
         this.dmgAmp = amp;
-        this.lastDmgTime = l.getTime();
         this.dmgPerSec = dmg * 3.75;
     }
 
     public BuffBurn(final LogicModule l, final int d, final double amp, final double dmg, final Player o, final Mob t) {
         super(l, d, o, t);
         this.dmgAmp = amp;
-        this.lastDmgTime = l.getTime();
         this.dmgPerSec = dmg * 3.75;
     }
 

@@ -7,6 +7,7 @@ An multiplayer action 2D sidescrolling brawler coded in pure Java.
 ## Gameplay Changes
 * Players can now control their direction in midair.
 * Map - Moved platforms slightly closer.
+* Fixed Firebrand burn damage missing one tick.
 
 ## Client Changes
 * Fixed a typo in the Title in the title screen.
