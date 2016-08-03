@@ -5,7 +5,6 @@ import blockfighter.server.LogicModule;
 import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.maps.GameMap;
-import java.util.LinkedList;
 import java.util.Map;
 
 public class BossLightning extends Mob {
@@ -90,26 +89,6 @@ public class BossLightning extends Mob {
         }
     }
 
-    @Override
-    public Player getTarget() {
-        Player target = null;
-        double maxAggro = 0;
-        final LinkedList<Player> remove = new LinkedList<>();
-        for (final Map.Entry<Player, Double> p : this.aggroCounter.entrySet()) {
-            if (!p.getKey().isConnected() || p.getKey().isDead()) {
-                remove.add(p.getKey());
-                continue;
-            }
-            if (p.getValue() > maxAggro) {
-                maxAggro = p.getValue();
-                target = p.getKey();
-            }
-        }
-        while (!remove.isEmpty()) {
-            this.aggroCounter.remove(remove.poll());
-        }
-        return target;
-    }
 
     private void nextAIstate(final Player t) {
         if (t == null) {

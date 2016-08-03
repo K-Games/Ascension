@@ -55,10 +55,10 @@ public class Globals {
             .daemon(true)
             .priority(Thread.MIN_PRIORITY)
             .build());
-    
+
     public static int SERVER_TCP_PORT = 25565;
     public static int SERVER_UDP_PORT = 25566;
-    
+
     public static byte SERVER_MAX_PLAYERS = 10;
     public static boolean SERVER_BATCH_PACKETSEND = false;
     public static HashMap<Byte, Byte> SERVER_ROOMNUM_TO_ROOMINDEX = new HashMap<>();
@@ -73,10 +73,10 @@ public class Globals {
 
     public final static long LOGIC_TICKS_PER_SEC = 100;
     public final static long LOGIC_UPDATE = 1000000000 / LOGIC_TICKS_PER_SEC;
-    
+
     public final static long SENDALL_TICKS_PER_SEC = 80;
     public final static long SENDALL_UPDATE = 1000000000 / SENDALL_TICKS_PER_SEC;
-    
+
     public final static long REFRESH_ALL_UPDATE = 100;
 
     public final static byte RIGHT = 0, LEFT = 1, DOWN = 2, UP = 3;

@@ -218,7 +218,7 @@ public class PacketSender {
     private static void sendTCPPacket(final byte[] packet) {
         client.sendTCP(packet);
     }
-    
+
     private static void sendUDPPacket(final byte[] packet) {
         client.sendUDP(packet);
     }

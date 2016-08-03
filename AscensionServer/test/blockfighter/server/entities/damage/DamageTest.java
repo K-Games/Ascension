@@ -8,8 +8,8 @@ import blockfighter.server.entities.player.Player;
 import blockfighter.server.maps.GameMapArena;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Test;
 
 public class DamageTest {
 

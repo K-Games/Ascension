@@ -7,8 +7,9 @@ import blockfighter.server.maps.GameMap;
 import blockfighter.server.maps.GameMapArena;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -156,7 +157,6 @@ public class LogicModule extends Thread {
 //                }
 //                this.lastRefreshAll = currentTime;
 //            }
-
             if (!this.getMap().isPvP() && currentTime - this.lastResetCheckTime >= Globals.msToNs(1000)) {
                 if (this.resetStartTime == 0) {
                     if (this.mobs.isEmpty()) {
@@ -178,25 +178,18 @@ public class LogicModule extends Thread {
             LOGIC_THREAD_POOL.execute(mob.getValue());
         }
 
-        final LinkedList<Byte> remove = new LinkedList<>();
-        for (final Map.Entry<Byte, Mob> mob : this.mobs.entrySet()) {
+        Iterator<Entry<Byte, Mob>> mobsIter = this.mobs.entrySet().iterator();
+        while (mobsIter.hasNext()) {
+            Entry<Byte, Mob> mob = mobsIter.next();
             try {
                 mob.getValue().join();
                 if (mob.getValue().isDead()) {
-                    remove.add(mob.getValue().getKey());
+                    mobsIter.remove();
+                    returnMobKey(mob.getKey());
                 }
             } catch (final InterruptedException ex) {
                 Globals.logError(ex.getLocalizedMessage(), ex, true);
             }
-        }
-        removeMobs(remove);
-    }
-
-    private void removeMobs(final LinkedList<Byte> remove) {
-        while (!remove.isEmpty()) {
-            final byte key = remove.pop();
-            this.mobs.remove(key);
-            returnMobKey(key);
         }
     }
 
@@ -204,26 +197,19 @@ public class LogicModule extends Thread {
         for (final Map.Entry<Byte, Player> player : this.players.entrySet()) {
             LOGIC_THREAD_POOL.execute(player.getValue());
         }
-        final LinkedList<Byte> remove = new LinkedList<>();
-        for (final Map.Entry<Byte, Player> player : this.players.entrySet()) {
+        Iterator<Entry<Byte, Player>> playersIter = this.players.entrySet().iterator();
+        while (playersIter.hasNext()) {
+            Entry<Byte, Player> player = playersIter.next();
             try {
                 player.getValue().join();
                 if (!(player.getValue().isConnected())) {
-                    remove.add(player.getValue().getKey());
+                    playersIter.remove();
+                    this.playerKeys.add(player.getKey());
+                    Globals.log(LogicModule.class, "Room: " + this.room + " Returned player key: " + player.getKey() + " Keys Remaining: " + this.playerKeys.size(), Globals.LOG_TYPE_DATA, true);
                 }
             } catch (final InterruptedException ex) {
                 Globals.logError(ex.getLocalizedMessage(), ex, true);
             }
-        }
-        removeDisconnectedPlayers(remove);
-    }
-
-    private void removeDisconnectedPlayers(final LinkedList<Byte> remove) {
-        while (!remove.isEmpty()) {
-            final byte key = remove.pop();
-            this.players.remove(key);
-            this.playerKeys.add(key);
-            Globals.log(LogicModule.class, "Room: " + this.room + " Returned player key: " + key + " Keys Remaining: " + this.playerKeys.size(), Globals.LOG_TYPE_DATA, true);
         }
     }
 
@@ -231,25 +217,19 @@ public class LogicModule extends Thread {
         for (final Map.Entry<Integer, Projectile> p : this.projectiles.entrySet()) {
             LOGIC_THREAD_POOL.execute(p.getValue());
         }
-        final LinkedList<Integer> remove = new LinkedList<>();
-        for (final Map.Entry<Integer, Projectile> p : this.projectiles.entrySet()) {
+
+        Iterator<Entry<Integer, Projectile>> projectilesIter = this.projectiles.entrySet().iterator();
+        while (projectilesIter.hasNext()) {
+            Entry<Integer, Projectile> projectile = projectilesIter.next();
             try {
-                p.getValue().join();
-                if (p.getValue().isExpired()) {
-                    remove.add(p.getValue().getKey());
+                projectile.getValue().join();
+                if (projectile.getValue().isExpired()) {
+                    projectilesIter.remove();
+                    returnProjKey(projectile.getValue().getKey());
                 }
             } catch (final InterruptedException ex) {
                 Globals.logError(ex.getLocalizedMessage(), ex, true);
             }
-        }
-        removeProjectiles(remove);
-    }
-
-    private void removeProjectiles(final LinkedList<Integer> remove) {
-        while (!remove.isEmpty()) {
-            final int key = remove.pop();
-            this.projectiles.remove(key);
-            returnProjKey(key);
         }
     }
 

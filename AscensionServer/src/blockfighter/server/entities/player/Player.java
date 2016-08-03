@@ -56,8 +56,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -794,50 +795,48 @@ public class Player extends Thread implements GameEntity {
             }
         }
 
-        final LinkedList<Integer> remove = new LinkedList<>();
-        for (final Map.Entry<Integer, Buff> bEntry : this.buffs.entrySet()) {
-            final Buff b = bEntry.getValue();
-            b.update();
+        Iterator<Entry<Integer, Buff>> buffsIter = this.buffs.entrySet().iterator();
+        while (buffsIter.hasNext()) {
+            Entry<Integer, Buff> bEntry = buffsIter.next();
+            final Buff buff = bEntry.getValue();
+            buff.update();
 
             // Track if stunned, knocked or has a barrier buff.
-            if (canDebuffAffect() && b instanceof BuffStun) {
+            if (canDebuffAffect() && buff instanceof BuffStun) {
                 if (this.stunDebuff == null) {
-                    this.stunDebuff = b;
+                    this.stunDebuff = buff;
                 }
-            } else if (canDebuffAffect() && b instanceof BuffKnockback) {
+            } else if (canDebuffAffect() && buff instanceof BuffKnockback) {
                 if (this.knockbackDebuff == null) {
-                    this.knockbackDebuff = b;
+                    this.knockbackDebuff = buff;
                 }
-            } else if (b instanceof BuffShieldReflect) {
-                this.reflects.put(bEntry.getKey(), b);
-            } else if (b instanceof BuffPassiveBarrier) {
+            } else if (buff instanceof BuffShieldReflect) {
+                this.reflects.put(bEntry.getKey(), buff);
+            } else if (buff instanceof BuffPassiveBarrier) {
                 if (this.barrierBuff == null) {
-                    this.barrierBuff = b;
+                    this.barrierBuff = buff;
                 }
-            } else if (b instanceof BuffPassiveResist) {
+            } else if (buff instanceof BuffPassiveResist) {
                 if (this.resistBuff == null) {
-                    this.resistBuff = b;
+                    this.resistBuff = buff;
                 }
             }
 
             // Add all the damage reduction buffs(Multiplicative)
-            if (b instanceof BuffDmgReduct) {
-                this.dmgReduct = this.dmgReduct * ((BuffDmgReduct) b).getDmgTakenMult();
+            if (buff instanceof BuffDmgReduct) {
+                this.dmgReduct = this.dmgReduct * ((BuffDmgReduct) buff).getDmgTakenMult();
             }
 
             // Add all the damage intake amplification(Additive)
-            if (b instanceof BuffDmgTakenAmp) {
-                this.dmgAmp = this.dmgAmp + ((BuffDmgTakenAmp) b).getDmgTakenAmp();
+            if (buff instanceof BuffDmgTakenAmp) {
+                this.dmgAmp = this.dmgAmp + ((BuffDmgTakenAmp) buff).getDmgTakenAmp();
             }
 
             // Remove expired buffs/remove debuffs when invulnerable/special state
-            if (b.isExpired() || (!canDebuffAffect() && b.isDebuff())) {
-                remove.add(bEntry.getKey());
+            if (buff.isExpired() || (!canDebuffAffect() && buff.isDebuff())) {
+                buffsIter.remove();
+                returnBuffKey(bEntry.getKey());
             }
-        }
-        for (final Integer bKey : remove) {
-            this.buffs.remove(bKey);
-            returnBuffKey(bKey);
         }
     }
 

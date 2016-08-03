@@ -4,17 +4,12 @@ import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.GameEntity;
 import blockfighter.server.entities.buff.Buff;
-import blockfighter.server.entities.buff.BuffDmgReduct;
-import blockfighter.server.entities.buff.BuffDmgTakenAmp;
-import blockfighter.server.entities.buff.BuffKnockback;
-import blockfighter.server.entities.buff.BuffStun;
 import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.maps.GameMap;
 import blockfighter.server.net.PacketSender;
 import java.awt.geom.Rectangle2D;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -115,20 +110,6 @@ public abstract class Mob extends Thread implements GameEntity {
     public Player getTarget() {
         Player target = null;
         double maxAggro = 0;
-        final LinkedList<Player> remove = new LinkedList<>();
-        for (final Map.Entry<Player, Double> p : this.aggroCounter.entrySet()) {
-            if (!p.getKey().isConnected() || p.getKey().isDead()) {
-                remove.add(p.getKey());
-                continue;
-            }
-            if (p.getValue() > maxAggro) {
-                maxAggro = p.getValue();
-                target = p.getKey();
-            }
-        }
-        while (!remove.isEmpty()) {
-            this.aggroCounter.remove(remove.poll());
-        }
         return target;
     }
 
@@ -302,51 +283,31 @@ public abstract class Mob extends Thread implements GameEntity {
     }
 
     public void updateBuffs() {
+        //Reset buff trackers
         this.isStun = null;
         this.isKnockback = null;
         this.dmgReduct = 1;
         this.dmgAmp = 1;
 
-        // Empty and add buffs from queue
-        while (!this.buffQueue.isEmpty()) {
-            final Buff b = this.buffQueue.poll();
-            final Integer bKey = getNextBuffKey();
-            if (bKey != null && b != null) {
-                if (b instanceof BuffStun) {
-                    b.reduceDuration(this.stunReduction);
-                    this.stunReduction += 100;
-                }
-                this.buffs.put(bKey, b);
-            }
-        }
+        // While buff queue has things
+            //Poll buff
+            //Get next buff key
+            //Ensure key and buff isnt null
+                //add buff
 
-        final LinkedList<Integer> remove = new LinkedList<>();
-        for (final Map.Entry<Integer, Buff> bEntry : this.buffs.entrySet()) {
-            final Buff b = bEntry.getValue();
-            b.update();
-            if (this.isStun == null && b instanceof BuffStun) {
-                this.isStun = b;
-
-            } else if (this.isKnockback == null && b instanceof BuffKnockback) {
-                this.isKnockback = b;
-            }
+        //Iterate through buffs
+            //Update buffs
+            
+            //Track stun if stun is null
+            //Track Knockback if it is null
+            
             // Add all the damage reduction buffs(Multiplicative)
-            if (b instanceof BuffDmgReduct) {
-                this.dmgReduct = this.dmgReduct * ((BuffDmgReduct) b).getDmgTakenMult();
-            }
-
+            
             // Add all the damage intake amplification(Additive)
-            if (b instanceof BuffDmgTakenAmp) {
-                this.dmgAmp = this.dmgAmp + ((BuffDmgTakenAmp) b).getDmgTakenAmp();
-            }
-            if (b.isExpired()) {
-                remove.add(bEntry.getKey());
-            }
-        }
-        for (final int bKey : remove) {
-            this.buffs.remove(bKey);
-            returnBuffKey(bKey);
-        }
+            
+            //Check buff expired
+                //removed from iterator
+                //return buff key
     }
 
     public boolean intersectHitbox(final Rectangle2D.Double box) {

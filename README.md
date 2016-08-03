@@ -21,6 +21,7 @@ An multiplayer action 2D sidescrolling brawler coded in pure Java.
 * EXP gains is a modifiable property in config using `expmult`. Defaults to 0.05.
 * Network performance improvement.
 * Unused UDP support integrated.
+* Improved performance when removing entities.
 
 # Credits
 ### Developer/Game Designer/Visual Designs

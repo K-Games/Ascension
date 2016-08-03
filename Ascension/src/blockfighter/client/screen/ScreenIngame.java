@@ -25,8 +25,9 @@ import java.awt.image.BufferedImage;
 import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.util.Arrays;
-import java.util.LinkedList;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -149,55 +150,19 @@ public class ScreenIngame extends Screen {
         for (final Map.Entry<Integer, IngameNumber> pEntry : this.ingameNumber.entrySet()) {
             threadPool.execute(pEntry.getValue());
         }
-        final LinkedList<Integer> remove = new LinkedList<>();
-        for (final Map.Entry<Integer, IngameNumber> pEntry : this.ingameNumber.entrySet()) {
+
+        Iterator<Entry<Integer, IngameNumber>> numbersIter = this.ingameNumber.entrySet().iterator();
+        while (numbersIter.hasNext()) {
+            Entry<Integer, IngameNumber> number = numbersIter.next();
             try {
-                pEntry.getValue().join();
-                if (pEntry.getValue().isExpired()) {
-                    remove.add(pEntry.getKey());
+                number.getValue().join();
+                if (number.getValue().isExpired()) {
+                    numbersIter.remove();
+                    returnDmgKey(number.getKey());
                 }
             } catch (final InterruptedException ex) {
             }
         }
-        removeIngameNumber(remove);
-    }
-
-    private void removeIngameNumber(final LinkedList<Integer> remove) {
-        while (!remove.isEmpty()) {
-            final int p = remove.pop();
-            returnDmgKey(p);
-            this.ingameNumber.remove(p);
-        }
-    }
-
-    @Override
-    public void updateParticles(final ConcurrentHashMap<Integer, Particle> updateParticles) {
-        for (final Map.Entry<Integer, Particle> pEntry : updateParticles.entrySet()) {
-            threadPool.execute(pEntry.getValue());
-        }
-        final LinkedList<Integer> remove = new LinkedList<>();
-        for (final Map.Entry<Integer, Particle> pEntry : updateParticles.entrySet()) {
-            try {
-                pEntry.getValue().join();
-                if (pEntry.getValue().isExpired()) {
-                    remove.add(pEntry.getKey());
-                }
-            } catch (final InterruptedException ex) {
-            }
-        }
-        removeParticles(updateParticles, remove);
-    }
-
-    private void removeParticles(final ConcurrentHashMap<Integer, Particle> removeParticles, final LinkedList<Integer> remove) {
-        while (!remove.isEmpty()) {
-            final int p = remove.pop();
-            returnParticleKey(p);
-            removeParticles.remove(p);
-        }
-    }
-
-    public void spawnParticle() {
-        final int key = getNextParticleKey();
     }
 
     private void updateNotifications() {
@@ -231,18 +196,17 @@ public class ScreenIngame extends Screen {
         for (final Map.Entry<Byte, Player> pEntry : this.players.entrySet()) {
             threadPool.execute(pEntry.getValue());
         }
-        final LinkedList<Byte> remove = new LinkedList<>();
-        for (final Map.Entry<Byte, Player> pEntry : this.players.entrySet()) {
+
+        Iterator<Entry<Byte, Player>> playersIter = this.players.entrySet().iterator();
+        while (playersIter.hasNext()) {
+            Entry<Byte, Player> player = playersIter.next();
             try {
-                pEntry.getValue().join();
-                if (pEntry.getValue().isDisconnected()) {
-                    remove.add(pEntry.getKey());
+                player.getValue().join();
+                if (player.getValue().isDisconnected()) {
+                    playersIter.remove();
                 }
             } catch (final InterruptedException ex) {
             }
-        }
-        while (!remove.isEmpty()) {
-            this.players.remove(remove.poll());
         }
     }
 
@@ -1195,12 +1159,18 @@ public class ScreenIngame extends Screen {
 
     @Override
     public void unload() {
-        final LinkedList<Integer> remove = new LinkedList<>();
-        for (final Map.Entry<Integer, Particle> pEntry : this.particles.entrySet()) {
-            pEntry.getValue().setExpire();
-            remove.add(pEntry.getKey());
+
+        Iterator<Entry<Integer, Particle>> particleIter = this.particles.entrySet().iterator();
+        while (particleIter.hasNext()) {
+            Entry<Integer, Particle> particle = particleIter.next();
+            try {
+                particle.getValue().join();
+                particle.getValue().setExpire();
+                particleIter.remove();
+                returnParticleKey(particle.getKey());
+            } catch (final InterruptedException ex) {
+            }
         }
-        removeParticles(this.particles, remove);
 
         Particle.unloadParticles();
         ItemEquip.unloadSprites();

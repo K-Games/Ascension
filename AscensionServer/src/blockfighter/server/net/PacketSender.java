@@ -4,7 +4,6 @@ import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.player.Player;
 import com.esotericsoftware.kryonet.Connection;
-import com.esotericsoftware.kryonet.Server;
 import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;

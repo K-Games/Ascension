@@ -5,7 +5,7 @@ import blockfighter.client.entities.particles.Particle;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.util.LinkedList;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
@@ -16,7 +16,7 @@ import java.util.concurrent.ExecutorService;
  */
 public abstract class GameMap {
 
-    protected static ConcurrentHashMap<Integer, Particle> particles = new ConcurrentHashMap<>(20);
+    protected ConcurrentHashMap<Integer, Particle> particles = new ConcurrentHashMap<>(20);
     protected long lastUpdateTime = 0;
     protected static ExecutorService threadPool;
     protected int mapHeight, mapWidth, mapXOrigin = 0, mapYOrigin = 0;
@@ -25,7 +25,7 @@ public abstract class GameMap {
     BufferedImage bg;
 
     public ConcurrentHashMap<Integer, Particle> getParticles() {
-        return particles;
+        return this.particles;
     }
 
     public static void setThreadPool(final ExecutorService tp) {
@@ -57,25 +57,19 @@ public abstract class GameMap {
     }
 
     public void updateParticles() {
-        for (final Map.Entry<Integer, Particle> pEntry : particles.entrySet()) {
+        for (final Map.Entry<Integer, Particle> pEntry : this.particles.entrySet()) {
             threadPool.execute(pEntry.getValue());
         }
-        final LinkedList<Integer> remove = new LinkedList<>();
-        for (final Map.Entry<Integer, Particle> pEntry : particles.entrySet()) {
+        Iterator<Map.Entry<Integer, Particle>> particlesIter = this.particles.entrySet().iterator();
+        while (particlesIter.hasNext()) {
+            Map.Entry<Integer, Particle> particle = particlesIter.next();
             try {
-                pEntry.getValue().join();
-                if (pEntry.getValue().isExpired()) {
-                    remove.add(pEntry.getKey());
+                particle.getValue().join();
+                if (particle.getValue().isExpired()) {
+                    particlesIter.remove();
                 }
             } catch (final InterruptedException ex) {
             }
-        }
-        removeParticles(remove);
-    }
-
-    private void removeParticles(final LinkedList<Integer> remove) {
-        while (!remove.isEmpty()) {
-            particles.remove(remove.pop());
         }
     }
 

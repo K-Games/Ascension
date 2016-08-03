@@ -11,7 +11,7 @@ import java.awt.event.FocusListener;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.util.LinkedList;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -57,26 +57,21 @@ public abstract class Screen implements KeyListener, MouseListener, MouseMotionL
         }
     }
 
-    public void updateParticles(final ConcurrentHashMap<Integer, Particle> particles) {
-        for (final Map.Entry<Integer, Particle> pEntry : particles.entrySet()) {
+    public void updateParticles(final ConcurrentHashMap<Integer, Particle> updateParticles) {
+        for (final Map.Entry<Integer, Particle> pEntry : updateParticles.entrySet()) {
             threadPool.execute(pEntry.getValue());
         }
-        final LinkedList<Integer> remove = new LinkedList<>();
-        for (final Map.Entry<Integer, Particle> pEntry : particles.entrySet()) {
+        Iterator<Map.Entry<Integer, Particle>> particlesIter = updateParticles.entrySet().iterator();
+        while (particlesIter.hasNext()) {
+            Map.Entry<Integer, Particle> particle = particlesIter.next();
             try {
-                pEntry.getValue().join();
-                if (pEntry.getValue().isExpired()) {
-                    remove.add(pEntry.getKey());
+                particle.getValue().join();
+                if (particle.getValue().isExpired()) {
+                    particlesIter.remove();
+                    returnParticleKey(particle.getKey());
                 }
             } catch (final InterruptedException ex) {
             }
-        }
-        removeParticles(particles, remove);
-    }
-
-    private void removeParticles(final ConcurrentHashMap<Integer, Particle> particles, final LinkedList<Integer> remove) {
-        while (!remove.isEmpty()) {
-            particles.remove(remove.pop());
         }
     }
 
