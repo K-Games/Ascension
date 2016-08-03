@@ -213,10 +213,11 @@ public class Globals {
             MAXDMG_BASE = 40;
 
     // Packet globals
-    public final static int PACKET_MAX_SIZE = 256;
+    public final static int PACKET_MAX_SIZE = 150;
     public final static int PACKET_BYTE = 1;
     public final static int PACKET_INT = 4;
     public final static int PACKET_CHAR = 1;
+    public static int PACKET_MAX_PER_CON = 1000;
 
     // Datatypes
     public final static byte DATA_PING = 0x00,
@@ -288,6 +289,9 @@ public class Globals {
                     SERVER_ROOMNUM_TO_ROOMINDEX.put((Byte) roomNums[i], i);
                 }
             }
+            if (prop.getProperty("maxpackets") != null) {
+                PACKET_MAX_PER_CON = Integer.parseInt(prop.getProperty("maxpackets"));
+            }
             if (prop.getProperty("logicthreads") != null) {
                 SERVER_LOGIC_THREADS = Byte.parseByte(prop.getProperty("logicthreads"));
             }
@@ -313,7 +317,7 @@ public class Globals {
             log(Globals.class, "Config", "EXP Multiplier: " + EXP_MULTIPLIER, Globals.LOG_TYPE_DATA, true);
             log(Globals.class, "Config", "Logic Module Threads: " + SERVER_LOGIC_THREADS, Globals.LOG_TYPE_DATA, true);
             log(Globals.class, "Config", "Max Packet Sender Threads: " + SERVER_PACKETSENDER_THREADS, Globals.LOG_TYPE_DATA, true);
-
+            log(Globals.class, "Config", "Max Packets Per Connection: " + PACKET_MAX_PER_CON, Globals.LOG_TYPE_DATA, true);
         }
     }
 

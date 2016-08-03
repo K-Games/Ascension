@@ -85,9 +85,13 @@ public class PacketSender implements Runnable {
             if (packet != null) {
                 SENDER_THREAD_POOL.execute(() -> {
                     if (packet.getPlayer() != null) {
-                        packet.getPlayer().getConnection().sendTCP(packet.getData());
+                        if (packet.getPlayer().getConnection().getTcpWriteBufferSize() < Globals.PACKET_MAX_SIZE * Globals.PACKET_MAX_PER_CON * 0.75) {
+                            packet.getPlayer().getConnection().sendTCP(packet.getData());
+                        }
                     } else if (packet.getConnection() != null) {
-                        packet.getConnection().sendTCP(packet.getData());
+                        if (packet.getConnection().getTcpWriteBufferSize() < Globals.PACKET_MAX_SIZE * Globals.PACKET_MAX_PER_CON * 0.75) {
+                            packet.getConnection().sendTCP(packet.getData());
+                        }
                     }
                 });
             }
@@ -109,7 +113,7 @@ public class PacketSender implements Runnable {
     public static void sendConnection(final byte[] data, final Connection c) {
         if (Globals.SERVER_BATCH_PACKETSEND) {
             OUT_PACKET_QUEUE.add(new GamePacket(data, c));
-        } else {
+        } else if (c.getTcpWriteBufferSize() < Globals.PACKET_MAX_SIZE * Globals.PACKET_MAX_PER_CON * 0.75) {
             c.sendTCP(data);
         }
     }
@@ -119,7 +123,7 @@ public class PacketSender implements Runnable {
             try {
                 if (Globals.SERVER_BATCH_PACKETSEND) {
                     OUT_PACKET_QUEUE.add(new GamePacket(data, player));
-                } else {
+                } else if (player.getConnection().getTcpWriteBufferSize() < Globals.PACKET_MAX_SIZE * Globals.PACKET_MAX_PER_CON * 0.75) {
                     player.getConnection().sendTCP(data);
                 }
             } catch (Exception e) {

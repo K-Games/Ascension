@@ -208,7 +208,7 @@ public class Globals {
             PLAYER_ANIM_STATE_ROLL = 0x08;
 
     // Packet globals
-    public final static int PACKET_MAX_SIZE = 256;
+    public final static int PACKET_MAX_SIZE = 150;
     public final static int PACKET_BYTE = 1;
     public final static int PACKET_INT = 4;
     public final static int PACKET_LONG = 8;

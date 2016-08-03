@@ -36,7 +36,7 @@ public class GameClient extends Thread {
             ((ScreenServerList) logic.getScreen()).setStatus(ScreenServerList.STATUS_CONNECTING);
         }
 
-        this.client = new Client(Globals.PACKET_MAX_SIZE * 200, Globals.PACKET_MAX_SIZE);
+        this.client = new Client(Globals.PACKET_MAX_SIZE * 800, Globals.PACKET_MAX_SIZE);
         this.client.setTimeout(5000);
         this.client.setKeepAliveTCP(500);
         PacketSender.setClient(this.client);
