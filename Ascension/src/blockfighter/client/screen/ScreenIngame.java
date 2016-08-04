@@ -54,7 +54,6 @@ public class ScreenIngame extends Screen {
     private double screenShakeX = 0, screenShakeY = 0;
     private boolean screenShake = false;
 
-    private byte myKey = -1;
     private Rectangle2D logoutBox;
 
     private long pingTime = 0;
@@ -75,9 +74,8 @@ public class ScreenIngame extends Screen {
 
     private int drawInfoHotkey = -1;
 
-    public ScreenIngame(final byte i, final byte numPlayer, final GameMap m, final GameClient cl) {
+    public ScreenIngame(final byte numPlayer, final GameMap m, final GameClient cl) {
         this.client = cl;
-        this.myKey = i;
         this.c = logic.getSelectedChar();
         this.players = new ConcurrentHashMap<>(numPlayer);
         for (int j = 0; j < this.hotkeySlots.length; j++) {
@@ -109,11 +107,11 @@ public class ScreenIngame extends Screen {
 
         if (now - this.lastSendKeyTime >= Globals.SEND_KEYDOWN_UPDATE) {
             for (byte i = 0; i < this.moveKeyDown.length; i++) {
-                client.sendMoveKey(this.myKey, i, this.moveKeyDown[i]);
+                client.sendMoveKey(logic.getMyPlayerKey(), i, this.moveKeyDown[i]);
             }
             for (int i = 0; i < this.skillKeyDown.length; i++) {
                 if (this.skillKeyDown[i]) {
-                    client.sendUseSkill(this.myKey, this.c.getHotkeys()[i].getSkillCode());
+                    client.sendUseSkill(logic.getMyPlayerKey(), this.c.getHotkeys()[i].getSkillCode());
                 }
             }
             this.lastSendKeyTime = now;
@@ -126,8 +124,8 @@ public class ScreenIngame extends Screen {
             updateMobs();
             updateNotifications();
 
-            if (this.players.containsKey(this.myKey)) {
-                logic.setSoundLisenterPos(this.players.get(this.myKey).getX(), this.players.get(this.myKey).getY());
+            if (this.players.containsKey(logic.getMyPlayerKey())) {
+                logic.setSoundLisenterPos(this.players.get(logic.getMyPlayerKey()).getX(), this.players.get(logic.getMyPlayerKey()).getY());
             }
 
             this.ping = this.client.getPing();
@@ -135,13 +133,13 @@ public class ScreenIngame extends Screen {
         }
 
         if (now - this.lastRequestTime >= Globals.REQUESTALL_UPDATE) {
-            client.sendGetAll(this.myKey);
+            client.sendGetAll(logic.getMyPlayerKey());
             this.lastRequestTime = now;
         }
         if (now - this.lastPingTime >= Globals.PING_UPDATE) {
             this.pingID = (byte) (Globals.rng(256));
             this.pingTime = System.currentTimeMillis();
-            client.sendGetPing(this.myKey, this.pingID);
+            client.sendGetPing(logic.getMyPlayerKey(), this.pingID);
             this.lastPingTime = now;
         }
     }
@@ -214,11 +212,11 @@ public class ScreenIngame extends Screen {
     public void draw(final Graphics2D g) {
         g.setClip(0, 0, 1280, 720);
         final AffineTransform resetForm = g.getTransform();
-        if (this.players != null && this.myKey != -1 && this.players.containsKey(this.myKey)) {
-            this.map.drawBg(g, this.players.get(this.myKey).getX(), this.players.get(this.myKey).getY());
+        if (this.players != null && logic.getMyPlayerKey() != -1 && this.players.containsKey(logic.getMyPlayerKey())) {
+            this.map.drawBg(g, this.players.get(logic.getMyPlayerKey()).getX(), this.players.get(logic.getMyPlayerKey()).getY());
             double scale = 1;
             g.scale(scale, scale);
-            g.translate(640.0 / scale - this.players.get(this.myKey).getX(), 500.0 / scale - this.players.get(this.myKey).getY());
+            g.translate(640.0 / scale - this.players.get(logic.getMyPlayerKey()).getX(), 500.0 / scale - this.players.get(logic.getMyPlayerKey()).getY());
             if (screenShake) {
                 g.translate(screenShakeX, screenShakeY);
             }
@@ -320,12 +318,12 @@ public class ScreenIngame extends Screen {
     }
 
     private void drawHUD(final Graphics2D g, final BufferedImage hud) {
-        if (this.players.containsKey(this.myKey)) {
+        if (this.players.containsKey(logic.getMyPlayerKey())) {
             final BufferedImage hpbar = Globals.HUD[1];
             final double hpbarWidth;
 
-            if (this.players.get(this.myKey).getStat(Globals.STAT_MINHP) <= this.players.get(this.myKey).getStat(Globals.STAT_MAXHP)) {
-                hpbarWidth = this.players.get(this.myKey).getStat(Globals.STAT_MINHP) / this.players.get(this.myKey).getStat(Globals.STAT_MAXHP);
+            if (this.players.get(logic.getMyPlayerKey()).getStat(Globals.STAT_MINHP) <= this.players.get(logic.getMyPlayerKey()).getStat(Globals.STAT_MAXHP)) {
+                hpbarWidth = this.players.get(logic.getMyPlayerKey()).getStat(Globals.STAT_MINHP) / this.players.get(logic.getMyPlayerKey()).getStat(Globals.STAT_MAXHP);
             } else {
                 hpbarWidth = 1;
             }
@@ -335,15 +333,15 @@ public class ScreenIngame extends Screen {
                     (int) (hpbarWidth * 802D), 38, null);
             g.setFont(Globals.ARIAL_18PT);
             final int width = g.getFontMetrics().stringWidth(
-                    (int) this.players.get(this.myKey).getStat(Globals.STAT_MINHP) + "/"
-                    + (int) this.players.get(this.myKey).getStat(Globals.STAT_MAXHP));
+                    (int) this.players.get(logic.getMyPlayerKey()).getStat(Globals.STAT_MINHP) + "/"
+                    + (int) this.players.get(logic.getMyPlayerKey()).getStat(Globals.STAT_MAXHP));
             drawStringOutline(g,
-                    (int) this.players.get(this.myKey).getStat(Globals.STAT_MINHP) + "/"
-                    + (int) this.players.get(this.myKey).getStat(Globals.STAT_MAXHP),
+                    (int) this.players.get(logic.getMyPlayerKey()).getStat(Globals.STAT_MINHP) + "/"
+                    + (int) this.players.get(logic.getMyPlayerKey()).getStat(Globals.STAT_MAXHP),
                     Globals.WINDOW_WIDTH / 2 - width / 2, Globals.WINDOW_HEIGHT - hud.getHeight() + 28, 1);
             g.setColor(Color.WHITE);
-            g.drawString((int) this.players.get(this.myKey).getStat(Globals.STAT_MINHP) + "/"
-                    + (int) this.players.get(this.myKey).getStat(Globals.STAT_MAXHP),
+            g.drawString((int) this.players.get(logic.getMyPlayerKey()).getStat(Globals.STAT_MINHP) + "/"
+                    + (int) this.players.get(logic.getMyPlayerKey()).getStat(Globals.STAT_MAXHP),
                     Globals.WINDOW_WIDTH / 2 - width / 2, Globals.WINDOW_HEIGHT - hud.getHeight() + 28);
         }
     }
@@ -452,7 +450,7 @@ public class ScreenIngame extends Screen {
         final int x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
         final int y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
 
-        if (Point.distance(this.players.get(this.myKey).getX(), this.players.get(this.myKey).getY(), x, y) <= 800) {
+        if (Point.distance(this.players.get(logic.getMyPlayerKey()).getX(), this.players.get(logic.getMyPlayerKey()).getY(), x, y) <= 800) {
             logic.playSound(sfxID, x, y);
         }
     }
@@ -545,11 +543,8 @@ public class ScreenIngame extends Screen {
 
     private void dataPlayerDisconnect(final byte[] data) {
         final byte key = data[1];
-        if (this.players.containsKey(key) && key != this.myKey) {
+        if (this.players.containsKey(key) && key != logic.getMyPlayerKey()) {
             this.players.get(key).disconnect();
-        }
-        if (key == this.myKey) {
-            client.shutdownClient();
         }
     }
 
@@ -925,7 +920,7 @@ public class ScreenIngame extends Screen {
     }
 
     public void disconnect() {
-        client.sendDisconnect(this.myKey);
+        client.sendDisconnect(logic.getMyPlayerKey());
     }
 
     public void setPing(final byte rID) {
@@ -1045,68 +1040,68 @@ public class ScreenIngame extends Screen {
         } else if (key == this.c.getKeyBind()[Globals.KEYBIND_SKILL1]) {
             if (this.c.getHotkeys()[0] != null) {
                 setSkillKeyDown(0, false);
-                client.sendUseSkill(this.myKey, this.c.getHotkeys()[0].getSkillCode());
+                client.sendUseSkill(logic.getMyPlayerKey(), this.c.getHotkeys()[0].getSkillCode());
             }
         } else if (key == this.c.getKeyBind()[Globals.KEYBIND_SKILL2]) {
             if (this.c.getHotkeys()[1] != null) {
                 setSkillKeyDown(1, false);
-                client.sendUseSkill(this.myKey, this.c.getHotkeys()[1].getSkillCode());
+                client.sendUseSkill(logic.getMyPlayerKey(), this.c.getHotkeys()[1].getSkillCode());
             }
         } else if (key == this.c.getKeyBind()[Globals.KEYBIND_SKILL3]) {
             if (this.c.getHotkeys()[2] != null) {
                 setSkillKeyDown(2, false);
-                client.sendUseSkill(this.myKey, this.c.getHotkeys()[2].getSkillCode());
+                client.sendUseSkill(logic.getMyPlayerKey(), this.c.getHotkeys()[2].getSkillCode());
             }
         } else if (key == this.c.getKeyBind()[Globals.KEYBIND_SKILL4]) {
             if (this.c.getHotkeys()[3] != null) {
                 setSkillKeyDown(3, false);
-                client.sendUseSkill(this.myKey, this.c.getHotkeys()[3].getSkillCode());
+                client.sendUseSkill(logic.getMyPlayerKey(), this.c.getHotkeys()[3].getSkillCode());
             }
         } else if (key == this.c.getKeyBind()[Globals.KEYBIND_SKILL5]) {
             if (this.c.getHotkeys()[4] != null) {
                 setSkillKeyDown(4, false);
-                client.sendUseSkill(this.myKey, this.c.getHotkeys()[4].getSkillCode());
+                client.sendUseSkill(logic.getMyPlayerKey(), this.c.getHotkeys()[4].getSkillCode());
             }
         } else if (key == this.c.getKeyBind()[Globals.KEYBIND_SKILL6]) {
             if (this.c.getHotkeys()[5] != null) {
                 setSkillKeyDown(5, false);
-                client.sendUseSkill(this.myKey, this.c.getHotkeys()[5].getSkillCode());
+                client.sendUseSkill(logic.getMyPlayerKey(), this.c.getHotkeys()[5].getSkillCode());
             }
         } else if (key == this.c.getKeyBind()[Globals.KEYBIND_SKILL7]) {
             if (this.c.getHotkeys()[6] != null) {
                 setSkillKeyDown(6, false);
-                client.sendUseSkill(this.myKey, this.c.getHotkeys()[6].getSkillCode());
+                client.sendUseSkill(logic.getMyPlayerKey(), this.c.getHotkeys()[6].getSkillCode());
             }
         } else if (key == this.c.getKeyBind()[Globals.KEYBIND_SKILL8]) {
             if (this.c.getHotkeys()[7] != null) {
                 setSkillKeyDown(7, false);
-                client.sendUseSkill(this.myKey, this.c.getHotkeys()[7].getSkillCode());
+                client.sendUseSkill(logic.getMyPlayerKey(), this.c.getHotkeys()[7].getSkillCode());
             }
         } else if (key == this.c.getKeyBind()[Globals.KEYBIND_SKILL9]) {
             if (this.c.getHotkeys()[8] != null) {
                 setSkillKeyDown(8, false);
-                client.sendUseSkill(this.myKey, this.c.getHotkeys()[8].getSkillCode());
+                client.sendUseSkill(logic.getMyPlayerKey(), this.c.getHotkeys()[8].getSkillCode());
             }
         } else if (key == this.c.getKeyBind()[Globals.KEYBIND_SKILL10]) {
             if (this.c.getHotkeys()[9] != null) {
                 setSkillKeyDown(9, false);
-                client.sendUseSkill(this.myKey, this.c.getHotkeys()[9].getSkillCode());
+                client.sendUseSkill(logic.getMyPlayerKey(), this.c.getHotkeys()[9].getSkillCode());
             }
         } else if (key == this.c.getKeyBind()[Globals.KEYBIND_SKILL11]) {
             if (this.c.getHotkeys()[10] != null) {
                 setSkillKeyDown(10, false);
-                client.sendUseSkill(this.myKey, this.c.getHotkeys()[10].getSkillCode());
+                client.sendUseSkill(logic.getMyPlayerKey(), this.c.getHotkeys()[10].getSkillCode());
             }
         } else if (key == this.c.getKeyBind()[Globals.KEYBIND_SKILL12]) {
             if (this.c.getHotkeys()[11] != null) {
                 setSkillKeyDown(11, false);
-                client.sendUseSkill(this.myKey, this.c.getHotkeys()[11].getSkillCode());
+                client.sendUseSkill(logic.getMyPlayerKey(), this.c.getHotkeys()[11].getSkillCode());
             }
         }
 
         switch (e.getKeyCode()) {
             case KeyEvent.VK_ESCAPE:
-                client.sendDisconnect(this.myKey);
+                client.sendDisconnect(logic.getMyPlayerKey());
                 break;
         }
     }
@@ -1126,7 +1121,7 @@ public class ScreenIngame extends Screen {
         if (this.logoutBox != null) {
             Rectangle2D.Double box = new Rectangle2D.Double(10, 10, this.logoutBox.getWidth() + 6, this.logoutBox.getHeight() + 6);
             if (box.contains(e.getPoint())) {
-                client.sendDisconnect(this.myKey);
+                client.sendDisconnect(logic.getMyPlayerKey());
             }
         }
     }

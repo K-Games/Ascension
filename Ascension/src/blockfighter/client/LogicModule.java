@@ -17,6 +17,7 @@ public class LogicModule implements Runnable {
     private long currentTime = 0;
     private SaveData selectedChar;
     private byte selectedRoom = 0;
+    private byte myPlayerKey = -1;
     private Screen screen;
     private final SoundModule soundModule;
 
@@ -83,6 +84,14 @@ public class LogicModule implements Runnable {
         }
     }
 
+    public void setMyPlayerKey(final byte key) {
+        this.myPlayerKey = key;
+    }
+
+    public byte getMyPlayerKey() {
+        return this.myPlayerKey;
+    }
+
     public void setSelectedChar(final SaveData s) {
         this.selectedChar = s;
     }
@@ -133,6 +142,7 @@ public class LogicModule implements Runnable {
     }
 
     private void shutdownClient() {
-        client.shutdownClient();
+        client.shutdownClient(ScreenServerList.STATUS_NORMAL_SHUTDOWN);
+        setMyPlayerKey((byte) -1);
     }
 }

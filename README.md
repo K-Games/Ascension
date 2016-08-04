@@ -7,6 +7,7 @@ An multiplayer action 2D sidescrolling brawler coded in pure Java.
 ## Gameplay Changes
 
 ## Client Changes
+* Moved the client player key to Logic Module.
 
 ## Server Changes
 

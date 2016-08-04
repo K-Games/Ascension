@@ -5,7 +5,6 @@ import blockfighter.client.entities.particles.Particle;
 import blockfighter.client.maps.GameMap;
 import blockfighter.client.maps.GameMapArena;
 import blockfighter.client.maps.GameMapFloor1;
-import blockfighter.client.net.GameClient;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
@@ -19,14 +18,7 @@ import java.awt.image.BufferedImage;
 public class ScreenLoading extends ScreenMenu {
 
     private GameMap map;
-    private byte myKey;
     private boolean effectsReadyToRender = false, rendered = false;
-    private GameClient client;
-
-    public ScreenLoading(final byte key, final GameClient cl) {
-        this.myKey = key;
-        this.client = cl;
-    }
 
     public void load(final byte mapID) throws Exception {
         Particle.loadParticles();
@@ -110,7 +102,6 @@ public class ScreenLoading extends ScreenMenu {
 
     @Override
     public void mouseExited(final MouseEvent e) {
-
     }
 
     @Override
@@ -125,9 +116,5 @@ public class ScreenLoading extends ScreenMenu {
 
     @Override
     public void unload() {
-    }
-
-    public void disconnect() {
-        client.sendDisconnect(this.myKey);
     }
 }
