@@ -16,7 +16,7 @@ import java.util.logging.Logger;
 
 public class GameClient extends Thread {
 
-    private Client client;
+    private static Client client;
     private PacketReceiver receiver;
     private final LogicModule logic;
     private boolean loggedIn = false;
@@ -36,17 +36,16 @@ public class GameClient extends Thread {
             ((ScreenServerList) logic.getScreen()).setStatus(ScreenServerList.STATUS_CONNECTING);
         }
 
-        this.client = new Client(Globals.PACKET_MAX_SIZE * 800, Globals.PACKET_MAX_SIZE);
-        this.client.setTimeout(5000);
-        this.client.setKeepAliveTCP(500);
-        PacketSender.setClient(this.client);
+        client = new Client(Globals.PACKET_MAX_SIZE * 800, Globals.PACKET_MAX_SIZE);
+        client.setTimeout(5000);
+        client.setKeepAliveTCP(500);
         PacketHandler.setGameClient(this);
-        this.client.start();
+        client.start();
 
-        Kryo kyro = this.client.getKryo();
+        Kryo kyro = client.getKryo();
         kyro.register(byte[].class);
         this.receiver = new PacketReceiver();
-        this.client.addListener(new Listener.ThreadedListener(this.receiver));
+        client.addListener(new Listener.ThreadedListener(this.receiver));
 
         System.out.println("Connecting to " + Globals.SERVER_ADDRESS);
         try {
@@ -63,11 +62,9 @@ public class GameClient extends Thread {
 
     public void shutdownClient(final byte status) {
         client.close();
+        this.receiver = null;
         if (logic.getScreen() instanceof ScreenServerList) {
             ((ScreenServerList) logic.getScreen()).setStatus(status);
-        }
-        if (this.receiver != null) {
-            this.receiver = null;
         }
     }
 
@@ -132,71 +129,30 @@ public class GameClient extends Thread {
             }
             System.out.println("Finished Loading");
             ScreenIngame ingameScreen = new ScreenIngame(size, loading.getLoadedMap(), this);
-            while (!this.dataQueue.isEmpty()) {
-                ingameScreen.queueData(this.dataQueue.poll());
-            }
-            ingameScreen.update();
             logic.setScreen(ingameScreen);
-            sendGetAll(key);
+            PacketSender.sendGetAll(logic.getSelectedRoom(), key);
         } catch (final Exception e) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, e);
             Particle.unloadParticles();
             logic.disconnect();
-            sendDisconnect(key);
+            PacketSender.sendDisconnect(logic.getSelectedRoom(), key);
             logic.returnMenu();
         }
     }
 
-    public void sendGetPing(final byte k, final byte pID) {
-        this.client.updateReturnTripTime();
+    public static Client getClient() {
+        return client;
     }
 
-    public void sendGetAll(final byte k) {
-        PacketSender.sendGetAll(logic.getSelectedRoom(), k);
-    }
-
-    public void sendSetMobType(final byte k) {
-        PacketSender.sendSetMobType(logic.getSelectedRoom(), k);
-    }
-
-    public void sendGetMobStat(final byte k, final byte s) {
-        PacketSender.sendGetMobStat(logic.getSelectedRoom(), k, s);
-    }
-
-    public void sendGetName(final byte k) {
-        PacketSender.sendGetName(logic.getSelectedRoom(), k);
-    }
-
-    public void sendGetStat(final byte k, final byte s) {
-        PacketSender.sendGetStat(logic.getSelectedRoom(), k, s);
-    }
-
-    public void sendGetEquip(final byte k) {
-        PacketSender.sendGetEquip(logic.getSelectedRoom(), k);
-    }
-
-    public void sendDisconnect(final byte k) {
-        PacketSender.sendDisconnect(logic.getSelectedRoom(), k);
-    }
-
-    public void sendUseSkill(final byte k, final byte sc) {
-        PacketSender.sendUseSkill(logic.getSelectedRoom(), k, sc);
-    }
-
-    public void sendMoveKey(final byte k, final byte dir, final boolean b) {
-        PacketSender.sendMove(logic.getSelectedRoom(), k, dir, b);
-    }
-
-    public int getPing() {
-        return this.client.getReturnTripTime();
+    public static int getPing() {
+        return client.getReturnTripTime();
     }
 
     public void queueData(final byte[] data) {
-        if (logic.getScreen() instanceof ScreenIngame) {
-            ((ScreenIngame) logic.getScreen()).queueData(data);
-        } else {
-            this.dataQueue.add(data);
-        }
+        this.dataQueue.add(data);
     }
 
+    public ConcurrentLinkedQueue<byte[]> getDataQueue() {
+        return this.dataQueue;
+    }
 }

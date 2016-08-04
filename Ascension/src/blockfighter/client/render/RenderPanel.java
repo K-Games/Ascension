@@ -8,10 +8,6 @@ import java.awt.Graphics2D;
 import java.awt.image.VolatileImage;
 import javax.swing.JPanel;
 
-/**
- *
- * @author Ken Kwan
- */
 public class RenderPanel extends JPanel {
 
     /**

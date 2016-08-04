@@ -10,10 +10,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 
-/**
- *
- * @author Ken Kwan
- */
 public abstract class GameMap {
 
     protected ConcurrentHashMap<Integer, Particle> particles = new ConcurrentHashMap<>(20);

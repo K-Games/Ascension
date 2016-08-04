@@ -17,10 +17,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 
-/**
- *
- * @author Ken Kwan
- */
 public abstract class Screen implements KeyListener, MouseListener, MouseMotionListener, FocusListener {
 
     protected static final Color SKILL_BOX_BG_COLOR = new Color(0, 0, 0, 115);

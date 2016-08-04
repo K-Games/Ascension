@@ -3,10 +3,6 @@ package blockfighter.client.render;
 import blockfighter.client.LogicModule;
 import blockfighter.client.Main;
 
-/**
- *
- * @author Ken Kwan
- */
 public class RenderModule implements Runnable {
 
     private final RenderPanel panel;

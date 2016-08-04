@@ -7,10 +7,6 @@ import blockfighter.client.entities.player.Player;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
-/**
- *
- * @author Ken Kwan
- */
 public abstract class Particle extends Thread {
 
     protected int x, y;

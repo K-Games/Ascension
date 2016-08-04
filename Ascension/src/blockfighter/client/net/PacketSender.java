@@ -4,20 +4,9 @@ import blockfighter.client.Globals;
 import blockfighter.client.SaveData;
 import blockfighter.client.entities.items.ItemEquip;
 import blockfighter.client.entities.player.skills.Skill;
-import com.esotericsoftware.kryonet.Client;
 import java.nio.charset.StandardCharsets;
 
-/**
- *
- * @author Ken Kwan
- */
 public class PacketSender {
-
-    private static Client client;
-
-    public static void setClient(final Client cl) {
-        client = cl;
-    }
 
     public static void sendPlayerLogin(final byte room, final SaveData c) {
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 2 // Data type + room
@@ -173,13 +162,8 @@ public class PacketSender {
         sendTCPPacket(bytes);
     }
 
-    public static void sendGetPing(final byte room, final byte myKey, final byte pID) {
-        final byte[] bytes = new byte[Globals.PACKET_BYTE * 4];
-        bytes[0] = Globals.DATA_PING;
-        bytes[1] = room;
-        bytes[2] = myKey;
-        bytes[3] = pID;
-        sendTCPPacket(bytes);
+    public static void sendGetPing() {
+        GameClient.getClient().updateReturnTripTime();
     }
 
     public static void sendDisconnect(final byte room, final byte myKey) {
@@ -216,10 +200,10 @@ public class PacketSender {
     }
 
     private static void sendTCPPacket(final byte[] packet) {
-        client.sendTCP(packet);
+        GameClient.getClient().sendTCP(packet);
     }
 
     private static void sendUDPPacket(final byte[] packet) {
-        client.sendUDP(packet);
+        GameClient.getClient().sendUDP(packet);
     }
 }

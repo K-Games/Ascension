@@ -14,10 +14,6 @@ import javax.swing.BorderFactory;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
-/**
- *
- * @author Ken Kwan
- */
 public class ScreenSelectChar extends ScreenMenu {
 
     private static final SaveData[] CHARACTER_DATA = new SaveData[3];

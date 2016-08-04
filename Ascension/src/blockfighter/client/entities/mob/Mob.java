@@ -5,13 +5,10 @@ import blockfighter.client.LogicModule;
 import blockfighter.client.Main;
 import blockfighter.client.entities.mob.boss.Lightning.BossLightning;
 import blockfighter.client.net.GameClient;
+import blockfighter.client.net.PacketSender;
 import java.awt.Graphics2D;
 import java.awt.Point;
 
-/**
- *
- * @author Ken Kwan
- */
 public abstract class Mob extends Thread {
 
     public final static int NUM_STATS = 3;
@@ -31,10 +28,8 @@ public abstract class Mob extends Thread {
     protected byte key, facing, animState, frame;
     protected double[] stats;
     protected static LogicModule logic;
-    private GameClient client;
 
-    public Mob(final int x, final int y, final byte k, final GameClient cl) {
-        this.client = cl;
+    public Mob(final int x, final int y, final byte k) {
         this.x = x;
         this.y = y;
         this.key = k;
@@ -102,7 +97,7 @@ public abstract class Mob extends Thread {
         update();
         if (this.stats[STAT_MAXHP] <= 0) {
             // Get boss stat
-            client.sendGetMobStat(this.key, STAT_MAXHP);
+            PacketSender.sendGetMobStat(logic.getSelectedRoom(), this.key, STAT_MAXHP);
         }
     }
 
@@ -112,7 +107,7 @@ public abstract class Mob extends Thread {
         Mob b = null;
         switch (type) {
             case MOB_BOSS_LIGHTNING:
-                b = new BossLightning(x, y, key, cl);
+                b = new BossLightning(x, y, key);
                 BossLightning.load();
                 break;
         }

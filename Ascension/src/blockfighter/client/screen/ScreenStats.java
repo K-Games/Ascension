@@ -10,10 +10,6 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
-/**
- *
- * @author Ken Kwan
- */
 public class ScreenStats extends ScreenMenu {
 
     private final SaveData c;

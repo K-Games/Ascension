@@ -25,10 +25,6 @@ import java.util.logging.Logger;
 import javax.swing.JFrame;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
-/**
- *
- * @author Ken Kwan
- */
 public class Main {
 
     public static final KeyHandler KEY_HANDLER = new KeyHandler();

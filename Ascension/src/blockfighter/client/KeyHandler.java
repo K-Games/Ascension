@@ -3,10 +3,6 @@ package blockfighter.client;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-/**
- *
- * @author Ken Kwan
- */
 public class KeyHandler implements KeyListener {
 
     private static LogicModule logic = null;

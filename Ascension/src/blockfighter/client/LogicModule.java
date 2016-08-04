@@ -6,10 +6,6 @@ import blockfighter.client.screen.Screen;
 import blockfighter.client.screen.ScreenIngame;
 import blockfighter.client.screen.ScreenServerList;
 
-/**
- *
- * @author Ken Kwan
- */
 public class LogicModule implements Runnable {
 
     // Shared Data

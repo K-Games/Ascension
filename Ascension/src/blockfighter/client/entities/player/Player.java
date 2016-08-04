@@ -4,16 +4,12 @@ import blockfighter.client.Globals;
 import blockfighter.client.LogicModule;
 import blockfighter.client.Main;
 import blockfighter.client.entities.items.ItemEquip;
-import blockfighter.client.net.GameClient;
+import blockfighter.client.net.PacketSender;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 
-/**
- *
- * @author Ken Kwan
- */
 public class Player extends Thread {
 
     private int x, y;
@@ -27,10 +23,8 @@ public class Player extends Thread {
     private long lastUpdateTime;
     private static LogicModule logic;
     private boolean disconnect = false;
-    private GameClient client;
 
-    public Player(final int x, final int y, final byte k, final GameClient cl) {
-        this.client = cl;
+    public Player(final int x, final int y, final byte k) {
         this.x = x;
         this.y = y;
         this.key = k;
@@ -42,8 +36,8 @@ public class Player extends Thread {
         setDaemon(true);
     }
 
-    public Player(final int x, final int y, final byte k, final byte f, final GameClient cl) {
-        this(x, y, k, cl);
+    public Player(final int x, final int y, final byte k, final byte f) {
+        this(x, y, k);
         this.facing = f;
     }
 
@@ -180,16 +174,16 @@ public class Player extends Thread {
     @Override
     public void run() {
         if (this.name.length() <= 0) {
-            client.sendGetName(this.key);
+            PacketSender.sendGetName(logic.getSelectedRoom(), this.key);
         }
         for (final ItemEquip e : this.equips) {
             if (e == null) {
-                client.sendGetEquip(this.key);
+                PacketSender.sendGetEquip(logic.getSelectedRoom(), this.key);
                 break;
             }
         }
         if (this.stats[Globals.STAT_MAXHP] <= 0) {
-            client.sendGetStat(this.key, Globals.STAT_MAXHP);
+            PacketSender.sendGetStat(logic.getSelectedRoom(), this.key, Globals.STAT_MAXHP);
         }
     }
 

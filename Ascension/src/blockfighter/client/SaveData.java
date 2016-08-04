@@ -44,10 +44,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
 
-/**
- *
- * @author Ken Kwan
- */
 public class SaveData {
 
     private final double[] baseStats = new double[Globals.NUM_STATS],

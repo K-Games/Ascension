@@ -11,10 +11,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
-/**
- *
- * @author Ken Kwan
- */
 public class ScreenLoading extends ScreenMenu {
 
     private GameMap map;

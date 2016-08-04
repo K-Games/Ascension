@@ -12,10 +12,6 @@ import java.util.concurrent.TimeUnit;
 import javax.imageio.ImageIO;
 import org.apache.commons.io.FileUtils;
 
-/**
- *
- * @author Ken Kwan
- */
 public class Globals {
 
     public static boolean SKIP_TITLE = false;

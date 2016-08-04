@@ -4,10 +4,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
-/**
- *
- * @author Ken Kwan
- */
 public class MouseHandler implements MouseListener, MouseMotionListener {
 
     private static LogicModule logic;

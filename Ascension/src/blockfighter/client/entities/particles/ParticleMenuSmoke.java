@@ -4,10 +4,6 @@ import blockfighter.client.Globals;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
-/**
- *
- * @author Ken Kwan
- */
 public class ParticleMenuSmoke extends Particle {
 
     public ParticleMenuSmoke(final int k, final int x, final int y) {

@@ -16,10 +16,6 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import org.apache.commons.io.FileUtils;
 
-/**
- *
- * @author Ken Kwan
- */
 public class ScreenServerList extends ScreenMenu {
 
     public static final byte STATUS_CONNECTING = 0,
@@ -276,7 +272,7 @@ public class ScreenServerList extends ScreenMenu {
                 break;
             default:
                 enableFields();
-                this.status = "Could not connect: Unkown Status";
+                this.status = "Could not connect: Unknown Status";
         }
     }
 

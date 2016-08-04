@@ -2,10 +2,6 @@ package blockfighter.client.net;
 
 import blockfighter.client.Globals;
 
-/**
- *
- * @author Ken Kwan
- */
 public class PacketHandler {
 
     private static GameClient gameClient;
