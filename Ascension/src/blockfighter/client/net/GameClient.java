@@ -134,8 +134,8 @@ public class GameClient extends Thread {
             this.loggedIn = true;
             notify();
         }
-
-        final ScreenLoading loading = new ScreenLoading(key, this);
+        logic.setMyPlayerKey(key);
+        final ScreenLoading loading = new ScreenLoading();
         logic.setScreen(loading);
         try {
             loading.load(mapID);
@@ -146,7 +146,7 @@ public class GameClient extends Thread {
                 }
             }
             System.out.println("Finished Loading");
-            ScreenIngame ingameScreen = new ScreenIngame(key, size, loading.getLoadedMap(), this);
+            ScreenIngame ingameScreen = new ScreenIngame(size, loading.getLoadedMap(), this);
             while (!this.dataQueue.isEmpty()) {
                 ingameScreen.queueData(this.dataQueue.poll());
             }

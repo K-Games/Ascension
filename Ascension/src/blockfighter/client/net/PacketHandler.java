@@ -23,9 +23,6 @@ public class PacketHandler {
             case Globals.DATA_PLAYER_CREATE:
                 receiveCreate(data);
                 break;
-            case Globals.DATA_PING:
-                receiveGetPing(data);
-                break;
             default:
                 receiveData(data);
                 break;
@@ -50,10 +47,6 @@ public class PacketHandler {
                 }
             }
         }.start();
-    }
-
-    private static void receiveGetPing(final byte[] data) {
-        gameClient.setPing(data[1]);
     }
 
     private static void receiveData(final byte[] data) {

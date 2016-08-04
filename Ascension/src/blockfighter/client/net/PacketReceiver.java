@@ -18,10 +18,6 @@ public class PacketReceiver extends Listener {
     }
 
     @Override
-    public void connected(Connection connection) {
-    }
-
-    @Override
     public void received(Connection connection, Object object) {
         if (object instanceof byte[]) {
             PacketHandler.process((byte[]) object);
