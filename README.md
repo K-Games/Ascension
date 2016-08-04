@@ -3,28 +3,12 @@
 # Description
 An multiplayer action 2D sidescrolling brawler coded in pure Java.
 
-# Version 0.19 Release
+# Version 0.19 Update 1
 ## Gameplay Changes
-* Players can now control their direction in midair.
-* Map - Moved platforms slightly closer.
-* Fixed Firebrand burn damage missing one tick.
-* Magnetize pull time increased from 0.2s to 0.35s.
 
 ## Client Changes
-* Fixed a typo in the Title in the title screen.
-* Critical hit damage in the Stats screen now match with the Inventory screen.
-* Players cannot login with no weapon or skills equipped.
-* Minor visual bug fix in the Login screen when logging out.
-* Update map visuals.
-* Fixed being disconnected if loading took too long.
 
 ## Server Changes
-* Fixed a rare concurrentcy bug with Reflect and Resist.
-* EXP gains is a modifiable property in config using `expmult`. Defaults to 0.05.
-* Max packets per connection can now be configured with `maxpackets`. Defaults to 1000.
-* Network performance improvement.
-* Unused UDP support integrated.
-* Improved performance when removing entities.
 
 # Credits
 ### Developer/Game Designer/Visual Designs
