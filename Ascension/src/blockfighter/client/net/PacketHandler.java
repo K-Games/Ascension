@@ -43,7 +43,11 @@ public class PacketHandler {
         new Thread() {
             @Override
             public void run() {
-                gameClient.receiveLogin(data);
+                try {
+                    gameClient.receiveLogin(data);
+                } catch (Exception e) {
+                    gameClient.shutdownClient((byte) -1);
+                }
             }
         }.start();
     }
