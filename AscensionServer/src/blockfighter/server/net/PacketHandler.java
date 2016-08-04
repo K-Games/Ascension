@@ -29,10 +29,20 @@ public class PacketHandler {
         final byte roomIndex = Globals.SERVER_ROOMNUM_TO_ROOMINDEX.get(room);
         switch (dataType) {
             case Globals.DATA_PLAYER_LOGIN:
-                receivePlayerLogin(data, roomIndex, c);
+                try {
+                    receivePlayerLogin(data, roomIndex, c);
+                } catch (Exception e) {
+                    Globals.logError(e.getLocalizedMessage(), e, true);
+                    c.close();
+                }
                 break;
             case Globals.DATA_PLAYER_CREATE:
-                receivePlayerCreate(data, roomIndex, c);
+                try {
+                    receivePlayerCreate(data, roomIndex, c);
+                } catch (Exception e) {
+                    Globals.logError(e.getLocalizedMessage(), e, true);
+                    c.close();
+                }
                 break;
             case Globals.DATA_PLAYER_GET_ALL:
                 receivePlayerGetAll(data, roomIndex, c);
@@ -341,11 +351,12 @@ public class PacketHandler {
             return;
         }
 
-        final byte[] bytes = new byte[Globals.PACKET_BYTE * 4];
+        final byte[] bytes = new byte[Globals.PACKET_BYTE * 5];
         bytes[0] = Globals.DATA_PLAYER_LOGIN;
         bytes[1] = Globals.LOGIN_SUCCESS;
         bytes[2] = Globals.GAME_MAJOR_VERSION;
         bytes[3] = Globals.GAME_MINOR_VERSION;
+        bytes[4] = Globals.GAME_UPDATE_NUMBER;
         PacketSender.sendConnection(bytes, c);
         Globals.log(PacketHandler.class, "DATA_PLAYER_LOGIN " + c + " Logged in. Sent Version Data: " + Globals.GAME_MAJOR_VERSION + "." + Globals.GAME_MINOR_VERSION, Globals.LOG_TYPE_DATA, true);
     }

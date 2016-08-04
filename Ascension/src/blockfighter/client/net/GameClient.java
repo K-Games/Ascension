@@ -61,8 +61,11 @@ public class GameClient extends Thread {
 
     }
 
-    public void shutdownClient() {
+    public void shutdownClient(final byte status) {
         client.close();
+        if (logic.getScreen() instanceof ScreenServerList) {
+            ((ScreenServerList) logic.getScreen()).setStatus(status);
+        }
         if (this.receiver != null) {
             this.receiver = null;
         }
@@ -75,37 +78,22 @@ public class GameClient extends Thread {
         byte loginResponse = data[1];
         switch (loginResponse) {
             case Globals.LOGIN_SUCCESS:
-                if (data[2] != Globals.GAME_MAJOR_VERSION || data[3] != Globals.GAME_MINOR_VERSION) {
-                    shutdownClient();
-                    if (logic.getScreen() instanceof ScreenServerList) {
-                        ((ScreenServerList) logic.getScreen()).setStatus(ScreenServerList.STATUS_WRONGVERSION);
-                    }
+                if (data[2] != Globals.GAME_MAJOR_VERSION || data[3] != Globals.GAME_MINOR_VERSION || data[4] != Globals.GAME_UPDATE_NUMBER) {
+                    shutdownClient(ScreenServerList.STATUS_WRONGVERSION);
                     return;
                 }
                 break;
             case Globals.LOGIN_FAIL_UID_IN_ROOM:
-                shutdownClient();
-                if (logic.getScreen() instanceof ScreenServerList) {
-                    ((ScreenServerList) logic.getScreen()).setStatus(ScreenServerList.STATUS_UIDINROOM);
-                }
+                shutdownClient(ScreenServerList.STATUS_UIDINROOM);
                 return;
             case Globals.LOGIN_FAIL_FULL_ROOM:
-                shutdownClient();
-                if (logic.getScreen() instanceof ScreenServerList) {
-                    ((ScreenServerList) logic.getScreen()).setStatus(ScreenServerList.STATUS_FULLROOM);
-                }
+                shutdownClient(ScreenServerList.STATUS_FULLROOM);
                 return;
             case Globals.LOGIN_FAIL_OUTSIDE_LEVEL_RANGE:
-                shutdownClient();
-                if (logic.getScreen() instanceof ScreenServerList) {
-                    ((ScreenServerList) logic.getScreen()).setStatus(ScreenServerList.STATUS_OUTSIDELEVEL);
-                }
+                shutdownClient(ScreenServerList.STATUS_OUTSIDELEVEL);
                 return;
             default:
-                shutdownClient();
-                if (logic.getScreen() instanceof ScreenServerList) {
-                    ((ScreenServerList) logic.getScreen()).setStatus((byte) -1);
-                }
+                shutdownClient((byte) -1);
                 return;
         }
 
@@ -122,10 +110,7 @@ public class GameClient extends Thread {
             }
         }
         if (attempts >= 5) {
-            shutdownClient();
-            if (logic.getScreen() instanceof ScreenServerList) {
-                ((ScreenServerList) logic.getScreen()).setStatus(ScreenServerList.STATUS_FAILEDCONNECT);
-            }
+            shutdownClient(ScreenServerList.STATUS_FAILEDCONNECT);
         }
     }
 
@@ -200,12 +185,6 @@ public class GameClient extends Thread {
 
     public void sendMoveKey(final byte k, final byte dir, final boolean b) {
         PacketSender.sendMove(logic.getSelectedRoom(), k, dir, b);
-    }
-
-    public void setPing(final byte data) {
-        if (logic.getScreen() instanceof ScreenIngame) {
-            ((ScreenIngame) logic.getScreen()).setPing(data);
-        }
     }
 
     public int getPing() {

@@ -23,7 +23,7 @@ import org.apache.commons.io.FileUtils;
 public class ScreenServerList extends ScreenMenu {
 
     public static final byte STATUS_CONNECTING = 0,
-            STATUS_SOCKETCLOSED = 1,
+            STATUS_NORMAL_SHUTDOWN = 1,
             STATUS_FAILEDCONNECT = 2,
             STATUS_NOSKILL = 3,
             STATUS_WRONGVERSION = 4,
@@ -31,7 +31,8 @@ public class ScreenServerList extends ScreenMenu {
             STATUS_UIDINROOM = 6,
             STATUS_OUTSIDELEVEL = 7,
             STATUS_NOEQUIP = 8,
-            STATUS_NOSKILL_NOEQUIP = 9;
+            STATUS_NOSKILL_NOEQUIP = 9,
+            STATUS_DISCONNECTED = 10;
 
     private static final JTextField SERVERADDRESS_FIELD = new JTextField();
     private static final JComboBox<String> SERVER_ROOMS;
@@ -227,7 +228,7 @@ public class ScreenServerList extends ScreenMenu {
     }
 
     public void setStatus(final byte code) {
-        if (code == STATUS_FAILEDCONNECT && this.statusCode != 0) {
+        if ((code == STATUS_FAILEDCONNECT || code == STATUS_DISCONNECTED) && this.statusCode != 0) {
             return;
         }
         this.statusCode = code;
@@ -235,9 +236,11 @@ public class ScreenServerList extends ScreenMenu {
             case STATUS_CONNECTING:
                 this.status = "Connecting...";
                 break;
-            case STATUS_SOCKETCLOSED:
+            case STATUS_NORMAL_SHUTDOWN:
+                break;
+            case STATUS_DISCONNECTED:
                 enableFields();
-                this.status = "Could not connect: Socket closed.";
+                this.status = "Could not connect: Disconnected by server.";
                 break;
             case STATUS_FAILEDCONNECT:
                 enableFields();

@@ -142,7 +142,11 @@ public class LogicModule implements Runnable {
     }
 
     private void shutdownClient() {
-        client.shutdownClient(ScreenServerList.STATUS_NORMAL_SHUTDOWN);
+        shutdownClient(ScreenServerList.STATUS_NORMAL_SHUTDOWN);
+    }
+
+    public void shutdownClient(final byte status) {
+        client.shutdownClient(status);
         setMyPlayerKey((byte) -1);
     }
 }

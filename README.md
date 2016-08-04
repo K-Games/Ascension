@@ -9,6 +9,7 @@ An multiplayer action 2D sidescrolling brawler coded in pure Java.
 ## Client Changes
 * Moved the client player key to Logic Module.
 * Fixed getting stuck logging in when receiving an invalid packet response.
+* Client version check now checks Update Number.
 
 ## Server Changes
 
