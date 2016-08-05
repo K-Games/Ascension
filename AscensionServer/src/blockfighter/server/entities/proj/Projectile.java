@@ -69,7 +69,7 @@ public abstract class Projectile extends Thread implements GameEntity {
         if (this.room.getMap().isPvP()) {
             for (final Map.Entry<Byte, Player> pEntry : this.room.getPlayers().entrySet()) {
                 final Player p = pEntry.getValue();
-                if (p != getOwner() && !this.pHit.containsKey(p.getKey()) && !p.isInvulnerable() && p.intersectHitbox(this.hitbox[0])) {
+                if (p != getOwner() && !this.pHit.containsKey(p.getKey()) && !p.isDead() && !p.isInvulnerable() && p.intersectHitbox(this.hitbox[0])) {
                     this.playerQueue.add(p);
                     this.pHit.put(p.getKey(), p);
                     queueEffect(this);
@@ -132,7 +132,7 @@ public abstract class Projectile extends Thread implements GameEntity {
         return this.key;
     }
 
-    public void processQueue() {
+    public void applyEffect() {
     }
 
     public Rectangle2D.Double[] getHitbox() {

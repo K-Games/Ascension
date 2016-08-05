@@ -341,7 +341,7 @@ public class LogicModule extends Thread {
                 while (!this.projEffectQueue.isEmpty()) {
                     final Projectile proj = this.projEffectQueue.poll();
                     if (proj != null) {
-                        proj.processQueue();
+                        proj.applyEffect();
                     }
                 }
             } catch (final Exception ex) {

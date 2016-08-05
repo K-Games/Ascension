@@ -5,15 +5,18 @@ An multiplayer action 2D sidescrolling brawler coded in pure Java.
 
 # Version 0.19 Update 1
 ## Gameplay Changes
+* Some skills now have screen shake when dealing damage.
 
 ## Client Changes
 * Moved the client player key to Logic Module.
 * Fixed getting stuck logging in when receiving an invalid packet response.
 * Client version check now checks Update Number.
 * Removed redundant code.
- 
+* Screen shake implemented.
+
 ## Server Changes
 * Server now sends client Update Number for version check.
+* Send screen shake when some projectiles deal damage.
 
 # Credits
 ### Developer/Game Designer/Visual Designs

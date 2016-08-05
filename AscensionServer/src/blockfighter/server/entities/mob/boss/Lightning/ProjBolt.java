@@ -21,7 +21,7 @@ public class ProjBolt extends MobProjectile {
     }
 
     @Override
-    public void processQueue() {
+    public void applyEffect() {
         while (!this.playerQueue.isEmpty()) {
             final Player p = this.playerQueue.poll();
             if (p != null && !p.isDead()) {

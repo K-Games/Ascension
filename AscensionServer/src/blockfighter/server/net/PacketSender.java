@@ -52,6 +52,12 @@ public class PacketSender implements Runnable {
         sendAll(bytes, room);
     }
 
+    public static void sendScreenShake(final Player player) {
+        final byte[] bytes = new byte[Globals.PACKET_BYTE * 1];
+        bytes[0] = Globals.DATA_SCREEN_SHAKE;
+        sendPlayer(bytes, player);
+    }
+
     public static void sendSFX(final byte room, final byte sfxID, final double soundX, final double soundY) {
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 2 + Globals.PACKET_INT * 2];
         bytes[0] = Globals.DATA_SOUND_EFFECT;

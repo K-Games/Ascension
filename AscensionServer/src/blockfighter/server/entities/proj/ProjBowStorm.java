@@ -35,7 +35,7 @@ public class ProjBowStorm extends Projectile {
     }
 
     @Override
-    public void processQueue() {
+    public void applyEffect() {
         while (!this.playerQueue.isEmpty()) {
             final Player p = this.playerQueue.poll(), owner = getOwner();
             if (p != null && !p.isDead()) {

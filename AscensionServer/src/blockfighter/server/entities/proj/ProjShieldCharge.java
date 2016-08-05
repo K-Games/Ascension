@@ -8,6 +8,7 @@ import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.player.skills.Skill;
+import blockfighter.server.net.PacketSender;
 import java.awt.geom.Rectangle2D;
 
 public class ProjShieldCharge extends Projectile {
@@ -37,7 +38,8 @@ public class ProjShieldCharge extends Projectile {
     }
 
     @Override
-    public void processQueue() {
+    public void applyEffect() {
+        PacketSender.sendScreenShake(this.getOwner());
         while (!this.playerQueue.isEmpty()) {
             final Player p = this.playerQueue.poll(), owner = getOwner();
             if (p != null && !p.isDead()) {

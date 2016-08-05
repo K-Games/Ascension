@@ -26,7 +26,8 @@ public class ProjBowVolley extends Projectile {
     }
 
     @Override
-    public void processQueue() {
+    public void applyEffect() {
+        PacketSender.sendScreenShake(this.getOwner());
         while (!this.playerQueue.isEmpty()) {
             final Player p = this.playerQueue.poll(), owner = getOwner();
             if (p != null && !p.isDead()) {

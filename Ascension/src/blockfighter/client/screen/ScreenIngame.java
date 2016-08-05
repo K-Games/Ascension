@@ -47,13 +47,16 @@ public class ScreenIngame extends Screen {
     private final ConcurrentLinkedQueue<Integer> ingameNumKeys = new ConcurrentLinkedQueue<>();
     private int numIngameNumKeys = 500;
 
-    private double screenShakeX = 0, screenShakeY = 0;
+    private double screenShakeX, screenShakeY;
+    private double screenShakeXAmount, screenShakeYAmount;
     private boolean screenShake = false;
+    private long screenShakeDuration, screenShakeStartTime;
 
     private Rectangle2D logoutBox;
 
     private int ping = 0;
 
+    private long lastScreenShakeTime = 0;
     private long lastUpdateTime = 0;
     private long lastRequestTime = 50;
     private long lastQueueTime = 0;
@@ -126,10 +129,22 @@ public class ScreenIngame extends Screen {
             this.lastUpdateTime = now;
         }
 
+        if (now - this.lastScreenShakeTime >= Globals.msToNs(25)) {
+            if (now - this.screenShakeStartTime <= Globals.msToNs(this.screenShakeDuration)) {
+                screenShakeX = Globals.rng(3) * screenShakeXAmount - screenShakeXAmount;
+                screenShakeY = Globals.rng(3) * screenShakeYAmount - screenShakeYAmount;
+                this.screenShake = true;
+            } else {
+                this.screenShake = false;
+            }
+            this.lastScreenShakeTime = now;
+        }
+
         if (now - this.lastRequestTime >= Globals.REQUESTALL_UPDATE) {
             PacketSender.sendGetAll(logic.getSelectedRoom(), logic.getMyPlayerKey());
             this.lastRequestTime = now;
         }
+
         if (now - this.lastPingTime >= Globals.PING_UPDATE) {
             PacketSender.sendGetPing();
             this.lastPingTime = now;
@@ -434,7 +449,20 @@ public class ScreenIngame extends Screen {
                 case Globals.DATA_SOUND_EFFECT:
                     dataSoundEffect(data);
                     break;
+                case Globals.DATA_SCREEN_SHAKE:
+                    dataScreenShake(data);
+                    break;
             }
+        }
+    }
+
+    private void dataScreenShake(final byte[] data) {
+        if (!this.screenShake) {
+            this.screenShake = true;
+            this.screenShakeStartTime = logic.getTime();
+            this.screenShakeDuration = 50;
+            this.screenShakeXAmount = 2;
+            this.screenShakeYAmount = 2;
         }
     }
 
