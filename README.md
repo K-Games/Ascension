@@ -13,6 +13,7 @@ An multiplayer action 2D sidescrolling brawler coded in pure Java.
 * Client version check now checks Update Number.
 * Removed redundant code.
 * Screen shake implemented.
+* Added EXP bar to ingame HUD.
 
 ## Server Changes
 * Server now sends client Update Number for version check.

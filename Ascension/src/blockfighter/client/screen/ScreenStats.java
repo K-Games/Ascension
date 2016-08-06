@@ -142,8 +142,8 @@ public class ScreenStats extends ScreenMenu {
 
         double[] baseStats = this.c.getBaseStats();
         String exp = "Exp: " + this.df.format((baseStats[Globals.STAT_EXP])) + "/"
-                + this.df.format(Globals.calcEXPtoNxtLvl(baseStats[Globals.STAT_LEVEL]))
-                + "(" + this.df.format((baseStats[Globals.STAT_EXP] / Globals.calcEXPtoNxtLvl(baseStats[Globals.STAT_LEVEL])) * 100) + "%)";
+                + this.df.format(baseStats[Globals.STAT_MAXEXP])
+                + "(" + this.df.format((baseStats[Globals.STAT_EXP] / baseStats[Globals.STAT_MAXEXP]) * 100) + "%)";
 
         g.setFont(Globals.ARIAL_18PT);
         drawStringOutline(g, exp, EXPBAR_BOX_X, EXPBAR_BOX_Y, 1);
@@ -157,7 +157,7 @@ public class ScreenStats extends ScreenMenu {
         g.setColor(Color.BLACK);
         g.fillRect(EXPBAR_BOX_X + 2, EXPBAR_BOX_Y + 7, 446, 36);
         g.setColor(new Color(255, 175, 0));
-        g.fillRect(EXPBAR_BOX_X + 3, EXPBAR_BOX_Y + 8, (int) (baseStats[Globals.STAT_EXP] / Globals.calcEXPtoNxtLvl(baseStats[Globals.STAT_LEVEL]) * 444), 34);
+        g.fillRect(EXPBAR_BOX_X + 3, EXPBAR_BOX_Y + 8, (int) (baseStats[Globals.STAT_EXP] / baseStats[Globals.STAT_MAXEXP] * 444), 34);
 
     }
 
