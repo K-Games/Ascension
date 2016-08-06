@@ -70,10 +70,13 @@ public class ScreenIngame extends Screen {
     private final GameMap map;
 
     private int drawInfoHotkey = -1;
+    private double expBarWidth, expBarDelta, expBarLevel;
 
     public ScreenIngame(final byte numPlayer, final GameMap m, final GameClient cl) {
         this.client = cl;
         this.c = logic.getSelectedChar();
+        this.expBarLevel = this.c.getBaseStats()[Globals.STAT_LEVEL];
+
         this.players = new ConcurrentHashMap<>(numPlayer);
         for (int j = 0; j < this.hotkeySlots.length; j++) {
             this.hotkeySlots[j] = new Rectangle2D.Double(Globals.WINDOW_WIDTH / 2 - Globals.HUD[0].getWidth() / 2 + 10 + (j * 66), 656, 60,
@@ -256,10 +259,7 @@ public class ScreenIngame extends Screen {
         g.setRenderingHint(
                 RenderingHints.KEY_TEXT_ANTIALIASING,
                 RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
-        final BufferedImage hud = Globals.HUD[0];
-        g.drawImage(hud, Globals.WINDOW_WIDTH / 2 - hud.getWidth() / 2, Globals.WINDOW_HEIGHT - hud.getHeight(), null);
-
-        drawHUD(g, hud);
+        drawHUD(g);
         drawHotkeys(g);
 
         if (this.drawInfoHotkey != -1) {
@@ -324,20 +324,57 @@ public class ScreenIngame extends Screen {
         }
     }
 
-    private void drawHUD(final Graphics2D g, final BufferedImage hud) {
+    private void drawHUD(final Graphics2D g) {
+        final BufferedImage hud = Globals.HUD[0];
+        final BufferedImage expHud = Globals.HUD[2];
+
+        g.drawImage(expHud, Globals.WINDOW_WIDTH / 2 - expHud.getWidth() / 2, Globals.WINDOW_HEIGHT - hud.getHeight() - expHud.getHeight(), null);
+        g.drawImage(hud, Globals.WINDOW_WIDTH / 2 - hud.getWidth() / 2, Globals.WINDOW_HEIGHT - hud.getHeight(), null);
+
         if (this.players.containsKey(logic.getMyPlayerKey())) {
             final BufferedImage hpbar = Globals.HUD[1];
-            final double hpbarWidth;
+            final BufferedImage expbar = Globals.HUD[3];
+            final double hpBarWidth;
 
             if (this.players.get(logic.getMyPlayerKey()).getStat(Globals.STAT_MINHP) <= this.players.get(logic.getMyPlayerKey()).getStat(Globals.STAT_MAXHP)) {
-                hpbarWidth = this.players.get(logic.getMyPlayerKey()).getStat(Globals.STAT_MINHP) / this.players.get(logic.getMyPlayerKey()).getStat(Globals.STAT_MAXHP);
+                hpBarWidth = this.players.get(logic.getMyPlayerKey()).getStat(Globals.STAT_MINHP) / this.players.get(logic.getMyPlayerKey()).getStat(Globals.STAT_MAXHP);
             } else {
-                hpbarWidth = 1;
+                hpBarWidth = 1;
             }
 
+            if (this.c.getBaseStats()[Globals.STAT_EXP] <= this.c.getBaseStats()[Globals.STAT_MAXEXP]) {
+                if (this.expBarLevel != this.c.getBaseStats()[Globals.STAT_LEVEL]) {
+                    if (this.expBarWidth >= 1) {
+                        this.expBarDelta = 0;
+                        this.expBarWidth = 0;
+                        this.expBarLevel = this.c.getBaseStats()[Globals.STAT_LEVEL];
+                    }
+                }
+                double expBarRealWidth = (this.expBarLevel == this.c.getBaseStats()[Globals.STAT_LEVEL]) ? this.c.getBaseStats()[Globals.STAT_EXP] / this.c.getBaseStats()[Globals.STAT_MAXEXP] : 1;
+                if (this.expBarWidth < expBarRealWidth) {
+                    if (expBarDelta > 0) {
+                        this.expBarWidth += this.expBarDelta;
+                        if (this.expBarWidth > 1) {
+                            this.expBarWidth = 1;
+                        }
+                    } else {
+                        expBarDelta = (expBarRealWidth - expBarWidth) / (1.5 * Globals.RENDER_FPS);
+                    }
+                } else {
+                    this.expBarWidth = expBarRealWidth;
+                    this.expBarDelta = 0;
+                }
+
+            } else {
+                this.expBarWidth = 0;
+            }
+
+            g.drawImage(expbar,
+                    Globals.WINDOW_WIDTH / 2 - expHud.getWidth() / 2 + 2, Globals.WINDOW_HEIGHT - hud.getHeight() - expHud.getHeight() + 2,
+                    (int) (expBarWidth * 802D), expbar.getHeight(), null);
             g.drawImage(hpbar,
                     Globals.WINDOW_WIDTH / 2 - hud.getWidth() / 2 + 2, Globals.WINDOW_HEIGHT - hud.getHeight() + 2,
-                    (int) (hpbarWidth * 802D), 38, null);
+                    (int) (hpBarWidth * 802D), 38, null);
             g.setFont(Globals.ARIAL_18PT);
             final int width = g.getFontMetrics().stringWidth(
                     (int) this.players.get(logic.getMyPlayerKey()).getStat(Globals.STAT_MINHP) + "/"
@@ -499,6 +536,7 @@ public class ScreenIngame extends Screen {
         final int amount = Globals.bytesToInt(Arrays.copyOfRange(data, 1, 5));
         this.notifications.add(new Notification(amount));
         this.c.addExp(amount);
+        this.expBarDelta = 0;
     }
 
     private void dataPlayerSetCooldown(final byte[] data) {

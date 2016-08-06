@@ -162,7 +162,7 @@ public class Globals {
 
     public final static byte NUM_EQUIP_SLOTS = 11;
 
-    public final static byte NUM_STATS = 16,
+    public final static byte NUM_STATS = 17,
             STAT_POWER = 0,
             STAT_DEFENSE = 1,
             STAT_SPIRIT = 2,
@@ -178,7 +178,8 @@ public class Globals {
             STAT_POINTS = 12,
             STAT_EXP = 13,
             STAT_SKILLPOINTS = 14,
-            STAT_DAMAGEREDUCT = 15;
+            STAT_DAMAGEREDUCT = 15,
+            STAT_MAXEXP = 16;
 
     public final static double HP_BASE = 3000, // PvE = 100
             HP_MULT = 200, // PvE = 30

@@ -501,18 +501,18 @@ public class SaveData {
     public void addExp(final double amount) {
         this.baseStats[Globals.STAT_EXP] += amount;
         if (this.baseStats[Globals.STAT_LEVEL] >= 100) {
-            if (this.baseStats[Globals.STAT_EXP] >= Globals.calcEXPtoNxtLvl(this.baseStats[Globals.STAT_LEVEL])) {
-                this.baseStats[Globals.STAT_EXP] = Globals.calcEXPtoNxtLvl(this.baseStats[Globals.STAT_LEVEL]);
+            if (this.baseStats[Globals.STAT_EXP] >= this.baseStats[Globals.STAT_MAXEXP]) {
+                this.baseStats[Globals.STAT_EXP] = this.baseStats[Globals.STAT_MAXEXP];
             }
             return;
         }
-        while (this.baseStats[Globals.STAT_EXP] >= Globals.calcEXPtoNxtLvl(this.baseStats[Globals.STAT_LEVEL])) {
+        while (this.baseStats[Globals.STAT_EXP] >= this.baseStats[Globals.STAT_MAXEXP]) {
             levelUp();
         }
     }
 
     public void levelUp() {
-        this.baseStats[Globals.STAT_EXP] -= Globals.calcEXPtoNxtLvl(this.baseStats[Globals.STAT_LEVEL]);
+        this.baseStats[Globals.STAT_EXP] -= this.baseStats[Globals.STAT_MAXEXP];
         this.baseStats[Globals.STAT_LEVEL] += 1;
         calcStats();
         saveData(this.saveNum, this);
@@ -582,6 +582,7 @@ public class SaveData {
         this.totalStats[Globals.STAT_CRITCHANCE] = this.baseStats[Globals.STAT_CRITCHANCE] + this.bonusStats[Globals.STAT_CRITCHANCE];
         this.totalStats[Globals.STAT_CRITDMG] = this.baseStats[Globals.STAT_CRITDMG] + this.bonusStats[Globals.STAT_CRITDMG];
         this.totalStats[Globals.STAT_DAMAGEREDUCT] = Globals.calcReduction(this.totalStats[Globals.STAT_ARMOR]);
+        this.baseStats[Globals.STAT_MAXEXP] = Globals.calcEXPtoNxtLvl(this.baseStats[Globals.STAT_LEVEL]);
     }
 
     public ItemEquip[] getInventory(final byte type) {
