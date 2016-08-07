@@ -162,7 +162,7 @@ public class Globals {
 
     public final static byte NUM_EQUIP_SLOTS = 11;
 
-    public final static byte NUM_STATS = 16,
+    public final static byte NUM_STATS = 17,
             STAT_POWER = 0,
             STAT_DEFENSE = 1,
             STAT_SPIRIT = 2,
@@ -178,7 +178,8 @@ public class Globals {
             STAT_POINTS = 12,
             STAT_EXP = 13,
             STAT_SKILLPOINTS = 14,
-            STAT_DAMAGEREDUCT = 15;
+            STAT_DAMAGEREDUCT = 15,
+            STAT_MAXEXP = 16;
 
     public final static double HP_BASE = 3000, // PvE = 100
             HP_MULT = 200, // PvE = 30
@@ -251,7 +252,7 @@ public class Globals {
             LOGIN_FAIL_OUTSIDE_LEVEL_RANGE = 0x03;
 
     public final static BufferedImage[][] CHAR_SPRITE = new BufferedImage[NUM_PLAYER_ANIM_STATE][];
-    public final static BufferedImage[] HUD = new BufferedImage[2];
+    public final static BufferedImage[] HUD = new BufferedImage[4];
     public static BufferedImage TITLE;
 
     public final static BufferedImage[] MENU_BG = new BufferedImage[3];
@@ -485,8 +486,10 @@ public class Globals {
                 }
             }
         }
-        HUD[0] = Globals.loadTextureResource("sprites/ui/ingame/ui.png");
+        HUD[0] = Globals.loadTextureResource("sprites/ui/ingame/hud.png");
         HUD[1] = Globals.loadTextureResource("sprites/ui/ingame/hp.png");
+        HUD[2] = Globals.loadTextureResource("sprites/ui/ingame/exphud.png");
+        HUD[3] = Globals.loadTextureResource("sprites/ui/ingame/exp.png");
 
         for (byte i = 0; i < MENU_BG.length; i++) {
             MENU_BG[i] = Globals.loadTextureResource("sprites/ui/menu/bg" + (i + 1) + ".png");

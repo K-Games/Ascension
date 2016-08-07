@@ -705,7 +705,7 @@ public class Player extends Thread implements GameEntity {
             }
         }
 
-        // Resistance Passive Snapshot HP 
+        // Resistance Passive Snapshot HP
         if (hasSkill(Skill.PASSIVE_RESIST) && this.skills.get(Skill.PASSIVE_RESIST).canCast()) {
             if (resistDamageSum.size() >= Globals.LOGIC_TICKS_PER_SEC * 2) {
                 resistDamageSum.poll();
@@ -842,7 +842,7 @@ public class Player extends Thread implements GameEntity {
 
     private void die(final Player killer) {
         if (killer != null) {
-            killer.giveEXP(Globals.calcEXPtoNxtLvl(this.stats[Globals.STAT_LEVEL]) * Globals.EXP_MULTIPLIER);
+            killer.giveEXP(this.stats[Globals.STAT_MAXEXP] * Globals.EXP_MULTIPLIER);
             killer.giveDrop(this.stats[Globals.STAT_LEVEL]);
         }
         PacketSender.sendParticle(this.room.getRoom(), Globals.PARTICLE_BLOOD, this.key);
@@ -925,6 +925,7 @@ public class Player extends Thread implements GameEntity {
         if (hasSkill(Skill.PASSIVE_KEENEYE)) {
             totalCritChance += 0.01 + 0.003 * getSkillLevel(Skill.PASSIVE_KEENEYE);
         }
+        System.out.println(totalCritChance);
         return Globals.rng(10000) + 1 < (int) (totalCritChance * 10000);
     }
 
@@ -968,6 +969,7 @@ public class Player extends Thread implements GameEntity {
         this.stats[Globals.STAT_REGEN] = this.stats[Globals.STAT_REGEN] + this.bonusStats[Globals.STAT_REGEN];
         this.stats[Globals.STAT_ARMOR] = this.stats[Globals.STAT_ARMOR] + this.bonusStats[Globals.STAT_ARMOR];
         this.stats[Globals.STAT_DAMAGEREDUCT] = Globals.calcReduction(this.stats[Globals.STAT_ARMOR]);
+        this.stats[Globals.STAT_MAXEXP] = Globals.calcEXPtoNxtLvl(this.stats[Globals.STAT_LEVEL]);
     }
 
     public void giveDrop(final double lvl) {
