@@ -10,9 +10,6 @@ import javax.swing.JPanel;
 
 public class RenderPanel extends JPanel {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 6032445082094163311L;
     private int FPSCount = 0;
     private Screen screen = null;

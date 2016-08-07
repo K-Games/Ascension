@@ -25,14 +25,9 @@ public abstract class Particle extends Thread {
 
     protected final int key;
     private static boolean LOADED = false;
-    /**
-     * Reference to Logic Module.
-     */
+
     protected static LogicModule logic;
 
-    /**
-     * The duration of this particle in ms.
-     */
     protected int duration;
 
     public static void init() {

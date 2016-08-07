@@ -68,9 +68,6 @@ public class Main {
         }
     }
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(final String[] args) {
         if (args.length > 0) {
             for (int i = 0; i < args.length; i++) {
