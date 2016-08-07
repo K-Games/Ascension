@@ -49,6 +49,7 @@ public class GameMapArena extends GameMap {
 
     @Override
     public void loadAssets() throws Exception {
+        System.out.println("Loading Map Arena Assets...");
         this.bg = Globals.loadTextureResource("sprites/maps/" + getMapID() + "/bg.png");
         if (this.bg == null) {
             throw new NullPointerException("Failed to load map " + getMapID() + " bg.");
@@ -80,5 +81,9 @@ public class GameMapArena extends GameMap {
 
     @Override
     public void prerender(Graphics2D g) {
+        g.drawImage(this.bg, 0, 0, null);
+        for (BufferedImage sprite : this.platforms) {
+            g.drawImage(sprite, 650, 350, null);
+        }
     }
 }

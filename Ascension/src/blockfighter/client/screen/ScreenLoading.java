@@ -14,10 +14,12 @@ import java.awt.image.BufferedImage;
 public class ScreenLoading extends ScreenMenu {
 
     private GameMap map;
-    private boolean effectsReadyToRender = false, rendered = false;
+    private boolean particlesReady = false, mapAssetsReady = false;
+    private boolean particlesRendered = false, mapAssetsRendered = false;
 
     public void load(final byte mapID) throws Exception {
         Particle.loadParticles();
+        this.particlesReady = true;
         switch (mapID) {
             case 0:
                 this.map = new GameMapArena();
@@ -27,7 +29,17 @@ public class ScreenLoading extends ScreenMenu {
                 break;
         }
         this.map.loadAssets();
-        this.effectsReadyToRender = true;
+        this.mapAssetsReady = true;
+    }
+
+    @Override
+    public void update() {
+        super.update();
+        if (this.particlesRendered && this.mapAssetsRendered) {
+            synchronized (this) {
+                notify();
+            }
+        }
     }
 
     public GameMap getLoadedMap() {
@@ -37,8 +49,8 @@ public class ScreenLoading extends ScreenMenu {
     @Override
     public void draw(final Graphics2D g) {
         final BufferedImage bg = Globals.MENU_BG[0];
-        if (this.effectsReadyToRender && !this.rendered) {
-            System.out.println("Prerendering Particles");
+        if (this.particlesReady && !this.particlesRendered) {
+            System.out.println("Prerendering Particles...");
             for (int i = 0; i < Globals.NUM_PARTICLE_EFFECTS; i++) {
                 if (Particle.getParticleSprites()[i] != null) {
                     for (final BufferedImage sprite : Particle.getParticleSprites()[i]) {
@@ -46,12 +58,15 @@ public class ScreenLoading extends ScreenMenu {
                     }
                 }
             }
-            this.map.prerender(g);
-            this.rendered = true;
-            synchronized (this) {
-                notify();
-            }
+            this.particlesRendered = true;
         }
+
+        if (this.mapAssetsReady && !this.mapAssetsRendered) {
+            System.out.println("Prerendering Map Assets...");
+            this.map.prerender(g);
+            this.mapAssetsRendered = true;
+        }
+
         g.drawImage(bg, 0, 0, null);
 
         g.setFont(Globals.ARIAL_18PT);
