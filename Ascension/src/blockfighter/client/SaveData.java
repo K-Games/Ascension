@@ -145,7 +145,18 @@ public class SaveData {
     }
 
     public static void saveData(final byte saveNum, final SaveData c) {
-        final byte[] data = new byte[46409 + Long.BYTES * 2];
+        final byte[] data = new byte[Globals.MAX_NAME_LENGTH //Name in UTF-8 Character
+                + Long.BYTES * 2 //UUID
+                + Integer.BYTES * 5 //Main stats
+                + Integer.BYTES * c.equipment.length * 11
+                + Integer.BYTES * c.inventory.length * c.inventory[0].length * 11
+                + Integer.BYTES * c.upgrades.length * 2
+                + Byte.BYTES * c.skills.length
+                + Byte.BYTES * c.hotkeys.length
+                + Integer.BYTES * 16 //Base Keybinds
+                + Integer.BYTES //EXP
+                ];
+
         byte[] temp = c.name.getBytes(StandardCharsets.UTF_8);
 
         int pos = 0;
