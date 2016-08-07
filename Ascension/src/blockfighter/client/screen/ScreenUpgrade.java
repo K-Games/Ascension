@@ -60,10 +60,10 @@ public class ScreenUpgrade extends ScreenMenu {
 
         UPGRADE_BOX[0] = new Rectangle2D.Double(UPGRADE_BOX_X, UPGRADE_BOX_Y + 30, 60, 60);
         UPGRADE_BOX[1] = new Rectangle2D.Double(UPGRADE_BOX_X + 160, UPGRADE_BOX_Y + 30, 60, 60);
-        COMBINE_BOX = new Rectangle2D.Double(UPGRADE_BOX_X + 20, UPGRADE_BOX_Y + 130, 180, 30);
+        COMBINE_BOX = new Rectangle2D.Double(UPGRADE_BOX_X + 20, UPGRADE_BOX_Y + 130, 180, 40);
 
         for (int i = 0; i < DESTROY_BOX.length; i++) {
-            DESTROY_BOX[i] = new Rectangle2D.Double(520 + i * 185, 655, 180, 30);
+            DESTROY_BOX[i] = new Rectangle2D.Double(520 + i * 185, 655, 180, 40);
         }
         PROMPT_BOX[0] = new Rectangle2D.Double(401, 400, 214, 112);
         PROMPT_BOX[1] = new Rectangle2D.Double(665, 400, 214, 112);

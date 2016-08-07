@@ -58,7 +58,7 @@ public class ScreenInventory extends ScreenMenu {
         EQUIP_SLOTS[Globals.ITEM_SHOE] = new Rectangle2D.Double(EQUIP_BOX_X + 115, EQUIP_BOX_Y + 280, 60, 60);
 
         for (int i = 0; i < DESTROY_BOX.length; i++) {
-            DESTROY_BOX[i] = new Rectangle2D.Double(520 + i * 185, 655, 180, 30);
+            DESTROY_BOX[i] = new Rectangle2D.Double(520 + i * 185, 655, 180, 40);
         }
         PROMPT_BOX[0] = new Rectangle2D.Double(401, 400, 214, 112);
         PROMPT_BOX[1] = new Rectangle2D.Double(665, 400, 214, 112);

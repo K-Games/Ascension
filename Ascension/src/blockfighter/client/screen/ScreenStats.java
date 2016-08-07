@@ -23,7 +23,7 @@ public class ScreenStats extends ScreenMenu {
         for (int i = 0; i < ADD_STAT_BOX.length; i++) {
             ADD_STAT_BOX[i] = new Rectangle2D.Double(MAINSTAT_BOX_X + 235 + 35 * (i / 3), MAINSTAT_BOX_Y + 15 + 25 * (i % 3), 30, 23);
         }
-        RESET_BOX = new Rectangle2D.Double(MAINSTAT_BOX_X, MAINSTAT_BOX_Y + 130, 180, 30);
+        RESET_BOX = new Rectangle2D.Double(MAINSTAT_BOX_X, MAINSTAT_BOX_Y + 130, 180, 40);
 
     }
 

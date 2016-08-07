@@ -92,7 +92,7 @@ public class ScreenSkills extends ScreenMenu {
         for (int i = 18; i < ADD_SKILL_BOX.length; i++) {
             ADD_SKILL_BOX[i] = new Rectangle2D.Double(SKILL_SLOTS[i].x + 59, SKILL_SLOTS[i].y + 37, 30, 23);
         }
-        RESET_BOX = new Rectangle2D.Double(1050, 630, 180, 30);
+        RESET_BOX = new Rectangle2D.Double(1050, 630, 180, 40);
     }
 
     public ScreenSkills() {

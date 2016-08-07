@@ -14,6 +14,7 @@ An multiplayer action 2D sidescrolling brawler coded in pure Java.
 * Removed redundant code.
 * Screen shake implemented.
 * Added EXP bar to ingame HUD.
+* Fixed 'Reset' buttons click area being slightly too small.
 
 ## Server Changes
 * Server now sends client Update Number for version check.

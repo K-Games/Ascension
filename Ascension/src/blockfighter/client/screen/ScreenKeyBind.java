@@ -18,7 +18,7 @@ public class ScreenKeyBind extends ScreenMenu {
 
     static {
         for (int i = 0; i < 12; i++) {
-            KEY_BOX[i] = new Rectangle2D.Double(365, 45 + (i * 50), 180, 30);
+            KEY_BOX[i] = new Rectangle2D.Double(365, 45 + (i * 50), 180, 40);
         }
         for (int i = 12; i < KEY_BOX.length; i++) {
             KEY_BOX[i] = new Rectangle2D.Double(800, 45 + ((i - 12) * 50), 180, 30);
