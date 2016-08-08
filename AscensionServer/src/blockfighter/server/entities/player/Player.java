@@ -925,7 +925,6 @@ public class Player extends Thread implements GameEntity {
         if (hasSkill(Skill.PASSIVE_KEENEYE)) {
             totalCritChance += 0.01 + 0.003 * getSkillLevel(Skill.PASSIVE_KEENEYE);
         }
-        System.out.println(totalCritChance);
         return Globals.rng(10000) + 1 < (int) (totalCritChance * 10000);
     }
 
