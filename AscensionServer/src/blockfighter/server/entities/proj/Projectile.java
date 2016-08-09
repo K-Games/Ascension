@@ -67,7 +67,7 @@ public abstract class Projectile extends Thread implements GameEntity {
             return;
         }
         if (this.room.getMap().isPvP()) {
-            for (final Map.Entry<Byte, Player> pEntry : this.room.getPlayers().entrySet()) {
+            for (final Map.Entry<Byte, Player> pEntry : this.room.getPlayersNearProj(this).entrySet()) {
                 final Player p = pEntry.getValue();
                 if (p != getOwner() && !this.pHit.containsKey(p.getKey()) && !p.isDead() && !p.isInvulnerable() && p.intersectHitbox(this.hitbox[0])) {
                     this.playerQueue.add(p);

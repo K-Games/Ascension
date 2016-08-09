@@ -5,8 +5,10 @@ import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.proj.Projectile;
 import blockfighter.server.maps.GameMap;
 import blockfighter.server.maps.GameMapArena;
+import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -21,6 +23,7 @@ public class LogicModule extends Thread {
 
     private long currentTime = 0;
     private byte room = -1;
+    private HashMap<Integer, HashMap<Byte, Player>> playerBuckets;
 
     private ConcurrentHashMap<Byte, Player> players = new ConcurrentHashMap<>(Globals.SERVER_MAX_PLAYERS, 0.9f,
             Math.max(Globals.SERVER_MAX_PLAYERS / 5, 3));
@@ -128,6 +131,77 @@ public class LogicModule extends Thread {
         //}
         resetKeys();
         this.map.spawnMapMobs(this);
+
+        double numRows = this.map.getMapHeight() / Globals.LOGIC_BUCKET_CELLSIZE;
+        double numCols = this.map.getMapWidth() / Globals.LOGIC_BUCKET_CELLSIZE;
+        int numBuckets = (int) Math.ceil(numRows * numCols);
+        this.playerBuckets = new HashMap<>(numBuckets);
+        Integer[] bucketIDs = getBucketIDsForRect(this.map.getBoundaryRectangle());
+        for (int bucketID : bucketIDs) {
+            this.playerBuckets.put(bucketID, new HashMap<>(10));
+        }
+    }
+
+    private void putPlayerIntoPlayerBuckets(Player player) {
+        Integer[] bucketIDs = getBucketIDsForRect(player.getHitbox());
+        for (int bucketID : bucketIDs) {
+            this.playerBuckets.get(bucketID).put(player.getKey(), player);
+        }
+    }
+
+    public HashMap<Byte, Player> getPlayersNearProj(Projectile proj) {
+        HashMap<Byte, Player> nearbyPlayerBuckets = new HashMap<>(this.players.size());
+        Integer[] bucketIDs = getBucketIDsForRect(proj.getHitbox()[0]);
+        for (int bucketID : bucketIDs) {
+            for (final Map.Entry<Byte, Player> player : this.playerBuckets.get(bucketID).entrySet()) {
+                if (!nearbyPlayerBuckets.containsKey(player.getKey())) {
+                    nearbyPlayerBuckets.put(player.getKey(), player.getValue());
+                }
+            }
+        }
+        return nearbyPlayerBuckets;
+    }
+
+    private Integer[] getBucketIDsForRect(Rectangle2D.Double rect) {
+        int maxOccupiedCol = 1 + (int) Math.ceil(rect.width / Globals.LOGIC_BUCKET_CELLSIZE);
+        int maxOccupiedRow = 1 + (int) Math.ceil(rect.height / Globals.LOGIC_BUCKET_CELLSIZE);
+        ArrayList<Integer> containingBuckets = new ArrayList<>(maxOccupiedRow * maxOccupiedCol);
+
+        double numCol = this.map.getMapWidth() / Globals.LOGIC_BUCKET_CELLSIZE;
+
+        double[] rectPointsX = new double[maxOccupiedCol];
+        rectPointsX[rectPointsX.length - 1] = rect.getMaxX();
+        for (int i = 0; i < rectPointsX.length - 1; i++) {
+            rectPointsX[i] = rect.getMinX() + i * Globals.LOGIC_BUCKET_CELLSIZE;
+            if (rectPointsX[i] < this.map.getBoundary()[Globals.MAP_LEFT]) {
+                rectPointsX[i] = this.map.getBoundary()[Globals.MAP_LEFT];
+            } else if (rectPointsX[i] > this.map.getBoundary()[Globals.MAP_RIGHT]) {
+                rectPointsX[i] = this.map.getBoundary()[Globals.MAP_RIGHT];
+            }
+        }
+
+        double[] rectPointsY = new double[maxOccupiedRow];
+        rectPointsY[rectPointsY.length - 1] = rect.getMaxY();
+        for (int i = 0; i < rectPointsY.length - 1; i++) {
+            rectPointsY[i] = rect.getMinY() + i * Globals.LOGIC_BUCKET_CELLSIZE;
+            if (rectPointsY[i] < this.map.getBoundary()[Globals.MAP_TOP]) {
+                rectPointsY[i] = this.map.getBoundary()[Globals.MAP_TOP];
+            } else if (rectPointsY[i] > this.map.getBoundary()[Globals.MAP_BOTTOM]) {
+                rectPointsY[i] = this.map.getBoundary()[Globals.MAP_BOTTOM];
+            }
+        }
+
+        for (int i = 0; i < rectPointsY.length; i++) {
+            for (int j = 0; j < rectPointsX.length; j++) {
+                double row = Math.floor(rectPointsY[i] / Globals.LOGIC_BUCKET_CELLSIZE) * numCol;
+                double col = Math.floor(rectPointsX[j] / Globals.LOGIC_BUCKET_CELLSIZE);
+                int id = (int) (row + col);
+                if (!containingBuckets.contains(id)) {
+                    containingBuckets.add(id);
+                }
+            }
+        }
+        return containingBuckets.toArray(new Integer[containingBuckets.size()]);
     }
 
     @Override
@@ -194,6 +268,10 @@ public class LogicModule extends Thread {
     }
 
     private void updatePlayers() {
+        for (final Map.Entry<Integer, HashMap<Byte, Player>> playerBucket : this.playerBuckets.entrySet()) {
+            playerBucket.getValue().clear();
+        }
+
         for (final Map.Entry<Byte, Player> player : this.players.entrySet()) {
             LOGIC_THREAD_POOL.execute(player.getValue());
         }
@@ -202,6 +280,7 @@ public class LogicModule extends Thread {
             Entry<Byte, Player> player = playersIter.next();
             try {
                 player.getValue().join();
+                putPlayerIntoPlayerBuckets(player.getValue());
                 if (!(player.getValue().isConnected())) {
                     playersIter.remove();
                     this.playerKeys.add(player.getKey());

@@ -73,6 +73,7 @@ public class Globals {
 
     public final static long LOGIC_TICKS_PER_SEC = 100;
     public final static long LOGIC_UPDATE = 1000000000 / LOGIC_TICKS_PER_SEC;
+    public final static long LOGIC_BUCKET_CELLSIZE = 300;
 
     public final static long SENDALL_TICKS_PER_SEC = 80;
     public final static long SENDALL_UPDATE = 1000000000 / SENDALL_TICKS_PER_SEC;
