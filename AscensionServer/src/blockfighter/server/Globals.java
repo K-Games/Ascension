@@ -80,7 +80,7 @@ public class Globals {
     public final static long REFRESH_ALL_UPDATE = 100;
 
     public final static byte RIGHT = 0, LEFT = 1, DOWN = 2, UP = 3;
-    public final static byte MAP_LEFT = 0, MAP_RIGHT = 1;
+    public final static byte MAP_LEFT = 0, MAP_RIGHT = 1, MAP_TOP = 2, MAP_BOTTOM = 3;
 
     public final static double GRAVITY = 0.35, MAX_FALLSPEED = 12.5;
     public static double EXP_MULTIPLIER = 0.05;

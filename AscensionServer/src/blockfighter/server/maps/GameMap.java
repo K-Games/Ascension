@@ -9,7 +9,7 @@ public abstract class GameMap {
 
     Rectangle2D.Double[] platforms;
     Point2D.Double[] spawnPoints;
-    double[] boundary = new double[2];
+    double[] boundary = new double[4];
     byte mapID = -1;
     boolean isPvP = false;
     LogicModule logic;
@@ -17,6 +17,8 @@ public abstract class GameMap {
     public GameMap() {
         this.boundary[Globals.MAP_LEFT] = 0.0;
         this.boundary[Globals.MAP_RIGHT] = 1280.0;
+        this.boundary[Globals.MAP_TOP] = -500;
+        this.boundary[Globals.MAP_BOTTOM] = 600;
     }
 
     public boolean isOutOfBounds(final double x) {
@@ -82,5 +84,17 @@ public abstract class GameMap {
             return new Point2D.Double(this.boundary[Globals.MAP_LEFT] + 50, 0);
         }
         return this.spawnPoints[Globals.rng(this.spawnPoints.length)];
+    }
+
+    public Rectangle2D.Double getBoundaryRectangle() {
+        return new Rectangle2D.Double(this.boundary[Globals.MAP_LEFT], this.boundary[Globals.MAP_TOP], getMapWidth(), getMapHeight());
+    }
+
+    public double getMapWidth() {
+        return this.boundary[Globals.MAP_RIGHT] - this.boundary[Globals.MAP_LEFT];
+    }
+
+    public double getMapHeight() {
+        return this.boundary[Globals.MAP_BOTTOM] - this.boundary[Globals.MAP_TOP];
     }
 }

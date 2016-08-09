@@ -19,6 +19,7 @@ An multiplayer action 2D sidescrolling brawler coded in pure Java.
 ## Server Changes
 * Server now sends client Update Number for version check.
 * Send screen shake when some projectiles deal damage.
+* Maps now have TOP and BOTTOM boundaries.
 
 # Credits
 ### Developer/Game Designer/Visual Designs
