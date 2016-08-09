@@ -6,7 +6,6 @@ import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.player.skills.Skill;
-import blockfighter.server.net.PacketSender;
 import java.awt.geom.Rectangle2D;
 
 public class ProjSwordGash extends Projectile {
@@ -15,35 +14,26 @@ public class ProjSwordGash extends Projectile {
 
     public ProjSwordGash(final LogicModule l, final Player o, final double x, final double y, final byte hit) {
         super(l, o, x, y, 50);
+        this.screenshake = true;
         this.hitbox = new Rectangle2D.Double[1];
-        if (o.getFacing() == Globals.RIGHT) {
-            switch (hit) {
-                case 1:
-                case 4:
-                    this.hitbox[0] = new Rectangle2D.Double(this.x - 50, this.y - 75, 250, 76);
-                    break;
-                case 2:
-                case 3:
-                    this.hitbox[0] = new Rectangle2D.Double(this.x - 50, this.y - 153, 246, 153);
-                    break;
-            }
-        } else {
-            switch (hit) {
-                case 1:
-                case 4:
-                    this.hitbox[0] = new Rectangle2D.Double(this.x - 250 + 50, this.y - 75, 250, 76);
-                    break;
-                case 2:
-                case 3:
-                    this.hitbox[0] = new Rectangle2D.Double(this.x - 252 + 50, this.y - 153, 246, 153);
-                    break;
-            }
+
+        double rectX;
+        switch (hit) {
+            case 1:
+            case 4:
+                rectX = (o.getFacing() == Globals.RIGHT) ? this.x - 50 : this.x - 250 + 50;
+                this.hitbox[0] = new Rectangle2D.Double(rectX, this.y - 75, 250, 76);
+                break;
+            case 2:
+            case 3:
+                rectX = (o.getFacing() == Globals.RIGHT) ? this.x - 50 : this.x - 252 + 50;
+                this.hitbox[0] = new Rectangle2D.Double(rectX, this.y - 153, 246, 153);
+                break;
         }
     }
 
     @Override
     public void applyEffect() {
-        PacketSender.sendScreenShake(this.getOwner());
         while (!this.playerQueue.isEmpty()) {
             final Player p = this.playerQueue.poll(), owner = getOwner();
             if (p != null && !p.isDead()) {

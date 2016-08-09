@@ -17,6 +17,7 @@ public class ProjBowVolley extends Projectile {
 
     public ProjBowVolley(final LogicModule l, final Player o, final double x, final double y) {
         super(l, o, x, y, 100);
+        this.screenshake = true;
         this.hitbox = new Rectangle2D.Double[1];
         if (o.getFacing() == Globals.RIGHT) {
             this.hitbox[0] = new Rectangle2D.Double(this.x + 40, this.y - 75 + Globals.rng(30) - 15, 465, 15);
@@ -27,7 +28,6 @@ public class ProjBowVolley extends Projectile {
 
     @Override
     public void applyEffect() {
-        PacketSender.sendScreenShake(this.getOwner());
         while (!this.playerQueue.isEmpty()) {
             final Player p = this.playerQueue.poll(), owner = getOwner();
             if (p != null && !p.isDead()) {

@@ -6,13 +6,13 @@ import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.player.skills.Skill;
-import blockfighter.server.net.PacketSender;
 import java.awt.geom.Rectangle2D;
 
 public class ProjSwordSlash extends Projectile {
 
     public ProjSwordSlash(final LogicModule l, final Player o, final double x, final double y, final int hit) {
         super(l, o, x, y, 200);
+        this.screenshake = true;
         this.hitbox = new Rectangle2D.Double[1];
         if (o.getFacing() == Globals.RIGHT) {
             switch (hit) {
@@ -43,7 +43,6 @@ public class ProjSwordSlash extends Projectile {
 
     @Override
     public void applyEffect() {
-        PacketSender.sendScreenShake(this.getOwner());
         while (!this.playerQueue.isEmpty()) {
             final Player p = this.playerQueue.poll(), owner = getOwner();
             if (p != null && !p.isDead()) {

@@ -15,6 +15,7 @@ public class ProjSwordCinder extends Projectile {
 
     public ProjSwordCinder(final LogicModule l, final Player o, final double x, final double y) {
         super(l, o, x, y, 300);
+        this.screenshake = true;
         this.hitbox = new Rectangle2D.Double[1];
         if (o.getFacing() == Globals.RIGHT) {
             this.hitbox[0] = new Rectangle2D.Double(this.x - 10, this.y - 220, 170, 238);
@@ -25,7 +26,6 @@ public class ProjSwordCinder extends Projectile {
 
     @Override
     public void applyEffect() {
-        PacketSender.sendScreenShake(this.getOwner());
         while (!this.playerQueue.isEmpty()) {
             final Player p = this.playerQueue.poll(), owner = getOwner();
             if (p != null && !p.isDead()) {

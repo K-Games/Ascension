@@ -5,6 +5,7 @@ import blockfighter.server.LogicModule;
 import blockfighter.server.entities.GameEntity;
 import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
+import blockfighter.server.net.PacketSender;
 import java.awt.geom.Rectangle2D;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -16,8 +17,7 @@ public abstract class Projectile extends Thread implements GameEntity {
 
     protected final LogicModule room;
 
-    protected double x,
-            y;
+    protected double x, y;
 
     private Player owner;
 
@@ -32,7 +32,7 @@ public abstract class Projectile extends Thread implements GameEntity {
 
     protected Rectangle2D.Double[] hitbox;
 
-    protected boolean queuedEffect = false;
+    protected boolean queuedEffect = false, screenshake = false;
 
     protected long projStartTime = 0;
 
@@ -141,6 +141,9 @@ public abstract class Projectile extends Thread implements GameEntity {
 
     public void queueEffect(final Projectile p) {
         if (!isQueued()) {
+            if (this.screenshake) {
+                PacketSender.sendScreenShake(this.getOwner());
+            }
             this.room.queueProjEffect(p);
             this.queuedEffect = true;
         }
