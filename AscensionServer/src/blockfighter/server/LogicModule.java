@@ -145,7 +145,9 @@ public class LogicModule extends Thread {
     private void putPlayerIntoPlayerBuckets(Player player) {
         Integer[] bucketIDs = getBucketIDsForRect(player.getHitbox());
         for (int bucketID : bucketIDs) {
-            this.playerBuckets.get(bucketID).put(player.getKey(), player);
+            if (this.playerBuckets.containsKey(bucketID)) {
+                this.playerBuckets.get(bucketID).put(player.getKey(), player);
+            }
         }
     }
 
@@ -154,8 +156,10 @@ public class LogicModule extends Thread {
         Integer[] bucketIDs = getBucketIDsForRect(proj.getHitbox()[0]);
         for (int bucketID : bucketIDs) {
             for (final Map.Entry<Byte, Player> player : this.playerBuckets.get(bucketID).entrySet()) {
-                if (!nearbyPlayerBuckets.containsKey(player.getKey())) {
-                    nearbyPlayerBuckets.put(player.getKey(), player.getValue());
+                if (this.playerBuckets.containsKey(bucketID)) {
+                    if (!nearbyPlayerBuckets.containsKey(player.getKey())) {
+                        nearbyPlayerBuckets.put(player.getKey(), player.getValue());
+                    }
                 }
             }
         }
