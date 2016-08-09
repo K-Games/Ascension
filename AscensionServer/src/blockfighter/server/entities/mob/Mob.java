@@ -297,14 +297,14 @@ public abstract class Mob extends Thread implements GameEntity {
 
         //Iterate through buffs
             //Update buffs
-            
+
             //Track stun if stun is null
             //Track Knockback if it is null
-            
+
             // Add all the damage reduction buffs(Multiplicative)
-            
+
             // Add all the damage intake amplification(Additive)
-            
+
             //Check buff expired
                 //removed from iterator
                 //return buff key
@@ -339,7 +339,7 @@ public abstract class Mob extends Thread implements GameEntity {
 
         this.isFalling = this.map.isFalling(this.x, this.y, this.ySpeed);
         if (!this.isFalling && this.ySpeed > 0) {
-            this.y = this.map.getValidY(this.x, this.y, this.ySpeed);
+            this.y = this.map.getValidY(this.x, this.y);
             setYSpeed(0);
             // queueBossState(STATE_STAND);
         }

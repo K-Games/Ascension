@@ -42,6 +42,7 @@ public class GameMapArena extends GameMap {
         this.boundary[Globals.MAP_RIGHT] = 3400.0;
         this.boundary[Globals.MAP_TOP] = -800;
         this.boundary[Globals.MAP_BOTTOM] = 700;
+        setupMap();
     }
 
     @Override

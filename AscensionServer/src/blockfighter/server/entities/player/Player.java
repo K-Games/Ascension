@@ -1066,7 +1066,7 @@ public class Player extends Thread implements GameEntity {
         }
         this.isFalling = this.map.isFalling(this.x, this.y, this.ySpeed);
         if (!this.isFalling && this.ySpeed > 0) {
-            this.y = this.map.getValidY(this.x, this.y, this.ySpeed);
+            this.y = this.map.getValidY(this.x, this.y);
             setYSpeed(0);
             this.isJumping = false;
         }
