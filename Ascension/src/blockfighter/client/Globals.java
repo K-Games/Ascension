@@ -384,6 +384,8 @@ public class Globals {
                 return "Skill Points";
             case STAT_DAMAGEREDUCT:
                 return "Damage Reduction";
+            case STAT_MAXEXP:
+                return "Required EXP";
         }
         return "INVALID STAT";
     }

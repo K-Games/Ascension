@@ -21,12 +21,99 @@ public class GlobalsTest {
     }
 
     @Test
-    public void testGetStatNameReturnAnyStringThatIsNotInvalidStatWhenStatIDIsValid() {
-        System.out.println("getStatName: Return Any String That Is Not Invalid Stat When StatID Is Valid");
-        byte statID = 0;
+    public void testGetStatNameReturnCorrectNameWhenStatIDIsValid() {
+        System.out.println("getStatName: Return Correct Stat Name When StatID Is Valid");
         String expResult = "INVALID STAT";
-        String result = Globals.getStatName(statID);
-        assertNotEquals(expResult, result);
+        String result;
+        for (byte i = 0; i < Globals.NUM_STATS; i++) {
+            result = Globals.getStatName(i);
+            assertNotEquals(expResult, result);
+        }
+
+        byte statID = Globals.STAT_ARMOR;
+        expResult = "Armor";
+        result = Globals.getStatName(statID);
+        assertEquals(expResult, result);
+
+        statID = Globals.STAT_POWER;
+        expResult = "Power";
+        result = Globals.getStatName(statID);
+        assertEquals(expResult, result);
+
+        statID = Globals.STAT_DEFENSE;
+        expResult = "Defense";
+        result = Globals.getStatName(statID);
+        assertEquals(expResult, result);
+
+        statID = Globals.STAT_SPIRIT;
+        expResult = "Spirit";
+        result = Globals.getStatName(statID);
+        assertEquals(expResult, result);
+
+        statID = Globals.STAT_MINHP;
+        expResult = "Current HP";
+        result = Globals.getStatName(statID);
+        assertEquals(expResult, result);
+
+        statID = Globals.STAT_MAXHP;
+        expResult = "Max HP";
+        result = Globals.getStatName(statID);
+        assertEquals(expResult, result);
+
+        statID = Globals.STAT_MINDMG;
+        expResult = "Minimum Damage";
+        result = Globals.getStatName(statID);
+        assertEquals(expResult, result);
+
+        statID = Globals.STAT_MAXDMG;
+        expResult = "Maximum Damage";
+        result = Globals.getStatName(statID);
+        assertEquals(expResult, result);
+
+        statID = Globals.STAT_CRITCHANCE;
+        expResult = "Critical Hit Chance";
+        result = Globals.getStatName(statID);
+        assertEquals(expResult, result);
+
+        statID = Globals.STAT_CRITDMG;
+        expResult = "Critical Hit Damage";
+        result = Globals.getStatName(statID);
+        assertEquals(expResult, result);
+
+        statID = Globals.STAT_REGEN;
+        expResult = "Regen(HP/Sec)";
+        result = Globals.getStatName(statID);
+        assertEquals(expResult, result);
+
+        statID = Globals.STAT_LEVEL;
+        expResult = "Level";
+        result = Globals.getStatName(statID);
+        assertEquals(expResult, result);
+
+        statID = Globals.STAT_POINTS;
+        expResult = "Stat Points";
+        result = Globals.getStatName(statID);
+        assertEquals(expResult, result);
+
+        statID = Globals.STAT_EXP;
+        expResult = "Experience";
+        result = Globals.getStatName(statID);
+        assertEquals(expResult, result);
+
+        statID = Globals.STAT_SKILLPOINTS;
+        expResult = "Skill Points";
+        result = Globals.getStatName(statID);
+        assertEquals(expResult, result);
+
+        statID = Globals.STAT_DAMAGEREDUCT;
+        expResult = "Damage Reduction";
+        result = Globals.getStatName(statID);
+        assertEquals(expResult, result);
+
+        statID = Globals.STAT_MAXEXP;
+        expResult = "Required EXP";
+        result = Globals.getStatName(statID);
+        assertEquals(expResult, result);
     }
 
     @Test
