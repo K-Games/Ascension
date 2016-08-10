@@ -9,8 +9,12 @@ http://www.gdunlimited.net/games/ascension/
 * Added Emotes. Assign a key to use the Emotes in the Keybind menu.
 
 ## Client Changes
+* Added keybinds for Emotes.
+* Added sending and handling received Emote action.
+* Enabled NUMPAD 0 to 9 as bindable keys.
 
 ## Server Changes
+* Added broadcast received Emote action.
 
 # Credits
 ### Developer/Game Designer/Visual Designs

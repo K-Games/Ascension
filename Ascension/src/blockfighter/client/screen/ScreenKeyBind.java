@@ -120,7 +120,9 @@ public class ScreenKeyBind extends ScreenMenu {
                     && e.getKeyCode() <= KeyEvent.VK_Z)
                     || e.getKeyCode() <= KeyEvent.VK_SPACE
                     || (e.getKeyCode() >= KeyEvent.VK_LEFT
-                    && e.getKeyCode() <= KeyEvent.VK_DOWN)) {
+                    && e.getKeyCode() <= KeyEvent.VK_DOWN)
+                    || (e.getKeyCode() >= KeyEvent.VK_NUMPAD0
+                    && e.getKeyCode() <= KeyEvent.VK_NUMPAD9)) {
                 this.c.setKeyBind(this.selectedKeyBox, e.getKeyCode());
                 this.selectedKeyBox = -1;
             }
