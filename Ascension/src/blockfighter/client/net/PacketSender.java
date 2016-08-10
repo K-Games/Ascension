@@ -118,20 +118,22 @@ public class PacketSender {
         sendTCPPacket(bytes);
     }
 
-    public static void sendSetMobType(final byte room, final byte mobKey) {
-        final byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
+    public static void sendSetMobType(final byte room, final int key) {
+        final byte[] bytes = new byte[Globals.PACKET_BYTE * 2 + Globals.PACKET_INT];
         bytes[0] = Globals.DATA_MOB_SET_TYPE;
         bytes[1] = room;
-        bytes[2] = mobKey;
+        final byte[] intKey = Globals.intToBytes(key);
+        System.arraycopy(intKey, 0, bytes, 2, intKey.length);
         sendTCPPacket(bytes);
     }
 
-    public static void sendGetMobStat(final byte room, final byte key, final byte stat) {
-        final byte[] bytes = new byte[Globals.PACKET_BYTE * 4];
+    public static void sendGetMobStat(final byte room, final int key, final byte stat) {
+        final byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT];
         bytes[0] = Globals.DATA_MOB_GET_STAT;
         bytes[1] = room;
-        bytes[2] = key;
-        bytes[3] = stat;
+        final byte[] intKey = Globals.intToBytes(key);
+        System.arraycopy(intKey, 0, bytes, 2, intKey.length);
+        bytes[6] = stat;
         sendTCPPacket(bytes);
     }
 

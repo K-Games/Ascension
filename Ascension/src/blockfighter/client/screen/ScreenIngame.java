@@ -39,7 +39,7 @@ public class ScreenIngame extends Screen {
 
     private final DecimalFormat df = new DecimalFormat("0.0");
     private final ConcurrentHashMap<Byte, Player> players;
-    private final ConcurrentHashMap<Byte, Mob> mobs = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Integer, Mob> mobs = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Integer, Particle> particles = new ConcurrentHashMap<>(500, 0.9f, 1);
     private final ConcurrentHashMap<Integer, IngameNumber> ingameNumber = new ConcurrentHashMap<>(500, 0.9f, 1);
     private final ConcurrentLinkedQueue<Notification> notifications = new ConcurrentLinkedQueue<>();
@@ -189,10 +189,10 @@ public class ScreenIngame extends Screen {
     }
 
     private void updateMobs() {
-        for (final Map.Entry<Byte, Mob> pEntry : this.mobs.entrySet()) {
+        for (final Map.Entry<Integer, Mob> pEntry : this.mobs.entrySet()) {
             threadPool.execute(pEntry.getValue());
         }
-        for (final Map.Entry<Byte, Mob> pEntry : this.mobs.entrySet()) {
+        for (final Map.Entry<Integer, Mob> pEntry : this.mobs.entrySet()) {
             try {
                 pEntry.getValue().join();
             } catch (final InterruptedException ex) {
@@ -237,7 +237,7 @@ public class ScreenIngame extends Screen {
         this.map.draw(g);
 
         if (this.mobs != null) {
-            for (final Map.Entry<Byte, Mob> pEntry : this.mobs.entrySet()) {
+            for (final Map.Entry<Integer, Mob> pEntry : this.mobs.entrySet()) {
                 pEntry.getValue().draw(g);
             }
         }
@@ -913,53 +913,54 @@ public class ScreenIngame extends Screen {
     }
 
     private void dataMobParticleEffect(final byte[] data) {
-        final byte key = data[1];
+        final int key = Globals.bytesToInt(Arrays.copyOfRange(data, 1, 5));
         if (this.mobs.containsKey(key)) {
             this.mobs.get(key).addParticle(data);
         }
     }
 
     private void dataMobSetType(final byte[] data) {
-        final byte key = data[1], type = data[2];
+        final int key = Globals.bytesToInt(Arrays.copyOfRange(data, 1, 5));
+        final byte type = data[5];
         if (!this.mobs.containsKey(key)) {
-            final int x = Globals.bytesToInt(Arrays.copyOfRange(data, 3, 7));
-            final int y = Globals.bytesToInt(Arrays.copyOfRange(data, 7, 11));
+            final int x = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
+            final int y = Globals.bytesToInt(Arrays.copyOfRange(data, 10, 14));
             this.mobs.put(key, Mob.spawnMob(type, key, x, y, this.client));
         }
     }
 
     private void dataMobSetPos(final byte[] data) {
-        final byte key = data[1];
+        final int key = Globals.bytesToInt(Arrays.copyOfRange(data, 1, 5));
         if (isExistingMob(key)) {
-            final int x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
-            final int y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
+            final int x = Globals.bytesToInt(Arrays.copyOfRange(data, 5, 9));
+            final int y = Globals.bytesToInt(Arrays.copyOfRange(data, 9, 13));
             this.mobs.get(key).setPos(x, y);
         }
     }
 
     private void dataMobSetFacing(final byte[] data) {
-        final byte key = data[1];
+        final int key = Globals.bytesToInt(Arrays.copyOfRange(data, 1, 5));
         if (isExistingMob(key)) {
-            final byte facing = data[2];
+            final byte facing = data[5];
             this.mobs.get(key).setFacing(facing);
         }
     }
 
     private void dataMobSetState(final byte[] data) {
-        final byte key = data[1];
+        final int key = Globals.bytesToInt(Arrays.copyOfRange(data, 1, 5));
         if (isExistingMob(key)) {
-            final byte state = data[2];
-            final byte frame = data[3];
+            final byte state = data[5];
+            final byte frame = data[6];
             this.mobs.get(key).setState(state);
             this.mobs.get(key).setFrame(frame);
         }
     }
 
     private void dataMobGetStat(final byte[] data) {
-        final byte key = data[1];
+        final int key = Globals.bytesToInt(Arrays.copyOfRange(data, 1, 5));
         if (isExistingMob(key)) {
-            final byte stat = data[2];
-            final int amount = Globals.bytesToInt(Arrays.copyOfRange(data, 3, 7));
+            final byte stat = data[5];
+            final int amount = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
             this.mobs.get(key).setStat(stat, amount);
         }
     }
@@ -989,7 +990,7 @@ public class ScreenIngame extends Screen {
         spawnPlayer(key, 0, 0);
     }
 
-    private boolean isExistingMob(final byte key) {
+    private boolean isExistingMob(final int key) {
         if (!this.mobs.containsKey(key)) {
             PacketSender.sendSetMobType(logic.getSelectedRoom(), key);
             return false;
@@ -1213,7 +1214,7 @@ public class ScreenIngame extends Screen {
 
         Particle.unloadParticles();
         ItemEquip.unloadSprites();
-        for (final Map.Entry<Byte, Mob> mobEntry : this.mobs.entrySet()) {
+        for (final Map.Entry<Integer, Mob> mobEntry : this.mobs.entrySet()) {
             mobEntry.getValue().unload();
         }
 

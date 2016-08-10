@@ -17,7 +17,7 @@ public class LogicModuleTest {
     @Mock
     ConcurrentLinkedQueue<Byte> playerKeys;
     @Mock
-    ConcurrentLinkedQueue<Byte> mobKeys;
+    ConcurrentLinkedQueue<Integer> mobKeys;
 
     LogicModule logic;
 
@@ -59,8 +59,8 @@ public class LogicModuleTest {
         logic = new LogicModule(null, mobKeys);
         when(mobKeys.isEmpty()).thenReturn(true);
 
-        byte expResult = -1;
-        byte result = logic.getNextMobKey();
+        int expResult = -1;
+        int result = logic.getNextMobKey();
 
         System.out.println("Expected: <" + expResult + ">, Result: <" + result + ">");
 
@@ -73,10 +73,10 @@ public class LogicModuleTest {
 
         logic = new LogicModule(null, mobKeys);
         when(mobKeys.isEmpty()).thenReturn(false);
-        when(mobKeys.poll()).thenReturn((byte) 1);
+        when(mobKeys.poll()).thenReturn(1);
 
-        byte expResult = 1;
-        byte result = logic.getNextMobKey();
+        int expResult = 1;
+        int result = logic.getNextMobKey();
 
         System.out.println("Expected: <" + expResult + ">, Result: <" + result + ">");
 
@@ -121,8 +121,8 @@ public class LogicModuleTest {
     @Test
     public void testReturnMobKey() {
         System.out.println("returnMobKey: Return 200 Mob Keys.");
-        ConcurrentLinkedQueue<Byte> spyMobKeys = new ConcurrentLinkedQueue<>();
-        ConcurrentLinkedQueue<Byte> spy = spy(spyMobKeys);
+        ConcurrentLinkedQueue<Integer> spyMobKeys = new ConcurrentLinkedQueue<>();
+        ConcurrentLinkedQueue<Integer> spy = spy(spyMobKeys);
 
         logic = new LogicModule(null, spy);
 

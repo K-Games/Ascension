@@ -36,7 +36,7 @@ public abstract class Mob extends Thread implements GameEntity {
     public final static byte MOB_BOSS_LIGHTNING = 0x00,
             MOB_BOSS_SHADOWFIEND = 0x01;
 
-    protected final byte key;
+    protected final int key;
     protected final LogicModule room;
     protected double x, y, ySpeed, xSpeed;
     protected boolean isFalling = false, isDead = false;
@@ -155,7 +155,7 @@ public abstract class Mob extends Thread implements GameEntity {
         return this.y;
     }
 
-    public byte getKey() {
+    public int getKey() {
         return this.key;
     }
 
@@ -264,11 +264,12 @@ public abstract class Mob extends Thread implements GameEntity {
 
         if (Globals.nsToMs(this.room.getTime() - this.lastHPSend) >= 150) {
             final byte[] minHP = Globals.intToBytes((int) (this.stats[STAT_MINHP] / this.stats[STAT_MAXHP] * 10000));
-            final byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT];
+            final byte[] bytes = new byte[Globals.PACKET_BYTE * 2 + Globals.PACKET_INT * 2];
             bytes[0] = Globals.DATA_MOB_GET_STAT;
-            bytes[1] = this.key;
-            bytes[2] = STAT_MINHP;
-            System.arraycopy(minHP, 0, bytes, 3, minHP.length);
+            final byte[] intKey = Globals.intToBytes(this.key);
+            System.arraycopy(intKey, 0, bytes, 1, intKey.length);
+            bytes[5] = STAT_MINHP;
+            System.arraycopy(minHP, 0, bytes, 6, minHP.length);
             PacketSender.sendAll(bytes, this.room.getRoom());
             this.lastHPSend = this.room.getTime();
         }
@@ -306,8 +307,8 @@ public abstract class Mob extends Thread implements GameEntity {
             // Add all the damage intake amplification(Additive)
 
             //Check buff expired
-                //removed from iterator
-                //return buff key
+            //removed from iterator
+            //return buff key
     }
 
     public boolean intersectHitbox(final Rectangle2D.Double box) {
@@ -392,38 +393,35 @@ public abstract class Mob extends Thread implements GameEntity {
     }
 
     public void sendPos() {
-        final byte[] bytes = new byte[Globals.PACKET_BYTE * 2 + Globals.PACKET_INT * 2];
+        final byte[] bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_INT * 3];
         bytes[0] = Globals.DATA_MOB_SET_POS;
-        bytes[1] = this.key;
+        final byte[] intKey = Globals.intToBytes(this.key);
+        System.arraycopy(intKey, 0, bytes, 1, intKey.length);
         final byte[] posXInt = Globals.intToBytes((int) this.x);
-        bytes[2] = posXInt[0];
-        bytes[3] = posXInt[1];
-        bytes[4] = posXInt[2];
-        bytes[5] = posXInt[3];
+        System.arraycopy(posXInt, 0, bytes, 5, posXInt.length);
         final byte[] posYInt = Globals.intToBytes((int) this.y);
-        bytes[6] = posYInt[0];
-        bytes[7] = posYInt[1];
-        bytes[8] = posYInt[2];
-        bytes[9] = posYInt[3];
+        System.arraycopy(posYInt, 0, bytes, 9, posYInt.length);
         PacketSender.sendAll(bytes, this.room.getRoom());
         this.updatePos = false;
     }
 
     public void sendFacing() {
-        final byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
+        final byte[] bytes = new byte[Globals.PACKET_BYTE * 2 + Globals.PACKET_INT];
         bytes[0] = Globals.DATA_MOB_SET_FACING;
-        bytes[1] = this.key;
-        bytes[2] = this.facing;
+        final byte[] intKey = Globals.intToBytes(this.key);
+        System.arraycopy(intKey, 0, bytes, 1, intKey.length);
+        bytes[5] = this.facing;
         PacketSender.sendAll(bytes, this.room.getRoom());
         this.updateFacing = false;
     }
 
     public void sendState() {
-        final byte[] bytes = new byte[Globals.PACKET_BYTE * 4];
+        final byte[] bytes = new byte[Globals.PACKET_BYTE * 3+ Globals.PACKET_INT];
         bytes[0] = Globals.DATA_MOB_SET_STATE;
-        bytes[1] = this.key;
-        bytes[2] = this.animState;
-        bytes[3] = this.frame;
+        final byte[] intKey = Globals.intToBytes(this.key);
+        System.arraycopy(intKey, 0, bytes, 1, intKey.length);
+        bytes[5] = this.animState;
+        bytes[6] = this.frame;
         PacketSender.sendAll(bytes, this.room.getRoom());
         this.updateAnimState = false;
     }
@@ -450,21 +448,16 @@ public abstract class Mob extends Thread implements GameEntity {
         PacketSender.sendAll(bytes, this.room.getRoom());
     }
 
-    public static void sendMobParticle(final byte key, final byte room, final byte particleID, final double x, final double y) {
+    public static void sendMobParticle(final int key, final byte room, final byte particleID, final double x, final double y) {
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT * 2];
         bytes[0] = Globals.DATA_MOB_PARTICLE_EFFECT;
-        bytes[1] = key;
-        bytes[2] = particleID;
+        final byte[] intKey = Globals.intToBytes(key);
+        System.arraycopy(intKey, 0, bytes, 1, intKey.length);
+        bytes[5] = particleID;
         final byte[] posXInt = Globals.intToBytes((int) x);
-        bytes[3] = posXInt[0];
-        bytes[4] = posXInt[1];
-        bytes[5] = posXInt[2];
-        bytes[6] = posXInt[3];
+        System.arraycopy(posXInt, 0, bytes, 6, posXInt.length);
         final byte[] posYInt = Globals.intToBytes((int) y);
-        bytes[7] = posYInt[0];
-        bytes[8] = posYInt[1];
-        bytes[9] = posYInt[2];
-        bytes[10] = posYInt[3];
+        System.arraycopy(posYInt, 0, bytes, 10, posYInt.length);
         PacketSender.sendAll(bytes, room);
     }
 }

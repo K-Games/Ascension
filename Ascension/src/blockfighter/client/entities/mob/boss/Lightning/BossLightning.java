@@ -2,11 +2,9 @@ package blockfighter.client.entities.mob.boss.Lightning;
 
 import blockfighter.client.Globals;
 import blockfighter.client.entities.mob.Mob;
-import blockfighter.client.entities.particles.Particle;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.util.Arrays;
 
 public class BossLightning extends Mob {
 
@@ -25,7 +23,7 @@ public class BossLightning extends Mob {
             PARTICLE_BALL1 = 0x03,
             PARTICLE_BALL2 = 0x04;
 
-    public BossLightning(final int x, final int y, final byte k) {
+    public BossLightning(final int x, final int y, final int k) {
         super(x, y, k);
         this.stats = new double[NUM_STATS];
     }
@@ -117,29 +115,6 @@ public class BossLightning extends Mob {
 
     @Override
     public void addParticle(final byte[] data) {
-        final byte particleID = data[2];
-        int particleX, particleY;
-        Particle b;
-        switch (particleID) {
-            case PARTICLE_ATT1:
-                particleX = Globals.bytesToInt(Arrays.copyOfRange(data, 3, 7));
-                particleY = Globals.bytesToInt(Arrays.copyOfRange(data, 7, 11));
-                b = new ParticleAttEmitter(particleX, particleY);
-                logic.getScreen().addParticle(b);
-                break;
-            case PARTICLE_BALL1:
-                particleX = Globals.bytesToInt(Arrays.copyOfRange(data, 3, 7));
-                particleY = Globals.bytesToInt(Arrays.copyOfRange(data, 7, 11));
-                b = new ParticleBallEmitter(particleX, particleY);
-                logic.getScreen().addParticle(b);
-                break;
-            case PARTICLE_BOLT:
-                particleX = Globals.bytesToInt(Arrays.copyOfRange(data, 3, 7));
-                particleY = Globals.bytesToInt(Arrays.copyOfRange(data, 7, 11));
-                b = new ParticleBolt(particleX, particleY);
-                logic.getScreen().addParticle(b);
-                break;
-        }
     }
 
     @Override

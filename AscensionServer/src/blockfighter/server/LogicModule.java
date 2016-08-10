@@ -7,7 +7,6 @@ import blockfighter.server.maps.GameMap;
 import blockfighter.server.maps.GameMapArena;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -27,7 +26,7 @@ public class LogicModule extends Thread {
 
     private ConcurrentHashMap<Byte, Player> players = new ConcurrentHashMap<>(Globals.SERVER_MAX_PLAYERS, 0.9f,
             Math.max(Globals.SERVER_MAX_PLAYERS / 5, 3));
-    private ConcurrentHashMap<Byte, Mob> mobs = new ConcurrentHashMap<>(1, 0.9f, 1);
+    private ConcurrentHashMap<Integer, Mob> mobs = new ConcurrentHashMap<>(1, 0.9f, 1);
     private ConcurrentHashMap<Integer, Projectile> projectiles = new ConcurrentHashMap<>(500, 0.75f, 3);
 
     private GameMap map;
@@ -37,7 +36,7 @@ public class LogicModule extends Thread {
 
     private ConcurrentLinkedQueue<Byte> playerKeys = new ConcurrentLinkedQueue<>();
     private ConcurrentLinkedQueue<Integer> projKeys = new ConcurrentLinkedQueue<>();
-    private ConcurrentLinkedQueue<Byte> mobKeys = new ConcurrentLinkedQueue<>();
+    private ConcurrentLinkedQueue<Integer> mobKeys = new ConcurrentLinkedQueue<>();
 
     private ConcurrentLinkedQueue<Player> playAddQueue = new ConcurrentLinkedQueue<>();
     private ConcurrentLinkedQueue<byte[]> playDirKeydownQueue = new ConcurrentLinkedQueue<>();
@@ -61,7 +60,7 @@ public class LogicModule extends Thread {
         reset();
     }
 
-    public LogicModule(ConcurrentLinkedQueue<Byte> playerKeys, ConcurrentLinkedQueue<Byte> mobKeys) {
+    public LogicModule(ConcurrentLinkedQueue<Byte> playerKeys, ConcurrentLinkedQueue<Integer> mobKeys) {
         this.playerKeys = playerKeys;
         this.mobKeys = mobKeys;
     }
@@ -93,45 +92,24 @@ public class LogicModule extends Thread {
     }
 
     private void resetKeys() {
-        for (int i = 0; i < 500; i++) {
+        this.projKeys.clear();
+        this.projMaxKeys = 500;
+        for (int i = 0; i < this.projMaxKeys; i++) {
             this.projKeys.add(i);
         }
-        Byte[] keys = new Byte[mobMaxKeys];
+        this.mobKeys.clear();
+        this.mobMaxKeys = 255;
         for (int i = 0; i < this.mobMaxKeys; i++) {
-            keys[i] = (byte) i;
+            this.mobKeys.add(i);
         }
-        mobKeys.addAll(Arrays.asList(keys));
+
+        this.playerKeys.clear();
         for (byte i = 0; i < Globals.SERVER_MAX_PLAYERS; i++) {
             this.playerKeys.add(i);
         }
     }
 
-    private void reset() {
-        this.players.clear();
-        this.mobs.clear();
-        this.projectiles.clear();
-        this.projKeys.clear();
-        this.playerKeys.clear();
-        this.mobKeys.clear();
-
-        this.playAddQueue.clear();
-        this.playDirKeydownQueue.clear();
-        this.playUseSkillQueue.clear();
-        this.projEffectQueue.clear();
-        this.projAddQueue.clear();
-
-        this.projMaxKeys = 500;
-        this.resetStartTime = 0;
-        //if (this.room == 0) {
-        this.setMap(new GameMapArena());
-        this.setMinLevel(this.room * 10 + 1);
-        this.setMaxLevel((this.room + 1) * 10);
-        //} else {
-        //    this.setMap(new GameMapFloor1());
-        //}
-        resetKeys();
-        this.map.spawnMapMobs(this);
-
+    private void resetPlayerBuckets() {
         double numRows = this.map.getMapHeight() / Globals.LOGIC_BUCKET_CELLSIZE;
         double numCols = this.map.getMapWidth() / Globals.LOGIC_BUCKET_CELLSIZE;
         int numBuckets = (int) Math.ceil(numRows * numCols);
@@ -142,6 +120,27 @@ public class LogicModule extends Thread {
         }
     }
 
+    private void reset() {
+        this.players.clear();
+        this.mobs.clear();
+        this.projectiles.clear();
+
+        this.playAddQueue.clear();
+        this.playDirKeydownQueue.clear();
+        this.playUseSkillQueue.clear();
+        this.projEffectQueue.clear();
+        this.projAddQueue.clear();
+
+        this.resetStartTime = 0;
+        this.setMap(new GameMapArena());
+        this.setMinLevel(this.room * 10 + 1);
+        this.setMaxLevel((this.room + 1) * 10);
+
+        resetKeys();
+        resetPlayerBuckets();
+        this.map.spawnMapMobs(this);
+    }
+
     private void putPlayerIntoPlayerBuckets(Player player) {
         Integer[] bucketIDs = getBucketIDsForRect(player.getHitbox());
         for (int bucketID : bucketIDs) {
@@ -149,6 +148,21 @@ public class LogicModule extends Thread {
                 this.playerBuckets.get(bucketID).put(player.getKey(), player);
             }
         }
+    }
+
+    public HashMap<Byte, Player> getPlayersNearRect(Rectangle2D.Double rect) {
+        HashMap<Byte, Player> nearbyPlayerBuckets = new HashMap<>(this.players.size());
+        Integer[] bucketIDs = getBucketIDsForRect(rect);
+        for (int bucketID : bucketIDs) {
+            for (final Map.Entry<Byte, Player> player : this.playerBuckets.get(bucketID).entrySet()) {
+                if (this.playerBuckets.containsKey(bucketID)) {
+                    if (!nearbyPlayerBuckets.containsKey(player.getKey())) {
+                        nearbyPlayerBuckets.put(player.getKey(), player.getValue());
+                    }
+                }
+            }
+        }
+        return nearbyPlayerBuckets;
     }
 
     public HashMap<Byte, Player> getPlayersNearProj(Projectile proj) {
@@ -252,13 +266,13 @@ public class LogicModule extends Thread {
     }
 
     private void updateMobs() {
-        for (final Map.Entry<Byte, Mob> mob : this.mobs.entrySet()) {
+        for (final Map.Entry<Integer, Mob> mob : this.mobs.entrySet()) {
             LOGIC_THREAD_POOL.execute(mob.getValue());
         }
 
-        Iterator<Entry<Byte, Mob>> mobsIter = this.mobs.entrySet().iterator();
+        Iterator<Entry<Integer, Mob>> mobsIter = this.mobs.entrySet().iterator();
         while (mobsIter.hasNext()) {
-            Entry<Byte, Mob> mob = mobsIter.next();
+            Entry<Integer, Mob> mob = mobsIter.next();
             try {
                 mob.getValue().join();
                 if (mob.getValue().isDead()) {
@@ -319,7 +333,7 @@ public class LogicModule extends Thread {
         return this.players;
     }
 
-    public ConcurrentHashMap<Byte, Mob> getMobs() {
+    public ConcurrentHashMap<Integer, Mob> getMobs() {
         return this.mobs;
     }
 
@@ -342,7 +356,7 @@ public class LogicModule extends Thread {
         return this.playerKeys.poll();
     }
 
-    public byte getNextMobKey() {
+    public int getNextMobKey() {
         if (this.mobKeys.isEmpty()) {
             return -1;
         }
@@ -493,7 +507,7 @@ public class LogicModule extends Thread {
         this.projKeys.add(key);
     }
 
-    public void returnMobKey(final byte key) {
+    public void returnMobKey(final int key) {
         this.mobKeys.add(key);
     }
 
@@ -521,8 +535,9 @@ public class LogicModule extends Thread {
     }
 
     public ArrayList<Player> getPlayersInRange(final Player player, final double radius) {
+        Rectangle2D.Double rect = new Rectangle2D.Double(player.getX() - radius, player.getY() - radius, radius * 2, radius * 2);
         ArrayList<Player> playersInRange = new ArrayList<>(Globals.SERVER_MAX_PLAYERS);
-        for (final Map.Entry<Byte, Player> pEntry : getPlayers().entrySet()) {
+        for (final Map.Entry<Byte, Player> pEntry : getPlayersNearRect(rect).entrySet()) {
             final Player p = pEntry.getValue();
             if (p != player && !p.isDead() && !p.isInvulnerable()) {
                 double distance = Math.sqrt(Math.pow((player.getX() - p.getX()), 2) + Math.pow((player.getY() - p.getY()), 2));
@@ -536,7 +551,7 @@ public class LogicModule extends Thread {
 
     public ArrayList<Mob> getMobsInRange(final Player player, final double radius) {
         ArrayList<Mob> mobInRange = new ArrayList<>(getMobs().size());
-        for (final Map.Entry<Byte, Mob> bEntry : getMobs().entrySet()) {
+        for (final Map.Entry<Integer, Mob> bEntry : getMobs().entrySet()) {
             final Mob b = bEntry.getValue();
             double distance = Math.sqrt(Math.pow((player.getX() - b.getX()), 2) + Math.pow((player.getY() - b.getY()), 2));
             if (distance <= 100) {
@@ -550,7 +565,7 @@ public class LogicModule extends Thread {
         this.playerKeys = playerKeys;
     }
 
-    public void setMobKeys(ConcurrentLinkedQueue<Byte> mobKeys) {
+    public void setMobKeys(ConcurrentLinkedQueue<Integer> mobKeys) {
         this.mobKeys = mobKeys;
     }
 
@@ -587,7 +602,7 @@ public class LogicModule extends Thread {
         this.players = players;
     }
 
-    public void setMobs(ConcurrentHashMap<Byte, Mob> mobs) {
+    public void setMobs(ConcurrentHashMap<Integer, Mob> mobs) {
         this.mobs = mobs;
     }
 

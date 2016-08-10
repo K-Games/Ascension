@@ -25,11 +25,12 @@ public abstract class Mob extends Thread {
             MOB_BOSS_SHADOWFIEND = 0x01;
 
     protected int x, y;
-    protected byte key, facing, animState, frame;
+    protected byte facing, animState, frame;
+    protected int key;
     protected double[] stats;
     protected static LogicModule logic;
 
-    public Mob(final int x, final int y, final byte k) {
+    public Mob(final int x, final int y, final int k) {
         this.x = x;
         this.y = y;
         this.key = k;
@@ -103,7 +104,7 @@ public abstract class Mob extends Thread {
 
     public abstract void update();
 
-    public static Mob spawnMob(final byte type, final byte key, final int x, final int y, final GameClient cl) {
+    public static Mob spawnMob(final byte type, final int key, final int x, final int y, final GameClient cl) {
         Mob b = null;
         switch (type) {
             case MOB_BOSS_LIGHTNING:

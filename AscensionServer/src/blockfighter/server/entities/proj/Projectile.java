@@ -25,7 +25,7 @@ public abstract class Projectile extends Thread implements GameEntity {
 
     protected HashMap<Byte, Player> pHit = new HashMap<>();
     protected final LinkedList<Player> playerQueue = new LinkedList<>();
-    protected HashMap<Byte, Mob> bHit = new HashMap<>();
+    protected HashMap<Integer, Mob> bHit = new HashMap<>();
     protected final LinkedList<Mob> mobQueue = new LinkedList<>();
 
     protected int duration;
@@ -77,7 +77,7 @@ public abstract class Projectile extends Thread implements GameEntity {
             }
         }
 
-        for (final Map.Entry<Byte, Mob> bEntry : this.room.getMobs().entrySet()) {
+        for (final Map.Entry<Integer, Mob> bEntry : this.room.getMobs().entrySet()) {
             final Mob b = bEntry.getValue();
             if (!this.bHit.containsKey(b.getKey()) && b.intersectHitbox(this.hitbox[0])) {
                 this.mobQueue.add(b);
