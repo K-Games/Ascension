@@ -19,8 +19,9 @@ An multiplayer action 2D sidescrolling brawler coded in pure Java.
 ## Server Changes
 * Server now sends client Update Number for version check.
 * Send screen shake when some projectiles deal damage.
-* Improved performance on projectile collision detection witg spatial hashing implementation.
+* Improved performance on projectile collision detection with spatial hashing implementation.
 * Maps now have TOP and BOTTOM boundaries.
+* Improved perforamnce on map platform collision detection with spatial hashing implementation.
 
 # Credits
 ### Developer/Game Designer/Visual Designs
