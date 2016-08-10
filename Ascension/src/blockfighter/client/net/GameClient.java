@@ -2,6 +2,7 @@ package blockfighter.client.net;
 
 import blockfighter.client.Globals;
 import blockfighter.client.LogicModule;
+import blockfighter.client.entities.emotes.Emote;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.client.screen.ScreenIngame;
 import blockfighter.client.screen.ScreenLoading;
@@ -139,6 +140,7 @@ public class GameClient extends Thread {
         } catch (final Exception e) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, e);
             Particle.unloadParticles();
+            Emote.unloadEmotes();
             logic.disconnect();
             PacketSender.sendDisconnect(logic.getSelectedRoom(), key);
             logic.returnMenu();

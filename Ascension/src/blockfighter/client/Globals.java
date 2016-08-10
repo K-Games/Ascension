@@ -244,12 +244,25 @@ public class Globals {
             DATA_MOB_GET_STAT = 0x16,
             DATA_PLAYER_GIVEDROP = 0x17,
             DATA_PLAYER_CREATE = 0x18,
-            DATA_SCREEN_SHAKE = 0x19;
+            DATA_SCREEN_SHAKE = 0x19,
+            DATA_PLAYER_EMOTE = 0x1A;
 
     public static final byte LOGIN_SUCCESS = 0x00,
             LOGIN_FAIL_UID_IN_ROOM = 0x01,
             LOGIN_FAIL_FULL_ROOM = 0x02,
             LOGIN_FAIL_OUTSIDE_LEVEL_RANGE = 0x03;
+
+    public static final byte NUM_EMOTES = 10,
+            EMOTE_0 = 0x00,
+            EMOTE_1 = 0x01,
+            EMOTE_2 = 0x02,
+            EMOTE_3 = 0x03,
+            EMOTE_4 = 0x04,
+            EMOTE_5 = 0x05,
+            EMOTE_6 = 0x06,
+            EMOTE_7 = 0x07,
+            EMOTE_8 = 0x08,
+            EMOTE_9 = 0x09;
 
     public final static BufferedImage[][] CHAR_SPRITE = new BufferedImage[NUM_PLAYER_ANIM_STATE][];
     public final static BufferedImage[] HUD = new BufferedImage[4];

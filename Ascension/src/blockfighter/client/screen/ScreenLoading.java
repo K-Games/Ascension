@@ -1,6 +1,7 @@
 package blockfighter.client.screen;
 
 import blockfighter.client.Globals;
+import blockfighter.client.entities.emotes.Emote;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.client.maps.GameMap;
 import blockfighter.client.maps.GameMapArena;
@@ -20,6 +21,8 @@ public class ScreenLoading extends ScreenMenu {
     public void load(final byte mapID) throws Exception {
         Particle.loadParticles();
         this.particlesReady = true;
+        Emote.loadEmotes();
+        
         switch (mapID) {
             case 0:
                 this.map = new GameMapArena();

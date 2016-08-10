@@ -2,6 +2,7 @@ package blockfighter.client.screen;
 
 import blockfighter.client.Globals;
 import blockfighter.client.SaveData;
+import blockfighter.client.entities.emotes.Emote;
 import blockfighter.client.entities.ingamenumber.IngameNumber;
 import blockfighter.client.entities.items.Item;
 import blockfighter.client.entities.items.ItemEquip;
@@ -489,7 +490,48 @@ public class ScreenIngame extends Screen {
                 case Globals.DATA_SCREEN_SHAKE:
                     dataScreenShake(data);
                     break;
+                case Globals.DATA_PLAYER_EMOTE:
+                    dataPlayerEmote(data);
+                    break;
             }
+        }
+    }
+
+    private void dataPlayerEmote(final byte[] data) {
+        final byte key = data[1];
+        final byte emoteID = data[2];
+        switch (emoteID) {
+            case Globals.EMOTE_0:
+                System.out.println("emote0");
+                //spawn emote tied to player
+                break;
+            case Globals.EMOTE_1:
+                System.out.println("emote1");
+                break;
+            case Globals.EMOTE_2:
+                System.out.println("emote2");
+                break;
+            case Globals.EMOTE_3:
+                System.out.println("emote3");
+                break;
+            case Globals.EMOTE_4:
+                System.out.println("emote4");
+                break;
+            case Globals.EMOTE_5:
+                System.out.println("emote5");
+                break;
+            case Globals.EMOTE_6:
+                System.out.println("emote6");
+                break;
+            case Globals.EMOTE_7:
+                System.out.println("emote7");
+                break;
+            case Globals.EMOTE_8:
+                System.out.println("emote8");
+                break;
+            case Globals.EMOTE_9:
+                System.out.println("emote9");
+                break;
         }
     }
 
@@ -1213,6 +1255,7 @@ public class ScreenIngame extends Screen {
         }
 
         Particle.unloadParticles();
+        Emote.unloadEmotes();
         ItemEquip.unloadSprites();
         for (final Map.Entry<Integer, Mob> mobEntry : this.mobs.entrySet()) {
             mobEntry.getValue().unload();

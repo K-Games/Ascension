@@ -6,6 +6,7 @@ http://www.gdunlimited.net/games/ascension/
 
 # Version 0.20 Update 1
 ## Gameplay Changes
+* Added Emotes. Assign a key to use the Emotes in the Keybind menu.
 
 ## Client Changes
 

@@ -164,6 +164,15 @@ public class PacketSender {
         sendTCPPacket(bytes);
     }
 
+    public static void sendUseEmote(final byte room, final byte key, final byte emoteID) {
+        final byte[] bytes = new byte[Globals.PACKET_BYTE * 4];
+        bytes[0] = Globals.DATA_PLAYER_EMOTE;
+        bytes[1] = room;
+        bytes[2] = key;
+        bytes[3] = emoteID;
+        sendTCPPacket(bytes);
+    }
+
     public static void sendGetPing() {
         GameClient.getClient().updateReturnTripTime();
     }

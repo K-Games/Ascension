@@ -133,6 +133,7 @@ public class Player extends Thread implements GameEntity {
     private Byte nextState;
 
     private long lastActionTime = 0;
+    private long lastEmoteTime = 0;
     private long skillCastTime = 0,
             deathTime = 0,
             lastHPSendTime = 0,
@@ -1389,6 +1390,18 @@ public class Player extends Thread implements GameEntity {
         }
         if (this.animState != prevAnimState || this.frame != prevFrame) {
             this.updateAnimState = true;
+        }
+    }
+
+    public void sendEmote(final byte emoteID) {
+        this.lastActionTime = this.room.getTime();
+        if (this.room.getTime() - this.lastEmoteTime >= Globals.msToNs(1000)) {
+            final byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
+            bytes[0] = Globals.DATA_PLAYER_EMOTE;
+            bytes[1] = this.key;
+            bytes[2] = emoteID;
+            PacketSender.sendAll(bytes, this.room.getRoom());
+            this.lastEmoteTime = this.room.getTime();
         }
     }
 
