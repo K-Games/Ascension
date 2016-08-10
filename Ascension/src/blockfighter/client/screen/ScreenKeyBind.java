@@ -20,8 +20,15 @@ public class ScreenKeyBind extends ScreenMenu {
         for (int i = 0; i < 12; i++) {
             KEY_BOX[i] = new Rectangle2D.Double(365, 45 + (i * 50), 180, 40);
         }
-        for (int i = 12; i < KEY_BOX.length; i++) {
-            KEY_BOX[i] = new Rectangle2D.Double(800, 45 + ((i - 12) * 50), 180, 30);
+        for (int i = 12; i < 16; i++) {
+            KEY_BOX[i] = new Rectangle2D.Double(800, 45 + ((i - 12) * 50), 180, 40);
+        }
+
+        for (int i = 16; i < 16 + Globals.NUM_EMOTES / 2; i++) {
+            KEY_BOX[i] = new Rectangle2D.Double(650, 300 + ((i - 16) * 50), 180, 40);
+        }
+        for (int i = 16 + Globals.NUM_EMOTES / 2; i < 16 + Globals.NUM_EMOTES; i++) {
+            KEY_BOX[i] = new Rectangle2D.Double(890, 300 + ((i - 16 - Globals.NUM_EMOTES / 2) * 50), 180, 40);
         }
     }
 
@@ -45,6 +52,11 @@ public class ScreenKeyBind extends ScreenMenu {
 
     private void drawButtons(final Graphics2D g) {
         final BufferedImage button = Globals.MENU_BUTTON[Globals.BUTTON_SMALLRECT];
+        g.setColor(SKILL_BOX_BG_COLOR);
+        g.fillRoundRect((int) KEY_BOX[16].x - 10 - 50, (int) KEY_BOX[16].y - 10,
+                (int) ((KEY_BOX[16 + Globals.NUM_EMOTES - 1].x + KEY_BOX[16 + Globals.NUM_EMOTES - 1].width + 10) - (KEY_BOX[16].x - 10 - 50)),
+                (int) ((KEY_BOX[16 + Globals.NUM_EMOTES - 1].y + KEY_BOX[16 + Globals.NUM_EMOTES - 1].height + 10) - (KEY_BOX[16].y - 10)), 15, 15);
+
         for (int i = 0; i < KEY_BOX.length; i++) {
             g.drawImage(button, (int) KEY_BOX[i].x, (int) KEY_BOX[i].y, null);
             g.setFont(Globals.ARIAL_18PT);

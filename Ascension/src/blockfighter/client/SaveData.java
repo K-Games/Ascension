@@ -142,6 +142,16 @@ public class SaveData {
         this.keybinds[Globals.KEYBIND_RIGHT] = KeyEvent.VK_RIGHT;
         this.keybinds[Globals.KEYBIND_JUMP] = KeyEvent.VK_SPACE;
         this.keybinds[Globals.KEYBIND_DOWN] = KeyEvent.VK_DOWN;
+        this.keybinds[Globals.KEYBIND_EMOTE1] = KeyEvent.VK_1;
+        this.keybinds[Globals.KEYBIND_EMOTE2] = KeyEvent.VK_2;
+        this.keybinds[Globals.KEYBIND_EMOTE3] = KeyEvent.VK_3;
+        this.keybinds[Globals.KEYBIND_EMOTE4] = KeyEvent.VK_4;
+        this.keybinds[Globals.KEYBIND_EMOTE5] = KeyEvent.VK_5;
+        this.keybinds[Globals.KEYBIND_EMOTE6] = KeyEvent.VK_6;
+        this.keybinds[Globals.KEYBIND_EMOTE7] = KeyEvent.VK_7;
+        this.keybinds[Globals.KEYBIND_EMOTE8] = KeyEvent.VK_8;
+        this.keybinds[Globals.KEYBIND_EMOTE9] = KeyEvent.VK_9;
+        this.keybinds[Globals.KEYBIND_EMOTE10] = KeyEvent.VK_0;
     }
 
     public static void saveData(final byte saveNum, final SaveData c) {
@@ -155,7 +165,7 @@ public class SaveData {
                 + Byte.BYTES * c.hotkeys.length
                 + Integer.BYTES * 16 //Base Keybinds
                 + Integer.BYTES //EXP
-                ];
+                + Integer.BYTES * Globals.NUM_EMOTES];
 
         byte[] temp = c.name.getBytes(StandardCharsets.UTF_8);
 
@@ -196,6 +206,8 @@ public class SaveData {
         System.arraycopy(temp, 0, data, pos, temp.length);
         pos += temp.length;
 
+        pos = saveEmoteKeyBind(data, c.getKeyBind(), pos);
+
         try {
             FileUtils.writeByteArrayToFile(new File(saveNum + ".tcdat"), data);
         } catch (final IOException ex) {
@@ -205,9 +217,20 @@ public class SaveData {
 
     private static int saveKeyBind(final byte[] data, final int[] keybind, final int pos) {
         int nextPos = pos;
-        for (final int element : keybind) {
+        for (int i = 0; i < 16; i++) {
             byte[] temp;
-            temp = Globals.intToBytes(element);
+            temp = Globals.intToBytes(keybind[i]);
+            System.arraycopy(temp, 0, data, nextPos, temp.length);
+            nextPos += temp.length;
+        }
+        return nextPos;
+    }
+
+    private static int saveEmoteKeyBind(final byte[] data, final int[] keybind, final int pos) {
+        int nextPos = pos;
+        for (int i = 16; i < 16 + Globals.NUM_EMOTES; i++) {
+            byte[] temp;
+            temp = Globals.intToBytes(keybind[i]);
             System.arraycopy(temp, 0, data, nextPos, temp.length);
             nextPos += temp.length;
         }
@@ -358,16 +381,37 @@ public class SaveData {
         c.baseStats[Globals.STAT_EXP] = Globals.bytesToInt(temp);
         pos += temp.length;
 
+        pos = readEmoteKeyBind(data, c.getKeyBind(), pos);
+
         c.calcStats();
         return c;
     }
 
     private static int readKeyBind(final byte[] data, final int[] keybind, final int pos) {
         int nextPos = pos;
-        for (int i = 0; i < keybind.length; i++) {
+        for (int i = 0; i < 16; i++) {
             final byte[] temp = new byte[4];
             System.arraycopy(data, nextPos, temp, 0, temp.length);
             keybind[i] = Globals.bytesToInt(temp);
+            nextPos += temp.length;
+        }
+        return nextPos;
+    }
+
+    private static int readEmoteKeyBind(final byte[] data, final int[] keybind, final int pos) {
+        int nextPos = pos;
+        for (int i = 16; i < 16 + Globals.NUM_EMOTES; i++) {
+            final byte[] temp = new byte[4];
+            try {
+                System.arraycopy(data, nextPos, temp, 0, temp.length);
+                if (Globals.bytesToInt(temp) == 0) {
+                    keybind[i] = -1;
+                } else {
+                    keybind[i] = Globals.bytesToInt(temp);
+                }
+            } catch (Exception e) {
+                keybind[i] = -1;
+            }
             nextPos += temp.length;
         }
         return nextPos;

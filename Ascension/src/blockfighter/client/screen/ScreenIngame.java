@@ -1110,6 +1110,26 @@ public class ScreenIngame extends Screen {
             if (this.c.getHotkeys()[11] != null) {
                 setSkillKeyDown(11, true);
             }
+        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE1]) {
+            PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.EMOTE_0);
+        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE2]) {
+            PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.EMOTE_1);
+        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE3]) {
+            PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.EMOTE_2);
+        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE4]) {
+            PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.EMOTE_3);
+        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE5]) {
+            PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.EMOTE_4);
+        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE6]) {
+            PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.EMOTE_5);
+        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE7]) {
+            PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.EMOTE_6);
+        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE8]) {
+            PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.EMOTE_7);
+        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE9]) {
+            PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.EMOTE_8);
+        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE10]) {
+            PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.EMOTE_9);
         }
     }
 
@@ -1184,6 +1204,26 @@ public class ScreenIngame extends Screen {
                 setSkillKeyDown(11, false);
                 PacketSender.sendUseSkill(logic.getSelectedRoom(), logic.getMyPlayerKey(), this.c.getHotkeys()[11].getSkillCode());
             }
+        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE1]) {
+            PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.EMOTE_0);
+        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE2]) {
+            PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.EMOTE_1);
+        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE3]) {
+            PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.EMOTE_2);
+        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE4]) {
+            PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.EMOTE_3);
+        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE5]) {
+            PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.EMOTE_4);
+        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE6]) {
+            PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.EMOTE_5);
+        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE7]) {
+            PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.EMOTE_6);
+        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE8]) {
+            PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.EMOTE_7);
+        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE9]) {
+            PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.EMOTE_8);
+        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE10]) {
+            PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.EMOTE_9);
         }
 
         switch (e.getKeyCode()) {

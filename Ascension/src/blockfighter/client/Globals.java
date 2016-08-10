@@ -125,7 +125,7 @@ public class Globals {
             PARTICLE_SHIELD_MAGNETIZESTART = 0x30,
             PARTICLE_SHIELD_MAGNETIZEBURST = 0x31;
 
-    public final static int NUM_KEYBINDS = 16,
+    public final static int NUM_KEYBINDS = 26,
             KEYBIND_SKILL1 = 0,
             KEYBIND_SKILL2 = 1,
             KEYBIND_SKILL3 = 2,
@@ -141,7 +141,17 @@ public class Globals {
             KEYBIND_LEFT = 12,
             KEYBIND_RIGHT = 13,
             KEYBIND_JUMP = 14,
-            KEYBIND_DOWN = 15;
+            KEYBIND_DOWN = 15,
+            KEYBIND_EMOTE1 = 16,
+            KEYBIND_EMOTE2 = 17,
+            KEYBIND_EMOTE3 = 18,
+            KEYBIND_EMOTE4 = 19,
+            KEYBIND_EMOTE5 = 20,
+            KEYBIND_EMOTE6 = 21,
+            KEYBIND_EMOTE7 = 22,
+            KEYBIND_EMOTE8 = 23,
+            KEYBIND_EMOTE9 = 24,
+            KEYBIND_EMOTE10 = 25;
 
     public final static byte NUM_ITEM_TABS = 10,
             ITEM_WEAPON = 0, // ITEM_WEAPON is the equipment slot/tab
