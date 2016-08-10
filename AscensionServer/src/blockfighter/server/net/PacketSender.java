@@ -133,7 +133,7 @@ public class PacketSender implements Runnable {
                     player.getConnection().sendTCP(data);
                 }
             } catch (Exception e) {
-                Globals.logError(e.getLocalizedMessage(), e, true);
+                Globals.logError(e.getStackTrace()[0].toString(), e, true);
             }
         }
     }

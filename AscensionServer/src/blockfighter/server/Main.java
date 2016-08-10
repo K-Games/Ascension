@@ -82,7 +82,7 @@ public class Main {
             Globals.log(Main.class, "Initialized " + server_rooms.length + " rooms", Globals.LOG_TYPE_DATA, true);
 
         } catch (final Exception ex) {
-            Globals.logError(ex.getLocalizedMessage(), ex, true);
+            Globals.logError(ex.getStackTrace()[0].toString(), ex, true);
         }
     }
 

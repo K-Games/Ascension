@@ -28,7 +28,7 @@ public class GameServer {
             Globals.log(GameServer.class, "Server listening on port TCP: " + Globals.SERVER_TCP_PORT, Globals.LOG_TYPE_DATA, true);
             //Globals.log(GameServer.class, "Server listening on port UDP: " + Globals.SERVER_UDP_PORT, Globals.LOG_TYPE_DATA, true);
         } catch (IOException ex) {
-            Globals.logError(ex.getLocalizedMessage(), ex, true);
+            Globals.logError(ex.getStackTrace()[0].toString(), ex, true);
             System.exit(1);
         }
     }

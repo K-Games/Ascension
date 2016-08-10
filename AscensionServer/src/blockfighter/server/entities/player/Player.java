@@ -467,7 +467,7 @@ public class Player extends Thread implements GameEntity {
         try {
             update();
         } catch (final Exception ex) {
-            Globals.logError(ex.getLocalizedMessage(), ex, true);
+            Globals.logError(ex.getStackTrace()[0].toString(), ex, true);
         }
     }
 

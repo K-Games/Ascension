@@ -32,7 +32,7 @@ public class PacketHandler {
                 try {
                     receivePlayerLogin(data, roomIndex, c);
                 } catch (Exception e) {
-                    Globals.logError(e.getLocalizedMessage(), e, true);
+                    Globals.logError(e.getStackTrace()[0].toString(), e, true);
                     c.close();
                 }
                 break;
@@ -40,7 +40,7 @@ public class PacketHandler {
                 try {
                     receivePlayerCreate(data, roomIndex, c);
                 } catch (Exception e) {
-                    Globals.logError(e.getLocalizedMessage(), e, true);
+                    Globals.logError(e.getStackTrace()[0].toString(), e, true);
                     c.close();
                 }
                 break;

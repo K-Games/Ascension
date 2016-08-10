@@ -247,7 +247,7 @@ public class LogicModule extends Thread {
             }
 
         } catch (final Exception ex) {
-            Globals.logError(ex.getLocalizedMessage(), ex, true);
+            Globals.logError(ex.getStackTrace()[0].toString(), ex, true);
         }
     }
 
@@ -266,7 +266,7 @@ public class LogicModule extends Thread {
                     returnMobKey(mob.getKey());
                 }
             } catch (final InterruptedException ex) {
-                Globals.logError(ex.getLocalizedMessage(), ex, true);
+                Globals.logError(ex.getStackTrace()[0].toString(), ex, true);
             }
         }
     }
@@ -287,11 +287,10 @@ public class LogicModule extends Thread {
                 putPlayerIntoPlayerBuckets(player.getValue());
                 if (!(player.getValue().isConnected())) {
                     playersIter.remove();
-                    this.playerKeys.add(player.getKey());
-                    Globals.log(LogicModule.class, "Room: " + this.room + " Returned player key: " + player.getKey() + " Keys Remaining: " + this.playerKeys.size(), Globals.LOG_TYPE_DATA, true);
+                    returnPlayerKey(player.getKey());
                 }
             } catch (final InterruptedException ex) {
-                Globals.logError(ex.getLocalizedMessage(), ex, true);
+                Globals.logError(ex.getStackTrace()[0].toString(), ex, true);
             }
         }
     }
@@ -311,7 +310,7 @@ public class LogicModule extends Thread {
                     returnProjKey(projectile.getValue().getKey());
                 }
             } catch (final InterruptedException ex) {
-                Globals.logError(ex.getLocalizedMessage(), ex, true);
+                Globals.logError(ex.getStackTrace()[0].toString(), ex, true);
             }
         }
     }
@@ -399,7 +398,7 @@ public class LogicModule extends Thread {
                     }
                 }
             } catch (final Exception ex) {
-                Globals.logError(ex.getLocalizedMessage(), ex, true);
+                Globals.logError(ex.getStackTrace()[0].toString(), ex, true);
             }
         };
 
@@ -415,7 +414,7 @@ public class LogicModule extends Thread {
                     }
                 }
             } catch (final Exception ex) {
-                Globals.logError(ex.getLocalizedMessage(), ex, true);
+                Globals.logError(ex.getStackTrace()[0].toString(), ex, true);
             }
         };
 
@@ -428,7 +427,7 @@ public class LogicModule extends Thread {
                     }
                 }
             } catch (final Exception ex) {
-                Globals.logError(ex.getLocalizedMessage(), ex, true);
+                Globals.logError(ex.getStackTrace()[0].toString(), ex, true);
             }
         };
 
@@ -441,7 +440,7 @@ public class LogicModule extends Thread {
                     }
                 }
             } catch (final Exception ex) {
-                Globals.logError(ex.getLocalizedMessage(), ex, true);
+                Globals.logError(ex.getStackTrace()[0].toString(), ex, true);
             }
         };
 
@@ -454,7 +453,7 @@ public class LogicModule extends Thread {
                     }
                 }
             } catch (final Exception ex) {
-                Globals.logError(ex.getLocalizedMessage(), ex, true);
+                Globals.logError(ex.getStackTrace()[0].toString(), ex, true);
             }
         };
 
@@ -496,6 +495,11 @@ public class LogicModule extends Thread {
 
     public void returnMobKey(final byte key) {
         this.mobKeys.add(key);
+    }
+
+    public void returnPlayerKey(final byte key) {
+        this.playerKeys.add(key);
+        Globals.log(LogicModule.class, "Room: " + this.room + " Returned player key: " + key + " Keys Remaining: " + this.playerKeys.size(), Globals.LOG_TYPE_DATA, true);
     }
 
     public boolean containsPlayerID(final UUID id) {
