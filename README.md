@@ -22,6 +22,7 @@ An multiplayer action 2D sidescrolling brawler coded in pure Java.
 * Improved performance on projectile collision detection with spatial hashing implementation.
 * Maps now have TOP and BOTTOM boundaries.
 * Improved perforamnce on map platform collision detection with spatial hashing implementation.
+* Players now accelerate/deccelerate to a target speed in the air instead of instantly changing speed.
 
 # Credits
 ### Developer/Game Designer/Visual Designs

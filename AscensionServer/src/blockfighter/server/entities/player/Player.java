@@ -96,7 +96,7 @@ public class Player extends Thread implements GameEntity {
     private final LogicModule room;
     private UUID uniqueID;
     private String name = "";
-    private double x, y, ySpeed, xSpeed;
+    private double x, y, ySpeed, xSpeed, targetXSpeed;
     private final boolean[] dirKeydown = new boolean[4];
     private boolean isFalling = false, isJumping = false, isInvulnerable = false, isDead = false, isRemoveDebuff = false;
     private boolean updatePos = false, updateFacing = false, updateAnimState = false;
@@ -355,6 +355,11 @@ public class Player extends Thread implements GameEntity {
             this.xSpeed = 0;
         }
         this.xSpeed = speed;
+        this.targetXSpeed = this.xSpeed;
+    }
+
+    public void accelerateXSpeed(final double targetSpeed) {
+        this.targetXSpeed = targetSpeed;
     }
 
     public void setSkill(final byte skillCode, final byte level) {
@@ -477,7 +482,10 @@ public class Player extends Thread implements GameEntity {
 
         queuePlayerState(PLAYER_STATE_STAND);
         updateFall();
-        final boolean movedX = updateX(this.xSpeed);
+        if (this.xSpeed != this.targetXSpeed) {
+            updateXAcceleration();
+        }
+        final boolean xChanged = updateX(this.xSpeed);
         this.hitbox.x = this.x - 20;
         this.hitbox.y = this.y - 100;
 
@@ -492,7 +500,7 @@ public class Player extends Thread implements GameEntity {
 
             if (!isImmovableUsingSkill() && !isStunned() && !isKnockback()) {
                 updateFacing();
-                updateWalk(movedX);
+                updateMove(xChanged);
                 if (!this.isJumping && !this.isFalling) {
                     updateJump();
                 }
@@ -1072,23 +1080,29 @@ public class Player extends Thread implements GameEntity {
         }
     }
 
-    private void updateWalk(final boolean moved) {
+    private void updateMove(final boolean xChanged) {
         if (this.dirKeydown[Globals.RIGHT] && !this.dirKeydown[Globals.LEFT]) {
-            setXSpeed(4.5);
-            if (moved) {
-                if (this.ySpeed == 0) {
-                    queuePlayerState(PLAYER_STATE_WALK);
-                }
+            if (this.ySpeed == 0) {
+                setXSpeed(4.5);
+            } else {
+                accelerateXSpeed(4.5);
+            }
+            if (xChanged && this.ySpeed == 0) {
+                queuePlayerState(PLAYER_STATE_WALK);
             }
         } else if (this.dirKeydown[Globals.LEFT] && !this.dirKeydown[Globals.RIGHT]) {
-            setXSpeed(-4.5);
-            if (moved) {
-                if (this.ySpeed == 0) {
-                    queuePlayerState(PLAYER_STATE_WALK);
-                }
+            if (this.ySpeed == 0) {
+                setXSpeed(-4.5);
+            } else {
+                accelerateXSpeed(-4.5);
             }
-        } else {
+            if (xChanged && this.ySpeed == 0) {
+                queuePlayerState(PLAYER_STATE_WALK);
+            }
+        } else if (this.ySpeed == 0) {
             setXSpeed(0);
+        } else {
+            accelerateXSpeed(0);
         }
     }
 
@@ -1130,6 +1144,20 @@ public class Player extends Thread implements GameEntity {
 
     public void setFrame(final byte f) {
         this.frame = f;
+    }
+
+    private void updateXAcceleration() {
+        if (this.xSpeed > this.targetXSpeed) {
+            this.xSpeed -= 0.15;
+            if (this.xSpeed < this.targetXSpeed) {
+                this.xSpeed = this.targetXSpeed;
+            }
+        } else if (this.xSpeed < this.targetXSpeed) {
+            this.xSpeed += 0.15;
+            if (this.xSpeed > this.targetXSpeed) {
+                this.xSpeed = this.targetXSpeed;
+            }
+        }
     }
 
     private boolean updateX(final double change) {
