@@ -218,6 +218,7 @@ public class Globals {
     public final static int PACKET_MAX_SIZE = 150;
     public final static int PACKET_BYTE = 1;
     public final static int PACKET_INT = 4;
+    public final static int PACKET_LONG = 8;
     public final static int PACKET_CHAR = 1;
     public static int PACKET_MAX_PER_CON = 1000;
 

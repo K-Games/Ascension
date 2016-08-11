@@ -81,48 +81,47 @@ public class PacketHandler {
     }
 
     private static void receiveMobGetStat(final byte[] data, final byte roomIndex, final Connection c) {
-        if (!rooms[roomIndex].getMobs().containsKey(data[2])) {
+        final int key = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 2 + Globals.PACKET_INT));
+        final byte statID = data[6];
+        if (!rooms[roomIndex].getMobs().containsKey(key)) {
             return;
         }
         byte[] stat;
-        switch (data[3]) {
+        switch (statID) {
             case Mob.STAT_MAXHP:
                 stat = Globals.intToBytes(10000);
                 break;
             case Mob.STAT_MINHP:
-                final double[] bStats = rooms[roomIndex].getMobs().get(data[2]).getStats();
+                final double[] bStats = rooms[roomIndex].getMobs().get(key).getStats();
                 final double hpPercent = bStats[Mob.STAT_MINHP] / bStats[Mob.STAT_MAXHP] * 10000;
                 stat = Globals.intToBytes((int) hpPercent);
                 break;
             default:
-                stat = Globals.intToBytes((int) rooms[roomIndex].getMobs().get(data[2]).getStats()[data[3]]);
+                stat = Globals.intToBytes((int) rooms[roomIndex].getMobs().get(key).getStats()[statID]);
         }
-        final byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT];
+        final byte[] bytes = new byte[Globals.PACKET_BYTE * 2 + Globals.PACKET_INT * 2];
         bytes[0] = Globals.DATA_MOB_GET_STAT;
-        bytes[1] = data[2];
-        bytes[2] = data[3];
-        System.arraycopy(stat, 0, bytes, 3, stat.length);
+        final byte[] intKey = Globals.intToBytes(key);
+        System.arraycopy(intKey, 0, bytes, 1, intKey.length);
+        bytes[5] = statID;
+        System.arraycopy(stat, 0, bytes, 6, stat.length);
         PacketSender.sendConnection(bytes, c);
     }
 
     private static void receiveMobSetType(final byte[] data, final byte roomIndex, final Connection c) {
-        if (!rooms[roomIndex].getMobs().containsKey(data[2])) {
+        final int key = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 2 + Globals.PACKET_INT));
+        if (!rooms[roomIndex].getMobs().containsKey(key)) {
             return;
         }
-        final byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT * 2];
+        final byte[] bytes = new byte[Globals.PACKET_BYTE * 2 + Globals.PACKET_INT * 3];
         bytes[0] = Globals.DATA_MOB_SET_TYPE;
-        bytes[1] = data[2];
-        bytes[2] = rooms[roomIndex].getMobs().get(data[2]).getType();
-        final byte[] posXInt = Globals.intToBytes((int) rooms[roomIndex].getMobs().get(data[2]).getX());
-        bytes[3] = posXInt[0];
-        bytes[4] = posXInt[1];
-        bytes[5] = posXInt[2];
-        bytes[6] = posXInt[3];
-        final byte[] posYInt = Globals.intToBytes((int) rooms[roomIndex].getMobs().get(data[2]).getY());
-        bytes[7] = posYInt[0];
-        bytes[8] = posYInt[1];
-        bytes[9] = posYInt[2];
-        bytes[10] = posYInt[3];
+        final byte[] intKey = Globals.intToBytes(key);
+        System.arraycopy(intKey, 0, bytes, 1, intKey.length);
+        bytes[5] = rooms[roomIndex].getMobs().get(key).getType();
+        final byte[] posXInt = Globals.intToBytes((int) rooms[roomIndex].getMobs().get(key).getX());
+        System.arraycopy(posXInt, 0, bytes, 6, posXInt.length);
+        final byte[] posYInt = Globals.intToBytes((int) rooms[roomIndex].getMobs().get(key).getY());
+        System.arraycopy(posYInt, 0, bytes, 10, posYInt.length);
         PacketSender.sendConnection(bytes, c);
     }
 
@@ -193,19 +192,15 @@ public class PacketHandler {
     }
 
     private static void receivePlayerCreate(final byte[] data, final byte roomIndex, final Connection c) {
-        byte[] temp = new byte[8];
         long leastSigBit, mostSigBit;
         int pos = 17;
         final LogicModule lm = rooms[roomIndex];
 
-        System.arraycopy(data, pos, temp, 0, temp.length);
-        pos += temp.length;
-        leastSigBit = Globals.bytesToLong(temp);
+        leastSigBit = Globals.bytesToLong(Arrays.copyOfRange(data, pos, pos + Globals.PACKET_LONG));
+        pos += Globals.PACKET_LONG;
 
-        System.arraycopy(data, pos, temp, 0, temp.length);
-        pos += temp.length;
-        mostSigBit = Globals.bytesToLong(temp);
-
+        mostSigBit = Globals.bytesToLong(Arrays.copyOfRange(data, pos, pos + Globals.PACKET_LONG));
+        pos += Globals.PACKET_LONG;
         final UUID id = new UUID(mostSigBit, leastSigBit);
 
         if (lm.containsPlayerID(id)) {
@@ -231,49 +226,35 @@ public class PacketHandler {
 
         final Player newPlayer = new Player(lm, freeKey, c, lm.getMap());
 
-        temp = new byte[Globals.MAX_NAME_LENGTH];
-        System.arraycopy(data, 2, temp, 0, temp.length);
-        newPlayer.setPlayerName(new String(temp, StandardCharsets.UTF_8).trim());
-
+        newPlayer.setPlayerName(new String(Arrays.copyOfRange(data, 2, 2 + Globals.MAX_NAME_LENGTH), StandardCharsets.UTF_8).trim());
         newPlayer.setUniqueID(id);
 
-        temp = new byte[4];
-        System.arraycopy(data, pos, temp, 0, temp.length);
-        pos += temp.length;
-        newPlayer.setStat(Globals.STAT_LEVEL, Globals.bytesToInt(temp));
-        System.arraycopy(data, pos, temp, 0, temp.length);
-        pos += temp.length;
-        newPlayer.setStat(Globals.STAT_POWER, Globals.bytesToInt(temp));
-        System.arraycopy(data, pos, temp, 0, temp.length);
-        pos += temp.length;
-        newPlayer.setStat(Globals.STAT_DEFENSE, Globals.bytesToInt(temp));
-        System.arraycopy(data, pos, temp, 0, temp.length);
-        pos += temp.length;
-        newPlayer.setStat(Globals.STAT_SPIRIT, Globals.bytesToInt(temp));
+        newPlayer.setStat(Globals.STAT_LEVEL, Globals.bytesToInt(Arrays.copyOfRange(data, pos, pos + Globals.PACKET_INT)));
+        pos += Globals.PACKET_INT;
+        newPlayer.setStat(Globals.STAT_POWER, Globals.bytesToInt(Arrays.copyOfRange(data, pos, pos + Globals.PACKET_INT)));
+        pos += Globals.PACKET_INT;
+        newPlayer.setStat(Globals.STAT_DEFENSE, Globals.bytesToInt(Arrays.copyOfRange(data, pos, pos + Globals.PACKET_INT)));
+        pos += Globals.PACKET_INT;
+        newPlayer.setStat(Globals.STAT_SPIRIT, Globals.bytesToInt(Arrays.copyOfRange(data, pos, pos + Globals.PACKET_INT)));
+        pos += Globals.PACKET_INT;
 
-        System.arraycopy(data, pos, temp, 0, temp.length);
-        pos += temp.length;
-        newPlayer.setBonusStat(Globals.STAT_ARMOR, Globals.bytesToInt(temp));
-        System.arraycopy(data, pos, temp, 0, temp.length);
-        pos += temp.length;
-        newPlayer.setBonusStat(Globals.STAT_REGEN, Globals.bytesToInt(temp) / 10D);
-        System.arraycopy(data, pos, temp, 0, temp.length);
-        pos += temp.length;
-        newPlayer.setBonusStat(Globals.STAT_CRITDMG, Globals.bytesToInt(temp) / 10000D);
-        System.arraycopy(data, pos, temp, 0, temp.length);
-        pos += temp.length;
-        newPlayer.setBonusStat(Globals.STAT_CRITCHANCE, Globals.bytesToInt(temp) / 10000D);
+        newPlayer.setBonusStat(Globals.STAT_ARMOR, Globals.bytesToInt(Arrays.copyOfRange(data, pos, pos + Globals.PACKET_INT)));
+        pos += Globals.PACKET_INT;
+        newPlayer.setBonusStat(Globals.STAT_REGEN, Globals.bytesToInt(Arrays.copyOfRange(data, pos, pos + Globals.PACKET_INT)) / 10D);
+        pos += Globals.PACKET_INT;
+        newPlayer.setBonusStat(Globals.STAT_CRITDMG, Globals.bytesToInt(Arrays.copyOfRange(data, pos, pos + Globals.PACKET_INT)) / 10000D);
+        pos += Globals.PACKET_INT;
+        newPlayer.setBonusStat(Globals.STAT_CRITCHANCE, Globals.bytesToInt(Arrays.copyOfRange(data, pos, pos + Globals.PACKET_INT)) / 10000D);
+        pos += Globals.PACKET_INT;
 
         for (int i = 0; i < Globals.NUM_EQUIP_SLOTS; i++) {
-            System.arraycopy(data, pos, temp, 0, temp.length);
-            pos += temp.length;
-            newPlayer.setEquip(i, Globals.bytesToInt(temp));
+            newPlayer.setEquip(i, Globals.bytesToInt(Arrays.copyOfRange(data, pos, pos + Globals.PACKET_INT)));
+            pos += Globals.PACKET_INT;
         }
 
         for (int i = 0; i < 12; i++) {
-            temp = new byte[2];
-            System.arraycopy(data, pos, temp, 0, temp.length);
-            pos += temp.length;
+            final byte[] temp = Arrays.copyOfRange(data, pos, pos + Globals.PACKET_BYTE * 2);
+            pos += Globals.PACKET_BYTE * 2;
             if (temp[0] == -1) {
                 continue;
             }
@@ -305,19 +286,16 @@ public class PacketHandler {
     }
 
     private static void receivePlayerLogin(final byte[] data, final byte roomIndex, final Connection c) {
-        byte[] temp = new byte[8];
         long leastSigBit, mostSigBit;
         int pos = 2;
         final LogicModule lm = rooms[roomIndex];
         Globals.log(PacketHandler.class, "DATA_PLAYER_LOGIN " + c + " Login Attempt Room: " + lm.getRoom(), Globals.LOG_TYPE_DATA, true);
 
-        System.arraycopy(data, pos, temp, 0, temp.length);
-        pos += temp.length;
-        leastSigBit = Globals.bytesToLong(temp);
+        leastSigBit = Globals.bytesToLong(Arrays.copyOfRange(data, pos, pos + Globals.PACKET_LONG));
+        pos += Globals.PACKET_LONG;
 
-        System.arraycopy(data, pos, temp, 0, temp.length);
-        pos += temp.length;
-        mostSigBit = Globals.bytesToLong(temp);
+        mostSigBit = Globals.bytesToLong(Arrays.copyOfRange(data, pos, pos + Globals.PACKET_LONG));
+        pos += Globals.PACKET_LONG;
 
         final UUID id = new UUID(mostSigBit, leastSigBit);
         if (lm.containsPlayerID(id)) {
@@ -338,9 +316,7 @@ public class PacketHandler {
             return;
         }
 
-        temp = new byte[4];
-        System.arraycopy(data, pos, temp, 0, temp.length);
-        final int level = Globals.bytesToInt(temp);
+        final int level = Globals.bytesToInt(Arrays.copyOfRange(data, pos, pos + Globals.PACKET_INT));
 
         if (!lm.isInLevelRange(level)) {
             final byte[] bytes = new byte[Globals.PACKET_BYTE * 2];
