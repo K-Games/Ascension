@@ -75,7 +75,12 @@ public class GameClient extends Thread {
         byte loginResponse = data[1];
         switch (loginResponse) {
             case Globals.LOGIN_SUCCESS:
-                if (data[2] != Globals.GAME_MAJOR_VERSION || data[3] != Globals.GAME_MINOR_VERSION || data[4] != Globals.GAME_UPDATE_NUMBER) {
+                try {
+                    if (data[2] != Globals.GAME_MAJOR_VERSION || data[3] != Globals.GAME_MINOR_VERSION || data[4] != Globals.GAME_UPDATE_NUMBER) {
+                        shutdownClient(ScreenServerList.STATUS_WRONGVERSION);
+                        return;
+                    }
+                } catch (Exception e) {
                     shutdownClient(ScreenServerList.STATUS_WRONGVERSION);
                     return;
                 }
