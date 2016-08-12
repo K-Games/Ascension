@@ -1,9 +1,10 @@
 ![Ascension](https://github.com/kenofnz/Ascension/raw/master/Ascension/resources/sprites/ui/menu/title.png)
 
 # Description
-An multiplayer action 2D sidescrolling brawler coded in pure Java.
+An multiplayer action 2D PvP platformer coded in Java.
+http://www.gdunlimited.net/games/ascension/
 
-# Version 0.19 Update 1
+# Version 0.20 Release
 ## Gameplay Changes
 * Some skills now have screen shake when dealing damage.
 
