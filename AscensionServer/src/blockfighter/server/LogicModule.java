@@ -154,8 +154,8 @@ public class LogicModule extends Thread {
         HashMap<Byte, Player> nearbyPlayerBuckets = new HashMap<>(this.players.size());
         Integer[] bucketIDs = getBucketIDsForRect(rect);
         for (int bucketID : bucketIDs) {
-            for (final Map.Entry<Byte, Player> player : this.playerBuckets.get(bucketID).entrySet()) {
-                if (this.playerBuckets.containsKey(bucketID)) {
+            if (this.playerBuckets.containsKey(bucketID)) {
+                for (final Map.Entry<Byte, Player> player : this.playerBuckets.get(bucketID).entrySet()) {
                     if (!nearbyPlayerBuckets.containsKey(player.getKey())) {
                         nearbyPlayerBuckets.put(player.getKey(), player.getValue());
                     }
