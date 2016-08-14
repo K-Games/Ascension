@@ -19,12 +19,10 @@ public class RoomTest {
     @Mock
     ConcurrentLinkedQueue<Integer> mobKeys;
 
-    Room room;
-
     @Test
     public void testGetNextPlayerKeyReturnInvalidKeyWhenPlayerKeysIsEmpty() {
         System.out.println("getNextPlayerKey: Return -1 when there are no player keys in queue");
-        room = new Room((byte) 0, (byte) 0);
+        Room room = new Room((byte) 0, (byte) 0);
         room.setPlayerKeys(playerKeys);
         when(playerKeys.isEmpty()).thenReturn(true);
 
@@ -39,7 +37,7 @@ public class RoomTest {
     @Test
     public void testGetNextPlayerKeyReturnAKeyWhenPlayerKeysIsNotEmpty() {
         System.out.println("getNextPlayerKey: Return a valid key when there are player keys in queue");
-        room = new Room((byte) 0, (byte) 0);
+        Room room = new Room((byte) 0, (byte) 0);
         room.setPlayerKeys(playerKeys);
         when(playerKeys.isEmpty()).thenReturn(false);
         when(playerKeys.poll()).thenReturn((byte) 1);
@@ -55,7 +53,7 @@ public class RoomTest {
     @Test
     public void testGetNextMobKeyReturnInvalidKeyWhenPlayerKeysIsEmpty() {
         System.out.println("getNextMobKey: Return -1 when there are no mob keys in queue");
-        room = new Room((byte) 0, (byte) 0);
+        Room room = new Room((byte) 0, (byte) 0);
         room.setMobKeys(mobKeys);
         when(mobKeys.isEmpty()).thenReturn(true);
 
@@ -70,7 +68,7 @@ public class RoomTest {
     @Test
     public void testGetNextMobKeyReturnAKeyWhenPlayerKeysIsNotEmpty() {
         System.out.println("getNextMobKey: Return a valid key when there are mob keys in queue");
-        room = new Room((byte) 0, (byte) 0);
+        Room room = new Room((byte) 0, (byte) 0);
         room.setMobKeys(mobKeys);
         when(mobKeys.isEmpty()).thenReturn(false);
         when(mobKeys.poll()).thenReturn(1);
@@ -86,7 +84,7 @@ public class RoomTest {
     @Test
     public void testGetNextProjKey() {
         System.out.println("getNextProjKey: Get 10,000 Projectile Keys with no duplicates.");
-        room = new Room((byte) 0, (byte) 0);
+        Room room = new Room((byte) 0, (byte) 0);
         for (int i = 0; i < 10000; i++) {
             int result = room.getNextProjKey();
             assertEquals(i, result);
@@ -99,7 +97,7 @@ public class RoomTest {
         ConcurrentLinkedQueue<Integer> projKeys = new ConcurrentLinkedQueue<>();
         ConcurrentLinkedQueue<Integer> spy = spy(projKeys);
 
-        room = new Room((byte) 0, (byte) 0);
+        Room room = new Room((byte) 0, (byte) 0);
         room.setProjKeys(spy);
         for (int i = 0; i < 200; i++) {
             int result = room.getNextProjKey();
@@ -123,7 +121,7 @@ public class RoomTest {
         System.out.println("returnMobKey: Return 200 Mob Keys.");
         ConcurrentLinkedQueue<Integer> spyMobKeys = new ConcurrentLinkedQueue<>();
         ConcurrentLinkedQueue<Integer> spy = spy(spyMobKeys);
-        room = new Room((byte) 0, (byte) 0);
+        Room room = new Room((byte) 0, (byte) 0);
         room.setMobKeys(spy);
         for (int i = 0; i < 200; i++) {
             room.returnMobKey((byte) i);
@@ -143,7 +141,7 @@ public class RoomTest {
         System.out.println("containsPlayerID: True if a player has this UUID");
         ConcurrentHashMap<Byte, Player> mockPlayers = new ConcurrentHashMap<>();
         Player mockPlayer = mock(Player.class);
-        room = new Room((byte) 0, (byte) 0) {
+        Room room = new Room((byte) 0, (byte) 0) {
             @Override
             public ConcurrentHashMap<Byte, Player> getPlayers() {
                 return mockPlayers;
@@ -166,7 +164,7 @@ public class RoomTest {
         Player mockPlayer = mock(Player.class);
 
         mockPlayers.put((byte) 0, mockPlayer);
-        room = new Room((byte) 0, (byte) 0);
+        Room room = new Room((byte) 0, (byte) 0);
         room.setPlayers(mockPlayers);
 
         UUID id1 = UUID.randomUUID();
@@ -182,7 +180,7 @@ public class RoomTest {
         System.out.println("getPlayerKey: Return player key with matching UUID");
         ConcurrentHashMap<Byte, Player> mockPlayers = new ConcurrentHashMap<>();
         Player mockPlayer = mock(Player.class);
-        room = new Room((byte) 0, (byte) 0) {
+        Room room = new Room((byte) 0, (byte) 0) {
             @Override
             public ConcurrentHashMap<Byte, Player> getPlayers() {
                 return mockPlayers;
@@ -215,7 +213,7 @@ public class RoomTest {
         byte playerKey = 8;
         mockPlayers.put(playerKey, mockPlayer);
 
-        room = new Room((byte) 0, (byte) 0);
+        Room room = new Room((byte) 0, (byte) 0);
         room.setPlayers(mockPlayers);
 
         UUID id = UUID.randomUUID();
@@ -234,7 +232,7 @@ public class RoomTest {
     @Test
     public void testGetPlayerKeyReturnInvalidKeyWithNoPlayers() {
         System.out.println("getPlayerKey: Return -1 when no players exist");
-        room = new Room((byte) 0, (byte) 0);
+        Room room = new Room((byte) 0, (byte) 0);
         byte expResult = -1;
         byte result = room.getPlayerKey(UUID.randomUUID());
 
@@ -246,7 +244,7 @@ public class RoomTest {
     @Test
     public void testIsFullTrueWhenPlayerKeysIsEmpty() {
         System.out.println("isFull: Return true when there are no player keys in queue");
-        room = new Room((byte) 0, (byte) 0);
+        Room room = new Room((byte) 0, (byte) 0);
         room.setPlayerKeys(playerKeys);
         when(playerKeys.isEmpty()).thenReturn(true);
 
@@ -262,7 +260,7 @@ public class RoomTest {
     public void testIsInLevelRangeTrueWhenInRange() {
         System.out.println("isFull: Return true when there are level is in room's level range");
 
-        room = new Room((byte) 0, (byte) 0);
+        Room room = new Room((byte) 0, (byte) 0);
         room.setMinLevel(1);
         room.setMaxLevel(30);
         for (int i = 1; i <= 30; i++) {
@@ -273,7 +271,7 @@ public class RoomTest {
     @Test
     public void testIsInLevelRangeFalseWhenOutOfRange() {
         System.out.println("isFull: Return false when there are level is not in room's level range");
-        room = new Room((byte) 0, (byte) 0);
+        Room room = new Room((byte) 0, (byte) 0);
         room.setMinLevel(1);
         room.setMaxLevel(30);
 
