@@ -42,7 +42,7 @@ public class Main {
     public static void main(final String[] args) {
         System.out.println("Ascension Server " + Globals.GAME_RELEASE_VERSION);
 
-        boolean isGUI = true, isDefault = false;
+        boolean isGUI = false, isDefault = false;
 
         if (args.length > 0) {
             final HashSet<String> arguments = new HashSet<>();
