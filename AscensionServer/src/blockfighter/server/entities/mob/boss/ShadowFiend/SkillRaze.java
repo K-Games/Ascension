@@ -17,13 +17,13 @@ public class SkillRaze extends MobSkill {
 
     @Override
     public void updateSkillUse(Mob mob) {
-        long duration = Globals.nsToMs(this.room.getTime() - mob.getSkillCastTime());
+        long duration = Globals.nsToMs(this.logic.getTime() - mob.getSkillCastTime());
         if (mob.getSkillCounter() == 0) {
             mob.incrementSkillCounter();
-            Projectile proj = new ProjRaze(this.room, mob, mob.getX(), mob.getY(), true);
-            Projectile proj2 = new ProjRaze(this.room, mob, mob.getX(), mob.getY(), false);
-            this.room.queueAddProj(proj2);
-            this.room.queueAddProj(proj);
+            Projectile proj = new ProjRaze(this.logic, mob, mob.getX(), mob.getY(), true);
+            Projectile proj2 = new ProjRaze(this.logic, mob, mob.getX(), mob.getY(), false);
+            this.logic.queueAddProj(proj2);
+            this.logic.queueAddProj(proj);
         }
         if (Globals.hasPastDuration(duration, 1000)) {
             mob.queueMobState(STATE_STAND);

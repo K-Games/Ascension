@@ -26,13 +26,13 @@ public class ProjTouch extends MobProjectile {
             return;
         }
 
-        long sinceLastDamage = Globals.nsToMs(this.room.getTime() - this.lastTouchDamage);
+        long sinceLastDamage = Globals.nsToMs(this.logic.getTime() - this.lastTouchDamage);
         if (sinceLastDamage >= 500) {
             this.pHit.clear();
-            this.lastTouchDamage = this.room.getTime();
+            this.lastTouchDamage = this.logic.getTime();
         }
 
-        for (final Map.Entry<Byte, Player> pEntry : this.room.getPlayers().entrySet()) {
+        for (final Map.Entry<Byte, Player> pEntry : this.logic.getRoom().getPlayers().entrySet()) {
             final Player p = pEntry.getValue();
             if (p != getOwner() && !this.pHit.containsKey(p.getKey()) && !p.isInvulnerable() && p.intersectHitbox(this.hitbox[0])) {
                 this.playerQueue.add(p);
@@ -49,7 +49,7 @@ public class ProjTouch extends MobProjectile {
             if (p != null && !p.isDead()) {
                 final int damage = (int) (70 * Math.pow(getMobOwner().getStats()[Mob.STAT_LEVEL], 1.7));
                 p.queueDamage(new Damage(damage, false, getMobOwner(), p, this.hitbox[0], p.getHitbox()));
-                p.queueBuff(new BuffKnockback(this.room, 100, (p.getFacing() == Globals.RIGHT) ? -5 : 5, -6, getMobOwner(), p));
+                p.queueBuff(new BuffKnockback(this.logic, 100, (p.getFacing() == Globals.RIGHT) ? -5 : 5, -6, getMobOwner(), p));
             }
         }
         this.queuedEffect = false;

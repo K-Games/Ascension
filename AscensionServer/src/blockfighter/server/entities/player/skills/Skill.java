@@ -12,7 +12,7 @@ public abstract class Skill {
     protected byte level;
     protected long skillCastTime;
     protected int maxCooldown;
-    protected LogicModule room;
+    protected LogicModule logic;
     protected boolean isPassive = false;
     protected int endDuration;
     protected Byte reqEquipSlot = null;
@@ -51,7 +51,7 @@ public abstract class Skill {
             PASSIVE_STATIC = 0x1D;
 
     public Skill(final LogicModule l) {
-        this.room = l;
+        this.logic = l;
     }
 
     public byte getSkillCode() {
@@ -63,11 +63,11 @@ public abstract class Skill {
     }
 
     public void setCooldown() {
-        this.skillCastTime = this.room.getTime();
+        this.skillCastTime = this.logic.getTime();
     }
 
     public long getCooldown() {
-        return Globals.nsToMs(this.room.getTime() - this.skillCastTime);
+        return Globals.nsToMs(this.logic.getTime() - this.skillCastTime);
     }
 
     public int getMaxCooldown() {

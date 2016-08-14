@@ -14,9 +14,9 @@ import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
 public class PacketSender implements Runnable {
 
-    private static LogicModule[] rooms;
+    private static LogicModule[] logic;
 
-    public static void sendParticle(final byte room, final byte particleID, final double x, final double y, final byte facing) {
+    public static void sendParticle(final byte roomNumber, final byte particleID, final double x, final double y, final byte facing) {
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT * 2];
         bytes[0] = Globals.DATA_PARTICLE_EFFECT;
         bytes[1] = particleID;
@@ -28,28 +28,28 @@ public class PacketSender implements Runnable {
         System.arraycopy(posYInt, 0, bytes, 6, posYInt.length);
 
         bytes[10] = facing;
-        sendAll(bytes, room);
+        sendAll(bytes, roomNumber);
     }
 
-    public static void sendParticle(final byte room, final byte particleID, final double x, final double y) {
-        sendParticle(room, particleID, x, y, Globals.RIGHT);
+    public static void sendParticle(final byte roomNumber, final byte particleID, final double x, final double y) {
+        sendParticle(roomNumber, particleID, x, y, Globals.RIGHT);
     }
 
-    public static void sendParticle(final byte room, final byte particleID, final byte key) {
+    public static void sendParticle(final byte roomNumber, final byte particleID, final byte key) {
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
         bytes[0] = Globals.DATA_PARTICLE_EFFECT;
         bytes[1] = particleID;
         bytes[2] = key;
-        sendAll(bytes, room);
+        sendAll(bytes, roomNumber);
     }
 
-    public static void sendParticle(final byte room, final byte particleID, final byte key, final byte facing) {
+    public static void sendParticle(final byte roomNumber, final byte particleID, final byte key, final byte facing) {
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 4];
         bytes[0] = Globals.DATA_PARTICLE_EFFECT;
         bytes[1] = particleID;
         bytes[2] = facing;
         bytes[3] = key;
-        sendAll(bytes, room);
+        sendAll(bytes, roomNumber);
     }
 
     public static void sendScreenShake(final Player player) {
@@ -58,7 +58,7 @@ public class PacketSender implements Runnable {
         sendPlayer(bytes, player);
     }
 
-    public static void sendSFX(final byte room, final byte sfxID, final double soundX, final double soundY) {
+    public static void sendSFX(final byte roomNumber, final byte sfxID, final double soundX, final double soundY) {
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 2 + Globals.PACKET_INT * 2];
         bytes[0] = Globals.DATA_SOUND_EFFECT;
         bytes[1] = sfxID;
@@ -66,7 +66,7 @@ public class PacketSender implements Runnable {
         System.arraycopy(posXInt, 0, bytes, 2, posXInt.length);
         final byte[] posYInt = Globals.intToBytes((int) soundY);
         System.arraycopy(posYInt, 0, bytes, 6, posYInt.length);
-        sendAll(bytes, room);
+        sendAll(bytes, roomNumber);
     }
     private int dataSent = 0;
     private static final ConcurrentLinkedQueue<GamePacket> OUT_PACKET_QUEUE = new ConcurrentLinkedQueue<>();
@@ -113,7 +113,7 @@ public class PacketSender implements Runnable {
     }
 
     public static void setLogic(final LogicModule[] l) {
-        rooms = l;
+        logic = l;
     }
 
     public static void sendConnection(final byte[] data, final Connection c) {
@@ -138,14 +138,14 @@ public class PacketSender implements Runnable {
         }
     }
 
-    public static void sendAll(final byte[] data, final byte room) {
-        for (final Map.Entry<Byte, Player> pEntry : rooms[Globals.SERVER_ROOMNUM_TO_ROOMINDEX.get(room)].getPlayers().entrySet()) {
+    public static void sendAll(final byte[] data, final byte roomNumber) {
+        for (final Map.Entry<Byte, Player> pEntry : logic[Globals.SERVER_ROOMNUM_TO_ROOMINDEX.get(roomNumber)].getRoom().getPlayers().entrySet()) {
             sendPlayer(data, pEntry.getValue());
         }
     }
 
-    public static void sendAllPlayerData(final byte room) {
-        for (final Map.Entry<Byte, Player> pEntry : rooms[Globals.SERVER_ROOMNUM_TO_ROOMINDEX.get(room)].getPlayers().entrySet()) {
+    public static void sendAllPlayerData(final byte roomNumber) {
+        for (final Map.Entry<Byte, Player> pEntry : logic[Globals.SERVER_ROOMNUM_TO_ROOMINDEX.get(roomNumber)].getRoom().getPlayers().entrySet()) {
             final Player player = pEntry.getValue();
             player.sendData();
         }

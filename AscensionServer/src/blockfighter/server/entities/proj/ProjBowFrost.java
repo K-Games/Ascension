@@ -51,8 +51,8 @@ public class ProjBowFrost extends Projectile {
                     damage = (int) owner.criticalDamage(damage);
                 }
                 p.queueDamage(new Damage(damage, true, owner, p, crit, this.hitbox[0], p.getHitbox()));
-                p.queueBuff(new BuffKnockback(this.room, 200, (owner.getFacing() == Globals.RIGHT) ? 3 : -3, -4, owner, p));
-                p.queueBuff(new BuffStun(this.room, owner.isSkillMaxed(Skill.BOW_FROST) ? 2500 : 1500));
+                p.queueBuff(new BuffKnockback(this.logic, 200, (owner.getFacing() == Globals.RIGHT) ? 3 : -3, -4, owner, p));
+                p.queueBuff(new BuffStun(this.logic, owner.isSkillMaxed(Skill.BOW_FROST) ? 2500 : 1500));
             }
         }
         while (!this.mobQueue.isEmpty()) {
@@ -71,7 +71,7 @@ public class ProjBowFrost extends Projectile {
                 }
                 b.queueDamage(new Damage(damage, true, owner, b, crit, this.hitbox[0], b.getHitbox()));
                 if (!this.isSecondary) {
-                    b.queueBuff(new BuffStun(this.room, owner.isSkillMaxed(Skill.BOW_FROST) ? 2500 : 1500));
+                    b.queueBuff(new BuffStun(this.logic, owner.isSkillMaxed(Skill.BOW_FROST) ? 2500 : 1500));
                 }
             }
         }

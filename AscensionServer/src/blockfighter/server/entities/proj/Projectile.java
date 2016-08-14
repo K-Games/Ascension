@@ -2,6 +2,7 @@ package blockfighter.server.entities.proj;
 
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
+import blockfighter.server.Room;
 import blockfighter.server.entities.GameEntity;
 import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
@@ -15,7 +16,8 @@ public abstract class Projectile extends Thread implements GameEntity {
 
     protected final int key;
 
-    protected final LogicModule room;
+    protected final LogicModule logic;
+    protected final Room room;
 
     protected double x, y;
 
@@ -37,9 +39,10 @@ public abstract class Projectile extends Thread implements GameEntity {
     protected long projStartTime = 0;
 
     public Projectile(final LogicModule l) {
-        this.room = l;
+        this.logic = l;
+        this.room = l.getRoom();
         this.key = this.room.getNextProjKey();
-        projStartTime = this.room.getTime();
+        projStartTime = this.logic.getTime();
     }
 
     public Projectile(final LogicModule l, final Player o, final double x, final double y, final int duration) {
@@ -121,7 +124,7 @@ public abstract class Projectile extends Thread implements GameEntity {
     }
 
     public boolean isExpired() {
-        return Globals.nsToMs(this.room.getTime() - this.projStartTime) >= this.duration;
+        return Globals.nsToMs(this.logic.getTime() - this.projStartTime) >= this.duration;
     }
 
     public boolean isQueued() {
@@ -144,7 +147,7 @@ public abstract class Projectile extends Thread implements GameEntity {
             if (this.screenshake) {
                 PacketSender.sendScreenShake(this.getOwner());
             }
-            this.room.queueProjEffect(p);
+            this.logic.queueProjEffect(p);
             this.queuedEffect = true;
         }
     }

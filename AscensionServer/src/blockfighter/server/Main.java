@@ -75,7 +75,7 @@ public class Main {
                 PACKETSENDER_SCHEDULER.scheduleAtFixedRate(new PacketSender(), 0, 100, TimeUnit.MICROSECONDS);
             }
             for (final Map.Entry<Byte, Byte> b : Globals.SERVER_ROOMNUM_TO_ROOMINDEX.entrySet()) {
-                server_rooms[b.getValue()] = new LogicModule(b.getKey());
+                server_rooms[b.getValue()] = new LogicModule(b.getKey(), b.getValue());
                 LOGIC_SCHEDULER.scheduleAtFixedRate(server_rooms[b.getValue()], 0, 750, TimeUnit.MICROSECONDS);
             }
             Globals.log(Main.class, "Initialized " + server_rooms.length + " rooms", Globals.LOG_TYPE_ERR, false);
