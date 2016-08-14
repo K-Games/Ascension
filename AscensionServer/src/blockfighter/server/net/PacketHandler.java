@@ -22,13 +22,13 @@ public class PacketHandler {
 
     public static void process(byte[] data, Connection c) {
         final byte dataType = data[0];
-        final byte room = data[1];
+        final byte roomNum = data[1];
 
-        if (!Globals.SERVER_ROOMNUM_TO_ROOMINDEX.containsKey(room)) {
-            Globals.log(PacketHandler.class, "DATA_INVALID_ROOM " + c + " Invalid Room Number. Room: " + room, Globals.LOG_TYPE_DATA, true);
+        if (!Globals.SERVER_ROOMNUM_TO_ROOMINDEX.containsKey(roomNum)) {
+            Globals.log(PacketHandler.class, "DATA_INVALID_ROOM " + c + " Invalid Room Number. Room: " + roomNum, Globals.LOG_TYPE_DATA, true);
             return;
         }
-        final byte roomIndex = Globals.SERVER_ROOMNUM_TO_ROOMINDEX.get(room);
+        final byte roomIndex = Globals.SERVER_ROOMNUM_TO_ROOMINDEX.get(roomNum);
         switch (dataType) {
             case Globals.DATA_PLAYER_LOGIN:
                 try {
@@ -214,7 +214,7 @@ public class PacketHandler {
         final UUID id = new UUID(mostSigBit, leastSigBit);
 
         if (room.containsPlayerID(id)) {
-            if (room.getPlayers().get(room.getPlayerKey(id)).getConnection().getID() == c.getID()) {
+            if (room.getPlayers().get(room.getPlayerKey(id)).getConnection() == c) {
                 final byte[] bytes = new byte[Globals.PACKET_BYTE * 4];
                 bytes[0] = Globals.DATA_PLAYER_CREATE;
                 bytes[1] = room.getMap().getMapID();
@@ -228,7 +228,8 @@ public class PacketHandler {
 
         final byte freeKey = room.getNextPlayerKey();
         if (freeKey == -1) {
-            Globals.log(PacketHandler.class, "DATA_PLAYER_CREATE " + c + " Room " + room.getRoomNumber() + " at max capacity.", Globals.LOG_TYPE_DATA, true);
+            c.close();
+            Globals.log(PacketHandler.class, "DATA_PLAYER_CREATE " + c + " Room " + room.getRoomNumber() + " has no player keys left.", Globals.LOG_TYPE_DATA, true);
             return;
         }
 

@@ -17,7 +17,7 @@ public class Room {
 
     private byte roomNumber = -1;
     private byte roomIndex = -1;
-    private HashMap<Integer, HashMap<Byte, Player>> playerBuckets;
+    private ConcurrentHashMap<Integer, ConcurrentHashMap<Byte, Player>> playerBuckets;
 
     private ConcurrentHashMap<Byte, Player> players = new ConcurrentHashMap<>(Globals.SERVER_MAX_PLAYERS, 0.9f,
             Math.max(Globals.SERVER_MAX_PLAYERS / 5, 3));
@@ -73,10 +73,10 @@ public class Room {
         double numRows = this.map.getMapHeight() / Globals.LOGIC_BUCKET_CELLSIZE;
         double numCols = this.map.getMapWidth() / Globals.LOGIC_BUCKET_CELLSIZE;
         int numBuckets = (int) Math.ceil(numRows * numCols);
-        this.playerBuckets = new HashMap<>(numBuckets);
+        this.playerBuckets = new ConcurrentHashMap<>(numBuckets);
         Integer[] bucketIDs = getBucketIDsForRect(this.map.getBoundaryRectangle());
         for (int bucketID : bucketIDs) {
-            this.playerBuckets.put(bucketID, new HashMap<>(10));
+            this.playerBuckets.put(bucketID, new ConcurrentHashMap<>(10));
         }
     }
 
@@ -95,7 +95,7 @@ public class Room {
     }
 
     public void clearPlayerBuckets() {
-        for (final Map.Entry<Integer, HashMap<Byte, Player>> playerBucket : this.playerBuckets.entrySet()) {
+        for (final Map.Entry<Integer, ConcurrentHashMap<Byte, Player>> playerBucket : this.playerBuckets.entrySet()) {
             playerBucket.getValue().clear();
         }
     }
@@ -128,8 +128,8 @@ public class Room {
         HashMap<Byte, Player> nearbyPlayerBuckets = new HashMap<>(this.players.size());
         Integer[] bucketIDs = getBucketIDsForRect(proj.getHitbox()[0]);
         for (int bucketID : bucketIDs) {
-            for (final Map.Entry<Byte, Player> player : this.playerBuckets.get(bucketID).entrySet()) {
-                if (this.playerBuckets.containsKey(bucketID)) {
+            if (this.playerBuckets.containsKey(bucketID)) {
+                for (final Map.Entry<Byte, Player> player : this.playerBuckets.get(bucketID).entrySet()) {
                     if (!nearbyPlayerBuckets.containsKey(player.getKey())) {
                         nearbyPlayerBuckets.put(player.getKey(), player.getValue());
                     }
