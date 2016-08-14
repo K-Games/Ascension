@@ -22,7 +22,6 @@ public abstract class Emote extends Thread {
     private final static String[] EMOTE_SPRITE_FOLDER = new String[Globals.NUM_EMOTES];
     private final static int[] EMOTE_FRAMES = new int[Globals.NUM_EMOTES];
 
-    protected final int key;
     private static boolean LOADED = false;
 
     protected static LogicModule logic;
@@ -30,6 +29,10 @@ public abstract class Emote extends Thread {
 
     public static void init() {
         logic = Main.getLogicModule();
+
+        EMOTE_SPRITE_FOLDER[Globals.EMOTE_ALERT] = "alert";
+        EMOTE_FRAMES[Globals.EMOTE_ALERT] = 1;
+
     }
 
     public static void unloadEmotes() {
@@ -73,10 +76,6 @@ public abstract class Emote extends Thread {
         return this.y;
     }
 
-    public int getKey() {
-        return this.key;
-    }
-
     @Override
     public void run() {
         update();
@@ -86,7 +85,7 @@ public abstract class Emote extends Thread {
         return Globals.nsToMs(logic.getTime() - this.emoteStartTime) >= this.duration;
     }
 
-    public Emote(final int k, final Player owner) {
+    public Emote(final Player owner) {
         if (logic != null) {
             this.emoteStartTime = logic.getTime();
             this.lastFrameTime = this.emoteStartTime;
@@ -94,8 +93,7 @@ public abstract class Emote extends Thread {
             this.emoteStartTime = System.nanoTime();
             this.lastFrameTime = this.emoteStartTime;
         }
-        this.key = k;
-        this.duration = 2000;
+        this.duration = 1000;
         this.owner = owner;
         setDaemon(true);
     }

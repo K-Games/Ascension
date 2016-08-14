@@ -263,7 +263,7 @@ public class Globals {
             LOGIN_FAIL_OUTSIDE_LEVEL_RANGE = 0x03;
 
     public static final byte NUM_EMOTES = 10,
-            EMOTE_0 = 0x00,
+            EMOTE_ALERT = 0x00,
             EMOTE_1 = 0x01,
             EMOTE_2 = 0x02,
             EMOTE_3 = 0x03,
