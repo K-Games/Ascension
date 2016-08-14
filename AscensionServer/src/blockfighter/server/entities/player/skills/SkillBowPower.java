@@ -20,21 +20,21 @@ public class SkillBowPower extends Skill {
 
     @Override
     public void updateSkillUse(Player player) {
-        final long duration = Globals.nsToMs(this.room.getTime() - player.getSkillCastTime());
+        final long duration = Globals.nsToMs(this.logic.getTime() - player.getSkillCastTime());
         if (player.getSkillCounter() == 0) {
-            PacketSender.sendSFX(this.room.getRoom(), Globals.SFX_POWER2, player.getX(), player.getY());
+            PacketSender.sendSFX(this.logic.getRoom().getRoomNumber(), Globals.SFX_POWER2, player.getX(), player.getY());
         }
         if (duration <= 400 && Globals.hasPastDuration(duration, player.getSkillCounter() * 20) && player.getSkillCounter() < 20) {
-            PacketSender.sendParticle(this.room.getRoom(), Globals.PARTICLE_BOW_POWERCHARGE, player.getKey());
+            PacketSender.sendParticle(this.logic.getRoom().getRoomNumber(), Globals.PARTICLE_BOW_POWERCHARGE, player.getKey());
             player.incrementSkillCounter();
         }
         if (Globals.hasPastDuration(duration, 800) && player.getSkillCounter() < 21) {
             player.incrementSkillCounter();
-            final ProjBowPower proj = new ProjBowPower(this.room, player, player.getX(), player.getY());
-            this.room.queueAddProj(proj);
-            PacketSender.sendParticle(this.room.getRoom(), Globals.PARTICLE_BOW_POWER, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
+            final ProjBowPower proj = new ProjBowPower(this.logic, player, player.getX(), player.getY());
+            this.logic.queueAddProj(proj);
+            PacketSender.sendParticle(this.logic.getRoom().getRoomNumber(), Globals.PARTICLE_BOW_POWER, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
                     player.getFacing());
-            PacketSender.sendSFX(this.room.getRoom(), Globals.SFX_POWER, player.getX(), player.getY());
+            PacketSender.sendSFX(this.logic.getRoom().getRoomNumber(), Globals.SFX_POWER, player.getX(), player.getY());
         }
         player.updateSkillEnd(duration >= this.endDuration || (!player.isSkillMaxed(Skill.BOW_POWER) && duration < 800 && (player.isStunned() || player.isKnockback())));
     }

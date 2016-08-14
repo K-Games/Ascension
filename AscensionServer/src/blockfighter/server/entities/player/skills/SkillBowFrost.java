@@ -20,13 +20,13 @@ public class SkillBowFrost extends Skill {
 
     @Override
     public void updateSkillUse(Player player) {
-        final long duration = Globals.nsToMs(this.room.getTime() - player.getSkillCastTime());
+        final long duration = Globals.nsToMs(this.logic.getTime() - player.getSkillCastTime());
         final int numHits = player.isSkillMaxed(Skill.BOW_FROST) ? 3 : 1;
         if (Globals.hasPastDuration(duration, 160 + player.getSkillCounter() * 90) && player.getSkillCounter() < numHits) {
             player.incrementSkillCounter();
-            final ProjBowFrost proj = new ProjBowFrost(this.room, player, player.getX(), player.getY(), false);
-            this.room.queueAddProj(proj);
-            PacketSender.sendParticle(this.room.getRoom(), Globals.PARTICLE_BOW_FROSTARROW, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
+            final ProjBowFrost proj = new ProjBowFrost(this.logic, player, player.getX(), player.getY(), false);
+            this.logic.queueAddProj(proj);
+            PacketSender.sendParticle(this.logic.getRoom().getRoomNumber(), Globals.PARTICLE_BOW_FROSTARROW, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
                     player.getFacing());
         }
 

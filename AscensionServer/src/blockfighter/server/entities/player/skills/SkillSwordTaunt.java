@@ -21,20 +21,20 @@ public class SkillSwordTaunt extends Skill {
 
     @Override
     public void updateSkillUse(Player player) {
-        final long duration = Globals.nsToMs(this.room.getTime() - player.getSkillCastTime());
+        final long duration = Globals.nsToMs(this.logic.getTime() - player.getSkillCastTime());
         if (player.getSkillCounter() == 0) {
             player.incrementSkillCounter();
             if (player.isSkillMaxed(Skill.SWORD_TAUNT)) {
-                player.queueBuff(new BuffSwordTaunt(this.room, 10000, 0.2, 0.2, player));
-                PacketSender.sendParticle(this.room.getRoom(), Globals.PARTICLE_SWORD_TAUNTBUFF, player.getKey());
+                player.queueBuff(new BuffSwordTaunt(this.logic, 10000, 0.2, 0.2, player));
+                PacketSender.sendParticle(this.logic.getRoom().getRoomNumber(), Globals.PARTICLE_SWORD_TAUNTBUFF, player.getKey());
             }
-            PacketSender.sendParticle(this.room.getRoom(), Globals.PARTICLE_SWORD_TAUNTAURA1, player.getKey());
+            PacketSender.sendParticle(this.logic.getRoom().getRoomNumber(), Globals.PARTICLE_SWORD_TAUNTAURA1, player.getKey());
         }
         if (Globals.hasPastDuration(duration, 50) && player.getSkillCounter() == 1) {
             player.incrementSkillCounter();
-            final ProjSwordTaunt proj = new ProjSwordTaunt(this.room, player, player.getX(), player.getY());
-            this.room.queueAddProj(proj);
-            PacketSender.sendParticle(this.room.getRoom(), Globals.PARTICLE_SWORD_TAUNT, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
+            final ProjSwordTaunt proj = new ProjSwordTaunt(this.logic, player, player.getX(), player.getY());
+            this.logic.queueAddProj(proj);
+            PacketSender.sendParticle(this.logic.getRoom().getRoomNumber(), Globals.PARTICLE_SWORD_TAUNT, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
                     player.getFacing());
         }
         player.updateSkillEnd(duration, this.endDuration, false, false);

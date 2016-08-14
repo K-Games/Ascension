@@ -20,7 +20,7 @@ public class SkillBowRapid extends Skill {
 
     @Override
     public void updateSkillUse(Player player) {
-        final long duration = Globals.nsToMs(this.room.getTime() - player.getSkillCastTime());
+        final long duration = Globals.nsToMs(this.logic.getTime() - player.getSkillCastTime());
         final int numHits = 3;
 
         if (Globals.hasPastDuration(duration, 150 + player.getSkillCounter() * 150) && player.getSkillCounter() < numHits) {
@@ -34,13 +34,13 @@ public class SkillBowRapid extends Skill {
             } else if (player.getSkillCounter() == 3) {
                 projY = player.getY() + 20;
             }
-            final ProjBowRapid proj = new ProjBowRapid(this.room, player, player.getX(), projY);
-            this.room.queueAddProj(proj);
-            PacketSender.sendParticle(this.room.getRoom(), Globals.PARTICLE_BOW_RAPID, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
+            final ProjBowRapid proj = new ProjBowRapid(this.logic, player, player.getX(), projY);
+            this.logic.queueAddProj(proj);
+            PacketSender.sendParticle(this.logic.getRoom().getRoomNumber(), Globals.PARTICLE_BOW_RAPID, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
                     player.getFacing());
-            PacketSender.sendParticle(this.room.getRoom(), Globals.PARTICLE_BOW_RAPID2, (player.getFacing() == Globals.LEFT) ? player.getX() - 20 : player.getX() - 40, proj.getHitbox()[0].getY() - 40,
+            PacketSender.sendParticle(this.logic.getRoom().getRoomNumber(), Globals.PARTICLE_BOW_RAPID2, (player.getFacing() == Globals.LEFT) ? player.getX() - 20 : player.getX() - 40, proj.getHitbox()[0].getY() - 40,
                     player.getFacing());
-            PacketSender.sendSFX(this.room.getRoom(), Globals.SFX_RAPID, player.getX(), player.getY());
+            PacketSender.sendSFX(this.logic.getRoom().getRoomNumber(), Globals.SFX_RAPID, player.getX(), player.getY());
         }
         player.updateSkillEnd(duration, this.endDuration, true, false);
     }

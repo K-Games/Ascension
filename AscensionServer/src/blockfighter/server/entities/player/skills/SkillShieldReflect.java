@@ -24,19 +24,19 @@ public class SkillShieldReflect extends Skill {
 
     @Override
     public void updateSkillUse(Player player) {
-        final long duration = Globals.nsToMs(this.room.getTime() - this.skillCastTime);
+        final long duration = Globals.nsToMs(this.logic.getTime() - this.skillCastTime);
         if (player.getSkillCounter() == 0) {
             player.incrementSkillCounter();
-            player.queueBuff(new BuffShieldReflect(this.room, 3000, .4 + 0.02 * player.getSkillLevel(Skill.SHIELD_REFLECT), player, player));
-            PacketSender.sendParticle(this.room.getRoom(), Globals.PARTICLE_SHIELD_REFLECTCAST, player.getKey());
-            PacketSender.sendParticle(this.room.getRoom(), Globals.PARTICLE_SHIELD_REFLECTBUFF, player.getKey());
+            player.queueBuff(new BuffShieldReflect(this.logic, 3000, .4 + 0.02 * player.getSkillLevel(Skill.SHIELD_REFLECT), player, player));
+            PacketSender.sendParticle(this.logic.getRoom().getRoomNumber(), Globals.PARTICLE_SHIELD_REFLECTCAST, player.getKey());
+            PacketSender.sendParticle(this.logic.getRoom().getRoomNumber(), Globals.PARTICLE_SHIELD_REFLECTBUFF, player.getKey());
             if (player.isSkillMaxed(Skill.SHIELD_REFLECT)) {
-                for (final Map.Entry<Byte, Player> pEntry : this.room.getPlayers().entrySet()) {
+                for (final Map.Entry<Byte, Player> pEntry : this.logic.getRoom().getPlayers().entrySet()) {
                     final Player p = pEntry.getValue();
                     if (p != player && !p.isDead()) {
-                        p.queueBuff(new BuffShieldReflect(this.room, 3000, 0.4, player, p));
-                        if (!this.room.getMap().isPvP()) {
-                            PacketSender.sendParticle(this.room.getRoom(), Globals.PARTICLE_SHIELD_REFLECTCAST, p.getKey());
+                        p.queueBuff(new BuffShieldReflect(this.logic, 3000, 0.4, player, p));
+                        if (!this.logic.getRoom().getMap().isPvP()) {
+                            PacketSender.sendParticle(this.logic.getRoom().getRoomNumber(), Globals.PARTICLE_SHIELD_REFLECTCAST, p.getKey());
                         }
                     }
                 }
@@ -47,8 +47,8 @@ public class SkillShieldReflect extends Skill {
 
     public void updateSkillReflectHit(final double dmgTaken, final double mult, final Player player) {
         double radius = 300;
-        if (this.room.getMap().isPvP()) {
-            ArrayList<Player> playersInRange = this.room.getPlayersInRange(player, radius);
+        if (this.logic.getRoom().getMap().isPvP()) {
+            ArrayList<Player> playersInRange = this.logic.getRoom().getPlayersInRange(player, radius);
             if (!playersInRange.isEmpty()) {
                 for (Player p : playersInRange) {
                     final Damage dmgEntity = new Damage((int) (dmgTaken * mult), true, player, p, false, p.getHitbox(), p.getHitbox());
@@ -57,7 +57,7 @@ public class SkillShieldReflect extends Skill {
                 }
             }
         } else {
-            ArrayList<Mob> mobsInRange = this.room.getMobsInRange(player, radius);
+            ArrayList<Mob> mobsInRange = this.logic.getRoom().getMobsInRange(player, radius);
             if (!mobsInRange.isEmpty()) {
                 for (Mob mob : mobsInRange) {
                     final Damage dmgEntity = new Damage((int) (dmgTaken * mult), true, player, mob, false, mob.getHitbox(), mob.getHitbox());
@@ -66,6 +66,6 @@ public class SkillShieldReflect extends Skill {
                 }
             }
         }
-        PacketSender.sendParticle(this.room.getRoom(), Globals.PARTICLE_SHIELD_REFLECTHIT, player.getX(), player.getY());
+        PacketSender.sendParticle(this.logic.getRoom().getRoomNumber(), Globals.PARTICLE_SHIELD_REFLECTHIT, player.getX(), player.getY());
     }
 }

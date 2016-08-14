@@ -29,7 +29,7 @@ public class ProjBall extends MobProjectile {
                 final int damage = (int) (400 * Math.pow(getMobOwner().getStats()[Mob.STAT_LEVEL], 1.7));
                 p.queueDamage(new Damage(damage, false, getMobOwner(), p, this.hitbox[0], p.getHitbox()));
 
-                p.queueBuff(new BuffKnockback(this.room, 300, (getMobOwner().getFacing() == Globals.RIGHT) ? 5 : -5, -8, getMobOwner(), p));
+                p.queueBuff(new BuffKnockback(this.logic, 300, (getMobOwner().getFacing() == Globals.RIGHT) ? 5 : -5, -8, getMobOwner(), p));
             }
         }
         this.queuedEffect = false;

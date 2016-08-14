@@ -19,7 +19,7 @@ public class SkillShieldDash extends Skill {
 
     @Override
     public void updateSkillUse(Player player) {
-        final long duration = Globals.nsToMs(this.room.getTime() - player.getSkillCastTime());
+        final long duration = Globals.nsToMs(this.logic.getTime() - player.getSkillCastTime());
         if (!player.isStunned() && !player.isKnockback()) {
             player.setXSpeed((player.getFacing() == Globals.RIGHT) ? 8.5 : -8.5);
         }
@@ -28,15 +28,15 @@ public class SkillShieldDash extends Skill {
         }
 
         if (player.getSkillCounter() == 0) {
-            PacketSender.sendParticle(this.room.getRoom(), Globals.PARTICLE_SHIELD_DASH, player.getKey(), player.getFacing());
+            PacketSender.sendParticle(this.logic.getRoom().getRoomNumber(), Globals.PARTICLE_SHIELD_DASH, player.getKey(), player.getFacing());
             player.setYSpeed(-5.5);
             player.incrementSkillCounter();
         }
 
         if (player.getSkillCounter() == 1 && duration >= this.endDuration) {
             player.incrementSkillCounter();
-            player.queueBuff(new BuffShieldDash(this.room, 5000, 0.01 + 0.003 * player.getSkillLevel(Skill.SHIELD_DASH), player));
-            PacketSender.sendParticle(this.room.getRoom(), Globals.PARTICLE_SHIELD_DASHBUFF, player.getKey());
+            player.queueBuff(new BuffShieldDash(this.logic, 5000, 0.01 + 0.003 * player.getSkillLevel(Skill.SHIELD_DASH), player));
+            PacketSender.sendParticle(this.logic.getRoom().getRoomNumber(), Globals.PARTICLE_SHIELD_DASHBUFF, player.getKey());
         }
         player.updateSkillEnd(duration, this.endDuration, true, true);
     }

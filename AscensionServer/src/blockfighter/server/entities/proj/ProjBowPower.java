@@ -37,7 +37,7 @@ public class ProjBowPower extends Projectile {
                     }
                 }
                 p.queueDamage(new Damage(damage, true, owner, p, crit, this.hitbox[0], p.getHitbox()));
-                p.queueBuff(new BuffKnockback(this.room, 500, (owner.getFacing() == Globals.RIGHT) ? 20 : -20, -25, owner, p));
+                p.queueBuff(new BuffKnockback(this.logic, 500, (owner.getFacing() == Globals.RIGHT) ? 20 : -20, -25, owner, p));
             }
         }
 

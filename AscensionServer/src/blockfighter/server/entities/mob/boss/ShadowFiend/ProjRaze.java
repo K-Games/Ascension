@@ -39,7 +39,7 @@ public class ProjRaze extends MobProjectile {
             if (p != null && !p.isDead()) {
                 final int damage = (int) (70 * Math.pow(getMobOwner().getStats()[Mob.STAT_LEVEL], 1.7));
                 p.queueDamage(new Damage(damage, false, getMobOwner(), p, this.hitbox[0], p.getHitbox()));
-                p.queueBuff(new BuffKnockback(this.room, 100, (p.getFacing() == Globals.RIGHT) ? -10 : 10, 0, getMobOwner(), p));
+                p.queueBuff(new BuffKnockback(this.logic, 100, (p.getFacing() == Globals.RIGHT) ? -10 : 10, 0, getMobOwner(), p));
             }
         }
         this.queuedEffect = false;

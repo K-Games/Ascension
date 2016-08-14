@@ -20,14 +20,14 @@ public class SkillSwordVorpal extends Skill {
 
     @Override
     public void updateSkillUse(Player player) {
-        final long duration = Globals.nsToMs(this.room.getTime() - player.getSkillCastTime());
+        final long duration = Globals.nsToMs(this.logic.getTime() - player.getSkillCastTime());
         int skillTime = player.isSkillMaxed(Skill.SWORD_VORPAL) ? 150 : 170,
                 numHits = player.isSkillMaxed(Skill.SWORD_VORPAL) ? 5 : 3;
         if (Globals.hasPastDuration(duration, skillTime * player.getSkillCounter()) && player.getSkillCounter() < numHits) {
-            final ProjSwordVorpal proj = new ProjSwordVorpal(this.room, player, player.getX(), player.getY());
-            this.room.queueAddProj(proj);
+            final ProjSwordVorpal proj = new ProjSwordVorpal(this.logic, player, player.getX(), player.getY());
+            this.logic.queueAddProj(proj);
             player.setFrame((byte) 0);
-            PacketSender.sendParticle(this.room.getRoom(), Globals.PARTICLE_SWORD_VORPAL, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
+            PacketSender.sendParticle(this.logic.getRoom().getRoomNumber(), Globals.PARTICLE_SWORD_VORPAL, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
                     player.getFacing());
             player.incrementSkillCounter();
         }
