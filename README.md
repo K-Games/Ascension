@@ -24,6 +24,7 @@ http://www.gdunlimited.net/games/ascension/
 * Maps now have TOP and BOTTOM boundaries.
 * Improved perforamnce on map platform collision detection with spatial hashing implementation.
 * Players now accelerate/deccelerate to a target speed in the air instead of instantly changing speed.
+* GUI is now disabled by default. To enable GUI, launch with `--gui` argument.
 
 # Credits
 ### Developer/Game Designer/Visual Designs
