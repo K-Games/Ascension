@@ -264,7 +264,7 @@ public class Globals {
 
     public static final byte NUM_EMOTES = 10,
             EMOTE_ALERT = 0x00,
-            EMOTE_1 = 0x01,
+            EMOTE_QUESTION = 0x01,
             EMOTE_2 = 0x02,
             EMOTE_3 = 0x03,
             EMOTE_4 = 0x04,

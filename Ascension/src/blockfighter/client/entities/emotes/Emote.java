@@ -32,7 +32,8 @@ public abstract class Emote extends Thread {
 
         EMOTE_SPRITE_FOLDER[Globals.EMOTE_ALERT] = "alert";
         EMOTE_FRAMES[Globals.EMOTE_ALERT] = 1;
-
+        EMOTE_SPRITE_FOLDER[Globals.EMOTE_QUESTION] = "question";
+        EMOTE_FRAMES[Globals.EMOTE_QUESTION] = 1;
     }
 
     public static void unloadEmotes() {

@@ -6,14 +6,14 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 
-public class EmoteAlert extends Emote {
+public class EmoteQuestion extends Emote {
 
-    double deltaY = 0, baseSpeed = -5, ySpeed = baseSpeed;
+    double deltaY = 0, baseSpeed = -4, ySpeed = baseSpeed;
 
-    public EmoteAlert(Player owner) {
+    public EmoteQuestion(Player owner) {
         super(owner);
-        this.x = owner.getX() + 20;
-        this.y = owner.getY() - 120;
+        this.x = owner.getX() + 18;
+        this.y = owner.getY() - 115;
         this.frame = 0;
     }
 
@@ -34,18 +34,18 @@ public class EmoteAlert extends Emote {
 
     @Override
     public void draw(final Graphics2D g) {
-        if (EMOTE_SPRITE[Globals.EMOTE_ALERT] == null) {
+        if (EMOTE_SPRITE[Globals.EMOTE_QUESTION] == null) {
             return;
         }
-        if (this.frame >= EMOTE_SPRITE[Globals.EMOTE_ALERT].length) {
+        if (this.frame >= EMOTE_SPRITE[Globals.EMOTE_QUESTION].length) {
             return;
         }
         final Point p = this.owner.getPos();
         if (p != null) {
-            this.x = p.x + 20;
-            this.y = (int) (p.y - 120 + deltaY);
+            this.x = p.x + 18;
+            this.y = (int) (p.y - 115 + deltaY);
         }
-        final BufferedImage sprite = EMOTE_SPRITE[Globals.EMOTE_ALERT][this.frame];
+        final BufferedImage sprite = EMOTE_SPRITE[Globals.EMOTE_QUESTION][this.frame];
         final int drawSrcX = this.x;
         final int drawSrcY = this.y;
         final int drawDscY = drawSrcY + sprite.getHeight();
