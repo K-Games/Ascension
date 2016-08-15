@@ -5,6 +5,8 @@ import blockfighter.client.SaveData;
 import blockfighter.client.entities.emotes.Emote;
 import blockfighter.client.entities.emotes.EmoteAlert;
 import blockfighter.client.entities.emotes.EmoteQuestion;
+import blockfighter.client.entities.emotes.EmoteSleep;
+import blockfighter.client.entities.emotes.EmoteSweat;
 import blockfighter.client.entities.ingamenumber.IngameNumber;
 import blockfighter.client.entities.items.Item;
 import blockfighter.client.entities.items.ItemEquip;
@@ -532,11 +534,11 @@ public class ScreenIngame extends Screen {
             case Globals.EMOTE_QUESTION:
                 this.emotes.add(new EmoteQuestion(this.players.get(playerKey)));
                 break;
-            case Globals.EMOTE_2:
-                System.out.println("emote2");
+            case Globals.EMOTE_SWEAT:
+                this.emotes.add(new EmoteSweat(this.players.get(playerKey)));
                 break;
-            case Globals.EMOTE_3:
-                System.out.println("emote3");
+            case Globals.EMOTE_SLEEP:
+                this.emotes.add(new EmoteSleep(this.players.get(playerKey)));
                 break;
             case Globals.EMOTE_4:
                 System.out.println("emote4");
@@ -1139,9 +1141,9 @@ public class ScreenIngame extends Screen {
         } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE2]) {
             PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.EMOTE_QUESTION);
         } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE3]) {
-            PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.EMOTE_2);
+            PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.EMOTE_SWEAT);
         } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE4]) {
-            PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.EMOTE_3);
+            PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.EMOTE_SLEEP);
         } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE5]) {
             PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.EMOTE_4);
         } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE6]) {
@@ -1233,9 +1235,9 @@ public class ScreenIngame extends Screen {
         } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE2]) {
             PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.EMOTE_QUESTION);
         } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE3]) {
-            PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.EMOTE_2);
+            PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.EMOTE_SWEAT);
         } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE4]) {
-            PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.EMOTE_3);
+            PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.EMOTE_SLEEP);
         } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE5]) {
             PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.EMOTE_4);
         } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE6]) {

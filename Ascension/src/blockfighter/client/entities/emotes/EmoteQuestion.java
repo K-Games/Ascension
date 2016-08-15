@@ -12,8 +12,6 @@ public class EmoteQuestion extends Emote {
 
     public EmoteQuestion(Player owner) {
         super(owner);
-        this.x = owner.getX() + 18;
-        this.y = owner.getY() - 115;
         this.frame = 0;
     }
 

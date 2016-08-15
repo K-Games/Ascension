@@ -6,44 +6,43 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 
-public class EmoteAlert extends Emote {
+public class EmoteSleep extends Emote {
 
-    double deltaY = 0, baseSpeed = -4, ySpeed = baseSpeed;
-
-    public EmoteAlert(Player owner) {
+    public EmoteSleep(Player owner) {
         super(owner);
         this.frame = 0;
+        this.frameDuration = 250;
     }
 
     @Override
     public void update() {
         super.update();
-        this.ySpeed += 0.6;
-        this.deltaY += this.ySpeed;
-        if (this.deltaY >= 0) {
-            this.deltaY = 0;
-            this.baseSpeed /= 1.5;
-            if (this.baseSpeed > -2) {
-                this.baseSpeed = -2;
+        if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
+            if (EMOTE_SPRITE != null && this.frame <= EMOTE_SPRITE[Globals.EMOTE_SLEEP].length) {
+                if (this.frame >= EMOTE_SPRITE[Globals.EMOTE_SLEEP].length) {
+                    this.frame = 0;
+                } else {
+                    this.frame++;
+                }
             }
-            this.ySpeed = this.baseSpeed;
+            this.lastFrameTime = logic.getTime();
         }
     }
 
     @Override
     public void draw(final Graphics2D g) {
-        if (EMOTE_SPRITE[Globals.EMOTE_ALERT] == null) {
+        if (EMOTE_SPRITE[Globals.EMOTE_SLEEP] == null) {
             return;
         }
-        if (this.frame >= EMOTE_SPRITE[Globals.EMOTE_ALERT].length) {
+        if (this.frame >= EMOTE_SPRITE[Globals.EMOTE_SLEEP].length) {
             return;
         }
         final Point p = this.owner.getPos();
         if (p != null) {
             this.x = p.x + 18;
-            this.y = (int) (p.y - 115 + deltaY);
+            this.y = p.y - 130;
         }
-        final BufferedImage sprite = EMOTE_SPRITE[Globals.EMOTE_ALERT][this.frame];
+        final BufferedImage sprite = EMOTE_SPRITE[Globals.EMOTE_SLEEP][this.frame];
         final int drawSrcX = this.x;
         final int drawSrcY = this.y;
         final int drawDscY = drawSrcY + sprite.getHeight();
