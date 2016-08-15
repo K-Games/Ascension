@@ -1,5 +1,6 @@
 package blockfighter.client;
 
+import blockfighter.client.entities.emotes.Emote;
 import blockfighter.client.entities.ingamenumber.IngameNumber;
 import blockfighter.client.entities.items.ItemEquip;
 import blockfighter.client.entities.mob.Mob;
@@ -56,7 +57,8 @@ public class Main {
             IngameNumber.class,
             Skill.class,
             ItemEquip.class,
-            Notification.class
+            Notification.class,
+            Emote.class
         };
 
         for (Class<?> cls : classes) {

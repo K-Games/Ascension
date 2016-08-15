@@ -2,6 +2,7 @@ package blockfighter.client.screen;
 
 import blockfighter.client.Globals;
 import blockfighter.client.SaveData;
+import blockfighter.client.entities.emotes.Emote;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -20,13 +21,21 @@ public class ScreenKeyBind extends ScreenMenu {
         for (int i = 0; i < 12; i++) {
             KEY_BOX[i] = new Rectangle2D.Double(365, 45 + (i * 50), 180, 40);
         }
-        for (int i = 12; i < KEY_BOX.length; i++) {
-            KEY_BOX[i] = new Rectangle2D.Double(800, 45 + ((i - 12) * 50), 180, 30);
+        for (int i = 12; i < 16; i++) {
+            KEY_BOX[i] = new Rectangle2D.Double(800, 45 + ((i - 12) * 50), 180, 40);
+        }
+
+        for (int i = 16; i < 16 + Globals.NUM_EMOTES / 2; i++) {
+            KEY_BOX[i] = new Rectangle2D.Double(650, 300 + ((i - 16) * 50), 180, 40);
+        }
+        for (int i = 16 + Globals.NUM_EMOTES / 2; i < 16 + Globals.NUM_EMOTES; i++) {
+            KEY_BOX[i] = new Rectangle2D.Double(890, 300 + ((i - 16 - Globals.NUM_EMOTES / 2) * 50), 180, 40);
         }
     }
 
     public ScreenKeyBind() {
         this.c = logic.getSelectedChar();
+        Emote.loadEmotes();
     }
 
     @Override
@@ -38,13 +47,29 @@ public class ScreenKeyBind extends ScreenMenu {
                 RenderingHints.KEY_TEXT_ANTIALIASING,
                 RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
         drawButtons(g);
-
+        drawEmotes(g);
         drawMenuButton(g);
         super.draw(g);
     }
 
+    private void drawEmotes(final Graphics2D g) {
+        for (int i = 16; i < KEY_BOX.length; i++) {
+            if (Emote.getEmoteSprites() != null && Emote.getEmoteSprites()[i - 16] != null) {
+                BufferedImage sprite = Emote.getEmoteSprites()[i - 16][Emote.getEmoteSprites()[i - 16].length - 1];
+                if (sprite != null) {
+                    g.drawImage(sprite, (int) KEY_BOX[i].x - 15 - sprite.getWidth(), (int) KEY_BOX[i].y + 5, null);
+                }
+            }
+        }
+    }
+
     private void drawButtons(final Graphics2D g) {
         final BufferedImage button = Globals.MENU_BUTTON[Globals.BUTTON_SMALLRECT];
+        g.setColor(SKILL_BOX_BG_COLOR);
+        g.fillRoundRect((int) KEY_BOX[16].x - 10 - 50, (int) KEY_BOX[16].y - 10,
+                (int) ((KEY_BOX[16 + Globals.NUM_EMOTES - 1].x + KEY_BOX[16 + Globals.NUM_EMOTES - 1].width + 10) - (KEY_BOX[16].x - 10 - 50)),
+                (int) ((KEY_BOX[16 + Globals.NUM_EMOTES - 1].y + KEY_BOX[16 + Globals.NUM_EMOTES - 1].height + 10) - (KEY_BOX[16].y - 10)), 15, 15);
+
         for (int i = 0; i < KEY_BOX.length; i++) {
             g.drawImage(button, (int) KEY_BOX[i].x, (int) KEY_BOX[i].y, null);
             g.setFont(Globals.ARIAL_18PT);
@@ -108,7 +133,9 @@ public class ScreenKeyBind extends ScreenMenu {
                     && e.getKeyCode() <= KeyEvent.VK_Z)
                     || e.getKeyCode() <= KeyEvent.VK_SPACE
                     || (e.getKeyCode() >= KeyEvent.VK_LEFT
-                    && e.getKeyCode() <= KeyEvent.VK_DOWN)) {
+                    && e.getKeyCode() <= KeyEvent.VK_DOWN)
+                    || (e.getKeyCode() >= KeyEvent.VK_NUMPAD0
+                    && e.getKeyCode() <= KeyEvent.VK_NUMPAD9)) {
                 this.c.setKeyBind(this.selectedKeyBox, e.getKeyCode());
                 this.selectedKeyBox = -1;
             }
@@ -157,6 +184,7 @@ public class ScreenKeyBind extends ScreenMenu {
 
     @Override
     public void unload() {
+        Emote.unloadEmotes();
     }
 
 }

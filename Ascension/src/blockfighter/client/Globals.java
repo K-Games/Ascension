@@ -125,7 +125,7 @@ public class Globals {
             PARTICLE_SHIELD_MAGNETIZESTART = 0x30,
             PARTICLE_SHIELD_MAGNETIZEBURST = 0x31;
 
-    public final static int NUM_KEYBINDS = 16,
+    public final static int NUM_KEYBINDS = 26,
             KEYBIND_SKILL1 = 0,
             KEYBIND_SKILL2 = 1,
             KEYBIND_SKILL3 = 2,
@@ -141,7 +141,17 @@ public class Globals {
             KEYBIND_LEFT = 12,
             KEYBIND_RIGHT = 13,
             KEYBIND_JUMP = 14,
-            KEYBIND_DOWN = 15;
+            KEYBIND_DOWN = 15,
+            KEYBIND_EMOTE1 = 16,
+            KEYBIND_EMOTE2 = 17,
+            KEYBIND_EMOTE3 = 18,
+            KEYBIND_EMOTE4 = 19,
+            KEYBIND_EMOTE5 = 20,
+            KEYBIND_EMOTE6 = 21,
+            KEYBIND_EMOTE7 = 22,
+            KEYBIND_EMOTE8 = 23,
+            KEYBIND_EMOTE9 = 24,
+            KEYBIND_EMOTE10 = 25;
 
     public final static byte NUM_ITEM_TABS = 10,
             ITEM_WEAPON = 0, // ITEM_WEAPON is the equipment slot/tab
@@ -244,12 +254,25 @@ public class Globals {
             DATA_MOB_GET_STAT = 0x16,
             DATA_PLAYER_GIVEDROP = 0x17,
             DATA_PLAYER_CREATE = 0x18,
-            DATA_SCREEN_SHAKE = 0x19;
+            DATA_SCREEN_SHAKE = 0x19,
+            DATA_PLAYER_EMOTE = 0x1A;
 
     public static final byte LOGIN_SUCCESS = 0x00,
             LOGIN_FAIL_UID_IN_ROOM = 0x01,
             LOGIN_FAIL_FULL_ROOM = 0x02,
             LOGIN_FAIL_OUTSIDE_LEVEL_RANGE = 0x03;
+
+    public static final byte NUM_EMOTES = 10,
+            EMOTE_ALERT = 0x00,
+            EMOTE_QUESTION = 0x01,
+            EMOTE_SWEAT = 0x02,
+            EMOTE_SLEEP = 0x03,
+            EMOTE_ANGRY = 0x04,
+            EMOTE_5 = 0x05,
+            EMOTE_6 = 0x06,
+            EMOTE_7 = 0x07,
+            EMOTE_8 = 0x08,
+            EMOTE_9 = 0x09;
 
     public final static BufferedImage[][] CHAR_SPRITE = new BufferedImage[NUM_PLAYER_ANIM_STATE][];
     public final static BufferedImage[] HUD = new BufferedImage[4];

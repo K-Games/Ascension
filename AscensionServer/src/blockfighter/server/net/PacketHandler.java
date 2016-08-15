@@ -76,6 +76,9 @@ public class PacketHandler {
             case Globals.DATA_MOB_SET_TYPE:
                 receiveMobSetType(data, roomIndex, c);
                 break;
+            case Globals.DATA_PLAYER_EMOTE:
+                receivePlayerUseEmote(data, roomIndex, c);
+                break;
             default:
                 Globals.log(PacketHandler.class, "DATA_UNKNOWN " + c + " Unknown data type: " + dataType, Globals.LOG_TYPE_DATA, true);
                 break;
@@ -191,6 +194,14 @@ public class PacketHandler {
         bytes[0] = Globals.DATA_PING;
         bytes[1] = data[3];
         PacketSender.sendConnection(bytes, c);
+    }
+
+    private static void receivePlayerUseEmote(final byte[] data, final byte roomIndex, final Connection c) {
+        final ConcurrentHashMap<Byte, Player> players = logic[roomIndex].getRoom().getPlayers();
+        Player p = players.get(data[2]);
+        if (p != null && p.getConnection() == c) {
+            p.sendEmote(data[3]);
+        }
     }
 
     private static void receivePlayerUseSkill(final byte[] data, final byte roomIndex, final Connection c) {
