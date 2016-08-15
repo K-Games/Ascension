@@ -2,6 +2,7 @@
 
 # Description
 An multiplayer action 2D PvP platformer coded in Java.
+
 http://www.gdunlimited.net/games/ascension/
 
 # Version 0.20 Update 1
@@ -15,6 +16,7 @@ http://www.gdunlimited.net/games/ascension/
 
 ## Server Changes
 * Added broadcast received Emote action.
+* Logs no longer gets seperated into folders. All logs append to `ErrorLog.log` and `DataLog.log` in `logs` folder.
 
 # Credits
 ### Developer/Game Designer/Visual Designs

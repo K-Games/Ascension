@@ -28,8 +28,7 @@ public class Globals {
 
     public final static boolean LOGGING = true,
             DEBUG_MODE = false;
-    private final static String SERVER_ID = String.format("%1$td-%1$tb-%1$tY %1$tH-%1$tM-%1$tS", System.currentTimeMillis());
-    private final static String LOG_DIR = "logs/" + SERVER_ID,
+    private final static String LOG_DIR = "logs/",
             ERRLOG_FILE = "ErrorLog.log",
             DATALOG_FILE = "DataLog.log";
     private static JTextArea dataConsole, errConsole;
