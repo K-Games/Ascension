@@ -1394,14 +1394,14 @@ public class Player extends Thread implements GameEntity {
     }
 
     public void sendEmote(final byte emoteID) {
-        this.lastActionTime = this.room.getTime();
-        if (this.room.getTime() - this.lastEmoteTime >= Globals.msToNs(1000)) {
+        this.lastActionTime = this.logic.getTime();
+        if (this.logic.getTime() - this.lastEmoteTime >= Globals.msToNs(1000)) {
             final byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
             bytes[0] = Globals.DATA_PLAYER_EMOTE;
             bytes[1] = this.key;
             bytes[2] = emoteID;
-            PacketSender.sendAll(bytes, this.room.getRoom());
-            this.lastEmoteTime = this.room.getTime();
+            PacketSender.sendAll(bytes, this.room.getRoomNumber());
+            this.lastEmoteTime = this.logic.getTime();
         }
     }
 
