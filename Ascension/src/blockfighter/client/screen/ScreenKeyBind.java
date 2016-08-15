@@ -2,6 +2,7 @@ package blockfighter.client.screen;
 
 import blockfighter.client.Globals;
 import blockfighter.client.SaveData;
+import blockfighter.client.entities.emotes.Emote;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -34,6 +35,7 @@ public class ScreenKeyBind extends ScreenMenu {
 
     public ScreenKeyBind() {
         this.c = logic.getSelectedChar();
+        Emote.loadEmotes();
     }
 
     @Override
@@ -45,9 +47,20 @@ public class ScreenKeyBind extends ScreenMenu {
                 RenderingHints.KEY_TEXT_ANTIALIASING,
                 RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
         drawButtons(g);
-
+        drawEmotes(g);
         drawMenuButton(g);
         super.draw(g);
+    }
+
+    private void drawEmotes(final Graphics2D g) {
+        for (int i = 16; i < KEY_BOX.length; i++) {
+            if (Emote.getEmoteSprites() != null && Emote.getEmoteSprites()[i - 16] != null) {
+                BufferedImage sprite = Emote.getEmoteSprites()[i - 16][Emote.getEmoteSprites()[i - 16].length - 1];
+                if (sprite != null) {
+                    g.drawImage(sprite, (int) KEY_BOX[i].x - 15 - sprite.getWidth(), (int) KEY_BOX[i].y + 5, null);
+                }
+            }
+        }
     }
 
     private void drawButtons(final Graphics2D g) {
@@ -171,6 +184,7 @@ public class ScreenKeyBind extends ScreenMenu {
 
     @Override
     public void unload() {
+        Emote.unloadEmotes();
     }
 
 }

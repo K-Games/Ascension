@@ -545,19 +545,14 @@ public class ScreenIngame extends Screen {
                 this.emotes.add(new EmoteAngry(this.players.get(playerKey)));
                 break;
             case Globals.EMOTE_5:
-                System.out.println("emote5");
                 break;
             case Globals.EMOTE_6:
-                System.out.println("emote6");
                 break;
             case Globals.EMOTE_7:
-                System.out.println("emote7");
                 break;
             case Globals.EMOTE_8:
-                System.out.println("emote8");
                 break;
             case Globals.EMOTE_9:
-                System.out.println("emote9");
                 break;
         }
     }
