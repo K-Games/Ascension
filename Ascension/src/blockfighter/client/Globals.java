@@ -267,7 +267,7 @@ public class Globals {
             EMOTE_QUESTION = 0x01,
             EMOTE_SWEAT = 0x02,
             EMOTE_SLEEP = 0x03,
-            EMOTE_4 = 0x04,
+            EMOTE_ANGRY = 0x04,
             EMOTE_5 = 0x05,
             EMOTE_6 = 0x06,
             EMOTE_7 = 0x07,

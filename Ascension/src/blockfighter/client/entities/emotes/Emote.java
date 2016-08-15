@@ -38,6 +38,8 @@ public abstract class Emote extends Thread {
         EMOTE_FRAMES[Globals.EMOTE_SWEAT] = 5;
         EMOTE_SPRITE_FOLDER[Globals.EMOTE_SLEEP] = "sleep";
         EMOTE_FRAMES[Globals.EMOTE_SLEEP] = 3;
+        EMOTE_SPRITE_FOLDER[Globals.EMOTE_ANGRY] = "angry";
+        EMOTE_FRAMES[Globals.EMOTE_ANGRY] = 1;
     }
 
     public static void unloadEmotes() {
@@ -53,7 +55,7 @@ public abstract class Emote extends Thread {
         System.gc();
     }
 
-    public static void loadEmotes() throws Exception {
+    public static void loadEmotes() {
         if (LOADED) {
             return;
         }
@@ -110,7 +112,7 @@ public abstract class Emote extends Thread {
         this.duration = 0;
     }
 
-    public static BufferedImage[][] getParticleSprites() {
+    public static BufferedImage[][] getEmoteSprites() {
         return EMOTE_SPRITE;
     }
 }
