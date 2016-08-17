@@ -8,6 +8,7 @@ http://www.gdunlimited.net/games/ascension/
 # Version 0.20 Update 1
 ## Gameplay Changes
 * Added Emotes. Assign a key to use the Emotes in the Keybind menu.
+* Equipment Upgrades now add an additional flat 0.75 stats to existing Primary Stats(Power, Defense, Spirit) per upgrade.
 
 ## Client Changes
 * Added keybinds for Emotes.
