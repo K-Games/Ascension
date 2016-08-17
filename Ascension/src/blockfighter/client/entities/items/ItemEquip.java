@@ -26,7 +26,10 @@ public class ItemEquip implements Item {
             UPGRADE_CRITDMG = 0.02, // 2%
             UPGRADE_REGEN = 8,
             UPGRADE_ARMOR = 24,
-            UPGRADE_MULT = 0.04;
+            UPGRADE_MULT = 0.04,
+            UPGRADE_STAT_FLATBONUS = 0.75;
+
+    private final static double NEWSTAT_BASEMULT_BONUS = 0.25D;
 
     public final static HashSet<Integer> ITEM_CODES = new HashSet<>();
 
@@ -331,41 +334,41 @@ public class ItemEquip implements Item {
 
         switch (getItemType(ic)) {
             case Globals.ITEM_WEAPON:
-                newStats[Globals.STAT_POWER] = level + 0.25D * level + Globals.rng(6);
+                newStats[Globals.STAT_POWER] = level + NEWSTAT_BASEMULT_BONUS * level + Globals.rng(6);
                 break;
             case Globals.ITEM_BOW:
-                newStats[Globals.STAT_POWER] = level + 0.25D * level + Globals.rng(6);
+                newStats[Globals.STAT_POWER] = level + NEWSTAT_BASEMULT_BONUS * level + Globals.rng(6);
                 break;
             case Globals.ITEM_SHIELD:
-                newStats[Globals.STAT_DEFENSE] = level + 0.25D * level + Globals.rng(6);
+                newStats[Globals.STAT_DEFENSE] = level + NEWSTAT_BASEMULT_BONUS * level + Globals.rng(6);
                 break;
             case Globals.ITEM_ARROW:
-                newStats[Globals.STAT_POWER] = level + 0.25D * level + Globals.rng(6);
+                newStats[Globals.STAT_POWER] = level + NEWSTAT_BASEMULT_BONUS * level + Globals.rng(6);
                 newStats[Globals.STAT_CRITCHANCE] = level * 0.001 + Globals.rng(11) * 0.001;
                 break;
             case Globals.ITEM_CHEST:
-                newStats[Globals.STAT_DEFENSE] = level + 0.25D * level + Globals.rng(6);
+                newStats[Globals.STAT_DEFENSE] = level + NEWSTAT_BASEMULT_BONUS * level + Globals.rng(6);
                 break;
             case Globals.ITEM_PANTS:
-                newStats[Globals.STAT_DEFENSE] = level + 0.25D * level + Globals.rng(6);
+                newStats[Globals.STAT_DEFENSE] = level + NEWSTAT_BASEMULT_BONUS * level + Globals.rng(6);
                 break;
             case Globals.ITEM_HEAD:
-                newStats[Globals.STAT_DEFENSE] = level + 0.25D * level + Globals.rng(6);
-                newStats[Globals.STAT_SPIRIT] = level + 0.25D * level + Globals.rng(6);
+                newStats[Globals.STAT_DEFENSE] = level + NEWSTAT_BASEMULT_BONUS * level + Globals.rng(6);
+                newStats[Globals.STAT_SPIRIT] = level + NEWSTAT_BASEMULT_BONUS * level + Globals.rng(6);
                 break;
             case Globals.ITEM_SHOE:
-                newStats[Globals.STAT_SPIRIT] = level + 0.25D * level + Globals.rng(6);
+                newStats[Globals.STAT_SPIRIT] = level + NEWSTAT_BASEMULT_BONUS * level + Globals.rng(6);
                 break;
             case Globals.ITEM_BELT:
-                newStats[Globals.STAT_SPIRIT] = level + 0.25D * level + Globals.rng(6);
+                newStats[Globals.STAT_SPIRIT] = level + NEWSTAT_BASEMULT_BONUS * level + Globals.rng(6);
                 break;
             case Globals.ITEM_SHOULDER:
-                newStats[Globals.STAT_DEFENSE] = level + 0.25D * level + Globals.rng(6);
-                newStats[Globals.STAT_POWER] = level + 0.25D * level + Globals.rng(6);
+                newStats[Globals.STAT_DEFENSE] = level + NEWSTAT_BASEMULT_BONUS * level + Globals.rng(6);
+                newStats[Globals.STAT_POWER] = level + NEWSTAT_BASEMULT_BONUS * level + Globals.rng(6);
                 break;
             case Globals.ITEM_GLOVE:
-                newStats[Globals.STAT_SPIRIT] = level + 0.25D * level + Globals.rng(6);
-                newStats[Globals.STAT_POWER] = level + 0.25D * level + Globals.rng(6);
+                newStats[Globals.STAT_SPIRIT] = level + NEWSTAT_BASEMULT_BONUS * level + Globals.rng(6);
+                newStats[Globals.STAT_POWER] = level + NEWSTAT_BASEMULT_BONUS * level + Globals.rng(6);
                 break;
             case Globals.ITEM_AMULET:
                 newStats[Globals.STAT_CRITDMG] = level * 0.02 + Globals.rng(11) * 0.01;
@@ -567,11 +570,11 @@ public class ItemEquip implements Item {
     private void updateStats() {
         System.arraycopy(this.baseStats, 0, this.totalStats, 0, this.baseStats.length);
         this.totalStats[Globals.STAT_POWER] = Math
-                .round(this.baseStats[Globals.STAT_POWER] * (1 + this.bonusMult + this.upgrades * UPGRADE_MULT));
+                .round(this.baseStats[Globals.STAT_POWER] * (1 + this.bonusMult + this.upgrades * UPGRADE_MULT) + ((this.baseStats[Globals.STAT_POWER] > 0) ? this.upgrades * UPGRADE_STAT_FLATBONUS : 0));
         this.totalStats[Globals.STAT_DEFENSE] = Math
-                .round(this.baseStats[Globals.STAT_DEFENSE] * (1 + this.bonusMult + this.upgrades * UPGRADE_MULT));
+                .round(this.baseStats[Globals.STAT_DEFENSE] * (1 + this.bonusMult + this.upgrades * UPGRADE_MULT) + ((this.baseStats[Globals.STAT_DEFENSE] > 0) ? this.upgrades * UPGRADE_STAT_FLATBONUS : 0));
         this.totalStats[Globals.STAT_SPIRIT] = Math
-                .round(this.baseStats[Globals.STAT_SPIRIT] * (1 + this.bonusMult + this.upgrades * UPGRADE_MULT));
+                .round(this.baseStats[Globals.STAT_SPIRIT] * (1 + this.bonusMult + this.upgrades * UPGRADE_MULT) + ((this.baseStats[Globals.STAT_SPIRIT] > 0) ? this.upgrades * UPGRADE_STAT_FLATBONUS : 0));
 
         if (this.baseStats[Globals.STAT_CRITCHANCE] > 0) {
             this.totalStats[Globals.STAT_CRITCHANCE] = this.baseStats[Globals.STAT_CRITCHANCE] + (0.003 * (this.bonusMult / 0.1)) + this.upgrades * UPGRADE_CRITCHANCE;
