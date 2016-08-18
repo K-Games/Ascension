@@ -11,27 +11,27 @@
     <description>Builds, tests, and runs the project Ascension.</description>
     <import file="nbproject/build-impl.xml"/>
         <target name="-post-compile">
-            <copy todir="${dist.dir}/windows/resources" >  
+            <copy todir="${dist.dir}/Ascension-Release-Win/resources" >
                 <fileset dir="resources" includes="**"/>
             </copy>
-            <copy todir="${dist.dir}/macosx/resources" >  
+            <copy todir="${dist.dir}/Ascension-Release-Multiplatform/resources" >
                 <fileset dir="resources" includes="**"/>
             </copy>
         </target>
         <target name="-post-jar">
             <delete file="${dist.dir}/README.TXT"/>
-            <copy file="${dist.dir}/bin.jar" tofile="${dist.dir}/windows/bin/bin.jar" />
-            <move file="${dist.dir}/bin.jar" tofile="${dist.dir}/macosx/Ascension.jar" />
-            <copy todir="${dist.dir}/windows/bin/lib" >  
+            <copy file="${dist.dir}/bin.jar" tofile="${dist.dir}/Ascension-Release-Win/bin/bin.jar" />
+            <move file="${dist.dir}/bin.jar" tofile="${dist.dir}/Ascension-Release-Multiplatform/Ascension.jar" />
+            <copy todir="${dist.dir}/Ascension-Release-Win/bin/lib" >
                 <fileset dir="${dist.dir}/lib" includes="**"/>
             </copy>
-            <move file="${dist.dir}/lib" todir="${dist.dir}/macosx/" />
+            <move file="${dist.dir}/lib" todir="${dist.dir}/Ascension-Release-Multiplatform/" />
         </target>
     <!--
 
-    There exist several targets which are by default empty and which can be 
-    used for execution of your tasks. These targets are usually executed 
-    before and after some main targets. They are: 
+    There exist several targets which are by default empty and which can be
+    used for execution of your tasks. These targets are usually executed
+    before and after some main targets. They are:
 
       -pre-init:                 called before initialization of project properties
       -post-init:                called after initialization of project properties
@@ -57,19 +57,19 @@
             </obfuscate>
         </target>
 
-    For list of available properties check the imported 
-    nbproject/build-impl.xml file. 
+    For list of available properties check the imported
+    nbproject/build-impl.xml file.
 
 
     Another way to customize the build is by overriding existing main targets.
-    The targets of interest are: 
+    The targets of interest are:
 
       -init-macrodef-javac:     defines macro for javac compilation
       -init-macrodef-junit:     defines macro for junit execution
       -init-macrodef-debug:     defines macro for class debugging
       -init-macrodef-java:      defines macro for class execution
       -do-jar:                  JAR building
-      run:                      execution of project 
+      run:                      execution of project
       -javadoc-build:           Javadoc generation
       test-report:              JUnit report generation
 
@@ -81,10 +81,10 @@
             </exec>
         </target>
 
-    Notice that the overridden target depends on the jar target and not only on 
-    the compile target as the regular run target does. Again, for a list of available 
+    Notice that the overridden target depends on the jar target and not only on
+    the compile target as the regular run target does. Again, for a list of available
     properties which you can use, check the target you are overriding in the
-    nbproject/build-impl.xml file. 
+    nbproject/build-impl.xml file.
 
     -->
 </project>
