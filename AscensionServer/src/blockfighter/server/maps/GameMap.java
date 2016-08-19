@@ -11,9 +11,9 @@ public abstract class GameMap {
 
     final static long PLATFORM_BUCKET_CELLSIZE = 600;
 
-    private HashMap<Integer, ArrayList<Rectangle2D.Double>> platformBuckets;
+    private HashMap<Integer, ArrayList<GameMapPlatform>> platformBuckets;
 
-    Rectangle2D.Double[] platforms;
+    GameMapPlatform[] platforms;
     Point2D.Double[] spawnPoints;
     double[] boundary = new double[4];
     byte mapID = -1;
@@ -37,8 +37,8 @@ public abstract class GameMap {
             this.platformBuckets.put(bucketID, new ArrayList<>());
         }
 
-        for (Rectangle2D.Double platform : platforms) {
-            bucketIDs = getBucketIDsForRect(platform);
+        for (GameMapPlatform platform : platforms) {
+            bucketIDs = getBucketIDsForRect(platform.getRect());
             for (int bucketID : bucketIDs) {
                 this.platformBuckets.get(bucketID).add(platform);
             }
@@ -95,7 +95,7 @@ public abstract class GameMap {
         Integer[] bucketIDs = getBucketIDsForRect(rect);
         for (int bucketID : bucketIDs) {
             if (this.platformBuckets.containsKey(bucketID)) {
-                for (Rectangle2D.Double platform : this.platformBuckets.get(bucketID)) {
+                for (GameMapPlatform platform : this.platformBuckets.get(bucketID)) {
                     if (platform.intersects(rect)) {
                         return true;
                     }
@@ -120,9 +120,9 @@ public abstract class GameMap {
         Rectangle2D.Double fallingArea = new Rectangle2D.Double(x - 25, y, 50, 1);
         Integer[] bucketIDs = getBucketIDsForRect(fallingArea);
         for (int bucketID : bucketIDs) {
-            for (Rectangle2D.Double platform : this.platformBuckets.get(bucketID)) {
+            for (GameMapPlatform platform : this.platformBuckets.get(bucketID)) {
                 if (platform.intersects(fallingArea)) {
-                    return platform.y;
+                    return platform.getY(x);
                 }
             }
         }

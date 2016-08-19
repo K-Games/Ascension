@@ -24,6 +24,7 @@ Inspired by Action RPGs and Metroidvanias. A game dedicated about its gameplay.
 ### Server Changes
 * Added broadcast received Emote action.
 * Logs no longer gets seperated into folders. All logs append to `ErrorLog.log` and `DataLog.log` in `logs` folder.
+* Added support for non-flat platforms.
 
 ![Social Media](https://github.com/kenofnz/AscensionInfo/raw/gh-pages/images/social.png)
 
