@@ -1203,8 +1203,8 @@ public class Player extends Thread implements GameEntity {
 
     public void setPlayerState(final byte newState) {
         this.playerState = newState;
-        this.frame = -1;
-        this.lastFrameTime = 0;
+        this.frame = 0;
+        this.lastFrameTime = this.logic.getTime();
         this.updateAnimState = true;
     }
 
@@ -1246,13 +1246,13 @@ public class Player extends Thread implements GameEntity {
                 break;
             case PLAYER_STATE_JUMP:
                 this.animState = Globals.PLAYER_ANIM_STATE_JUMP;
-                if (frameDuration >= 30) {
+                if (frameDuration >= 60) {
                     if (this.isFalling && this.map.isWithinDistanceToGround(this.x, this.y, 110)) {
                         this.frame = 2;
                     } else if (this.frame < 1) {
                         this.frame++;
-                    } else {
-                        this.frame = 1;
+                    } else if (!this.isFalling && this.frame == 2) {
+                        this.frame = 0;
                     }
                     this.lastFrameTime = this.logic.getTime();
                 }
