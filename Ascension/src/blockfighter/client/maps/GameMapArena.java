@@ -39,10 +39,8 @@ public class GameMapArena extends GameMap {
         g.drawImage(this.platforms[0], 1550, -150, null);
         g.drawImage(this.platforms[1], 2450, -150, null);
 
-        g.drawImage(this.platforms[1], 200, -400, null);
         g.drawImage(this.platforms[0], 1100, -400, null);
         g.drawImage(this.platforms[0], 2000, -400, null);
-        g.drawImage(this.platforms[1], 2900, -400, null);
         super.draw(g);
 
     }

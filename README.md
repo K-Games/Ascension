@@ -15,11 +15,13 @@ Inspired by Action RPGs and Metroidvanias. A game dedicated about its gameplay.
 ### Gameplay Changes
 * Added Emotes. Assign a key to use the Emotes in the Keybind menu.
 * Equipment Upgrades now add an additional flat 0.75 stats to existing Primary Stats(Power, Defense, Spirit) per upgrade.
+* Map Update - Removed the far left and right platforms on the highest level.
 
 ### Client Changes
 * Added keybinds for Emotes.
 * Added sending and handling received Emote action.
 * Enabled NUMPAD 0 to 9 as bindable keys.
+* Added Splash screen
 
 ### Server Changes
 * Added broadcast received Emote action.

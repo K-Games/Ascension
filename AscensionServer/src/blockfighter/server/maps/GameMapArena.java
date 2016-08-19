@@ -10,7 +10,7 @@ public class GameMapArena extends GameMap {
     public GameMapArena() {
         this.mapID = 0;
         this.isPvP = true;
-        this.platforms = new GameMapPlatform[15];
+        this.platforms = new GameMapPlatform[13];
         this.platforms[0] = new GameMapPlatform(new Rectangle2D.Double(-50, 600, 3450, 30));
 
         this.platforms[1] = new GameMapPlatform(new Rectangle2D.Double(650, 350, 300, 30));
@@ -26,16 +26,14 @@ public class GameMapArena extends GameMap {
         this.platforms[9] = new GameMapPlatform(new Rectangle2D.Double(1550, -150, 300, 30));
         this.platforms[10] = new GameMapPlatform(new Rectangle2D.Double(2450, -150, 300, 30));
 
-        this.platforms[11] = new GameMapPlatform(new Rectangle2D.Double(200, -400, 300, 30));
-        this.platforms[12] = new GameMapPlatform(new Rectangle2D.Double(1100, -400, 300, 30));
-        this.platforms[13] = new GameMapPlatform(new Rectangle2D.Double(2000, -400, 300, 30));
-        this.platforms[14] = new GameMapPlatform(new Rectangle2D.Double(2900, -400, 300, 30));
+        this.platforms[11] = new GameMapPlatform(new Rectangle2D.Double(1100, -400, 300, 30));
+        this.platforms[12] = new GameMapPlatform(new Rectangle2D.Double(2000, -400, 300, 30));
 
-        this.spawnPoints = new Point2D.Double[18];
+        this.spawnPoints = new Point2D.Double[16];
         for (int i = 0; i < 4; i++) {
-            this.spawnPoints[i + 14] = new Point2D.Double(this.platforms[0].getRect().width / 6D * (i + 1), this.platforms[0].getRect().getY() - 150);
+            this.spawnPoints[i + 12] = new Point2D.Double(this.platforms[0].getRect().width / 6D * (i + 1), this.platforms[0].getRect().getY() - 150);
         }
-        for (int i = 1; i < 15; i++) {
+        for (int i = 1; i < this.platforms.length; i++) {
             this.spawnPoints[i - 1] = new Point2D.Double(this.platforms[i].getRect().getCenterX(), this.platforms[i].getRect().getY() - 150);
         }
         this.boundary[Globals.MAP_LEFT] = 0.0;
