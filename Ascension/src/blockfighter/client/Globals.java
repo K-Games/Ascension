@@ -19,7 +19,9 @@ public class Globals {
     public static int SERVER_UDP_PORT = 25566;
     public static String SERVER_ADDRESS;
 
-    public final static boolean TEST_MAX_LEVEL = true,
+    public static final String DEV_PASSPHRASE = "amFwAkjuy0K/lSvUUyZvdiIFdn/Dzu/OAxStgUEdLKk=";
+
+    public static boolean TEST_MAX_LEVEL = false,
             DEBUG_MODE = false;
 
     public final static byte GAME_MAJOR_VERSION = 0,

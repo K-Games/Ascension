@@ -17,6 +17,9 @@ import blockfighter.client.screen.ScreenSelectChar;
 import blockfighter.client.screen.ScreenTitle;
 import java.awt.Dimension;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.util.Base64;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -72,6 +75,24 @@ public class Main {
 
     public static void main(final String[] args) {
         if (args.length > 0) {
+            boolean devEnabled = false;
+            for (int i = 0; i < args.length; i++) {
+                if (args[i].toLowerCase().equals("-pass")) {
+                    try {
+                        byte[] digest = MessageDigest.getInstance("SHA-256").digest(args[i + 1].getBytes(StandardCharsets.UTF_8));
+                        String passphrase = Base64.getEncoder().encodeToString(digest);
+                        if (passphrase.equals(Globals.DEV_PASSPHRASE)) {
+                            devEnabled = true;
+                        } else {
+                            System.err.println("-pass Incorrect passphrase");
+                        }
+                    } catch (Exception e) {
+                        System.err.println("-pass Enter the developer passphrase");
+                    }
+                    break;
+                }
+            }
+
             for (int i = 0; i < args.length; i++) {
                 switch (args[i].toLowerCase()) {
                     case "-tcpport":
@@ -106,6 +127,20 @@ public class Main {
                         break;
                     case "-skiptitle":
                         Globals.SKIP_TITLE = true;
+                        break;
+                    case "-debug":
+                        if (devEnabled) {
+                            Globals.DEBUG_MODE = true;
+                        } else {
+                            System.err.println("-debug Dev passphrase required");
+                        }
+                        break;
+                    case "-maxlevel":
+                        if (devEnabled) {
+                            Globals.TEST_MAX_LEVEL = true;
+                        } else {
+                            System.err.println("-maxlevel Dev passphrase required");
+                        }
                         break;
                 }
             }
