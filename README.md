@@ -29,6 +29,7 @@ Inspired by Action RPGs and Metroidvanias. A game dedicated about its gameplay.
 * Logs no longer gets seperated into folders. All logs append to `ErrorLog.log` and `DataLog.log` in `logs` folder.
 * Added support for non-flat platforms.
 * Abstracted Projectiles for higher level implementations.
+* Removed unused Mob classes.
 
 ![Social Media](https://github.com/kenofnz/AscensionInfo/raw/gh-pages/images/social.png)
 
