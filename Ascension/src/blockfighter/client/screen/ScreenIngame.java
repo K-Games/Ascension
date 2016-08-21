@@ -863,18 +863,6 @@ public class ScreenIngame extends Screen {
                     addParticle(new ParticleShieldReflectHit(x, y, i));
                 }
                 break;
-            case Globals.PARTICLE_SHIELD_IRON:
-                playerKey = data[2];
-                if (this.players.containsKey(playerKey)) {
-                    addParticle(new ParticleShieldIron(this.players.get(playerKey)));
-                }
-                break;
-            case Globals.PARTICLE_SHIELD_IRONALLY:
-                playerKey = data[2];
-                if (this.players.containsKey(playerKey)) {
-                    addParticle(new ParticleShieldIronAlly(this.players.get(playerKey)));
-                }
-                break;
             case Globals.PARTICLE_SHIELD_FORTIFYBUFF:
                 playerKey = data[2];
                 if (this.players.containsKey(playerKey)) {

@@ -39,9 +39,9 @@ import blockfighter.server.entities.player.skills.SkillPassiveWillpower;
 import blockfighter.server.entities.player.skills.SkillShieldCharge;
 import blockfighter.server.entities.player.skills.SkillShieldDash;
 import blockfighter.server.entities.player.skills.SkillShieldFortify;
-import blockfighter.server.entities.player.skills.SkillShieldIron;
 import blockfighter.server.entities.player.skills.SkillShieldMagnetize;
 import blockfighter.server.entities.player.skills.SkillShieldReflect;
+import blockfighter.server.entities.player.skills.SkillShieldRoar;
 import blockfighter.server.entities.player.skills.SkillSwordCinder;
 import blockfighter.server.entities.player.skills.SkillSwordGash;
 import blockfighter.server.entities.player.skills.SkillSwordPhantom;
@@ -88,7 +88,7 @@ public class Player extends Thread implements GameEntity {
             PLAYER_STATE_SHIELD_CHARGE = 0x0F,
             PLAYER_STATE_SHIELD_DASH = 0x10,
             PLAYER_STATE_SHIELD_FORTIFY = 0x11,
-            PLAYER_STATE_SHIELD_IRON = 0x12,
+            PLAYER_STATE_SHIELD_ROAR = 0x12,
             PLAYER_STATE_SHIELD_REFLECT = 0x13,
             PLAYER_STATE_SHIELD_MAGNETIZE = 0x14,
             PLAYER_STATE_DEAD = 0x15;
@@ -161,7 +161,7 @@ public class Player extends Thread implements GameEntity {
             PLAYER_STATE_SHIELD_CHARGE,
             PLAYER_STATE_SHIELD_DASH,
             PLAYER_STATE_SHIELD_FORTIFY,
-            PLAYER_STATE_SHIELD_IRON,
+            PLAYER_STATE_SHIELD_ROAR,
             PLAYER_STATE_SHIELD_REFLECT,
             PLAYER_STATE_SHIELD_MAGNETIZE
         };
@@ -177,7 +177,7 @@ public class Player extends Thread implements GameEntity {
             PLAYER_STATE_BOW_VOLLEY,
             PLAYER_STATE_SHIELD_CHARGE,
             PLAYER_STATE_SHIELD_DASH,
-            PLAYER_STATE_SHIELD_IRON,
+            PLAYER_STATE_SHIELD_ROAR,
             PLAYER_STATE_SHIELD_MAGNETIZE
         };
         IMMOVABLE_PLAYER_SKILL_STATES = new HashSet<>(Arrays.asList(immovableSkills));
@@ -197,7 +197,7 @@ public class Player extends Thread implements GameEntity {
         PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SHIELD_CHARGE, Skill.SHIELD_CHARGE);
         PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SHIELD_DASH, Skill.SHIELD_DASH);
         PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SHIELD_FORTIFY, Skill.SHIELD_FORTIFY);
-        PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SHIELD_IRON, Skill.SHIELD_IRON);
+        PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SHIELD_ROAR, Skill.SHIELD_ROAR);
         PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SHIELD_REFLECT, Skill.SHIELD_REFLECT);
         PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SHIELD_MAGNETIZE, Skill.SHIELD_MAGNETIZE);
 
@@ -409,8 +409,8 @@ public class Player extends Thread implements GameEntity {
             case Skill.SHIELD_FORTIFY:
                 newSkill = new SkillShieldFortify(this.logic);
                 break;
-            case Skill.SHIELD_IRON:
-                newSkill = new SkillShieldIron(this.logic);
+            case Skill.SHIELD_ROAR:
+                newSkill = new SkillShieldRoar(this.logic);
                 break;
             case Skill.SHIELD_CHARGE:
                 newSkill = new SkillShieldCharge(this.logic);
@@ -595,7 +595,7 @@ public class Player extends Thread implements GameEntity {
         this.skillUseQueue.clear();
         if (data != null) {
             byte skillCode = data[3];
-            if (skillCode == Skill.SHIELD_IRON || !isStunned()) {
+            if (skillCode == Skill.SHIELD_ROAR || !isStunned()) {
                 if (hasSkill(skillCode)) {
                     castSkill(skillCode);
                 }
@@ -1372,7 +1372,7 @@ public class Player extends Thread implements GameEntity {
                     this.frame++;
                 }
                 break;
-            case PLAYER_STATE_SHIELD_IRON:
+            case PLAYER_STATE_SHIELD_ROAR:
                 this.animState = Globals.PLAYER_ANIM_STATE_BUFF;
                 if (frameDuration >= 30 && this.frame < 4) {
                     this.frame++;

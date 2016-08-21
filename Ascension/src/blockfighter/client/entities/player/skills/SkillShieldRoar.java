@@ -5,19 +5,19 @@ import blockfighter.client.entities.items.ItemEquip;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-public class SkillShieldIron extends Skill {
+public class SkillShieldRoar extends Skill {
 
-    public SkillShieldIron() {
-        this.icon = Globals.SKILL_ICON[SHIELD_IRON];
-        this.skillCode = SHIELD_IRON;
+    public SkillShieldRoar() {
+        this.icon = Globals.SKILL_ICON[SHIELD_ROAR];
+        this.skillCode = SHIELD_ROAR;
         this.maxCooldown = 20000;
         this.reqWeapon = Globals.ITEM_SHIELD;
-        this.skillName = "Iron Fortress";
+        this.skillName = "Primal Roar";
     }
 
     @Override
     public void drawInfo(final Graphics2D g, final int x, final int y) {
-        final int boxHeight = (this.level < 30) ? 235 : 190, boxWidth = 400;
+        final int boxHeight = (this.level < 30) ? 235 : 190, boxWidth = 380;
         int drawX = x, drawY = y;
         if (drawY + boxHeight > 700) {
             drawY = 700 - boxHeight;
@@ -39,19 +39,19 @@ public class SkillShieldIron extends Skill {
         g.drawString("Level: " + this.level + " - Requires " + ItemEquip.getItemTypeName(this.reqWeapon), drawX + 80, drawY + 50);
         g.drawString("Cooldown: " + this.maxCooldown / 1000 + " Seconds", drawX + 80, drawY + 70);
 
-        g.drawString("Become immobile and reduce damage taken.", drawX + 10, drawY + 90);
+        g.drawString("Send enemies flying with a ferocious roar.", drawX + 10, drawY + 90);
 
         g.drawString("[Level " + this.level + "]", drawX + 10, drawY + 115);
-        g.drawString("Reduce damage taken by " + (this.level + 55) + "% for 2 seconds.", drawX + 10, drawY + 135);
+        g.drawString("Deals " + (this.level * 15 + 150) + "% + Defense multiplied by " + (16 * (1.5 + 0.15 * this.level)) + " damage.", drawX + 10, drawY + 135);
         if (this.level < 30) {
             g.drawString("[Level " + (this.level + 1) + "]", drawX + 10, drawY + 160);
-            g.drawString("Reduce damage taken by " + ((this.level + 1) + 55) + "% for 2 seconds.", drawX + 10, drawY + 180);
+            g.drawString("Deals " + ((this.level + 1) * 15 + 150) + "% + Defense multiplied by " + (16 * (1.5 + 0.15 * (this.level + 1))) + " damage.", drawX + 10, drawY + 180);
 
             g.drawString("[Level 30 Bonus]", drawX + 10, drawY + 205);
-            g.drawString("Allies also reduce damage taken by 40% for 2 seconds.", drawX + 10, drawY + 225);
+            g.drawString("Enemies are stunned for 2 seconds.", drawX + 10, drawY + 225);
         } else {
             g.drawString("[Level 30 Bonus]", drawX + 10, drawY + 160);
-            g.drawString("Allies also reduce damage taken by 40% for 2 seconds.", drawX + 10, drawY + 180);
+            g.drawString("Enemies are stunned for 2 seconds.", drawX + 10, drawY + 180);
         }
     }
 
