@@ -3,7 +3,6 @@ package blockfighter.server.entities.damage;
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.mob.Mob;
-import blockfighter.server.entities.mob.boss.Lightning.BossLightning;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.maps.GameMapArena;
 import java.awt.geom.Point2D;
@@ -16,7 +15,12 @@ public class DamageTest {
     @Test
     public void testDamageMobOwnerConstructors() {
         int expDamage = Globals.rng(1000);
-        Mob expMob = new BossLightning(new LogicModule((byte) 0, (byte) 0), null, 0, 0);
+        Mob expMob = new Mob(new LogicModule((byte) 0, (byte) 0), null, 0, 0, (byte) 0) {
+            @Override
+            public void update() {
+            }
+        };
+
         Player expPlayer = new Player(new LogicModule((byte) 0, (byte) 0), (byte) 0, null, new GameMapArena());
         Point2D.Double expPoint = new Point2D.Double(0, 0);
         Damage instance = new Damage(expDamage, expMob, expPlayer, expPoint);
@@ -101,7 +105,11 @@ public class DamageTest {
     @Test
     public void testDamagePlayerOwnerMobTargetConstructors() {
         int expDamage = Globals.rng(1000);
-        Mob expMob = new BossLightning(new LogicModule((byte) 0, (byte) 0), null, 0, 0);
+        Mob expMob = new Mob(new LogicModule((byte) 0, (byte) 0), null, 0, 0, (byte) 0) {
+            @Override
+            public void update() {
+            }
+        };
         Player expOwner = new Player(new LogicModule((byte) 0, (byte) 0), (byte) 0, null, new GameMapArena());
         Point2D.Double expPoint = new Point2D.Double(0, 0);
         Damage instance = new Damage(expDamage, expOwner, expMob, true, expPoint);

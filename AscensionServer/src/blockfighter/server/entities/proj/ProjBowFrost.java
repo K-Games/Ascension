@@ -29,53 +29,42 @@ public class ProjBowFrost extends Projectile {
     }
 
     @Override
+    public int calculateDamage(final boolean isCrit) {
+        final Player owner = getOwner();
+        double damage = (!this.isSecondary)
+                ? (owner.rollDamage() * (1 + .2 * owner.getSkillLevel(Skill.BOW_FROST)))
+                : owner.rollDamage() * 2.5;
+        damage = (isCrit) ? owner.criticalDamage(damage) : damage;
+        return (int) damage;
+    }
+
+    @Override
+    public void applyDamage(Player target) {
+        final Player owner = getOwner();
+        final boolean isCrit = owner.rollCrit();
+        final int damage = calculateDamage(isCrit);
+        target.queueDamage(new Damage(damage, true, owner, target, isCrit, this.hitbox[0], target.getHitbox()));
+        target.queueBuff(new BuffKnockback(this.logic, 200, (owner.getFacing() == Globals.RIGHT) ? 3 : -3, -4, owner, target));
+        if (!this.isSecondary) {
+            target.queueBuff(new BuffStun(this.logic, owner.isSkillMaxed(Skill.BOW_FROST) ? 2500 : 1500));
+        }
+    }
+
+    @Override
+    public void applyDamage(Mob target) {
+        final Player owner = getOwner();
+        final boolean isCrit = owner.rollCrit();
+        final int damage = calculateDamage(isCrit);
+        target.queueDamage(new Damage(damage, true, owner, target, isCrit, this.hitbox[0], target.getHitbox()));
+        if (!this.isSecondary) {
+            target.queueBuff(new BuffStun(this.logic, owner.isSkillMaxed(Skill.BOW_FROST) ? 2500 : 1500));
+        }
+    }
+
+    @Override
     public void update() {
         this.x += this.speedX;
         this.hitbox[0].x += this.speedX;
         super.update();
     }
-
-    @Override
-    public void applyEffect() {
-        while (!this.playerQueue.isEmpty()) {
-            final Player p = this.playerQueue.poll(), owner = getOwner();
-            if (p != null && !p.isDead()) {
-                int damage;
-                if (!this.isSecondary) {
-                    damage = (int) (owner.rollDamage() * (1 + .2 * owner.getSkillLevel(Skill.BOW_FROST)));
-                } else {
-                    damage = (int) (owner.rollDamage() * 2.5);
-                }
-                final boolean crit = owner.rollCrit();
-                if (crit) {
-                    damage = (int) owner.criticalDamage(damage);
-                }
-                p.queueDamage(new Damage(damage, true, owner, p, crit, this.hitbox[0], p.getHitbox()));
-                p.queueBuff(new BuffKnockback(this.logic, 200, (owner.getFacing() == Globals.RIGHT) ? 3 : -3, -4, owner, p));
-                p.queueBuff(new BuffStun(this.logic, owner.isSkillMaxed(Skill.BOW_FROST) ? 2500 : 1500));
-            }
-        }
-        while (!this.mobQueue.isEmpty()) {
-            final Mob b = this.mobQueue.poll();
-            final Player owner = getOwner();
-            if (b != null && !b.isDead()) {
-                int damage;
-                if (!this.isSecondary) {
-                    damage = (int) (owner.rollDamage() * (1 + .2 * owner.getSkillLevel(Skill.BOW_FROST)));
-                } else {
-                    damage = (int) (owner.rollDamage() * 2.5);
-                }
-                final boolean crit = owner.rollCrit();
-                if (crit) {
-                    damage = (int) owner.criticalDamage(damage);
-                }
-                b.queueDamage(new Damage(damage, true, owner, b, crit, this.hitbox[0], b.getHitbox()));
-                if (!this.isSecondary) {
-                    b.queueBuff(new BuffStun(this.logic, owner.isSkillMaxed(Skill.BOW_FROST) ? 2500 : 1500));
-                }
-            }
-        }
-        this.queuedEffect = false;
-    }
-
 }

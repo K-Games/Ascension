@@ -23,32 +23,28 @@ public class ProjSwordVorpal extends Projectile {
     }
 
     @Override
-    public void applyEffect() {
-        while (!this.playerQueue.isEmpty()) {
-            final Player p = this.playerQueue.poll(), owner = getOwner();
-            if (p != null && !p.isDead()) {
-                int damage = (int) (owner.rollDamage() * (1.45 + 0.06 * owner.getSkillLevel(Skill.SWORD_VORPAL)));
-                final boolean crit = owner.rollCrit(owner.isSkillMaxed(Skill.SWORD_VORPAL) ? 0.3 : 0);
-                if (crit) {
-                    damage = (int) owner.criticalDamage(damage, 0.4 + 0.03 * owner.getSkillLevel(Skill.SWORD_VORPAL));
-                }
-                p.queueDamage(new Damage(damage, true, owner, p, crit, this.hitbox[0], p.getHitbox()));
-                p.queueBuff(new BuffKnockback(this.logic, 200, (owner.getFacing() == Globals.RIGHT) ? 1 : -1, -3, owner, p));
-            }
-        }
-        while (!this.mobQueue.isEmpty()) {
-            final Mob b = this.mobQueue.poll();
-            final Player owner = getOwner();
-            if (b != null && !b.isDead()) {
-                int damage = (int) (owner.rollDamage() * (1.45 + 0.06 * owner.getSkillLevel(Skill.SWORD_VORPAL)));
-                final boolean crit = owner.rollCrit(owner.isSkillMaxed(Skill.SWORD_VORPAL) ? 0.3 : 0);
-                if (crit) {
-                    damage = (int) owner.criticalDamage(damage, 0.4 + 0.03 * owner.getSkillLevel(Skill.SWORD_VORPAL));
-                }
-                b.queueDamage(new Damage(damage, true, owner, b, crit, this.hitbox[0], b.getHitbox()));
-            }
-        }
-        this.queuedEffect = false;
+    public int calculateDamage(boolean isCrit) {
+        final Player owner = getOwner();
+        double damage = owner.rollDamage() * (1.45 + 0.06 * owner.getSkillLevel(Skill.SWORD_VORPAL));
+        damage = (isCrit) ? owner.criticalDamage(damage, 0.4 + 0.03 * owner.getSkillLevel(Skill.SWORD_VORPAL)) : damage;
+        return (int) damage;
+    }
+
+    @Override
+    public void applyDamage(Player target) {
+        final Player owner = getOwner();
+        final boolean isCrit = owner.rollCrit(owner.isSkillMaxed(Skill.SWORD_VORPAL) ? 0.3 : 0);
+        final int damage = calculateDamage(isCrit);
+        target.queueDamage(new Damage(damage, true, owner, target, isCrit, this.hitbox[0], target.getHitbox()));
+        target.queueBuff(new BuffKnockback(this.logic, 200, (owner.getFacing() == Globals.RIGHT) ? 1 : -1, -3, owner, target));
+    }
+
+    @Override
+    public void applyDamage(Mob target) {
+        final Player owner = getOwner();
+        final boolean isCrit = owner.rollCrit(owner.isSkillMaxed(Skill.SWORD_VORPAL) ? 0.3 : 0);
+        final int damage = calculateDamage(isCrit);
+        target.queueDamage(new Damage(damage, true, owner, target, isCrit, this.hitbox[0], target.getHitbox()));
     }
 
 }

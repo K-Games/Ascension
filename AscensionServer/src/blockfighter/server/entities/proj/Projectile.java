@@ -136,6 +136,20 @@ public abstract class Projectile extends Thread implements GameEntity {
     }
 
     public void applyEffect() {
+        while (!this.playerQueue.isEmpty()) {
+            final Player p = this.playerQueue.poll();
+            if (p != null && !p.isDead()) {
+                Projectile.this.applyDamage(p);
+            }
+        }
+
+        while (!this.mobQueue.isEmpty()) {
+            final Mob b = this.mobQueue.poll();
+            if (b != null && !b.isDead()) {
+                applyDamage(b);
+            }
+        }
+        this.queuedEffect = false;
     }
 
     public Rectangle2D.Double[] getHitbox() {
@@ -151,4 +165,10 @@ public abstract class Projectile extends Thread implements GameEntity {
             this.queuedEffect = true;
         }
     }
+
+    public abstract void applyDamage(final Player target);
+
+    public abstract void applyDamage(final Mob target);
+
+    public abstract int calculateDamage(final boolean isCrit);
 }

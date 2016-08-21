@@ -27,55 +27,54 @@ public class ProjBowVolley extends Projectile {
     }
 
     @Override
-    public void applyEffect() {
-        while (!this.playerQueue.isEmpty()) {
-            final Player p = this.playerQueue.poll(), owner = getOwner();
-            if (p != null && !p.isDead()) {
-                int damage = (int) (owner.rollDamage() * (.85 + owner.getSkillLevel(Skill.BOW_VOLLEY) * .03));
-                final boolean crit = owner.rollCrit();
-                if (crit) {
-                    damage = (int) owner.criticalDamage(damage);
-                    if (!this.buffed) {
-                        this.buffed = true;
-                        if (owner.isSkillMaxed(Skill.BOW_VOLLEY)) {
-                            owner.queueBuff(new BuffBowVolley(this.logic, 4000, 0.01, owner));
-                            final byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
-                            bytes[0] = Globals.DATA_PARTICLE_EFFECT;
-                            bytes[1] = Globals.PARTICLE_BOW_VOLLEYBUFF;
-                            bytes[2] = owner.getKey();
-                            PacketSender.sendAll(bytes, this.logic.getRoom().getRoomNumber());
-                        }
-                    }
-                }
-                p.queueDamage(new Damage(damage, true, owner, p, crit, this.hitbox[0], p.getHitbox()));
-                p.queueBuff(new BuffKnockback(this.logic, 50, (owner.getFacing() == Globals.RIGHT) ? 1 : -1, -0.1, owner, p));
-            }
-        }
+    public int calculateDamage(final boolean isCrit) {
+        final Player owner = getOwner();
+        double damage = owner.rollDamage() * (.85 + owner.getSkillLevel(Skill.BOW_VOLLEY) * .03);
+        damage = (isCrit) ? owner.criticalDamage(damage) : damage;
+        return (int) damage;
+    }
 
-        while (!this.mobQueue.isEmpty()) {
-            final Mob b = this.mobQueue.poll();
-            final Player owner = getOwner();
-            if (b != null && !b.isDead()) {
-                int damage = (int) (owner.rollDamage() * (.85 + owner.getSkillLevel(Skill.BOW_VOLLEY) * .03));
-                final boolean crit = owner.rollCrit();
-                if (crit) {
-                    damage = (int) owner.criticalDamage(damage);
-                    if (!this.buffed) {
-                        this.buffed = true;
-                        if (owner.isSkillMaxed(Skill.BOW_VOLLEY)) {
-                            owner.queueBuff(new BuffBowVolley(this.logic, 4000, 0.01, owner));
-                            final byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
-                            bytes[0] = Globals.DATA_PARTICLE_EFFECT;
-                            bytes[1] = Globals.PARTICLE_BOW_VOLLEYBUFF;
-                            bytes[2] = owner.getKey();
-                            PacketSender.sendAll(bytes, this.logic.getRoom().getRoomNumber());
-                        }
-                    }
+    @Override
+    public void applyDamage(Player target) {
+        final Player owner = getOwner();
+        final boolean isCrit = owner.rollCrit();
+        final int damage = calculateDamage(isCrit);
+        if (isCrit) {
+            if (!this.buffed) {
+                this.buffed = true;
+                if (owner.isSkillMaxed(Skill.BOW_VOLLEY)) {
+                    owner.queueBuff(new BuffBowVolley(this.logic, 4000, 0.01, owner));
+                    final byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
+                    bytes[0] = Globals.DATA_PARTICLE_EFFECT;
+                    bytes[1] = Globals.PARTICLE_BOW_VOLLEYBUFF;
+                    bytes[2] = owner.getKey();
+                    PacketSender.sendAll(bytes, this.logic.getRoom().getRoomNumber());
                 }
-                b.queueDamage(new Damage(damage, true, owner, b, crit, this.hitbox[0], b.getHitbox()));
             }
         }
-        this.queuedEffect = false;
+        target.queueDamage(new Damage(damage, true, owner, target, isCrit, this.hitbox[0], target.getHitbox()));
+        target.queueBuff(new BuffKnockback(this.logic, 50, (owner.getFacing() == Globals.RIGHT) ? 1 : -1, -0.1, owner, target));
+    }
+
+    @Override
+    public void applyDamage(Mob target) {
+        final Player owner = getOwner();
+        final boolean isCrit = owner.rollCrit();
+        final int damage = calculateDamage(isCrit);
+        if (isCrit) {
+            if (!this.buffed) {
+                this.buffed = true;
+                if (owner.isSkillMaxed(Skill.BOW_VOLLEY)) {
+                    owner.queueBuff(new BuffBowVolley(this.logic, 4000, 0.01, owner));
+                    final byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
+                    bytes[0] = Globals.DATA_PARTICLE_EFFECT;
+                    bytes[1] = Globals.PARTICLE_BOW_VOLLEYBUFF;
+                    bytes[2] = owner.getKey();
+                    PacketSender.sendAll(bytes, this.logic.getRoom().getRoomNumber());
+                }
+            }
+        }
+        target.queueDamage(new Damage(damage, true, owner, target, isCrit, this.hitbox[0], target.getHitbox()));
     }
 
 }

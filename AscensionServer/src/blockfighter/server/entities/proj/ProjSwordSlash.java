@@ -42,32 +42,26 @@ public class ProjSwordSlash extends Projectile {
     }
 
     @Override
-    public void applyEffect() {
-        while (!this.playerQueue.isEmpty()) {
-            final Player p = this.playerQueue.poll(), owner = getOwner();
-            if (p != null && !p.isDead()) {
-                int damage = (int) (owner.rollDamage() * (1 + 0.04 * owner.getSkillLevel(Skill.SWORD_SLASH)));
-                final boolean crit = owner.rollCrit();
-                if (crit) {
-                    damage = (int) owner.criticalDamage(damage);
-                }
-                p.queueDamage(new Damage(damage, true, owner, p, crit, this.hitbox[0], p.getHitbox()));
-                //p.queueBuff(new BuffKnockback(50, (owner.getFacing() == Globals.RIGHT) ? 0.5 : -0.5, -3, owner, p));
-            }
-        }
-        while (!this.mobQueue.isEmpty()) {
-            final Mob b = this.mobQueue.poll();
-            final Player owner = getOwner();
-            if (b != null && !b.isDead()) {
-                int damage = (int) (owner.rollDamage() * (1 + 0.04 * owner.getSkillLevel(Skill.SWORD_SLASH)));
-                final boolean crit = owner.rollCrit();
-                if (crit) {
-                    damage = (int) owner.criticalDamage(damage);
-                }
-                b.queueDamage(new Damage(damage, true, owner, b, crit, this.hitbox[0], b.getHitbox()));
-            }
-        }
-        this.queuedEffect = false;
+    public int calculateDamage(final boolean isCrit) {
+        final Player owner = getOwner();
+        double damage = owner.rollDamage() * (1 + 0.04 * owner.getSkillLevel(Skill.SWORD_SLASH));
+        damage = (isCrit) ? owner.criticalDamage(damage) : damage;
+        return (int) damage;
     }
 
+    @Override
+    public void applyDamage(Player target) {
+        final Player owner = getOwner();
+        final boolean isCrit = owner.rollCrit();
+        final int damage = calculateDamage(isCrit);
+        target.queueDamage(new Damage(damage, true, owner, target, isCrit, this.hitbox[0], target.getHitbox()));
+    }
+
+    @Override
+    public void applyDamage(Mob target) {
+        final Player owner = getOwner();
+        final boolean isCrit = owner.rollCrit();
+        final int damage = calculateDamage(isCrit);
+        target.queueDamage(new Damage(damage, true, owner, target, isCrit, this.hitbox[0], target.getHitbox()));
+    }
 }

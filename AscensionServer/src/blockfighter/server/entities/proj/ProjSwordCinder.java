@@ -25,42 +25,36 @@ public class ProjSwordCinder extends Projectile {
     }
 
     @Override
-    public void applyEffect() {
-        while (!this.playerQueue.isEmpty()) {
-            final Player p = this.playerQueue.poll(), owner = getOwner();
-            if (p != null && !p.isDead()) {
-                int damage = (int) (owner.rollDamage() * (4.5 + owner.getSkillLevel(Skill.SWORD_CINDER) * .2));
-                final boolean crit = owner.rollCrit((owner.isSkillMaxed(Skill.SWORD_CINDER)) ? 1 : 0);
-                if (crit) {
-                    damage = (int) owner.criticalDamage(damage);
-                }
-                p.queueDamage(new Damage(damage, true, owner, p, crit, this.hitbox[0], p.getHitbox()));
-                p.queueBuff(new BuffKnockback(this.logic, 300, (owner.getFacing() == Globals.RIGHT) ? 1 : -1, -4, owner, p));
-                p.queueBuff(new BuffBurn(this.logic, 4000, owner.getSkillLevel(Skill.SWORD_CINDER) * 0.01,
-                        owner.isSkillMaxed(Skill.SWORD_CINDER) ? owner.rollDamage() : 0, owner, p));
-                final byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
-                bytes[0] = Globals.DATA_PARTICLE_EFFECT;
-                bytes[1] = Globals.PARTICLE_BURN;
-                bytes[2] = p.getKey();
-                PacketSender.sendAll(bytes, this.logic.getRoom().getRoomNumber());
-            }
-        }
-        while (!this.mobQueue.isEmpty()) {
-            final Mob b = this.mobQueue.poll();
-            final Player owner = getOwner();
-            if (b != null && !b.isDead()) {
-                int damage = (int) (owner.rollDamage() * (4.5 + owner.getSkillLevel(Skill.SWORD_CINDER) * .2));
-                final boolean crit = owner.rollCrit((owner.isSkillMaxed(Skill.SWORD_CINDER)) ? 1 : 0);
-                if (crit) {
-                    damage = (int) owner.criticalDamage(damage);
-                }
-                b.queueDamage(new Damage(damage, true, owner, b, crit, this.hitbox[0], b.getHitbox()));
-                b.queueBuff(new BuffBurn(this.logic, 4000, owner.getSkillLevel(Skill.SWORD_CINDER) * 0.01,
-                        owner.isSkillMaxed(Skill.SWORD_CINDER) ? owner.rollDamage() : 0, owner, b));
-                // Monster buff display
-            }
-        }
-        this.queuedEffect = false;
+    public int calculateDamage(final boolean isCrit) {
+        final Player owner = getOwner();
+        double damage = owner.rollDamage() * (4.5 + owner.getSkillLevel(Skill.SWORD_CINDER) * .2);
+        damage = (isCrit) ? owner.criticalDamage(damage) : damage;
+        return (int) damage;
     }
 
+    @Override
+    public void applyDamage(Player target) {
+        final Player owner = getOwner();
+        final boolean isCrit = owner.rollCrit((owner.isSkillMaxed(Skill.SWORD_CINDER)) ? 1 : 0);
+        final int damage = calculateDamage(isCrit);
+        target.queueDamage(new Damage(damage, true, owner, target, isCrit, this.hitbox[0], target.getHitbox()));
+        target.queueBuff(new BuffKnockback(this.logic, 300, (owner.getFacing() == Globals.RIGHT) ? 1 : -1, -4, owner, target));
+        target.queueBuff(new BuffBurn(this.logic, 4000, owner.getSkillLevel(Skill.SWORD_CINDER) * 0.01,
+                owner.isSkillMaxed(Skill.SWORD_CINDER) ? owner.rollDamage() : 0, owner, target));
+        final byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
+        bytes[0] = Globals.DATA_PARTICLE_EFFECT;
+        bytes[1] = Globals.PARTICLE_BURN;
+        bytes[2] = target.getKey();
+        PacketSender.sendAll(bytes, this.logic.getRoom().getRoomNumber());
+    }
+
+    @Override
+    public void applyDamage(Mob target) {
+        final Player owner = getOwner();
+        final boolean isCrit = owner.rollCrit((owner.isSkillMaxed(Skill.SWORD_CINDER)) ? 1 : 0);
+        final int damage = calculateDamage(isCrit);
+        target.queueDamage(new Damage(damage, true, owner, target, isCrit, this.hitbox[0], target.getHitbox()));
+        target.queueBuff(new BuffBurn(this.logic, 4000, owner.getSkillLevel(Skill.SWORD_CINDER) * 0.01,
+                owner.isSkillMaxed(Skill.SWORD_CINDER) ? owner.rollDamage() : 0, owner, target));
+    }
 }

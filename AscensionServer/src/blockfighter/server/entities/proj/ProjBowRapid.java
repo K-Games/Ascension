@@ -23,39 +23,30 @@ public class ProjBowRapid extends Projectile {
     }
 
     @Override
-    public void applyEffect() {
-        while (!this.playerQueue.isEmpty()) {
-            final Player p = this.playerQueue.poll(), owner = getOwner();
-            if (p != null && !p.isDead()) {
-                int damage = (int) (owner.rollDamage() * (.8 + 0.02 * owner.getSkillLevel(Skill.BOW_RAPID)));
-                final boolean crit = owner.rollCrit();
-                if (crit) {
-                    damage = (int) owner.criticalDamage(damage);
-                }
-                if (owner.isSkillMaxed(Skill.BOW_RAPID) && Globals.rng(50) + 1 <= 50) {
-                    damage *= 2;
-                }
-                p.queueDamage(new Damage(damage, true, owner, p, crit, this.hitbox[0], p.getHitbox()));
-                p.queueBuff(new BuffKnockback(this.logic, 50, (owner.getFacing() == Globals.RIGHT) ? 3 : -3, -2, owner, p));
-            }
+    public int calculateDamage(final boolean isCrit) {
+        final Player owner = getOwner();
+        double damage = owner.rollDamage() * (.8 + 0.02 * owner.getSkillLevel(Skill.BOW_RAPID));
+        damage = (isCrit) ? owner.criticalDamage(damage) : damage;
+        if (owner.isSkillMaxed(Skill.BOW_RAPID) && Globals.rng(50) + 1 <= 50) {
+            damage *= 2;
         }
-
-        while (!this.mobQueue.isEmpty()) {
-            final Mob b = this.mobQueue.poll();
-            final Player owner = getOwner();
-            if (b != null && !b.isDead()) {
-                int damage = (int) (owner.rollDamage() * (.8 + 0.02 * owner.getSkillLevel(Skill.BOW_RAPID)));
-                final boolean crit = owner.rollCrit();
-                if (crit) {
-                    damage = (int) owner.criticalDamage(damage);
-                }
-                if (owner.isSkillMaxed(Skill.BOW_RAPID) && Globals.rng(50) + 1 <= 50) {
-                    damage *= 2;
-                }
-                b.queueDamage(new Damage(damage, true, owner, b, crit, this.hitbox[0], b.getHitbox()));
-            }
-        }
-        this.queuedEffect = false;
+        return (int) damage;
     }
 
+    @Override
+    public void applyDamage(Player target) {
+        final Player owner = getOwner();
+        final boolean isCrit = owner.rollCrit();
+        final int damage = calculateDamage(isCrit);
+        target.queueDamage(new Damage(damage, true, owner, target, isCrit, this.hitbox[0], target.getHitbox()));
+        target.queueBuff(new BuffKnockback(this.logic, 50, (owner.getFacing() == Globals.RIGHT) ? 3 : -3, -2, owner, target));
+    }
+
+    @Override
+    public void applyDamage(Mob target) {
+        final Player owner = getOwner();
+        final boolean isCrit = owner.rollCrit();
+        final int damage = calculateDamage(isCrit);
+        target.queueDamage(new Damage(damage, true, owner, target, isCrit, this.hitbox[0], target.getHitbox()));
+    }
 }

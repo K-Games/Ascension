@@ -33,44 +33,36 @@ public class ProjSwordGash extends Projectile {
     }
 
     @Override
-    public void applyEffect() {
-        while (!this.playerQueue.isEmpty()) {
-            final Player p = this.playerQueue.poll(), owner = getOwner();
-            if (p != null && !p.isDead()) {
-                int damage = (int) (owner.rollDamage() * (.75 + 0.03 * owner.getSkillLevel(Skill.SWORD_GASH)));
-                final boolean crit = owner.rollCrit();
-                if (crit) {
-                    damage = (int) owner.criticalDamage(damage);
-                }
-                p.queueDamage(new Damage(damage, true, owner, p, crit, this.hitbox[0], p.getHitbox()));
-                //p.queueBuff(new BuffKnockback(this.logic, 10, (owner.getFacing() == Globals.RIGHT) ? 3 : -3, -0.5, owner, p));
-
-                if (!this.healed && owner.isSkillMaxed(Skill.SWORD_GASH)) {
-                    final double heal = owner.getStats()[Globals.STAT_MAXHP] * 0.0025;
-                    owner.queueHeal((int) heal);
-                    this.healed = true;
-                }
-            }
-        }
-        while (!this.mobQueue.isEmpty()) {
-            final Mob b = this.mobQueue.poll();
-            final Player owner = getOwner();
-            if (b != null && !b.isDead()) {
-                int damage = (int) (owner.rollDamage() * (.75 + 0.03 * owner.getSkillLevel(Skill.SWORD_GASH)));
-                final boolean crit = owner.rollCrit();
-                if (crit) {
-                    damage = (int) owner.criticalDamage(damage);
-                }
-                b.queueDamage(new Damage(damage, true, owner, b, crit, this.hitbox[0], b.getHitbox()));
-
-                if (!this.healed && owner.isSkillMaxed(Skill.SWORD_GASH)) {
-                    final double heal = owner.getStats()[Globals.STAT_MAXHP] * 0.0025;
-                    owner.queueHeal((int) heal);
-                    this.healed = true;
-                }
-            }
-        }
-        this.queuedEffect = false;
+    public int calculateDamage(final boolean isCrit) {
+        final Player owner = getOwner();
+        double damage = owner.rollDamage() * (.75 + 0.03 * owner.getSkillLevel(Skill.SWORD_GASH));
+        damage = (isCrit) ? owner.criticalDamage(damage) : damage;
+        return (int) damage;
     }
 
+    @Override
+    public void applyDamage(Player target) {
+        final Player owner = getOwner();
+        final boolean isCrit = owner.rollCrit();
+        final int damage = calculateDamage(isCrit);
+        target.queueDamage(new Damage(damage, true, owner, target, isCrit, this.hitbox[0], target.getHitbox()));
+        if (!this.healed && owner.isSkillMaxed(Skill.SWORD_GASH)) {
+            final double heal = owner.getStats()[Globals.STAT_MAXHP] * 0.0025;
+            owner.queueHeal((int) heal);
+            this.healed = true;
+        }
+    }
+
+    @Override
+    public void applyDamage(Mob target) {
+        final Player owner = getOwner();
+        final boolean isCrit = owner.rollCrit();
+        final int damage = calculateDamage(isCrit);
+        target.queueDamage(new Damage(damage, true, owner, target, isCrit, this.hitbox[0], target.getHitbox()));
+        if (!this.healed && owner.isSkillMaxed(Skill.SWORD_GASH)) {
+            final double heal = owner.getStats()[Globals.STAT_MAXHP] * 0.0025;
+            owner.queueHeal((int) heal);
+            this.healed = true;
+        }
+    }
 }

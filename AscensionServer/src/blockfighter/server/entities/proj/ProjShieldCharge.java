@@ -24,6 +24,37 @@ public class ProjShieldCharge extends Projectile {
     }
 
     @Override
+    public int calculateDamage(final boolean isCrit) {
+        final Player owner = getOwner();
+        double damage = owner.rollDamage() * (1.5 + .2 * owner.getSkillLevel(Skill.SHIELD_CHARGE));
+        damage = (isCrit) ? owner.criticalDamage(damage) : damage;
+        return (int) damage;
+    }
+
+    @Override
+    public void applyDamage(Player target) {
+        final Player owner = getOwner();
+        final boolean isCrit = owner.rollCrit();
+        final int damage = calculateDamage(isCrit);
+        target.queueDamage(new Damage(damage, true, owner, target, isCrit, this.hitbox[0], target.getHitbox()));
+        target.queueBuff(new BuffKnockback(this.logic, 300, (owner.getFacing() == Globals.RIGHT) ? 4 : -4, -5, owner, target));
+        if (owner.isSkillMaxed(Skill.SHIELD_CHARGE)) {
+            target.queueBuff(new BuffStun(this.logic, 1000));
+        }
+    }
+
+    @Override
+    public void applyDamage(Mob target) {
+        final Player owner = getOwner();
+        final boolean isCrit = owner.rollCrit();
+        final int damage = calculateDamage(isCrit);
+        target.queueDamage(new Damage(damage, true, owner, target, isCrit, this.hitbox[0], target.getHitbox()));
+        if (owner.isSkillMaxed(Skill.SHIELD_CHARGE)) {
+            target.queueBuff(new BuffStun(this.logic, 1000));
+        }
+    }
+
+    @Override
     public void update() {
         this.y = getOwner().getY() - 180;
         this.hitbox[0].y = getOwner().getY() - 170;
@@ -35,41 +66,6 @@ public class ProjShieldCharge extends Projectile {
             this.hitbox[0].x = getOwner().getX() - 253 + 150;
         }
         super.update();
-    }
-
-    @Override
-    public void applyEffect() {
-        while (!this.playerQueue.isEmpty()) {
-            final Player p = this.playerQueue.poll(), owner = getOwner();
-            if (p != null && !p.isDead()) {
-                int damage = (int) (owner.rollDamage() * (1.5 + .2 * owner.getSkillLevel(Skill.SHIELD_CHARGE)));
-                final boolean crit = owner.rollCrit();
-                if (crit) {
-                    damage = (int) owner.criticalDamage(damage);
-                }
-                p.queueDamage(new Damage(damage, true, owner, p, crit, this.hitbox[0], p.getHitbox()));
-                p.queueBuff(new BuffKnockback(this.logic, 300, (owner.getFacing() == Globals.RIGHT) ? 4 : -4, -5, owner, p));
-                if (owner.isSkillMaxed(Skill.SHIELD_CHARGE)) {
-                    p.queueBuff(new BuffStun(this.logic, 1000));
-                }
-            }
-        }
-        while (!this.mobQueue.isEmpty()) {
-            final Mob b = this.mobQueue.poll();
-            final Player owner = getOwner();
-            if (b != null && !b.isDead()) {
-                int damage = (int) (owner.rollDamage() * (1.5 + .2 * owner.getSkillLevel(Skill.SHIELD_CHARGE)));
-                final boolean crit = owner.rollCrit();
-                if (crit) {
-                    damage = (int) owner.criticalDamage(damage);
-                }
-                b.queueDamage(new Damage(damage, true, owner, b, crit, this.hitbox[0], b.getHitbox()));
-                if (owner.isSkillMaxed(Skill.SHIELD_CHARGE)) {
-                    b.queueBuff(new BuffStun(this.logic, 1000));
-                }
-            }
-        }
-        this.queuedEffect = false;
     }
 
 }

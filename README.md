@@ -16,6 +16,7 @@ Inspired by Action RPGs and Metroidvanias. A game dedicated about its gameplay.
 * Added Emotes. Assign a key to use the Emotes in the Keybind menu.
 * Equipment Upgrades now add an additional flat 0.75 stats to existing Primary Stats(Power, Defense, Spirit) per upgrade.
 * Map Update - Removed the far left and right platforms on the highest level.
+* Fixed Phantom Slash not doing correct damage.
 
 ### Client Changes
 * Added keybinds for Emotes.
@@ -27,6 +28,7 @@ Inspired by Action RPGs and Metroidvanias. A game dedicated about its gameplay.
 * Added broadcast received Emote action.
 * Logs no longer gets seperated into folders. All logs append to `ErrorLog.log` and `DataLog.log` in `logs` folder.
 * Added support for non-flat platforms.
+* Abstracted Projectiles for higher level implementations.
 
 ![Social Media](https://github.com/kenofnz/AscensionInfo/raw/gh-pages/images/social.png)
 
