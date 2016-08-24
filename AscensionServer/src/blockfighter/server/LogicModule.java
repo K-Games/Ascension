@@ -118,12 +118,13 @@ public class LogicModule extends Thread {
     }
 
     private void updatePlayers() {
-        this.room.clearPlayerBuckets();
         final ConcurrentHashMap<Byte, Player> players = this.room.getPlayers();
 
         for (final Map.Entry<Byte, Player> player : players.entrySet()) {
             LOGIC_THREAD_POOL.execute(player.getValue());
         }
+
+        this.room.clearPlayerBuckets();
         Iterator<Entry<Byte, Player>> playersIter = players.entrySet().iterator();
         while (playersIter.hasNext()) {
             Entry<Byte, Player> player = playersIter.next();

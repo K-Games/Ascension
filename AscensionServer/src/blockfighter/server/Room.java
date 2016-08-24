@@ -125,18 +125,7 @@ public class Room {
     }
 
     public HashMap<Byte, Player> getPlayersNearProj(Projectile proj) {
-        HashMap<Byte, Player> nearbyPlayerBuckets = new HashMap<>(this.players.size());
-        Integer[] bucketIDs = getBucketIDsForRect(proj.getHitbox()[0]);
-        for (int bucketID : bucketIDs) {
-            if (this.playerBuckets.containsKey(bucketID)) {
-                for (final Map.Entry<Byte, Player> player : this.playerBuckets.get(bucketID).entrySet()) {
-                    if (!nearbyPlayerBuckets.containsKey(player.getKey())) {
-                        nearbyPlayerBuckets.put(player.getKey(), player.getValue());
-                    }
-                }
-            }
-        }
-        return nearbyPlayerBuckets;
+        return getPlayersNearRect(proj.getHitbox()[0]);
     }
 
     private Integer[] getBucketIDsForRect(Rectangle2D.Double rect) {
