@@ -35,7 +35,7 @@ public class ParticleSwordGash extends Particle {
             return;
         }
         final BufferedImage sprite = PARTICLE_SPRITE[Globals.PARTICLE_SWORD_GASH1][this.frame];
-        final int drawSrcX = this.x + ((this.facing == Globals.RIGHT) ? -40 : 40);
+        final int drawSrcX = this.x + ((this.facing == Globals.RIGHT) ? -30 : 30);
         final int drawSrcY = this.y - sprite.getHeight() + 20;
         final int drawDscY = drawSrcY + sprite.getHeight();
         final int drawDscX = drawSrcX + ((this.facing == Globals.RIGHT) ? sprite.getWidth() : -sprite.getWidth());

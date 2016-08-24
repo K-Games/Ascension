@@ -52,8 +52,8 @@ public class SkillSwordTaunt extends Skill {
             g.drawString("Deal 20% increased damage for 10 seconds.", drawX + 10, drawY + 245);
         } else {
             g.drawString("[Level 30 Bonus]", drawX + 10, drawY + 160);
-            g.drawString("Take 20% less damage for 10 seconds.", drawX + 10, drawY + 180);
-            g.drawString("Deal 20% increased damage for 10 seconds.", drawX + 10, drawY + 200);
+            g.drawString("Take 20% less damage for 5 seconds.", drawX + 10, drawY + 180);
+            g.drawString("Deal 20% increased damage for 5 seconds.", drawX + 10, drawY + 200);
         }
     }
 
