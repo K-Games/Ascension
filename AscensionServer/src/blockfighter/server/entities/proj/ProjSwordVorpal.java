@@ -16,9 +16,9 @@ public class ProjSwordVorpal extends Projectile {
         this.screenshake = true;
         this.hitbox = new Rectangle2D.Double[1];
         if (o.getFacing() == Globals.RIGHT) {
-            this.hitbox[0] = new Rectangle2D.Double(this.x - 60, this.y - 130, 350, 113);
+            this.hitbox[0] = new Rectangle2D.Double(this.x - 60, this.y - 90, 350, 90);
         } else {
-            this.hitbox[0] = new Rectangle2D.Double(this.x - 350 + 60, this.y - 130, 350, 113);
+            this.hitbox[0] = new Rectangle2D.Double(this.x - 350 + 60, this.y - 90, 350, 90);
         }
     }
 

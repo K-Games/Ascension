@@ -16,9 +16,9 @@ public class ProjSwordTaunt extends Projectile {
         this.screenshake = true;
         this.hitbox = new Rectangle2D.Double[1];
         if (o.getFacing() == Globals.RIGHT) {
-            this.hitbox[0] = new Rectangle2D.Double(this.x, this.y - 260, 200, 260);
+            this.hitbox[0] = new Rectangle2D.Double(this.x, this.y - 260, 210, 260);
         } else {
-            this.hitbox[0] = new Rectangle2D.Double(this.x - 200, this.y - 260, 200, 260);
+            this.hitbox[0] = new Rectangle2D.Double(this.x - 210, this.y - 260, 210, 260);
         }
     }
 

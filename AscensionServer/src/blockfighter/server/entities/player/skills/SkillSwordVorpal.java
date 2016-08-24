@@ -27,8 +27,7 @@ public class SkillSwordVorpal extends Skill {
             final ProjSwordVorpal proj = new ProjSwordVorpal(this.logic, player, player.getX(), player.getY());
             this.logic.queueAddProj(proj);
             player.setFrame((byte) 0);
-            PacketSender.sendParticle(this.logic.getRoom().getRoomNumber(), Globals.PARTICLE_SWORD_VORPAL, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
-                    player.getFacing());
+            PacketSender.sendParticle(this.logic.getRoom().getRoomNumber(), Globals.PARTICLE_SWORD_VORPAL, player.getX(), player.getY(), player.getFacing());
             player.incrementSkillCounter();
         }
 
