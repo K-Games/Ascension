@@ -12,7 +12,7 @@ public class ParticleSwordTauntBuffEmitter extends Particle {
     public ParticleSwordTauntBuffEmitter(final Player p) {
         super(p);
         this.frame = 0;
-        this.duration = 10000;
+        this.duration = 5000;
     }
 
     @Override

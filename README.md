@@ -16,6 +16,7 @@ Inspired by Action RPGs and Metroidvanias. A game dedicated about its gameplay.
 * Lowered Maximum Armor roll for new Rings.
 * Knockback no longer disables Skill casting.
 * Firebrand - Range increased from 170 to 280
+* Aggression - Buff duration decreased from 10 seconds to 5 seconds.
 * Shield Skill Removed - Iron Fortress
 * New Shield Skill - Hellion Roar - Send enemies flying with a ferocious roar.
 

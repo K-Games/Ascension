@@ -11,8 +11,8 @@ public class ParticleSwordTauntAura extends Particle {
     public ParticleSwordTauntAura(final Player p) {
         super(p);
         this.frame = 0;
-        this.frameDuration = 25;
-        this.duration = 500;
+        this.frameDuration = 50;
+        this.duration = 250;
         final Point point = this.owner.getPos();
         if (point != null) {
             this.x = point.x;
@@ -23,16 +23,8 @@ public class ParticleSwordTauntAura extends Particle {
     @Override
     public void update() {
         super.update();
-
-        if (this.duration > 100) {
-            for (int i = 0; i < 2; i++) {
-                final ParticleSwordTauntAuraParticle b = new ParticleSwordTauntAuraParticle(this.x, this.y, this.facing);
-                logic.getScreen().addParticle(b);
-            }
-        }
         if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
-            this.frameDuration = 25;
-            if (PARTICLE_SPRITE != null && this.frame < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_TAUNTAURA1].length - 1) {
+            if (PARTICLE_SPRITE != null && this.frame < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_TAUNTAURA1].length) {
                 this.frame++;
             }
             this.lastFrameTime = logic.getTime();
@@ -54,7 +46,7 @@ public class ParticleSwordTauntAura extends Particle {
         }
         final BufferedImage sprite = PARTICLE_SPRITE[Globals.PARTICLE_SWORD_TAUNTAURA1][this.frame];
         final int drawSrcX = this.x - sprite.getWidth() / 2;
-        final int drawSrcY = this.y - sprite.getHeight() + 20;
+        final int drawSrcY = this.y - sprite.getHeight();
         final int drawDscY = drawSrcY + sprite.getHeight();
         final int drawDscX = drawSrcX + sprite.getWidth();
         g.drawImage(sprite, drawSrcX, drawSrcY, drawDscX, drawDscY, 0, 0, sprite.getWidth(), sprite.getHeight(), null);
