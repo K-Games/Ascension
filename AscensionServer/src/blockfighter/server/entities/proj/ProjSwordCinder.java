@@ -14,13 +14,13 @@ import java.awt.geom.Rectangle2D;
 public class ProjSwordCinder extends Projectile {
 
     public ProjSwordCinder(final LogicModule l, final Player o, final double x, final double y) {
-        super(l, o, x, y, 300);
+        super(l, o, x, y, 200);
         this.screenshake = true;
         this.hitbox = new Rectangle2D.Double[1];
         if (o.getFacing() == Globals.RIGHT) {
-            this.hitbox[0] = new Rectangle2D.Double(this.x - 10, this.y - 220, 170, 238);
+            this.hitbox[0] = new Rectangle2D.Double(this.x, this.y - 180, 280, 180);
         } else {
-            this.hitbox[0] = new Rectangle2D.Double(this.x - 190 + 10, this.y - 220, 170, 238);
+            this.hitbox[0] = new Rectangle2D.Double(this.x - 280, this.y - 180, 280, 180);
         }
     }
 

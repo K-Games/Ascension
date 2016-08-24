@@ -15,10 +15,12 @@ Inspired by Action RPGs and Metroidvanias. A game dedicated about its gameplay.
 ### Gameplay Changes
 * Lowered Maximum Armor roll for new Rings.
 * Knockback no longer disables Skill casting.
+* Firebrand - Range increased from 170 to 280
 * Shield Skill Removed - Iron Fortress
 * New Shield Skill - Hellion Roar - Send enemies flying with a ferocious roar.
 
 ### Client Changes
+* New skill sprites
 * More responsive movement when tapping movement keys.
 
 ### Server Changes

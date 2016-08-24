@@ -16,16 +16,8 @@ public class ParticleSwordCinder extends Particle {
     @Override
     public void update() {
         super.update();
-
-        if (this.duration > 100) {
-            for (int i = 0; i < 2; i++) {
-                final ParticleSwordCinderParticle b = new ParticleSwordCinderParticle(this.x,
-                        this.y, this.facing);
-                logic.getScreen().addParticle(b);
-            }
-        }
         if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
-            if (PARTICLE_SPRITE != null && this.frame < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_CINDER].length - 1) {
+            if (PARTICLE_SPRITE != null && this.frame < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_CINDER].length) {
                 this.frame++;
             }
             this.lastFrameTime = logic.getTime();
@@ -41,10 +33,10 @@ public class ParticleSwordCinder extends Particle {
             return;
         }
         final BufferedImage sprite = PARTICLE_SPRITE[Globals.PARTICLE_SWORD_CINDER][this.frame];
-        final int drawSrcX = this.x + ((this.facing == Globals.RIGHT) ? 0 : sprite.getWidth());
-        final int drawSrcY = this.y;
+        final int drawSrcX = this.x + ((this.facing == Globals.RIGHT) ? -130 : 130);
+        final int drawSrcY = this.y - sprite.getHeight() + 40;
         final int drawDscY = drawSrcY + sprite.getHeight();
-        final int drawDscX = this.x + ((this.facing == Globals.RIGHT) ? sprite.getWidth() : 0);
+        final int drawDscX = drawSrcX + ((this.facing == Globals.RIGHT) ? sprite.getWidth() : -sprite.getWidth());
         g.drawImage(sprite, drawSrcX, drawSrcY, drawDscX, drawDscY, 0, 0, sprite.getWidth(), sprite.getHeight(), null);
     }
 }

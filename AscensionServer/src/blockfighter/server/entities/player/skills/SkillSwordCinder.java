@@ -8,6 +8,8 @@ import blockfighter.server.net.PacketSender;
 
 public class SkillSwordCinder extends Skill {
 
+    private ProjSwordCinder proj;
+
     public SkillSwordCinder(final LogicModule l) {
         super(l);
         this.skillCode = SWORD_CINDER;
@@ -21,12 +23,14 @@ public class SkillSwordCinder extends Skill {
     @Override
     public void updateSkillUse(Player player) {
         final long duration = Globals.nsToMs(this.logic.getTime() - player.getSkillCastTime());
-        if (Globals.hasPastDuration(duration, 50) && player.getSkillCounter() == 0) {
+        if (player.getSkillCounter() == 0) {
             player.incrementSkillCounter();
-            final ProjSwordCinder proj = new ProjSwordCinder(this.logic, player, player.getX(), player.getY());
+            proj = new ProjSwordCinder(this.logic, player, player.getX(), player.getY());
+            PacketSender.sendParticle(this.logic.getRoom().getRoomNumber(), Globals.PARTICLE_SWORD_CINDER, player.getX(), player.getY(), player.getFacing());
+        }
+        if (Globals.hasPastDuration(duration, 100) && player.getSkillCounter() == 1) {
+            player.incrementSkillCounter();
             this.logic.queueAddProj(proj);
-            PacketSender.sendParticle(this.logic.getRoom().getRoomNumber(), Globals.PARTICLE_SWORD_CINDER, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
-                    player.getFacing());
         }
         player.updateSkillEnd(duration, this.endDuration, true, false);
     }
