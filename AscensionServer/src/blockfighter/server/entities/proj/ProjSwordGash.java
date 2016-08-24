@@ -12,24 +12,12 @@ public class ProjSwordGash extends Projectile {
 
     private boolean healed = false;
 
-    public ProjSwordGash(final LogicModule l, final Player o, final double x, final double y, final byte hit) {
+    public ProjSwordGash(final LogicModule l, final Player o, final double x, final double y) {
         super(l, o, x, y, 50);
         this.screenshake = true;
         this.hitbox = new Rectangle2D.Double[1];
-
-        double rectX;
-        switch (hit) {
-            case 1:
-            case 4:
-                rectX = (o.getFacing() == Globals.RIGHT) ? this.x - 50 : this.x - 250 + 50;
-                this.hitbox[0] = new Rectangle2D.Double(rectX, this.y - 75, 250, 76);
-                break;
-            case 2:
-            case 3:
-                rectX = (o.getFacing() == Globals.RIGHT) ? this.x - 50 : this.x - 252 + 50;
-                this.hitbox[0] = new Rectangle2D.Double(rectX, this.y - 153, 246, 153);
-                break;
-        }
+        double rectX = (o.getFacing() == Globals.RIGHT) ? this.x : this.x - 200;
+        this.hitbox[0] = new Rectangle2D.Double(rectX, this.y - 130, 200, 130);
     }
 
     @Override

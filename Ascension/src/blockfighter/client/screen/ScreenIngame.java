@@ -719,18 +719,6 @@ public class ScreenIngame extends Screen {
                 facing = data[10];
                 addParticle(new ParticleSwordGash2(x, y, facing));
                 break;
-            case Globals.PARTICLE_SWORD_GASH3:
-                x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
-                y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
-                facing = data[10];
-                addParticle(new ParticleSwordGash3(x, y, facing));
-                break;
-            case Globals.PARTICLE_SWORD_GASH4:
-                x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
-                y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
-                facing = data[10];
-                addParticle(new ParticleSwordGash4(x, y, facing));
-                break;
             case Globals.PARTICLE_SWORD_VORPAL:
                 x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
                 y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
