@@ -1078,12 +1078,16 @@ public class ScreenIngame extends Screen {
         final int key = e.getKeyCode();
         if (key == this.c.getKeyBind()[Globals.KEYBIND_JUMP]) {
             setKeyDown(Globals.UP, true);
+            PacketSender.sendMove(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.UP, this.moveKeyDown[Globals.UP]);
         } else if (key == this.c.getKeyBind()[Globals.KEYBIND_DOWN]) {
             setKeyDown(Globals.DOWN, true);
+            PacketSender.sendMove(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.DOWN, this.moveKeyDown[Globals.DOWN]);
         } else if (key == this.c.getKeyBind()[Globals.KEYBIND_LEFT]) {
             setKeyDown(Globals.LEFT, true);
+            PacketSender.sendMove(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.LEFT, this.moveKeyDown[Globals.LEFT]);
         } else if (key == this.c.getKeyBind()[Globals.KEYBIND_RIGHT]) {
             setKeyDown(Globals.RIGHT, true);
+            PacketSender.sendMove(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.RIGHT, this.moveKeyDown[Globals.RIGHT]);
         } else if (key == this.c.getKeyBind()[Globals.KEYBIND_SKILL1]) {
             if (this.c.getHotkeys()[0] != null) {
                 setSkillKeyDown(0, true);
@@ -1160,12 +1164,16 @@ public class ScreenIngame extends Screen {
         final int key = e.getKeyCode();
         if (key == this.c.getKeyBind()[Globals.KEYBIND_JUMP]) {
             setKeyDown(Globals.UP, false);
+            PacketSender.sendMove(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.UP, this.moveKeyDown[Globals.UP]);
         } else if (key == this.c.getKeyBind()[Globals.KEYBIND_DOWN]) {
             setKeyDown(Globals.DOWN, false);
+            PacketSender.sendMove(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.DOWN, this.moveKeyDown[Globals.DOWN]);
         } else if (key == this.c.getKeyBind()[Globals.KEYBIND_LEFT]) {
             setKeyDown(Globals.LEFT, false);
+            PacketSender.sendMove(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.LEFT, this.moveKeyDown[Globals.LEFT]);
         } else if (key == this.c.getKeyBind()[Globals.KEYBIND_RIGHT]) {
             setKeyDown(Globals.RIGHT, false);
+            PacketSender.sendMove(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.RIGHT, this.moveKeyDown[Globals.RIGHT]);
         } else if (key == this.c.getKeyBind()[Globals.KEYBIND_SKILL1]) {
             if (this.c.getHotkeys()[0] != null) {
                 setSkillKeyDown(0, false);
