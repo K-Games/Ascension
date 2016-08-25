@@ -28,7 +28,7 @@ public class ProjBowStorm extends Projectile {
     @Override
     public int calculateDamage(final boolean isCrit) {
         final Player owner = getOwner();
-        double damage = owner.rollDamage() * 0.6 + (.06 * owner.getSkillLevel(Skill.BOW_STORM));
+        double damage = owner.rollDamage() * (0.6 + (.06 * owner.getSkillLevel(Skill.BOW_STORM)));
         damage *= 100 / 200D;
         if (isCrit) {
             damage = owner.isSkillMaxed(Skill.BOW_STORM) ? owner.criticalDamage(damage, 5) : owner.criticalDamage(damage);

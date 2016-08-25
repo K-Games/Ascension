@@ -9,8 +9,8 @@ public class ParticleBowPower extends Particle {
     public ParticleBowPower(final int x, final int y, final byte f) {
         super(x, y, f);
         this.frame = 0;
-        this.frameDuration = 25;
-        this.duration = 600;
+        this.frameDuration = 75;
+        this.duration = 250;
     }
 
     @Override
@@ -18,12 +18,11 @@ public class ParticleBowPower extends Particle {
         super.update();
         if (Globals.nsToMs(logic.getTime() - this.particleStartTime) >= 50) {
             for (int i = 0; i < 2; i++) {
-                final ParticleBowPowerParticle b = new ParticleBowPowerParticle(this.x + ((this.facing == Globals.RIGHT) ? 0 : 700), this.y, this.facing);
+                final ParticleBowPowerParticle b = new ParticleBowPowerParticle(this.x, this.y - 150, this.facing);
                 logic.getScreen().addParticle(b);
             }
         }
         if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
-            this.frameDuration = 25;
             if (PARTICLE_SPRITE != null && this.frame < PARTICLE_SPRITE[Globals.PARTICLE_BOW_POWER].length - 1) {
                 this.frame++;
             }
@@ -40,10 +39,10 @@ public class ParticleBowPower extends Particle {
             return;
         }
         final BufferedImage sprite = PARTICLE_SPRITE[Globals.PARTICLE_BOW_POWER][this.frame];
-        final int drawSrcX = this.x + ((this.facing == Globals.RIGHT) ? 0 : 700);
-        final int drawSrcY = this.y;
+        final int drawSrcX = this.x + ((this.facing == Globals.RIGHT) ? -50 : 50);
+        final int drawSrcY = this.y - sprite.getHeight() + 110;
         final int drawDscY = drawSrcY + sprite.getHeight();
-        final int drawDscX = this.x + ((this.facing == Globals.RIGHT) ? 700 : 0);
+        final int drawDscX = drawSrcX + ((this.facing == Globals.RIGHT) ? sprite.getWidth() + 250 : -sprite.getWidth() - 250);
         g.drawImage(sprite, drawSrcX, drawSrcY, drawDscX, drawDscY, 0, 0, sprite.getWidth(), sprite.getHeight(), null);
     }
 }
