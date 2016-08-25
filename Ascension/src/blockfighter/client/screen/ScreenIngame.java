@@ -792,10 +792,9 @@ public class ScreenIngame extends Screen {
                 }
                 break;
             case Globals.PARTICLE_BOW_VOLLEYBOW:
-                x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
-                y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
-                facing = data[10];
-                addParticle(new ParticleBowVolleyBow(x, y, facing));
+                facing = data[2];
+                playerKey = data[3];
+                addParticle(new ParticleBowVolleyBow(facing, this.players.get(playerKey)));
                 break;
             case Globals.PARTICLE_BOW_VOLLEYARROW:
                 x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));

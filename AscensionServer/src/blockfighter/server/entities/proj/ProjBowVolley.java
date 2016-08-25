@@ -20,9 +20,9 @@ public class ProjBowVolley extends Projectile {
         this.screenshake = true;
         this.hitbox = new Rectangle2D.Double[1];
         if (o.getFacing() == Globals.RIGHT) {
-            this.hitbox[0] = new Rectangle2D.Double(this.x + 40, this.y - 75 + Globals.rng(30) - 15, 465, 15);
+            this.hitbox[0] = new Rectangle2D.Double(this.x + 40, this.y - 75 + Globals.rng(10) * 5 - 25, 445, 15);
         } else {
-            this.hitbox[0] = new Rectangle2D.Double(this.x - 465 - 40, this.y - 75 + Globals.rng(30) - 15, 465, 15);
+            this.hitbox[0] = new Rectangle2D.Double(this.x - 445 - 40, this.y - 75 + Globals.rng(10) * 5 - 25, 445, 15);
         }
     }
 
