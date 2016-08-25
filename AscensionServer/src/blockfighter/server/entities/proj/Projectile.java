@@ -139,7 +139,7 @@ public abstract class Projectile extends Thread implements GameEntity {
         while (!this.playerQueue.isEmpty()) {
             final Player p = this.playerQueue.poll();
             if (p != null && !p.isDead()) {
-                Projectile.this.applyDamage(p);
+                applyDamage(p);
             }
         }
 

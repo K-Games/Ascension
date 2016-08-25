@@ -491,8 +491,6 @@ public class Player extends Thread implements GameEntity {
             updateXAcceleration();
         }
         final boolean xChanged = updateX(this.xSpeed);
-        this.hitbox.x = this.x - 20;
-        this.hitbox.y = this.y - 100;
 
         if (isDead()) {
             // Update respawn Timer
@@ -519,6 +517,9 @@ public class Player extends Thread implements GameEntity {
 
             updateHP();
         }
+        this.hitbox.x = this.x - 20;
+        this.hitbox.y = this.y - 100;
+
         updateAnimState();
         if (this.updatePos) {
             sendPos();
