@@ -13,8 +13,11 @@ Inspired by Action RPGs and Metroidvanias. A game dedicated about its gameplay.
 
 ## Version 0.20 Update 2
 ### Gameplay Changes
+* Lowered Maximum Armor roll for new Rings.
+* Knockback no longer disables Skill casting.
 
 ### Client Changes
+* More responsive movement when tapping movement keys.
 
 ### Server Changes
 

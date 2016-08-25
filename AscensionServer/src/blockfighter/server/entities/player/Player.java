@@ -595,7 +595,7 @@ public class Player extends Thread implements GameEntity {
         this.skillUseQueue.clear();
         if (data != null) {
             byte skillCode = data[3];
-            if (skillCode == Skill.SHIELD_IRON || (!isStunned() && !isKnockback())) {
+            if (skillCode == Skill.SHIELD_IRON || !isStunned()) {
                 if (hasSkill(skillCode)) {
                     castSkill(skillCode);
                 }
