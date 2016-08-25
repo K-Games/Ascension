@@ -328,55 +328,83 @@ public class ItemEquip implements Item {
         updateStats();
     }
 
+    public static double newItemPowerStat(final double level) {
+        return level + NEWSTAT_BASEMULT_BONUS * level + Globals.rng(6);
+    }
+
+    public static double newItemDefenseStat(final double level) {
+        return level + NEWSTAT_BASEMULT_BONUS * level + Globals.rng(6);
+    }
+
+    public static double newItemSpiritStat(final double level) {
+        return level + NEWSTAT_BASEMULT_BONUS * level + Globals.rng(6);
+    }
+
+    public static double newItemCritChance(final double level) {
+        return (level + Globals.rng(11)) * 0.001;
+    }
+
+    public static double newItemCritDmg(final double level) {
+        return level * 0.02 + Globals.rng(11) * 0.01;
+    }
+
+    public static double newItemRegen(final double level) {
+        return (level + Globals.rng(11)) * 5;
+    }
+
+    public static double newItemArmor(final double level) {
+        return (level + Globals.rng(4)) * 18;
+    }
+
     public static double[] newEquipStat(final int ic, final double level) {
         final double[] newStats = new double[Globals.NUM_STATS];
         newStats[Globals.STAT_LEVEL] = level;
 
         switch (getItemType(ic)) {
             case Globals.ITEM_WEAPON:
-                newStats[Globals.STAT_POWER] = level + NEWSTAT_BASEMULT_BONUS * level + Globals.rng(6);
+                newStats[Globals.STAT_POWER] = newItemPowerStat(level);
                 break;
             case Globals.ITEM_BOW:
-                newStats[Globals.STAT_POWER] = level + NEWSTAT_BASEMULT_BONUS * level + Globals.rng(6);
+                newStats[Globals.STAT_POWER] = newItemPowerStat(level);
                 break;
             case Globals.ITEM_SHIELD:
-                newStats[Globals.STAT_DEFENSE] = level + NEWSTAT_BASEMULT_BONUS * level + Globals.rng(6);
+                newStats[Globals.STAT_DEFENSE] = newItemDefenseStat(level);
                 break;
             case Globals.ITEM_ARROW:
-                newStats[Globals.STAT_POWER] = level + NEWSTAT_BASEMULT_BONUS * level + Globals.rng(6);
-                newStats[Globals.STAT_CRITCHANCE] = level * 0.001 + Globals.rng(11) * 0.001;
+                newStats[Globals.STAT_POWER] = newItemPowerStat(level);
+                newStats[Globals.STAT_CRITCHANCE] = newItemCritChance(level);
                 break;
             case Globals.ITEM_CHEST:
-                newStats[Globals.STAT_DEFENSE] = level + NEWSTAT_BASEMULT_BONUS * level + Globals.rng(6);
+                newStats[Globals.STAT_DEFENSE] = newItemDefenseStat(level);
                 break;
             case Globals.ITEM_PANTS:
-                newStats[Globals.STAT_DEFENSE] = level + NEWSTAT_BASEMULT_BONUS * level + Globals.rng(6);
+                newStats[Globals.STAT_DEFENSE] = newItemDefenseStat(level);
                 break;
             case Globals.ITEM_HEAD:
-                newStats[Globals.STAT_DEFENSE] = level + NEWSTAT_BASEMULT_BONUS * level + Globals.rng(6);
-                newStats[Globals.STAT_SPIRIT] = level + NEWSTAT_BASEMULT_BONUS * level + Globals.rng(6);
+                newStats[Globals.STAT_DEFENSE] = newItemDefenseStat(level);
+                newStats[Globals.STAT_SPIRIT] = newItemSpiritStat(level);
                 break;
             case Globals.ITEM_SHOE:
-                newStats[Globals.STAT_SPIRIT] = level + NEWSTAT_BASEMULT_BONUS * level + Globals.rng(6);
+                newStats[Globals.STAT_SPIRIT] = newItemSpiritStat(level);
                 break;
             case Globals.ITEM_BELT:
-                newStats[Globals.STAT_SPIRIT] = level + NEWSTAT_BASEMULT_BONUS * level + Globals.rng(6);
+                newStats[Globals.STAT_SPIRIT] = newItemSpiritStat(level);
                 break;
             case Globals.ITEM_SHOULDER:
-                newStats[Globals.STAT_DEFENSE] = level + NEWSTAT_BASEMULT_BONUS * level + Globals.rng(6);
-                newStats[Globals.STAT_POWER] = level + NEWSTAT_BASEMULT_BONUS * level + Globals.rng(6);
+                newStats[Globals.STAT_DEFENSE] = newItemDefenseStat(level);
+                newStats[Globals.STAT_POWER] = newItemPowerStat(level);
                 break;
             case Globals.ITEM_GLOVE:
-                newStats[Globals.STAT_SPIRIT] = level + NEWSTAT_BASEMULT_BONUS * level + Globals.rng(6);
-                newStats[Globals.STAT_POWER] = level + NEWSTAT_BASEMULT_BONUS * level + Globals.rng(6);
+                newStats[Globals.STAT_SPIRIT] = newItemSpiritStat(level);
+                newStats[Globals.STAT_POWER] = newItemPowerStat(level);
                 break;
             case Globals.ITEM_AMULET:
-                newStats[Globals.STAT_CRITDMG] = level * 0.02 + Globals.rng(11) * 0.01;
-                newStats[Globals.STAT_REGEN] = level * 5 + Globals.rng(11) * 5;
+                newStats[Globals.STAT_CRITDMG] = newItemCritDmg(level);
+                newStats[Globals.STAT_REGEN] = newItemRegen(level);
                 break;
             case Globals.ITEM_RING:
-                newStats[Globals.STAT_CRITCHANCE] = level * 0.001 + Globals.rng(11) * 0.001;
-                newStats[Globals.STAT_ARMOR] = level * 18 + Globals.rng(11) * 18;
+                newStats[Globals.STAT_CRITCHANCE] = newItemCritChance(level);
+                newStats[Globals.STAT_ARMOR] = newItemArmor(level);
                 break;
         }
         newStats[Globals.STAT_POWER] = Math.round(newStats[Globals.STAT_POWER]);
