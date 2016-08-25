@@ -812,7 +812,7 @@ public class ScreenIngame extends Screen {
                 x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
                 y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
                 facing = data[10];
-                addParticle(new ParticleBowFrostArrow(x, y, facing));
+                addParticle(new ParticleBowFrostArrowEmitter(x, y, facing));
                 break;
             case Globals.PARTICLE_SHIELD_DASH:
                 facing = data[2];

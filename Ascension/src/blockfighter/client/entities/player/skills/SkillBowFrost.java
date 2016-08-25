@@ -53,7 +53,7 @@ public class SkillBowFrost extends Skill {
         } else {
             g.drawString("[Level 30 Bonus]", drawX + 10, drawY + 160);
             g.drawString("Freeze now lasts for 2.5 seconds.", drawX + 10, drawY + 180);
-            g.drawString("Additional 2 shots that deals 250% damage.", drawX + 10, drawY + 200);
+            g.drawString("Deal additional 2x 250% damage.", drawX + 10, drawY + 200);
         }
     }
 

@@ -13,18 +13,20 @@ import java.awt.geom.Rectangle2D;
 public class ProjBowFrost extends Projectile {
 
     private double speedX = 0;
+    private long lastMoveTime = 0;
     private final boolean isSecondary;
 
     public ProjBowFrost(final LogicModule l, final Player o, final double x, final double y, final boolean isSec) {
         super(l, o, x, y, 500);
         this.isSecondary = isSec;
         this.hitbox = new Rectangle2D.Double[1];
+        lastMoveTime = logic.getTime();
         if (o.getFacing() == Globals.RIGHT) {
-            this.hitbox[0] = new Rectangle2D.Double(this.x + 35, this.y - 150, 300, 148);
-            this.speedX = 20;
+            this.hitbox[0] = new Rectangle2D.Double(this.x, this.y - 150, 180, 150);
+            speedX = 180;
         } else {
-            this.hitbox[0] = new Rectangle2D.Double(this.x - 300 - 35, this.y - 150, 300, 148);
-            this.speedX = -20;
+            this.hitbox[0] = new Rectangle2D.Double(this.x - 180, this.y - 150, 180, 150);
+            speedX = -180;
         }
     }
 
@@ -63,8 +65,11 @@ public class ProjBowFrost extends Projectile {
 
     @Override
     public void update() {
-        this.x += this.speedX;
-        this.hitbox[0].x += this.speedX;
+        if (logic.getTime() - lastMoveTime >= Globals.msToNs(100)) {
+            this.x += this.speedX;
+            this.hitbox[0].x += this.speedX;
+            lastMoveTime = logic.getTime();
+        }
         super.update();
     }
 }
