@@ -47,7 +47,7 @@ public class ParticleShieldCharge extends Particle {
         }
         final BufferedImage sprite = PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_CHARGE][this.frame];
         final int drawSrcX = this.x + ((this.facing == Globals.RIGHT) ? -150 : 150);
-        final int drawSrcY = this.y - 170;
+        final int drawSrcY = this.y - sprite.getHeight() + 30;
         final int drawDscY = drawSrcY + sprite.getHeight();
         final int drawDscX = drawSrcX + ((this.facing == Globals.RIGHT) ? sprite.getWidth() : -sprite.getWidth());
         g.drawImage(sprite, drawSrcX, drawSrcY, drawDscX, drawDscY, 0, 0, sprite.getWidth(), sprite.getHeight(), null);
