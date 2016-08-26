@@ -26,7 +26,7 @@ import blockfighter.client.entities.player.skills.SkillPassiveWillpower;
 import blockfighter.client.entities.player.skills.SkillShieldCharge;
 import blockfighter.client.entities.player.skills.SkillShieldDash;
 import blockfighter.client.entities.player.skills.SkillShieldFortify;
-import blockfighter.client.entities.player.skills.SkillShieldIron;
+import blockfighter.client.entities.player.skills.SkillShieldRoar;
 import blockfighter.client.entities.player.skills.SkillShieldMagnetize;
 import blockfighter.client.entities.player.skills.SkillShieldReflect;
 import blockfighter.client.entities.player.skills.SkillSwordCinder;
@@ -82,7 +82,7 @@ public class SaveData {
         this.skills[Skill.BOW_VOLLEY] = new SkillBowVolley();
 
         this.skills[Skill.SHIELD_FORTIFY] = new SkillShieldFortify();
-        this.skills[Skill.SHIELD_IRON] = new SkillShieldIron();
+        this.skills[Skill.SHIELD_ROAR] = new SkillShieldRoar();
         this.skills[Skill.SHIELD_CHARGE] = new SkillShieldCharge();
         this.skills[Skill.SHIELD_REFLECT] = new SkillShieldReflect();
         this.skills[Skill.SHIELD_MAGNETIZE] = new SkillShieldMagnetize();

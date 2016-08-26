@@ -34,7 +34,7 @@ public abstract class Skill {
             BOW_STORM = 0x0A,
             BOW_VOLLEY = 0x0B,
             SHIELD_FORTIFY = 0x0C,
-            SHIELD_IRON = 0x0D,
+            SHIELD_ROAR = 0x0D,
             SHIELD_CHARGE = 0x0E,
             SHIELD_REFLECT = 0x0F,
             SHIELD_TOSS = 0x10,
