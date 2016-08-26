@@ -20,6 +20,7 @@ Inspired by Action RPGs and Metroidvanias. A game dedicated about its gameplay.
 * Bombardment - Damage instance delay decreased from 0.2 to 0.1 - Double number of instances. Same total damage.
 * Bombardment - Players hit will suffer a minor knockback.
 * Fixed Bombardment damage being too low.
+* Magnetize - Damage is now dealt at the end.
 * Shield Skill Removed - Iron Fortress
 * New Shield Skill - Hellion Roar - Send enemies flying with a ferocious roar.
 
