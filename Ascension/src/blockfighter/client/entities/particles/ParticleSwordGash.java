@@ -11,7 +11,7 @@ public class ParticleSwordGash extends Particle {
         super(x, y, f);
         this.frame = 0;
         this.frameDuration = 50;
-        this.duration = 250;
+        this.duration = 200;
     }
 
     @Override
@@ -36,7 +36,7 @@ public class ParticleSwordGash extends Particle {
         }
         final BufferedImage sprite = PARTICLE_SPRITE[Globals.PARTICLE_SWORD_GASH1][this.frame];
         final int drawSrcX = this.x + ((this.facing == Globals.RIGHT) ? -30 : 30);
-        final int drawSrcY = this.y - sprite.getHeight() + 20;
+        final int drawSrcY = this.y - sprite.getHeight() - 10;
         final int drawDscY = drawSrcY + sprite.getHeight();
         final int drawDscX = drawSrcX + ((this.facing == Globals.RIGHT) ? sprite.getWidth() : -sprite.getWidth());
         g.drawImage(sprite, drawSrcX, drawSrcY, drawDscX, drawDscY, 0, 0, sprite.getWidth(), sprite.getHeight(), null);

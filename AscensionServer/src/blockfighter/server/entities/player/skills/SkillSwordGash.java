@@ -22,17 +22,19 @@ public class SkillSwordGash extends Skill {
     public void updateSkillUse(Player player) {
         final long duration = Globals.nsToMs(this.logic.getTime() - player.getSkillCastTime());
         final byte numHits = 4;
-        if (Globals.hasPastDuration(duration, (80 * player.getSkillCounter())) && player.getSkillCounter() < numHits) {
+        if (Globals.hasPastDuration(duration, (100 * player.getSkillCounter())) && player.getSkillCounter() < numHits) {
             player.incrementSkillCounter();
             final ProjSwordGash proj = new ProjSwordGash(this.logic, player, player.getX(), player.getY());
             this.logic.queueAddProj(proj);
             //PacketSender.sendSFX(this.logic.getRoom().getRoomNumber(), Globals.SFX_GASH, player.getX(), player.getY());
             switch (player.getSkillCounter()) {
                 case 1:
+                case 2:
                     PacketSender.sendParticle(this.logic.getRoom().getRoomNumber(), Globals.PARTICLE_SWORD_GASH1, player.getX(), player.getY(),
                             player.getFacing());
                     break;
                 case 3:
+                case 4:
                     PacketSender.sendParticle(this.logic.getRoom().getRoomNumber(), Globals.PARTICLE_SWORD_GASH2, player.getX(), player.getY(),
                             player.getFacing());
                     break;
