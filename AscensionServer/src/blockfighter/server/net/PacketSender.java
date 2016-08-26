@@ -53,8 +53,18 @@ public class PacketSender implements Runnable {
     }
 
     public static void sendScreenShake(final Player player) {
-        final byte[] bytes = new byte[Globals.PACKET_BYTE * 1];
+        sendScreenShake(player, 2, 2, 50);
+    }
+
+    public static void sendScreenShake(final Player player, final int xAmount, final int yAmount, final int duration) {
+        final byte[] bytes = new byte[Globals.PACKET_BYTE * 1 + Globals.PACKET_INT * 3];
         bytes[0] = Globals.DATA_SCREEN_SHAKE;
+        final byte[] posXInt = Globals.intToBytes(xAmount);
+        System.arraycopy(posXInt, 0, bytes, 1, posXInt.length);
+        final byte[] posYInt = Globals.intToBytes(yAmount);
+        System.arraycopy(posYInt, 0, bytes, 5, posYInt.length);
+        final byte[] durationBytes = Globals.intToBytes(duration);
+        System.arraycopy(durationBytes, 0, bytes, 9, durationBytes.length);
         sendPlayer(bytes, player);
     }
 

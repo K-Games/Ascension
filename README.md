@@ -20,6 +20,7 @@ Inspired by Action RPGs and Metroidvanias. A game dedicated about its gameplay.
 * More responsive movement when tapping movement keys.
 
 ### Server Changes
+* Screen shake duration and intensity can be now adjusted.
 
 ![Social Media](https://github.com/kenofnz/AscensionInfo/raw/gh-pages/images/social.png)
 

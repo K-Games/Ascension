@@ -558,12 +558,15 @@ public class ScreenIngame extends Screen {
     }
 
     private void dataScreenShake(final byte[] data) {
-        if (!this.screenShake) {
+        final int xAmount = Globals.bytesToInt(Arrays.copyOfRange(data, 1, 5));
+        final int yAmount = Globals.bytesToInt(Arrays.copyOfRange(data, 5, 9));
+        final int duration = Globals.bytesToInt(Arrays.copyOfRange(data, 9, 13));
+        if (!this.screenShake || xAmount > this.screenShakeXAmount || yAmount > this.screenShakeYAmount) {
             this.screenShake = true;
             this.screenShakeStartTime = logic.getTime();
-            this.screenShakeDuration = 50;
-            this.screenShakeXAmount = 2;
-            this.screenShakeYAmount = 2;
+            this.screenShakeDuration = duration;
+            this.screenShakeXAmount = xAmount;
+            this.screenShakeYAmount = yAmount;
         }
     }
 
