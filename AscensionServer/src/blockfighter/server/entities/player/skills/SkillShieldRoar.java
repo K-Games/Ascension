@@ -28,7 +28,7 @@ public class SkillShieldRoar extends Skill {
         }
         //Spawn projectile.
         if (Globals.hasPastDuration(duration, 200) && player.getSkillCounter() == 1) {
-            PacketSender.sendScreenShake(player);
+            PacketSender.sendScreenShake(player, 8, 8, 200);
             player.incrementSkillCounter();
             final ProjShieldRoar proj = new ProjShieldRoar(this.logic, player, player.getX(), player.getY());
             this.logic.queueAddProj(proj);

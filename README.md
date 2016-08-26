@@ -15,6 +15,8 @@ Inspired by Action RPGs and Metroidvanias. A game dedicated about its gameplay.
 ### Gameplay Changes
 * Lowered Maximum Armor roll for new Rings.
 * Knockback no longer disables Skill casting.
+* Shield Skill Removed - Iron Fortress
+* New Shield Skill - Hellion Roar - Send enemies flying with a ferocious roar.
 
 ### Client Changes
 * More responsive movement when tapping movement keys.

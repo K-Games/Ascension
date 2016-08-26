@@ -12,7 +12,7 @@ public class SkillShieldRoar extends Skill {
         this.skillCode = SHIELD_ROAR;
         this.maxCooldown = 20000;
         this.reqWeapon = Globals.ITEM_SHIELD;
-        this.skillName = "Primal Roar";
+        this.skillName = "Hellion Roar";
     }
 
     @Override
