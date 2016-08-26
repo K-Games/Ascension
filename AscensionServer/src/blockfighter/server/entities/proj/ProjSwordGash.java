@@ -17,7 +17,7 @@ public class ProjSwordGash extends Projectile {
         this.screenshake = true;
         this.hitbox = new Rectangle2D.Double[1];
         double rectX = (o.getFacing() == Globals.RIGHT) ? this.x : this.x - 200;
-        this.hitbox[0] = new Rectangle2D.Double(rectX, this.y - 130, 200, 130);
+        this.hitbox[0] = new Rectangle2D.Double(rectX, this.y - 150, 200, 150);
     }
 
     @Override
