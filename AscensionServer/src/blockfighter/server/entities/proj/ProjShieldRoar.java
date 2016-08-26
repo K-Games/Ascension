@@ -8,6 +8,7 @@ import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.player.skills.Skill;
+import blockfighter.server.net.PacketSender;
 import java.awt.geom.Rectangle2D;
 
 public class ProjShieldRoar extends Projectile {
@@ -30,6 +31,7 @@ public class ProjShieldRoar extends Projectile {
         final int damage = calculateDamage(isCrit);
         target.queueDamage(new Damage(damage, true, owner, target, isCrit, this.hitbox[0], target.getHitbox()));
         target.queueBuff(new BuffKnockback(this.logic, 200, (1 - Math.abs(target.getX() - owner.getX()) / 600D) * ((owner.getFacing() == Globals.RIGHT) ? 30 : -30), 0, owner, target));
+        PacketSender.sendParticle(this.logic.getRoom().getRoomNumber(), Globals.PARTICLE_SHIELD_ROARHIT, target.getKey());
         if (owner.isSkillMaxed(Skill.SHIELD_ROAR)) {
             target.queueBuff(new BuffStun(this.logic, 2200));
         }

@@ -27,7 +27,7 @@ import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 public class Globals {
 
     public final static boolean LOGGING = true,
-            DEBUG_MODE = false;
+            DEBUG_MODE = true;
     private final static String LOG_DIR = "logs/",
             ERRLOG_FILE = "ErrorLog.log",
             DATALOG_FILE = "DataLog.log";

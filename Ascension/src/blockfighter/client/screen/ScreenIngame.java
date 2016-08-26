@@ -869,6 +869,19 @@ public class ScreenIngame extends Screen {
                     addParticle(new ParticleShieldFortifyEmitter(this.players.get(playerKey)));
                 }
                 break;
+            case Globals.PARTICLE_SHIELD_ROAR:
+                facing = data[2];
+                playerKey = data[3];
+                if (this.players.containsKey(playerKey)) {
+                    addParticle(new ParticleShieldRoar(facing, this.players.get(playerKey)));
+                }
+                break;
+            case Globals.PARTICLE_SHIELD_ROARHIT:
+                playerKey = data[2];
+                if (this.players.containsKey(playerKey)) {
+                    addParticle(new ParticleShieldRoarHit(this.players.get(playerKey)));
+                }
+                break;
             case Globals.PARTICLE_SHIELD_MAGNETIZE:
                 playerKey = data[2];
                 targetKey = data[3];

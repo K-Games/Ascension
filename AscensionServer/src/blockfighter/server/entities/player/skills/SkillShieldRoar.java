@@ -4,6 +4,7 @@ import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.proj.ProjShieldRoar;
+import blockfighter.server.net.PacketSender;
 
 public class SkillShieldRoar extends Skill {
 
@@ -21,8 +22,13 @@ public class SkillShieldRoar extends Skill {
     public void updateSkillUse(Player player) {
         final long duration = Globals.nsToMs(this.logic.getTime() - this.skillCastTime);
         //Send roar particle
+        if (player.getSkillCounter() == 0) {
+            PacketSender.sendParticle(this.logic.getRoom().getRoomNumber(), Globals.PARTICLE_SHIELD_ROAR, player.getKey(), player.getFacing());
+            player.incrementSkillCounter();
+        }
         //Spawn projectile.
-        if (Globals.hasPastDuration(duration, 150) && player.getSkillCounter() == 0) {
+        if (Globals.hasPastDuration(duration, 200) && player.getSkillCounter() == 1) {
+            PacketSender.sendScreenShake(player);
             player.incrementSkillCounter();
             final ProjShieldRoar proj = new ProjShieldRoar(this.logic, player, player.getX(), player.getY());
             this.logic.queueAddProj(proj);

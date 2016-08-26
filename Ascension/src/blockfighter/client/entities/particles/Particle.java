@@ -73,6 +73,8 @@ public abstract class Particle extends Thread {
         PARTICLE_SPRITE_FOLDER[Globals.PARTICLE_BOW_RAPID2] = "rapid2";
         PARTICLE_SPRITE_FOLDER[Globals.PARTICLE_SHIELD_MAGNETIZESTART] = "magnetizestart";
         PARTICLE_SPRITE_FOLDER[Globals.PARTICLE_SHIELD_MAGNETIZEBURST] = "magnetizeburst";
+        PARTICLE_SPRITE_FOLDER[Globals.PARTICLE_SHIELD_ROAR] = "roar";
+        PARTICLE_SPRITE_FOLDER[Globals.PARTICLE_SHIELD_ROARHIT] = "roarhit";
 
         PARTICLE_FRAMES[Globals.PARTICLE_SWORD_SLASH1] = 5;
         PARTICLE_FRAMES[Globals.PARTICLE_SWORD_SLASH2] = 5;
@@ -115,6 +117,8 @@ public abstract class Particle extends Thread {
         PARTICLE_FRAMES[Globals.PARTICLE_BOW_RAPID2] = 3;
         PARTICLE_FRAMES[Globals.PARTICLE_SHIELD_MAGNETIZESTART] = 13;
         PARTICLE_FRAMES[Globals.PARTICLE_SHIELD_MAGNETIZEBURST] = 11;
+        PARTICLE_FRAMES[Globals.PARTICLE_SHIELD_ROAR] = 10;
+        PARTICLE_FRAMES[Globals.PARTICLE_SHIELD_ROARHIT] = 7;
     }
 
     public static void unloadParticles() {
