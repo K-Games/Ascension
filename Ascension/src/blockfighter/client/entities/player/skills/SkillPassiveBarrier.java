@@ -1,12 +1,11 @@
 package blockfighter.client.entities.player.skills;
 
 import blockfighter.client.Globals;
-import java.awt.Color;
-import java.awt.Graphics2D;
 
 public class SkillPassiveBarrier extends Skill {
 
     public SkillPassiveBarrier() {
+        this.isPassive = true;
         this.skillCode = PASSIVE_BARRIER;
         this.maxCooldown = 30000;
         this.skillName = "Barrier";
@@ -14,42 +13,16 @@ public class SkillPassiveBarrier extends Skill {
     }
 
     @Override
-    public void drawInfo(final Graphics2D g, final int x, final int y) {
-        final int boxHeight = (this.level < 30) ? 230 : 185, boxWidth = 385;
-        int drawX = x, drawY = y;
-        if (drawY + boxHeight > 700) {
-            drawY = 700 - boxHeight;
-        }
-
-        if (drawX + 30 + boxWidth > 1240) {
-            drawX = 1240 - boxWidth;
-        }
-        g.setColor(new Color(30, 30, 30, 185));
-        g.fillRect(drawX, drawY, boxWidth, boxHeight);
-        g.setColor(Color.BLACK);
-        g.drawRect(drawX, drawY, boxWidth, boxHeight);
-        g.drawRect(drawX + 1, drawY + 1, boxWidth - 2, boxHeight - 2);
-        g.drawImage(this.icon, drawX + 10, drawY + 10, null);
-        g.setColor(Color.WHITE);
-        g.setFont(Globals.ARIAL_18PT);
-        g.drawString(getSkillName(), drawX + 80, drawY + 30);
-        g.setFont(Globals.ARIAL_15PT);
-        g.drawString("Level: " + this.level, drawX + 80, drawY + 50);
-        g.drawString("Cooldown: " + this.maxCooldown / 1000 + " Seconds", drawX + 80, drawY + 70);
-
-        g.drawString("After taking damage over 50% of HP, gain a barrier", drawX + 10, drawY + 90);
-        g.drawString("that can absorb up to a percentage of HP in damage.", drawX + 10, drawY + 110);
-
-        g.setColor(new Color(255, 190, 0));
-        g.drawString("Assign this passive to a hotkey to gain its effects.", drawX + 10, drawY + 130);
-
-        g.setColor(Color.WHITE);
-        g.drawString("[Level " + this.level + "]", drawX + 10, drawY + 155);
-        g.drawString("Absorbs up to " + this.df.format(10 + this.level * 0.5) + "% of HP.", drawX + 10, drawY + 175);
-
-        if (this.level < 30) {
-            g.drawString("[Level " + (this.level + 1) + "]", drawX + 10, drawY + 200);
-            g.drawString("Absorbs up to " + (10 + (this.level + 1) * 0.5) + "% of HP.", drawX + 10, drawY + 220);
-        }
+    public void updateDesc() {
+        this.description = new String[]{
+            "After taking damage over 50% of HP, gain a barrier",
+            "that can absorb up to a percentage of HP in damage."
+        };
+        this.skillCurLevelDesc = new String[]{
+            "Absorbs up to " + this.df.format(10 + this.level * 0.5) + "% of Max HP."
+        };
+        this.skillNextLevelDesc = new String[]{
+            "Absorbs up to " + this.df.format(10 + (this.level + 1) * 0.5) + "% of Max HP."
+        };
     }
 }

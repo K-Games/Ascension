@@ -52,4 +52,8 @@ public class SkillPassiveShadowAttack extends Skill {
             g.drawString((20 + (this.level + 1)) + "% chance to summon a shadow blade.", drawX + 10, drawY + 220);
         }
     }
+
+    @Override
+    public void updateDesc() {
+    }
 }
