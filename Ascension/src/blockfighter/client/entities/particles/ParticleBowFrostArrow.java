@@ -9,20 +9,14 @@ public class ParticleBowFrostArrow extends Particle {
     public ParticleBowFrostArrow(final int x, final int y, final byte f) {
         super(x, y, f);
         this.frame = 0;
-        this.frameDuration = 500;
-        this.duration = 725;
+        this.frameDuration = 50;
+        this.duration = 700;
     }
 
     @Override
     public void update() {
         super.update();
-        if (this.facing == Globals.RIGHT) {
-            this.x += 50;
-        } else {
-            this.x -= 50;
-        }
         if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
-            this.frameDuration = 25;
             if (PARTICLE_SPRITE != null && this.frame < PARTICLE_SPRITE[Globals.PARTICLE_BOW_FROSTARROW].length) {
                 this.frame++;
             }
@@ -39,10 +33,10 @@ public class ParticleBowFrostArrow extends Particle {
             return;
         }
         final BufferedImage sprite = PARTICLE_SPRITE[Globals.PARTICLE_BOW_FROSTARROW][this.frame];
-        final int drawSrcX = this.x + ((this.facing == Globals.RIGHT) ? 0 : sprite.getWidth());
-        final int drawSrcY = this.y;
+        final int drawSrcX = this.x;
+        final int drawSrcY = this.y - sprite.getHeight() + 20;
         final int drawDscY = drawSrcY + sprite.getHeight();
-        final int drawDscX = this.x + ((this.facing == Globals.RIGHT) ? sprite.getWidth() : 0);
+        final int drawDscX = drawSrcX + ((this.facing == Globals.RIGHT) ? sprite.getWidth() : -sprite.getWidth());
         g.drawImage(sprite, drawSrcX, drawSrcY, drawDscX, drawDscY, 0, 0, sprite.getWidth(), sprite.getHeight(), null);
     }
 }

@@ -9,8 +9,8 @@ public class ParticleSwordTaunt extends Particle {
     public ParticleSwordTaunt(final int x, final int y, final byte f) {
         super(x, y, f);
         this.frame = 0;
-        this.frameDuration = 25;
-        this.duration = 400;
+        this.frameDuration = 50;
+        this.duration = 300;
     }
 
     @Override
@@ -18,9 +18,10 @@ public class ParticleSwordTaunt extends Particle {
         super.update();
 
         if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
-            this.frameDuration = 25;
-            if (PARTICLE_SPRITE != null && this.frame < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_TAUNT].length - 1) {
+
+            if (PARTICLE_SPRITE != null && this.frame < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_TAUNT].length) {
                 this.frame++;
+                this.frameDuration = (this.frame == 2) ? 100 : 50;
             }
             this.lastFrameTime = logic.getTime();
         }
@@ -35,10 +36,10 @@ public class ParticleSwordTaunt extends Particle {
             return;
         }
         final BufferedImage sprite = PARTICLE_SPRITE[Globals.PARTICLE_SWORD_TAUNT][this.frame];
-        final int drawSrcX = this.x + ((this.facing == Globals.RIGHT) ? 0 : sprite.getWidth());
-        final int drawSrcY = this.y;
+        final int drawSrcX = this.x + ((this.facing == Globals.RIGHT) ? -170 : 170);
+        final int drawSrcY = this.y - sprite.getHeight() + 80;
         final int drawDscY = drawSrcY + sprite.getHeight();
-        final int drawDscX = this.x + ((this.facing == Globals.RIGHT) ? sprite.getWidth() : 0);
+        final int drawDscX = drawSrcX + ((this.facing == Globals.RIGHT) ? sprite.getWidth() : -sprite.getWidth());
         g.drawImage(sprite, drawSrcX, drawSrcY, drawDscX, drawDscY, 0, 0, sprite.getWidth(), sprite.getHeight(), null);
     }
 }

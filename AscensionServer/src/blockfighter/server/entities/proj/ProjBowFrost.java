@@ -13,18 +13,20 @@ import java.awt.geom.Rectangle2D;
 public class ProjBowFrost extends Projectile {
 
     private double speedX = 0;
+    private long lastMoveTime = 0;
     private final boolean isSecondary;
 
     public ProjBowFrost(final LogicModule l, final Player o, final double x, final double y, final boolean isSec) {
         super(l, o, x, y, 500);
         this.isSecondary = isSec;
         this.hitbox = new Rectangle2D.Double[1];
+        lastMoveTime = logic.getTime();
         if (o.getFacing() == Globals.RIGHT) {
-            this.hitbox[0] = new Rectangle2D.Double(this.x + 35, this.y - 150, 300, 148);
-            this.speedX = 20;
+            this.hitbox[0] = new Rectangle2D.Double(this.x, this.y - 150, 180, 150);
+            speedX = 180;
         } else {
-            this.hitbox[0] = new Rectangle2D.Double(this.x - 300 - 35, this.y - 150, 300, 148);
-            this.speedX = -20;
+            this.hitbox[0] = new Rectangle2D.Double(this.x - 180, this.y - 150, 180, 150);
+            speedX = -180;
         }
     }
 
@@ -44,7 +46,7 @@ public class ProjBowFrost extends Projectile {
         final boolean isCrit = owner.rollCrit();
         final int damage = calculateDamage(isCrit);
         target.queueDamage(new Damage(damage, true, owner, target, isCrit, this.hitbox[0], target.getHitbox()));
-        target.queueBuff(new BuffKnockback(this.logic, 200, (owner.getFacing() == Globals.RIGHT) ? 3 : -3, -4, owner, target));
+        target.queueBuff(new BuffKnockback(this.logic, 200, 0.1, -4, owner, target));
         if (!this.isSecondary) {
             target.queueBuff(new BuffStun(this.logic, owner.isSkillMaxed(Skill.BOW_FROST) ? 2500 : 1500));
         }
@@ -63,8 +65,11 @@ public class ProjBowFrost extends Projectile {
 
     @Override
     public void update() {
-        this.x += this.speedX;
-        this.hitbox[0].x += this.speedX;
+        if (logic.getTime() - lastMoveTime >= Globals.msToNs(100)) {
+            this.x += this.speedX;
+            this.hitbox[0].x += this.speedX;
+            lastMoveTime = logic.getTime();
+        }
         super.update();
     }
 }

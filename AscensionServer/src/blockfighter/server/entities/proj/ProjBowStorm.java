@@ -2,6 +2,7 @@ package blockfighter.server.entities.proj;
 
 import blockfighter.server.Globals;
 import blockfighter.server.LogicModule;
+import blockfighter.server.entities.buff.BuffKnockback;
 import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
@@ -27,7 +28,8 @@ public class ProjBowStorm extends Projectile {
     @Override
     public int calculateDamage(final boolean isCrit) {
         final Player owner = getOwner();
-        double damage = owner.rollDamage() * 0.6 + (.06 * owner.getSkillLevel(Skill.BOW_STORM));
+        double damage = owner.rollDamage() * (0.6 + (.06 * owner.getSkillLevel(Skill.BOW_STORM)));
+        damage *= 100 / 200D;
         if (isCrit) {
             damage = owner.isSkillMaxed(Skill.BOW_STORM) ? owner.criticalDamage(damage, 5) : owner.criticalDamage(damage);
         }
@@ -40,6 +42,7 @@ public class ProjBowStorm extends Projectile {
         final boolean isCrit = owner.rollCrit();
         int damage = calculateDamage(isCrit);
         target.queueDamage(new Damage(damage, true, owner, target, isCrit, this.hitbox[0], target.getHitbox()));
+        target.queueBuff(new BuffKnockback(this.logic, 50, (Globals.rng(2) == 0) ? 3 : -3, 0, owner, target));
     }
 
     @Override
@@ -53,7 +56,7 @@ public class ProjBowStorm extends Projectile {
     @Override
     public void update() {
         super.update();
-        if (Globals.nsToMs(this.logic.getTime() - lastDamageTime) >= 200) {
+        if (Globals.nsToMs(this.logic.getTime() - lastDamageTime) >= 100) {
             lastDamageTime = this.logic.getTime();
             this.pHit.clear();
             this.bHit.clear();

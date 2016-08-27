@@ -32,7 +32,7 @@ public class SkillBowPower extends Skill {
             player.incrementSkillCounter();
             final ProjBowPower proj = new ProjBowPower(this.logic, player, player.getX(), player.getY());
             this.logic.queueAddProj(proj);
-            PacketSender.sendParticle(this.logic.getRoom().getRoomNumber(), Globals.PARTICLE_BOW_POWER, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
+            PacketSender.sendParticle(this.logic.getRoom().getRoomNumber(), Globals.PARTICLE_BOW_POWER, player.getX(), player.getY(),
                     player.getFacing());
             PacketSender.sendSFX(this.logic.getRoom().getRoomNumber(), Globals.SFX_POWER, player.getX(), player.getY());
         }

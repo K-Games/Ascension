@@ -26,8 +26,10 @@ public class SkillBowFrost extends Skill {
             player.incrementSkillCounter();
             final ProjBowFrost proj = new ProjBowFrost(this.logic, player, player.getX(), player.getY(), false);
             this.logic.queueAddProj(proj);
-            PacketSender.sendParticle(this.logic.getRoom().getRoomNumber(), Globals.PARTICLE_BOW_FROSTARROW, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
-                    player.getFacing());
+            if (player.getSkillCounter() == 1) {
+                PacketSender.sendParticle(this.logic.getRoom().getRoomNumber(), Globals.PARTICLE_BOW_FROSTARROW, player.getX(), player.getY(),
+                        player.getFacing());
+            }
         }
 
         player.updateSkillEnd(duration, this.endDuration, false, false);

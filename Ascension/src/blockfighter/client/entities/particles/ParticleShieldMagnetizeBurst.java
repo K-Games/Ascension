@@ -11,8 +11,8 @@ public class ParticleShieldMagnetizeBurst extends Particle {
     public ParticleShieldMagnetizeBurst(final Player p) {
         super(p);
         this.frame = 0;
-        this.frameDuration = 25;
-        this.duration = 275;
+        this.frameDuration = 50;
+        this.duration = 600;
         final Point point = this.owner.getPos();
         if (point != null) {
             this.x = point.x;
@@ -25,7 +25,6 @@ public class ParticleShieldMagnetizeBurst extends Particle {
         super.update();
 
         if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
-            this.frameDuration = 25;
             if (PARTICLE_SPRITE != null && this.frame < PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_MAGNETIZEBURST].length) {
                 this.frame++;
                 if (this.frame == PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_MAGNETIZEBURST].length) {
@@ -50,10 +49,10 @@ public class ParticleShieldMagnetizeBurst extends Particle {
             this.y = p.y;
         }
         final BufferedImage sprite = PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_MAGNETIZEBURST][this.frame];
-        final int drawSrcX = this.x - (sprite.getWidth() * 4) / 2;
-        final int drawSrcY = this.y - (sprite.getHeight() * 4) / 2;
-        final int drawDscY = drawSrcY + (sprite.getHeight() * 4);
-        final int drawDscX = drawSrcX + (sprite.getWidth() * 4);
+        final int drawSrcX = this.x - (sprite.getWidth()) / 2 + 20;
+        final int drawSrcY = this.y - sprite.getHeight() + 60;
+        final int drawDscY = drawSrcY + sprite.getHeight();
+        final int drawDscX = drawSrcX + sprite.getWidth();
         g.drawImage(sprite, drawSrcX, drawSrcY, drawDscX, drawDscY, 0, 0, sprite.getWidth(), sprite.getHeight(), null);
     }
 }

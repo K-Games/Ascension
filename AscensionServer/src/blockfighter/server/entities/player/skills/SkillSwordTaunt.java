@@ -9,6 +9,8 @@ import blockfighter.server.net.PacketSender;
 
 public class SkillSwordTaunt extends Skill {
 
+    private ProjSwordTaunt proj;
+
     public SkillSwordTaunt(final LogicModule l) {
         super(l);
         this.skillCode = SWORD_TAUNT;
@@ -25,17 +27,17 @@ public class SkillSwordTaunt extends Skill {
         if (player.getSkillCounter() == 0) {
             player.incrementSkillCounter();
             if (player.isSkillMaxed(Skill.SWORD_TAUNT)) {
-                player.queueBuff(new BuffSwordTaunt(this.logic, 10000, 0.2, 0.2, player));
+                player.queueBuff(new BuffSwordTaunt(this.logic, 5000, 0.2, 0.2, player));
                 PacketSender.sendParticle(this.logic.getRoom().getRoomNumber(), Globals.PARTICLE_SWORD_TAUNTBUFF, player.getKey());
             }
+            proj = new ProjSwordTaunt(this.logic, player, player.getX(), player.getY());
             PacketSender.sendParticle(this.logic.getRoom().getRoomNumber(), Globals.PARTICLE_SWORD_TAUNTAURA1, player.getKey());
+            PacketSender.sendParticle(this.logic.getRoom().getRoomNumber(), Globals.PARTICLE_SWORD_TAUNT, player.getX(), player.getY(), player.getFacing());
         }
-        if (Globals.hasPastDuration(duration, 50) && player.getSkillCounter() == 1) {
+        if (Globals.hasPastDuration(duration, 100) && player.getSkillCounter() == 1) {
             player.incrementSkillCounter();
-            final ProjSwordTaunt proj = new ProjSwordTaunt(this.logic, player, player.getX(), player.getY());
             this.logic.queueAddProj(proj);
-            PacketSender.sendParticle(this.logic.getRoom().getRoomNumber(), Globals.PARTICLE_SWORD_TAUNT, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
-                    player.getFacing());
+
         }
         player.updateSkillEnd(duration, this.endDuration, false, false);
     }

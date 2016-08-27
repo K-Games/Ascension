@@ -719,18 +719,6 @@ public class ScreenIngame extends Screen {
                 facing = data[10];
                 addParticle(new ParticleSwordGash2(x, y, facing));
                 break;
-            case Globals.PARTICLE_SWORD_GASH3:
-                x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
-                y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
-                facing = data[10];
-                addParticle(new ParticleSwordGash3(x, y, facing));
-                break;
-            case Globals.PARTICLE_SWORD_GASH4:
-                x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
-                y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
-                facing = data[10];
-                addParticle(new ParticleSwordGash4(x, y, facing));
-                break;
             case Globals.PARTICLE_SWORD_VORPAL:
                 x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
                 y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
@@ -804,10 +792,9 @@ public class ScreenIngame extends Screen {
                 }
                 break;
             case Globals.PARTICLE_BOW_VOLLEYBOW:
-                x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
-                y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
-                facing = data[10];
-                addParticle(new ParticleBowVolleyBow(x, y, facing));
+                facing = data[2];
+                playerKey = data[3];
+                addParticle(new ParticleBowVolleyBow(facing, this.players.get(playerKey)));
                 break;
             case Globals.PARTICLE_BOW_VOLLEYARROW:
                 x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
@@ -825,7 +812,7 @@ public class ScreenIngame extends Screen {
                 x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
                 y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
                 facing = data[10];
-                addParticle(new ParticleBowFrostArrow(x, y, facing));
+                addParticle(new ParticleBowFrostArrowEmitter(x, y, facing));
                 break;
             case Globals.PARTICLE_SHIELD_DASH:
                 facing = data[2];

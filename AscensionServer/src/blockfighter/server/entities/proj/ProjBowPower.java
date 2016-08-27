@@ -12,13 +12,13 @@ import java.awt.geom.Rectangle2D;
 public class ProjBowPower extends Projectile {
 
     public ProjBowPower(final LogicModule l, final Player o, final double x, final double y) {
-        super(l, o, x, y, 300);
+        super(l, o, x, y, 150);
         this.screenshake = true;
         this.hitbox = new Rectangle2D.Double[1];
         if (o.getFacing() == Globals.RIGHT) {
-            this.hitbox[0] = new Rectangle2D.Double(this.x + 30, this.y - 145, 700, 150);
+            this.hitbox[0] = new Rectangle2D.Double(this.x + 30, this.y - 145, 650, 150);
         } else {
-            this.hitbox[0] = new Rectangle2D.Double(this.x - 700 - 30, this.y - 145, 700, 150);
+            this.hitbox[0] = new Rectangle2D.Double(this.x - 650 - 30, this.y - 145, 650, 150);
         }
     }
 

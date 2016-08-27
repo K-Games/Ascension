@@ -12,13 +12,13 @@ import java.awt.geom.Rectangle2D;
 public class ProjSwordTaunt extends Projectile {
 
     public ProjSwordTaunt(final LogicModule l, final Player o, final double x, final double y) {
-        super(l, o, x, y, 200);
+        super(l, o, x, y, 150);
         this.screenshake = true;
         this.hitbox = new Rectangle2D.Double[1];
         if (o.getFacing() == Globals.RIGHT) {
-            this.hitbox[0] = new Rectangle2D.Double(this.x - 20, this.y - 155, 250, 160);
+            this.hitbox[0] = new Rectangle2D.Double(this.x, this.y - 240, 210, 240);
         } else {
-            this.hitbox[0] = new Rectangle2D.Double(this.x - 250 + 20, this.y - 155, 250, 160);
+            this.hitbox[0] = new Rectangle2D.Double(this.x - 210, this.y - 240, 210, 240);
         }
     }
 

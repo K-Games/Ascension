@@ -8,10 +8,10 @@ import java.awt.image.BufferedImage;
 public class ParticleSwordPhantom2 extends Particle {
 
     public ParticleSwordPhantom2(final int x, final int y, final byte f) {
-        super(x - ((f == Globals.RIGHT) ? 110 : 0), y, f);
+        super(x, y, f);
         this.frame = 0;
         this.frameDuration = 50;
-        this.duration = 400;
+        this.duration = 200;
     }
 
     @Override
@@ -37,10 +37,10 @@ public class ParticleSwordPhantom2 extends Particle {
             return;
         }
         final BufferedImage sprite = PARTICLE_SPRITE[Globals.PARTICLE_SWORD_PHANTOM2][this.frame];
-        final int drawSrcX = this.x + ((this.facing == Globals.RIGHT) ? 0 : sprite.getWidth());
-        final int drawSrcY = this.y;
+        final int drawSrcX = this.x + ((this.facing == Globals.RIGHT) ? -10 : 10);
+        final int drawSrcY = this.y - sprite.getHeight() + 10;
         final int drawDscY = drawSrcY + sprite.getHeight();
-        final int drawDscX = this.x + ((this.facing == Globals.RIGHT) ? sprite.getWidth() : 0);
+        final int drawDscX = drawSrcX + ((this.facing == Globals.RIGHT) ? sprite.getWidth() : -sprite.getWidth());
         g.drawImage(sprite, drawSrcX, drawSrcY, drawDscX, drawDscY, 0, 0, sprite.getWidth(), sprite.getHeight(), null);
     }
 }

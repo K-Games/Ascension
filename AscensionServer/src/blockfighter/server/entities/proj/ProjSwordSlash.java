@@ -10,35 +10,11 @@ import java.awt.geom.Rectangle2D;
 
 public class ProjSwordSlash extends Projectile {
 
-    public ProjSwordSlash(final LogicModule l, final Player o, final double x, final double y, final int hit) {
-        super(l, o, x, y, 200);
+    public ProjSwordSlash(final LogicModule l, final Player o, final double x, final double y) {
+        super(l, o, x, y, 150);
         this.screenshake = true;
         this.hitbox = new Rectangle2D.Double[1];
-        if (o.getFacing() == Globals.RIGHT) {
-            switch (hit) {
-                case 1:
-                    this.hitbox[0] = new Rectangle2D.Double(this.x - 20, this.y - 130, 250, 80);
-                    break;
-                case 2:
-                    this.hitbox[0] = new Rectangle2D.Double(this.x - 20, this.y - 90, 250, 80);
-                    break;
-                case 3:
-                    this.hitbox[0] = new Rectangle2D.Double(this.x - 20, this.y - 100, 270, 60);
-                    break;
-            }
-        } else {
-            switch (hit) {
-                case 1:
-                    this.hitbox[0] = new Rectangle2D.Double(this.x - 274 + 20, this.y - 130, 250, 80);
-                    break;
-                case 2:
-                    this.hitbox[0] = new Rectangle2D.Double(this.x - 274 + 20, this.y - 90, 250, 80);
-                    break;
-                case 3:
-                    this.hitbox[0] = new Rectangle2D.Double(this.x - 274 + 20, this.y - 100, 270, 60);
-                    break;
-            }
-        }
+        this.hitbox[0] = new Rectangle2D.Double(this.x - ((o.getFacing() == Globals.RIGHT) ? 0 : 200), this.y - 200, 200, 200);
     }
 
     @Override
