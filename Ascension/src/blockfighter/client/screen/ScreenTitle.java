@@ -4,7 +4,6 @@ import blockfighter.client.Globals;
 import blockfighter.client.entities.particles.Particle;
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -68,11 +67,6 @@ public class ScreenTitle extends Screen {
         g.drawImage(bg, 0, bg2y + 720, 1280, bg2y, 0, 0, bg.getWidth(), bg.getHeight(), null);
         g.drawImage(Globals.TITLE, Globals.WINDOW_WIDTH / 2 - Globals.TITLE.getWidth() / 2, 100, null);
 
-        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                RenderingHints.VALUE_ANTIALIAS_ON);
-        g.setRenderingHint(
-                RenderingHints.KEY_TEXT_ANTIALIASING,
-                RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
         g.setFont(Globals.ARIAL_24PT);
         g.setColor(fontColor);
         String click = "Click to continue";

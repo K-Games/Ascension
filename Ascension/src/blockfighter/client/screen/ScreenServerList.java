@@ -5,7 +5,6 @@ import blockfighter.client.Main;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
-import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -106,10 +105,6 @@ public class ScreenServerList extends ScreenMenu {
     public void draw(final Graphics2D g) {
         final BufferedImage bg = Globals.MENU_BG[1];
         g.drawImage(bg, 0, 0, null);
-
-        g.setRenderingHint(
-                RenderingHints.KEY_TEXT_ANTIALIASING,
-                RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
 
         String title = "Login to Server";
         g.setFont(Globals.ARIAL_30PT);

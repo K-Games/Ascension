@@ -5,7 +5,6 @@ import blockfighter.client.SaveData;
 import blockfighter.client.entities.emotes.Emote;
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
@@ -43,9 +42,6 @@ public class ScreenKeyBind extends ScreenMenu {
         final BufferedImage bg = Globals.MENU_BG[1];
         g.drawImage(bg, 0, 0, null);
 
-        g.setRenderingHint(
-                RenderingHints.KEY_TEXT_ANTIALIASING,
-                RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
         drawButtons(g);
         drawEmotes(g);
         drawMenuButton(g);

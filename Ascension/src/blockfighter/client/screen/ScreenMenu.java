@@ -6,7 +6,6 @@ import blockfighter.client.entities.particles.Particle;
 import blockfighter.client.entities.particles.ParticleMenuSmoke;
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
@@ -76,11 +75,6 @@ public abstract class ScreenMenu extends Screen {
 
     @Override
     public void draw(final Graphics2D g) {
-        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                RenderingHints.VALUE_ANTIALIAS_ON);
-        g.setRenderingHint(
-                RenderingHints.KEY_TEXT_ANTIALIASING,
-                RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
         for (final Map.Entry<Integer, Particle> pEntry : particles.entrySet()) {
             pEntry.getValue().draw(g);
         }
@@ -91,10 +85,6 @@ public abstract class ScreenMenu extends Screen {
     }
 
     public void drawMenuButton(final Graphics2D g) {
-        g.setRenderingHint(
-                RenderingHints.KEY_TEXT_ANTIALIASING,
-                RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
-
         final BufferedImage button = Globals.MENU_BUTTON[Globals.BUTTON_MENUS];
         for (final Rectangle2D.Double menuBox1 : MENU_BOX) {
             g.drawImage(button, (int) menuBox1.x, (int) menuBox1.y, null);
