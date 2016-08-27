@@ -6,7 +6,6 @@ import blockfighter.client.SaveData;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
-import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -72,10 +71,6 @@ public class ScreenSelectChar extends ScreenMenu {
         g.drawImage(button, 20, 60, null);
         g.drawImage(button, 440, 60, null);
         g.drawImage(button, 860, 60, null);
-
-        g.setRenderingHint(
-                RenderingHints.KEY_TEXT_ANTIALIASING,
-                RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
 
         for (int j = 0; j < 3; j++) {
             if (CHARACTER_DATA[j] == null) {

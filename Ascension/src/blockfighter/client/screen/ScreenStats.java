@@ -4,7 +4,6 @@ import blockfighter.client.Globals;
 import blockfighter.client.SaveData;
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
@@ -165,10 +164,6 @@ public class ScreenStats extends ScreenMenu {
     public void draw(final Graphics2D g) {
         final BufferedImage bg = Globals.MENU_BG[1];
         g.drawImage(bg, 0, 0, null);
-
-        g.setRenderingHint(
-                RenderingHints.KEY_TEXT_ANTIALIASING,
-                RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
 
         g.setFont(Globals.ARIAL_30PT);
         drawStringOutline(g, this.c.getPlayerName(), 255, 76, 2);

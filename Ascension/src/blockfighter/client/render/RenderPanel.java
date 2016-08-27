@@ -5,6 +5,7 @@ import blockfighter.client.screen.Screen;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.image.VolatileImage;
 import javax.swing.JPanel;
 
@@ -37,6 +38,12 @@ public class RenderPanel extends JPanel {
         }
 
         super.paintComponent(g2d);
+
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                RenderingHints.VALUE_ANTIALIAS_ON);
+        g2d.setRenderingHint(
+                RenderingHints.KEY_TEXT_ANTIALIASING,
+                RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
         if (this.screen != null) {
             this.screen.draw(g2d);
         }

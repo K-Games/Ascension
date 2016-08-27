@@ -8,7 +8,6 @@ import blockfighter.client.entities.particles.ParticleMenuUpgrade;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
@@ -125,11 +124,6 @@ public class ScreenUpgrade extends ScreenMenu {
     public void draw(final Graphics2D g) {
         final BufferedImage bg = Globals.MENU_BG[1];
         g.drawImage(bg, 0, 0, null);
-
-        final Graphics2D g2d = g;
-        g2d.setRenderingHint(
-                RenderingHints.KEY_TEXT_ANTIALIASING,
-                RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
 
         drawEquipSlots(g);
         drawUpgradeBox(g);

@@ -3,7 +3,6 @@ package blockfighter.client.screen;
 import blockfighter.client.Globals;
 import blockfighter.client.entities.items.ItemEquip;
 import java.awt.Graphics2D;
-import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -72,10 +71,6 @@ public class ScreenSpriteTest extends ScreenMenu {
 
     @Override
     public void draw(final Graphics2D g) {
-        final Graphics2D g2d = g;
-        g2d.setRenderingHint(
-                RenderingHints.KEY_TEXT_ANTIALIASING,
-                RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
         drawSlots(g);
     }
 
