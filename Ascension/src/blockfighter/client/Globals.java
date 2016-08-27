@@ -34,6 +34,8 @@ public class Globals {
             + GAME_UPDATE_NUMBER;
 
     public final static String WINDOW_TITLE = "Ascenion " + GAME_RELEASE_VERSION;
+    public final static boolean WINDOW_SCALE_ENABLED = false;
+    public final static double WINDOW_SCALE = 1.5D;
     public final static int WINDOW_WIDTH = 1280;
     public final static int WINDOW_HEIGHT = 720;
 

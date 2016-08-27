@@ -4,10 +4,12 @@ import blockfighter.client.Globals;
 import blockfighter.client.Main;
 import blockfighter.client.SaveData;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import javax.swing.BorderFactory;
 import javax.swing.JTextField;
@@ -28,8 +30,13 @@ public class ScreenSelectChar extends ScreenMenu {
 
     static {
         CREATE_NAMEFIELD.addFocusListener(Main.FOCUS_HANDLER);
-        CREATE_NAMEFIELD.setBounds(440, 300, 400, 50);
-        CREATE_NAMEFIELD.setFont(Globals.ARIAL_30PT);
+        if (Globals.WINDOW_SCALE_ENABLED) {
+            CREATE_NAMEFIELD.setBounds((int) (440 * Globals.WINDOW_SCALE), (int) (300 * Globals.WINDOW_SCALE), (int) (400 * Globals.WINDOW_SCALE), (int) (50 * Globals.WINDOW_SCALE));
+            CREATE_NAMEFIELD.setFont(new Font(Globals.ARIAL_30PT.getFontName(), Globals.ARIAL_30PT.getStyle(), (int) (Globals.ARIAL_30PT.getSize() * Globals.WINDOW_SCALE)));
+        } else {
+            CREATE_NAMEFIELD.setBounds(440, 300, 400, 50);
+            CREATE_NAMEFIELD.setFont(Globals.ARIAL_30PT);
+        }
         CREATE_NAMEFIELD.setForeground(Color.WHITE);
         CREATE_NAMEFIELD.setOpaque(false);
         CREATE_NAMEFIELD.setCaretColor(Color.WHITE);
@@ -156,9 +163,15 @@ public class ScreenSelectChar extends ScreenMenu {
     }
 
     private void mouseReleased_Create(final MouseEvent e) {
+        Point2D.Double scaled;
+        if (Globals.WINDOW_SCALE_ENABLED) {
+            scaled = new Point2D.Double(e.getX() / Globals.WINDOW_SCALE, e.getY() / Globals.WINDOW_SCALE);
+        } else {
+            scaled = new Point2D.Double(e.getX(), e.getY());
+        }
         panel.requestFocus();
         for (byte i = 0; i < PROMPT_BOX.length; i++) {
-            if (PROMPT_BOX[i].contains(e.getPoint())) {
+            if (PROMPT_BOX[i].contains(scaled)) {
                 if (i == 0) {
                     CREATE_NAMEFIELD.setText(CREATE_NAMEFIELD.getText().trim());
                     if (CREATE_NAMEFIELD.getText().length() <= 15 && CREATE_NAMEFIELD.getText().length() > 0) {
@@ -200,6 +213,12 @@ public class ScreenSelectChar extends ScreenMenu {
 
     @Override
     public void mouseReleased(final MouseEvent e) {
+        Point2D.Double scaled;
+        if (Globals.WINDOW_SCALE_ENABLED) {
+            scaled = new Point2D.Double(e.getX() / Globals.WINDOW_SCALE, e.getY() / Globals.WINDOW_SCALE);
+        } else {
+            scaled = new Point2D.Double(e.getX(), e.getY());
+        }
         if (this.fadeIn && !this.finishedFadeIn) {
             return;
         }
@@ -209,14 +228,9 @@ public class ScreenSelectChar extends ScreenMenu {
                 return;
             }
             for (byte i = 0; i < SELECT_BOX.length; i++) {
-                if (SELECT_BOX[i].contains(e.getPoint())) {
+                if (SELECT_BOX[i].contains(scaled)) {
                     if (CHARACTER_DATA[i] == null) {
                         this.createPrompt = true;
-                        CREATE_NAMEFIELD.setBounds(440, 300, 400, 50);
-                        CREATE_NAMEFIELD.setFont(Globals.ARIAL_30PT);
-                        CREATE_NAMEFIELD.setForeground(Color.WHITE);
-                        CREATE_NAMEFIELD.setOpaque(false);
-                        CREATE_NAMEFIELD.setBorder(BorderFactory.createEmptyBorder());
                         if (panel != null) {
                             panel.add(CREATE_NAMEFIELD);
                             panel.revalidate();

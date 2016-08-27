@@ -7,9 +7,9 @@ import blockfighter.client.entities.items.ItemUpgrade;
 import blockfighter.client.entities.particles.ParticleMenuUpgrade;
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import javax.swing.SwingUtilities;
@@ -35,7 +35,7 @@ public class ScreenUpgrade extends ScreenMenu {
             PROMPT_BOX = new Rectangle2D.Double[2];
     private static final Rectangle2D.Double COMBINE_BOX;
 
-    private Point mousePos;
+    private Point2D.Double mousePos;
 
     private int drawItem = -1, drawEquip = -1, drawSelect = -1;
 
@@ -131,11 +131,11 @@ public class ScreenUpgrade extends ScreenMenu {
         drawDestroyConfirm(g);
         if (this.destroy) {
             BufferedImage button = Globals.MENU_ITEMDELETE[0];
-            g.drawImage(button, this.mousePos.x + 10, this.mousePos.y + 15, null);
+            g.drawImage(button, (int) (this.mousePos.x + 10), (int) (this.mousePos.y + 15), null);
         }
         drawMenuButton(g);
         if (this.dragItem != -1) {
-            this.c.getUpgrades()[this.dragItem].draw(g, this.mousePos.x + 5, this.mousePos.y + 5);
+            this.c.getUpgrades()[this.dragItem].draw(g, (int) (this.mousePos.x + 5), (int) (this.mousePos.y + 5));
         }
         super.draw(g);
         drawItemInfo(g);
@@ -383,6 +383,12 @@ public class ScreenUpgrade extends ScreenMenu {
 
     @Override
     public void mouseReleased(final MouseEvent e) {
+        Point2D.Double scaled;
+        if (Globals.WINDOW_SCALE_ENABLED) {
+            scaled = new Point2D.Double(e.getX() / Globals.WINDOW_SCALE, e.getY() / Globals.WINDOW_SCALE);
+        } else {
+            scaled = new Point2D.Double(e.getX(), e.getY());
+        }
         final int drItem = this.dragItem;
         this.dragItem = -1;
         if (this.destroyConfirm) {
@@ -395,7 +401,7 @@ public class ScreenUpgrade extends ScreenMenu {
         }
         if (SwingUtilities.isLeftMouseButton(e)) {
             for (int i = 0; i < INVENTORY_SLOTS.length; i++) {
-                if (INVENTORY_SLOTS[i].contains(e.getPoint())) {
+                if (INVENTORY_SLOTS[i].contains(scaled)) {
                     if (!this.destroy) {
                         if (drItem != -1) {
                             if (drItem == selectUpgrade) {
@@ -424,7 +430,7 @@ public class ScreenUpgrade extends ScreenMenu {
                     }
                 }
             }
-            if (UPGRADE_BOX[0].contains(e.getPoint())) {
+            if (UPGRADE_BOX[0].contains(scaled)) {
                 if (!this.destroy) {
                     if (drItem != -1) {
                         this.selectUpgrade = drItem;
@@ -434,7 +440,7 @@ public class ScreenUpgrade extends ScreenMenu {
             }
 
             for (int i = 0; !this.destroy && i < EQUIP_SLOTS.length; i++) {
-                if (EQUIP_SLOTS[i].contains(e.getPoint()) && this.c.getEquip()[i] != null) {
+                if (EQUIP_SLOTS[i].contains(scaled) && this.c.getEquip()[i] != null) {
                     // Set upgrading item
                     this.selectEquip = i;
                     return;
@@ -442,7 +448,7 @@ public class ScreenUpgrade extends ScreenMenu {
             }
 
             for (int i = 0; i < DESTROY_BOX.length; i++) {
-                if (DESTROY_BOX[i].contains(e.getPoint())) {
+                if (DESTROY_BOX[i].contains(scaled)) {
                     switch (i) {
                         case 0:
                             this.destroy = !this.destroy;
@@ -456,7 +462,7 @@ public class ScreenUpgrade extends ScreenMenu {
                 }
             }
 
-            if (!this.upgrading && COMBINE_BOX.contains(e.getPoint())) {
+            if (!this.upgrading && COMBINE_BOX.contains(scaled)) {
                 if (this.selectUpgrade >= 0 && this.selectEquip >= 0) {
                     this.upPart = 0;
                     this.upgrading = true;
@@ -466,8 +472,14 @@ public class ScreenUpgrade extends ScreenMenu {
     }
 
     private void mouseReleased_destroyConfirm(final MouseEvent e) {
+        Point2D.Double scaled;
+        if (Globals.WINDOW_SCALE_ENABLED) {
+            scaled = new Point2D.Double(e.getX() / Globals.WINDOW_SCALE, e.getY() / Globals.WINDOW_SCALE);
+        } else {
+            scaled = new Point2D.Double(e.getX(), e.getY());
+        }
         for (byte i = 0; i < PROMPT_BOX.length; i++) {
-            if (PROMPT_BOX[i].contains(e.getPoint())) {
+            if (PROMPT_BOX[i].contains(scaled)) {
                 if (i == 0) {
                     this.selectUpgrade = -1;
                     this.c.destroyAllUpgrade();
@@ -489,6 +501,12 @@ public class ScreenUpgrade extends ScreenMenu {
 
     @Override
     public void mouseDragged(final MouseEvent e) {
+        Point2D.Double scaled;
+        if (Globals.WINDOW_SCALE_ENABLED) {
+            scaled = new Point2D.Double(e.getX() / Globals.WINDOW_SCALE, e.getY() / Globals.WINDOW_SCALE);
+        } else {
+            scaled = new Point2D.Double(e.getX(), e.getY());
+        }
         mouseMoved(e);
         if (this.destroyConfirm || this.destroy || this.upgrading) {
             return;
@@ -496,7 +514,7 @@ public class ScreenUpgrade extends ScreenMenu {
         if (SwingUtilities.isLeftMouseButton(e)) {
             if (this.dragItem == -1) {
                 for (int i = 0; i < INVENTORY_SLOTS.length; i++) {
-                    if (INVENTORY_SLOTS[i].contains(e.getPoint()) && this.c.getUpgrades()[i] != null) {
+                    if (INVENTORY_SLOTS[i].contains(scaled) && this.c.getUpgrades()[i] != null) {
                         this.dragItem = i;
                         return;
                     }
@@ -507,30 +525,36 @@ public class ScreenUpgrade extends ScreenMenu {
 
     @Override
     public void mouseMoved(final MouseEvent e) {
-        this.mousePos = e.getPoint();
+        Point2D.Double scaled;
+        if (Globals.WINDOW_SCALE_ENABLED) {
+            scaled = new Point2D.Double(e.getX() / Globals.WINDOW_SCALE, e.getY() / Globals.WINDOW_SCALE);
+        } else {
+            scaled = new Point2D.Double(e.getX(), e.getY());
+        }
+        this.mousePos = scaled;
         this.drawItem = -1;
         this.drawEquip = -1;
         this.drawSelect = -1;
 
-        if (UPGRADE_BOX[0].contains(e.getPoint()) && this.selectUpgrade > -1) {
+        if (UPGRADE_BOX[0].contains(scaled) && this.selectUpgrade > -1) {
             this.drawSelect = 0;
             return;
         }
 
-        if (UPGRADE_BOX[1].contains(e.getPoint()) && this.selectEquip > -1) {
+        if (UPGRADE_BOX[1].contains(scaled) && this.selectEquip > -1) {
             this.drawSelect = 1;
             return;
         }
 
         for (int i = 0; i < INVENTORY_SLOTS.length; i++) {
-            if (INVENTORY_SLOTS[i].contains(e.getPoint()) && this.c.getUpgrades()[i] != null) {
+            if (INVENTORY_SLOTS[i].contains(scaled) && this.c.getUpgrades()[i] != null) {
                 this.drawItem = i;
                 return;
             }
         }
 
         for (int i = 0; this.drawItem < 0 && i < EQUIP_SLOTS.length; i++) {
-            if (EQUIP_SLOTS[i].contains(e.getPoint()) && this.c.getEquip()[i] != null) {
+            if (EQUIP_SLOTS[i].contains(scaled) && this.c.getEquip()[i] != null) {
                 this.drawEquip = i;
                 return;
             }

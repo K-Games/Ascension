@@ -7,6 +7,7 @@ import blockfighter.client.entities.particles.ParticleMenuSmoke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.text.DecimalFormat;
@@ -111,9 +112,15 @@ public abstract class ScreenMenu extends Screen {
     @Override
     public void mouseReleased(final MouseEvent e) {
         panel.requestFocus();
+        Point2D.Double scaled;
+        if (Globals.WINDOW_SCALE_ENABLED) {
+            scaled = new Point2D.Double(e.getX() / Globals.WINDOW_SCALE, e.getY() / Globals.WINDOW_SCALE);
+        } else {
+            scaled = new Point2D.Double(e.getX(), e.getY());
+        }
         if (SwingUtilities.isLeftMouseButton(e)) {
             for (byte i = 0; i < MENU_BOX.length; i++) {
-                if (MENU_BOX[i].contains(e.getPoint())) {
+                if (MENU_BOX[i].contains(scaled)) {
                     SaveData.saveData(logic.getSelectedChar().getSaveNum(), logic.getSelectedChar());
                     switch (i) {
                         case 0:

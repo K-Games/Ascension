@@ -6,6 +6,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
@@ -207,11 +208,17 @@ public class ScreenStats extends ScreenMenu {
 
     @Override
     public void mouseReleased(final MouseEvent e) {
+        Point2D.Double scaled;
+        if (Globals.WINDOW_SCALE_ENABLED) {
+            scaled = new Point2D.Double(e.getX() / Globals.WINDOW_SCALE, e.getY() / Globals.WINDOW_SCALE);
+        } else {
+            scaled = new Point2D.Double(e.getX(), e.getY());
+        }
         double[] baseStats = this.c.getBaseStats();
         super.mouseReleased(e);
         if (baseStats[Globals.STAT_POINTS] >= 1) {
             for (int i = 0; i < 3; i++) {
-                if (ADD_STAT_BOX[i].contains(e.getPoint())) {
+                if (ADD_STAT_BOX[i].contains(scaled)) {
                     switch (i) {
                         case 0:
                             this.c.addStat(Globals.STAT_POWER, 1);
@@ -228,7 +235,7 @@ public class ScreenStats extends ScreenMenu {
         }
         if (baseStats[Globals.STAT_POINTS] >= 5) {
             for (int i = 3; i < 6; i++) {
-                if (ADD_STAT_BOX[i].contains(e.getPoint())) {
+                if (ADD_STAT_BOX[i].contains(scaled)) {
                     switch (i) {
                         case 3:
                             this.c.addStat(Globals.STAT_POWER, 5);
@@ -245,7 +252,7 @@ public class ScreenStats extends ScreenMenu {
         }
         if (baseStats[Globals.STAT_POINTS] >= 50) {
             for (int i = 6; i < 9; i++) {
-                if (ADD_STAT_BOX[i].contains(e.getPoint())) {
+                if (ADD_STAT_BOX[i].contains(scaled)) {
                     switch (i) {
                         case 6:
                             this.c.addStat(Globals.STAT_POWER, 50);
@@ -260,7 +267,7 @@ public class ScreenStats extends ScreenMenu {
                 }
             }
         }
-        if (RESET_BOX.contains(e.getPoint())) {
+        if (RESET_BOX.contains(scaled)) {
             this.c.resetStat();
         }
     }

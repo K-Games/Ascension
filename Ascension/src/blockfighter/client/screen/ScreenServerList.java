@@ -3,10 +3,12 @@ package blockfighter.client.screen;
 import blockfighter.client.Globals;
 import blockfighter.client.Main;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
@@ -46,19 +48,28 @@ public class ScreenServerList extends ScreenMenu {
         SERVERADDRESS_FIELD.addFocusListener(Main.FOCUS_HANDLER);
         SERVER_ROOMS.addFocusListener(Main.FOCUS_HANDLER);
 
-        SERVERADDRESS_FIELD.setBounds(550, 150, 400, 40);
-        SERVERADDRESS_FIELD.setFont(Globals.ARIAL_24PT);
+        if (Globals.WINDOW_SCALE_ENABLED) {
+            SERVERADDRESS_FIELD.setBounds((int) (550 * Globals.WINDOW_SCALE), (int) (150 * Globals.WINDOW_SCALE), (int) (400 * Globals.WINDOW_SCALE), (int) (40 * Globals.WINDOW_SCALE));
+            SERVERADDRESS_FIELD.setFont(new Font(Globals.ARIAL_24PT.getFontName(), Globals.ARIAL_24PT.getStyle(), (int) (Globals.ARIAL_24PT.getSize() * Globals.WINDOW_SCALE)));
+        } else {
+            SERVERADDRESS_FIELD.setBounds(550, 150, 400, 40);
+            SERVERADDRESS_FIELD.setFont(Globals.ARIAL_24PT);
+        }
         SERVERADDRESS_FIELD.setForeground(Color.WHITE);
         SERVERADDRESS_FIELD.setBackground(Color.BLACK);
         SERVERADDRESS_FIELD.setCaretColor(Color.WHITE);
         SERVERADDRESS_FIELD.setOpaque(true);
         SERVERADDRESS_FIELD.setText(loadServerList());
-
-        SERVER_ROOMS.setFont(Globals.ARIAL_24PT);
+        if (Globals.WINDOW_SCALE_ENABLED) {
+            SERVER_ROOMS.setBounds((int) (1000 * Globals.WINDOW_SCALE), (int) (150 * Globals.WINDOW_SCALE), (int) (150 * Globals.WINDOW_SCALE), (int) (40 * Globals.WINDOW_SCALE));
+            SERVER_ROOMS.setFont(new Font(Globals.ARIAL_24PT.getFontName(), Globals.ARIAL_24PT.getStyle(), (int) (Globals.ARIAL_24PT.getSize() * Globals.WINDOW_SCALE)));
+        } else {
+            SERVER_ROOMS.setBounds(1000, 150, 150, 40);
+            SERVER_ROOMS.setFont(Globals.ARIAL_24PT);
+        }
         SERVER_ROOMS.setForeground(Color.WHITE);
         SERVER_ROOMS.setBackground(Color.BLACK);
         SERVER_ROOMS.setOpaque(true);
-        SERVER_ROOMS.setBounds(1000, 150, 150, 40);
 
     }
 
@@ -170,12 +181,18 @@ public class ScreenServerList extends ScreenMenu {
 
     @Override
     public void mouseReleased(final MouseEvent e) {
+        Point2D.Double scaled;
+        if (Globals.WINDOW_SCALE_ENABLED) {
+            scaled = new Point2D.Double(e.getX() / Globals.WINDOW_SCALE, e.getY() / Globals.WINDOW_SCALE);
+        } else {
+            scaled = new Point2D.Double(e.getX(), e.getY());
+        }
         if (connecting || !enabledInput) {
             return;
         }
         super.mouseReleased(e);
         if (SwingUtilities.isLeftMouseButton(e)) {
-            if (CONNECT_BOX.contains(e.getPoint())) {
+            if (CONNECT_BOX.contains(scaled)) {
                 // Connect
                 if (SERVERADDRESS_FIELD.getText().trim().length() > 0) {
                     connecting = true;
