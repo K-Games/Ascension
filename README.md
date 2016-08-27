@@ -30,6 +30,7 @@ Inspired by Action RPGs and Metroidvanias. A game dedicated about its gameplay.
 
 ### Server Changes
 * Screen shake duration and intensity can be now adjusted.
+* Fixed rare case where players would get hit by projectiles at death location when respawning.
 
 ![Social Media](https://github.com/kenofnz/AscensionInfo/raw/gh-pages/images/social.png)
 
