@@ -2,11 +2,15 @@ package blockfighter.client.render;
 
 import blockfighter.client.Globals;
 import blockfighter.client.screen.Screen;
+import java.awt.AWTException;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.ImageCapabilities;
 import java.awt.RenderingHints;
 import java.awt.image.VolatileImage;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JPanel;
 
 public class RenderPanel extends JPanel {
@@ -14,7 +18,7 @@ public class RenderPanel extends JPanel {
     private static final long serialVersionUID = 6032445082094163311L;
     private int FPSCount = 0;
     private Screen screen = null;
-    private final boolean useGPU = true;
+    private boolean useGPU = true;
     private VolatileImage vBuffer;
     private Graphics2D bufferGraphics;
 
@@ -27,7 +31,12 @@ public class RenderPanel extends JPanel {
     public void paintComponent(final Graphics g) {
         Graphics2D g2d;
         if (useGPU && vBuffer == null) {
-            vBuffer = this.createVolatileImage(Globals.WINDOW_WIDTH, Globals.WINDOW_HEIGHT);
+            try {
+                vBuffer = getGraphicsConfiguration().createCompatibleVolatileImage(Globals.WINDOW_WIDTH, Globals.WINDOW_HEIGHT, new ImageCapabilities(true));
+            } catch (AWTException ex) {
+                useGPU = false;
+                Logger.getLogger(RenderPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
             bufferGraphics = vBuffer.createGraphics();
         }
 
