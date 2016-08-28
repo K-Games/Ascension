@@ -7,6 +7,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
@@ -150,9 +151,15 @@ public class ScreenKeyBind extends ScreenMenu {
 
     @Override
     public void mouseReleased(final MouseEvent e) {
+        Point2D.Double scaled;
+        if (Globals.WINDOW_SCALE_ENABLED) {
+            scaled = new Point2D.Double(e.getX() / Globals.WINDOW_SCALE, e.getY() / Globals.WINDOW_SCALE);
+        } else {
+            scaled = new Point2D.Double(e.getX(), e.getY());
+        }
         super.mouseReleased(e);
         for (int i = 0; i < KEY_BOX.length; i++) {
-            if (KEY_BOX[i].contains(e.getPoint())) {
+            if (KEY_BOX[i].contains(scaled)) {
                 this.selectedKeyBox = i;
                 return;
             }

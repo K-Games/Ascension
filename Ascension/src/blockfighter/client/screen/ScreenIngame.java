@@ -26,6 +26,7 @@ import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.nio.charset.StandardCharsets;
@@ -1260,9 +1261,15 @@ public class ScreenIngame extends Screen {
 
     @Override
     public void mouseReleased(final MouseEvent e) {
+        Point2D.Double scaled;
+        if (Globals.WINDOW_SCALE_ENABLED) {
+            scaled = new Point2D.Double(e.getX() / Globals.WINDOW_SCALE, e.getY() / Globals.WINDOW_SCALE);
+        } else {
+            scaled = new Point2D.Double(e.getX(), e.getY());
+        }
         if (this.logoutBox != null) {
             Rectangle2D.Double box = new Rectangle2D.Double(10, 10, this.logoutBox.getWidth() + 6, this.logoutBox.getHeight() + 6);
-            if (box.contains(e.getPoint())) {
+            if (box.contains(scaled)) {
                 PacketSender.sendDisconnect(logic.getSelectedRoom(), logic.getMyPlayerKey());
             }
         }
@@ -1285,9 +1292,15 @@ public class ScreenIngame extends Screen {
 
     @Override
     public void mouseMoved(final MouseEvent e) {
+        Point2D.Double scaled;
+        if (Globals.WINDOW_SCALE_ENABLED) {
+            scaled = new Point2D.Double(e.getX() / Globals.WINDOW_SCALE, e.getY() / Globals.WINDOW_SCALE);
+        } else {
+            scaled = new Point2D.Double(e.getX(), e.getY());
+        }
         this.drawInfoHotkey = -1;
         for (int i = 0; i < this.hotkeySlots.length; i++) {
-            if (this.hotkeySlots[i].contains(e.getPoint()) && this.c.getHotkeys()[i] != null) {
+            if (this.hotkeySlots[i].contains(scaled) && this.c.getHotkeys()[i] != null) {
                 this.drawInfoHotkey = i;
                 return;
             }

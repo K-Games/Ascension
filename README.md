@@ -29,6 +29,7 @@ Inspired by Action RPGs and Metroidvanias. A game dedicated about its gameplay.
 * More responsive movement when tapping movement keys.
 * Dynamic Skill tooltip sizing to easily add and modify new Skills.
 * Fixed and updated Weapon Inventory offhand hint rendering too many times.
+* Added Support for upscaling.
 
 ### Server Changes
 * Screen shake duration and intensity can be now adjusted.

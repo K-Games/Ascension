@@ -165,7 +165,11 @@ public class Main {
         // frame.setUndecorated(true);
         frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.getContentPane().setPreferredSize(new Dimension(Globals.WINDOW_WIDTH, Globals.WINDOW_HEIGHT));
+        if (Globals.WINDOW_SCALE_ENABLED) {
+            frame.getContentPane().setPreferredSize(new Dimension((int) (Globals.WINDOW_WIDTH * Globals.WINDOW_SCALE), (int) (Globals.WINDOW_HEIGHT * Globals.WINDOW_SCALE)));
+        } else {
+            frame.getContentPane().setPreferredSize(new Dimension(Globals.WINDOW_WIDTH, Globals.WINDOW_HEIGHT));
+        }
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.getContentPane().add(panel, null);

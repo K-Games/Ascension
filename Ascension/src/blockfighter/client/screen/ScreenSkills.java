@@ -5,9 +5,9 @@ import blockfighter.client.SaveData;
 import blockfighter.client.entities.player.skills.Skill;
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import javax.swing.SwingUtilities;
@@ -32,7 +32,7 @@ public class ScreenSkills extends ScreenMenu {
     private final Skill[] hotkeyList;
     private final Skill[] skillList;
 
-    private Point mousePos;
+    private Point2D.Double mousePos;
 
     private int drawInfoSkill = -1, drawInfoHotkey = -1;
     private int dragSkill = -1, dragHotkey = -1;
@@ -120,9 +120,9 @@ public class ScreenSkills extends ScreenMenu {
         drawMenuButton(g);
 
         if (this.dragSkill != -1) {
-            this.skillList[this.dragSkill].draw(g, this.mousePos.x, this.mousePos.y);
+            this.skillList[this.dragSkill].draw(g, (int) this.mousePos.x, (int) this.mousePos.y);
         } else if (this.dragHotkey != -1) {
-            this.hotkeyList[this.dragHotkey].draw(g, this.mousePos.x, this.mousePos.y);
+            this.hotkeyList[this.dragHotkey].draw(g, (int) this.mousePos.x, (int) this.mousePos.y);
         }
 
         super.draw(g);
@@ -254,6 +254,12 @@ public class ScreenSkills extends ScreenMenu {
 
     @Override
     public void mouseReleased(final MouseEvent e) {
+        Point2D.Double scaled;
+        if (Globals.WINDOW_SCALE_ENABLED) {
+            scaled = new Point2D.Double(e.getX() / Globals.WINDOW_SCALE, e.getY() / Globals.WINDOW_SCALE);
+        } else {
+            scaled = new Point2D.Double(e.getX(), e.getY());
+        }
         final int drSkill = this.dragSkill, drHK = this.dragHotkey;
         this.dragSkill = -1;
         this.dragHotkey = -1;
@@ -261,7 +267,7 @@ public class ScreenSkills extends ScreenMenu {
         super.mouseReleased(e);
         if (SwingUtilities.isLeftMouseButton(e)) {
             for (int i = 0; i < HOTKEY_SLOTS.length; i++) {
-                if (HOTKEY_SLOTS[i].contains(e.getPoint())) {
+                if (HOTKEY_SLOTS[i].contains(scaled)) {
                     if (drSkill != -1) {
                         this.hotkeyList[i] = this.skillList[drSkill];
                         return;
@@ -275,12 +281,12 @@ public class ScreenSkills extends ScreenMenu {
                     return;
                 }
             }
-            if (RESET_BOX.contains(e.getPoint())) {
+            if (RESET_BOX.contains(scaled)) {
                 this.c.resetSkill();
                 return;
             }
             for (byte i = 0; i < ADD_SKILL_BOX.length; i++) {
-                if (ADD_SKILL_BOX[i].contains(e.getPoint())) {
+                if (ADD_SKILL_BOX[i].contains(scaled)) {
                     if (this.c.getBaseStats()[Globals.STAT_SKILLPOINTS] > 0 && !this.skillList[i].isMaxed()) {
                         this.c.addSkill(i);
                         return;
@@ -303,18 +309,24 @@ public class ScreenSkills extends ScreenMenu {
 
     @Override
     public void mouseDragged(final MouseEvent e) {
+        Point2D.Double scaled;
+        if (Globals.WINDOW_SCALE_ENABLED) {
+            scaled = new Point2D.Double(e.getX() / Globals.WINDOW_SCALE, e.getY() / Globals.WINDOW_SCALE);
+        } else {
+            scaled = new Point2D.Double(e.getX(), e.getY());
+        }
         mouseMoved(e);
         if (SwingUtilities.isLeftMouseButton(e)) {
             if (this.dragSkill == -1 && this.dragHotkey == -1) {
                 for (int i = 0; i < HOTKEY_SLOTS.length; i++) {
-                    if (HOTKEY_SLOTS[i].contains(e.getPoint()) && this.hotkeyList[i] != null) {
+                    if (HOTKEY_SLOTS[i].contains(scaled) && this.hotkeyList[i] != null) {
                         this.dragHotkey = i;
                         return;
                     }
                 }
 
                 for (byte i = 0; i < SKILL_SLOTS.length; i++) {
-                    if (SKILL_SLOTS[i].contains(e.getPoint()) && SKILL_SLOTS[i] != null) {
+                    if (SKILL_SLOTS[i].contains(scaled) && SKILL_SLOTS[i] != null) {
                         this.dragSkill = i;
                         return;
                     }
@@ -325,18 +337,24 @@ public class ScreenSkills extends ScreenMenu {
 
     @Override
     public void mouseMoved(final MouseEvent e) {
-        this.mousePos = e.getPoint();
+        Point2D.Double scaled;
+        if (Globals.WINDOW_SCALE_ENABLED) {
+            scaled = new Point2D.Double(e.getX() / Globals.WINDOW_SCALE, e.getY() / Globals.WINDOW_SCALE);
+        } else {
+            scaled = new Point2D.Double(e.getX(), e.getY());
+        }
+        this.mousePos = scaled;
         this.drawInfoSkill = -1;
         this.drawInfoHotkey = -1;
         for (int i = 0; i < HOTKEY_SLOTS.length; i++) {
-            if (HOTKEY_SLOTS[i].contains(e.getPoint()) && this.hotkeyList[i] != null) {
+            if (HOTKEY_SLOTS[i].contains(scaled) && this.hotkeyList[i] != null) {
                 this.drawInfoHotkey = i;
                 return;
             }
         }
 
         for (byte i = 0; i < SKILL_SLOTS.length; i++) {
-            if (SKILL_SLOTS[i].contains(e.getPoint()) && SKILL_SLOTS[i] != null) {
+            if (SKILL_SLOTS[i].contains(scaled) && SKILL_SLOTS[i] != null) {
                 this.drawInfoSkill = i;
                 return;
             }
