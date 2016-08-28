@@ -284,19 +284,21 @@ public class ScreenInventory extends ScreenMenu {
     }
 
     private void drawInventory(final Graphics2D g) {
-        final BufferedImage button = Globals.MENU_BUTTON[Globals.BUTTON_SLOT];
+        BufferedImage button = Globals.MENU_BUTTON[Globals.BUTTON_SLOT];
 
         for (int i = 0; i < this.c.getInventory(selectedTab).length; i++) {
             g.drawImage(button, (int) INVENTORY_SLOTS[i].x, (int) INVENTORY_SLOTS[i].y, null);
             if (this.c.getInventory(selectedTab)[i] != null) {
                 this.c.getInventory(selectedTab)[i].draw(g, (int) INVENTORY_SLOTS[i].x, (int) INVENTORY_SLOTS[i].y);
             }
-            if (selectedTab == Globals.ITEM_WEAPON) {
-                g.setFont(Globals.ARIAL_15PT);
-                drawStringOutline(g, "Right Click to equip as Offhand", 280, 682, 1);
-                g.setColor(new Color(255, 130, 0));
-                g.drawString("Right Click to equip as Offhand", 280, 682);
-            }
+        }
+        if (selectedTab == Globals.ITEM_WEAPON) {
+            button = Globals.MENU_BUTTON[Globals.BUTTON_RIGHTCLICK];
+            g.drawImage(button, 280, 657, null);
+            g.setFont(Globals.ARIAL_15PT);
+            drawStringOutline(g, "Equip For Offhand", 310, 680, 1);
+            g.setColor(new Color(255, 130, 0));
+            g.drawString("Equip For Offhand", 310, 680);
         }
     }
 

@@ -283,7 +283,7 @@ public class Globals {
     public final static BufferedImage[] MENU_BG = new BufferedImage[3];
     public final static BufferedImage[] MENU_SMOKE = new BufferedImage[1];
     public final static BufferedImage[] MENU_UPGRADEPARTICLE = new BufferedImage[4];
-    public final static BufferedImage[] MENU_BUTTON = new BufferedImage[16];
+    public final static BufferedImage[] MENU_BUTTON = new BufferedImage[17];
     public final static BufferedImage[] MENU_WINDOW = new BufferedImage[2];
     public final static BufferedImage[] MENU_TABPOINTER = new BufferedImage[2];
     public final static BufferedImage[] MENU_ITEMDELETE = new BufferedImage[1];
@@ -332,7 +332,8 @@ public class Globals {
             BUTTON_BELTTAB = 12,
             BUTTON_RINGTAB = 13,
             BUTTON_AMULETTAB = 14,
-            BUTTON_SMALLRECT = 15;
+            BUTTON_SMALLRECT = 15,
+            BUTTON_RIGHTCLICK = 16;
 
     public final static byte WINDOW_CREATECHAR = 0,
             WINDOW_DESTROYCONFIRM = 1;
