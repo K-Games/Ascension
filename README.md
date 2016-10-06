@@ -11,29 +11,12 @@ Inspired by Action RPGs and Metroidvanias. A game dedicated about its gameplay.
 
 ![Game Updates](https://github.com/kenofnz/AscensionInfo/raw/gh-pages/images/updates.png)
 
-## Version 0.20 Update 2
+## Version 0.21 Release
 ### Gameplay Changes
-* Lowered Maximum Armor roll for new Rings.
-* Knockback no longer disables Skill casting.
-* Firebrand - Range increased from 170 to 280
-* Aggression - Buff duration decreased from 10 seconds to 5 seconds.
-* Bombardment - Damage instance delay decreased from 0.2 to 0.1 - Double number of instances. Same total damage.
-* Bombardment - Players hit will suffer a minor knockback.
-* Fixed Bombardment damage being too low.
-* Magnetize - Damage is now dealt at the end.
-* Shield Skill Removed - Iron Fortress
-* New Shield Skill - Hellion Roar - Send enemies flying with a ferocious roar.
 
 ### Client Changes
-* New skill sprites
-* More responsive movement when tapping movement keys.
-* Dynamic Skill tooltip sizing to easily add and modify new Skills.
-* Fixed and updated Weapon Inventory offhand hint rendering too many times.
-* Added Support for upscaling.
 
 ### Server Changes
-* Screen shake duration and intensity can be now adjusted.
-* Fixed rare case where players would get hit by projectiles at death location when respawning.
 
 ![Social Media](https://github.com/kenofnz/AscensionInfo/raw/gh-pages/images/social.png)
 
