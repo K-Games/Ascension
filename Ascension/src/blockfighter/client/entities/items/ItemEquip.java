@@ -93,9 +93,9 @@ public class ItemEquip implements Item {
 
     private static void loadItemData() {
         Globals.log(ItemEquip.class, "Loading Item Data...", Globals.LOG_TYPE_DATA, true);
-        System.out.print("[");
+        int loadCount = 0;
         for (final int itemCode : Globals.ITEM_CODES) {
-            System.out.print(itemCode + ",");
+            loadCount++;
             try {
                 InputStream itemFile = Globals.loadResourceAsStream("itemdata/equip/" + itemCode + ".txt");
                 List<String> fileLines = IOUtils.readLines(itemFile);
@@ -208,10 +208,10 @@ public class ItemEquip implements Item {
                     }
                 }
             } catch (IOException | NullPointerException e) {
-                System.err.println("Could not load item #" + itemCode + " details.");
+                Globals.logError("Could not load item #" + itemCode + " data.", e, true);
             }
         }
-        System.out.println("]");
+        Globals.log(ItemEquip.class, "Loaded Item Data.", Globals.LOG_TYPE_DATA, true);
     }
 
     private static void loadItemDrawOffset() {

@@ -1,0 +1,29 @@
+[name]
+Template Name
+[Desc]
+Template description
+[attackswingoffset]
+10,20 <- top left origin coordinates (x,y) offset for sprite(main hand for weapons) during sword attack animation
+[attackbowoffset]
+attack bow animation
+[standoffset]
+standing animation
+[walkoffset]
+walking animation
+[buffoffset]
+buff cast animation
+[deadoffset]
+death animation
+[jumpoffset]
+jumping animation
+[rolloffset]
+rolling animation
+[attackswingoffhandoffset]
+used for weapons in offhand
+[attackbowoffhandoffset]
+[standoffhandoffset]
+[walkoffhandoffset]
+[buffoffhandoffset]
+[deadoffhandoffset]
+[jumpoffhandoffset]
+[rolloffhandoffset]
