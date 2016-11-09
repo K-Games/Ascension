@@ -368,7 +368,7 @@ public class ScreenIngame extends Screen {
                     if (this.expBarWidth >= 1) {
                         this.expBarDelta = 0;
                         this.expBarWidth = 0;
-                        this.expBarLevel = this.c.getBaseStats()[Globals.STAT_LEVEL];
+                        this.expBarLevel++;
                     }
                 }
                 double expBarRealWidth = (this.expBarLevel == this.c.getBaseStats()[Globals.STAT_LEVEL]) ? this.c.getBaseStats()[Globals.STAT_EXP] / this.c.getBaseStats()[Globals.STAT_MAXEXP] : 1;
