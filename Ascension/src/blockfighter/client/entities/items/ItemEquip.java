@@ -550,10 +550,16 @@ public class ItemEquip implements Item {
         }
         String hand = (!offhand) ? "mainhand" : "offhand";
         if (ITEM_SPRITES.containsKey(this.itemCode + "_" + hand)) {
+            int offsetX = 0, offsetY = 0;
+            if (ITEM_DRAWOFFSET.containsKey(this.itemCode + "_" + hand + "_" + state)) {
+                offsetX = ITEM_DRAWOFFSET.get(this.itemCode + "_" + hand + "_" + state).x;
+                offsetY = ITEM_DRAWOFFSET.get(this.itemCode + "_" + hand + "_" + state).y;
+            }
+
             BufferedImage sprite = ITEM_SPRITES.get(this.itemCode + "_" + hand)[state][frame];
             if (sprite != null) {
-                int sX = x + ((facing == Globals.RIGHT) ? 1 : -1) * ITEM_DRAWOFFSET.get(this.itemCode + "_" + hand + "_" + state).x;
-                int sY = y + ITEM_DRAWOFFSET.get(this.itemCode + "_" + hand + "_" + state).y;
+                int sX = x + ((facing == Globals.RIGHT) ? 1 : -1) * offsetX;
+                int sY = y + offsetY;
                 int dX = sX + ((facing == Globals.RIGHT) ? 1 : -1) * sprite.getWidth();
                 int dY = sY + sprite.getHeight();
                 g.drawImage(sprite, sX, sY, dX, dY, 0, 0, sprite.getWidth(), sprite.getHeight(), null);

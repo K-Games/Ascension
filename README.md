@@ -15,6 +15,8 @@ Inspired by Action RPGs and Metroidvanias. A game dedicated about its gameplay.
 ### Gameplay Changes
 
 ### Client Changes
+* Fixed unable to draw ingame equips without offsets set in its item data.
+* Fixed sword attack animation having 1 extra frame.
 
 ### Server Changes
 
