@@ -92,7 +92,7 @@ public class ItemEquip implements Item {
     }
 
     private static void loadItemData() {
-        System.out.println("Loading Item Data...");
+        Globals.log(ItemEquip.class, "Loading Item Data...", Globals.LOG_TYPE_DATA, true);
         System.out.print("[");
         for (final int itemCode : Globals.ITEM_CODES) {
             System.out.print(itemCode + ",");

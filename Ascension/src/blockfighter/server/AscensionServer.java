@@ -42,13 +42,13 @@ public class AscensionServer {
     }
 
     public void shutdown() {
-        System.out.println("Shutting down server...");
+        Globals.log(AscensionServer.class, "Shutting down server...", Globals.LOG_TYPE_DATA, true);
         SERVER.shutdown();
         PACKETSENDER_SCHEDULER.shutdown();
         LOGIC_SCHEDULER.shutdown();
         SERVER_ROOMS = null;
         System.gc();
-        System.out.println("Server shut down.");
+        Globals.log(AscensionServer.class, "Server shut down", Globals.LOG_TYPE_DATA, true);
     }
 
     public void launch(final String[] args) {

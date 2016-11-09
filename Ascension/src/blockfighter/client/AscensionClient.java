@@ -101,7 +101,7 @@ public class AscensionClient {
                         try {
                             int port = Integer.parseInt(args[i + 1]);
                             if (port > 0 && port <= 65535) {
-                                System.out.println("Setting server connection TCP port to " + port);
+                                Globals.log(AscensionClient.class, "Setting server connection TCP port to " + port, Globals.LOG_TYPE_DATA, true);
                                 Globals.SERVER_TCP_PORT = port;
                             } else {
                                 System.err.println("-port Specify a valid port between 1 to 65535");
@@ -116,7 +116,7 @@ public class AscensionClient {
                         try {
                             int port = Integer.parseInt(args[i + 1]);
                             if (port > 0 && port <= 65535) {
-                                System.out.println("Setting server connection UDP port to " + port);
+                                Globals.log(AscensionClient.class, "Setting server connection UDP port to " + port, Globals.LOG_TYPE_DATA, true);
                                 Globals.SERVER_UDP_PORT = port;
                             } else {
                                 System.err.println("-port Specify a valid port between 1 to 65535");

@@ -987,7 +987,7 @@ public class Player extends Thread implements GameEntity {
 
     public void giveDrop(final double lvl) {
         for (int equipCode : Globals.ITEM_CODES) {
-            if (Globals.rng(100) < 100) {
+            if (Globals.rng(100) < 2) {
                 final byte[] bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_INT * 2];
                 bytes[0] = Globals.DATA_PLAYER_GIVEDROP;
 
