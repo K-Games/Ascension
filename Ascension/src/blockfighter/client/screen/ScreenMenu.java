@@ -1,6 +1,6 @@
 package blockfighter.client.screen;
 
-import blockfighter.client.Globals;
+import blockfighter.shared.Globals;
 import blockfighter.client.SaveData;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.client.entities.particles.ParticleMenuSmoke;
@@ -59,7 +59,7 @@ public abstract class ScreenMenu extends Screen {
     @Override
     public void update() {
         final long now = logic.getTime(); // Get time now
-        if (now - this.lastUpdateTime >= Globals.LOGIC_UPDATE) {
+        if (now - this.lastUpdateTime >= Globals.CLIENT_LOGIC_UPDATE) {
             updateParticles(particles);
             this.lastUpdateTime = now;
             if (fadeIn) {

@@ -1,6 +1,6 @@
 package blockfighter.client.entities.particles;
 
-import blockfighter.client.Globals;
+import blockfighter.shared.Globals;
 import java.awt.Color;
 import java.awt.Graphics2D;
 

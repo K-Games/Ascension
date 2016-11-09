@@ -1,9 +1,9 @@
 package blockfighter.client.entities.player.skills;
 
-import blockfighter.client.Globals;
+import blockfighter.client.AscensionClient;
 import blockfighter.client.LogicModule;
-import blockfighter.client.Main;
 import blockfighter.client.entities.items.ItemEquip;
+import blockfighter.shared.Globals;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -63,7 +63,7 @@ public abstract class Skill {
             PASSIVE_STATIC = 0x1D;
 
     public static void init() {
-        logic = Main.getLogicModule();
+        logic = AscensionClient.getLogicModule();
     }
 
     public void draw(final Graphics2D g, final int x, final int y) {

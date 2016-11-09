@@ -1,6 +1,6 @@
 package blockfighter.client.maps;
 
-import blockfighter.client.Globals;
+import blockfighter.shared.Globals;
 import blockfighter.client.entities.particles.Particle;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
@@ -46,7 +46,7 @@ public abstract class GameMap {
 
     public void update() {
         final long now = System.nanoTime(); // Get time now
-        if (now - this.lastUpdateTime >= Globals.LOGIC_UPDATE) {
+        if (now - this.lastUpdateTime >= Globals.CLIENT_LOGIC_UPDATE) {
             updateParticles();
             this.lastUpdateTime = now;
         }

@@ -8,7 +8,7 @@ public class FocusHandler implements FocusListener {
     private static LogicModule logic = null;
 
     public static void init() {
-        logic = Main.getLogicModule();
+        logic = AscensionClient.getLogicModule();
     }
 
     @Override

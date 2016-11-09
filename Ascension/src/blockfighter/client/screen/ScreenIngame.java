@@ -1,6 +1,6 @@
 package blockfighter.client.screen;
 
-import blockfighter.client.Globals;
+import blockfighter.shared.Globals;
 import blockfighter.client.SaveData;
 import blockfighter.client.entities.emotes.Emote;
 import blockfighter.client.entities.emotes.EmoteAlert;
@@ -124,7 +124,7 @@ public class ScreenIngame extends Screen {
             this.lastSendKeyTime = now;
         }
 
-        if (now - this.lastUpdateTime >= Globals.LOGIC_UPDATE) {
+        if (now - this.lastUpdateTime >= Globals.CLIENT_LOGIC_UPDATE) {
             updateIngameNumber();
             updateParticles(this.particles);
             updatePlayers();

@@ -8,7 +8,7 @@ public class KeyHandler implements KeyListener {
     private static LogicModule logic = null;
 
     public static void init() {
-        logic = Main.getLogicModule();
+        logic = AscensionClient.getLogicModule();
     }
 
     @Override

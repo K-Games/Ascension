@@ -1,6 +1,6 @@
 package blockfighter.client.screen;
 
-import blockfighter.client.Globals;
+import blockfighter.shared.Globals;
 import blockfighter.client.entities.particles.Particle;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -32,7 +32,7 @@ public class ScreenTitle extends Screen {
             int transparency = (int) (255 * Globals.nsToMs(now - fadeOutStart) / 2000f);
             fadeOutColor = new Color(0, 0, 0, (transparency < 0) ? 0 : transparency);
         }
-        if (now - this.lastUpdateTime >= Globals.LOGIC_UPDATE) {
+        if (now - this.lastUpdateTime >= Globals.CLIENT_LOGIC_UPDATE) {
             bg1y--;
             bg2y--;
             if (bg1y <= -720) {

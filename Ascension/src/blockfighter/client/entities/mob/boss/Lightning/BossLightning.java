@@ -1,7 +1,7 @@
 package blockfighter.client.entities.mob.boss.Lightning;
 
-import blockfighter.client.Globals;
 import blockfighter.client.entities.mob.Mob;
+import blockfighter.shared.Globals;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -90,7 +90,7 @@ public class BossLightning extends Mob {
         if (SPRITE == null) {
             return;
         }
-        System.out.println("Unloaded Lightning Assets...");
+        Globals.log(BossLightning.class, "Unloaded Lightning Assets...", Globals.LOG_TYPE_DATA, true);
         ParticleAmbient.unload();
         ParticleBolt.unload();
         for (int i = 0; i < SPRITE.length; i++) {

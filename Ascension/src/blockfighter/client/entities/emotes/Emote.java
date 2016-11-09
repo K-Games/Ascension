@@ -1,9 +1,9 @@
 package blockfighter.client.entities.emotes;
 
-import blockfighter.client.Globals;
+import blockfighter.client.AscensionClient;
 import blockfighter.client.LogicModule;
-import blockfighter.client.Main;
 import blockfighter.client.entities.player.Player;
+import blockfighter.shared.Globals;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
@@ -28,7 +28,7 @@ public abstract class Emote extends Thread {
     protected int duration;
 
     public static void init() {
-        logic = Main.getLogicModule();
+        logic = AscensionClient.getLogicModule();
 
         EMOTE_SPRITE_FOLDER[Globals.EMOTE_ALERT] = "alert";
         EMOTE_FRAMES[Globals.EMOTE_ALERT] = 1;
@@ -43,7 +43,7 @@ public abstract class Emote extends Thread {
     }
 
     public static void unloadEmotes() {
-        System.out.println("Unloading Emotes...");
+        Globals.log(Emote.class, "Unloading Emotes...", Globals.LOG_TYPE_DATA, true);
         for (int i = 0; EMOTE_SPRITE != null && i < EMOTE_SPRITE.length; i++) {
             for (int j = 0; EMOTE_SPRITE[i] != null && j < EMOTE_SPRITE[i].length; j++) {
                 EMOTE_SPRITE[i][j] = null;
@@ -59,7 +59,7 @@ public abstract class Emote extends Thread {
         if (LOADED) {
             return;
         }
-        System.out.println("Loading Emotes...");
+        Globals.log(Emote.class, "Loading Emotes...", Globals.LOG_TYPE_DATA, true);
         LOADED = true;
         EMOTE_SPRITE = new BufferedImage[Globals.NUM_EMOTES][];
         for (int emoteID = 0; emoteID < EMOTE_SPRITE.length; emoteID++) {

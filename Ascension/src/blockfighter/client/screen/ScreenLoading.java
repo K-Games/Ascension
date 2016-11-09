@@ -1,11 +1,11 @@
 package blockfighter.client.screen;
 
-import blockfighter.client.Globals;
 import blockfighter.client.entities.emotes.Emote;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.client.maps.GameMap;
 import blockfighter.client.maps.GameMapArena;
 import blockfighter.client.maps.GameMapFloor1;
+import blockfighter.shared.Globals;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
@@ -22,7 +22,7 @@ public class ScreenLoading extends ScreenMenu {
         Particle.loadParticles();
         this.particlesReady = true;
         Emote.loadEmotes();
-        
+
         switch (mapID) {
             case 0:
                 this.map = new GameMapArena();
@@ -53,7 +53,7 @@ public class ScreenLoading extends ScreenMenu {
     public void draw(final Graphics2D g) {
         final BufferedImage bg = Globals.MENU_BG[0];
         if (this.particlesReady && !this.particlesRendered) {
-            System.out.println("Prerendering Particles...");
+            Globals.log(ScreenLoading.class, "Prerendering Particles...", Globals.LOG_TYPE_DATA, true);
             for (int i = 0; i < Globals.NUM_PARTICLE_EFFECTS; i++) {
                 if (Particle.getParticleSprites()[i] != null) {
                     for (final BufferedImage sprite : Particle.getParticleSprites()[i]) {
@@ -65,7 +65,7 @@ public class ScreenLoading extends ScreenMenu {
         }
 
         if (this.mapAssetsReady && !this.mapAssetsRendered) {
-            System.out.println("Prerendering Map Assets...");
+            Globals.log(ScreenLoading.class, "Prerendering Map Assets...", Globals.LOG_TYPE_DATA, true);
             this.map.prerender(g);
             this.mapAssetsRendered = true;
         }

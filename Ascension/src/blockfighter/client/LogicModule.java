@@ -5,6 +5,7 @@ import blockfighter.client.net.GameClient;
 import blockfighter.client.screen.Screen;
 import blockfighter.client.screen.ScreenIngame;
 import blockfighter.client.screen.ScreenServerList;
+import blockfighter.shared.Globals;
 
 public class LogicModule implements Runnable {
 
@@ -27,7 +28,7 @@ public class LogicModule implements Runnable {
             this.currentTime = System.nanoTime();
             this.screen.update();
         } catch (final Exception ex) {
-            System.err.println(this.getClass().getCanonicalName() + ": " + ex.getLocalizedMessage() + "@" + ex.getStackTrace()[0]);
+            Globals.logError(ex.getStackTrace()[0].toString(), ex, true);
         }
     }
 

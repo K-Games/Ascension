@@ -1,9 +1,9 @@
 package blockfighter.client.maps;
 
-import blockfighter.client.Globals;
 import blockfighter.client.entities.mob.boss.Lightning.BossLightning;
 import blockfighter.client.entities.mob.boss.Lightning.ParticleAmbient;
 import blockfighter.client.entities.mob.boss.Lightning.ParticleBolt;
+import blockfighter.shared.Globals;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
@@ -50,10 +50,10 @@ public class GameMapFloor1 extends GameMap {
 
     @Override
     public void prerender(final Graphics2D g) {
-        System.out.println("Prerendering Floor 1 Particles");
+        Globals.log(GameMapFloor1.class, "Prerendering Floor 1 Particles", Globals.LOG_TYPE_DATA, true);
         ParticleAmbient.prerender(g);
         ParticleBolt.prerender(g);
-        System.out.println("Prerendering Mob Assets");
+        Globals.log(GameMapFloor1.class, "Prerendering Mob Assets", Globals.LOG_TYPE_DATA, true);
         BossLightning.prerender(g);
     }
 

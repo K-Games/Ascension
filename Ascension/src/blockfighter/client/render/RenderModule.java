@@ -1,7 +1,7 @@
 package blockfighter.client.render;
 
 import blockfighter.client.LogicModule;
-import blockfighter.client.Main;
+import blockfighter.client.AscensionClient;
 
 public class RenderModule implements Runnable {
 
@@ -16,7 +16,7 @@ public class RenderModule implements Runnable {
     }
 
     public static void init() {
-        logic = Main.getLogicModule();
+        logic = AscensionClient.getLogicModule();
     }
 
     @Override

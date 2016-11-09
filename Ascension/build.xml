@@ -17,11 +17,19 @@
             <copy todir="${dist.dir}/Ascension-Release-Multiplatform/resources" >
                 <fileset dir="resources" includes="**"/>
             </copy>
+             <copy todir="${dist.dir}/AscensionServer/resources/itemdata/equip" >
+                <fileset dir="resources/itemdata/equip" includes="**"/>
+            </copy>
         </target>
         <target name="-post-jar">
             <delete file="${dist.dir}/README.TXT"/>
             <copy file="${dist.dir}/bin.jar" tofile="${dist.dir}/Ascension-Release-Win/bin/bin.jar" />
+            <copy file="${dist.dir}/bin.jar" tofile="${dist.dir}/AscensionServer/AscensionServer.jar" />
             <move file="${dist.dir}/bin.jar" tofile="${dist.dir}/Ascension-Release-Multiplatform/Ascension.jar" />
+            <copy todir="${dist.dir}/AscensionServer/lib" >
+                <fileset dir="${dist.dir}/lib" includes="**"/>
+            </copy>
+
             <copy todir="${dist.dir}/Ascension-Release-Win/bin/lib" >
                 <fileset dir="${dist.dir}/lib" includes="**"/>
             </copy>

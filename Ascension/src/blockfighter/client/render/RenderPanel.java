@@ -1,6 +1,6 @@
 package blockfighter.client.render;
 
-import blockfighter.client.Globals;
+import blockfighter.shared.Globals;
 import blockfighter.client.screen.Screen;
 import java.awt.AWTException;
 import java.awt.Color;

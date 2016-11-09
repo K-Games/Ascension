@@ -1,5 +1,6 @@
 package blockfighter.client;
 
+import blockfighter.shared.Globals;
 import paulscode.sound.SoundSystemConfig;
 import paulscode.sound.SoundSystemJPCT;
 
@@ -44,7 +45,7 @@ public class SoundModule implements Runnable {
             this.soundModule.backgroundMusic(Globals.SOUND_BGM[bgmID], Globals.SOUND_BGM[bgmID]);
             currentBGM = bgmID;
             this.soundModule.setVolume("bgm", 1f);
-            System.out.println("Playing " + Globals.SOUND_BGM[bgmID]);
+            Globals.log(SoundModule.class, "Playing " + Globals.SOUND_BGM[bgmID], Globals.LOG_TYPE_DATA, true);
         }
     }
 

@@ -1,12 +1,12 @@
 package blockfighter.client.net;
 
-import blockfighter.client.Globals;
 import blockfighter.client.LogicModule;
 import blockfighter.client.entities.emotes.Emote;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.client.screen.ScreenIngame;
 import blockfighter.client.screen.ScreenLoading;
 import blockfighter.client.screen.ScreenServerList;
+import blockfighter.shared.Globals;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Listener;
@@ -48,7 +48,7 @@ public class GameClient extends Thread {
         this.receiver = new PacketReceiver();
         client.addListener(new Listener.ThreadedListener(this.receiver));
 
-        System.out.println("Connecting to " + Globals.SERVER_ADDRESS);
+        Globals.log(GameClient.class, "Connecting to " + Globals.SERVER_ADDRESS, Globals.LOG_TYPE_DATA, true);
         try {
             client.connect(5000, Globals.SERVER_ADDRESS, Globals.SERVER_TCP_PORT);
             PacketSender.sendPlayerLogin(logic.getSelectedRoom(), logic.getSelectedChar());
@@ -101,7 +101,7 @@ public class GameClient extends Thread {
         }
 
         while (!this.loggedIn && attempts < 5) {
-            System.out.println("Attempting to login with character. " + (attempts + 1) + "/5");
+            Globals.log(GameClient.class, "Attempting to login with character. " + (attempts + 1) + "/5", Globals.LOG_TYPE_DATA, true);
             PacketSender.sendPlayerCreate(logic.getSelectedRoom(), logic.getSelectedChar());
             attempts++;
             synchronized (this) {
@@ -133,7 +133,7 @@ public class GameClient extends Thread {
                 } catch (final InterruptedException e) {
                 }
             }
-            System.out.println("Finished Loading");
+            Globals.log(GameClient.class, "Finished loading.", Globals.LOG_TYPE_DATA, true);
             ScreenIngame ingameScreen = new ScreenIngame(size, loading.getLoadedMap(), this);
             logic.setScreen(ingameScreen);
             PacketSender.sendGetAll(logic.getSelectedRoom(), key);

@@ -1,9 +1,9 @@
 package blockfighter.client.entities.particles;
 
-import blockfighter.client.Globals;
+import blockfighter.client.AscensionClient;
 import blockfighter.client.LogicModule;
-import blockfighter.client.Main;
 import blockfighter.client.entities.player.Player;
+import blockfighter.shared.Globals;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
@@ -31,7 +31,7 @@ public abstract class Particle extends Thread {
     protected int duration;
 
     public static void init() {
-        logic = Main.getLogicModule();
+        logic = AscensionClient.getLogicModule();
         PARTICLE_SPRITE_FOLDER[Globals.PARTICLE_SWORD_SLASH1] = "slash1";
         PARTICLE_SPRITE_FOLDER[Globals.PARTICLE_SWORD_SLASH2] = "slash2";
         PARTICLE_SPRITE_FOLDER[Globals.PARTICLE_SWORD_SLASH3] = "slash3";
@@ -118,7 +118,7 @@ public abstract class Particle extends Thread {
     }
 
     public static void unloadParticles() {
-        System.out.println("Unloading Particles...");
+        Globals.log(Particle.class, "Unloading Particles...", Globals.LOG_TYPE_DATA, true);
         for (int i = 0; PARTICLE_SPRITE != null && i < PARTICLE_SPRITE.length; i++) {
             for (int j = 0; PARTICLE_SPRITE[i] != null && j < PARTICLE_SPRITE[i].length; j++) {
                 PARTICLE_SPRITE[i][j] = null;
@@ -134,7 +134,7 @@ public abstract class Particle extends Thread {
         if (LOADED) {
             return;
         }
-        System.out.println("Loading Particles...");
+        Globals.log(Particle.class, "Loading Particles...", Globals.LOG_TYPE_DATA, true);
         LOADED = true;
         PARTICLE_SPRITE = new BufferedImage[Globals.NUM_PARTICLE_EFFECTS][];
         for (int spriteID = 0; spriteID < PARTICLE_SPRITE.length; spriteID++) {

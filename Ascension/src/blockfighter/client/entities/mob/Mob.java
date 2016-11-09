@@ -1,8 +1,8 @@
 package blockfighter.client.entities.mob;
 
-import blockfighter.client.Globals;
+import blockfighter.shared.Globals;
 import blockfighter.client.LogicModule;
-import blockfighter.client.Main;
+import blockfighter.client.AscensionClient;
 import blockfighter.client.entities.mob.boss.Lightning.BossLightning;
 import blockfighter.client.net.GameClient;
 import blockfighter.client.net.PacketSender;
@@ -41,7 +41,7 @@ public abstract class Mob extends Thread {
     }
 
     public static void init() {
-        logic = Main.getLogicModule();
+        logic = AscensionClient.getLogicModule();
     }
 
     public Point getPos() {

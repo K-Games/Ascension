@@ -1,8 +1,8 @@
 package blockfighter.client.entities.notification;
 
-import blockfighter.client.Globals;
+import blockfighter.shared.Globals;
 import blockfighter.client.LogicModule;
-import blockfighter.client.Main;
+import blockfighter.client.AscensionClient;
 import blockfighter.client.entities.items.Item;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -33,7 +33,7 @@ public class Notification extends Thread {
     }
 
     public static void init() {
-        logic = Main.getLogicModule();
+        logic = AscensionClient.getLogicModule();
     }
 
     @Override

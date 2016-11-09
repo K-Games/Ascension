@@ -1,17 +1,15 @@
 package blockfighter.client.entities.items;
 
-import blockfighter.client.Globals;
+import blockfighter.shared.Globals;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
-import java.util.HashSet;
 
 public class ItemUpgrade implements Item {
 
     public final static int ITEM_TOME = 100;
-    private final static HashSet<Integer> ITEM_UPGRADE_CODES = new HashSet<>();
     private final static HashMap<Integer, String> ITEM_NAMES = new HashMap<>();
     private final static HashMap<Integer, BufferedImage> ITEM_ICONS = new HashMap<>();
 
@@ -23,8 +21,6 @@ public class ItemUpgrade implements Item {
     }
 
     private static void loadUpgradeItems() {
-        ITEM_UPGRADE_CODES.add(100);
-
         ITEM_NAMES.put(ITEM_TOME, "Tome of Enhancement");
     }
 
@@ -64,7 +60,7 @@ public class ItemUpgrade implements Item {
     }
 
     public static boolean isValidItem(final int i) {
-        return ITEM_UPGRADE_CODES.contains(i);
+        return Globals.ITEM_UPGRADE_CODES.contains(i);
     }
 
     @Override

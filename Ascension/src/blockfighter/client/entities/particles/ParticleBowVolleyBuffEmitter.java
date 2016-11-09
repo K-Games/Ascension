@@ -1,6 +1,6 @@
 package blockfighter.client.entities.particles;
 
-import blockfighter.client.Globals;
+import blockfighter.shared.Globals;
 import blockfighter.client.entities.player.Player;
 import java.awt.Point;
 

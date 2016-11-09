@@ -1,6 +1,6 @@
 package blockfighter.client.entities.particles;
 
-import blockfighter.client.Globals;
+import blockfighter.shared.Globals;
 import static blockfighter.client.entities.particles.Particle.logic;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;

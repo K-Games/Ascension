@@ -1,6 +1,6 @@
 package blockfighter.client.entities.particles;
 
-import blockfighter.client.Globals;
+import blockfighter.shared.Globals;
 
 public class ParticleBowFrostArrowEmitter extends Particle {
 

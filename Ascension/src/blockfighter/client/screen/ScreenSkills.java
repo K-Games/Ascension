@@ -1,6 +1,6 @@
 package blockfighter.client.screen;
 
-import blockfighter.client.Globals;
+import blockfighter.shared.Globals;
 import blockfighter.client.SaveData;
 import blockfighter.client.entities.player.skills.Skill;
 import java.awt.Color;
