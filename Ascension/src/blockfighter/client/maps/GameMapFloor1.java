@@ -1,6 +1,6 @@
 package blockfighter.client.maps;
 
-import blockfighter.client.Globals;
+import blockfighter.shared.Globals;
 import blockfighter.client.entities.mob.boss.Lightning.BossLightning;
 import blockfighter.client.entities.mob.boss.Lightning.ParticleAmbient;
 import blockfighter.client.entities.mob.boss.Lightning.ParticleBolt;

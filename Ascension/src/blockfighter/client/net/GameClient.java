@@ -1,6 +1,6 @@
 package blockfighter.client.net;
 
-import blockfighter.client.Globals;
+import blockfighter.shared.Globals;
 import blockfighter.client.LogicModule;
 import blockfighter.client.entities.emotes.Emote;
 import blockfighter.client.entities.particles.Particle;

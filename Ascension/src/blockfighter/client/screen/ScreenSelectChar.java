@@ -1,7 +1,7 @@
 package blockfighter.client.screen;
 
-import blockfighter.client.Globals;
-import blockfighter.client.Main;
+import blockfighter.shared.Globals;
+import blockfighter.client.AscensionClient;
 import blockfighter.client.SaveData;
 import java.awt.Color;
 import java.awt.Font;
@@ -29,7 +29,7 @@ public class ScreenSelectChar extends ScreenMenu {
     private byte selectNum = -1;
 
     static {
-        CREATE_NAMEFIELD.addFocusListener(Main.FOCUS_HANDLER);
+        CREATE_NAMEFIELD.addFocusListener(AscensionClient.FOCUS_HANDLER);
         if (Globals.WINDOW_SCALE_ENABLED) {
             CREATE_NAMEFIELD.setBounds((int) (440 * Globals.WINDOW_SCALE), (int) (300 * Globals.WINDOW_SCALE), (int) (400 * Globals.WINDOW_SCALE), (int) (50 * Globals.WINDOW_SCALE));
             CREATE_NAMEFIELD.setFont(new Font(Globals.ARIAL_30PT.getFontName(), Globals.ARIAL_30PT.getStyle(), (int) (Globals.ARIAL_30PT.getSize() * Globals.WINDOW_SCALE)));

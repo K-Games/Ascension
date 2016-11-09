@@ -1,8 +1,8 @@
 package blockfighter.client.entities.particles;
 
-import blockfighter.client.Globals;
+import blockfighter.shared.Globals;
 import blockfighter.client.LogicModule;
-import blockfighter.client.Main;
+import blockfighter.client.AscensionClient;
 import blockfighter.client.entities.player.Player;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -31,7 +31,7 @@ public abstract class Particle extends Thread {
     protected int duration;
 
     public static void init() {
-        logic = Main.getLogicModule();
+        logic = AscensionClient.getLogicModule();
         PARTICLE_SPRITE_FOLDER[Globals.PARTICLE_SWORD_SLASH1] = "slash1";
         PARTICLE_SPRITE_FOLDER[Globals.PARTICLE_SWORD_SLASH2] = "slash2";
         PARTICLE_SPRITE_FOLDER[Globals.PARTICLE_SWORD_SLASH3] = "slash3";

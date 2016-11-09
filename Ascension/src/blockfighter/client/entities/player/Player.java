@@ -1,8 +1,8 @@
 package blockfighter.client.entities.player;
 
-import blockfighter.client.Globals;
+import blockfighter.shared.Globals;
 import blockfighter.client.LogicModule;
-import blockfighter.client.Main;
+import blockfighter.client.AscensionClient;
 import blockfighter.client.entities.items.ItemEquip;
 import blockfighter.client.net.PacketSender;
 import java.awt.Color;
@@ -42,7 +42,7 @@ public class Player extends Thread {
     }
 
     public static void init() {
-        logic = Main.getLogicModule();
+        logic = AscensionClient.getLogicModule();
     }
 
     public Point getPos() {

@@ -1,7 +1,7 @@
 package blockfighter.client.screen;
 
 import blockfighter.client.LogicModule;
-import blockfighter.client.Main;
+import blockfighter.client.AscensionClient;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.client.render.RenderPanel;
 import java.awt.Color;
@@ -35,7 +35,7 @@ public abstract class Screen implements KeyListener, MouseListener, MouseMotionL
     private static int numParticleKeys = 500;
 
     public static void init() {
-        logic = Main.getLogicModule();
+        logic = AscensionClient.getLogicModule();
         for (int key = 0; key < numParticleKeys; key++) {
             PARTICLE_KEYS.add(key);
         }

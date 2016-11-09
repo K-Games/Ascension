@@ -1,5 +1,6 @@
 package blockfighter.client;
 
+import blockfighter.shared.Globals;
 import paulscode.sound.SoundSystemConfig;
 import paulscode.sound.SoundSystemJPCT;
 

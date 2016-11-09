@@ -1,6 +1,6 @@
 package blockfighter.client.entities.mob.boss.Lightning;
 
-import blockfighter.client.Globals;
+import blockfighter.shared.Globals;
 import blockfighter.client.entities.mob.Mob;
 import java.awt.Color;
 import java.awt.Graphics2D;

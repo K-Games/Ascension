@@ -1,7 +1,7 @@
 package blockfighter.client.net;
 
 import blockfighter.client.LogicModule;
-import blockfighter.client.Main;
+import blockfighter.client.AscensionClient;
 import blockfighter.client.screen.ScreenIngame;
 import blockfighter.client.screen.ScreenLoading;
 import blockfighter.client.screen.ScreenServerList;
@@ -15,7 +15,7 @@ public class PacketReceiver extends Listener {
     private boolean isConnected = true;
 
     public static void init() {
-        logic = Main.getLogicModule();
+        logic = AscensionClient.getLogicModule();
     }
 
     @Override

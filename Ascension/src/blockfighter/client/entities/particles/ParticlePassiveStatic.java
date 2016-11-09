@@ -1,6 +1,6 @@
 package blockfighter.client.entities.particles;
 
-import blockfighter.client.Globals;
+import blockfighter.shared.Globals;
 import blockfighter.client.entities.player.Player;
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -32,7 +32,7 @@ public class ParticlePassiveStatic extends Particle {
             int distanceY = ((this.target.getY() - 75) - (this.owner.getY() - 75)) / this.lightningPointsY[0].length;
 
             this.colourIndex = Globals.rng(color.length);
-            this.drawWidth -= 3.0f / (this.duration / Globals.nsToMs((long) Globals.LOGIC_UPDATE));
+            this.drawWidth -= 3.0f / (this.duration / Globals.nsToMs((long) Globals.CLIENT_LOGIC_UPDATE));
             for (byte j = 0; j < this.lightningPointsX.length; j++) {
                 for (byte i = 0; i < this.lightningPointsX[j].length; i++) {
                     this.lightningPointsX[j][i] = (int) (this.owner.getX() + i * distanceX + Globals.rng(20) - 10);

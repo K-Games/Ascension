@@ -1,6 +1,6 @@
 package blockfighter.client.entities.particles;
 
-import blockfighter.client.Globals;
+import blockfighter.shared.Globals;
 import blockfighter.client.entities.player.Player;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -24,7 +24,7 @@ public class ParticleBowPowerCharge extends Particle {
         super.update();
         if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
             long durationLeft = this.duration - Globals.nsToMs(logic.getTime() - this.particleStartTime);
-            double numberOfTicks = durationLeft / Globals.nsToMs((long) Globals.LOGIC_UPDATE);
+            double numberOfTicks = durationLeft / Globals.nsToMs((long) Globals.CLIENT_LOGIC_UPDATE);
             if (numberOfTicks <= 1) {
                 this.x = owner.getX();
                 this.y = owner.getY() - 75;

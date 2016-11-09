@@ -9,7 +9,7 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
     private static LogicModule logic;
 
     public static void init() {
-        logic = Main.getLogicModule();
+        logic = AscensionClient.getLogicModule();
     }
 
     @Override

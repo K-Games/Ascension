@@ -1,6 +1,6 @@
 package blockfighter.client.net;
 
-import blockfighter.client.Globals;
+import blockfighter.shared.Globals;
 
 public class PacketHandler {
 

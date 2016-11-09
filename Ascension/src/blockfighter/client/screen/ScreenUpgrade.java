@@ -1,6 +1,6 @@
 package blockfighter.client.screen;
 
-import blockfighter.client.Globals;
+import blockfighter.shared.Globals;
 import blockfighter.client.SaveData;
 import blockfighter.client.entities.items.ItemEquip;
 import blockfighter.client.entities.items.ItemUpgrade;
@@ -79,7 +79,7 @@ public class ScreenUpgrade extends ScreenMenu {
     @Override
     public void update() {
         final long now = logic.getTime(); // Get time now
-        if (now - this.lastUpdateTime >= Globals.LOGIC_UPDATE) {
+        if (now - this.lastUpdateTime >= Globals.CLIENT_LOGIC_UPDATE) {
             if (this.upgrading) {
                 if (ItemUpgrade.rollUpgrade(this.c.getUpgrades()[this.selectUpgrade], this.c.getEquip()[this.selectEquip])) {
                     this.c.getEquip()[this.selectEquip].addUpgrade(1);

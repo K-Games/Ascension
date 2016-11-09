@@ -1,8 +1,8 @@
 package blockfighter.client.entities.emotes;
 
-import blockfighter.client.Globals;
+import blockfighter.shared.Globals;
 import blockfighter.client.LogicModule;
-import blockfighter.client.Main;
+import blockfighter.client.AscensionClient;
 import blockfighter.client.entities.player.Player;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -28,7 +28,7 @@ public abstract class Emote extends Thread {
     protected int duration;
 
     public static void init() {
-        logic = Main.getLogicModule();
+        logic = AscensionClient.getLogicModule();
 
         EMOTE_SPRITE_FOLDER[Globals.EMOTE_ALERT] = "alert";
         EMOTE_FRAMES[Globals.EMOTE_ALERT] = 1;

@@ -2,7 +2,6 @@ package blockfighter.client;
 
 import blockfighter.client.entities.items.Item;
 import blockfighter.client.entities.items.ItemEquip;
-import static blockfighter.client.entities.items.ItemEquip.ITEM_CODES;
 import blockfighter.client.entities.items.ItemUpgrade;
 import blockfighter.client.entities.player.skills.Skill;
 import blockfighter.client.entities.player.skills.SkillBowArc;
@@ -26,22 +25,21 @@ import blockfighter.client.entities.player.skills.SkillPassiveWillpower;
 import blockfighter.client.entities.player.skills.SkillShieldCharge;
 import blockfighter.client.entities.player.skills.SkillShieldDash;
 import blockfighter.client.entities.player.skills.SkillShieldFortify;
-import blockfighter.client.entities.player.skills.SkillShieldRoar;
 import blockfighter.client.entities.player.skills.SkillShieldMagnetize;
 import blockfighter.client.entities.player.skills.SkillShieldReflect;
+import blockfighter.client.entities.player.skills.SkillShieldRoar;
 import blockfighter.client.entities.player.skills.SkillSwordCinder;
 import blockfighter.client.entities.player.skills.SkillSwordGash;
 import blockfighter.client.entities.player.skills.SkillSwordPhantom;
 import blockfighter.client.entities.player.skills.SkillSwordSlash;
 import blockfighter.client.entities.player.skills.SkillSwordTaunt;
 import blockfighter.client.entities.player.skills.SkillSwordVorpal;
+import blockfighter.shared.Globals;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
 
 public class SaveData {
@@ -120,7 +118,7 @@ public class SaveData {
             addItem(new ItemUpgrade(ItemUpgrade.ITEM_TOME, (int) this.baseStats[Globals.STAT_LEVEL]));
         }
 
-        for (final int itemCode : ITEM_CODES) {
+        for (final int itemCode : Globals.ITEM_CODES) {
             final ItemEquip startEq = new ItemEquip(itemCode, this.baseStats[Globals.STAT_LEVEL], Globals.TEST_MAX_LEVEL);
             addItem(startEq);
         }
@@ -211,7 +209,7 @@ public class SaveData {
         try {
             FileUtils.writeByteArrayToFile(new File(saveNum + ".tcdat"), data);
         } catch (final IOException ex) {
-            Logger.getLogger(SaveData.class.getName()).log(Level.SEVERE, null, ex);
+            Globals.logError(ex.getStackTrace()[0].toString(), ex, true);
         }
     }
 

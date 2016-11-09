@@ -1,6 +1,6 @@
 package blockfighter.client.entities.emotes;
 
-import blockfighter.client.Globals;
+import blockfighter.shared.Globals;
 import blockfighter.client.entities.player.Player;
 import java.awt.Graphics2D;
 import java.awt.Point;

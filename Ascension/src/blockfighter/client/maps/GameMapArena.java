@@ -1,6 +1,6 @@
 package blockfighter.client.maps;
 
-import blockfighter.client.Globals;
+import blockfighter.shared.Globals;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 

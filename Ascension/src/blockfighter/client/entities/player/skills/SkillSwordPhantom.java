@@ -1,6 +1,6 @@
 package blockfighter.client.entities.player.skills;
 
-import blockfighter.client.Globals;
+import blockfighter.shared.Globals;
 
 public class SkillSwordPhantom extends Skill {
 

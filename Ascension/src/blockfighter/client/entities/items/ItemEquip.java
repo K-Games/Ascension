@@ -1,6 +1,6 @@
 package blockfighter.client.entities.items;
 
-import blockfighter.client.Globals;
+import blockfighter.shared.Globals;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -10,10 +10,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.io.LineIterator;
 import org.apache.commons.lang3.StringUtils;
 
 public class ItemEquip implements Item {
@@ -30,8 +28,6 @@ public class ItemEquip implements Item {
             UPGRADE_STAT_FLATBONUS = 0.75;
 
     private final static double NEWSTAT_BASEMULT_BONUS = 0.25D;
-
-    public final static HashSet<Integer> ITEM_CODES = new HashSet<>();
 
     private final static HashMap<Byte, String> ITEM_TYPENAME = new HashMap<>(13);
     private final static HashMap<Integer, String> ITEM_NAMES;
@@ -58,10 +54,9 @@ public class ItemEquip implements Item {
     static {
         loadItemTypeNames();
         loadTierColours();
-        loadItemCodes();
-        ITEM_NAMES = new HashMap<>(ITEM_CODES.size());
-        ITEM_ICONS = new HashMap<>(ITEM_CODES.size());
-        ITEM_DESC = new HashMap<>(ITEM_CODES.size());
+        ITEM_NAMES = new HashMap<>(Globals.ITEM_CODES.size());
+        ITEM_ICONS = new HashMap<>(Globals.ITEM_CODES.size());
+        ITEM_DESC = new HashMap<>(Globals.ITEM_CODES.size());
         loadItemData();
         loadItemDrawOffset();
     }
@@ -96,32 +91,10 @@ public class ItemEquip implements Item {
     public static void init() {
     }
 
-    private static void loadItemCodes() {
-        try {
-            InputStream itemFile = Globals.loadResourceAsStream("itemdata/equip/itemcodes.txt");
-            LineIterator it = IOUtils.lineIterator(itemFile, "UTF-8");
-            try {
-                while (it.hasNext()) {
-                    String line = it.nextLine();
-                    try {
-                        int itemcode = Integer.parseInt(line);
-                        ITEM_CODES.add(itemcode);
-                    } catch (NumberFormatException e) {
-                    }
-                }
-            } finally {
-                LineIterator.closeQuietly(it);
-            }
-        } catch (IOException e) {
-            System.err.println("Could not load item codes from data");
-            System.exit(1);
-        }
-    }
-
     private static void loadItemData() {
         System.out.println("Loading Item Data...");
         System.out.print("[");
-        for (final int itemCode : ITEM_CODES) {
+        for (final int itemCode : Globals.ITEM_CODES) {
             System.out.print(itemCode + ",");
             try {
                 InputStream itemFile = Globals.loadResourceAsStream("itemdata/equip/" + itemCode + ".txt");
@@ -663,7 +636,7 @@ public class ItemEquip implements Item {
     }
 
     public static boolean isValidItem(final int i) {
-        return ITEM_CODES.contains(i);
+        return Globals.ITEM_CODES.contains(i);
     }
 
     public double getBonusMult() {
