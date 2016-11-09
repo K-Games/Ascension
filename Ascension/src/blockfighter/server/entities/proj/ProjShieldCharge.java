@@ -1,6 +1,5 @@
 package blockfighter.server.entities.proj;
 
-import blockfighter.shared.Globals;
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.buff.BuffKnockback;
 import blockfighter.server.entities.buff.BuffStun;
@@ -8,6 +7,7 @@ import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.player.skills.Skill;
+import blockfighter.shared.Globals;
 import java.awt.geom.Rectangle2D;
 
 public class ProjShieldCharge extends Projectile {
@@ -37,7 +37,7 @@ public class ProjShieldCharge extends Projectile {
         final boolean isCrit = owner.rollCrit();
         final int damage = calculateDamage(isCrit);
         target.queueDamage(new Damage(damage, true, owner, target, isCrit, this.hitbox[0], target.getHitbox()));
-        target.queueBuff(new BuffKnockback(this.logic, 300, (owner.getFacing() == Globals.RIGHT) ? 4 : -4, -5, owner, target));
+        target.queueBuff(new BuffKnockback(this.logic, 300, (owner.getFacing() == Globals.RIGHT) ? 20 : -20, -10, owner, target));
         if (owner.isSkillMaxed(Skill.SHIELD_CHARGE)) {
             target.queueBuff(new BuffStun(this.logic, 1000));
         }

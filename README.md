@@ -13,6 +13,7 @@ Inspired by Action RPGs and Metroidvanias. A game dedicated about its gameplay.
 
 ## Version 0.21 Release
 ### Gameplay Changes
+* Blade Flurry, Rend, Firebrand, Aggression, Rapid Fire, Vortex Bolts, Overwhelm, Magnetize have increased knockback.
 
 ### Client Changes
 

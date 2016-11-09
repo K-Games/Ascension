@@ -1,11 +1,12 @@
 package blockfighter.server.entities.proj;
 
-import blockfighter.shared.Globals;
 import blockfighter.server.LogicModule;
+import blockfighter.server.entities.buff.BuffKnockback;
 import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.player.skills.Skill;
+import blockfighter.shared.Globals;
 import java.awt.geom.Rectangle2D;
 
 public class ProjSwordGash extends Projectile {
@@ -34,6 +35,7 @@ public class ProjSwordGash extends Projectile {
         final boolean isCrit = owner.rollCrit();
         final int damage = calculateDamage(isCrit);
         target.queueDamage(new Damage(damage, true, owner, target, isCrit, this.hitbox[0], target.getHitbox()));
+        target.queueBuff(new BuffKnockback(this.logic, 100, (owner.getFacing() == Globals.RIGHT) ? 4 : -4, -1, owner, target));
         if (!this.healed && owner.isSkillMaxed(Skill.SWORD_GASH)) {
             final double heal = owner.getStats()[Globals.STAT_MAXHP] * 0.0025;
             owner.queueHeal((int) heal);
