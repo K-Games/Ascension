@@ -1,7 +1,7 @@
 package blockfighter.client.screen;
 
-import blockfighter.shared.Globals;
 import blockfighter.client.entities.items.ItemEquip;
+import blockfighter.shared.Globals;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -11,7 +11,7 @@ public class ScreenSpriteTest extends ScreenMenu {
 
     private byte standFrame = 0;
 
-    private final byte jumpFrame = 0;
+    private byte jumpFrame = 0;
 
     private byte walkFrame = 0;
 
@@ -42,6 +42,11 @@ public class ScreenSpriteTest extends ScreenMenu {
                 this.walkFrame++;
                 if (this.walkFrame == Globals.CHAR_SPRITE[Globals.PLAYER_ANIM_STATE_WALK].length) {
                     this.walkFrame = 0;
+                }
+
+                this.jumpFrame++;
+                if (this.jumpFrame == Globals.CHAR_SPRITE[Globals.PLAYER_ANIM_STATE_JUMP].length) {
+                    this.jumpFrame = 0;
                 }
 
                 this.buffFrame++;
