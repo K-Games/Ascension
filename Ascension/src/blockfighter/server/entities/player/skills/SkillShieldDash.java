@@ -5,16 +5,79 @@ import blockfighter.server.entities.buff.BuffShieldDash;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.net.PacketSender;
 import blockfighter.shared.Globals;
+import java.util.HashMap;
 
 public class SkillShieldDash extends Skill {
 
+    private static final byte SKILL_CODE = Globals.SHIELD_DASH;
+
+    private static final boolean IS_PASSIVE;
+    private static final byte REQ_WEAPON;
+    private static final double MAX_COOLDOWN;
+
+    private static final double BASE_VALUE, MULT_VALUE;
+    private static final byte REQ_EQUIP_SLOT = Globals.ITEM_OFFHAND;
+    private static final byte PLAYER_STATE = Player.PLAYER_STATE_SHIELD_DASH;
+    private static final int SKILL_DURATION = 400;
+
+    static {
+        String[] data = Globals.loadSkillData(SKILL_CODE);
+        HashMap<String, Integer> dataHeaders = Globals.getDataHeaders(data, null);
+
+        REQ_WEAPON = Globals.loadReqWeapon(data, dataHeaders);
+        MAX_COOLDOWN = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MAXCOOLDOWN_HEADER);
+        BASE_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_BASEVALUE_HEADER);
+        MULT_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MULTVALUE_HEADER);
+        IS_PASSIVE = Globals.loadBooleanValue(data, dataHeaders, Globals.SKILL_PASSIVE_HEADER);
+    }
+
     public SkillShieldDash(final LogicModule l) {
         super(l);
-        this.skillCode = SHIELD_DASH;
-        this.maxCooldown = 13000;
-        this.endDuration = 400;
-        this.playerState = Player.PLAYER_STATE_SHIELD_DASH;
-        this.reqEquipSlot = Globals.ITEM_OFFHAND;
+    }
+
+    @Override
+    public byte castPlayerState() {
+        return PLAYER_STATE;
+    }
+
+    @Override
+    public double getBaseValue() {
+        return BASE_VALUE;
+    }
+
+    @Override
+    public double getMaxCooldown() {
+        return MAX_COOLDOWN;
+    }
+
+    @Override
+    public double getMultValue() {
+        return MULT_VALUE;
+    }
+
+    @Override
+    public Byte getReqEquipSlot() {
+        return null;
+    }
+
+    @Override
+    public Byte getReqWeapon() {
+        return null;
+    }
+
+    @Override
+    public byte getSkillCode() {
+        return SKILL_CODE;
+    }
+
+    @Override
+    public int getSkillDuration() {
+        return SKILL_DURATION;
+    }
+
+    @Override
+    public boolean isPassive() {
+        return IS_PASSIVE;
     }
 
     @Override
@@ -23,7 +86,7 @@ public class SkillShieldDash extends Skill {
         if (!player.isStunned() && !player.isKnockback()) {
             player.setXSpeed((player.getFacing() == Globals.RIGHT) ? 8.5 : -8.5);
         }
-        if (player.isSkillMaxed(Skill.SHIELD_DASH) && !player.isInvulnerable()) {
+        if (player.isSkillMaxed(Globals.SHIELD_DASH) && !player.isInvulnerable()) {
             player.setInvulnerable(true);
         }
 
@@ -33,11 +96,11 @@ public class SkillShieldDash extends Skill {
             player.incrementSkillCounter();
         }
 
-        if (player.getSkillCounter() == 1 && duration >= this.endDuration) {
+        if (player.getSkillCounter() == 1 && duration >= getSkillDuration()) {
             player.incrementSkillCounter();
-            player.queueBuff(new BuffShieldDash(this.logic, 5000, 0.01 + 0.003 * player.getSkillLevel(Skill.SHIELD_DASH), player));
+            player.queueBuff(new BuffShieldDash(this.logic, 5000, getBaseValue() + getMultValue() * player.getSkillLevel(Globals.SHIELD_DASH), player));
             PacketSender.sendParticle(this.logic.getRoom().getRoomNumber(), Globals.PARTICLE_SHIELD_DASHBUFF, player.getKey());
         }
-        player.updateSkillEnd(duration, this.endDuration, true, true);
+        player.updateSkillEnd(duration, getSkillDuration(), true, true);
     }
 }

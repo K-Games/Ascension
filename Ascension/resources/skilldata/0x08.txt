@@ -1,0 +1,19 @@
+[name]
+Rapid Fire
+[desc]
+1
+Fire 3 shots over 0.5 seconds.
+[reqweapon]
+11
+[maxcooldown]
+700
+[basevalue]
+0.8
+[multvalue]
+0.02
+[passive]
+false
+[maxleveldamagemult]
+2
+[maxlevelbonuschance]
+50

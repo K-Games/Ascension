@@ -1,0 +1,20 @@
+[name]
+Defender Mastery
+[desc]
+2
+When equipped with a Sword and Shield you deal
+additional damage and take reduced damage.
+[reqweapon]
+-1
+[maxcooldown]
+0
+[basevalue]
+0.09
+[multvalue]
+0.002
+[passive]
+true
+[basedmgreduct]
+0.05
+[multdmgreduct]
+0.005

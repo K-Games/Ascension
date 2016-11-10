@@ -1,0 +1,19 @@
+[name]
+Fortify
+[desc]
+1
+Reduce damage taken for 5 seconds.
+[reqweapon]
+-1
+[maxcooldown]
+24000
+[basevalue]
+0.01
+[multvalue]
+0.005
+[passive]
+false
+[buffduration]
+5000
+[heal]
+0.075

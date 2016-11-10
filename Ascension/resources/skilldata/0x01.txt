@@ -1,0 +1,17 @@
+[name]
+Phantom Reaper
+[desc]
+3
+Teleport multiple times to a random enemy
+within a 350 radius and strike in their direction.
+Invulnerable during the skill duration.
+[reqweapon]
+0
+[maxcooldown]
+20000
+[basevalue]
+0.75
+[multvalue]
+0.02
+[passive]
+false

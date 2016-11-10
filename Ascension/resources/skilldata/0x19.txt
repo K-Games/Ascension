@@ -1,0 +1,16 @@
+[name]
+Power Of Will
+[desc]
+2
+Increase damage dealt based on your remaining HP.
+More remaining HP grants more damage increase.
+[reqweapon]
+-1
+[maxcooldown]
+0
+[basevalue]
+0.05
+[multvalue]
+0.005
+[passive]
+true

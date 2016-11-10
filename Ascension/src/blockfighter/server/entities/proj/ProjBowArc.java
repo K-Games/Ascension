@@ -5,7 +5,7 @@ import blockfighter.server.entities.buff.BuffKnockback;
 import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
-import blockfighter.server.entities.player.skills.Skill;
+import blockfighter.server.entities.player.skills.SkillBowArc;
 import blockfighter.shared.Globals;
 import java.awt.geom.Rectangle2D;
 
@@ -25,7 +25,9 @@ public class ProjBowArc extends Projectile {
     @Override
     public int calculateDamage(final boolean isCrit) {
         final Player owner = getOwner();
-        double damage = owner.rollDamage() * (.8 + .02 * owner.getSkillLevel(Skill.BOW_ARC));
+        double baseValue = owner.getSkill(Globals.BOW_ARC).getBaseValue();
+        double multValue = owner.getSkill(Globals.BOW_ARC).getMultValue();
+        double damage = owner.rollDamage() * (baseValue + multValue * owner.getSkillLevel(Globals.BOW_ARC));
         damage = (isCrit) ? owner.criticalDamage(damage) : damage;
         return (int) damage;
     }
@@ -36,10 +38,12 @@ public class ProjBowArc extends Projectile {
         final boolean isCrit = owner.rollCrit();
         final int damage = calculateDamage(isCrit);
         target.queueDamage(new Damage(damage, true, owner, target, isCrit, this.hitbox[0], target.getHitbox()));
-        if (owner.isSkillMaxed(Skill.BOW_ARC)) {
-            double heal = damage * 0.05;
-            if (heal > owner.getStats()[Globals.STAT_MAXHP] * 1 / 30D) {
-                heal = owner.getStats()[Globals.STAT_MAXHP] * 1 / 30D;
+        if (owner.isSkillMaxed(Globals.BOW_ARC)) {
+            double lifesteal = ((SkillBowArc) owner.getSkill(Globals.BOW_ARC)).getLifesteal() / 3;
+            double maxLifesteal = ((SkillBowArc) owner.getSkill(Globals.BOW_ARC)).getMaxLifesteal() / 3;
+            double heal = damage * lifesteal;
+            if (heal > owner.getStats()[Globals.STAT_MAXHP] * maxLifesteal) {
+                heal = owner.getStats()[Globals.STAT_MAXHP] * maxLifesteal;
             }
             owner.queueHeal((int) heal);
         }
@@ -52,10 +56,12 @@ public class ProjBowArc extends Projectile {
         final boolean isCrit = owner.rollCrit();
         final int damage = calculateDamage(isCrit);
         target.queueDamage(new Damage(damage, true, owner, target, isCrit, this.hitbox[0], target.getHitbox()));
-        if (owner.isSkillMaxed(Skill.BOW_ARC)) {
-            double heal = damage * 0.05;
-            if (heal > owner.getStats()[Globals.STAT_MAXHP] * 1 / 30D) {
-                heal = owner.getStats()[Globals.STAT_MAXHP] * 1 / 30D;
+        if (owner.isSkillMaxed(Globals.BOW_ARC)) {
+            double lifesteal = ((SkillBowArc) owner.getSkill(Globals.BOW_ARC)).getLifesteal() / 3;
+            double maxLifesteal = ((SkillBowArc) owner.getSkill(Globals.BOW_ARC)).getMaxLifesteal() / 3;
+            double heal = damage * lifesteal;
+            if (heal > owner.getStats()[Globals.STAT_MAXHP] * maxLifesteal) {
+                heal = owner.getStats()[Globals.STAT_MAXHP] * maxLifesteal;
             }
             owner.queueHeal((int) heal);
         }

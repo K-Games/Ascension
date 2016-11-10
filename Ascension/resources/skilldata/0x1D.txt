@@ -1,0 +1,15 @@
+[name]
+Static Charge
+[desc]
+1
+Shock a nearby enemy when you deal damage.
+[reqweapon]
+-1
+[maxcooldown]
+0
+[basevalue]
+0.5
+[multvalue]
+0.15
+[passive]
+true

@@ -17,6 +17,7 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Properties;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
@@ -193,6 +194,7 @@ public class Globals {
             ITEM_BOW = 11, // They all will be placed in weapons tab
             ITEM_ARROW = 12;
 
+    public final static byte NUM_ITEM_TYPES = 13;
     public final static byte NUM_EQUIP_SLOTS = 11;
 
     public final static byte NUM_STATS = 17,
@@ -297,6 +299,41 @@ public class Globals {
             EMOTE_8 = 0x08,
             EMOTE_9 = 0x09;
 
+    public final static byte NUM_SKILLS = 30,
+            SWORD_VORPAL = 0x00,
+            SWORD_MULTI = 0x01,
+            SWORD_PHANTOM = 0x01,
+            SWORD_CINDER = 0x02,
+            SWORD_GASH = 0x03,
+            SWORD_SLASH = 0x04,
+            SWORD_TAUNT = 0x05,
+            BOW_ARC = 0x06,
+            BOW_POWER = 0x07,
+            BOW_RAPID = 0x08,
+            BOW_FROST = 0x09,
+            BOW_STORM = 0x0A,
+            BOW_VOLLEY = 0x0B,
+            SHIELD_FORTIFY = 0x0C,
+            SHIELD_ROAR = 0x0D,
+            SHIELD_CHARGE = 0x0E,
+            SHIELD_REFLECT = 0x0F,
+            SHIELD_TOSS = 0x10,
+            SHIELD_MAGNETIZE = 0x10,
+            SHIELD_DASH = 0x11,
+            PASSIVE_DUALSWORD = 0x12,
+            PASSIVE_KEENEYE = 0x13,
+            PASSIVE_VITALHIT = 0x14,
+            PASSIVE_SHIELDMASTERY = 0x15,
+            PASSIVE_BARRIER = 0x16,
+            PASSIVE_RESIST = 0x17,
+            PASSIVE_BOWMASTERY = 0x18,
+            PASSIVE_WILLPOWER = 0x19,
+            PASSIVE_HARMONY = 0x1A,
+            PASSIVE_REVIVE = 0x1B,
+            PASSIVE_TOUGH = 0x1B,
+            PASSIVE_SHADOWATTACK = 0x1C,
+            PASSIVE_STATIC = 0x1D;
+
     public final static BufferedImage[][] CHAR_SPRITE = new BufferedImage[NUM_PLAYER_ANIM_STATE][];
     public final static BufferedImage[] HUD = new BufferedImage[4];
     public static BufferedImage TITLE;
@@ -313,7 +350,7 @@ public class Globals {
     public final static BufferedImage[][] DAMAGE_FONT = new BufferedImage[4][10];
     public final static BufferedImage[] EXP_WORD = new BufferedImage[1];
 
-    public final static BufferedImage[] SKILL_ICON = new BufferedImage[Skill.NUM_SKILLS];
+    public final static BufferedImage[] SKILL_ICON = new BufferedImage[NUM_SKILLS];
 
     public final static byte NUM_BGM = 5,
             BGM_MENU = 0x00,
@@ -366,7 +403,7 @@ public class Globals {
     public static final byte NOTIFICATION_EXP = 0,
             NOTIFICATION_ITEM = 1;
 
-    public final static boolean LOGGING = true;
+    public static boolean LOGGING = false;
     private final static String LOG_DIR = "logs/",
             ERRLOG_FILE = "ErrorLog-" + String.format("%1$td%1$tm%1$tY-%1$tH%1$tM%1$tS", System.currentTimeMillis()) + ".log",
             DATALOG_FILE = "DataLog-" + String.format("%1$td%1$tm%1$tY-%1$tH%1$tM%1$tS", System.currentTimeMillis()) + ".log";
@@ -411,8 +448,112 @@ public class Globals {
     public final static HashSet<Integer> ITEM_CODES = new HashSet<>();
     public static final HashSet<Integer> ITEM_UPGRADE_CODES = new HashSet<>();
 
-    public static void loadServer() {
+    public static final String SKILL_BASEVALUE_HEADER = "[basevalue]",
+            SKILL_DESC_HEADER = "[desc]",
+            SKILL_MAXCOOLDOWN_HEADER = "[maxcooldown]",
+            SKILL_MULTVALUE_HEADER = "[multvalue]",
+            SKILL_NAME_HEADER = "[name]",
+            SKILL_PASSIVE_HEADER = "[passive]",
+            SKILL_REQWEAPON_HEADER = "[reqweapon]";
 
+    public static final String[] DATA_HEADERS = {
+        SKILL_NAME_HEADER,
+        SKILL_DESC_HEADER,
+        SKILL_REQWEAPON_HEADER,
+        SKILL_MAXCOOLDOWN_HEADER,
+        SKILL_BASEVALUE_HEADER,
+        SKILL_MULTVALUE_HEADER,
+        SKILL_PASSIVE_HEADER};
+
+    static {
+        createLogDirectory();
+        loadItemCodes();
+    }
+
+    public static HashMap<String, Integer> getDataHeaders(final String[] data, final String[] customDataHeaders) {
+        HashMap<String, Integer> dataHeader = new HashMap<>();
+        for (int i = 0; i < data.length; i++) {
+            for (String header : DATA_HEADERS) {
+                if (data[i].equalsIgnoreCase(header)) {
+                    dataHeader.put(header, i);
+                }
+            }
+            if (customDataHeaders != null) {
+                for (String header : customDataHeaders) {
+                    if (data[i].equalsIgnoreCase(header)) {
+                        dataHeader.put(header, i);
+                    }
+                }
+            }
+        }
+        return dataHeader;
+    }
+
+    public static boolean loadBooleanValue(final String[] data, final HashMap<String, Integer> dataHeaders, String header) {
+        try {
+            return Boolean.parseBoolean(data[dataHeaders.get(header) + 1]);
+        } catch (Exception e) {
+            Globals.logError(e.getStackTrace()[0].toString(), e, true);
+        }
+        return false;
+    }
+
+    public static double loadDoubleValue(final String[] data, final HashMap<String, Integer> dataHeaders, String header) {
+        try {
+            return Double.parseDouble(data[dataHeaders.get(header) + 1]);
+        } catch (Exception e) {
+            Globals.logError(e.getStackTrace()[0].toString(), e, true);
+        }
+        return 0;
+    }
+
+    public static byte loadReqWeapon(final String[] data, final HashMap<String, Integer> dataHeaders) {
+        try {
+            byte weaponData = Byte.parseByte(data[dataHeaders.get(SKILL_REQWEAPON_HEADER) + 1]);
+            return (weaponData >= Globals.NUM_ITEM_TYPES) ? -1 : weaponData;
+        } catch (Exception e) {
+            Globals.logError(e.getStackTrace()[0].toString(), e, true);
+        }
+        return -1;
+    }
+
+    public static String[] loadSkillData(final byte skillCode) {
+        Globals.log(Skill.class, "Loading Skill " + String.format("0x%02X", skillCode) + " Data...", Globals.LOG_TYPE_DATA, true);
+        try {
+            InputStream skillDataFile = Globals.loadResourceAsStream("skilldata/" + String.format("0x%02X", skillCode) + ".txt");
+            List<String> fileLines = IOUtils.readLines(skillDataFile);
+            return fileLines.toArray(new String[fileLines.size()]);
+        } catch (IOException | NullPointerException e) {
+            Globals.logError("Could not load Skill " + String.format("0x%02X", skillCode) + " Data." + e.getStackTrace()[0].toString(), e, true);
+            System.exit(101);
+            return null;
+        }
+    }
+
+    public static String[] loadSkillDesc(final String[] data, final HashMap<String, Integer> dataHeaders) {
+        try {
+            int numOfLines = Integer.parseInt(data[dataHeaders.get(SKILL_DESC_HEADER) + 1]);
+            String[] description = new String[numOfLines];
+            for (int line = 0; line < numOfLines; line++) {
+                description[line] = data[dataHeaders.get(SKILL_DESC_HEADER) + 2 + line];
+            }
+            return description;
+        } catch (Exception e) {
+            Globals.logError(e.getStackTrace()[0].toString(), e, true);
+        }
+        return new String[0];
+    }
+
+    public static String loadSkillName(final String[] data, final HashMap<String, Integer> dataHeaders) {
+        try {
+            return data[dataHeaders.get(SKILL_NAME_HEADER) + 1];
+        } catch (Exception e) {
+            Globals.logError(e.getStackTrace()[0].toString(), e, true);
+        }
+        return "NO_NAME";
+    }
+
+    public static void loadServer() {
     }
 
     public static void loadClient() {
@@ -426,11 +567,6 @@ public class Globals {
         PLAYER_NUM_ANIM_FRAMES[PLAYER_ANIM_STATE_JUMP] = 3;
         loadSound();
         loadGFX();
-    }
-
-    static {
-        createLogDirectory();
-        loadItemCodes();
     }
 
     private static void loadSound() {
@@ -869,7 +1005,7 @@ public class Globals {
             }
         } catch (IOException e) {
             Globals.logError("Could not load item codes from data", e, true);
-            System.exit(404);
+            System.exit(102);
         }
     }
 }

@@ -6,19 +6,109 @@ import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.proj.ProjSwordTaunt;
 import blockfighter.server.net.PacketSender;
 import blockfighter.shared.Globals;
+import java.util.HashMap;
 
 public class SkillSwordTaunt extends Skill {
 
     private ProjSwordTaunt proj;
 
+    private static final String BUFFDURATION_HEADER = "[buffduration]",
+            DMGREDUCT_HEADER = "[damagereduct]",
+            DMGINC_HEADER = "[damageinc]";
+
+    private static final String[] CUSTOM_DATA_HEADERS = {
+        BUFFDURATION_HEADER,
+        DMGREDUCT_HEADER,
+        DMGINC_HEADER
+    };
+
+    private static final double BUFF_DURATION,
+            DAMAGE_REDUCT,
+            DAMAGE_INCREASE;
+
+    private static final byte SKILL_CODE = Globals.SWORD_TAUNT;
+    private static final boolean IS_PASSIVE;
+    private static final byte REQ_WEAPON;
+    private static final double MAX_COOLDOWN;
+
+    private static final double BASE_VALUE, MULT_VALUE;
+    private static final byte REQ_EQUIP_SLOT = Globals.ITEM_WEAPON;
+    private static final byte PLAYER_STATE = Player.PLAYER_STATE_SWORD_TAUNT;
+    private static final int SKILL_DURATION = 350;
+
+    static {
+        String[] data = Globals.loadSkillData(SKILL_CODE);
+        HashMap<String, Integer> dataHeaders = Globals.getDataHeaders(data, CUSTOM_DATA_HEADERS);
+
+        REQ_WEAPON = Globals.loadReqWeapon(data, dataHeaders);
+        MAX_COOLDOWN = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MAXCOOLDOWN_HEADER);
+        BASE_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_BASEVALUE_HEADER) * 100;
+        MULT_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MULTVALUE_HEADER) * 100;
+        IS_PASSIVE = Globals.loadBooleanValue(data, dataHeaders, Globals.SKILL_PASSIVE_HEADER);
+        BUFF_DURATION = Globals.loadDoubleValue(data, dataHeaders, BUFFDURATION_HEADER) / 1000D;
+        DAMAGE_REDUCT = Globals.loadDoubleValue(data, dataHeaders, DMGREDUCT_HEADER) * 100;
+        DAMAGE_INCREASE = Globals.loadDoubleValue(data, dataHeaders, DMGINC_HEADER) * 100;
+    }
+
     public SkillSwordTaunt(final LogicModule l) {
         super(l);
-        this.skillCode = SWORD_TAUNT;
-        this.maxCooldown = 25000;
-        this.reqWeapon = Globals.ITEM_SWORD;
-        this.endDuration = 350;
-        this.playerState = Player.PLAYER_STATE_SWORD_TAUNT;
-        this.reqEquipSlot = Globals.ITEM_WEAPON;
+    }
+
+    public double getBuffDuration() {
+        return BUFF_DURATION;
+    }
+
+    public double getDamageReduct() {
+        return DAMAGE_REDUCT;
+    }
+
+    public double getDamageIncrease() {
+        return DAMAGE_INCREASE;
+    }
+
+    @Override
+    public byte castPlayerState() {
+        return PLAYER_STATE;
+    }
+
+    @Override
+    public double getBaseValue() {
+        return BASE_VALUE;
+    }
+
+    @Override
+    public double getMaxCooldown() {
+        return MAX_COOLDOWN;
+    }
+
+    @Override
+    public double getMultValue() {
+        return MULT_VALUE;
+    }
+
+    @Override
+    public Byte getReqEquipSlot() {
+        return REQ_EQUIP_SLOT;
+    }
+
+    @Override
+    public Byte getReqWeapon() {
+        return REQ_WEAPON;
+    }
+
+    @Override
+    public byte getSkillCode() {
+        return SKILL_CODE;
+    }
+
+    @Override
+    public int getSkillDuration() {
+        return SKILL_DURATION;
+    }
+
+    @Override
+    public boolean isPassive() {
+        return IS_PASSIVE;
     }
 
     @Override
@@ -26,8 +116,8 @@ public class SkillSwordTaunt extends Skill {
         final long duration = Globals.nsToMs(this.logic.getTime() - player.getSkillCastTime());
         if (player.getSkillCounter() == 0) {
             player.incrementSkillCounter();
-            if (player.isSkillMaxed(Skill.SWORD_TAUNT)) {
-                player.queueBuff(new BuffSwordTaunt(this.logic, 5000, 0.2, 0.2, player));
+            if (player.isSkillMaxed(Globals.SWORD_TAUNT)) {
+                player.queueBuff(new BuffSwordTaunt(this.logic, (int) BUFF_DURATION, DAMAGE_REDUCT, DAMAGE_INCREASE, player));
                 PacketSender.sendParticle(this.logic.getRoom().getRoomNumber(), Globals.PARTICLE_SWORD_TAUNTBUFF, player.getKey());
             }
             proj = new ProjSwordTaunt(this.logic, player, player.getX(), player.getY());
@@ -39,7 +129,7 @@ public class SkillSwordTaunt extends Skill {
             this.logic.queueAddProj(proj);
 
         }
-        player.updateSkillEnd(duration, this.endDuration, false, false);
+        player.updateSkillEnd(duration, getSkillDuration(), false, false);
     }
 
 }

@@ -17,8 +17,8 @@ public class ScreenSkills extends ScreenMenu {
     private final SaveData c;
     // Slots(x,y) in the GUI
     private static final Rectangle2D.Double[] HOTKEY_SLOTS = new Rectangle2D.Double[12];
-    private static final Rectangle2D.Double[] SKILL_SLOTS = new Rectangle2D.Double[Skill.NUM_SKILLS];
-    private static final Rectangle2D.Double[] ADD_SKILL_BOX = new Rectangle2D.Double[Skill.NUM_SKILLS];
+    private static final Rectangle2D.Double[] SKILL_SLOTS = new Rectangle2D.Double[Globals.NUM_SKILLS];
+    private static final Rectangle2D.Double[] ADD_SKILL_BOX = new Rectangle2D.Double[Globals.NUM_SKILLS];
     private static final Rectangle2D.Double RESET_BOX;
 
     private static final int SWORD_BOX_X = 260, SWORD_BOX_Y = 55;
@@ -39,47 +39,47 @@ public class ScreenSkills extends ScreenMenu {
 
     static {
 
-        SKILL_SLOTS[Skill.SWORD_GASH] = new Rectangle2D.Double(SWORD_BOX_X, SWORD_BOX_Y, 60, 60);
-        SKILL_SLOTS[Skill.SWORD_SLASH] = new Rectangle2D.Double(SWORD_BOX_X, SWORD_BOX_Y + 90, 60, 60);
-        //skillSlots[Skill.SWORD_MULTI] = new Rectangle2D.Double(241, 235, 60, 60);
-        SKILL_SLOTS[Skill.SWORD_PHANTOM] = new Rectangle2D.Double(SWORD_BOX_X, SWORD_BOX_Y + 180, 60, 60);
-        SKILL_SLOTS[Skill.SWORD_VORPAL] = new Rectangle2D.Double(SWORD_BOX_X, SWORD_BOX_Y + 270, 60, 60);
-        SKILL_SLOTS[Skill.SWORD_CINDER] = new Rectangle2D.Double(SWORD_BOX_X, SWORD_BOX_Y + 360, 60, 60);
-        SKILL_SLOTS[Skill.SWORD_TAUNT] = new Rectangle2D.Double(SWORD_BOX_X, SWORD_BOX_Y + 450, 60, 60);
+        SKILL_SLOTS[Globals.SWORD_GASH] = new Rectangle2D.Double(SWORD_BOX_X, SWORD_BOX_Y, 60, 60);
+        SKILL_SLOTS[Globals.SWORD_SLASH] = new Rectangle2D.Double(SWORD_BOX_X, SWORD_BOX_Y + 90, 60, 60);
+        //skillSlots[Globals.SWORD_MULTI] = new Rectangle2D.Double(241, 235, 60, 60);
+        SKILL_SLOTS[Globals.SWORD_PHANTOM] = new Rectangle2D.Double(SWORD_BOX_X, SWORD_BOX_Y + 180, 60, 60);
+        SKILL_SLOTS[Globals.SWORD_VORPAL] = new Rectangle2D.Double(SWORD_BOX_X, SWORD_BOX_Y + 270, 60, 60);
+        SKILL_SLOTS[Globals.SWORD_CINDER] = new Rectangle2D.Double(SWORD_BOX_X, SWORD_BOX_Y + 360, 60, 60);
+        SKILL_SLOTS[Globals.SWORD_TAUNT] = new Rectangle2D.Double(SWORD_BOX_X, SWORD_BOX_Y + 450, 60, 60);
 
-        SKILL_SLOTS[Skill.BOW_ARC] = new Rectangle2D.Double(BOW_BOX_X, BOW_BOX_Y, 60, 60);
-        SKILL_SLOTS[Skill.BOW_RAPID] = new Rectangle2D.Double(BOW_BOX_X, BOW_BOX_Y + 90, 60, 60);
-        SKILL_SLOTS[Skill.BOW_POWER] = new Rectangle2D.Double(BOW_BOX_X, BOW_BOX_Y + 180, 60, 60);
-        SKILL_SLOTS[Skill.BOW_VOLLEY] = new Rectangle2D.Double(BOW_BOX_X, BOW_BOX_Y + 270, 60, 60);
-        SKILL_SLOTS[Skill.BOW_STORM] = new Rectangle2D.Double(BOW_BOX_X, BOW_BOX_Y + 360, 60, 60);
-        SKILL_SLOTS[Skill.BOW_FROST] = new Rectangle2D.Double(BOW_BOX_X, BOW_BOX_Y + 450, 60, 60);
+        SKILL_SLOTS[Globals.BOW_ARC] = new Rectangle2D.Double(BOW_BOX_X, BOW_BOX_Y, 60, 60);
+        SKILL_SLOTS[Globals.BOW_RAPID] = new Rectangle2D.Double(BOW_BOX_X, BOW_BOX_Y + 90, 60, 60);
+        SKILL_SLOTS[Globals.BOW_POWER] = new Rectangle2D.Double(BOW_BOX_X, BOW_BOX_Y + 180, 60, 60);
+        SKILL_SLOTS[Globals.BOW_VOLLEY] = new Rectangle2D.Double(BOW_BOX_X, BOW_BOX_Y + 270, 60, 60);
+        SKILL_SLOTS[Globals.BOW_STORM] = new Rectangle2D.Double(BOW_BOX_X, BOW_BOX_Y + 360, 60, 60);
+        SKILL_SLOTS[Globals.BOW_FROST] = new Rectangle2D.Double(BOW_BOX_X, BOW_BOX_Y + 450, 60, 60);
 
-        SKILL_SLOTS[Skill.SHIELD_DASH] = new Rectangle2D.Double(UTIL_BOX_X, UTIL_BOX_Y, 60, 60);
-        SKILL_SLOTS[Skill.SHIELD_FORTIFY] = new Rectangle2D.Double(UTIL_BOX_X, UTIL_BOX_Y + 75, 60, 60);
+        SKILL_SLOTS[Globals.SHIELD_DASH] = new Rectangle2D.Double(UTIL_BOX_X, UTIL_BOX_Y, 60, 60);
+        SKILL_SLOTS[Globals.SHIELD_FORTIFY] = new Rectangle2D.Double(UTIL_BOX_X, UTIL_BOX_Y + 75, 60, 60);
 
-        SKILL_SLOTS[Skill.SHIELD_ROAR] = new Rectangle2D.Double(SHIELD_BOX_X, SHIELD_BOX_Y, 60, 60);
-        SKILL_SLOTS[Skill.SHIELD_CHARGE] = new Rectangle2D.Double(SHIELD_BOX_X, SHIELD_BOX_Y + 75, 60, 60);
-        SKILL_SLOTS[Skill.SHIELD_REFLECT] = new Rectangle2D.Double(SHIELD_BOX_X, SHIELD_BOX_Y + 150, 60, 60);
-        SKILL_SLOTS[Skill.SHIELD_TOSS] = new Rectangle2D.Double(SHIELD_BOX_X, SHIELD_BOX_Y + 225, 60, 60);
+        SKILL_SLOTS[Globals.SHIELD_ROAR] = new Rectangle2D.Double(SHIELD_BOX_X, SHIELD_BOX_Y, 60, 60);
+        SKILL_SLOTS[Globals.SHIELD_CHARGE] = new Rectangle2D.Double(SHIELD_BOX_X, SHIELD_BOX_Y + 75, 60, 60);
+        SKILL_SLOTS[Globals.SHIELD_REFLECT] = new Rectangle2D.Double(SHIELD_BOX_X, SHIELD_BOX_Y + 150, 60, 60);
+        SKILL_SLOTS[Globals.SHIELD_TOSS] = new Rectangle2D.Double(SHIELD_BOX_X, SHIELD_BOX_Y + 225, 60, 60);
 
         //Specialize
-        SKILL_SLOTS[Skill.PASSIVE_DUALSWORD] = new Rectangle2D.Double(PASSIVE_BOX_X, PASSIVE_BOX_Y, 60, 60);
-        SKILL_SLOTS[Skill.PASSIVE_BOWMASTERY] = new Rectangle2D.Double(PASSIVE_BOX_X, PASSIVE_BOX_Y + 85, 60, 60);
-        SKILL_SLOTS[Skill.PASSIVE_SHIELDMASTERY] = new Rectangle2D.Double(PASSIVE_BOX_X, PASSIVE_BOX_Y + 170, 60, 60);
+        SKILL_SLOTS[Globals.PASSIVE_DUALSWORD] = new Rectangle2D.Double(PASSIVE_BOX_X, PASSIVE_BOX_Y, 60, 60);
+        SKILL_SLOTS[Globals.PASSIVE_BOWMASTERY] = new Rectangle2D.Double(PASSIVE_BOX_X, PASSIVE_BOX_Y + 85, 60, 60);
+        SKILL_SLOTS[Globals.PASSIVE_SHIELDMASTERY] = new Rectangle2D.Double(PASSIVE_BOX_X, PASSIVE_BOX_Y + 170, 60, 60);
 
         //Defense
-        SKILL_SLOTS[Skill.PASSIVE_RESIST] = new Rectangle2D.Double(PASSIVE_BOX_X, PASSIVE_BOX_Y + 255, 60, 60);
-        SKILL_SLOTS[Skill.PASSIVE_BARRIER] = new Rectangle2D.Double(PASSIVE_BOX_X, PASSIVE_BOX_Y + 340, 60, 60);
-        SKILL_SLOTS[Skill.PASSIVE_TOUGH] = new Rectangle2D.Double(PASSIVE_BOX_X, PASSIVE_BOX_Y + 425, 60, 60);
+        SKILL_SLOTS[Globals.PASSIVE_RESIST] = new Rectangle2D.Double(PASSIVE_BOX_X, PASSIVE_BOX_Y + 255, 60, 60);
+        SKILL_SLOTS[Globals.PASSIVE_BARRIER] = new Rectangle2D.Double(PASSIVE_BOX_X, PASSIVE_BOX_Y + 340, 60, 60);
+        SKILL_SLOTS[Globals.PASSIVE_TOUGH] = new Rectangle2D.Double(PASSIVE_BOX_X, PASSIVE_BOX_Y + 425, 60, 60);
 
         //Offense
-        SKILL_SLOTS[Skill.PASSIVE_KEENEYE] = new Rectangle2D.Double(PASSIVE_BOX_X + 110, PASSIVE_BOX_Y, 60, 60);
-        SKILL_SLOTS[Skill.PASSIVE_VITALHIT] = new Rectangle2D.Double(PASSIVE_BOX_X + 110, PASSIVE_BOX_Y + 85, 60, 60);
-        SKILL_SLOTS[Skill.PASSIVE_SHADOWATTACK] = new Rectangle2D.Double(PASSIVE_BOX_X + 110, PASSIVE_BOX_Y + 170, 60, 60);
+        SKILL_SLOTS[Globals.PASSIVE_KEENEYE] = new Rectangle2D.Double(PASSIVE_BOX_X + 110, PASSIVE_BOX_Y, 60, 60);
+        SKILL_SLOTS[Globals.PASSIVE_VITALHIT] = new Rectangle2D.Double(PASSIVE_BOX_X + 110, PASSIVE_BOX_Y + 85, 60, 60);
+        SKILL_SLOTS[Globals.PASSIVE_SHADOWATTACK] = new Rectangle2D.Double(PASSIVE_BOX_X + 110, PASSIVE_BOX_Y + 170, 60, 60);
         //Hybrid
-        SKILL_SLOTS[Skill.PASSIVE_WILLPOWER] = new Rectangle2D.Double(PASSIVE_BOX_X + 110, PASSIVE_BOX_Y + 255, 60, 60);
-        SKILL_SLOTS[Skill.PASSIVE_HARMONY] = new Rectangle2D.Double(PASSIVE_BOX_X + 110, PASSIVE_BOX_Y + 340, 60, 60);
-        SKILL_SLOTS[Skill.PASSIVE_STATIC] = new Rectangle2D.Double(PASSIVE_BOX_X + 110, PASSIVE_BOX_Y + 425, 60, 60);
+        SKILL_SLOTS[Globals.PASSIVE_WILLPOWER] = new Rectangle2D.Double(PASSIVE_BOX_X + 110, PASSIVE_BOX_Y + 255, 60, 60);
+        SKILL_SLOTS[Globals.PASSIVE_HARMONY] = new Rectangle2D.Double(PASSIVE_BOX_X + 110, PASSIVE_BOX_Y + 340, 60, 60);
+        SKILL_SLOTS[Globals.PASSIVE_STATIC] = new Rectangle2D.Double(PASSIVE_BOX_X + 110, PASSIVE_BOX_Y + 425, 60, 60);
 
         for (int i = 0; i < HOTKEY_SLOTS.length; i++) {
             HOTKEY_SLOTS[i] = new Rectangle2D.Double(HOTKEY_BOX_X + (i * 64), HOTKEY_BOX_Y, 60, 60);

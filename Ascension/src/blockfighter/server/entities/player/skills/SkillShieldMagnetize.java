@@ -7,20 +7,110 @@ import blockfighter.server.entities.proj.ProjShieldMagnetize;
 import blockfighter.server.net.PacketSender;
 import blockfighter.shared.Globals;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class SkillShieldMagnetize extends Skill {
 
     ArrayList<Player> playersCaught;
     ArrayList<Mob> mobsCaught;
 
+    private static final String BASEDEF_HEADER = "[basedefense]",
+            MULTDEF_HEADER = "[multdefense]",
+            MAXLEVELMULT_HEADER = "[maxlevelmult]";
+
+    private static final String[] CUSTOM_DATA_HEADERS = {
+        BASEDEF_HEADER,
+        MULTDEF_HEADER,
+        MAXLEVELMULT_HEADER
+    };
+
+    private static final double BASE_DEFENSE,
+            MULT_DEFENSE,
+            MAX_LEVEL_MULT;
+
+    private static final byte SKILL_CODE = Globals.SHIELD_MAGNETIZE;
+    private static final boolean IS_PASSIVE;
+    private static final byte REQ_WEAPON;
+    private static final double MAX_COOLDOWN;
+
+    private static final double BASE_VALUE, MULT_VALUE;
+    private static final byte REQ_EQUIP_SLOT = Globals.ITEM_OFFHAND;
+    private static final byte PLAYER_STATE = Player.PLAYER_STATE_SHIELD_MAGNETIZE;
+    private static final int SKILL_DURATION = 600;
+
+    static {
+        String[] data = Globals.loadSkillData(SKILL_CODE);
+        HashMap<String, Integer> dataHeaders = Globals.getDataHeaders(data, CUSTOM_DATA_HEADERS);
+
+        REQ_WEAPON = Globals.loadReqWeapon(data, dataHeaders);
+        MAX_COOLDOWN = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MAXCOOLDOWN_HEADER);
+        BASE_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_BASEVALUE_HEADER);
+        MULT_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MULTVALUE_HEADER);
+        IS_PASSIVE = Globals.loadBooleanValue(data, dataHeaders, Globals.SKILL_PASSIVE_HEADER);
+        BASE_DEFENSE = Globals.loadDoubleValue(data, dataHeaders, BASEDEF_HEADER);
+        MULT_DEFENSE = Globals.loadDoubleValue(data, dataHeaders, MULTDEF_HEADER);
+        MAX_LEVEL_MULT = Globals.loadDoubleValue(data, dataHeaders, MAXLEVELMULT_HEADER);
+    }
+
     public SkillShieldMagnetize(final LogicModule l) {
         super(l);
-        this.skillCode = SHIELD_MAGNETIZE;
-        this.maxCooldown = 15000;
-        this.reqWeapon = Globals.ITEM_SHIELD;
-        this.endDuration = 600;
-        this.playerState = Player.PLAYER_STATE_SHIELD_MAGNETIZE;
-        this.reqEquipSlot = Globals.ITEM_OFFHAND;
+    }
+
+    public double getBaseDefense() {
+        return BASE_DEFENSE;
+    }
+
+    public double getMultDefense() {
+        return MULT_DEFENSE;
+    }
+
+    public double getMaxLevelMult() {
+        return MAX_LEVEL_MULT;
+    }
+
+    @Override
+    public byte castPlayerState() {
+        return PLAYER_STATE;
+    }
+
+    @Override
+    public double getBaseValue() {
+        return BASE_VALUE;
+    }
+
+    @Override
+    public double getMaxCooldown() {
+        return MAX_COOLDOWN;
+    }
+
+    @Override
+    public double getMultValue() {
+        return MULT_VALUE;
+    }
+
+    @Override
+    public Byte getReqEquipSlot() {
+        return REQ_EQUIP_SLOT;
+    }
+
+    @Override
+    public Byte getReqWeapon() {
+        return REQ_WEAPON;
+    }
+
+    @Override
+    public byte getSkillCode() {
+        return SKILL_CODE;
+    }
+
+    @Override
+    public int getSkillDuration() {
+        return SKILL_DURATION;
+    }
+
+    @Override
+    public boolean isPassive() {
+        return IS_PASSIVE;
     }
 
     @Override
@@ -76,6 +166,6 @@ public class SkillShieldMagnetize extends Skill {
             player.incrementSkillCounter();
         }
 
-        player.updateSkillEnd(duration, this.endDuration, false, false);
+        player.updateSkillEnd(duration, getSkillDuration(), false, false);
     }
 }

@@ -2,7 +2,7 @@ package blockfighter.server.entities.buff;
 
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.player.Player;
-import blockfighter.server.entities.player.skills.Skill;
+import blockfighter.server.entities.player.skills.SkillShieldFortify;
 import blockfighter.shared.Globals;
 
 public class BuffShieldFortify extends Buff implements BuffDmgReduct {
@@ -21,9 +21,10 @@ public class BuffShieldFortify extends Buff implements BuffDmgReduct {
     @Override
     public void update() {
         super.update();
-        if (getOwner().isSkillMaxed(Skill.SHIELD_FORTIFY)) {
+        if (getOwner().isSkillMaxed(Globals.SHIELD_FORTIFY)) {
             if (Globals.nsToMs(room.getTime() - lastHPHeal) >= Globals.nsToMs(Globals.SERVER_LOGIC_UPDATE)) {
-                final int amount = (int) Math.ceil(getOwner().getStats()[Globals.STAT_MAXHP] * 0.075 / (this.maxDuration / Globals.nsToMs(Globals.SERVER_LOGIC_UPDATE)));
+                double healAmount = ((SkillShieldFortify) getOwner().getSkill(Globals.SHIELD_FORTIFY)).getHealAmount();
+                final int amount = (int) Math.ceil(getOwner().getStats()[Globals.STAT_MAXHP] * healAmount / (this.maxDuration / Globals.nsToMs(Globals.SERVER_LOGIC_UPDATE)));
                 getOwner().queueHeal(amount);
                 lastHPHeal = room.getTime();
             }

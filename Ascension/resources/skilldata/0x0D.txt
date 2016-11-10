@@ -1,0 +1,23 @@
+[name]
+Hellion Roar
+[desc]
+1
+Send enemies flying with a ferocious roar.
+[reqweapon]
+10
+[maxcooldown]
+20000
+[basevalue]
+1.5
+[multvalue]
+0.15
+[passive]
+false
+[stunduration]
+2000
+[basedefense]
+1.5
+[multdefense]
+0.15
+[multbasedefense]
+16

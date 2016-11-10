@@ -1,0 +1,20 @@
+[name]
+Vortex Bolts
+[desc]
+2
+Fire 20 bolts over 2 seconds.
+Can be interrupted by stuns and knockback.
+[reqweapon]
+11
+[maxcooldown]
+17000
+[basevalue]
+0.85
+[multvalue]
+0.03
+[passive]
+false
+[maxlevelbuffdamage]
+0.01
+[maxlevelbuffduration]
+4000

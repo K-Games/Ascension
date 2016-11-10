@@ -1,0 +1,16 @@
+[name]
+Bow Mastery
+[desc]
+2
+When equipped with an Bow and Arrow Enchantment
+you gain additional Critical Hit Damage.
+[reqweapon]
+-1
+[maxcooldown]
+0
+[basevalue]
+0.3
+[multvalue]
+0.04
+[passive]
+true

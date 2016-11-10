@@ -1,0 +1,15 @@
+[name]
+Tough Skin
+[desc]
+1
+Boost your natural resilience to damage.
+[reqweapon]
+-1
+[maxcooldown]
+0
+[basevalue]
+0.06
+[multvalue]
+0.003
+[passive]
+true

@@ -57,7 +57,7 @@ public class SaveData {
     private final ItemEquip[] equipment = new ItemEquip[Globals.NUM_EQUIP_SLOTS];
 
     private final Skill[] hotkeys = new Skill[12];
-    private final Skill[] skills = new Skill[Skill.NUM_SKILLS];
+    private final Skill[] skills = new Skill[Globals.NUM_SKILLS];
     private final int[] keybinds = new int[Globals.NUM_KEYBINDS];
 
     public SaveData(final String n, final byte saveNumber) {
@@ -65,39 +65,39 @@ public class SaveData {
         this.name = n;
         this.uniqueID = UUID.randomUUID();
         // initalize skill list
-        this.skills[Skill.SWORD_CINDER] = new SkillSwordCinder();
-        this.skills[Skill.SWORD_GASH] = new SkillSwordGash();
-        this.skills[Skill.SWORD_PHANTOM] = new SkillSwordPhantom();
-        this.skills[Skill.SWORD_SLASH] = new SkillSwordSlash();
-        this.skills[Skill.SWORD_TAUNT] = new SkillSwordTaunt();
-        this.skills[Skill.SWORD_VORPAL] = new SkillSwordVorpal();
+        this.skills[Globals.SWORD_CINDER] = new SkillSwordCinder();
+        this.skills[Globals.SWORD_GASH] = new SkillSwordGash();
+        this.skills[Globals.SWORD_PHANTOM] = new SkillSwordPhantom();
+        this.skills[Globals.SWORD_SLASH] = new SkillSwordSlash();
+        this.skills[Globals.SWORD_TAUNT] = new SkillSwordTaunt();
+        this.skills[Globals.SWORD_VORPAL] = new SkillSwordVorpal();
 
-        this.skills[Skill.BOW_ARC] = new SkillBowArc();
-        this.skills[Skill.BOW_FROST] = new SkillBowFrost();
-        this.skills[Skill.BOW_POWER] = new SkillBowPower();
-        this.skills[Skill.BOW_RAPID] = new SkillBowRapid();
-        this.skills[Skill.BOW_STORM] = new SkillBowStorm();
-        this.skills[Skill.BOW_VOLLEY] = new SkillBowVolley();
+        this.skills[Globals.BOW_ARC] = new SkillBowArc();
+        this.skills[Globals.BOW_FROST] = new SkillBowFrost();
+        this.skills[Globals.BOW_POWER] = new SkillBowPower();
+        this.skills[Globals.BOW_RAPID] = new SkillBowRapid();
+        this.skills[Globals.BOW_STORM] = new SkillBowStorm();
+        this.skills[Globals.BOW_VOLLEY] = new SkillBowVolley();
 
-        this.skills[Skill.SHIELD_FORTIFY] = new SkillShieldFortify();
-        this.skills[Skill.SHIELD_ROAR] = new SkillShieldRoar();
-        this.skills[Skill.SHIELD_CHARGE] = new SkillShieldCharge();
-        this.skills[Skill.SHIELD_REFLECT] = new SkillShieldReflect();
-        this.skills[Skill.SHIELD_MAGNETIZE] = new SkillShieldMagnetize();
-        this.skills[Skill.SHIELD_DASH] = new SkillShieldDash();
+        this.skills[Globals.SHIELD_FORTIFY] = new SkillShieldFortify();
+        this.skills[Globals.SHIELD_ROAR] = new SkillShieldRoar();
+        this.skills[Globals.SHIELD_CHARGE] = new SkillShieldCharge();
+        this.skills[Globals.SHIELD_REFLECT] = new SkillShieldReflect();
+        this.skills[Globals.SHIELD_MAGNETIZE] = new SkillShieldMagnetize();
+        this.skills[Globals.SHIELD_DASH] = new SkillShieldDash();
 
-        this.skills[Skill.PASSIVE_DUALSWORD] = new SkillPassiveDualSword();
-        this.skills[Skill.PASSIVE_KEENEYE] = new SkillPassiveKeenEye();
-        this.skills[Skill.PASSIVE_VITALHIT] = new SkillPassiveVitalHit();
-        this.skills[Skill.PASSIVE_SHIELDMASTERY] = new SkillPassiveShieldMastery();
-        this.skills[Skill.PASSIVE_BARRIER] = new SkillPassiveBarrier();
-        this.skills[Skill.PASSIVE_RESIST] = new SkillPassiveResistance();
-        this.skills[Skill.PASSIVE_BOWMASTERY] = new SkillPassiveBowMastery();
-        this.skills[Skill.PASSIVE_WILLPOWER] = new SkillPassiveWillpower();
-        this.skills[Skill.PASSIVE_HARMONY] = new SkillPassiveHarmony();
-        this.skills[Skill.PASSIVE_TOUGH] = new SkillPassiveTough();
-        this.skills[Skill.PASSIVE_SHADOWATTACK] = new SkillPassiveShadowAttack();
-        this.skills[Skill.PASSIVE_STATIC] = new SkillPassiveStatic();
+        this.skills[Globals.PASSIVE_DUALSWORD] = new SkillPassiveDualSword();
+        this.skills[Globals.PASSIVE_KEENEYE] = new SkillPassiveKeenEye();
+        this.skills[Globals.PASSIVE_VITALHIT] = new SkillPassiveVitalHit();
+        this.skills[Globals.PASSIVE_SHIELDMASTERY] = new SkillPassiveShieldMastery();
+        this.skills[Globals.PASSIVE_BARRIER] = new SkillPassiveBarrier();
+        this.skills[Globals.PASSIVE_RESIST] = new SkillPassiveResistance();
+        this.skills[Globals.PASSIVE_BOWMASTERY] = new SkillPassiveBowMastery();
+        this.skills[Globals.PASSIVE_WILLPOWER] = new SkillPassiveWillpower();
+        this.skills[Globals.PASSIVE_HARMONY] = new SkillPassiveHarmony();
+        this.skills[Globals.PASSIVE_TOUGH] = new SkillPassiveTough();
+        this.skills[Globals.PASSIVE_SHADOWATTACK] = new SkillPassiveShadowAttack();
+        this.skills[Globals.PASSIVE_STATIC] = new SkillPassiveStatic();
     }
 
     public void newCharacter(final boolean testMax) {
@@ -257,7 +257,7 @@ public class SaveData {
 
     private static int saveSkills(final byte[] data, final SaveData c, final int pos) {
         int nextPos = pos;
-        for (int i = 0; i < Skill.NUM_SKILLS; i++) {
+        for (int i = 0; i < Globals.NUM_SKILLS; i++) {
             data[nextPos] = c.getSkills()[i].getLevel();
             nextPos += 1;
         }
@@ -417,7 +417,7 @@ public class SaveData {
 
     private static int readSkills(final byte[] data, final SaveData c, final int pos) {
         int nextPos = pos;
-        for (int i = 0; i < Skill.NUM_SKILLS; i++) {
+        for (int i = 0; i < Globals.NUM_SKILLS; i++) {
             c.getSkills()[i].setLevel(data[nextPos]);
             nextPos += 1;
         }

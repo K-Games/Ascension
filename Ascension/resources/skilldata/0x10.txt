@@ -1,0 +1,21 @@
+[name]
+Magnetize
+[desc]
+1
+Pull enemies within 400 range towards you.
+[reqweapon]
+10
+[maxcooldown]
+15000
+[basevalue]
+1.5
+[multvalue]
+0.15
+[passive]
+false
+[basedefense]
+15
+[multdefense]
+1
+[maxlevelmult]
+3

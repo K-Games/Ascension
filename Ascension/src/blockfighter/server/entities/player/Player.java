@@ -118,7 +118,7 @@ public class Player extends Thread implements GameEntity {
     private final double[] stats = new double[Globals.NUM_STATS], bonusStats = new double[Globals.NUM_STATS];
 
     private final int[] equips = new int[Globals.NUM_EQUIP_SLOTS];
-    private final ConcurrentHashMap<Byte, Skill> skills = new ConcurrentHashMap<>(Skill.NUM_SKILLS, 0.9f, 1);
+    private final ConcurrentHashMap<Byte, Skill> skills = new ConcurrentHashMap<>(Globals.NUM_SKILLS, 0.9f, 1);
     private boolean connected = true;
 
     private final ConcurrentLinkedQueue<Damage> damageQueue = new ConcurrentLinkedQueue<>();
@@ -182,24 +182,24 @@ public class Player extends Thread implements GameEntity {
         };
         IMMOVABLE_PLAYER_SKILL_STATES = new HashSet<>(Arrays.asList(immovableSkills));
 
-        PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SWORD_VORPAL, Skill.SWORD_VORPAL);
-        PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SWORD_PHANTOM, Skill.SWORD_PHANTOM);
-        PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SWORD_CINDER, Skill.SWORD_CINDER);
-        PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SWORD_GASH, Skill.SWORD_GASH);
-        PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SWORD_SLASH, Skill.SWORD_SLASH);
-        PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SWORD_TAUNT, Skill.SWORD_TAUNT);
-        PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_BOW_ARC, Skill.BOW_ARC);
-        PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_BOW_POWER, Skill.BOW_POWER);
-        PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_BOW_RAPID, Skill.BOW_RAPID);
-        PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_BOW_FROST, Skill.BOW_FROST);
-        PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_BOW_STORM, Skill.BOW_STORM);
-        PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_BOW_VOLLEY, Skill.BOW_VOLLEY);
-        PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SHIELD_CHARGE, Skill.SHIELD_CHARGE);
-        PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SHIELD_DASH, Skill.SHIELD_DASH);
-        PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SHIELD_FORTIFY, Skill.SHIELD_FORTIFY);
-        PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SHIELD_ROAR, Skill.SHIELD_ROAR);
-        PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SHIELD_REFLECT, Skill.SHIELD_REFLECT);
-        PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SHIELD_MAGNETIZE, Skill.SHIELD_MAGNETIZE);
+        PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SWORD_VORPAL, Globals.SWORD_VORPAL);
+        PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SWORD_PHANTOM, Globals.SWORD_PHANTOM);
+        PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SWORD_CINDER, Globals.SWORD_CINDER);
+        PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SWORD_GASH, Globals.SWORD_GASH);
+        PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SWORD_SLASH, Globals.SWORD_SLASH);
+        PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SWORD_TAUNT, Globals.SWORD_TAUNT);
+        PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_BOW_ARC, Globals.BOW_ARC);
+        PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_BOW_POWER, Globals.BOW_POWER);
+        PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_BOW_RAPID, Globals.BOW_RAPID);
+        PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_BOW_FROST, Globals.BOW_FROST);
+        PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_BOW_STORM, Globals.BOW_STORM);
+        PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_BOW_VOLLEY, Globals.BOW_VOLLEY);
+        PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SHIELD_CHARGE, Globals.SHIELD_CHARGE);
+        PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SHIELD_DASH, Globals.SHIELD_DASH);
+        PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SHIELD_FORTIFY, Globals.SHIELD_FORTIFY);
+        PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SHIELD_ROAR, Globals.SHIELD_ROAR);
+        PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SHIELD_REFLECT, Globals.SHIELD_REFLECT);
+        PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SHIELD_MAGNETIZE, Globals.SHIELD_MAGNETIZE);
 
     }
 
@@ -374,94 +374,94 @@ public class Player extends Thread implements GameEntity {
     public void setSkill(final byte skillCode, final byte level) {
         Skill newSkill = null;
         switch (skillCode) {
-            case Skill.SWORD_CINDER:
+            case Globals.SWORD_CINDER:
                 newSkill = new SkillSwordCinder(this.logic);
                 break;
-            case Skill.SWORD_GASH:
+            case Globals.SWORD_GASH:
                 newSkill = new SkillSwordGash(this.logic);
                 break;
-            case Skill.SWORD_PHANTOM:
+            case Globals.SWORD_PHANTOM:
                 newSkill = new SkillSwordPhantom(this.logic);
                 break;
-            case Skill.SWORD_SLASH:
+            case Globals.SWORD_SLASH:
                 newSkill = new SkillSwordSlash(this.logic);
                 break;
-            case Skill.SWORD_TAUNT:
+            case Globals.SWORD_TAUNT:
                 newSkill = new SkillSwordTaunt(this.logic);
                 break;
-            case Skill.SWORD_VORPAL:
+            case Globals.SWORD_VORPAL:
                 newSkill = new SkillSwordVorpal(this.logic);
                 break;
-            case Skill.BOW_ARC:
+            case Globals.BOW_ARC:
                 newSkill = new SkillBowArc(this.logic);
                 break;
-            case Skill.BOW_FROST:
+            case Globals.BOW_FROST:
                 newSkill = new SkillBowFrost(this.logic);
                 break;
-            case Skill.BOW_POWER:
+            case Globals.BOW_POWER:
                 newSkill = new SkillBowPower(this.logic);
                 break;
-            case Skill.BOW_RAPID:
+            case Globals.BOW_RAPID:
                 newSkill = new SkillBowRapid(this.logic);
                 break;
-            case Skill.BOW_STORM:
+            case Globals.BOW_STORM:
                 newSkill = new SkillBowStorm(this.logic);
                 break;
-            case Skill.BOW_VOLLEY:
+            case Globals.BOW_VOLLEY:
                 newSkill = new SkillBowVolley(this.logic);
                 break;
-            case Skill.SHIELD_FORTIFY:
+            case Globals.SHIELD_FORTIFY:
                 newSkill = new SkillShieldFortify(this.logic);
                 break;
-            case Skill.SHIELD_ROAR:
+            case Globals.SHIELD_ROAR:
                 newSkill = new SkillShieldRoar(this.logic);
                 break;
-            case Skill.SHIELD_CHARGE:
+            case Globals.SHIELD_CHARGE:
                 newSkill = new SkillShieldCharge(this.logic);
                 break;
-            case Skill.SHIELD_REFLECT:
+            case Globals.SHIELD_REFLECT:
                 newSkill = new SkillShieldReflect(this.logic);
                 break;
-            case Skill.SHIELD_MAGNETIZE:
+            case Globals.SHIELD_MAGNETIZE:
                 newSkill = new SkillShieldMagnetize(this.logic);
                 break;
-            case Skill.SHIELD_DASH:
+            case Globals.SHIELD_DASH:
                 newSkill = new SkillShieldDash(this.logic);
                 break;
-            case Skill.PASSIVE_DUALSWORD:
+            case Globals.PASSIVE_DUALSWORD:
                 newSkill = new SkillPassiveDualSword(this.logic);
                 break;
-            case Skill.PASSIVE_KEENEYE:
+            case Globals.PASSIVE_KEENEYE:
                 newSkill = new SkillPassiveKeenEye(this.logic);
                 break;
-            case Skill.PASSIVE_VITALHIT:
+            case Globals.PASSIVE_VITALHIT:
                 newSkill = new SkillPassiveVitalHit(this.logic);
                 break;
-            case Skill.PASSIVE_SHIELDMASTERY:
+            case Globals.PASSIVE_SHIELDMASTERY:
                 newSkill = new SkillPassiveShieldMastery(this.logic);
                 break;
-            case Skill.PASSIVE_BARRIER:
+            case Globals.PASSIVE_BARRIER:
                 newSkill = new SkillPassiveBarrier(this.logic);
                 break;
-            case Skill.PASSIVE_RESIST:
+            case Globals.PASSIVE_RESIST:
                 newSkill = new SkillPassiveResistance(this.logic);
                 break;
-            case Skill.PASSIVE_BOWMASTERY:
+            case Globals.PASSIVE_BOWMASTERY:
                 newSkill = new SkillPassiveBowMastery(this.logic);
                 break;
-            case Skill.PASSIVE_WILLPOWER:
+            case Globals.PASSIVE_WILLPOWER:
                 newSkill = new SkillPassiveWillpower(this.logic);
                 break;
-            case Skill.PASSIVE_HARMONY:
+            case Globals.PASSIVE_HARMONY:
                 newSkill = new SkillPassiveHarmony(this.logic);
                 break;
-            case Skill.PASSIVE_TOUGH:
+            case Globals.PASSIVE_TOUGH:
                 newSkill = new SkillPassiveTough(this.logic);
                 break;
-            case Skill.PASSIVE_SHADOWATTACK:
+            case Globals.PASSIVE_SHADOWATTACK:
                 newSkill = new SkillPassiveShadowAttack(this.logic);
                 break;
-            case Skill.PASSIVE_STATIC:
+            case Globals.PASSIVE_STATIC:
                 newSkill = new SkillPassiveStatic(this.logic);
                 break;
         }
@@ -595,7 +595,7 @@ public class Player extends Thread implements GameEntity {
         this.skillUseQueue.clear();
         if (data != null) {
             byte skillCode = data[3];
-            if (skillCode == Skill.SHIELD_ROAR || !isStunned()) {
+            if (skillCode == Globals.SHIELD_ROAR || !isStunned()) {
                 if (hasSkill(skillCode)) {
                     castSkill(skillCode);
                 }
@@ -646,7 +646,7 @@ public class Player extends Thread implements GameEntity {
                         final Buff b = bEntry.getValue();
                         if (b instanceof BuffShieldReflect) {
                             Player reflectOwner = ((BuffShieldReflect) b).getOwner();
-                            SkillShieldReflect reflectSkill = (SkillShieldReflect) reflectOwner.getSkill(Skill.SHIELD_REFLECT);
+                            SkillShieldReflect reflectSkill = (SkillShieldReflect) reflectOwner.getSkill(Globals.SHIELD_REFLECT);
                             reflectSkill.updateSkillReflectHit(finalDamage, ((BuffShieldReflect) b).getMultiplier(), reflectOwner);
                         }
                     }
@@ -661,18 +661,23 @@ public class Player extends Thread implements GameEntity {
                 //Passive damage reduction
                 double passiveReduct = 0;
                 // Defender Mastery Passive Reduction
-                if (hasSkill(Skill.PASSIVE_SHIELDMASTERY) && getSkill(Skill.PASSIVE_SHIELDMASTERY).canCast(this)) {
-                    passiveReduct += 0.05 + 0.005 * getSkillLevel(Skill.PASSIVE_SHIELDMASTERY);
+                if (hasSkill(Globals.PASSIVE_SHIELDMASTERY) && getSkill(Globals.PASSIVE_SHIELDMASTERY).canCast(this)) {
+                    double baseReduct = ((SkillPassiveShieldMastery) getSkill(Globals.PASSIVE_SHIELDMASTERY)).getBaseDmgReduct();
+                    double multReduct = ((SkillPassiveShieldMastery) getSkill(Globals.PASSIVE_SHIELDMASTERY)).getMultDmgReduct();
+                    passiveReduct += baseReduct + multReduct * getSkillLevel(Globals.PASSIVE_SHIELDMASTERY);
                 }
 
                 //Passive Tough Skin
-                if (hasSkill(Skill.PASSIVE_TOUGH)) {
-                    passiveReduct += 0.06 + 0.003 * getSkillLevel(Skill.PASSIVE_TOUGH);
+                if (hasSkill(Globals.PASSIVE_TOUGH)) {
+                    double baseValue = getSkill(Globals.PASSIVE_TOUGH).getBaseValue();
+                    double multValue = getSkill(Globals.PASSIVE_TOUGH).getMultValue();
+                    passiveReduct += baseValue + multValue * getSkillLevel(Globals.PASSIVE_TOUGH);
                 }
 
                 // Dual Wield Passive Reduction
-                if (hasSkill(Skill.PASSIVE_DUALSWORD) && getSkill(Skill.PASSIVE_DUALSWORD).canCast(this)) {
-                    passiveReduct += 0.01 * getSkillLevel(Skill.PASSIVE_DUALSWORD);
+                if (hasSkill(Globals.PASSIVE_DUALSWORD) && getSkill(Globals.PASSIVE_DUALSWORD).canCast(this)) {
+                    double dmgReductMult = ((SkillPassiveDualSword) getSkill(Globals.PASSIVE_DUALSWORD)).getDamageReductMult();
+                    passiveReduct += dmgReductMult * getSkillLevel(Globals.PASSIVE_DUALSWORD);
                 }
                 finalDamage = finalDamage * (1 - passiveReduct);
 
@@ -699,16 +704,18 @@ public class Player extends Thread implements GameEntity {
                 if (finalDamage > 0) {
                     sinceLastHPSend = 150;
                 }
-                if (hasSkill(Skill.PASSIVE_BARRIER) && this.skills.get(Skill.PASSIVE_BARRIER).canCast()) {
+                if (hasSkill(Globals.PASSIVE_BARRIER) && this.skills.get(Globals.PASSIVE_BARRIER).canCast()) {
                     this.barrierDmgTaken += finalDamage;
                     if (this.barrierDmgTaken >= this.stats[Globals.STAT_MAXHP] * 0.5) {
                         this.barrierDmgTaken = 0;
+                        double baseValue = getSkill(Globals.PASSIVE_BARRIER).getBaseValue();
+                        double multValue = getSkill(Globals.PASSIVE_BARRIER).getMultValue();
                         queueBuff(new BuffPassiveBarrier(this.logic,
-                                this.stats[Globals.STAT_MAXHP] * (0.1 + 0.005 * getSkillLevel(Skill.PASSIVE_BARRIER)),
+                                this.stats[Globals.STAT_MAXHP] * (baseValue + multValue * getSkillLevel(Globals.PASSIVE_BARRIER)),
                                 this));
                         PacketSender.sendParticle(this.room.getRoomNumber(), Globals.PARTICLE_PASSIVE_BARRIER, dmg.getDmgPoint().x, dmg.getDmgPoint().y);
-                        this.skills.get(Skill.PASSIVE_BARRIER).setCooldown();
-                        sendCooldown(Skill.PASSIVE_BARRIER);
+                        this.skills.get(Globals.PASSIVE_BARRIER).setCooldown();
+                        sendCooldown(Globals.PASSIVE_BARRIER);
                     }
                 }
                 //Globals.log(Player.class.getSimpleName(), "<" + this.getPlayerName() + "> taking damage"
@@ -720,7 +727,7 @@ public class Player extends Thread implements GameEntity {
         }
 
         // Resistance Passive Snapshot HP
-        if (hasSkill(Skill.PASSIVE_RESIST) && this.skills.get(Skill.PASSIVE_RESIST).canCast()) {
+        if (hasSkill(Globals.PASSIVE_RESIST) && this.skills.get(Globals.PASSIVE_RESIST).canCast()) {
             if (resistDamageSum.size() >= Globals.SERVER_LOGIC_TICKS_PER_SEC * 2) {
                 resistDamageSum.poll();
             }
@@ -731,8 +738,8 @@ public class Player extends Thread implements GameEntity {
             }
             if (damageSum >= 0.25 * this.stats[Globals.STAT_MAXHP]) {
                 queueBuff(new BuffPassiveResist(this.logic, 2000, 1));
-                this.skills.get(Skill.PASSIVE_RESIST).setCooldown();
-                sendCooldown(Skill.PASSIVE_RESIST);
+                this.skills.get(Globals.PASSIVE_RESIST).setCooldown();
+                sendCooldown(Globals.PASSIVE_RESIST);
                 resistDamageSum.clear();
             }
         }
@@ -903,19 +910,25 @@ public class Player extends Thread implements GameEntity {
             }
         }
         // Defender Mastery Passive
-        if (hasSkill(Skill.PASSIVE_SHIELDMASTERY) && getSkill(Skill.PASSIVE_SHIELDMASTERY).canCast(this)) {
-            mult += 0.09 + 0.002 * getSkillLevel(Skill.PASSIVE_SHIELDMASTERY);
+        if (hasSkill(Globals.PASSIVE_SHIELDMASTERY) && getSkill(Globals.PASSIVE_SHIELDMASTERY).canCast(this)) {
+            double baseValue = getSkill(Globals.PASSIVE_SHIELDMASTERY).getBaseValue();
+            double multValue = getSkill(Globals.PASSIVE_SHIELDMASTERY).getMultValue();
+            mult += baseValue + multValue * getSkillLevel(Globals.PASSIVE_SHIELDMASTERY);
         }
         // Power of Will Passive
-        if (hasSkill(Skill.PASSIVE_WILLPOWER)) {
+        if (hasSkill(Globals.PASSIVE_WILLPOWER)) {
             // (5% + 0.5% Per Level) * %HP Left
-            mult += (0.05 + 0.005 * getSkillLevel(Skill.PASSIVE_WILLPOWER))
+            double baseValue = getSkill(Globals.PASSIVE_WILLPOWER).getBaseValue();
+            double multValue = getSkill(Globals.PASSIVE_WILLPOWER).getMultValue();
+            mult += (baseValue + multValue * getSkillLevel(Globals.PASSIVE_WILLPOWER))
                     * (this.stats[Globals.STAT_MINHP] / this.stats[Globals.STAT_MAXHP]);
         }
 
         //Passive Harmony
-        if (hasSkill(Skill.PASSIVE_HARMONY)) {
-            dmg += this.stats[Globals.STAT_MAXHP] * (0.001 + 0.001 * getSkillLevel(Skill.PASSIVE_HARMONY));
+        if (hasSkill(Globals.PASSIVE_HARMONY)) {
+            double baseValue = getSkill(Globals.PASSIVE_HARMONY).getBaseValue();
+            double multValue = getSkill(Globals.PASSIVE_HARMONY).getMultValue();
+            dmg += this.stats[Globals.STAT_MAXHP] * (baseValue + multValue * getSkillLevel(Globals.PASSIVE_HARMONY));
         }
 
         dmg *= mult;
@@ -929,15 +942,19 @@ public class Player extends Thread implements GameEntity {
     public boolean rollCrit(final double bonusCritChance) {
         double totalCritChance = this.stats[Globals.STAT_CRITCHANCE] + bonusCritChance;
         // Dual Sword Passive
-        if (hasSkill(Skill.PASSIVE_DUALSWORD)
+        if (hasSkill(Globals.PASSIVE_DUALSWORD)
                 && Items.getItemType(this.equips[Globals.ITEM_WEAPON]) == Globals.ITEM_SWORD
                 && Items.getItemType(this.equips[Globals.ITEM_OFFHAND]) == Globals.ITEM_SWORD) {
             // Check if has Dual Sword passive AND Mainhand/Offhand are both Swords.
-            totalCritChance += 0.04 + 0.002 * getSkillLevel(Skill.PASSIVE_DUALSWORD);
+            double baseValue = getSkill(Globals.PASSIVE_DUALSWORD).getBaseValue();
+            double multValue = getSkill(Globals.PASSIVE_DUALSWORD).getMultValue();
+            totalCritChance += baseValue + multValue * getSkillLevel(Globals.PASSIVE_DUALSWORD);
         }
         // Keen Eye Passive
-        if (hasSkill(Skill.PASSIVE_KEENEYE)) {
-            totalCritChance += 0.01 + 0.003 * getSkillLevel(Skill.PASSIVE_KEENEYE);
+        if (hasSkill(Globals.PASSIVE_KEENEYE)) {
+            double baseValue = getSkill(Globals.PASSIVE_KEENEYE).getBaseValue();
+            double multValue = getSkill(Globals.PASSIVE_KEENEYE).getMultValue();
+            totalCritChance += baseValue + multValue * getSkillLevel(Globals.PASSIVE_KEENEYE);
         }
         return Globals.rng(10000) + 1 < (int) (totalCritChance * 10000);
     }
@@ -949,12 +966,16 @@ public class Player extends Thread implements GameEntity {
     public double criticalDamage(final double dmg, final double bonusCritDmg) {
         double totalCritDmg = 1 + this.stats[Globals.STAT_CRITDMG] + bonusCritDmg;
         // Bow Mastery Passive
-        if (hasSkill(Skill.PASSIVE_BOWMASTERY) && getSkill(Skill.PASSIVE_BOWMASTERY).canCast(this)) {
-            totalCritDmg += 0.3 + 0.04 * getSkillLevel(Skill.PASSIVE_BOWMASTERY);
+        if (hasSkill(Globals.PASSIVE_BOWMASTERY) && getSkill(Globals.PASSIVE_BOWMASTERY).canCast(this)) {
+            double baseValue = getSkill(Globals.PASSIVE_BOWMASTERY).getBaseValue();
+            double multValue = getSkill(Globals.PASSIVE_BOWMASTERY).getMultValue();
+            totalCritDmg += baseValue + multValue * getSkillLevel(Globals.PASSIVE_BOWMASTERY);
         }
         // Keen Eye Passive
-        if (hasSkill(Skill.PASSIVE_VITALHIT)) {
-            totalCritDmg += 0.1 + 0.02 * getSkillLevel(Skill.PASSIVE_VITALHIT);
+        if (hasSkill(Globals.PASSIVE_VITALHIT)) {
+            double baseValue = getSkill(Globals.PASSIVE_VITALHIT).getBaseValue();
+            double multValue = getSkill(Globals.PASSIVE_VITALHIT).getMultValue();
+            totalCritDmg += baseValue + multValue * getSkillLevel(Globals.PASSIVE_VITALHIT);
         }
         return dmg * (totalCritDmg);
     }
@@ -1189,12 +1210,12 @@ public class Player extends Thread implements GameEntity {
     }
 
     public void damageProc(final Damage dmg) {
-        if (hasSkill(Skill.PASSIVE_SHADOWATTACK) && getSkill(Skill.PASSIVE_SHADOWATTACK).canCast()) {
-            ((SkillPassiveShadowAttack) getSkill(Skill.PASSIVE_SHADOWATTACK)).updateSkillUse(this, dmg);
+        if (hasSkill(Globals.PASSIVE_SHADOWATTACK) && getSkill(Globals.PASSIVE_SHADOWATTACK).canCast()) {
+            ((SkillPassiveShadowAttack) getSkill(Globals.PASSIVE_SHADOWATTACK)).updateSkillUse(this, dmg);
         }
 
-        if (hasSkill(Skill.PASSIVE_STATIC)) {
-            getSkill(Skill.PASSIVE_STATIC).updateSkillUse(this);
+        if (hasSkill(Globals.PASSIVE_STATIC)) {
+            getSkill(Globals.PASSIVE_STATIC).updateSkillUse(this);
         }
     }
 

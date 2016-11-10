@@ -1,0 +1,16 @@
+[name]
+Resistance
+[desc]
+2
+When taking damage over 25% of your HP within
+2 seconds, block all damage for the next 2 seconds.
+[reqweapon]
+-1
+[maxcooldown]
+35000
+[basevalue]
+0
+[multvalue]
+1000
+[passive]
+true

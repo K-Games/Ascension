@@ -1,30 +1,93 @@
 package blockfighter.client.entities.player.skills;
 
 import blockfighter.shared.Globals;
+import java.awt.image.BufferedImage;
+import java.util.HashMap;
 
 public class SkillBowStorm extends Skill {
 
-    public SkillBowStorm() {
-        this.icon = Globals.SKILL_ICON[BOW_STORM];
-        this.skillCode = BOW_STORM;
-        this.maxCooldown = 20000;
-        this.reqWeapon = Globals.ITEM_BOW;
-        this.skillName = "Bombardment";
+    private static final String DURATION_HEADER = "[duration]",
+            MAXLVLBONUSCRITDMG_HEADER = "[maxlevelbonuscritdamage]";
+
+    private static final String[] CUSTOM_DATA_HEADERS = {
+        DURATION_HEADER,
+        MAXLVLBONUSCRITDMG_HEADER
+    };
+
+    private static final double DURATION, MAX_LEVEL_BONUS_CRIT_DAMAGE;
+
+    private static final byte SKILL_CODE = Globals.BOW_STORM;
+    private static final BufferedImage ICON = Globals.SKILL_ICON[SKILL_CODE];
+
+    private static final String SKILL_NAME;
+    private static final String[] DESCRIPTION;
+    private static final boolean IS_PASSIVE;
+    private static final byte REQ_WEAPON;
+    private static final double MAX_COOLDOWN;
+
+    private static final double BASE_VALUE, MULT_VALUE;
+
+    static {
+        String[] data = Globals.loadSkillData(SKILL_CODE);
+        HashMap<String, Integer> dataHeaders = Globals.getDataHeaders(data, CUSTOM_DATA_HEADERS);
+
+        SKILL_NAME = Globals.loadSkillName(data, dataHeaders);
+        DESCRIPTION = Globals.loadSkillDesc(data, dataHeaders);
+        REQ_WEAPON = Globals.loadReqWeapon(data, dataHeaders);
+        MAX_COOLDOWN = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MAXCOOLDOWN_HEADER);
+        BASE_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_BASEVALUE_HEADER) * 100;
+        MULT_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MULTVALUE_HEADER) * 100;
+        IS_PASSIVE = Globals.loadBooleanValue(data, dataHeaders, Globals.SKILL_PASSIVE_HEADER);
+
+        MAX_LEVEL_BONUS_CRIT_DAMAGE = Globals.loadDoubleValue(data, dataHeaders, MAXLVLBONUSCRITDMG_HEADER) * 100;
+        DURATION = Globals.loadDoubleValue(data, dataHeaders, DURATION_HEADER) / 1000D;
+    }
+
+    @Override
+    public String[] getDesc() {
+        return DESCRIPTION;
+    }
+
+    @Override
+    public BufferedImage getIcon() {
+        return ICON;
+    }
+
+    @Override
+    public double getMaxCooldown() {
+        return MAX_COOLDOWN;
+    }
+
+    @Override
+    public byte getReqWeapon() {
+        return REQ_WEAPON;
+    }
+
+    @Override
+    public byte getSkillCode() {
+        return SKILL_CODE;
+    }
+
+    @Override
+    public String getSkillName() {
+        return SKILL_NAME;
+    }
+
+    @Override
+    public boolean isPassive() {
+        return IS_PASSIVE;
     }
 
     @Override
     public void updateDesc() {
-        this.description = new String[]{
-            "Launch a hail of arrows, damaging the area in front."
-        };
         this.skillCurLevelDesc = new String[]{
-            "Deals " + (300 + 30 * this.level) + "% damage per second for 5 seconds."
+            "Deals " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * this.level) + "% damage per second for " + TIME_NUMBER_FORMAT.format(DURATION) + " seconds."
         };
         this.skillNextLevelDesc = new String[]{
-            "Deals " + (300 + 30 * (this.level + 1)) + "% damage per second for 5 seconds."
+            "Deals " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "% damage per second for " + TIME_NUMBER_FORMAT.format(DURATION) + " seconds."
         };
         this.maxBonusDesc = new String[]{
-            "Critical Hits have bonus +500% Critical Hit Damage."
+            "Critical Hits have bonus +" + NUMBER_FORMAT.format(MAX_LEVEL_BONUS_CRIT_DAMAGE) + "% Critical Hit Damage."
         };
     }
 

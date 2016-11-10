@@ -1,0 +1,21 @@
+[name]
+Vorpal Strike
+[desc]
+1
+Stab rapidly 3 times.
+[reqweapon]
+0
+[maxcooldown]
+14000
+[basevalue]
+1.45
+[multvalue]
+0.06
+[passive]
+false
+[bonuscritchc]
+0.3
+[basebonuscritdamage]
+0.4
+[multbonuscritdamage]
+0.03

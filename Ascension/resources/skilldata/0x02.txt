@@ -1,0 +1,23 @@
+[name]
+Firebrand
+[desc]
+1
+Deal a powerful hit that afflicts enemies with Burn for 4 seconds.
+[reqweapon]
+0
+[maxcooldown]
+20000
+[basevalue]
+4.5
+[multvalue]
+0.2
+[passive]
+false
+[buffduration]
+4000
+[damageamp]
+0.01
+[burndamage]
+3.75
+[bonuscritchc]
+1
