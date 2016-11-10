@@ -1,11 +1,11 @@
 package blockfighter.server.entities.player.skills;
 
-import blockfighter.shared.Globals;
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.proj.ProjSwordPhantom;
 import blockfighter.server.net.PacketSender;
+import blockfighter.shared.Globals;
 import java.util.ArrayList;
 
 public class SkillSwordPhantom extends Skill {
@@ -72,7 +72,7 @@ public class SkillSwordPhantom extends Skill {
                 final ProjSwordPhantom proj = new ProjSwordPhantom(this.logic, player, player.getX(), player.getY());
                 this.logic.queueAddProj(proj);
                 PacketSender.sendParticle(this.logic.getRoom().getRoomNumber(), Globals.PARTICLE_SWORD_PHANTOM, player.getX(), player.getY(), player.getFacing());
-                PacketSender.sendParticle(this.logic.getRoom().getRoomNumber(), Globals.PARTICLE_SWORD_PHANTOM2, player.getX(), player.getY(), player.getFacing());
+                PacketSender.sendParticle(this.logic.getRoom().getRoomNumber(), Globals.PARTICLE_SWORD_PHANTOM2, player.getKey());
                 player.incrementSkillCounter();
             }
         }

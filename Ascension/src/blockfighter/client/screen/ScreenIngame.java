@@ -1,6 +1,5 @@
 package blockfighter.client.screen;
 
-import blockfighter.shared.Globals;
 import blockfighter.client.SaveData;
 import blockfighter.client.entities.emotes.Emote;
 import blockfighter.client.entities.emotes.EmoteAlert;
@@ -20,6 +19,7 @@ import blockfighter.client.entities.player.skills.Skill;
 import blockfighter.client.maps.GameMap;
 import blockfighter.client.net.GameClient;
 import blockfighter.client.net.PacketSender;
+import blockfighter.shared.Globals;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -729,10 +729,10 @@ public class ScreenIngame extends Screen {
                 addParticle(new ParticleSwordPhantom(x, y, facing));
                 break;
             case Globals.PARTICLE_SWORD_PHANTOM2:
-                x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
-                y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
-                facing = data[10];
-                addParticle(new ParticleSwordPhantom2(x, y, facing));
+                playerKey = data[2];
+                if (this.players.containsKey(playerKey)) {
+                    addParticle(new ParticleSwordPhantom2(this.players.get(playerKey)));
+                }
                 break;
             case Globals.PARTICLE_SWORD_MULTI:
                 x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
