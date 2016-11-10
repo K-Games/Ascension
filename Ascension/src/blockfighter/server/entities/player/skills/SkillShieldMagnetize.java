@@ -51,7 +51,7 @@ public class SkillShieldMagnetize extends Skill {
             player.incrementSkillCounter();
         }
 
-        if (Globals.hasPastDuration(duration, 200) && player.getSkillCounter() >= 2) {
+        if (Globals.hasPastDuration(duration, 200) && player.getSkillCounter() == 2) {
             if (this.logic.getRoom().getMap().isPvP()) {
                 if (!this.playersCaught.isEmpty()) {
                     int numOfTicks = (int) ((500 - duration) / Globals.nsToMs(Globals.SERVER_LOGIC_UPDATE));

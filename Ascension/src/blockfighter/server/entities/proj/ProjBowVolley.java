@@ -1,6 +1,5 @@
 package blockfighter.server.entities.proj;
 
-import blockfighter.shared.Globals;
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.buff.BuffBowVolley;
 import blockfighter.server.entities.buff.BuffKnockback;
@@ -9,6 +8,7 @@ import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.player.skills.Skill;
 import blockfighter.server.net.PacketSender;
+import blockfighter.shared.Globals;
 import java.awt.geom.Rectangle2D;
 
 public class ProjBowVolley extends Projectile {
@@ -53,7 +53,7 @@ public class ProjBowVolley extends Projectile {
             }
         }
         target.queueDamage(new Damage(damage, true, owner, target, isCrit, this.hitbox[0], target.getHitbox()));
-        target.queueBuff(new BuffKnockback(this.logic, 50, (owner.getFacing() == Globals.RIGHT) ? 1 : -1, -0.1, owner, target));
+        target.queueBuff(new BuffKnockback(this.logic, 50, (owner.getFacing() == Globals.RIGHT) ? 2.5 : -2.5, -0.5, owner, target));
     }
 
     @Override

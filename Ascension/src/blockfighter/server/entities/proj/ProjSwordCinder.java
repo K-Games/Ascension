@@ -1,6 +1,5 @@
 package blockfighter.server.entities.proj;
 
-import blockfighter.shared.Globals;
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.buff.BuffBurn;
 import blockfighter.server.entities.buff.BuffKnockback;
@@ -9,6 +8,7 @@ import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.player.skills.Skill;
 import blockfighter.server.net.PacketSender;
+import blockfighter.shared.Globals;
 import java.awt.geom.Rectangle2D;
 
 public class ProjSwordCinder extends Projectile {
@@ -38,7 +38,7 @@ public class ProjSwordCinder extends Projectile {
         final boolean isCrit = owner.rollCrit((owner.isSkillMaxed(Skill.SWORD_CINDER)) ? 1 : 0);
         final int damage = calculateDamage(isCrit);
         target.queueDamage(new Damage(damage, true, owner, target, isCrit, this.hitbox[0], target.getHitbox()));
-        target.queueBuff(new BuffKnockback(this.logic, 300, (owner.getFacing() == Globals.RIGHT) ? 1 : -1, -4, owner, target));
+        target.queueBuff(new BuffKnockback(this.logic, 300, (owner.getFacing() == Globals.RIGHT) ? 7 : -7, -8, owner, target));
         target.queueBuff(new BuffBurn(this.logic, 4000, owner.getSkillLevel(Skill.SWORD_CINDER) * 0.01,
                 owner.isSkillMaxed(Skill.SWORD_CINDER) ? owner.rollDamage() : 0, owner, target));
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
