@@ -368,8 +368,8 @@ public class Globals {
 
     public final static boolean LOGGING = true;
     private final static String LOG_DIR = "logs/",
-            ERRLOG_FILE = "ErrorLog.log",
-            DATALOG_FILE = "DataLog.log";
+            ERRLOG_FILE = "ErrorLog-" + String.format("%1$td%1$tm%1$tY-%1$tH%1$tM%1$tS", System.currentTimeMillis()) + ".log",
+            DATALOG_FILE = "DataLog-" + String.format("%1$td%1$tm%1$tY-%1$tH%1$tM%1$tS", System.currentTimeMillis()) + ".log";
     private static JTextArea dataConsole, errConsole;
 
     public final static byte LOG_TYPE_ERR = 0x00,
