@@ -184,6 +184,9 @@ public abstract class Particle extends Thread {
         this.y = y;
         this.duration = 200;
         this.owner = owner;
+        if (owner != null) {
+            this.facing = owner.getFacing();
+        }
         setDaemon(true);
     }
 
