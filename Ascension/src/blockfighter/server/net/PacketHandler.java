@@ -1,10 +1,10 @@
 package blockfighter.server.net;
 
-import blockfighter.shared.Globals;
 import blockfighter.server.LogicModule;
 import blockfighter.server.Room;
 import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
+import blockfighter.shared.Globals;
 import com.esotericsoftware.kryonet.Connection;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
@@ -302,7 +302,6 @@ public class PacketHandler {
         GameServer.addPlayerConnection(c, newPlayer);
 
         Globals.log(PacketHandler.class, "DATA_PLAYER_CREATE " + c + " Sent <" + newPlayer.getPlayerName() + "> creation confirmation.  Room: " + room.getRoomNumber() + " Key: " + freeKey, Globals.LOG_TYPE_DATA, true);
-        newPlayer.sendPos();
         newPlayer.sendName();
         newPlayer.sendStat(Globals.STAT_MAXHP);
     }

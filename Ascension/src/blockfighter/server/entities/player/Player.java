@@ -286,6 +286,10 @@ public class Player extends Thread implements GameEntity {
         return this.skillCastTime;
     }
 
+    public boolean isUpdatePos() {
+        return this.updatePos;
+    }
+
     public void incrementSkillCounter() {
         this.skillCounter++;
     }
@@ -521,10 +525,6 @@ public class Player extends Thread implements GameEntity {
         this.hitbox.y = this.y - 100;
 
         updateAnimState();
-        if (this.updatePos) {
-            sendPos();
-            this.updateFacing = false;
-        }
         if (this.updateFacing) {
             sendFacing();
         }
@@ -1451,19 +1451,18 @@ public class Player extends Thread implements GameEntity {
         PacketSender.sendPlayer(bytes, requestingPlayer);
     }
 
-    public void sendPos() {
-        final byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT * 2];
-        bytes[0] = Globals.DATA_PLAYER_SET_POS;
-        bytes[1] = this.key;
+    public byte[] getPosData() {
+        final byte[] bytes = new byte[Globals.PACKET_BYTE * 2 + Globals.PACKET_INT * 2];
+        bytes[0] = this.key;
         final byte[] posXInt = Globals.intToBytes((int) this.x);
-        System.arraycopy(posXInt, 0, bytes, 2, posXInt.length);
+        System.arraycopy(posXInt, 0, bytes, 1, posXInt.length);
 
         final byte[] posYInt = Globals.intToBytes((int) this.y);
-        System.arraycopy(posYInt, 0, bytes, 6, posYInt.length);
-        bytes[10] = this.facing;
-        PacketSender.sendAll(bytes, this.room.getRoomNumber());
+        System.arraycopy(posYInt, 0, bytes, 5, posYInt.length);
+
+        bytes[9] = this.facing;
         this.updatePos = false;
-        this.updateFacing = false;
+        return bytes;
     }
 
     public void sendFacing() {

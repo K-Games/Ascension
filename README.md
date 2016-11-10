@@ -17,6 +17,7 @@ Inspired by Action RPGs and Metroidvanias. A game dedicated about its gameplay.
 ### Client Changes
 
 ### Server Changes
+* Improve netcode for player position.
 
 ![Social Media](https://github.com/kenofnz/AscensionInfo/raw/gh-pages/images/social.png)
 
