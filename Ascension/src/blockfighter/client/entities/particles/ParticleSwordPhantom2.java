@@ -25,7 +25,7 @@ public class ParticleSwordPhantom2 extends Particle {
     @Override
     public void update() {
         super.update();
-        if (Globals.nsToMs(logic.getTime() - this.particleStartTime) >= 100 && trailX[1] == null) {
+        if (Globals.nsToMs(logic.getTime() - this.particleStartTime) >= 50 && trailX[1] == null) {
             this.trailX[1] = this.owner.getX();
             this.trailY[3] = this.owner.getY() - 100;
             this.trailY[2] = this.owner.getY() - 20;

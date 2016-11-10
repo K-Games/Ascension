@@ -93,9 +93,7 @@ public class ItemEquip implements Item {
 
     private static void loadItemData() {
         Globals.log(ItemEquip.class, "Loading Item Data...", Globals.LOG_TYPE_DATA, true);
-        int loadCount = 0;
         for (final int itemCode : Globals.ITEM_CODES) {
-            loadCount++;
             try {
                 InputStream itemFile = Globals.loadResourceAsStream("itemdata/equip/" + itemCode + ".txt");
                 List<String> fileLines = IOUtils.readLines(itemFile);
