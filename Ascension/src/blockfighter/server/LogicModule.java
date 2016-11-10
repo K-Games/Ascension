@@ -3,7 +3,9 @@ package blockfighter.server;
 import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.proj.Projectile;
+import blockfighter.server.net.PacketSender;
 import blockfighter.shared.Globals;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -120,7 +122,7 @@ public class LogicModule extends Thread {
 
     private void updatePlayers() {
         final ConcurrentHashMap<Byte, Player> players = this.room.getPlayers();
-
+        final ArrayList<byte[]> posDatas = new ArrayList<>();
         for (final Map.Entry<Byte, Player> player : players.entrySet()) {
             LOGIC_THREAD_POOL.execute(player.getValue());
         }
@@ -132,6 +134,12 @@ public class LogicModule extends Thread {
             try {
                 player.getValue().join();
                 this.room.putPlayerIntoBuckets(player.getValue());
+
+                if (player.getValue().isUpdatePos()) {
+                    byte[] posData = player.getValue().getPosData();
+                    posDatas.add(posData);
+                }
+
                 if (!(player.getValue().isConnected())) {
                     playersIter.remove();
                     this.room.returnPlayerKey(player.getKey());
@@ -139,6 +147,19 @@ public class LogicModule extends Thread {
             } catch (final InterruptedException ex) {
                 Globals.logError(ex.getStackTrace()[0].toString(), ex, true);
             }
+        }
+
+        if (posDatas.size() > 0) {
+            byte[] bytes = new byte[Globals.PACKET_BYTE * 1
+                    + (Globals.PACKET_BYTE * 2 + Globals.PACKET_INT * 2) * posDatas.size()];
+            bytes[0] = Globals.DATA_PLAYER_SET_POS;
+            int bytePos = 1;
+
+            for (byte[] posData : posDatas) {
+                System.arraycopy(posData, 0, bytes, bytePos, posData.length);
+                bytePos += posData.length;
+            }
+            PacketSender.sendAll(bytes, this.room.getRoomNumber());
         }
     }
 

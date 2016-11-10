@@ -637,13 +637,15 @@ public class ScreenIngame extends Screen {
     }
 
     private void dataPlayerSetPos(final byte[] data) {
-        final byte key = data[1];
-        final int x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
-        final int y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
-        final byte facing = data[10];
-        spawnPlayer(key, x, y);
-        this.players.get(key).setPos(x, y);
-        this.players.get(key).setFacing(facing);
+        for (int i = 0; i < (data.length - 1) / 10; i++) {
+            final byte key = data[i * 10 + 1];
+            final int x = Globals.bytesToInt(Arrays.copyOfRange(data, i * 10 + 2, i * 10 + 6));
+            final int y = Globals.bytesToInt(Arrays.copyOfRange(data, i * 10 + 6, i * 10 + 10));
+            final byte facing = data[i * 10 + 10];
+            spawnPlayer(key, x, y);
+            this.players.get(key).setPos(x, y);
+            this.players.get(key).setFacing(facing);
+        }
     }
 
     private void dataPlayerSetFacing(final byte[] data) {
