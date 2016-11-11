@@ -301,7 +301,6 @@ public class Globals {
 
     public final static byte NUM_SKILLS = 30,
             SWORD_VORPAL = 0x00,
-            SWORD_MULTI = 0x01,
             SWORD_PHANTOM = 0x01,
             SWORD_CINDER = 0x02,
             SWORD_GASH = 0x03,
@@ -317,7 +316,6 @@ public class Globals {
             SHIELD_ROAR = 0x0D,
             SHIELD_CHARGE = 0x0E,
             SHIELD_REFLECT = 0x0F,
-            SHIELD_TOSS = 0x10,
             SHIELD_MAGNETIZE = 0x10,
             SHIELD_DASH = 0x11,
             PASSIVE_DUALSWORD = 0x12,
@@ -329,7 +327,6 @@ public class Globals {
             PASSIVE_BOWMASTERY = 0x18,
             PASSIVE_WILLPOWER = 0x19,
             PASSIVE_HARMONY = 0x1A,
-            PASSIVE_REVIVE = 0x1B,
             PASSIVE_TOUGH = 0x1B,
             PASSIVE_SHADOWATTACK = 0x1C,
             PASSIVE_STATIC = 0x1D;

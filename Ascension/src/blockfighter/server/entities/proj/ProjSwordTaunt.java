@@ -26,7 +26,6 @@ public class ProjSwordTaunt extends Projectile {
         final Player owner = getOwner();
         double baseValue = owner.getSkill(Globals.SWORD_TAUNT).getBaseValue();
         double multValue = owner.getSkill(Globals.SWORD_TAUNT).getMultValue();
-
         double damage = owner.rollDamage() * (baseValue + multValue * owner.getSkillLevel(Globals.SWORD_TAUNT));
         damage = (isCrit) ? owner.criticalDamage(damage) : damage;
         return (int) damage;

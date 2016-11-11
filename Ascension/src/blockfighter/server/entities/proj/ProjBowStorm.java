@@ -15,7 +15,7 @@ public class ProjBowStorm extends Projectile {
     private static final long DAMAGE_INSTANCE_DELAY = 100;
 
     public ProjBowStorm(final LogicModule l, final Player o, final double x, final double y) {
-        super(l, o, x, y, (int) ((SkillBowStorm) o.getSkill(Globals.BOW_RAPID)).getDuration());
+        super(l, o, x, y, (int) ((SkillBowStorm) o.getSkill(Globals.BOW_STORM)).getDuration());
         lastDamageTime = this.logic.getTime();
         this.hitbox = new Rectangle2D.Double[1];
         if (o.getFacing() == Globals.RIGHT) {
@@ -29,13 +29,13 @@ public class ProjBowStorm extends Projectile {
     @Override
     public int calculateDamage(final boolean isCrit) {
         final Player owner = getOwner();
-        double dmgInstances = ((SkillBowStorm) owner.getSkill(Globals.BOW_RAPID)).getDuration() / DAMAGE_INSTANCE_DELAY;
+        double dmgInstances = ((SkillBowStorm) owner.getSkill(Globals.BOW_STORM)).getDuration() / DAMAGE_INSTANCE_DELAY;
         double baseValue = owner.getSkill(Globals.BOW_STORM).getBaseValue() / dmgInstances;
         double multValue = owner.getSkill(Globals.BOW_STORM).getMultValue() / dmgInstances;
 
         double damage = owner.rollDamage() * (baseValue + multValue * owner.getSkillLevel(Globals.BOW_STORM));
         if (isCrit) {
-            damage = owner.isSkillMaxed(Globals.BOW_STORM) ? owner.criticalDamage(damage, ((SkillBowStorm) owner.getSkill(Globals.BOW_RAPID)).getBonusCritDamage()) : owner.criticalDamage(damage);
+            damage = owner.isSkillMaxed(Globals.BOW_STORM) ? owner.criticalDamage(damage, ((SkillBowStorm) owner.getSkill(Globals.BOW_STORM)).getBonusCritDamage()) : owner.criticalDamage(damage);
         }
         return (int) damage;
     }

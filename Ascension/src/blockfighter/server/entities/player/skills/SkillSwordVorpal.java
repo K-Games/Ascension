@@ -37,13 +37,13 @@ public class SkillSwordVorpal extends Skill {
 
         REQ_WEAPON = Globals.loadReqWeapon(data, dataHeaders);
         MAX_COOLDOWN = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MAXCOOLDOWN_HEADER);
-        BASE_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_BASEVALUE_HEADER) * 100;
-        MULT_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MULTVALUE_HEADER) * 100;
+        BASE_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_BASEVALUE_HEADER);
+        MULT_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MULTVALUE_HEADER);
         IS_PASSIVE = Globals.loadBooleanValue(data, dataHeaders, Globals.SKILL_PASSIVE_HEADER);
 
-        BASE_BONUS_CRIT_DAMAGE = Globals.loadDoubleValue(data, dataHeaders, BASEBONUSCRITDMG_HEADER) * 100;
-        MULT_BONUS_CRIT_DAMAGE = Globals.loadDoubleValue(data, dataHeaders, MULTBONUSCRITDMG_HEADER) * 100;
-        BONUS_CRIT_CHANCE = Globals.loadDoubleValue(data, dataHeaders, BONUSCRITCHC_HEADER) * 100;
+        BASE_BONUS_CRIT_DAMAGE = Globals.loadDoubleValue(data, dataHeaders, BASEBONUSCRITDMG_HEADER);
+        MULT_BONUS_CRIT_DAMAGE = Globals.loadDoubleValue(data, dataHeaders, MULTBONUSCRITDMG_HEADER);
+        BONUS_CRIT_CHANCE = Globals.loadDoubleValue(data, dataHeaders, BONUSCRITCHC_HEADER);
     }
 
     public SkillSwordVorpal(final LogicModule l) {

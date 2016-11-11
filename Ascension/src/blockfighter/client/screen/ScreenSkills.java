@@ -60,7 +60,7 @@ public class ScreenSkills extends ScreenMenu {
         SKILL_SLOTS[Globals.SHIELD_ROAR] = new Rectangle2D.Double(SHIELD_BOX_X, SHIELD_BOX_Y, 60, 60);
         SKILL_SLOTS[Globals.SHIELD_CHARGE] = new Rectangle2D.Double(SHIELD_BOX_X, SHIELD_BOX_Y + 75, 60, 60);
         SKILL_SLOTS[Globals.SHIELD_REFLECT] = new Rectangle2D.Double(SHIELD_BOX_X, SHIELD_BOX_Y + 150, 60, 60);
-        SKILL_SLOTS[Globals.SHIELD_TOSS] = new Rectangle2D.Double(SHIELD_BOX_X, SHIELD_BOX_Y + 225, 60, 60);
+        SKILL_SLOTS[Globals.SHIELD_MAGNETIZE] = new Rectangle2D.Double(SHIELD_BOX_X, SHIELD_BOX_Y + 225, 60, 60);
 
         //Specialize
         SKILL_SLOTS[Globals.PASSIVE_DUALSWORD] = new Rectangle2D.Double(PASSIVE_BOX_X, PASSIVE_BOX_Y, 60, 60);
