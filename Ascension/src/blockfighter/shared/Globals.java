@@ -466,7 +466,6 @@ public class Globals {
         SKILL_PASSIVE_HEADER};
 
     static {
-        createLogDirectory();
         loadItemCodes();
     }
 

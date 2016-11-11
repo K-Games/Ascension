@@ -53,6 +53,8 @@ public class AscensionServer {
 
     public void launch(final String[] args) {
         System.out.println("Ascension Server " + Globals.GAME_RELEASE_VERSION);
+        Globals.LOGGING = true;
+        Globals.createLogDirectory();
 
         boolean isGUI = false, isDefault = false;
 

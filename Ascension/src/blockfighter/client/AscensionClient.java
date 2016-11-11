@@ -146,6 +146,7 @@ public class AscensionClient {
                         break;
                     case "-log":
                         Globals.LOGGING = true;
+                        Globals.createLogDirectory();
                         break;
                 }
             }
