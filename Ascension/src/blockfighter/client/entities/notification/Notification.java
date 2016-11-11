@@ -1,9 +1,9 @@
 package blockfighter.client.entities.notification;
 
-import blockfighter.shared.Globals;
-import blockfighter.client.LogicModule;
 import blockfighter.client.AscensionClient;
+import blockfighter.client.LogicModule;
 import blockfighter.client.entities.items.Item;
+import blockfighter.shared.Globals;
 import java.awt.Color;
 import java.awt.Graphics2D;
 

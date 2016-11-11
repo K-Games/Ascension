@@ -1,11 +1,11 @@
 package blockfighter.server.entities.player.skills;
 
-import blockfighter.shared.Globals;
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.net.PacketSender;
+import blockfighter.shared.Globals;
 import java.util.ArrayList;
 
 public class SkillPassiveStatic extends Skill {

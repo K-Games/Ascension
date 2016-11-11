@@ -1,11 +1,11 @@
 package blockfighter.client.entities.mob;
 
-import blockfighter.shared.Globals;
-import blockfighter.client.LogicModule;
 import blockfighter.client.AscensionClient;
+import blockfighter.client.LogicModule;
 import blockfighter.client.entities.mob.boss.Lightning.BossLightning;
 import blockfighter.client.net.GameClient;
 import blockfighter.client.net.PacketSender;
+import blockfighter.shared.Globals;
 import java.awt.Graphics2D;
 import java.awt.Point;
 

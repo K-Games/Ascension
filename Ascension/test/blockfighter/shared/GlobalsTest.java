@@ -1,6 +1,5 @@
 package blockfighter.shared;
 
-import blockfighter.shared.Globals;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 import static org.junit.Assert.*;

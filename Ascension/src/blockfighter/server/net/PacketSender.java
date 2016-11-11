@@ -1,8 +1,8 @@
 package blockfighter.server.net;
 
-import blockfighter.shared.Globals;
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.player.Player;
+import blockfighter.shared.Globals;
 import com.esotericsoftware.kryonet.Connection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;

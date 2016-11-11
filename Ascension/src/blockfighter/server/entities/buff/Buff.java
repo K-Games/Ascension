@@ -1,10 +1,10 @@
 package blockfighter.server.entities.buff;
 
-import blockfighter.shared.Globals;
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.GameEntity;
 import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
+import blockfighter.shared.Globals;
 
 public abstract class Buff implements GameEntity {
 

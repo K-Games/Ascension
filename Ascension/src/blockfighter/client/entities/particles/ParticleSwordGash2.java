@@ -1,7 +1,7 @@
 package blockfighter.client.entities.particles;
 
-import blockfighter.shared.Globals;
 import static blockfighter.client.entities.particles.Particle.PARTICLE_SPRITE;
+import blockfighter.shared.Globals;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 

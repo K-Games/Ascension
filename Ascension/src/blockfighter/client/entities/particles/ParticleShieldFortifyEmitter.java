@@ -1,8 +1,8 @@
 package blockfighter.client.entities.particles;
 
-import blockfighter.shared.Globals;
 import static blockfighter.client.entities.particles.Particle.logic;
 import blockfighter.client.entities.player.Player;
+import blockfighter.shared.Globals;
 import java.awt.Point;
 
 public class ParticleShieldFortifyEmitter extends Particle {

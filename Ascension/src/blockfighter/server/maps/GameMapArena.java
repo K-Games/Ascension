@@ -1,7 +1,7 @@
 package blockfighter.server.maps;
 
-import blockfighter.shared.Globals;
 import blockfighter.server.LogicModule;
+import blockfighter.shared.Globals;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 

@@ -1,7 +1,7 @@
 package blockfighter.client.screen;
 
-import blockfighter.client.LogicModule;
 import blockfighter.client.AscensionClient;
+import blockfighter.client.LogicModule;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.client.render.RenderPanel;
 import java.awt.Color;

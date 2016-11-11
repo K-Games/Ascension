@@ -1,7 +1,7 @@
 package blockfighter.client.render;
 
-import blockfighter.client.LogicModule;
 import blockfighter.client.AscensionClient;
+import blockfighter.client.LogicModule;
 
 public class RenderModule implements Runnable {
 

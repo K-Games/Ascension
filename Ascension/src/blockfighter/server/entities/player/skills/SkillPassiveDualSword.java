@@ -1,9 +1,9 @@
 package blockfighter.server.entities.player.skills;
 
-import blockfighter.shared.Globals;
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.items.Items;
 import blockfighter.server.entities.player.Player;
+import blockfighter.shared.Globals;
 
 public class SkillPassiveDualSword extends Skill {
 

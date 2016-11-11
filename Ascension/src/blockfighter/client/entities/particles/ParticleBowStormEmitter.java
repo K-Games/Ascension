@@ -1,7 +1,7 @@
 package blockfighter.client.entities.particles;
 
-import blockfighter.shared.Globals;
 import static blockfighter.client.entities.particles.Particle.logic;
+import blockfighter.shared.Globals;
 
 public class ParticleBowStormEmitter extends Particle {
 

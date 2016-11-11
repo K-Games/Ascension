@@ -1,12 +1,12 @@
 package blockfighter.server.entities.proj;
 
-import blockfighter.shared.Globals;
 import blockfighter.server.LogicModule;
 import blockfighter.server.Room;
 import blockfighter.server.entities.GameEntity;
 import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.net.PacketSender;
+import blockfighter.shared.Globals;
 import java.awt.geom.Rectangle2D;
 import java.util.HashMap;
 import java.util.LinkedList;

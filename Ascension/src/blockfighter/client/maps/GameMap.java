@@ -1,7 +1,7 @@
 package blockfighter.client.maps;
 
-import blockfighter.shared.Globals;
 import blockfighter.client.entities.particles.Particle;
+import blockfighter.shared.Globals;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;

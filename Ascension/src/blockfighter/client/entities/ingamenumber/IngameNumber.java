@@ -1,8 +1,8 @@
 package blockfighter.client.entities.ingamenumber;
 
-import blockfighter.shared.Globals;
-import blockfighter.client.LogicModule;
 import blockfighter.client.AscensionClient;
+import blockfighter.client.LogicModule;
+import blockfighter.shared.Globals;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;

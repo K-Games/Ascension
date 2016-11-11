@@ -1,7 +1,7 @@
 package blockfighter.client.net;
 
-import blockfighter.client.LogicModule;
 import blockfighter.client.AscensionClient;
+import blockfighter.client.LogicModule;
 import blockfighter.client.screen.ScreenIngame;
 import blockfighter.client.screen.ScreenLoading;
 import blockfighter.client.screen.ScreenServerList;

@@ -1,8 +1,8 @@
 package blockfighter.server.entities.damage;
 
-import blockfighter.shared.Globals;
 import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
+import blockfighter.shared.Globals;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 

@@ -1,10 +1,10 @@
 package blockfighter.server.entities.buff;
 
-import blockfighter.shared.Globals;
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
+import blockfighter.shared.Globals;
 import java.awt.geom.Point2D;
 
 public class BuffBurn extends Buff implements BuffDmgTakenAmp {

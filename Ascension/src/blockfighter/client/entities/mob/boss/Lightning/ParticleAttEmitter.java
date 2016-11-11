@@ -1,7 +1,7 @@
 package blockfighter.client.entities.mob.boss.Lightning;
 
-import blockfighter.shared.Globals;
 import blockfighter.client.entities.particles.Particle;
+import blockfighter.shared.Globals;
 
 public class ParticleAttEmitter extends Particle {
 

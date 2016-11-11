@@ -1,9 +1,9 @@
 package blockfighter.client.screen;
 
-import blockfighter.shared.Globals;
 import blockfighter.client.SaveData;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.client.entities.particles.ParticleMenuSmoke;
+import blockfighter.shared.Globals;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;

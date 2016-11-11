@@ -1,9 +1,9 @@
 package blockfighter.client.net;
 
-import blockfighter.shared.Globals;
 import blockfighter.client.SaveData;
 import blockfighter.client.entities.items.ItemEquip;
 import blockfighter.client.entities.player.skills.Skill;
+import blockfighter.shared.Globals;
 import java.nio.charset.StandardCharsets;
 
 public class PacketSender {

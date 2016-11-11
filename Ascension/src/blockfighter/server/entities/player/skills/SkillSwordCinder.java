@@ -1,10 +1,10 @@
 package blockfighter.server.entities.player.skills;
 
-import blockfighter.shared.Globals;
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.proj.ProjSwordCinder;
 import blockfighter.server.net.PacketSender;
+import blockfighter.shared.Globals;
 
 public class SkillSwordCinder extends Skill {
 
