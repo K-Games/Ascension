@@ -1,0 +1,19 @@
+[name]
+Bombardment
+[desc]
+1
+Launch a hail of arrows, bombarding the area in front.
+[reqweapon]
+11
+[maxcooldown]
+20000
+[basevalue]
+3
+[multvalue]
+0.3
+[passive]
+false
+[maxlevelbonuscritdamage]
+5
+[duration]
+5000

@@ -206,7 +206,7 @@ public class ItemEquip implements Item {
                     }
                 }
             } catch (IOException | NullPointerException e) {
-                Globals.logError("Could not load item #" + itemCode + " data.", e, true);
+                Globals.logError("Could not load item #" + itemCode + " data." + e.getStackTrace()[0].toString(), e, true);
             }
         }
         Globals.log(ItemEquip.class, "Loaded Item Data.", Globals.LOG_TYPE_DATA, true);

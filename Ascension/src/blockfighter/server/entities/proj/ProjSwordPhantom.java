@@ -4,7 +4,6 @@ import blockfighter.server.LogicModule;
 import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
-import blockfighter.server.entities.player.skills.Skill;
 import blockfighter.shared.Globals;
 import java.awt.geom.Rectangle2D;
 
@@ -23,7 +22,9 @@ public class ProjSwordPhantom extends Projectile {
     @Override
     public int calculateDamage(final boolean isCrit) {
         final Player owner = getOwner();
-        double damage = owner.rollDamage() * (.75 + owner.getSkillLevel(Skill.SWORD_PHANTOM) * .02);
+        double baseValue = owner.getSkill(Globals.SWORD_PHANTOM).getBaseValue();
+        double multValue = owner.getSkill(Globals.SWORD_PHANTOM).getMultValue();
+        double damage = owner.rollDamage() * (baseValue + multValue * owner.getSkillLevel(Globals.SWORD_PHANTOM));
         damage = (isCrit) ? owner.criticalDamage(damage) : damage;
         return (int) damage;
     }

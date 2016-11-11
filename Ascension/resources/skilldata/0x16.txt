@@ -1,0 +1,16 @@
+[name]
+Barrier
+[desc]
+2
+After taking damage equal to 50% of HP, gain a barrier
+that can absorb up to a percentage of HP in damage.
+[reqweapon]
+-1
+[maxcooldown]
+30000
+[basevalue]
+0.1
+[multvalue]
+0.005
+[passive]
+true

@@ -5,16 +5,17 @@ import blockfighter.server.entities.buff.BuffKnockback;
 import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
-import blockfighter.server.entities.player.skills.Skill;
+import blockfighter.server.entities.player.skills.SkillBowStorm;
 import blockfighter.shared.Globals;
 import java.awt.geom.Rectangle2D;
 
 public class ProjBowStorm extends Projectile {
 
     private long lastDamageTime;
+    private static final long DAMAGE_INSTANCE_DELAY = 100;
 
     public ProjBowStorm(final LogicModule l, final Player o, final double x, final double y) {
-        super(l, o, x, y, 5000);
+        super(l, o, x, y, (int) ((SkillBowStorm) o.getSkill(Globals.BOW_RAPID)).getDuration());
         lastDamageTime = this.logic.getTime();
         this.hitbox = new Rectangle2D.Double[1];
         if (o.getFacing() == Globals.RIGHT) {
@@ -28,10 +29,13 @@ public class ProjBowStorm extends Projectile {
     @Override
     public int calculateDamage(final boolean isCrit) {
         final Player owner = getOwner();
-        double damage = owner.rollDamage() * (0.6 + (.06 * owner.getSkillLevel(Skill.BOW_STORM)));
-        damage *= 100 / 200D;
+        double dmgInstances = ((SkillBowStorm) owner.getSkill(Globals.BOW_RAPID)).getDuration() / DAMAGE_INSTANCE_DELAY;
+        double baseValue = owner.getSkill(Globals.BOW_STORM).getBaseValue() / dmgInstances;
+        double multValue = owner.getSkill(Globals.BOW_STORM).getMultValue() / dmgInstances;
+
+        double damage = owner.rollDamage() * (baseValue + multValue * owner.getSkillLevel(Globals.BOW_STORM));
         if (isCrit) {
-            damage = owner.isSkillMaxed(Skill.BOW_STORM) ? owner.criticalDamage(damage, 5) : owner.criticalDamage(damage);
+            damage = owner.isSkillMaxed(Globals.BOW_STORM) ? owner.criticalDamage(damage, ((SkillBowStorm) owner.getSkill(Globals.BOW_RAPID)).getBonusCritDamage()) : owner.criticalDamage(damage);
         }
         return (int) damage;
     }
@@ -56,7 +60,7 @@ public class ProjBowStorm extends Projectile {
     @Override
     public void update() {
         super.update();
-        if (Globals.nsToMs(this.logic.getTime() - lastDamageTime) >= 100) {
+        if (Globals.nsToMs(this.logic.getTime() - lastDamageTime) >= DAMAGE_INSTANCE_DELAY) {
             lastDamageTime = this.logic.getTime();
             this.pHit.clear();
             this.bHit.clear();

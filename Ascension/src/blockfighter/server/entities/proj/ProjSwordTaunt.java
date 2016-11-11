@@ -5,7 +5,6 @@ import blockfighter.server.entities.buff.BuffKnockback;
 import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
-import blockfighter.server.entities.player.skills.Skill;
 import blockfighter.shared.Globals;
 import java.awt.geom.Rectangle2D;
 
@@ -25,7 +24,10 @@ public class ProjSwordTaunt extends Projectile {
     @Override
     public int calculateDamage(final boolean isCrit) {
         final Player owner = getOwner();
-        double damage = owner.rollDamage() * (8 + 0.2 * owner.getSkillLevel(Skill.SWORD_TAUNT));
+        double baseValue = owner.getSkill(Globals.SWORD_TAUNT).getBaseValue();
+        double multValue = owner.getSkill(Globals.SWORD_TAUNT).getMultValue();
+
+        double damage = owner.rollDamage() * (baseValue + multValue * owner.getSkillLevel(Globals.SWORD_TAUNT));
         damage = (isCrit) ? owner.criticalDamage(damage) : damage;
         return (int) damage;
     }

@@ -1,0 +1,19 @@
+[name]
+Arc Shot
+[desc]
+1
+Fire 3 shots in an arc.
+[reqweapon]
+11
+[maxcooldown]
+500
+[basevalue]
+0.8
+[multvalue]
+0.02
+[passive]
+false
+[lifesteal]
+0.05
+[maxlifesteal]
+0.1

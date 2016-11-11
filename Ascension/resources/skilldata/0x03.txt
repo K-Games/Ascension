@@ -1,0 +1,17 @@
+[name]
+Blade Flurry
+[desc]
+1
+Swing your blade 4 times.
+[reqweapon]
+0
+[maxcooldown]
+500
+[basevalue]
+0.75
+[multvalue]
+0.03
+[passive]
+false
+[lifesteal]
+0.0025

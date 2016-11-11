@@ -144,6 +144,9 @@ public class AscensionClient {
                             System.err.println("-maxlevel Dev passphrase required");
                         }
                         break;
+                    case "-log":
+                        Globals.LOGGING = true;
+                        break;
                 }
             }
         }

@@ -1,0 +1,15 @@
+[name]
+Vital Hit
+[desc]
+1
+Increases Critical Hit Damage.
+[reqweapon]
+-1
+[maxcooldown]
+0
+[basevalue]
+0.1
+[multvalue]
+0.02
+[passive]
+true

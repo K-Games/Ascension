@@ -1,0 +1,21 @@
+[name]
+Aggression
+[desc]
+1
+Deal an immense deadly blow.
+[reqweapon]
+0
+[maxcooldown]
+25000
+[basevalue]
+8
+[multvalue]
+0.2
+[passive]
+false
+[buffduration]
+5000
+[damageinc]
+0.2
+[damagereduct]
+0.2

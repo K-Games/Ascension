@@ -1,0 +1,18 @@
+[name]
+Overwhelm
+[desc]
+2
+Charge forward with your shield
+and send enemies hit flying.
+[reqweapon]
+10
+[maxcooldown]
+17000
+[basevalue]
+1.5
+[multvalue]
+0.2
+[passive]
+false
+[stunduration]
+1000

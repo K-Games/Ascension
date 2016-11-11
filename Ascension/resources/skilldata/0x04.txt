@@ -1,0 +1,19 @@
+[name]
+Rend
+[desc]
+1
+Slash 3 times.
+[reqweapon]
+0
+[maxcooldown]
+400
+[basevalue]
+1
+[multvalue]
+0.04
+[passive]
+false
+[buffduration]
+2000
+[damagereduct]
+0.1

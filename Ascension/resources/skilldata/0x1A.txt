@@ -1,0 +1,15 @@
+[name]
+Vigor
+[desc]
+1
+Gain additional damage base on Max HP.
+[reqweapon]
+-1
+[maxcooldown]
+0
+[basevalue]
+0.001
+[multvalue]
+0.001
+[passive]
+true

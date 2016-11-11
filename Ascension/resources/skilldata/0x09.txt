@@ -1,0 +1,24 @@
+[name]
+Frost Bind
+[desc]
+2
+An enchancted shot that causes ice pillars to erupt
+violently out of the ground, freezing targets hit.
+[reqweapon]
+11
+[maxcooldown]
+22000
+[basevalue]
+1
+[multvalue]
+0.2
+[passive]
+false
+[basestun]
+1500
+[maxlevelstun]
+2500
+[maxlevelbonusproj]
+2
+[maxlevelbonusdamage]
+2.5

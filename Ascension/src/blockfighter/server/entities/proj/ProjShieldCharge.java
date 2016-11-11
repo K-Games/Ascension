@@ -6,7 +6,7 @@ import blockfighter.server.entities.buff.BuffStun;
 import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
-import blockfighter.server.entities.player.skills.Skill;
+import blockfighter.server.entities.player.skills.SkillShieldCharge;
 import blockfighter.shared.Globals;
 import java.awt.geom.Rectangle2D;
 
@@ -26,7 +26,9 @@ public class ProjShieldCharge extends Projectile {
     @Override
     public int calculateDamage(final boolean isCrit) {
         final Player owner = getOwner();
-        double damage = owner.rollDamage() * (1.5 + .2 * owner.getSkillLevel(Skill.SHIELD_CHARGE));
+        double baseValue = owner.getSkill(Globals.SHIELD_CHARGE).getBaseValue();
+        double multValue = owner.getSkill(Globals.SHIELD_CHARGE).getMultValue();
+        double damage = owner.rollDamage() * (baseValue + multValue * owner.getSkillLevel(Globals.SHIELD_CHARGE));
         damage = (isCrit) ? owner.criticalDamage(damage) : damage;
         return (int) damage;
     }
@@ -38,8 +40,8 @@ public class ProjShieldCharge extends Projectile {
         final int damage = calculateDamage(isCrit);
         target.queueDamage(new Damage(damage, true, owner, target, isCrit, this.hitbox[0], target.getHitbox()));
         target.queueBuff(new BuffKnockback(this.logic, 300, (owner.getFacing() == Globals.RIGHT) ? 20 : -20, -10, owner, target));
-        if (owner.isSkillMaxed(Skill.SHIELD_CHARGE)) {
-            target.queueBuff(new BuffStun(this.logic, 1000));
+        if (owner.isSkillMaxed(Globals.SHIELD_CHARGE)) {
+            target.queueBuff(new BuffStun(this.logic, (int) ((SkillShieldCharge) owner.getSkill(Globals.SHIELD_CHARGE)).getStunDuration()));
         }
     }
 
@@ -49,8 +51,8 @@ public class ProjShieldCharge extends Projectile {
         final boolean isCrit = owner.rollCrit();
         final int damage = calculateDamage(isCrit);
         target.queueDamage(new Damage(damage, true, owner, target, isCrit, this.hitbox[0], target.getHitbox()));
-        if (owner.isSkillMaxed(Skill.SHIELD_CHARGE)) {
-            target.queueBuff(new BuffStun(this.logic, 1000));
+        if (owner.isSkillMaxed(Globals.SHIELD_CHARGE)) {
+            target.queueBuff(new BuffStun(this.logic, (int) ((SkillShieldCharge) owner.getSkill(Globals.SHIELD_CHARGE)).getStunDuration()));
         }
     }
 

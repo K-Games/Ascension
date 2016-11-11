@@ -1,0 +1,20 @@
+[name]
+Reflect Damage
+[desc]
+2
+For 3 seconds, when you take damage, you explode
+dealing a portion of damage taken.
+[reqweapon]
+10
+[maxcooldown]
+15000
+[basevalue]
+0.4
+[multvalue]
+0.02
+[passive]
+false
+[maxlevelreflect]
+0.4
+[buffduration]
+3000

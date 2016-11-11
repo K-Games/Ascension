@@ -10,9 +10,11 @@
 * Fixed unable to draw ingame equips without offsets set in its item data.
 * Fixed sword attack animation having 1 extra frame.
 * Fixed EXP bar not filling more than once when leveling up more than once.
+* Skill UI values read from data files to sync with server data.
 
 ### Server Changes
 * Improve netcode for player position.
+* Uses Skill data values from data files. Data values no longer hard coded and can be modified in data files.
 
 ---
 

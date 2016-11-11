@@ -6,7 +6,7 @@ import blockfighter.server.entities.buff.BuffKnockback;
 import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
-import blockfighter.server.entities.player.skills.Skill;
+import blockfighter.server.entities.player.skills.SkillBowVolley;
 import blockfighter.server.net.PacketSender;
 import blockfighter.shared.Globals;
 import java.awt.geom.Rectangle2D;
@@ -29,7 +29,10 @@ public class ProjBowVolley extends Projectile {
     @Override
     public int calculateDamage(final boolean isCrit) {
         final Player owner = getOwner();
-        double damage = owner.rollDamage() * (.85 + owner.getSkillLevel(Skill.BOW_VOLLEY) * .03);
+        double baseValue = owner.getSkill(Globals.BOW_VOLLEY).getBaseValue();
+        double multValue = owner.getSkill(Globals.BOW_VOLLEY).getMultValue();
+
+        double damage = owner.rollDamage() * (baseValue + multValue * owner.getSkillLevel(Globals.BOW_VOLLEY));
         damage = (isCrit) ? owner.criticalDamage(damage) : damage;
         return (int) damage;
     }
@@ -42,8 +45,10 @@ public class ProjBowVolley extends Projectile {
         if (isCrit) {
             if (!this.buffed) {
                 this.buffed = true;
-                if (owner.isSkillMaxed(Skill.BOW_VOLLEY)) {
-                    owner.queueBuff(new BuffBowVolley(this.logic, 4000, 0.01, owner));
+                if (owner.isSkillMaxed(Globals.BOW_VOLLEY)) {
+                    int buffDuration = (int) ((SkillBowVolley) owner.getSkill(Globals.BOW_VOLLEY)).getBuffDuration();
+                    double buffDamage = ((SkillBowVolley) owner.getSkill(Globals.BOW_VOLLEY)).getBuffDamage();
+                    owner.queueBuff(new BuffBowVolley(this.logic, buffDuration, buffDamage, owner));
                     final byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
                     bytes[0] = Globals.DATA_PARTICLE_EFFECT;
                     bytes[1] = Globals.PARTICLE_BOW_VOLLEYBUFF;
@@ -64,8 +69,10 @@ public class ProjBowVolley extends Projectile {
         if (isCrit) {
             if (!this.buffed) {
                 this.buffed = true;
-                if (owner.isSkillMaxed(Skill.BOW_VOLLEY)) {
-                    owner.queueBuff(new BuffBowVolley(this.logic, 4000, 0.01, owner));
+                if (owner.isSkillMaxed(Globals.BOW_VOLLEY)) {
+                    int buffDuration = (int) ((SkillBowVolley) owner.getSkill(Globals.BOW_VOLLEY)).getBuffDuration();
+                    double buffDamage = ((SkillBowVolley) owner.getSkill(Globals.BOW_VOLLEY)).getBuffDamage();
+                    owner.queueBuff(new BuffBowVolley(this.logic, buffDuration, buffDamage, owner));
                     final byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
                     bytes[0] = Globals.DATA_PARTICLE_EFFECT;
                     bytes[1] = Globals.PARTICLE_BOW_VOLLEYBUFF;

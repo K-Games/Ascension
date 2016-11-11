@@ -5,7 +5,7 @@ import blockfighter.server.entities.buff.BuffKnockback;
 import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
-import blockfighter.server.entities.player.skills.Skill;
+import blockfighter.server.entities.player.skills.SkillShieldMagnetize;
 import blockfighter.shared.Globals;
 import java.awt.geom.Rectangle2D;
 
@@ -21,9 +21,13 @@ public class ProjShieldMagnetize extends Projectile {
     @Override
     public int calculateDamage(final boolean isCrit) {
         final Player owner = getOwner();
-        double damage = owner.rollDamage() * (1.5 + 0.15 * owner.getSkillLevel(Skill.SHIELD_MAGNETIZE))
-                + (owner.getStats()[Globals.STAT_DEFENSE] * (15 + owner.getSkillLevel(Skill.SHIELD_MAGNETIZE)));
-        damage *= (owner.isSkillMaxed(Skill.SHIELD_MAGNETIZE)) ? 3 : 1;
+        double baseValue = owner.getSkill(Globals.SHIELD_MAGNETIZE).getBaseValue();
+        double multValue = owner.getSkill(Globals.SHIELD_MAGNETIZE).getMultValue();
+        double baseDef = ((SkillShieldMagnetize) owner.getSkill(Globals.SHIELD_MAGNETIZE)).getBaseDefense();
+        double multDef = ((SkillShieldMagnetize) owner.getSkill(Globals.SHIELD_MAGNETIZE)).getMultDefense();
+        double damage = owner.rollDamage() * (baseValue + multValue * owner.getSkillLevel(Globals.SHIELD_MAGNETIZE))
+                + (owner.getStats()[Globals.STAT_DEFENSE] * (baseDef + multDef * owner.getSkillLevel(Globals.SHIELD_MAGNETIZE)));
+        damage *= (owner.isSkillMaxed(Globals.SHIELD_MAGNETIZE)) ? ((SkillShieldMagnetize) owner.getSkill(Globals.SHIELD_MAGNETIZE)).getMaxLevelMult() : 1;
         damage = (isCrit) ? owner.criticalDamage(damage) : damage;
         return (int) damage;
     }

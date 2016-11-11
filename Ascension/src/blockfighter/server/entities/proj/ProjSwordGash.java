@@ -5,7 +5,7 @@ import blockfighter.server.entities.buff.BuffKnockback;
 import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
-import blockfighter.server.entities.player.skills.Skill;
+import blockfighter.server.entities.player.skills.SkillSwordGash;
 import blockfighter.shared.Globals;
 import java.awt.geom.Rectangle2D;
 
@@ -24,7 +24,9 @@ public class ProjSwordGash extends Projectile {
     @Override
     public int calculateDamage(final boolean isCrit) {
         final Player owner = getOwner();
-        double damage = owner.rollDamage() * (.75 + 0.03 * owner.getSkillLevel(Skill.SWORD_GASH));
+        double baseValue = owner.getSkill(Globals.SWORD_GASH).getBaseValue();
+        double multValue = owner.getSkill(Globals.SWORD_GASH).getMultValue();
+        double damage = owner.rollDamage() * (baseValue + multValue * owner.getSkillLevel(Globals.SWORD_GASH));
         damage = (isCrit) ? owner.criticalDamage(damage) : damage;
         return (int) damage;
     }
@@ -36,8 +38,8 @@ public class ProjSwordGash extends Projectile {
         final int damage = calculateDamage(isCrit);
         target.queueDamage(new Damage(damage, true, owner, target, isCrit, this.hitbox[0], target.getHitbox()));
         target.queueBuff(new BuffKnockback(this.logic, 100, (owner.getFacing() == Globals.RIGHT) ? 4 : -4, -1, owner, target));
-        if (!this.healed && owner.isSkillMaxed(Skill.SWORD_GASH)) {
-            final double heal = owner.getStats()[Globals.STAT_MAXHP] * 0.0025;
+        if (!this.healed && owner.isSkillMaxed(Globals.SWORD_GASH)) {
+            final double heal = owner.getStats()[Globals.STAT_MAXHP] * ((SkillSwordGash) owner.getSkill(Globals.SWORD_GASH)).getLifesteal();
             owner.queueHeal((int) heal);
             this.healed = true;
         }
@@ -49,8 +51,8 @@ public class ProjSwordGash extends Projectile {
         final boolean isCrit = owner.rollCrit();
         final int damage = calculateDamage(isCrit);
         target.queueDamage(new Damage(damage, true, owner, target, isCrit, this.hitbox[0], target.getHitbox()));
-        if (!this.healed && owner.isSkillMaxed(Skill.SWORD_GASH)) {
-            final double heal = owner.getStats()[Globals.STAT_MAXHP] * 0.0025;
+        if (!this.healed && owner.isSkillMaxed(Globals.SWORD_GASH)) {
+            final double heal = owner.getStats()[Globals.STAT_MAXHP] * ((SkillSwordGash) owner.getSkill(Globals.SWORD_GASH)).getLifesteal();
             owner.queueHeal((int) heal);
             this.healed = true;
         }

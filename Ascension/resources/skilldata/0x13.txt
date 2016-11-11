@@ -1,0 +1,15 @@
+[name]
+Keen Eye
+[desc]
+1
+Increases Critical Hit Chance.
+[reqweapon]
+-1
+[maxcooldown]
+0
+[basevalue]
+0.01
+[multvalue]
+0.003
+[passive]
+true
