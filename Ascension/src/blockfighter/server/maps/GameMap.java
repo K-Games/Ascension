@@ -106,7 +106,7 @@ public abstract class GameMap {
     }
 
     public boolean isFalling(final double x, final double y, final double fallspeed) {
-        if (fallspeed <= 0) {
+        if (fallspeed < 0) {
             return false;
         }
         return !areaIntersectsPlatform(new Rectangle2D.Double(x - 25, y, 50, 1));

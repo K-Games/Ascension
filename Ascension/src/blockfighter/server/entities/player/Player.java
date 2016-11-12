@@ -1092,36 +1092,37 @@ public class Player extends Thread implements GameEntity {
             queuePlayerState(PLAYER_STATE_JUMP);
         }
 
-        setYSpeed(this.ySpeed + Globals.GRAVITY);
-        if (this.ySpeed >= Globals.MAX_FALLSPEED) {
-            setYSpeed(Globals.MAX_FALLSPEED);
-        }
-        if (this.ySpeed < 0) {
-            this.isJumping = true;
+        this.isJumping = this.ySpeed < 0;
+        if (this.isFalling || this.isJumping) {
+            setYSpeed(this.ySpeed + Globals.GRAVITY);
+            if (this.ySpeed >= Globals.MAX_FALLSPEED) {
+                setYSpeed(Globals.MAX_FALLSPEED);
+            }
         }
         this.isFalling = this.map.isFalling(this.x, this.y, this.ySpeed);
+
         if (!this.isFalling && this.ySpeed > 0) {
             this.y = this.map.getValidY(this.x, this.y);
             setYSpeed(0);
-            this.isJumping = false;
+            this.updatePos = true;
         }
     }
 
     private void updateMove(final boolean xChanged) {
         if (this.dirKeydown[Globals.RIGHT] && !this.dirKeydown[Globals.LEFT]) {
             if (this.ySpeed == 0) {
-                setXSpeed(4.5);
+                setXSpeed(Globals.WALK_SPEED);
             } else {
-                accelerateXSpeed(4.5);
+                accelerateXSpeed(Globals.WALK_SPEED);
             }
             if (xChanged && this.ySpeed == 0) {
                 queuePlayerState(PLAYER_STATE_WALK);
             }
         } else if (this.dirKeydown[Globals.LEFT] && !this.dirKeydown[Globals.RIGHT]) {
             if (this.ySpeed == 0) {
-                setXSpeed(-4.5);
+                setXSpeed(-Globals.WALK_SPEED);
             } else {
-                accelerateXSpeed(-4.5);
+                accelerateXSpeed(-Globals.WALK_SPEED);
             }
             if (xChanged && this.ySpeed == 0) {
                 queuePlayerState(PLAYER_STATE_WALK);
