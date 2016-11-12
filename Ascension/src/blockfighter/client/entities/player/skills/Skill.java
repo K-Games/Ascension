@@ -5,6 +5,7 @@ import blockfighter.client.LogicModule;
 import blockfighter.client.entities.items.ItemEquip;
 import blockfighter.shared.Globals;
 import java.awt.Color;
+import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.text.DecimalFormat;
@@ -14,6 +15,9 @@ public abstract class Skill {
     protected static LogicModule logic;
     protected static DecimalFormat NUMBER_FORMAT = new DecimalFormat("###,###,##0.##");
     protected static DecimalFormat TIME_NUMBER_FORMAT = new DecimalFormat("0.#");
+
+    private FontMetrics fontMetric;
+    private int boxWidth, boxHeight;
 
     protected byte level;
     protected long skillCastTime;
@@ -31,25 +35,12 @@ public abstract class Skill {
     }
 
     public void drawInfo(final Graphics2D g, final int x, final int y) {
-        final int boxHeight = ((this.level < 30) ? 130 : 105) + getDesc().length * 20 + skillCurLevelDesc.length * 20 + ((this.level < 30) ? skillNextLevelDesc.length * 20 : 0) + ((isPassive()) ? 20 : maxBonusDesc.length * 20 + 25);
-        g.setFont(Globals.ARIAL_15PT);
-        int boxWidth = g.getFontMetrics().stringWidth("Level: " + this.level + " - Requires " + ItemEquip.getItemTypeName(getReqWeapon())) + 90;
-        for (String s : getDesc()) {
-            boxWidth = Math.max(boxWidth, g.getFontMetrics().stringWidth(s) + 20);
-        }
-        for (String s : maxBonusDesc) {
-            boxWidth = Math.max(boxWidth, g.getFontMetrics().stringWidth(s) + 20);
-        }
-        for (String s : skillCurLevelDesc) {
-            boxWidth = Math.max(boxWidth, g.getFontMetrics().stringWidth(s) + 20);
-        }
-        for (String s : skillNextLevelDesc) {
-            boxWidth = Math.max(boxWidth, g.getFontMetrics().stringWidth(s) + 20);
-        }
-        if (isPassive()) {
-            boxWidth = Math.max(boxWidth, g.getFontMetrics().stringWidth("Assign this passive to a hotkey to gain its effects.") + 20);
+        if (fontMetric == null) {
+            fontMetric = g.getFontMetrics(Globals.ARIAL_15PT);
+            updateInfoBoxSize();
         }
 
+        g.setFont(Globals.ARIAL_15PT);
         int drawX = x, drawY = y;
         if (drawY + boxHeight > 700) {
             drawY = 700 - boxHeight;
@@ -135,6 +126,30 @@ public abstract class Skill {
 
     public abstract byte getReqWeapon();
 
+    public void updateInfoBoxSize() {
+        if (fontMetric == null) {
+            return;
+        }
+        boxHeight = ((this.level < 30) ? 130 : 105) + getDesc().length * 20 + skillCurLevelDesc.length * 20 + ((this.level < 30) ? skillNextLevelDesc.length * 20 : 0) + ((isPassive()) ? 20 : maxBonusDesc.length * 20 + 25);
+
+        boxWidth = fontMetric.stringWidth("Level: " + this.level + " - Requires " + ItemEquip.getItemTypeName(getReqWeapon())) + 90;
+        for (String s : getDesc()) {
+            boxWidth = Math.max(boxWidth, fontMetric.stringWidth(s) + 20);
+        }
+        for (String s : maxBonusDesc) {
+            boxWidth = Math.max(boxWidth, fontMetric.stringWidth(s) + 20);
+        }
+        for (String s : skillCurLevelDesc) {
+            boxWidth = Math.max(boxWidth, fontMetric.stringWidth(s) + 20);
+        }
+        for (String s : skillNextLevelDesc) {
+            boxWidth = Math.max(boxWidth, fontMetric.stringWidth(s) + 20);
+        }
+        if (isPassive()) {
+            boxWidth = Math.max(boxWidth, fontMetric.stringWidth("Assign this passive to a hotkey to gain its effects.") + 20);
+        }
+    }
+
     public void resetCooldown() {
         this.skillCastTime = 0;
     }
@@ -156,6 +171,7 @@ public abstract class Skill {
     public void setLevel(final byte lvl) {
         this.level = lvl;
         updateDesc();
+        updateInfoBoxSize();
     }
 
     public byte getLevel() {
@@ -166,6 +182,7 @@ public abstract class Skill {
         if (this.level + amount <= 30) {
             this.level += amount;
             updateDesc();
+            updateInfoBoxSize();
             return true;
         }
         return false;
