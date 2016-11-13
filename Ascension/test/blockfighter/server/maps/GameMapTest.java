@@ -117,7 +117,7 @@ public class GameMapTest {
 
     @Test
     public void testIsFalling() {
-        assertFalse(this.testMap.isFalling(0, 0, 0));
+        assertTrue(this.testMap.isFalling(0, 0, 0));
         assertFalse(this.testMap.isFalling(2900, -400, 10));
         assertFalse(this.testMap.isFalling(0, 0, -10));
         assertTrue(this.testMap.isFalling(0, 0, 10));
