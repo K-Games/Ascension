@@ -14,7 +14,7 @@ public class SkillPassiveStatic extends SkillPassive {
     private static final byte SKILL_CODE = Globals.PASSIVE_STATIC;
     private static final boolean IS_PASSIVE;
     private static final byte REQ_WEAPON;
-    private static final double MAX_COOLDOWN;
+    private static final long MAX_COOLDOWN;
 
     private static final double BASE_VALUE, MULT_VALUE;
 
@@ -23,7 +23,7 @@ public class SkillPassiveStatic extends SkillPassive {
         HashMap<String, Integer> dataHeaders = Globals.getDataHeaders(data, null);
 
         REQ_WEAPON = Globals.loadReqWeapon(data, dataHeaders);
-        MAX_COOLDOWN = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MAXCOOLDOWN_HEADER);
+        MAX_COOLDOWN = (long) Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MAXCOOLDOWN_HEADER);
         BASE_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_BASEVALUE_HEADER);
         MULT_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MULTVALUE_HEADER);
         IS_PASSIVE = Globals.loadBooleanValue(data, dataHeaders, Globals.SKILL_PASSIVE_HEADER);
@@ -39,7 +39,7 @@ public class SkillPassiveStatic extends SkillPassive {
     }
 
     @Override
-    public double getMaxCooldown() {
+    public long getMaxCooldown() {
         return MAX_COOLDOWN;
     }
 

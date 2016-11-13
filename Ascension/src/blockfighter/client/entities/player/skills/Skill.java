@@ -13,7 +13,7 @@ import java.text.DecimalFormat;
 public abstract class Skill {
 
     protected static LogicModule logic;
-    protected static DecimalFormat NUMBER_FORMAT = new DecimalFormat("###,###,##0.##");
+    protected static DecimalFormat NUMBER_FORMAT = new DecimalFormat("0.##");
     protected static DecimalFormat TIME_NUMBER_FORMAT = new DecimalFormat("0.#");
 
     private FontMetrics fontMetric;
@@ -28,6 +28,8 @@ public abstract class Skill {
 
     public static void init() {
         logic = AscensionClient.getLogicModule();
+        NUMBER_FORMAT.setGroupingSize(3);
+        NUMBER_FORMAT.setGroupingUsed(true);
     }
 
     public void draw(final Graphics2D g, final int x, final int y) {
@@ -65,7 +67,7 @@ public abstract class Skill {
             g.drawString("Level: " + this.level, drawX + 80, drawY + 50);
         }
         if (getMaxCooldown() > 0) {
-            g.drawString("Cooldown: " + Skill.TIME_NUMBER_FORMAT.format(getMaxCooldown() / 1000D) + " Seconds", drawX + 80, drawY + 70);
+            g.drawString("Cooldown: " + TIME_NUMBER_FORMAT.format(getMaxCooldown() / 1000D) + " Seconds", drawX + 80, drawY + 70);
         }
 
         int totalDescY = 0;
@@ -122,7 +124,7 @@ public abstract class Skill {
 
     public abstract boolean isPassive();
 
-    public abstract double getMaxCooldown();
+    public abstract long getMaxCooldown();
 
     public abstract byte getReqWeapon();
 
@@ -162,9 +164,9 @@ public abstract class Skill {
         this.skillCastTime = logic.getTime();
     }
 
-    public double getCooldown() {
+    public long getCooldown() {
         long elapsed = Globals.nsToMs(logic.getTime() - this.skillCastTime);
-        double cd = getMaxCooldown() - elapsed;
+        long cd = getMaxCooldown() - elapsed;
         return (cd > 0) ? cd : 0;
     }
 

@@ -22,7 +22,7 @@ public class SkillBowArc extends Skill {
     private static final String[] DESCRIPTION;
     private static final boolean IS_PASSIVE;
     private static final byte REQ_WEAPON;
-    private static final double MAX_COOLDOWN;
+    private static final long MAX_COOLDOWN;
     private static final double BASE_VALUE, MULT_VALUE;
 
     static {
@@ -32,7 +32,7 @@ public class SkillBowArc extends Skill {
         SKILL_NAME = Globals.loadSkillName(data, dataHeaders);
         DESCRIPTION = Globals.loadSkillDesc(data, dataHeaders);
         REQ_WEAPON = Globals.loadReqWeapon(data, dataHeaders);
-        MAX_COOLDOWN = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MAXCOOLDOWN_HEADER);
+        MAX_COOLDOWN = (long) Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MAXCOOLDOWN_HEADER);
         BASE_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_BASEVALUE_HEADER) * 100;
         MULT_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MULTVALUE_HEADER) * 100;
         IS_PASSIVE = Globals.loadBooleanValue(data, dataHeaders, Globals.SKILL_PASSIVE_HEADER);
@@ -52,7 +52,7 @@ public class SkillBowArc extends Skill {
     }
 
     @Override
-    public double getMaxCooldown() {
+    public long getMaxCooldown() {
         return MAX_COOLDOWN;
     }
 

@@ -319,7 +319,7 @@ public class ScreenIngame extends Screen {
             if (hotkey[j] != null) {
                 hotkey[j].draw(g, (int) this.hotkeySlots[j].x, (int) this.hotkeySlots[j].y);
                 g.setColor(new Color(100, 100, 100, 125));
-                final int cdHeight = (int) ((hotkey[j].getCooldown() / hotkey[j].getMaxCooldown()) * this.hotkeySlots[j].height);
+                final int cdHeight = (int) ((hotkey[j].getCooldown() / (hotkey[j].getMaxCooldown() * 1D)) * this.hotkeySlots[j].height);
                 g.fillRect((int) this.hotkeySlots[j].x, (int) (this.hotkeySlots[j].y + this.hotkeySlots[j].height - cdHeight),
                         (int) this.hotkeySlots[j].width,
                         cdHeight);

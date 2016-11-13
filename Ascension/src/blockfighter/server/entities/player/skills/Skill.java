@@ -15,7 +15,7 @@ public abstract class Skill {
 
     public abstract boolean isPassive();
 
-    public abstract double getMaxCooldown();
+    public abstract long getMaxCooldown();
 
     public abstract Byte getReqWeapon();
 

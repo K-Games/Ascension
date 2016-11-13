@@ -752,7 +752,7 @@ public class Player extends Thread implements GameEntity {
             }
         }
         // Add regenerated HP(1% of REGEN per 10ms tick)
-        this.stats[Globals.STAT_MINHP] += this.stats[Globals.STAT_REGEN] / 100D;
+        this.stats[Globals.STAT_MINHP] += this.stats[Globals.STAT_REGEN] / Globals.SERVER_LOGIC_TICKS_PER_SEC;
 
         if (this.stats[Globals.STAT_MINHP] > this.stats[Globals.STAT_MAXHP]) {
             this.stats[Globals.STAT_MINHP] = this.stats[Globals.STAT_MAXHP];
