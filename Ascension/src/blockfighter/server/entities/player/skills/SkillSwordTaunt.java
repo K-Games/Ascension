@@ -54,7 +54,7 @@ public class SkillSwordTaunt extends Skill {
 
     @Override
     public Double getCustomValue(String customHeader) {
-        return null;
+        return CUSTOM_VALUES.get(customHeader);
     }
 
     @Override

@@ -89,4 +89,8 @@ public class SkillBowVolley extends Skill {
             "Each Critical Hit increases damage by " + NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_MAXLVLBUFFDMG)) + "% for " + TIME_NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_MAXLVLBUFFDURATION)) + " seconds."
         };
     }
+
+    public static double getBuffDuration() {
+        return CUSTOM_VALUES.get(CUSTOMHEADER_MAXLVLBUFFDURATION);
+    }
 }
