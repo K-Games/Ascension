@@ -1,6 +1,6 @@
 package blockfighter.shared;
 
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 import static org.junit.Assert.*;
 import org.junit.Test;
@@ -12,17 +12,15 @@ public class GlobalsTest {
 
     @Test
     public void testGetStatNameReturnInvalidStatWhenStatIDIsInvalid() {
-        System.out.println("getStatName: Return Invalid Stat When StatID Is Invalid");
         byte statID = 40;
         String expResult = "INVALID STAT";
         String result = Globals.getStatName(statID);
-        System.out.println("Expected: <" + expResult + ">, Result: <" + result + ">");
+
         assertEquals(expResult, result);
     }
 
     @Test
     public void testGetStatNameReturnCorrectNameWhenStatIDIsValid() {
-        System.out.println("getStatName: Return Correct Stat Name When StatID Is Valid");
         String expResult = "INVALID STAT";
         String result;
         for (byte i = 0; i < Globals.NUM_STATS; i++) {
@@ -118,79 +116,69 @@ public class GlobalsTest {
 
     @Test
     public void testLongToBytes() {
-        System.out.println("longToBytes: Long Max Value convert to correct bytes");
         long input = Long.MAX_VALUE;
         byte[] expResult = {(byte) 0x7F, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF};
         byte[] result = Globals.longToBytes(input);
-        System.out.println("Expected: " + Arrays.toString(expResult));
-        System.out.println("Result: " + Arrays.toString(result));
+
         assertArrayEquals(expResult, result);
     }
 
     @Test
     public void testBytesToLong() {
-        System.out.println("bytesToLong: Bytes convert to Long Max Value");
         byte[] bytes = {(byte) 0x7F, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF};
         long expResult = Long.MAX_VALUE;
         long result = Globals.bytesToLong(bytes);
-        System.out.println("Expected: <" + expResult + ">, Result: <" + result + ">");
+
         assertEquals(expResult, result);
     }
 
     @Test
     public void testIntToBytes() {
-        System.out.println("intToBytes: Integer Min Value convert to correct bytes");
         int input = Integer.MIN_VALUE;
         byte[] expResult = {(byte) 0x80, (byte) 0x00, (byte) 0x00, (byte) 0x00};
         byte[] result = Globals.intToBytes(input);
-        System.out.println("Expected: " + Arrays.toString(expResult));
-        System.out.println("Result: " + Arrays.toString(result));
+
         assertArrayEquals(expResult, result);
     }
 
     @Test
     public void testBytesToInt() {
-        System.out.println("bytesToInt: Bytes convert to Integer Min Value");
         byte[] bytes = {(byte) 0x80, (byte) 0x00, (byte) 0x00, (byte) 0x00};
         int expResult = Integer.MIN_VALUE;
         int result = Globals.bytesToInt(bytes);
-        System.out.println("Expected: <" + expResult + ">, Result: <" + result + ">");
+
         assertEquals(expResult, result);
     }
 
     @Test
     public void testNsToMs() {
-        System.out.println("nsToMs: 1,000,000,000 ns converted to 1,000 ms");
         long time = 1000000000L;
         long expResult = TimeUnit.MILLISECONDS.convert(time, TimeUnit.NANOSECONDS);
         long result = Globals.nsToMs(time);
-        System.out.println("Expected: <" + expResult + ">, Result: <" + result + ">");
+
         assertEquals(expResult, result);
     }
 
     @Test
     public void testMsToNs() {
-        System.out.println("msToNs: 1,000 ms converted to 1,000,000,000 ms");
         long time = 1000L;
         long expResult = TimeUnit.NANOSECONDS.convert(time, TimeUnit.MILLISECONDS);
         long result = Globals.msToNs(time);
-        System.out.println("Expected: <" + expResult + ">, Result: <" + result + ">");
+
         assertEquals(expResult, result);
     }
 
     @Test
     public void testRngReturnInvalidNumberWhenInputIsZero() {
-        System.out.println("rng: Return -1 When Input Is 0");
         int i = 0;
         int expResult = -1;
         int result = Globals.rng(i);
-        System.out.println("Expected: <" + expResult + ">, Result: <" + result + ">");
+
         assertEquals(expResult, result);
     }
 
     @Test
     public void testDurationHasPastFalseWhenDurationHasNotPast() {
-        System.out.println("hasPastDuration: False When Duration Has Not Past");
         int currentDuration = 5000;
         int durationToPast = 6000;
         boolean result = Globals.hasPastDuration(currentDuration, durationToPast);
@@ -199,11 +187,206 @@ public class GlobalsTest {
 
     @Test
     public void testDurationHasPastTrueWhenDurationHasPast() {
-        System.out.println("hasPastDuration: True When Duration Has Past");
         int currentDuration = 5000;
         int durationToPast = 0;
 
         boolean result = Globals.hasPastDuration(currentDuration, durationToPast);
         assertTrue(result);
     }
+
+    @Test
+    public void testGetDataHeaders() {
+        String[] data = new String[Globals.DATA_HEADERS.length + 2];
+        System.arraycopy(Globals.DATA_HEADERS, 0, data, 0, Globals.DATA_HEADERS.length);
+        data[Globals.DATA_HEADERS.length] = "[test1]";
+        data[Globals.DATA_HEADERS.length + 1] = "[test2]";
+        String[] customDataHeaders = {"[test1]", "[test2]"};
+        HashMap<String, Integer> result = Globals.getDataHeaders(data, customDataHeaders);
+        for (String header : data) {
+            assertTrue(result.containsKey(header));
+
+        }
+    }
+
+    @Test
+    public void testLoadBooleanValue() {
+        String[] customHeaders = {"[testBool]", "[testBool2]"};
+        String[] data = {customHeaders[0], "true", customHeaders[1], "false"};
+
+        HashMap<String, Integer> dataHeaders = Globals.getDataHeaders(data, customHeaders);
+
+        String header = customHeaders[0];
+        boolean result = Globals.loadBooleanValue(data, dataHeaders, header);
+
+        assertTrue(result);
+
+        header = customHeaders[1];
+        result = Globals.loadBooleanValue(data, dataHeaders, header);
+
+        assertFalse(result);
+    }
+
+    @Test
+    public void testLoadDoubleValue() {
+        String[] customHeaders = {"[testDouble]", "[testDouble2]"};
+        double[] customDataValue = {0.123, 10019239784.222};
+        String[] data = {customHeaders[0], String.valueOf(customDataValue[0]), customHeaders[1], String.valueOf(customDataValue[1])};
+
+        HashMap<String, Integer> dataHeaders = Globals.getDataHeaders(data, customHeaders);
+
+        String header = customHeaders[0];
+        double result = Globals.loadDoubleValue(data, dataHeaders, header);
+
+        assertEquals(customDataValue[0], result, 0);
+
+        header = customHeaders[1];
+        result = Globals.loadDoubleValue(data, dataHeaders, header);
+
+        assertEquals(customDataValue[1], result, 0);
+    }
+
+    @Test
+    public void testLoadReqWeapon() {
+        String[] data = {Globals.SKILL_REQWEAPON_HEADER, String.valueOf(Globals.NUM_ITEM_TYPES + 1)};
+
+        HashMap<String, Integer> dataHeaders = Globals.getDataHeaders(data, null);
+
+        assertEquals(-1, Globals.loadReqWeapon(data, dataHeaders));
+        for (int i = 0; i < Globals.NUM_ITEM_TYPES; i++) {
+            data = new String[]{Globals.SKILL_REQWEAPON_HEADER, String.valueOf(i)};
+
+            byte result = Globals.loadReqWeapon(data, dataHeaders);
+            dataHeaders = Globals.getDataHeaders(data, null);
+
+            assertEquals(i, result);
+        }
+    }
+
+    @Test
+    public void testLoadSkillData() {
+        Globals.LOGGING = false;
+        for (byte i = 0; i < Globals.NUM_SKILLS; i++) {
+            String[] result = Globals.loadSkillData(i);
+            assertNotNull(result);
+        }
+    }
+
+    @Test
+    public void testLoadSkillDesc() {
+        String[] desc = {"Test Desc", "line2"};
+        String[] data = {Globals.SKILL_DESC_HEADER, String.valueOf(2), desc[0], desc[1]};
+
+        HashMap<String, Integer> dataHeaders = Globals.getDataHeaders(data, null);
+
+        String[] result = Globals.loadSkillDesc(data, dataHeaders);
+
+        assertTrue(result[0].equals(desc[0]));
+        assertTrue(result[1].equals(desc[1]));
+    }
+
+    @Test
+    public void testLoadSkillName() {
+        String name = "testName";
+        String[] data = {Globals.SKILL_NAME_HEADER, name};
+
+        HashMap<String, Integer> dataHeaders = Globals.getDataHeaders(data, null);
+
+        String result = Globals.loadSkillName(data, dataHeaders);
+
+        assertTrue(result.equals(name));
+    }
+
+    @Test
+    public void testCalcArmor() {
+        double defense = Globals.rng(1000000);
+        double expResult = defense * Globals.ARMOR_MULT;
+        double result = Globals.calcArmor(defense);
+
+        assertEquals(expResult, result, 0.0);
+    }
+
+    @Test
+    public void testCalcRegen() {
+        double spirit = Globals.rng(1000000);
+        double expResult = spirit * Globals.REGEN_MULT;
+        double result = Globals.calcRegen(spirit);
+
+        assertEquals(expResult, result, 0.0);
+    }
+
+    @Test
+    public void testCalcMaxHP() {
+        double defense = Globals.rng(1000000);
+        double expResult = defense * Globals.HP_MULT + Globals.HP_BASE;
+        double result = Globals.calcMaxHP(defense);
+
+        assertEquals(expResult, result, 0.0);
+    }
+
+    @Test
+    public void testCalcMinDmg() {
+        double power = Globals.rng(1000000);
+        double expResult = power * Globals.MINDMG_MULT + Globals.MINDMG_BASE;
+        double result = Globals.calcMinDmg(power);
+
+        assertEquals(expResult, result, 0.0);
+    }
+
+    @Test
+    public void testCalcMaxDmg() {
+        double power = Globals.rng(1000000);
+        double expResult = power * Globals.MAXDMG_MULT + Globals.MAXDMG_BASE;
+        double result = Globals.calcMaxDmg(power);
+
+        assertEquals(expResult, result, 0.0);
+    }
+
+    @Test
+    public void testCalcCritChance() {
+        double spirit = Globals.rng(1000000);
+        double expResult = spirit / (spirit + Globals.CRITCHC_CONST) + Globals.CRITCHC_BASE;
+        double result = Globals.calcCritChance(spirit);
+
+        assertEquals(expResult, result, 0.0);
+    }
+
+    @Test
+    public void testCalcCritDmg() {
+        double spirit = Globals.rng(1000000);
+        double expResult = spirit / Globals.CRITDMG_FACT * Globals.CRITDMG_MULT + Globals.CRITDMG_BASE;
+        double result = Globals.calcCritDmg(spirit);
+
+        assertEquals(expResult, result, 0.0);
+    }
+
+    @Test
+    public void testCalcReduction() {
+        double armor = Globals.rng(1000000) / Globals.rng(200) * 1D;
+        double expResult = 1 - (armor / (armor + Globals.REDUCT_CONST));
+        double result = Globals.calcReduction(armor);
+
+        assertEquals(expResult, result, 0.0);
+    }
+
+    @Test
+    public void testCalcEHP() {
+        double reduct = Globals.rng(10000) / 10000D;
+        double maxHP = Globals.rng(1000000) / Globals.rng(200) * 1D;
+        double expResult = maxHP / reduct;
+        double result = Globals.calcEHP(reduct, maxHP);
+
+        assertEquals(expResult, result, 0.0);
+    }
+
+    @Test
+    public void testCalcEXPtoNxtLvl() {
+        for (byte i = 1; i < 101; i++) {
+            double level = i;
+            int expResult = (int) (Math.round(Math.pow(level, 3.75) + 100));
+            int result = Globals.calcEXPtoNxtLvl(level);
+
+            assertEquals(expResult, result);
+        }
+    }
+
 }

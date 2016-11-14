@@ -21,7 +21,7 @@ public class RoomTest {
 
     @Test
     public void testGetNextPlayerKeyReturnInvalidKeyWhenPlayerKeysIsEmpty() {
-        System.out.println("getNextPlayerKey: Return -1 when there are no player keys in queue");
+
         Room room = new Room((byte) 0, (byte) 0);
         room.setPlayerKeys(playerKeys);
         when(playerKeys.isEmpty()).thenReturn(true);
@@ -29,14 +29,12 @@ public class RoomTest {
         byte expResult = -1;
         byte result = room.getNextPlayerKey();
 
-        System.out.println("Expected: <" + expResult + ">, Result: <" + result + ">");
-
         assertEquals(expResult, result);
     }
 
     @Test
     public void testGetNextPlayerKeyReturnAKeyWhenPlayerKeysIsNotEmpty() {
-        System.out.println("getNextPlayerKey: Return a valid key when there are player keys in queue");
+
         Room room = new Room((byte) 0, (byte) 0);
         room.setPlayerKeys(playerKeys);
         when(playerKeys.isEmpty()).thenReturn(false);
@@ -45,14 +43,12 @@ public class RoomTest {
         byte expResult = 1;
         byte result = room.getNextPlayerKey();
 
-        System.out.println("Expected: <" + expResult + ">, Result: <" + result + ">");
-
         assertEquals(expResult, result);
     }
 
     @Test
     public void testGetNextMobKeyReturnInvalidKeyWhenPlayerKeysIsEmpty() {
-        System.out.println("getNextMobKey: Return -1 when there are no mob keys in queue");
+
         Room room = new Room((byte) 0, (byte) 0);
         room.setMobKeys(mobKeys);
         when(mobKeys.isEmpty()).thenReturn(true);
@@ -60,14 +56,12 @@ public class RoomTest {
         int expResult = -1;
         int result = room.getNextMobKey();
 
-        System.out.println("Expected: <" + expResult + ">, Result: <" + result + ">");
-
         assertEquals(expResult, result);
     }
 
     @Test
     public void testGetNextMobKeyReturnAKeyWhenPlayerKeysIsNotEmpty() {
-        System.out.println("getNextMobKey: Return a valid key when there are mob keys in queue");
+
         Room room = new Room((byte) 0, (byte) 0);
         room.setMobKeys(mobKeys);
         when(mobKeys.isEmpty()).thenReturn(false);
@@ -76,14 +70,12 @@ public class RoomTest {
         int expResult = 1;
         int result = room.getNextMobKey();
 
-        System.out.println("Expected: <" + expResult + ">, Result: <" + result + ">");
-
         assertEquals(expResult, result);
     }
 
     @Test
     public void testGetNextProjKey() {
-        System.out.println("getNextProjKey: Get 10,000 Projectile Keys with no duplicates.");
+
         Room room = new Room((byte) 0, (byte) 0);
         for (int i = 0; i < 10000; i++) {
             int result = room.getNextProjKey();
@@ -93,7 +85,7 @@ public class RoomTest {
 
     @Test
     public void testReturnProjKey() {
-        System.out.println("returnProjKey: Return 200 Projectile Keys.");
+
         ConcurrentLinkedQueue<Integer> projKeys = new ConcurrentLinkedQueue<>();
         ConcurrentLinkedQueue<Integer> spy = spy(projKeys);
 
@@ -111,14 +103,12 @@ public class RoomTest {
         int expResult = 200;
         int result = spy.size();
 
-        System.out.println("Expected: <" + expResult + ">, Result: <" + result + ">");
-
         assertEquals(expResult, result);
     }
 
     @Test
     public void testReturnMobKey() {
-        System.out.println("returnMobKey: Return 200 Mob Keys.");
+
         ConcurrentLinkedQueue<Integer> spyMobKeys = new ConcurrentLinkedQueue<>();
         ConcurrentLinkedQueue<Integer> spy = spy(spyMobKeys);
         Room room = new Room((byte) 0, (byte) 0);
@@ -131,14 +121,12 @@ public class RoomTest {
         int expResult = 200;
         int result = spy.size();
 
-        System.out.println("Expected: <" + expResult + ">, Result: <" + result + ">");
-
         assertEquals(expResult, result);
     }
 
     @Test
     public void testContainsPlayerIDTrueWhenAPlayerHasThisUUID() {
-        System.out.println("containsPlayerID: True if a player has this UUID");
+
         ConcurrentHashMap<Byte, Player> mockPlayers = new ConcurrentHashMap<>();
         Player mockPlayer = mock(Player.class);
         Room room = new Room((byte) 0, (byte) 0) {
@@ -159,7 +147,7 @@ public class RoomTest {
 
     @Test
     public void testContainsPlayerIDFalseWhenNotInPlayers() {
-        System.out.println("containsPlayerID: False if no players have this UUID");
+
         ConcurrentHashMap<Byte, Player> mockPlayers = new ConcurrentHashMap<>();
         Player mockPlayer = mock(Player.class);
 
@@ -177,7 +165,7 @@ public class RoomTest {
 
     @Test
     public void testGetPlayerKeyReturnValidKeyWithMatchingUUID() {
-        System.out.println("getPlayerKey: Return player key with matching UUID");
+
         ConcurrentHashMap<Byte, Player> mockPlayers = new ConcurrentHashMap<>();
         Player mockPlayer = mock(Player.class);
         Room room = new Room((byte) 0, (byte) 0) {
@@ -199,14 +187,12 @@ public class RoomTest {
         byte expResult = playerKey;
         byte result = room.getPlayerKey(id);
 
-        System.out.println("Expected: <" + expResult + ">, Result: <" + result + ">");
-
         assertEquals(expResult, result);
     }
 
     @Test
     public void testGetPlayerKeyReturnInvalidKeyWithNoMatchingUUID() {
-        System.out.println("getPlayerKey: Return -1 when no players have a matching UUID");
+
         ConcurrentHashMap<Byte, Player> mockPlayers = new ConcurrentHashMap<>();
         Player mockPlayer = mock(Player.class);
 
@@ -224,26 +210,22 @@ public class RoomTest {
         byte expResult = -1;
         byte result = room.getPlayerKey(UUID.randomUUID());
 
-        System.out.println("Expected: <" + expResult + ">, Result: <" + result + ">");
-
         assertEquals(expResult, result);
     }
 
     @Test
     public void testGetPlayerKeyReturnInvalidKeyWithNoPlayers() {
-        System.out.println("getPlayerKey: Return -1 when no players exist");
+
         Room room = new Room((byte) 0, (byte) 0);
         byte expResult = -1;
         byte result = room.getPlayerKey(UUID.randomUUID());
-
-        System.out.println("Expected: <" + expResult + ">, Result: <" + result + ">");
 
         assertEquals(expResult, result);
     }
 
     @Test
     public void testIsFullTrueWhenPlayerKeysIsEmpty() {
-        System.out.println("isFull: Return true when there are no player keys in queue");
+
         Room room = new Room((byte) 0, (byte) 0);
         room.setPlayerKeys(playerKeys);
         when(playerKeys.isEmpty()).thenReturn(true);
@@ -251,14 +233,11 @@ public class RoomTest {
         boolean expResult = true;
         boolean result = room.isFull();
 
-        System.out.println("Expected: <" + expResult + ">, Result: <" + result + ">");
-
         assertEquals(expResult, result);
     }
 
     @Test
     public void testIsInLevelRangeTrueWhenInRange() {
-        System.out.println("isFull: Return true when there are level is in room's level range");
 
         Room room = new Room((byte) 0, (byte) 0);
         room.setMinLevel(1);
@@ -270,7 +249,7 @@ public class RoomTest {
 
     @Test
     public void testIsInLevelRangeFalseWhenOutOfRange() {
-        System.out.println("isFull: Return false when there are level is not in room's level range");
+
         Room room = new Room((byte) 0, (byte) 0);
         room.setMinLevel(1);
         room.setMaxLevel(30);
