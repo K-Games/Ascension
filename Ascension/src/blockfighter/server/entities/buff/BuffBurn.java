@@ -4,6 +4,7 @@ import blockfighter.server.LogicModule;
 import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
+import blockfighter.server.entities.player.skills.SkillSwordCinder;
 import blockfighter.shared.Globals;
 import java.awt.geom.Point2D;
 
@@ -15,13 +16,13 @@ public class BuffBurn extends Buff implements BuffDmgTakenAmp {
     public BuffBurn(final LogicModule l, final int d, final double amp, final double dmg, final Player o, final Player t) {
         super(l, d, o, t);
         this.dmgAmp = amp;
-        this.dmgPerSec = dmg * 3.75;
+        this.dmgPerSec = dmg * o.getSkill(Globals.SWORD_CINDER).getCustomValue(SkillSwordCinder.CUSTOMHEADER_BURNDMG);
     }
 
     public BuffBurn(final LogicModule l, final int d, final double amp, final double dmg, final Player o, final Mob t) {
         super(l, d, o, t);
         this.dmgAmp = amp;
-        this.dmgPerSec = dmg * 3.75;
+        this.dmgPerSec = dmg * o.getSkill(Globals.SWORD_CINDER).getCustomValue(SkillSwordCinder.CUSTOMHEADER_BURNDMG);;
     }
 
     @Override

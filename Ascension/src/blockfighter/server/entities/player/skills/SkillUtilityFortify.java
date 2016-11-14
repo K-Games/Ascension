@@ -1,26 +1,25 @@
 package blockfighter.server.entities.player.skills;
 
 import blockfighter.server.LogicModule;
-import blockfighter.server.entities.buff.BuffShieldFortify;
+import blockfighter.server.entities.buff.BuffUtilityFortify;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.net.PacketSender;
 import blockfighter.shared.Globals;
 import java.util.HashMap;
 
-public class SkillShieldFortify extends Skill {
+public class SkillUtilityFortify extends Skill {
 
-    private static final String BUFFDURATION_HEADER = "[buffduration]",
-            HEAL_HEADER = "[heal]";
+    public static final String CUSTOMHEADER_BUFFDURATION = "[buffduration]",
+            CUSTOMHEADER_HEAL = "[heal]";
 
     private static final String[] CUSTOM_DATA_HEADERS = {
-        BUFFDURATION_HEADER,
-        HEAL_HEADER
+        CUSTOMHEADER_BUFFDURATION,
+        CUSTOMHEADER_HEAL
     };
 
-    private static final double BUFF_DURATION,
-            HEAL_AMOUNT;
+    private static final HashMap<String, Double> CUSTOM_VALUES = new HashMap<>(2);
 
-    private static final byte SKILL_CODE = Globals.SHIELD_FORTIFY;
+    private static final byte SKILL_CODE = Globals.UTILITY_FORTIFY;
     private static final boolean IS_PASSIVE;
     private static final byte REQ_WEAPON;
     private static final long MAX_COOLDOWN;
@@ -39,16 +38,17 @@ public class SkillShieldFortify extends Skill {
         BASE_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_BASEVALUE_HEADER);
         MULT_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MULTVALUE_HEADER);
         IS_PASSIVE = Globals.loadBooleanValue(data, dataHeaders, Globals.SKILL_PASSIVE_HEADER);
-        BUFF_DURATION = Globals.loadDoubleValue(data, dataHeaders, BUFFDURATION_HEADER);
-        HEAL_AMOUNT = Globals.loadDoubleValue(data, dataHeaders, HEAL_HEADER);
+        CUSTOM_VALUES.put(CUSTOMHEADER_BUFFDURATION, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_BUFFDURATION));
+        CUSTOM_VALUES.put(CUSTOMHEADER_HEAL, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_HEAL));
     }
 
-    public SkillShieldFortify(final LogicModule l) {
+    public SkillUtilityFortify(final LogicModule l) {
         super(l);
     }
 
-    public double getHealAmount() {
-        return HEAL_AMOUNT;
+    @Override
+    public Double getCustomValue(String customHeader) {
+        return CUSTOM_VALUES.get(customHeader);
     }
 
     @Override
@@ -107,7 +107,8 @@ public class SkillShieldFortify extends Skill {
 
         if (Globals.hasPastDuration(duration, getSkillDuration()) && player.getSkillCounter() == 1) {
             player.incrementSkillCounter();
-            player.queueBuff(new BuffShieldFortify(this.logic, (int) BUFF_DURATION, BASE_VALUE + MULT_VALUE * player.getSkillLevel(Globals.SHIELD_FORTIFY), player));
+            double buffDuration = getCustomValue(CUSTOMHEADER_BUFFDURATION);
+            player.queueBuff(new BuffUtilityFortify(this.logic, (int) buffDuration, BASE_VALUE + MULT_VALUE * player.getSkillLevel(Globals.UTILITY_FORTIFY), player));
             PacketSender.sendParticle(this.logic.getRoom().getRoomNumber(), Globals.PARTICLE_SHIELD_FORTIFYBUFF, player.getKey());
         }
 

@@ -6,14 +6,14 @@ import java.util.HashMap;
 
 public class SkillBowRapid extends Skill {
 
-    private static final String MAXLVLDMGMULT_HEADER = "[maxleveldamagemult]",
-            MAXLVLBONUSCHC_HEADER = "[maxlevelbonuschance]";
+    public static final String CUSTOMHEADER_MAXLVLDMGMULT = "[maxleveldamagemult]",
+            CUSTOMHEADER_MAXLVLBONUSCHC = "[maxlevelbonuschance]";
 
     private static final String[] CUSTOM_DATA_HEADERS = {
-        MAXLVLDMGMULT_HEADER,
-        MAXLVLBONUSCHC_HEADER};
+        CUSTOMHEADER_MAXLVLDMGMULT,
+        CUSTOMHEADER_MAXLVLBONUSCHC};
 
-    private static final double MAX_LEVEL_DAMAGE_MULT, MAX_LEVEL_BONUS_CHANCE;
+    private static final HashMap<String, Double> CUSTOM_VALUES = new HashMap<>(2);
 
     private static final byte SKILL_CODE = Globals.BOW_RAPID;
     private static final BufferedImage ICON = Globals.SKILL_ICON[SKILL_CODE];
@@ -38,8 +38,8 @@ public class SkillBowRapid extends Skill {
         MULT_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MULTVALUE_HEADER) * 100;
         IS_PASSIVE = Globals.loadBooleanValue(data, dataHeaders, Globals.SKILL_PASSIVE_HEADER);
 
-        MAX_LEVEL_DAMAGE_MULT = Globals.loadDoubleValue(data, dataHeaders, MAXLVLDMGMULT_HEADER);
-        MAX_LEVEL_BONUS_CHANCE = Globals.loadDoubleValue(data, dataHeaders, MAXLVLBONUSCHC_HEADER);
+        CUSTOM_VALUES.put(CUSTOMHEADER_MAXLVLDMGMULT, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_MAXLVLDMGMULT));
+        CUSTOM_VALUES.put(CUSTOMHEADER_MAXLVLBONUSCHC, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_MAXLVLBONUSCHC));
     }
 
     @Override
@@ -86,7 +86,7 @@ public class SkillBowRapid extends Skill {
             "Deals " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "% damage per hit."
         };
         this.maxBonusDesc = new String[]{
-            "Each shot has " + NUMBER_FORMAT.format(MAX_LEVEL_BONUS_CHANCE) + "% Chance to deal " + NUMBER_FORMAT.format(MAX_LEVEL_DAMAGE_MULT) + "x damage."
+            "Each shot has " + NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_MAXLVLBONUSCHC)) + "% Chance to deal " + NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_MAXLVLDMGMULT)) + "x damage."
         };
     }
 

@@ -6,6 +6,7 @@ import blockfighter.server.entities.buff.BuffStun;
 import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
+import blockfighter.server.entities.player.skills.Skill;
 import blockfighter.server.entities.player.skills.SkillBowFrost;
 import blockfighter.shared.Globals;
 import java.awt.geom.Rectangle2D;
@@ -37,7 +38,7 @@ public class ProjBowFrost extends Projectile {
         double multValue = owner.getSkill(Globals.BOW_FROST).getMultValue();
         double damage = (!this.isSecondary)
                 ? (owner.rollDamage() * (baseValue + multValue * owner.getSkillLevel(Globals.BOW_FROST)))
-                : owner.rollDamage() * ((SkillBowFrost) owner.getSkill(Globals.BOW_FROST)).getSecondaryDamage();
+                : owner.rollDamage() * owner.getSkill(Globals.BOW_FROST).getCustomValue(SkillBowFrost.CUSTOMHEADER_MAXLEVELBONUSDAMAGE);
         damage = (isCrit) ? owner.criticalDamage(damage) : damage;
         return (int) damage;
     }
@@ -50,7 +51,9 @@ public class ProjBowFrost extends Projectile {
         target.queueDamage(new Damage(damage, true, owner, target, isCrit, this.hitbox[0], target.getHitbox()));
         target.queueBuff(new BuffKnockback(this.logic, 200, (owner.getFacing() == Globals.RIGHT) ? 1 : -1, -4, owner, target));
         if (!this.isSecondary) {
-            target.queueBuff(new BuffStun(this.logic, (int) ((SkillBowFrost) owner.getSkill(Globals.BOW_FROST)).getStunDuration()));
+            Skill skill = owner.getSkill(Globals.BOW_FROST);
+            double stunDuration = (skill.isMaxed()) ? skill.getCustomValue(SkillBowFrost.CUSTOMHEADER_MAXLEVELSTUN) : skill.getCustomValue(SkillBowFrost.CUSTOMHEADER_BASESTUN);
+            target.queueBuff(new BuffStun(this.logic, (int) stunDuration));
         }
     }
 
@@ -61,7 +64,9 @@ public class ProjBowFrost extends Projectile {
         final int damage = calculateDamage(isCrit);
         target.queueDamage(new Damage(damage, true, owner, target, isCrit, this.hitbox[0], target.getHitbox()));
         if (!this.isSecondary) {
-            target.queueBuff(new BuffStun(this.logic, (int) ((SkillBowFrost) owner.getSkill(Globals.BOW_FROST)).getStunDuration()));
+            Skill skill = owner.getSkill(Globals.BOW_FROST);
+            double stunDuration = (skill.isMaxed()) ? skill.getCustomValue(SkillBowFrost.CUSTOMHEADER_MAXLEVELSTUN) : skill.getCustomValue(SkillBowFrost.CUSTOMHEADER_BASESTUN);
+            target.queueBuff(new BuffStun(this.logic, (int) stunDuration));
         }
     }
 

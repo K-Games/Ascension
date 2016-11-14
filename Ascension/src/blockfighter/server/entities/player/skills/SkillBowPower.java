@@ -9,13 +9,13 @@ import java.util.HashMap;
 
 public class SkillBowPower extends Skill {
 
-    private static final String MAXLEVELBONUSCRITDMG_HEADER = "[maxlevelbonuscritdamage]";
+    public static final String CUSTOMHEADER_MAXLEVELBONUSCRITDMG = "[maxlevelbonuscritdamage]";
 
     private static final String[] CUSTOM_DATA_HEADERS = {
-        MAXLEVELBONUSCRITDMG_HEADER
+        CUSTOMHEADER_MAXLEVELBONUSCRITDMG
     };
 
-    private static final double MAX_LEVEL_BONUS_CRIT_DAMAGE;
+    private static final HashMap<String, Double> CUSTOM_VALUES = new HashMap<>(1);
 
     private static final byte SKILL_CODE = Globals.BOW_POWER;
     private static final boolean IS_PASSIVE;
@@ -37,15 +37,16 @@ public class SkillBowPower extends Skill {
         MULT_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MULTVALUE_HEADER);
         IS_PASSIVE = Globals.loadBooleanValue(data, dataHeaders, Globals.SKILL_PASSIVE_HEADER);
 
-        MAX_LEVEL_BONUS_CRIT_DAMAGE = Globals.loadDoubleValue(data, dataHeaders, MAXLEVELBONUSCRITDMG_HEADER);
+        CUSTOM_VALUES.put(CUSTOMHEADER_MAXLEVELBONUSCRITDMG, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_MAXLEVELBONUSCRITDMG));
     }
 
     public SkillBowPower(final LogicModule l) {
         super(l);
     }
 
-    public double getBonusCritDamage() {
-        return (isMaxed()) ? MAX_LEVEL_BONUS_CRIT_DAMAGE : 0;
+    @Override
+    public Double getCustomValue(String customHeader) {
+        return CUSTOM_VALUES.get(customHeader);
     }
 
     @Override

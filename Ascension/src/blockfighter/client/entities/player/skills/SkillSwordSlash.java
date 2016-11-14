@@ -6,16 +6,15 @@ import java.util.HashMap;
 
 public class SkillSwordSlash extends Skill {
 
-    private static final String BUFFDURATION_HEADER = "[buffduration]",
-            DMGREDUCT_HEADER = "[damagereduct]";
+    public static final String CUSTOMHEADER_BUFFDURATION = "[buffduration]",
+            CUSTOMHEADER_DMGREDUCT = "[damagereduct]";
 
     private static final String[] CUSTOM_DATA_HEADERS = {
-        BUFFDURATION_HEADER,
-        DMGREDUCT_HEADER
+        CUSTOMHEADER_BUFFDURATION,
+        CUSTOMHEADER_DMGREDUCT
     };
 
-    private static final double BUFF_DURATION,
-            DAMAGE_REDUCT;
+    private static final HashMap<String, Double> CUSTOM_VALUES = new HashMap<>(2);
 
     private static final byte SKILL_CODE = Globals.SWORD_SLASH;
     private static final BufferedImage ICON = Globals.SKILL_ICON[SKILL_CODE];
@@ -39,8 +38,8 @@ public class SkillSwordSlash extends Skill {
         BASE_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_BASEVALUE_HEADER) * 100;
         MULT_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MULTVALUE_HEADER) * 100;
         IS_PASSIVE = Globals.loadBooleanValue(data, dataHeaders, Globals.SKILL_PASSIVE_HEADER);
-        BUFF_DURATION = Globals.loadDoubleValue(data, dataHeaders, BUFFDURATION_HEADER) / 1000D;
-        DAMAGE_REDUCT = Globals.loadDoubleValue(data, dataHeaders, DMGREDUCT_HEADER) * 100;
+        CUSTOM_VALUES.put(CUSTOMHEADER_BUFFDURATION, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_BUFFDURATION) / 1000);
+        CUSTOM_VALUES.put(CUSTOMHEADER_DMGREDUCT, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_DMGREDUCT) * 100);
     }
 
     @Override
@@ -89,7 +88,7 @@ public class SkillSwordSlash extends Skill {
         };
 
         this.maxBonusDesc = new String[]{
-            "Take " + NUMBER_FORMAT.format(DAMAGE_REDUCT) + "% less damage for " + TIME_NUMBER_FORMAT.format(BUFF_DURATION) + " seconds."
+            "Take " + NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_DMGREDUCT)) + "% less damage for " + TIME_NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_BUFFDURATION)) + " seconds."
         };
     }
 }

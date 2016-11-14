@@ -9,22 +9,19 @@ import java.util.HashMap;
 
 public class SkillShieldRoar extends Skill {
 
-    private static final String BASEDEF_HEADER = "[basedefense]",
-            MULTDEF_HEADER = "[multdefense]",
-            MULTBASEDEF_HEADER = "[multbasedefense]",
-            STUN_HEADER = "[stunduration]";
+    public static final String CUSTOMHEADER_BASEDEF = "[basedefense]",
+            CUSTOMHEADER_MULTDEF = "[multdefense]",
+            CUSTOMHEADER_MULTBASEDEF = "[multbasedefense]",
+            CUSTOMHEADER_STUN = "[stunduration]";
 
     private static final String[] CUSTOM_DATA_HEADERS = {
-        BASEDEF_HEADER,
-        MULTDEF_HEADER,
-        STUN_HEADER,
-        MULTBASEDEF_HEADER
+        CUSTOMHEADER_BASEDEF,
+        CUSTOMHEADER_MULTDEF,
+        CUSTOMHEADER_STUN,
+        CUSTOMHEADER_MULTBASEDEF
     };
 
-    private static final double STUN_DURATION,
-            BASE_DEFENSE,
-            MULT_DEFENSE,
-            MULT_BASE_DEFENSE;
+    private static final HashMap<String, Double> CUSTOM_VALUES = new HashMap<>(4);
 
     private static final byte SKILL_CODE = Globals.SHIELD_ROAR;
 
@@ -46,30 +43,19 @@ public class SkillShieldRoar extends Skill {
         BASE_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_BASEVALUE_HEADER);
         MULT_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MULTVALUE_HEADER);
         IS_PASSIVE = Globals.loadBooleanValue(data, dataHeaders, Globals.SKILL_PASSIVE_HEADER);
-        STUN_DURATION = Globals.loadDoubleValue(data, dataHeaders, STUN_HEADER);
-        BASE_DEFENSE = Globals.loadDoubleValue(data, dataHeaders, BASEDEF_HEADER);
-        MULT_DEFENSE = Globals.loadDoubleValue(data, dataHeaders, MULTDEF_HEADER);
-        MULT_BASE_DEFENSE = Globals.loadDoubleValue(data, dataHeaders, MULTBASEDEF_HEADER);
+        CUSTOM_VALUES.put(CUSTOMHEADER_BASEDEF, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_BASEDEF));
+        CUSTOM_VALUES.put(CUSTOMHEADER_MULTDEF, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_MULTDEF));
+        CUSTOM_VALUES.put(CUSTOMHEADER_STUN, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_STUN));
+        CUSTOM_VALUES.put(CUSTOMHEADER_MULTBASEDEF, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_MULTBASEDEF));
     }
 
     public SkillShieldRoar(final LogicModule l) {
         super(l);
     }
 
-    public double getBaseDefense() {
-        return BASE_DEFENSE;
-    }
-
-    public double getMultDefense() {
-        return MULT_DEFENSE;
-    }
-
-    public double getMultBaseDefense() {
-        return MULT_BASE_DEFENSE;
-    }
-
-    public double getStunDuration() {
-        return STUN_DURATION;
+    @Override
+    public Double getCustomValue(String customHeader) {
+        return CUSTOM_VALUES.get(customHeader);
     }
 
     @Override

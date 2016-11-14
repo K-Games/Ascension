@@ -29,6 +29,8 @@ public abstract class Skill {
 
     public abstract double getMultValue();
 
+    public abstract Double getCustomValue(String customHeader);
+
     public Skill(final LogicModule l) {
         this.logic = l;
     }

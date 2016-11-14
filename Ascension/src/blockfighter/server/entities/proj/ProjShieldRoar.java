@@ -33,7 +33,8 @@ public class ProjShieldRoar extends Projectile {
         target.queueBuff(new BuffKnockback(this.logic, 200, (1 - Math.abs(target.getX() - owner.getX()) / 600D) * ((owner.getFacing() == Globals.RIGHT) ? 30 : -30), 0, owner, target));
         PacketSender.sendParticle(this.logic.getRoom().getRoomNumber(), Globals.PARTICLE_SHIELD_ROARHIT, target.getKey());
         if (owner.isSkillMaxed(Globals.SHIELD_ROAR)) {
-            target.queueBuff(new BuffStun(this.logic, (int) ((SkillShieldRoar) owner.getSkill(Globals.SHIELD_ROAR)).getStunDuration()));
+            double stunDuration = owner.getSkill(Globals.SHIELD_ROAR).getCustomValue(SkillShieldRoar.CUSTOMHEADER_STUN);
+            target.queueBuff(new BuffStun(this.logic, (int) stunDuration));
         }
     }
 
@@ -46,9 +47,9 @@ public class ProjShieldRoar extends Projectile {
         Player owner = getOwner();
         double baseValue = owner.getSkill(Globals.SHIELD_ROAR).getBaseValue();
         double multValue = owner.getSkill(Globals.SHIELD_ROAR).getMultValue();
-        double baseDefense = ((SkillShieldRoar) owner.getSkill(Globals.SHIELD_ROAR)).getBaseDefense();
-        double multDefense = ((SkillShieldRoar) owner.getSkill(Globals.SHIELD_ROAR)).getMultDefense();
-        double multBaseDefense = ((SkillShieldRoar) owner.getSkill(Globals.SHIELD_ROAR)).getMultBaseDefense();
+        double baseDefense = owner.getSkill(Globals.SHIELD_ROAR).getCustomValue(SkillShieldRoar.CUSTOMHEADER_BASEDEF);
+        double multDefense = owner.getSkill(Globals.SHIELD_ROAR).getCustomValue(SkillShieldRoar.CUSTOMHEADER_MULTDEF);
+        double multBaseDefense = owner.getSkill(Globals.SHIELD_ROAR).getCustomValue(SkillShieldRoar.CUSTOMHEADER_MULTBASEDEF);
 
         double damage = owner.rollDamage() * (baseValue + multValue * owner.getSkillLevel(Globals.SHIELD_ROAR))
                 + (owner.getStats()[Globals.STAT_DEFENSE] * (multBaseDefense * (baseDefense + multDefense * owner.getSkillLevel(Globals.SHIELD_ROAR))));

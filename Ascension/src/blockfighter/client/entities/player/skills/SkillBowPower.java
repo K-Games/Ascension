@@ -6,13 +6,13 @@ import java.util.HashMap;
 
 public class SkillBowPower extends Skill {
 
-    private static final String MAXLEVELBONUSCRITDMG_HEADER = "[maxlevelbonuscritdamage]";
+    public static final String CUSTOMHEADER_MAXLEVELBONUSCRITDMG = "[maxlevelbonuscritdamage]";
 
     private static final String[] CUSTOM_DATA_HEADERS = {
-        MAXLEVELBONUSCRITDMG_HEADER
+        CUSTOMHEADER_MAXLEVELBONUSCRITDMG
     };
 
-    private static final double MAX_LEVEL_BONUS_CRIT_DAMAGE;
+    private static final HashMap<String, Double> CUSTOM_VALUES = new HashMap<>(1);
 
     private static final byte SKILL_CODE = Globals.BOW_POWER;
     private static final BufferedImage ICON = Globals.SKILL_ICON[SKILL_CODE];
@@ -35,7 +35,7 @@ public class SkillBowPower extends Skill {
         MULT_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MULTVALUE_HEADER) * 100;
         IS_PASSIVE = Globals.loadBooleanValue(data, dataHeaders, Globals.SKILL_PASSIVE_HEADER);
 
-        MAX_LEVEL_BONUS_CRIT_DAMAGE = Globals.loadDoubleValue(data, dataHeaders, MAXLEVELBONUSCRITDMG_HEADER) * 100;
+        CUSTOM_VALUES.put(CUSTOMHEADER_MAXLEVELBONUSCRITDMG, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_MAXLEVELBONUSCRITDMG) * 100);
     }
 
     @Override
@@ -83,7 +83,7 @@ public class SkillBowPower extends Skill {
         };
         this.maxBonusDesc = new String[]{
             "Can no longer be interrupted.",
-            "Critical Hits deal +" + NUMBER_FORMAT.format(MAX_LEVEL_BONUS_CRIT_DAMAGE) + "% Critical Hit damage."
+            "Critical Hits deal +" + NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_MAXLEVELBONUSCRITDMG)) + "% Critical Hit damage."
         };
     }
 }

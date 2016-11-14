@@ -4,9 +4,19 @@ import blockfighter.shared.Globals;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 
-public class SkillShieldDash extends Skill {
+public class SkillUtilityFortify extends Skill {
 
-    private static final byte SKILL_CODE = Globals.SHIELD_DASH;
+    public static final String CUSTOMHEADER_BUFFDURATION = "[buffduration]",
+            CUSTOMHEADER_HEAL = "[heal]";
+
+    private static final String[] CUSTOM_DATA_HEADERS = {
+        CUSTOMHEADER_BUFFDURATION,
+        CUSTOMHEADER_HEAL
+    };
+
+    private static final HashMap<String, Double> CUSTOM_VALUES = new HashMap<>(2);
+
+    private static final byte SKILL_CODE = Globals.UTILITY_FORTIFY;
     private static final BufferedImage ICON = Globals.SKILL_ICON[SKILL_CODE];
 
     private static final String SKILL_NAME;
@@ -19,7 +29,7 @@ public class SkillShieldDash extends Skill {
 
     static {
         String[] data = Globals.loadSkillData(SKILL_CODE);
-        HashMap<String, Integer> dataHeaders = Globals.getDataHeaders(data, null);
+        HashMap<String, Integer> dataHeaders = Globals.getDataHeaders(data, CUSTOM_DATA_HEADERS);
 
         SKILL_NAME = Globals.loadSkillName(data, dataHeaders);
         DESCRIPTION = Globals.loadSkillDesc(data, dataHeaders);
@@ -28,6 +38,9 @@ public class SkillShieldDash extends Skill {
         BASE_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_BASEVALUE_HEADER) * 100;
         MULT_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MULTVALUE_HEADER) * 100;
         IS_PASSIVE = Globals.loadBooleanValue(data, dataHeaders, Globals.SKILL_PASSIVE_HEADER);
+        CUSTOM_VALUES.put(CUSTOMHEADER_BUFFDURATION, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_BUFFDURATION) / 1000);
+        CUSTOM_VALUES.put(CUSTOMHEADER_HEAL, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_HEAL) * 100);
+
     }
 
     @Override
@@ -68,13 +81,13 @@ public class SkillShieldDash extends Skill {
     @Override
     public void updateDesc() {
         this.skillCurLevelDesc = new String[]{
-            "Increases damage dealt by " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * this.level) + "%."
+            "Reduce damage taken by " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * this.level) + "%."
         };
         this.skillNextLevelDesc = new String[]{
-            "Increases damage dealt by " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "%."
+            "Reduce damage taken by " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "%."
         };
         this.maxBonusDesc = new String[]{
-            "Invulnerable during dash."
+            "Restore " + NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_HEAL)) + "% HP over " + TIME_NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_BUFFDURATION)) + " seconds."
         };
     }
 }

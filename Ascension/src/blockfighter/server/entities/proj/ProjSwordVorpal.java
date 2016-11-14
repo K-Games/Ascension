@@ -29,8 +29,8 @@ public class ProjSwordVorpal extends Projectile {
         double multValue = owner.getSkill(Globals.SWORD_VORPAL).getMultValue();
         double damage = owner.rollDamage() * (baseValue + multValue * owner.getSkillLevel(Globals.SWORD_VORPAL));
 
-        double baseCritDmg = ((SkillSwordVorpal) owner.getSkill(Globals.SWORD_VORPAL)).getBaseBonusCritDmg();
-        double multCritDmg = ((SkillSwordVorpal) owner.getSkill(Globals.SWORD_VORPAL)).getMultBonusCritDmg();
+        double baseCritDmg = owner.getSkill(Globals.SWORD_VORPAL).getCustomValue(SkillSwordVorpal.CUSTOMHEADER_BASEBONUSCRITDMG);
+        double multCritDmg = owner.getSkill(Globals.SWORD_VORPAL).getCustomValue(SkillSwordVorpal.CUSTOMHEADER_MULTBONUSCRITDMG);
         damage = (isCrit) ? owner.criticalDamage(damage, baseCritDmg + multCritDmg * owner.getSkillLevel(Globals.SWORD_VORPAL)) : damage;
         return (int) damage;
     }
@@ -38,7 +38,7 @@ public class ProjSwordVorpal extends Projectile {
     @Override
     public void applyDamage(Player target) {
         final Player owner = getOwner();
-        final boolean isCrit = owner.rollCrit(owner.isSkillMaxed(Globals.SWORD_VORPAL) ? ((SkillSwordVorpal) owner.getSkill(Globals.SWORD_VORPAL)).getBonusCritChance() : 0);
+        final boolean isCrit = owner.rollCrit(owner.isSkillMaxed(Globals.SWORD_VORPAL) ? owner.getSkill(Globals.SWORD_VORPAL).getCustomValue(SkillSwordVorpal.CUSTOMHEADER_BONUSCRITCHC) : 0);
         final int damage = calculateDamage(isCrit);
         target.queueDamage(new Damage(damage, true, owner, target, isCrit, this.hitbox[0], target.getHitbox()));
         target.queueBuff(new BuffKnockback(this.logic, 200, (owner.getFacing() == Globals.RIGHT) ? 3 : -3, -3, owner, target));

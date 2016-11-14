@@ -23,11 +23,11 @@ public class ProjShieldMagnetize extends Projectile {
         final Player owner = getOwner();
         double baseValue = owner.getSkill(Globals.SHIELD_MAGNETIZE).getBaseValue();
         double multValue = owner.getSkill(Globals.SHIELD_MAGNETIZE).getMultValue();
-        double baseDef = ((SkillShieldMagnetize) owner.getSkill(Globals.SHIELD_MAGNETIZE)).getBaseDefense();
-        double multDef = ((SkillShieldMagnetize) owner.getSkill(Globals.SHIELD_MAGNETIZE)).getMultDefense();
+        double baseDef = owner.getSkill(Globals.SHIELD_MAGNETIZE).getCustomValue(SkillShieldMagnetize.CUSTOMHEADER_BASEDEF);
+        double multDef = owner.getSkill(Globals.SHIELD_MAGNETIZE).getCustomValue(SkillShieldMagnetize.CUSTOMHEADER_MULTDEF);
         double damage = owner.rollDamage() * (baseValue + multValue * owner.getSkillLevel(Globals.SHIELD_MAGNETIZE))
                 + (owner.getStats()[Globals.STAT_DEFENSE] * (baseDef + multDef * owner.getSkillLevel(Globals.SHIELD_MAGNETIZE)));
-        damage *= (owner.isSkillMaxed(Globals.SHIELD_MAGNETIZE)) ? ((SkillShieldMagnetize) owner.getSkill(Globals.SHIELD_MAGNETIZE)).getMaxLevelMult() : 1;
+        damage *= (owner.isSkillMaxed(Globals.SHIELD_MAGNETIZE)) ? owner.getSkill(Globals.SHIELD_MAGNETIZE).getCustomValue(SkillShieldMagnetize.CUSTOMHEADER_MAXLEVELMULT) : 1;
         damage = (isCrit) ? owner.criticalDamage(damage) : damage;
         return (int) damage;
     }

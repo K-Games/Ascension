@@ -6,14 +6,14 @@ import java.util.HashMap;
 
 public class SkillBowVolley extends Skill {
 
-    private static final String MAXLVLBUFFDMG_HEADER = "[maxlevelbuffdamage]",
-            MAXLVLBUFFDURATION_HEADER = "[maxlevelbuffduration]";
+    public static final String CUSTOMHEADER_MAXLVLBUFFDMG = "[maxlevelbuffdamage]",
+            CUSTOMHEADER_MAXLVLBUFFDURATION = "[maxlevelbuffduration]";
 
     private static final String[] CUSTOM_DATA_HEADERS = {
-        MAXLVLBUFFDMG_HEADER,
-        MAXLVLBUFFDURATION_HEADER};
+        CUSTOMHEADER_MAXLVLBUFFDMG,
+        CUSTOMHEADER_MAXLVLBUFFDURATION};
 
-    private static final double MAX_LEVEL_BUFF_DAMAGE, MAX_LEVEL_BUFF_DURATION;
+    private static final HashMap<String, Double> CUSTOM_VALUES = new HashMap<>(2);
 
     private static final byte SKILL_CODE = Globals.BOW_VOLLEY;
     private static final BufferedImage ICON = Globals.SKILL_ICON[SKILL_CODE];
@@ -38,8 +38,8 @@ public class SkillBowVolley extends Skill {
         MULT_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MULTVALUE_HEADER) * 100;
         IS_PASSIVE = Globals.loadBooleanValue(data, dataHeaders, Globals.SKILL_PASSIVE_HEADER);
 
-        MAX_LEVEL_BUFF_DAMAGE = Globals.loadDoubleValue(data, dataHeaders, MAXLVLBUFFDMG_HEADER) * 100;
-        MAX_LEVEL_BUFF_DURATION = Globals.loadDoubleValue(data, dataHeaders, MAXLVLBUFFDURATION_HEADER) / 1000;
+        CUSTOM_VALUES.put(CUSTOMHEADER_MAXLVLBUFFDMG, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_MAXLVLBUFFDMG) * 100);
+        CUSTOM_VALUES.put(CUSTOMHEADER_MAXLVLBUFFDURATION, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_MAXLVLBUFFDURATION) / 1000);
     }
 
     @Override
@@ -86,7 +86,7 @@ public class SkillBowVolley extends Skill {
             "Deals " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "% damage per hit"
         };
         this.maxBonusDesc = new String[]{
-            "Each Critical Hit increases damage by " + NUMBER_FORMAT.format(MAX_LEVEL_BUFF_DAMAGE) + "% for " + TIME_NUMBER_FORMAT.format(MAX_LEVEL_BUFF_DURATION) + " seconds."
+            "Each Critical Hit increases damage by " + NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_MAXLVLBUFFDMG)) + "% for " + TIME_NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_MAXLVLBUFFDURATION)) + " seconds."
         };
     }
 }

@@ -1,15 +1,15 @@
 package blockfighter.server.entities.player.skills;
 
 import blockfighter.server.LogicModule;
-import blockfighter.server.entities.buff.BuffShieldDash;
+import blockfighter.server.entities.buff.BuffUtilityDash;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.net.PacketSender;
 import blockfighter.shared.Globals;
 import java.util.HashMap;
 
-public class SkillShieldDash extends Skill {
+public class SkillUtilityDash extends Skill {
 
-    private static final byte SKILL_CODE = Globals.SHIELD_DASH;
+    private static final byte SKILL_CODE = Globals.UTILITY_DASH;
 
     private static final boolean IS_PASSIVE;
     private static final byte REQ_WEAPON;
@@ -31,8 +31,13 @@ public class SkillShieldDash extends Skill {
         IS_PASSIVE = Globals.loadBooleanValue(data, dataHeaders, Globals.SKILL_PASSIVE_HEADER);
     }
 
-    public SkillShieldDash(final LogicModule l) {
+    public SkillUtilityDash(final LogicModule l) {
         super(l);
+    }
+
+    @Override
+    public Double getCustomValue(String customHeader) {
+        return null;
     }
 
     @Override
@@ -86,7 +91,7 @@ public class SkillShieldDash extends Skill {
         if (!player.isStunned() && !player.isKnockback()) {
             player.setXSpeed((player.getFacing() == Globals.RIGHT) ? 8.5 : -8.5);
         }
-        if (player.isSkillMaxed(Globals.SHIELD_DASH) && !player.isInvulnerable()) {
+        if (player.isSkillMaxed(Globals.UTILITY_DASH) && !player.isInvulnerable()) {
             player.setInvulnerable(true);
         }
 
@@ -98,7 +103,7 @@ public class SkillShieldDash extends Skill {
 
         if (player.getSkillCounter() == 1 && duration >= getSkillDuration()) {
             player.incrementSkillCounter();
-            player.queueBuff(new BuffShieldDash(this.logic, 5000, getBaseValue() + getMultValue() * player.getSkillLevel(Globals.SHIELD_DASH), player));
+            player.queueBuff(new BuffUtilityDash(this.logic, 5000, getBaseValue() + getMultValue() * player.getSkillLevel(Globals.UTILITY_DASH), player));
             PacketSender.sendParticle(this.logic.getRoom().getRoomNumber(), Globals.PARTICLE_SHIELD_DASHBUFF, player.getKey());
         }
         player.updateSkillEnd(duration, getSkillDuration(), true, true);
