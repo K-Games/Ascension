@@ -9,14 +9,14 @@ import java.util.HashMap;
 
 public class SkillBowVolley extends Skill {
 
-    private static final String MAXLVLBUFFDMG_HEADER = "[maxlevelbuffdamage]",
-            MAXLVLBUFFDURATION_HEADER = "[maxlevelbuffduration]";
+    public static final String CUSTOMHEADER_MAXLVLBUFFDMG = "[maxlevelbuffdamage]",
+            CUSTOMHEADER_MAXLVLBUFFDURATION = "[maxlevelbuffduration]";
 
     private static final String[] CUSTOM_DATA_HEADERS = {
-        MAXLVLBUFFDMG_HEADER,
-        MAXLVLBUFFDURATION_HEADER};
+        CUSTOMHEADER_MAXLVLBUFFDMG,
+        CUSTOMHEADER_MAXLVLBUFFDURATION};
 
-    private static final double MAX_LEVEL_BUFF_DAMAGE, MAX_LEVEL_BUFF_DURATION;
+    private static final HashMap<String, Double> CUSTOM_VALUES = new HashMap<>(2);
 
     private static final byte SKILL_CODE = Globals.BOW_VOLLEY;
     private static final boolean IS_PASSIVE;
@@ -39,20 +39,17 @@ public class SkillBowVolley extends Skill {
         MULT_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MULTVALUE_HEADER);
         IS_PASSIVE = Globals.loadBooleanValue(data, dataHeaders, Globals.SKILL_PASSIVE_HEADER);
 
-        MAX_LEVEL_BUFF_DAMAGE = Globals.loadDoubleValue(data, dataHeaders, MAXLVLBUFFDMG_HEADER);
-        MAX_LEVEL_BUFF_DURATION = Globals.loadDoubleValue(data, dataHeaders, MAXLVLBUFFDURATION_HEADER);
+        CUSTOM_VALUES.put(CUSTOMHEADER_MAXLVLBUFFDMG, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_MAXLVLBUFFDMG));
+        CUSTOM_VALUES.put(CUSTOMHEADER_MAXLVLBUFFDURATION, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_MAXLVLBUFFDURATION));
     }
 
     public SkillBowVolley(final LogicModule l) {
         super(l);
     }
 
-    public double getBuffDamage() {
-        return MAX_LEVEL_BUFF_DAMAGE;
-    }
-
-    public double getBuffDuration() {
-        return MAX_LEVEL_BUFF_DURATION;
+    @Override
+    public Double getCustomValue(String customHeader) {
+        return CUSTOM_VALUES.get(customHeader);
     }
 
     @Override

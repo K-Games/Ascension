@@ -9,17 +9,17 @@ import java.util.HashMap;
 
 public class SkillSwordVorpal extends Skill {
 
-    private static final String BASEBONUSCRITDMG_HEADER = "[basebonuscritdamage]",
-            MULTBONUSCRITDMG_HEADER = "[multbonuscritdamage]",
-            BONUSCRITCHC_HEADER = "[bonuscritchc]";
+    public static final String CUSTOMHEADER_BASEBONUSCRITDMG = "[basebonuscritdamage]",
+            CUSTOMHEADER_MULTBONUSCRITDMG = "[multbonuscritdamage]",
+            CUSTOMHEADER_BONUSCRITCHC = "[bonuscritchc]";
 
     private static final String[] CUSTOM_DATA_HEADERS = {
-        BASEBONUSCRITDMG_HEADER,
-        BONUSCRITCHC_HEADER,
-        MULTBONUSCRITDMG_HEADER
+        CUSTOMHEADER_BASEBONUSCRITDMG,
+        CUSTOMHEADER_MULTBONUSCRITDMG,
+        CUSTOMHEADER_BONUSCRITCHC
     };
 
-    private static final double BASE_BONUS_CRIT_DAMAGE, MULT_BONUS_CRIT_DAMAGE, BONUS_CRIT_CHANCE;
+    private static final HashMap<String, Double> CUSTOM_VALUES = new HashMap<>(3);
 
     private static final byte SKILL_CODE = Globals.SWORD_VORPAL;
     private static final boolean IS_PASSIVE;
@@ -41,25 +41,18 @@ public class SkillSwordVorpal extends Skill {
         MULT_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MULTVALUE_HEADER);
         IS_PASSIVE = Globals.loadBooleanValue(data, dataHeaders, Globals.SKILL_PASSIVE_HEADER);
 
-        BASE_BONUS_CRIT_DAMAGE = Globals.loadDoubleValue(data, dataHeaders, BASEBONUSCRITDMG_HEADER);
-        MULT_BONUS_CRIT_DAMAGE = Globals.loadDoubleValue(data, dataHeaders, MULTBONUSCRITDMG_HEADER);
-        BONUS_CRIT_CHANCE = Globals.loadDoubleValue(data, dataHeaders, BONUSCRITCHC_HEADER);
+        CUSTOM_VALUES.put(CUSTOMHEADER_BASEBONUSCRITDMG, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_BASEBONUSCRITDMG));
+        CUSTOM_VALUES.put(CUSTOMHEADER_MULTBONUSCRITDMG, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_MULTBONUSCRITDMG));
+        CUSTOM_VALUES.put(CUSTOMHEADER_BONUSCRITCHC, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_BONUSCRITCHC));
     }
 
     public SkillSwordVorpal(final LogicModule l) {
         super(l);
     }
 
-    public double getBaseBonusCritDmg() {
-        return BASE_BONUS_CRIT_DAMAGE;
-    }
-
-    public double getMultBonusCritDmg() {
-        return MULT_BONUS_CRIT_DAMAGE;
-    }
-
-    public double getBonusCritChance() {
-        return BONUS_CRIT_CHANCE;
+    @Override
+    public Double getCustomValue(String customHeader) {
+        return null;
     }
 
     @Override

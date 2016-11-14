@@ -29,8 +29,8 @@ public class ProjBowRapid extends Projectile {
         double multValue = owner.getSkill(Globals.BOW_RAPID).getMultValue();
         double damage = owner.rollDamage() * (baseValue + multValue * owner.getSkillLevel(Globals.BOW_RAPID));
         damage = (isCrit) ? owner.criticalDamage(damage) : damage;
-        if (owner.isSkillMaxed(Globals.BOW_RAPID) && Globals.rng(100) + 1 <= (int) ((SkillBowRapid) owner.getSkill(Globals.BOW_RAPID)).getMaxLevelBonusChance()) {
-            damage *= ((SkillBowRapid) owner.getSkill(Globals.BOW_RAPID)).getMaxLevelDamageMult();
+        if (owner.isSkillMaxed(Globals.BOW_RAPID) && Globals.rng(100) + 1 <= owner.getSkill(Globals.BOW_RAPID).getCustomValue(SkillBowRapid.CUSTOMHEADER_MAXLVLBONUSCHC)) {
+            damage *= owner.getSkill(Globals.BOW_RAPID).getCustomValue(SkillBowRapid.CUSTOMHEADER_MAXLVLDMGMULT);
         }
         return (int) damage;
     }

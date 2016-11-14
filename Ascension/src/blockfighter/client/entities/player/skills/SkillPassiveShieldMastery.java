@@ -6,13 +6,15 @@ import java.util.HashMap;
 
 public class SkillPassiveShieldMastery extends Skill {
 
-    private static final String BASEDMGREDUCT_HEADER = "[basedmgreduct]",
-            MULTDMGREDUCT_HEADER = "[multdmgreduct]";
+    public static final String CUSTOMHEADER_BASEDMGREDUCT = "[basedmgreduct]",
+            CUSTOMHEADER_MULTDMGREDUCT = "[multdmgreduct]";
+
     private static final String[] CUSTOM_DATA_HEADERS = {
-        BASEDMGREDUCT_HEADER,
-        MULTDMGREDUCT_HEADER
+        CUSTOMHEADER_BASEDMGREDUCT,
+        CUSTOMHEADER_MULTDMGREDUCT
     };
-    private static final double BASE_DMG_REDUCT, MULT_DMG_REDUCT;
+
+    private static final HashMap<String, Double> CUSTOM_VALUES = new HashMap<>(2);
 
     private static final byte SKILL_CODE = Globals.PASSIVE_SHIELDMASTERY;
     private static final BufferedImage ICON = Globals.SKILL_ICON[SKILL_CODE];
@@ -37,8 +39,8 @@ public class SkillPassiveShieldMastery extends Skill {
         MULT_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MULTVALUE_HEADER) * 100;
         IS_PASSIVE = Globals.loadBooleanValue(data, dataHeaders, Globals.SKILL_PASSIVE_HEADER);
 
-        BASE_DMG_REDUCT = Globals.loadDoubleValue(data, dataHeaders, BASEDMGREDUCT_HEADER) * 100;
-        MULT_DMG_REDUCT = Globals.loadDoubleValue(data, dataHeaders, MULTDMGREDUCT_HEADER) * 100;
+        CUSTOM_VALUES.put(CUSTOMHEADER_BASEDMGREDUCT, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_BASEDMGREDUCT) * 100);
+        CUSTOM_VALUES.put(CUSTOMHEADER_MULTDMGREDUCT, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_MULTDMGREDUCT) * 100);
     }
 
     @Override
@@ -84,11 +86,11 @@ public class SkillPassiveShieldMastery extends Skill {
 //        };
         this.skillCurLevelDesc = new String[]{
             "Deal additional " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * this.level) + "% damage.",
-            "Take " + NUMBER_FORMAT.format(BASE_DMG_REDUCT + MULT_DMG_REDUCT * this.level) + "% reduced damage."
+            "Take " + NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_BASEDMGREDUCT) + CUSTOM_VALUES.get(CUSTOMHEADER_MULTDMGREDUCT) * this.level) + "% reduced damage."
         };
         this.skillNextLevelDesc = new String[]{
             "Deal additional " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "% damage.",
-            "Take " + NUMBER_FORMAT.format(BASE_DMG_REDUCT + MULT_DMG_REDUCT * (this.level + 1)) + "% reduced damage."
+            "Take " + NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_BASEDMGREDUCT) + CUSTOM_VALUES.get(CUSTOMHEADER_MULTDMGREDUCT) * (this.level + 1)) + "% reduced damage."
         };
     }
 }

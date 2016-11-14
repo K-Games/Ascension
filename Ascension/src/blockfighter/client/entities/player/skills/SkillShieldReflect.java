@@ -6,16 +6,15 @@ import java.util.HashMap;
 
 public class SkillShieldReflect extends Skill {
 
-    private static final String MAXLVLREFLECT_HEADER = "[maxlevelreflect]",
-            BUFFDURATION_HEADER = "[buffduration]";
+    public static final String CUSTOMHEADER_MAXLVLREFLECT = "[maxlevelreflect]",
+            CUSTOMHEADER_BUFFDURATION = "[buffduration]";
 
     private static final String[] CUSTOM_DATA_HEADERS = {
-        MAXLVLREFLECT_HEADER,
-        BUFFDURATION_HEADER
+        CUSTOMHEADER_MAXLVLREFLECT,
+        CUSTOMHEADER_BUFFDURATION
     };
 
-    private static final double MAX_LEVEL_REFLECT,
-            BUFF_DURATION;
+    private static final HashMap<String, Double> CUSTOM_VALUES = new HashMap<>(2);
 
     private static final byte SKILL_CODE = Globals.SHIELD_REFLECT;
     private static final BufferedImage ICON = Globals.SKILL_ICON[SKILL_CODE];
@@ -39,8 +38,9 @@ public class SkillShieldReflect extends Skill {
         BASE_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_BASEVALUE_HEADER) * 100;
         MULT_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MULTVALUE_HEADER) * 100;
         IS_PASSIVE = Globals.loadBooleanValue(data, dataHeaders, Globals.SKILL_PASSIVE_HEADER);
-        MAX_LEVEL_REFLECT = Globals.loadDoubleValue(data, dataHeaders, MAXLVLREFLECT_HEADER) * 100;
-        BUFF_DURATION = Globals.loadDoubleValue(data, dataHeaders, BUFFDURATION_HEADER) / 1000;
+        CUSTOM_VALUES.put(CUSTOMHEADER_MAXLVLREFLECT, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_MAXLVLREFLECT) * 100);
+        CUSTOM_VALUES.put(CUSTOMHEADER_BUFFDURATION, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_BUFFDURATION) / 1000);
+
     }
 
     @Override
@@ -87,7 +87,7 @@ public class SkillShieldReflect extends Skill {
             "Deals " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "% of damage taken."
         };
         this.maxBonusDesc = new String[]{
-            "You reflect " + NUMBER_FORMAT.format(MAX_LEVEL_REFLECT) + "% of damage taken by other players."
+            "You reflect " + NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_MAXLVLREFLECT)) + "% of damage taken by other players."
         };
     }
 }

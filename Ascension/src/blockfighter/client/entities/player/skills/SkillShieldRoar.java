@@ -6,22 +6,19 @@ import java.util.HashMap;
 
 public class SkillShieldRoar extends Skill {
 
-    private static final String BASEDEF_HEADER = "[basedefense]",
-            MULTDEF_HEADER = "[multdefense]",
-            MULTBASEDEF_HEADER = "[multbasedefense]",
-            STUN_HEADER = "[stunduration]";
+    public static final String CUSTOMHEADER_BASEDEF = "[basedefense]",
+            CUSTOMHEADER_MULTDEF = "[multdefense]",
+            CUSTOMHEADER_MULTBASEDEF = "[multbasedefense]",
+            CUSTOMHEADER_STUN = "[stunduration]";
 
     private static final String[] CUSTOM_DATA_HEADERS = {
-        BASEDEF_HEADER,
-        MULTDEF_HEADER,
-        STUN_HEADER,
-        MULTBASEDEF_HEADER
+        CUSTOMHEADER_BASEDEF,
+        CUSTOMHEADER_MULTDEF,
+        CUSTOMHEADER_STUN,
+        CUSTOMHEADER_MULTBASEDEF
     };
 
-    private static final double STUN_DURATION,
-            BASE_DEFENSE,
-            MULT_DEFENSE,
-            MULT_BASE_DEFENSE;
+    private static final HashMap<String, Double> CUSTOM_VALUES = new HashMap<>(4);
 
     private static final byte SKILL_CODE = Globals.SHIELD_ROAR;
     private static final BufferedImage ICON = Globals.SKILL_ICON[SKILL_CODE];
@@ -45,10 +42,11 @@ public class SkillShieldRoar extends Skill {
         BASE_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_BASEVALUE_HEADER) * 100;
         MULT_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MULTVALUE_HEADER) * 100;
         IS_PASSIVE = Globals.loadBooleanValue(data, dataHeaders, Globals.SKILL_PASSIVE_HEADER);
-        STUN_DURATION = Globals.loadDoubleValue(data, dataHeaders, STUN_HEADER) / 1000D;
-        BASE_DEFENSE = Globals.loadDoubleValue(data, dataHeaders, BASEDEF_HEADER);
-        MULT_DEFENSE = Globals.loadDoubleValue(data, dataHeaders, MULTDEF_HEADER);
-        MULT_BASE_DEFENSE = Globals.loadDoubleValue(data, dataHeaders, MULTBASEDEF_HEADER);
+
+        CUSTOM_VALUES.put(CUSTOMHEADER_BASEDEF, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_BASEDEF));
+        CUSTOM_VALUES.put(CUSTOMHEADER_MULTDEF, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_MULTDEF));
+        CUSTOM_VALUES.put(CUSTOMHEADER_STUN, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_STUN) / 1000);
+        CUSTOM_VALUES.put(CUSTOMHEADER_MULTBASEDEF, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_MULTBASEDEF));
     }
 
     @Override
@@ -89,13 +87,13 @@ public class SkillShieldRoar extends Skill {
     @Override
     public void updateDesc() {
         this.skillCurLevelDesc = new String[]{
-            "Deals " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * this.level) + "% + Defense multiplied by " + NUMBER_FORMAT.format(MULT_BASE_DEFENSE * (BASE_DEFENSE + MULT_DEFENSE * this.level)) + " damage."
+            "Deals " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * this.level) + "% + Defense multiplied by " + NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_MULTBASEDEF) * (CUSTOM_VALUES.get(CUSTOMHEADER_BASEDEF) + CUSTOM_VALUES.get(CUSTOMHEADER_MULTDEF) * this.level)) + " damage."
         };
         this.skillNextLevelDesc = new String[]{
-            "Deals " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "% + Defense multiplied by " + NUMBER_FORMAT.format(MULT_BASE_DEFENSE * (BASE_DEFENSE + MULT_DEFENSE * (this.level + 1))) + " damage."
+            "Deals " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "% + Defense multiplied by " + NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_MULTBASEDEF) * (CUSTOM_VALUES.get(CUSTOMHEADER_BASEDEF) + CUSTOM_VALUES.get(CUSTOMHEADER_MULTDEF) * (this.level + 1))) + " damage."
         };
         this.maxBonusDesc = new String[]{
-            "Enemies are stunned for 2 seconds."
+            "Enemies are stunned for " + NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_STUN)) + " seconds."
         };
     }
 }

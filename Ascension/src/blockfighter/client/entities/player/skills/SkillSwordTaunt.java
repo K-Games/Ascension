@@ -6,19 +6,17 @@ import java.util.HashMap;
 
 public class SkillSwordTaunt extends Skill {
 
-    private static final String BUFFDURATION_HEADER = "[buffduration]",
-            DMGREDUCT_HEADER = "[damagereduct]",
-            DMGINC_HEADER = "[damageinc]";
+    public static final String CUSTOMHEADER_BUFFDURATION = "[buffduration]",
+            CUSTOMHEADER_DMGREDUCT = "[damagereduct]",
+            CUSTOMHEADER_DMGINC = "[damageinc]";
 
     private static final String[] CUSTOM_DATA_HEADERS = {
-        BUFFDURATION_HEADER,
-        DMGREDUCT_HEADER,
-        DMGINC_HEADER
+        CUSTOMHEADER_BUFFDURATION,
+        CUSTOMHEADER_DMGREDUCT,
+        CUSTOMHEADER_DMGINC
     };
 
-    private static final double BUFF_DURATION,
-            DAMAGE_REDUCT,
-            DAMAGE_INCREASE;
+    private static final HashMap<String, Double> CUSTOM_VALUES = new HashMap<>(3);
 
     private static final byte SKILL_CODE = Globals.SWORD_TAUNT;
     private static final BufferedImage ICON = Globals.SKILL_ICON[SKILL_CODE];
@@ -42,9 +40,9 @@ public class SkillSwordTaunt extends Skill {
         BASE_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_BASEVALUE_HEADER) * 100;
         MULT_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MULTVALUE_HEADER) * 100;
         IS_PASSIVE = Globals.loadBooleanValue(data, dataHeaders, Globals.SKILL_PASSIVE_HEADER);
-        BUFF_DURATION = Globals.loadDoubleValue(data, dataHeaders, BUFFDURATION_HEADER) / 1000D;
-        DAMAGE_REDUCT = Globals.loadDoubleValue(data, dataHeaders, DMGREDUCT_HEADER) * 100;
-        DAMAGE_INCREASE = Globals.loadDoubleValue(data, dataHeaders, DMGINC_HEADER) * 100;
+        CUSTOM_VALUES.put(CUSTOMHEADER_BUFFDURATION, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_BUFFDURATION) / 1000);
+        CUSTOM_VALUES.put(CUSTOMHEADER_DMGREDUCT, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_DMGREDUCT) * 100);
+        CUSTOM_VALUES.put(CUSTOMHEADER_DMGINC, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_DMGINC) * 100);
     }
 
     @Override
@@ -91,8 +89,8 @@ public class SkillSwordTaunt extends Skill {
             "Deals " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "% damage."
         };
         this.maxBonusDesc = new String[]{
-            "Take " + NUMBER_FORMAT.format(DAMAGE_REDUCT) + "% less damage for " + TIME_NUMBER_FORMAT.format(BUFF_DURATION) + " seconds.",
-            "Deal  " + NUMBER_FORMAT.format(DAMAGE_INCREASE) + "% increased damage for " + TIME_NUMBER_FORMAT.format(BUFF_DURATION) + " seconds."
+            "Take " + NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_DMGREDUCT)) + "% less damage for " + TIME_NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_BUFFDURATION)) + " seconds.",
+            "Deal  " + NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_DMGINC)) + "% increased damage for " + TIME_NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_BUFFDURATION)) + " seconds."
         };
     }
 }

@@ -9,13 +9,13 @@ import java.util.HashMap;
 
 public class SkillSwordGash extends Skill {
 
-    private static final String LIFESTEAL_HEADER = "[lifesteal]";
+    public static final String CUSTOMHEADER_LIFESTEAL = "[lifesteal]";
 
     private static final String[] CUSTOM_DATA_HEADERS = {
-        LIFESTEAL_HEADER
+        CUSTOMHEADER_LIFESTEAL
     };
 
-    private static final double LIFESTEAL;
+    private static final HashMap<String, Double> CUSTOM_VALUES = new HashMap<>(1);
 
     private static final byte SKILL_CODE = Globals.SWORD_GASH;
     private static final boolean IS_PASSIVE;
@@ -36,15 +36,16 @@ public class SkillSwordGash extends Skill {
         MULT_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MULTVALUE_HEADER);
         IS_PASSIVE = Globals.loadBooleanValue(data, dataHeaders, Globals.SKILL_PASSIVE_HEADER);
 
-        LIFESTEAL = Globals.loadDoubleValue(data, dataHeaders, LIFESTEAL_HEADER);
+        CUSTOM_VALUES.put(CUSTOMHEADER_LIFESTEAL, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_LIFESTEAL));
     }
 
     public SkillSwordGash(final LogicModule l) {
         super(l);
     }
 
-    public double getLifesteal() {
-        return LIFESTEAL;
+    @Override
+    public Double getCustomValue(String customHeader) {
+        return CUSTOM_VALUES.get(customHeader);
     }
 
     @Override

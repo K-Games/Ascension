@@ -10,7 +10,7 @@ import blockfighter.server.entities.buff.BuffDmgTakenAmp;
 import blockfighter.server.entities.buff.BuffKnockback;
 import blockfighter.server.entities.buff.BuffPassiveBarrier;
 import blockfighter.server.entities.buff.BuffPassiveResist;
-import blockfighter.server.entities.buff.BuffShieldDash;
+import blockfighter.server.entities.buff.BuffUtilityDash;
 import blockfighter.server.entities.buff.BuffShieldReflect;
 import blockfighter.server.entities.buff.BuffStun;
 import blockfighter.server.entities.buff.BuffSwordSlash;
@@ -36,8 +36,8 @@ import blockfighter.server.entities.player.skills.SkillPassiveTough;
 import blockfighter.server.entities.player.skills.SkillPassiveVitalHit;
 import blockfighter.server.entities.player.skills.SkillPassiveWillpower;
 import blockfighter.server.entities.player.skills.SkillShieldCharge;
-import blockfighter.server.entities.player.skills.SkillShieldDash;
-import blockfighter.server.entities.player.skills.SkillShieldFortify;
+import blockfighter.server.entities.player.skills.SkillUtilityDash;
+import blockfighter.server.entities.player.skills.SkillUtilityFortify;
 import blockfighter.server.entities.player.skills.SkillShieldMagnetize;
 import blockfighter.server.entities.player.skills.SkillShieldReflect;
 import blockfighter.server.entities.player.skills.SkillShieldRoar;
@@ -195,8 +195,8 @@ public class Player extends Thread implements GameEntity {
         PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_BOW_STORM, Globals.BOW_STORM);
         PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_BOW_VOLLEY, Globals.BOW_VOLLEY);
         PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SHIELD_CHARGE, Globals.SHIELD_CHARGE);
-        PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SHIELD_DASH, Globals.SHIELD_DASH);
-        PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SHIELD_FORTIFY, Globals.SHIELD_FORTIFY);
+        PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SHIELD_DASH, Globals.UTILITY_DASH);
+        PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SHIELD_FORTIFY, Globals.UTILITY_FORTIFY);
         PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SHIELD_ROAR, Globals.SHIELD_ROAR);
         PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SHIELD_REFLECT, Globals.SHIELD_REFLECT);
         PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SHIELD_MAGNETIZE, Globals.SHIELD_MAGNETIZE);
@@ -410,8 +410,8 @@ public class Player extends Thread implements GameEntity {
             case Globals.BOW_VOLLEY:
                 newSkill = new SkillBowVolley(this.logic);
                 break;
-            case Globals.SHIELD_FORTIFY:
-                newSkill = new SkillShieldFortify(this.logic);
+            case Globals.UTILITY_FORTIFY:
+                newSkill = new SkillUtilityFortify(this.logic);
                 break;
             case Globals.SHIELD_ROAR:
                 newSkill = new SkillShieldRoar(this.logic);
@@ -425,8 +425,8 @@ public class Player extends Thread implements GameEntity {
             case Globals.SHIELD_MAGNETIZE:
                 newSkill = new SkillShieldMagnetize(this.logic);
                 break;
-            case Globals.SHIELD_DASH:
-                newSkill = new SkillShieldDash(this.logic);
+            case Globals.UTILITY_DASH:
+                newSkill = new SkillUtilityDash(this.logic);
                 break;
             case Globals.PASSIVE_DUALSWORD:
                 newSkill = new SkillPassiveDualSword(this.logic);
@@ -662,8 +662,8 @@ public class Player extends Thread implements GameEntity {
                 double passiveReduct = 0;
                 // Defender Mastery Passive Reduction
                 if (hasSkill(Globals.PASSIVE_SHIELDMASTERY) && getSkill(Globals.PASSIVE_SHIELDMASTERY).canCast(this)) {
-                    double baseReduct = ((SkillPassiveShieldMastery) getSkill(Globals.PASSIVE_SHIELDMASTERY)).getBaseDmgReduct();
-                    double multReduct = ((SkillPassiveShieldMastery) getSkill(Globals.PASSIVE_SHIELDMASTERY)).getMultDmgReduct();
+                    double baseReduct = getSkill(Globals.PASSIVE_SHIELDMASTERY).getCustomValue(SkillPassiveShieldMastery.CUSTOMHEADER_BASEDMGREDUCT);
+                    double multReduct = getSkill(Globals.PASSIVE_SHIELDMASTERY).getCustomValue(SkillPassiveShieldMastery.CUSTOMHEADER_MULTDMGREDUCT);
                     passiveReduct += baseReduct + multReduct * getSkillLevel(Globals.PASSIVE_SHIELDMASTERY);
                 }
 
@@ -676,7 +676,7 @@ public class Player extends Thread implements GameEntity {
 
                 // Dual Wield Passive Reduction
                 if (hasSkill(Globals.PASSIVE_DUALSWORD) && getSkill(Globals.PASSIVE_DUALSWORD).canCast(this)) {
-                    double dmgReductMult = ((SkillPassiveDualSword) getSkill(Globals.PASSIVE_DUALSWORD)).getDamageReductMult();
+                    double dmgReductMult = getSkill(Globals.PASSIVE_DUALSWORD).getCustomValue(SkillPassiveDualSword.CUSTOMHEADER_DMGREDUCTMULT);
                     passiveReduct += dmgReductMult * getSkillLevel(Globals.PASSIVE_DUALSWORD);
                 }
                 finalDamage = finalDamage * (1 - passiveReduct);
@@ -797,8 +797,8 @@ public class Player extends Thread implements GameEntity {
                     continue;
                 }
 
-                if (b instanceof BuffShieldDash) {
-                    final Map.Entry<Integer, Buff> prevBuff = hasBuff(BuffShieldDash.class);
+                if (b instanceof BuffUtilityDash) {
+                    final Map.Entry<Integer, Buff> prevBuff = hasBuff(BuffUtilityDash.class);
                     if (prevBuff != null) {
                         this.buffs.remove(prevBuff.getKey());
                     }

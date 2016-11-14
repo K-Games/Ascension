@@ -6,15 +6,15 @@ import java.util.HashMap;
 
 public class SkillBowArc extends Skill {
 
-    private static final String LIFESTEAL_HEADER = "[lifesteal]",
-            MAXLIFESTEAL_HEADER = "[maxlifesteal]";
+    public static final String CUSTOMHEADER_LIFESTEAL = "[lifesteal]",
+            CUSTOMHEADER_MAXLIFESTEAL = "[maxlifesteal]";
 
     private static final String[] CUSTOM_DATA_HEADERS = {
-        LIFESTEAL_HEADER,
-        MAXLIFESTEAL_HEADER
+        CUSTOMHEADER_LIFESTEAL,
+        CUSTOMHEADER_MAXLIFESTEAL
     };
 
-    private static final double LIFESTEAL, MAX_LIFESTEAL;
+    private static final HashMap<String, Double> CUSTOM_VALUES = new HashMap<>(2);
 
     private static final byte SKILL_CODE = Globals.BOW_ARC;
     private static final BufferedImage ICON = Globals.SKILL_ICON[SKILL_CODE];
@@ -37,8 +37,8 @@ public class SkillBowArc extends Skill {
         MULT_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MULTVALUE_HEADER) * 100;
         IS_PASSIVE = Globals.loadBooleanValue(data, dataHeaders, Globals.SKILL_PASSIVE_HEADER);
 
-        LIFESTEAL = Globals.loadDoubleValue(data, dataHeaders, LIFESTEAL_HEADER) * 100;
-        MAX_LIFESTEAL = Globals.loadDoubleValue(data, dataHeaders, MAXLIFESTEAL_HEADER) * 100;
+        CUSTOM_VALUES.put(CUSTOMHEADER_LIFESTEAL, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_LIFESTEAL) * 100);
+        CUSTOM_VALUES.put(CUSTOMHEADER_MAXLIFESTEAL, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_MAXLIFESTEAL) * 100);
     }
 
     @Override
@@ -85,7 +85,7 @@ public class SkillBowArc extends Skill {
             "Deal " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "% damage per hit."
         };
         this.maxBonusDesc = new String[]{
-            "Restore " + NUMBER_FORMAT.format(LIFESTEAL) + "% damage to HP. Maximum of " + Skill.NUMBER_FORMAT.format(MAX_LIFESTEAL) + "% HP."
+            "Restore " + NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_LIFESTEAL)) + "% damage to HP. Maximum of " + Skill.NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_MAXLIFESTEAL)) + "% HP."
         };
     }
 }

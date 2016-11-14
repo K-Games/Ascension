@@ -23,8 +23,8 @@ import blockfighter.client.entities.player.skills.SkillPassiveTough;
 import blockfighter.client.entities.player.skills.SkillPassiveVitalHit;
 import blockfighter.client.entities.player.skills.SkillPassiveWillpower;
 import blockfighter.client.entities.player.skills.SkillShieldCharge;
-import blockfighter.client.entities.player.skills.SkillShieldDash;
-import blockfighter.client.entities.player.skills.SkillShieldFortify;
+import blockfighter.client.entities.player.skills.SkillUtilityDash;
+import blockfighter.client.entities.player.skills.SkillUtilityFortify;
 import blockfighter.client.entities.player.skills.SkillShieldMagnetize;
 import blockfighter.client.entities.player.skills.SkillShieldReflect;
 import blockfighter.client.entities.player.skills.SkillShieldRoar;
@@ -79,12 +79,12 @@ public class SaveData {
         this.skills[Globals.BOW_STORM] = new SkillBowStorm();
         this.skills[Globals.BOW_VOLLEY] = new SkillBowVolley();
 
-        this.skills[Globals.SHIELD_FORTIFY] = new SkillShieldFortify();
+        this.skills[Globals.UTILITY_FORTIFY] = new SkillUtilityFortify();
         this.skills[Globals.SHIELD_ROAR] = new SkillShieldRoar();
         this.skills[Globals.SHIELD_CHARGE] = new SkillShieldCharge();
         this.skills[Globals.SHIELD_REFLECT] = new SkillShieldReflect();
         this.skills[Globals.SHIELD_MAGNETIZE] = new SkillShieldMagnetize();
-        this.skills[Globals.SHIELD_DASH] = new SkillShieldDash();
+        this.skills[Globals.UTILITY_DASH] = new SkillUtilityDash();
 
         this.skills[Globals.PASSIVE_DUALSWORD] = new SkillPassiveDualSword();
         this.skills[Globals.PASSIVE_KEENEYE] = new SkillPassiveKeenEye();

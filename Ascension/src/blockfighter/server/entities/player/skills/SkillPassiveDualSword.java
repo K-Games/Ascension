@@ -8,12 +8,13 @@ import java.util.HashMap;
 
 public class SkillPassiveDualSword extends SkillPassive {
 
-    private static final String DMGREDUCTMULT_HEADER = "[dmgreductmult]";
+    public static final String CUSTOMHEADER_DMGREDUCTMULT = "[dmgreductmult]";
 
     private static final String[] CUSTOM_DATA_HEADERS = {
-        DMGREDUCTMULT_HEADER
+        CUSTOMHEADER_DMGREDUCTMULT
     };
-    private static final double DMG_REDUCT_MULT;
+
+    private static final HashMap<String, Double> CUSTOM_VALUES = new HashMap<>(1);
 
     private static final byte SKILL_CODE = Globals.PASSIVE_DUALSWORD;
     private static final boolean IS_PASSIVE;
@@ -32,15 +33,16 @@ public class SkillPassiveDualSword extends SkillPassive {
         MULT_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MULTVALUE_HEADER);
         IS_PASSIVE = Globals.loadBooleanValue(data, dataHeaders, Globals.SKILL_PASSIVE_HEADER);
 
-        DMG_REDUCT_MULT = Globals.loadDoubleValue(data, dataHeaders, DMGREDUCTMULT_HEADER);
+        CUSTOM_VALUES.put(CUSTOMHEADER_DMGREDUCTMULT, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_DMGREDUCTMULT));
     }
 
     public SkillPassiveDualSword(final LogicModule l) {
         super(l);
     }
 
-    public double getDamageReductMult() {
-        return DMG_REDUCT_MULT;
+    @Override
+    public Double getCustomValue(String customHeader) {
+        return CUSTOM_VALUES.get(customHeader);
     }
 
     @Override

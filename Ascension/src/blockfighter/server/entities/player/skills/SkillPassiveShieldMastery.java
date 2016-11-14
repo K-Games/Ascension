@@ -8,13 +8,15 @@ import java.util.HashMap;
 
 public class SkillPassiveShieldMastery extends SkillPassive {
 
-    private static final String BASEDMGREDUCT_HEADER = "[basedmgreduct]",
-            MULTDMGREDUCT_HEADER = "[multdmgreduct]";
+    public static final String CUSTOMHEADER_BASEDMGREDUCT = "[basedmgreduct]",
+            CUSTOMHEADER_MULTDMGREDUCT = "[multdmgreduct]";
+
     private static final String[] CUSTOM_DATA_HEADERS = {
-        BASEDMGREDUCT_HEADER,
-        MULTDMGREDUCT_HEADER
+        CUSTOMHEADER_BASEDMGREDUCT,
+        CUSTOMHEADER_MULTDMGREDUCT
     };
-    private static final double BASE_DMG_REDUCT, MULT_DMG_REDUCT;
+
+    private static final HashMap<String, Double> CUSTOM_VALUES = new HashMap<>(2);
 
     private static final byte SKILL_CODE = Globals.PASSIVE_SHIELDMASTERY;
     private static final boolean IS_PASSIVE;
@@ -33,20 +35,17 @@ public class SkillPassiveShieldMastery extends SkillPassive {
         MULT_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MULTVALUE_HEADER);
         IS_PASSIVE = Globals.loadBooleanValue(data, dataHeaders, Globals.SKILL_PASSIVE_HEADER);
 
-        BASE_DMG_REDUCT = Globals.loadDoubleValue(data, dataHeaders, BASEDMGREDUCT_HEADER);
-        MULT_DMG_REDUCT = Globals.loadDoubleValue(data, dataHeaders, MULTDMGREDUCT_HEADER);
+        CUSTOM_VALUES.put(CUSTOMHEADER_BASEDMGREDUCT, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_BASEDMGREDUCT));
+        CUSTOM_VALUES.put(CUSTOMHEADER_MULTDMGREDUCT, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_MULTDMGREDUCT));
     }
 
     public SkillPassiveShieldMastery(final LogicModule l) {
         super(l);
     }
 
-    public double getBaseDmgReduct() {
-        return BASE_DMG_REDUCT;
-    }
-
-    public double getMultDmgReduct() {
-        return MULT_DMG_REDUCT;
+    @Override
+    public Double getCustomValue(String customHeader) {
+        return CUSTOM_VALUES.get(customHeader);
     }
 
     @Override

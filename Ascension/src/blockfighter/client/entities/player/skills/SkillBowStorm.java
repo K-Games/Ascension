@@ -6,15 +6,15 @@ import java.util.HashMap;
 
 public class SkillBowStorm extends Skill {
 
-    private static final String DURATION_HEADER = "[duration]",
-            MAXLVLBONUSCRITDMG_HEADER = "[maxlevelbonuscritdamage]";
+    public static final String CUSTOMHEADER_DURATION = "[duration]",
+            CUSTOMHEADER_MAXLVLBONUSCRITDMG = "[maxlevelbonuscritdamage]";
 
     private static final String[] CUSTOM_DATA_HEADERS = {
-        DURATION_HEADER,
-        MAXLVLBONUSCRITDMG_HEADER
+        CUSTOMHEADER_DURATION,
+        CUSTOMHEADER_MAXLVLBONUSCRITDMG
     };
 
-    private static final double DURATION, MAX_LEVEL_BONUS_CRIT_DAMAGE;
+    private static final HashMap<String, Double> CUSTOM_VALUES = new HashMap<>(2);
 
     private static final byte SKILL_CODE = Globals.BOW_STORM;
     private static final BufferedImage ICON = Globals.SKILL_ICON[SKILL_CODE];
@@ -39,8 +39,8 @@ public class SkillBowStorm extends Skill {
         MULT_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MULTVALUE_HEADER) * 100;
         IS_PASSIVE = Globals.loadBooleanValue(data, dataHeaders, Globals.SKILL_PASSIVE_HEADER);
 
-        MAX_LEVEL_BONUS_CRIT_DAMAGE = Globals.loadDoubleValue(data, dataHeaders, MAXLVLBONUSCRITDMG_HEADER) * 100;
-        DURATION = Globals.loadDoubleValue(data, dataHeaders, DURATION_HEADER) / 1000D;
+        CUSTOM_VALUES.put(CUSTOMHEADER_MAXLVLBONUSCRITDMG, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_MAXLVLBONUSCRITDMG) * 100);
+        CUSTOM_VALUES.put(CUSTOMHEADER_DURATION, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_DURATION) / 1000);
     }
 
     @Override
@@ -81,13 +81,13 @@ public class SkillBowStorm extends Skill {
     @Override
     public void updateDesc() {
         this.skillCurLevelDesc = new String[]{
-            "Deals " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * this.level) + "% damage per second for " + TIME_NUMBER_FORMAT.format(DURATION) + " seconds."
+            "Deals " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * this.level) + "% damage per second for " + TIME_NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_DURATION)) + " seconds."
         };
         this.skillNextLevelDesc = new String[]{
-            "Deals " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "% damage per second for " + TIME_NUMBER_FORMAT.format(DURATION) + " seconds."
+            "Deals " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "% damage per second for " + TIME_NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_DURATION)) + " seconds."
         };
         this.maxBonusDesc = new String[]{
-            "Critical Hits have bonus +" + NUMBER_FORMAT.format(MAX_LEVEL_BONUS_CRIT_DAMAGE) + "% Critical Hit Damage."
+            "Critical Hits have bonus +" + NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_MAXLVLBONUSCRITDMG)) + "% Critical Hit Damage."
         };
     }
 

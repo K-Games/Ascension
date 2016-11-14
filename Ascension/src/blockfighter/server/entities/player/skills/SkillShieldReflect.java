@@ -13,16 +13,15 @@ import java.util.Map;
 
 public class SkillShieldReflect extends Skill {
 
-    private static final String MAXLVLREFLECT_HEADER = "[maxlevelreflect]",
-            BUFFDURATION_HEADER = "[buffduration]";
+    public static final String CUSTOMHEADER_MAXLVLREFLECT = "[maxlevelreflect]",
+            CUSTOMHEADER_BUFFDURATION = "[buffduration]";
 
     private static final String[] CUSTOM_DATA_HEADERS = {
-        MAXLVLREFLECT_HEADER,
-        BUFFDURATION_HEADER
+        CUSTOMHEADER_MAXLVLREFLECT,
+        CUSTOMHEADER_BUFFDURATION
     };
 
-    private static final double MAX_LEVEL_REFLECT,
-            BUFF_DURATION;
+    private static final HashMap<String, Double> CUSTOM_VALUES = new HashMap<>(2);
 
     private static final byte SKILL_CODE = Globals.SHIELD_REFLECT;
     private static final boolean IS_PASSIVE;
@@ -43,12 +42,18 @@ public class SkillShieldReflect extends Skill {
         BASE_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_BASEVALUE_HEADER);
         MULT_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MULTVALUE_HEADER);
         IS_PASSIVE = Globals.loadBooleanValue(data, dataHeaders, Globals.SKILL_PASSIVE_HEADER);
-        MAX_LEVEL_REFLECT = Globals.loadDoubleValue(data, dataHeaders, MAXLVLREFLECT_HEADER);
-        BUFF_DURATION = Globals.loadDoubleValue(data, dataHeaders, BUFFDURATION_HEADER);
+
+        CUSTOM_VALUES.put(CUSTOMHEADER_MAXLVLREFLECT, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_MAXLVLREFLECT));
+        CUSTOM_VALUES.put(CUSTOMHEADER_BUFFDURATION, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_BUFFDURATION));
     }
 
     public SkillShieldReflect(final LogicModule l) {
         super(l);
+    }
+
+    @Override
+    public Double getCustomValue(String customHeader) {
+        return CUSTOM_VALUES.get(customHeader);
     }
 
     @Override
@@ -101,14 +106,15 @@ public class SkillShieldReflect extends Skill {
         final long duration = Globals.nsToMs(this.logic.getTime() - this.skillCastTime);
         if (player.getSkillCounter() == 0) {
             player.incrementSkillCounter();
-            player.queueBuff(new BuffShieldReflect(this.logic, (int) BUFF_DURATION, getBaseValue() + getMultValue() * player.getSkillLevel(Globals.SHIELD_REFLECT), player, player));
+            double buffDuration = getCustomValue(CUSTOMHEADER_BUFFDURATION);
+            player.queueBuff(new BuffShieldReflect(this.logic, (int) buffDuration, getBaseValue() + getMultValue() * player.getSkillLevel(Globals.SHIELD_REFLECT), player, player));
             PacketSender.sendParticle(this.logic.getRoom().getRoomNumber(), Globals.PARTICLE_SHIELD_REFLECTCAST, player.getKey());
             PacketSender.sendParticle(this.logic.getRoom().getRoomNumber(), Globals.PARTICLE_SHIELD_REFLECTBUFF, player.getKey());
             if (player.isSkillMaxed(Globals.SHIELD_REFLECT)) {
                 for (final Map.Entry<Byte, Player> pEntry : this.logic.getRoom().getPlayers().entrySet()) {
                     final Player p = pEntry.getValue();
                     if (p != player && !p.isDead()) {
-                        p.queueBuff(new BuffShieldReflect(this.logic, (int) BUFF_DURATION, MAX_LEVEL_REFLECT, player, p));
+                        p.queueBuff(new BuffShieldReflect(this.logic, (int) buffDuration, getCustomValue(CUSTOMHEADER_MAXLVLREFLECT), player, p));
                         if (!this.logic.getRoom().getMap().isPvP()) {
                             PacketSender.sendParticle(this.logic.getRoom().getRoomNumber(), Globals.PARTICLE_SHIELD_REFLECTCAST, p.getKey());
                         }

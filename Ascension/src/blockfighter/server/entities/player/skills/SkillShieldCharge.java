@@ -9,13 +9,13 @@ import java.util.HashMap;
 
 public class SkillShieldCharge extends Skill {
 
-    private static final String STUN_HEADER = "[stunduration]";
+    public static final String CUSTOMHEADER_STUN = "[stunduration]";
 
     private static final String[] CUSTOM_DATA_HEADERS = {
-        STUN_HEADER
+        CUSTOMHEADER_STUN
     };
 
-    private static final double STUN_DURATION;
+    private static final HashMap<String, Double> CUSTOM_VALUES = new HashMap<>(1);
 
     private static final byte SKILL_CODE = Globals.SHIELD_CHARGE;
     private static final boolean IS_PASSIVE;
@@ -37,15 +37,16 @@ public class SkillShieldCharge extends Skill {
         BASE_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_BASEVALUE_HEADER);
         MULT_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MULTVALUE_HEADER);
         IS_PASSIVE = Globals.loadBooleanValue(data, dataHeaders, Globals.SKILL_PASSIVE_HEADER);
-        STUN_DURATION = Globals.loadDoubleValue(data, dataHeaders, STUN_HEADER);
+        CUSTOM_VALUES.put(CUSTOMHEADER_STUN, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_STUN));
     }
 
     public SkillShieldCharge(final LogicModule l) {
         super(l);
     }
 
-    public double getStunDuration() {
-        return STUN_DURATION;
+    @Override
+    public Double getCustomValue(String customHeader) {
+        return CUSTOM_VALUES.get(customHeader);
     }
 
     @Override

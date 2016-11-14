@@ -6,13 +6,13 @@ import java.util.HashMap;
 
 public class SkillShieldCharge extends Skill {
 
-    private static final String STUN_HEADER = "[stunduration]";
+    public static final String CUSTOMHEADER_STUN = "[stunduration]";
 
     private static final String[] CUSTOM_DATA_HEADERS = {
-        STUN_HEADER
+        CUSTOMHEADER_STUN
     };
 
-    private static final double STUN_DURATION;
+    private static final HashMap<String, Double> CUSTOM_VALUES = new HashMap<>(1);
 
     private static final byte SKILL_CODE = Globals.SHIELD_CHARGE;
     private static final BufferedImage ICON = Globals.SKILL_ICON[SKILL_CODE];
@@ -36,7 +36,7 @@ public class SkillShieldCharge extends Skill {
         BASE_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_BASEVALUE_HEADER) * 100;
         MULT_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MULTVALUE_HEADER) * 100;
         IS_PASSIVE = Globals.loadBooleanValue(data, dataHeaders, Globals.SKILL_PASSIVE_HEADER);
-        STUN_DURATION = Globals.loadDoubleValue(data, dataHeaders, STUN_HEADER) / 1000D;
+        CUSTOM_VALUES.put(CUSTOMHEADER_STUN, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_STUN) / 1000);
     }
 
     @Override
@@ -83,7 +83,7 @@ public class SkillShieldCharge extends Skill {
             "Deals " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "% damage."
         };
         this.maxBonusDesc = new String[]{
-            "Stun enemies hit for " + TIME_NUMBER_FORMAT.format(STUN_DURATION) + " second."
+            "Stun enemies hit for " + TIME_NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_STUN)) + " second."
         };
     }
 }

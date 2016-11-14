@@ -6,13 +6,13 @@ import java.util.HashMap;
 
 public class SkillSwordGash extends Skill {
 
-    private static final String LIFESTEAL_HEADER = "[lifesteal]";
+    public static final String CUSTOMHEADER_LIFESTEAL = "[lifesteal]";
 
     private static final String[] CUSTOM_DATA_HEADERS = {
-        LIFESTEAL_HEADER
+        CUSTOMHEADER_LIFESTEAL
     };
 
-    private static final double LIFESTEAL;
+    private static final HashMap<String, Double> CUSTOM_VALUES = new HashMap<>(1);
 
     private static final byte SKILL_CODE = Globals.SWORD_GASH;
     private static final BufferedImage ICON = Globals.SKILL_ICON[SKILL_CODE];
@@ -35,7 +35,7 @@ public class SkillSwordGash extends Skill {
         MULT_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MULTVALUE_HEADER) * 100;
         IS_PASSIVE = Globals.loadBooleanValue(data, dataHeaders, Globals.SKILL_PASSIVE_HEADER);
 
-        LIFESTEAL = Globals.loadDoubleValue(data, dataHeaders, LIFESTEAL_HEADER) * 100;
+        CUSTOM_VALUES.put(CUSTOMHEADER_LIFESTEAL, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_LIFESTEAL) * 100);
     }
 
     @Override
@@ -82,7 +82,7 @@ public class SkillSwordGash extends Skill {
             "Deals " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "% damage per hit."
         };
         this.maxBonusDesc = new String[]{
-            "Restore " + NUMBER_FORMAT.format(LIFESTEAL) + "% HP per hit."
+            "Restore " + NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_LIFESTEAL)) + "% HP per hit."
         };
     }
 }

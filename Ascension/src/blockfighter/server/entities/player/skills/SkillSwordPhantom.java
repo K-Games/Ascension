@@ -37,6 +37,11 @@ public class SkillSwordPhantom extends Skill {
     }
 
     @Override
+    public Double getCustomValue(String customHeader) {
+        return null;
+    }
+
+    @Override
     public byte castPlayerState() {
         return PLAYER_STATE;
     }

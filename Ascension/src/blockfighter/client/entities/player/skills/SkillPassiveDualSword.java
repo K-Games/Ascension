@@ -6,12 +6,13 @@ import java.util.HashMap;
 
 public class SkillPassiveDualSword extends Skill {
 
-    private static final String DMGREDUCTMULT_HEADER = "[dmgreductmult]";
+    public static final String CUSTOMHEADER_DMGREDUCTMULT = "[dmgreductmult]";
 
     private static final String[] CUSTOM_DATA_HEADERS = {
-        DMGREDUCTMULT_HEADER
+        CUSTOMHEADER_DMGREDUCTMULT
     };
-    private static final double DMG_REDUCT_MULT;
+
+    private static final HashMap<String, Double> CUSTOM_VALUES = new HashMap<>(1);
 
     private static final byte SKILL_CODE = Globals.PASSIVE_DUALSWORD;
     private static final BufferedImage ICON = Globals.SKILL_ICON[SKILL_CODE];
@@ -36,7 +37,7 @@ public class SkillPassiveDualSword extends Skill {
         MULT_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MULTVALUE_HEADER) * 100;
         IS_PASSIVE = Globals.loadBooleanValue(data, dataHeaders, Globals.SKILL_PASSIVE_HEADER);
 
-        DMG_REDUCT_MULT = Globals.loadDoubleValue(data, dataHeaders, DMGREDUCTMULT_HEADER) * 100;
+        CUSTOM_VALUES.put(CUSTOMHEADER_DMGREDUCTMULT, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_DMGREDUCTMULT) * 100);
     }
 
     @Override
@@ -78,11 +79,11 @@ public class SkillPassiveDualSword extends Skill {
     public void updateDesc() {
         this.skillCurLevelDesc = new String[]{
             "Additional " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * this.level) + "% Critical Hit Chance.",
-            "Take " + NUMBER_FORMAT.format(DMG_REDUCT_MULT * this.level) + "% reduced damage."
+            "Take " + NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_DMGREDUCTMULT) * this.level) + "% reduced damage."
         };
         this.skillNextLevelDesc = new String[]{
             "Additional " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "% Critical Hit Chance.",
-            "Take " + NUMBER_FORMAT.format(DMG_REDUCT_MULT * (this.level + 1)) + "% reduced damage."
+            "Take " + NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_DMGREDUCTMULT) * (this.level + 1)) + "% reduced damage."
         };
     }
 }

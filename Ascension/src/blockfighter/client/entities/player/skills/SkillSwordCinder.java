@@ -6,22 +6,19 @@ import java.util.HashMap;
 
 public class SkillSwordCinder extends Skill {
 
-    private static final String BUFFDURATION_HEADER = "[buffduration]",
-            DMGAMP_HEADER = "[damageamp]",
-            BURNDMG_HEADER = "[burndamage]",
-            BONUSCRITCHC_HEADER = "[bonuscritchc]";
+    public static final String CUSTOMHEADER_BUFFDURATION = "[buffduration]",
+            CUSTOMHEADER_DMGAMP = "[damageamp]",
+            CUSTOMHEADER_BURNDMG = "[burndamage]",
+            CUSTOMHEADER_BONUSCRITCHC = "[bonuscritchc]";
 
     private static final String[] CUSTOM_DATA_HEADERS = {
-        BUFFDURATION_HEADER,
-        DMGAMP_HEADER,
-        BURNDMG_HEADER,
-        BONUSCRITCHC_HEADER
+        CUSTOMHEADER_BUFFDURATION,
+        CUSTOMHEADER_DMGAMP,
+        CUSTOMHEADER_BURNDMG,
+        CUSTOMHEADER_BONUSCRITCHC
     };
 
-    private static final double BUFF_DURATION,
-            BURN_DAMAGE,
-            DAMAGE_AMP,
-            BONUS_CRIT_CHANCE;
+    private static final HashMap<String, Double> CUSTOM_VALUES = new HashMap<>(4);
 
     private static final byte SKILL_CODE = Globals.SWORD_CINDER;
     private static final BufferedImage ICON = Globals.SKILL_ICON[SKILL_CODE];
@@ -45,10 +42,11 @@ public class SkillSwordCinder extends Skill {
         BASE_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_BASEVALUE_HEADER) * 100;
         MULT_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MULTVALUE_HEADER) * 100;
         IS_PASSIVE = Globals.loadBooleanValue(data, dataHeaders, Globals.SKILL_PASSIVE_HEADER);
-        BUFF_DURATION = Globals.loadDoubleValue(data, dataHeaders, BUFFDURATION_HEADER) / 1000D;
-        BURN_DAMAGE = Globals.loadDoubleValue(data, dataHeaders, BURNDMG_HEADER) * 100;
-        DAMAGE_AMP = Globals.loadDoubleValue(data, dataHeaders, DMGAMP_HEADER) * 100;
-        BONUS_CRIT_CHANCE = Globals.loadDoubleValue(data, dataHeaders, BONUSCRITCHC_HEADER) * 100;
+        CUSTOM_VALUES.put(CUSTOMHEADER_BUFFDURATION, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_BUFFDURATION) / 1000);
+        CUSTOM_VALUES.put(CUSTOMHEADER_DMGAMP, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_DMGAMP) * 100);
+        CUSTOM_VALUES.put(CUSTOMHEADER_BURNDMG, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_BURNDMG) * 100);
+        CUSTOM_VALUES.put(CUSTOMHEADER_BONUSCRITCHC, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_BONUSCRITCHC) * 100);
+
     }
 
     @Override
@@ -90,15 +88,15 @@ public class SkillSwordCinder extends Skill {
     public void updateDesc() {
         this.skillCurLevelDesc = new String[]{
             "Deals " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * this.level) + "% damage.",
-            "Burning enemies take " + NUMBER_FORMAT.format(DAMAGE_AMP * this.level) + "% increased damage."
+            "Burning enemies take " + NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_DMGAMP) * this.level) + "% increased damage."
         };
         this.skillNextLevelDesc = new String[]{
             "Deals " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "% damage.",
-            "Burning enemies take " + NUMBER_FORMAT.format(DAMAGE_AMP * (this.level + 1)) + "% increased damage."
+            "Burning enemies take " + NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_DMGAMP) * (this.level + 1)) + "% increased damage."
         };
         this.maxBonusDesc = new String[]{
-            "Burn also deals " + NUMBER_FORMAT.format(BURN_DAMAGE) + "% damage per second for " + TIME_NUMBER_FORMAT.format(BUFF_DURATION) + " seconds.",
-            "Firebrand has " + NUMBER_FORMAT.format(BONUS_CRIT_CHANCE) + "% Critical Hit Chance."
+            "Burn also deals " + NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_BURNDMG)) + "% damage per second for " + TIME_NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_BUFFDURATION)) + " seconds.",
+            "Firebrand has " + NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_BONUSCRITCHC)) + "% Critical Hit Chance."
         };
     }
 }

@@ -6,19 +6,17 @@ import java.util.HashMap;
 
 public class SkillShieldMagnetize extends Skill {
 
-    private static final String BASEDEF_HEADER = "[basedefense]",
-            MULTDEF_HEADER = "[multdefense]",
-            MAXLEVELMULT_HEADER = "[maxlevelmult]";
+    public static final String CUSTOMHEADER_BASEDEF = "[basedefense]",
+            CUSTOMHEADER_MULTDEF = "[multdefense]",
+            CUSTOMHEADER_MAXLEVELMULT = "[maxlevelmult]";
 
     private static final String[] CUSTOM_DATA_HEADERS = {
-        BASEDEF_HEADER,
-        MULTDEF_HEADER,
-        MAXLEVELMULT_HEADER
+        CUSTOMHEADER_BASEDEF,
+        CUSTOMHEADER_MULTDEF,
+        CUSTOMHEADER_MAXLEVELMULT
     };
 
-    private static final double BASE_DEFENSE,
-            MULT_DEFENSE,
-            MAX_LEVEL_MULT;
+    private static final HashMap<String, Double> CUSTOM_VALUES = new HashMap<>(3);
 
     private static final byte SKILL_CODE = Globals.SHIELD_MAGNETIZE;
     private static final BufferedImage ICON = Globals.SKILL_ICON[SKILL_CODE];
@@ -42,9 +40,9 @@ public class SkillShieldMagnetize extends Skill {
         BASE_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_BASEVALUE_HEADER) * 100;
         MULT_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MULTVALUE_HEADER) * 100;
         IS_PASSIVE = Globals.loadBooleanValue(data, dataHeaders, Globals.SKILL_PASSIVE_HEADER);
-        BASE_DEFENSE = Globals.loadDoubleValue(data, dataHeaders, BASEDEF_HEADER);
-        MULT_DEFENSE = Globals.loadDoubleValue(data, dataHeaders, MULTDEF_HEADER);
-        MAX_LEVEL_MULT = Globals.loadDoubleValue(data, dataHeaders, MAXLEVELMULT_HEADER);
+        CUSTOM_VALUES.put(CUSTOMHEADER_BASEDEF, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_BASEDEF));
+        CUSTOM_VALUES.put(CUSTOMHEADER_MULTDEF, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_MULTDEF));
+        CUSTOM_VALUES.put(CUSTOMHEADER_MAXLEVELMULT, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_MAXLEVELMULT));
     }
 
     @Override
@@ -85,13 +83,13 @@ public class SkillShieldMagnetize extends Skill {
     @Override
     public void updateDesc() {
         this.skillCurLevelDesc = new String[]{
-            "Deals " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * this.level) + "% damage + Defense multiplied by " + NUMBER_FORMAT.format(BASE_DEFENSE + MULT_DEFENSE * this.level) + "."
+            "Deals " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * this.level) + "% damage + Defense multiplied by " + NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_BASEDEF) + CUSTOM_VALUES.get(CUSTOMHEADER_MULTDEF) * this.level) + "."
         };
         this.skillNextLevelDesc = new String[]{
-            "Deals " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "% damage + Defense multiplied by " + NUMBER_FORMAT.format(BASE_DEFENSE + MULT_DEFENSE * (this.level + 1)) + "."
+            "Deals " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "% damage + Defense multiplied by " + NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_BASEDEF) + CUSTOM_VALUES.get(CUSTOMHEADER_MULTDEF) * (this.level + 1)) + "."
         };
         this.maxBonusDesc = new String[]{
-            "Deals " + NUMBER_FORMAT.format(MAX_LEVEL_MULT) + "x damage."
+            "Deals " + NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_MAXLEVELMULT)) + "x damage."
         };
     }
 }

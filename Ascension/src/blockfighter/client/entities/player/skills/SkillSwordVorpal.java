@@ -6,17 +6,17 @@ import java.util.HashMap;
 
 public class SkillSwordVorpal extends Skill {
 
-    private static final String BASEBONUSCRITDMG_HEADER = "[basebonuscritdamage]",
-            MULTBONUSCRITDMG_HEADER = "[multbonuscritdamage]",
-            BONUSCRITCHC_HEADER = "[bonuscritchc]";
+    public static final String CUSTOMHEADER_BASEBONUSCRITDMG = "[basebonuscritdamage]",
+            CUSTOMHEADER_MULTBONUSCRITDMG = "[multbonuscritdamage]",
+            CUSTOMHEADER_BONUSCRITCHC = "[bonuscritchc]";
 
     private static final String[] CUSTOM_DATA_HEADERS = {
-        BASEBONUSCRITDMG_HEADER,
-        BONUSCRITCHC_HEADER,
-        MULTBONUSCRITDMG_HEADER
+        CUSTOMHEADER_BASEBONUSCRITDMG,
+        CUSTOMHEADER_MULTBONUSCRITDMG,
+        CUSTOMHEADER_BONUSCRITCHC
     };
 
-    private static final double BASE_BONUS_CRIT_DAMAGE, MULT_BONUS_CRIT_DAMAGE, BONUS_CRIT_CHANCE;
+    private static final HashMap<String, Double> CUSTOM_VALUES = new HashMap<>(3);
 
     private static final byte SKILL_CODE = Globals.SWORD_VORPAL;
     private static final BufferedImage ICON = Globals.SKILL_ICON[SKILL_CODE];
@@ -41,9 +41,9 @@ public class SkillSwordVorpal extends Skill {
         MULT_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MULTVALUE_HEADER) * 100;
         IS_PASSIVE = Globals.loadBooleanValue(data, dataHeaders, Globals.SKILL_PASSIVE_HEADER);
 
-        BASE_BONUS_CRIT_DAMAGE = Globals.loadDoubleValue(data, dataHeaders, BASEBONUSCRITDMG_HEADER) * 100;
-        MULT_BONUS_CRIT_DAMAGE = Globals.loadDoubleValue(data, dataHeaders, MULTBONUSCRITDMG_HEADER) * 100;
-        BONUS_CRIT_CHANCE = Globals.loadDoubleValue(data, dataHeaders, BONUSCRITCHC_HEADER) * 100;
+        CUSTOM_VALUES.put(CUSTOMHEADER_BASEBONUSCRITDMG, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_BASEBONUSCRITDMG) * 100);
+        CUSTOM_VALUES.put(CUSTOMHEADER_MULTBONUSCRITDMG, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_MULTBONUSCRITDMG) * 100);
+        CUSTOM_VALUES.put(CUSTOMHEADER_BONUSCRITCHC, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_BONUSCRITCHC) * 100);
     }
 
     @Override
@@ -85,14 +85,14 @@ public class SkillSwordVorpal extends Skill {
     public void updateDesc() {
         this.skillCurLevelDesc = new String[]{
             "Deals " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * this.level) + "% damage per hit.",
-            "Critical Hits deal additional +" + NUMBER_FORMAT.format(BASE_BONUS_CRIT_DAMAGE + MULT_BONUS_CRIT_DAMAGE * this.level) + "% Critical Damage."
+            "Critical Hits deal additional +" + NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_BASEBONUSCRITDMG) + CUSTOM_VALUES.get(CUSTOMHEADER_MULTBONUSCRITDMG) * this.level) + "% Critical Damage."
         };
         this.skillNextLevelDesc = new String[]{
             "Deals " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "% damage per hit.",
-            "Critical Hits deal additional +" + NUMBER_FORMAT.format(BASE_BONUS_CRIT_DAMAGE + MULT_BONUS_CRIT_DAMAGE * (this.level + 1)) + "% Critical Damage."
+            "Critical Hits deal additional +" + NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_BASEBONUSCRITDMG) + CUSTOM_VALUES.get(CUSTOMHEADER_MULTBONUSCRITDMG) * (this.level + 1)) + "% Critical Damage."
         };
         this.maxBonusDesc = new String[]{
-            "This attack has +" + NUMBER_FORMAT.format(BONUS_CRIT_CHANCE) + "% Critical Hit Chance.",
+            "This attack has +" + NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_BONUSCRITCHC)) + "% Critical Hit Chance.",
             "Stab rapidly hit 5 times."
         };
     }

@@ -54,8 +54,8 @@ public class ScreenSkills extends ScreenMenu {
         SKILL_SLOTS[Globals.BOW_STORM] = new Rectangle2D.Double(BOW_BOX_X, BOW_BOX_Y + 360, 60, 60);
         SKILL_SLOTS[Globals.BOW_FROST] = new Rectangle2D.Double(BOW_BOX_X, BOW_BOX_Y + 450, 60, 60);
 
-        SKILL_SLOTS[Globals.SHIELD_DASH] = new Rectangle2D.Double(UTIL_BOX_X, UTIL_BOX_Y, 60, 60);
-        SKILL_SLOTS[Globals.SHIELD_FORTIFY] = new Rectangle2D.Double(UTIL_BOX_X, UTIL_BOX_Y + 75, 60, 60);
+        SKILL_SLOTS[Globals.UTILITY_DASH] = new Rectangle2D.Double(UTIL_BOX_X, UTIL_BOX_Y, 60, 60);
+        SKILL_SLOTS[Globals.UTILITY_FORTIFY] = new Rectangle2D.Double(UTIL_BOX_X, UTIL_BOX_Y + 75, 60, 60);
 
         SKILL_SLOTS[Globals.SHIELD_ROAR] = new Rectangle2D.Double(SHIELD_BOX_X, SHIELD_BOX_Y, 60, 60);
         SKILL_SLOTS[Globals.SHIELD_CHARGE] = new Rectangle2D.Double(SHIELD_BOX_X, SHIELD_BOX_Y + 75, 60, 60);

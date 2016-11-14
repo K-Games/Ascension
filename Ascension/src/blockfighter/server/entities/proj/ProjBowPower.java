@@ -29,7 +29,8 @@ public class ProjBowPower extends Projectile {
         double multValue = owner.getSkill(Globals.BOW_POWER).getMultValue();
         double damage = owner.rollDamage() * (baseValue + multValue * owner.getSkillLevel(Globals.BOW_POWER));
         if (isCrit) {
-            damage = owner.criticalDamage(damage, ((SkillBowPower) owner.getSkill(Globals.BOW_POWER)).getBonusCritDamage());
+            double bonusCritDmg = (owner.getSkill(Globals.BOW_POWER).isMaxed()) ? owner.getSkill(Globals.BOW_POWER).getCustomValue(SkillBowPower.CUSTOMHEADER_MAXLEVELBONUSCRITDMG) : 0;
+            damage = owner.criticalDamage(damage, bonusCritDmg);
         }
         return (int) damage;
     }

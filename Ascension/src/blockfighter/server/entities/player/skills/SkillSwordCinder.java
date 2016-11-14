@@ -11,22 +11,19 @@ public class SkillSwordCinder extends Skill {
 
     private ProjSwordCinder proj;
 
-    private static final String BUFFDURATION_HEADER = "[buffduration]",
-            DMGAMP_HEADER = "[damageamp]",
-            BURNDMG_HEADER = "[burndamage]",
-            BONUSCRITCHC_HEADER = "[bonuscritchc]";
+    public static final String CUSTOMHEADER_BUFFDURATION = "[buffduration]",
+            CUSTOMHEADER_DMGAMP = "[damageamp]",
+            CUSTOMHEADER_BURNDMG = "[burndamage]",
+            CUSTOMHEADER_BONUSCRITCHC = "[bonuscritchc]";
 
     private static final String[] CUSTOM_DATA_HEADERS = {
-        BUFFDURATION_HEADER,
-        DMGAMP_HEADER,
-        BURNDMG_HEADER,
-        BONUSCRITCHC_HEADER
+        CUSTOMHEADER_BUFFDURATION,
+        CUSTOMHEADER_DMGAMP,
+        CUSTOMHEADER_BURNDMG,
+        CUSTOMHEADER_BONUSCRITCHC
     };
 
-    private static final double BUFF_DURATION,
-            BURN_DAMAGE,
-            DAMAGE_AMP,
-            BONUS_CRIT_CHANCE;
+    private static final HashMap<String, Double> CUSTOM_VALUES = new HashMap<>(4);
 
     private static final byte SKILL_CODE = Globals.SWORD_CINDER;
 
@@ -48,30 +45,19 @@ public class SkillSwordCinder extends Skill {
         BASE_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_BASEVALUE_HEADER);
         MULT_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MULTVALUE_HEADER);
         IS_PASSIVE = Globals.loadBooleanValue(data, dataHeaders, Globals.SKILL_PASSIVE_HEADER);
-        BUFF_DURATION = Globals.loadDoubleValue(data, dataHeaders, BUFFDURATION_HEADER);
-        BURN_DAMAGE = Globals.loadDoubleValue(data, dataHeaders, BURNDMG_HEADER);
-        DAMAGE_AMP = Globals.loadDoubleValue(data, dataHeaders, DMGAMP_HEADER);
-        BONUS_CRIT_CHANCE = Globals.loadDoubleValue(data, dataHeaders, BONUSCRITCHC_HEADER);
+        CUSTOM_VALUES.put(CUSTOMHEADER_BUFFDURATION, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_BUFFDURATION));
+        CUSTOM_VALUES.put(CUSTOMHEADER_DMGAMP, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_DMGAMP));
+        CUSTOM_VALUES.put(CUSTOMHEADER_BURNDMG, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_BURNDMG));
+        CUSTOM_VALUES.put(CUSTOMHEADER_BONUSCRITCHC, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_BONUSCRITCHC));
     }
 
     public SkillSwordCinder(final LogicModule l) {
         super(l);
     }
 
-    public double getBuffDuration() {
-        return BUFF_DURATION;
-    }
-
-    public double getDamageAmp() {
-        return DAMAGE_AMP;
-    }
-
-    public double getBurnDamage() {
-        return BURN_DAMAGE;
-    }
-
-    public double getBonusCritChance() {
-        return BONUS_CRIT_CHANCE;
+    @Override
+    public Double getCustomValue(String customHeader) {
+        return CUSTOM_VALUES.get(customHeader);
     }
 
     @Override

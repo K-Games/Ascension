@@ -9,15 +9,15 @@ import java.util.HashMap;
 
 public class SkillBowStorm extends Skill {
 
-    private static final String DURATION_HEADER = "[duration]",
-            MAXLVLBONUSCRITDMG_HEADER = "[maxlevelbonuscritdamage]";
+    public static final String CUSTOMHEADER_DURATION = "[duration]",
+            CUSTOMHEADER_MAXLVLBONUSCRITDMG = "[maxlevelbonuscritdamage]";
 
     private static final String[] CUSTOM_DATA_HEADERS = {
-        DURATION_HEADER,
-        MAXLVLBONUSCRITDMG_HEADER
+        CUSTOMHEADER_DURATION,
+        CUSTOMHEADER_MAXLVLBONUSCRITDMG
     };
 
-    private static final double DURATION, MAX_LEVEL_BONUS_CRIT_DAMAGE;
+    private static final HashMap<String, Double> CUSTOM_VALUES = new HashMap<>(2);
 
     private static final byte SKILL_CODE = Globals.BOW_STORM;
     private static final boolean IS_PASSIVE;
@@ -40,20 +40,17 @@ public class SkillBowStorm extends Skill {
         MULT_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MULTVALUE_HEADER);
         IS_PASSIVE = Globals.loadBooleanValue(data, dataHeaders, Globals.SKILL_PASSIVE_HEADER);
 
-        MAX_LEVEL_BONUS_CRIT_DAMAGE = Globals.loadDoubleValue(data, dataHeaders, MAXLVLBONUSCRITDMG_HEADER);
-        DURATION = Globals.loadDoubleValue(data, dataHeaders, DURATION_HEADER);
+        CUSTOM_VALUES.put(CUSTOMHEADER_MAXLVLBONUSCRITDMG, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_MAXLVLBONUSCRITDMG));
+        CUSTOM_VALUES.put(CUSTOMHEADER_DURATION, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_DURATION));
     }
 
     public SkillBowStorm(final LogicModule l) {
         super(l);
     }
 
-    public double getDuration() {
-        return DURATION;
-    }
-
-    public double getBonusCritDamage() {
-        return MAX_LEVEL_BONUS_CRIT_DAMAGE;
+    @Override
+    public Double getCustomValue(String customHeader) {
+        return CUSTOM_VALUES.get(customHeader);
     }
 
     @Override

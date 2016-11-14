@@ -22,4 +22,9 @@ public abstract class SkillPassive extends Skill {
     public int getSkillDuration() {
         return 0;
     }
+
+    @Override
+    public Double getCustomValue(String customHeader) {
+        return null;
+    }
 }

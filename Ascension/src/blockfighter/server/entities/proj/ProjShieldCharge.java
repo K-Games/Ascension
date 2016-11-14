@@ -41,7 +41,8 @@ public class ProjShieldCharge extends Projectile {
         target.queueDamage(new Damage(damage, true, owner, target, isCrit, this.hitbox[0], target.getHitbox()));
         target.queueBuff(new BuffKnockback(this.logic, 300, (owner.getFacing() == Globals.RIGHT) ? 20 : -20, -10, owner, target));
         if (owner.isSkillMaxed(Globals.SHIELD_CHARGE)) {
-            target.queueBuff(new BuffStun(this.logic, (int) ((SkillShieldCharge) owner.getSkill(Globals.SHIELD_CHARGE)).getStunDuration()));
+            double stunDuration = owner.getSkill(Globals.SHIELD_CHARGE).getCustomValue(SkillShieldCharge.CUSTOMHEADER_STUN);
+            target.queueBuff(new BuffStun(this.logic, (int) stunDuration));
         }
     }
 
@@ -52,7 +53,8 @@ public class ProjShieldCharge extends Projectile {
         final int damage = calculateDamage(isCrit);
         target.queueDamage(new Damage(damage, true, owner, target, isCrit, this.hitbox[0], target.getHitbox()));
         if (owner.isSkillMaxed(Globals.SHIELD_CHARGE)) {
-            target.queueBuff(new BuffStun(this.logic, (int) ((SkillShieldCharge) owner.getSkill(Globals.SHIELD_CHARGE)).getStunDuration()));
+            double stunDuration = owner.getSkill(Globals.SHIELD_CHARGE).getCustomValue(SkillShieldCharge.CUSTOMHEADER_STUN);
+            target.queueBuff(new BuffStun(this.logic, (int) stunDuration));
         }
     }
 
