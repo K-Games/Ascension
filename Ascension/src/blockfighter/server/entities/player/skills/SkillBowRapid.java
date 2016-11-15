@@ -73,12 +73,12 @@ public class SkillBowRapid extends Skill {
     }
 
     @Override
-    public Byte getReqEquipSlot() {
+    public byte getReqEquipSlot() {
         return REQ_EQUIP_SLOT;
     }
 
     @Override
-    public Byte getReqWeapon() {
+    public byte getReqWeapon() {
         return REQ_WEAPON;
     }
 

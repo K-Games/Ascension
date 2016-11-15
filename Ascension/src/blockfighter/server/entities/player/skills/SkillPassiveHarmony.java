@@ -45,7 +45,7 @@ public class SkillPassiveHarmony extends SkillPassive {
     }
 
     @Override
-    public Byte getReqWeapon() {
+    public byte getReqWeapon() {
         return REQ_WEAPON;
     }
 

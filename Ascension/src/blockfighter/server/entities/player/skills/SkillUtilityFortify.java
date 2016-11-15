@@ -26,7 +26,7 @@ public class SkillUtilityFortify extends Skill {
 
     private static final double BASE_VALUE, MULT_VALUE;
     private static final byte REQ_EQUIP_SLOT = Globals.ITEM_OFFHAND;
-    private static final byte PLAYER_STATE = Player.PLAYER_STATE_SHIELD_FORTIFY;
+    private static final byte PLAYER_STATE = Player.PLAYER_STATE_UTILITY_FORTIFY;
     private static final int SKILL_DURATION = 350;
 
     static {
@@ -72,13 +72,13 @@ public class SkillUtilityFortify extends Skill {
     }
 
     @Override
-    public Byte getReqEquipSlot() {
-        return null;
+    public byte getReqEquipSlot() {
+        return -1;
     }
 
     @Override
-    public Byte getReqWeapon() {
-        return null;
+    public byte getReqWeapon() {
+        return REQ_WEAPON;
     }
 
     @Override

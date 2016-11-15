@@ -14,7 +14,7 @@ public abstract class SkillPassive extends Skill {
     }
 
     @Override
-    public Byte getReqEquipSlot() {
+    public byte getReqEquipSlot() {
         return -1;
     }
 

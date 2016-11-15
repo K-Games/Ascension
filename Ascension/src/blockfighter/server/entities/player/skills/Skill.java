@@ -17,9 +17,9 @@ public abstract class Skill {
 
     public abstract long getMaxCooldown();
 
-    public abstract Byte getReqWeapon();
+    public abstract byte getReqWeapon();
 
-    public abstract Byte getReqEquipSlot();
+    public abstract byte getReqEquipSlot();
 
     public abstract byte castPlayerState();
 
@@ -60,7 +60,7 @@ public abstract class Skill {
     }
 
     public boolean canCast(final Player player) {
-        return !isPassive() && (getReqWeapon() == null || getReqEquipSlot() == null || Items.getItemType(player.getEquips()[getReqEquipSlot()]) == getReqWeapon())
+        return !isPassive() && (getReqWeapon() == -1 || getReqEquipSlot() == -1 || Items.getItemType(player.getEquips()[getReqEquipSlot()]) == getReqWeapon())
                 && canCast();
     }
 
