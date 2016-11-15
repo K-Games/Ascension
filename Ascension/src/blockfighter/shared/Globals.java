@@ -418,7 +418,7 @@ public class Globals {
 
     public static byte SERVER_MAX_PLAYERS = 10;
     public static boolean SERVER_BATCH_PACKETSEND = false;
-    public static HashMap<Byte, Byte> SERVER_ROOMNUM_TO_ROOMINDEX = new HashMap<>();
+    public final static HashMap<Byte, Byte> SERVER_ROOMNUM_TO_ROOMINDEX = new HashMap<>();
     public static int SERVER_MAX_IDLE = 120000;
     public static byte SERVER_LOGIC_THREADS = 3,
             SERVER_PACKETSENDER_THREADS = 5;
@@ -463,6 +463,9 @@ public class Globals {
         SKILL_PASSIVE_HEADER};
 
     static {
+        for (byte i = 0; i < 10; i++) {
+            SERVER_ROOMNUM_TO_ROOMINDEX.put(i, i);
+        }
         loadItemCodes();
     }
 
@@ -798,9 +801,6 @@ public class Globals {
     }
 
     public final static void setServerProp() {
-        for (byte i = 0; i < 10; i++) {
-            SERVER_ROOMNUM_TO_ROOMINDEX.put(i, i);
-        }
         InputStream inputStream = null;
         try {
             final Properties prop = new Properties();
