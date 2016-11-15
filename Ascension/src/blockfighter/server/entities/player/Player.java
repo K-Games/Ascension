@@ -86,8 +86,8 @@ public class Player extends Thread implements GameEntity {
             PLAYER_STATE_BOW_STORM = 0x0D,
             PLAYER_STATE_BOW_VOLLEY = 0x0E,
             PLAYER_STATE_SHIELD_CHARGE = 0x0F,
-            PLAYER_STATE_SHIELD_DASH = 0x10,
-            PLAYER_STATE_SHIELD_FORTIFY = 0x11,
+            PLAYER_STATE_UTILITY_DASH = 0x10,
+            PLAYER_STATE_UTILITY_FORTIFY = 0x11,
             PLAYER_STATE_SHIELD_ROAR = 0x12,
             PLAYER_STATE_SHIELD_REFLECT = 0x13,
             PLAYER_STATE_SHIELD_MAGNETIZE = 0x14,
@@ -159,8 +159,8 @@ public class Player extends Thread implements GameEntity {
             PLAYER_STATE_BOW_STORM,
             PLAYER_STATE_BOW_VOLLEY,
             PLAYER_STATE_SHIELD_CHARGE,
-            PLAYER_STATE_SHIELD_DASH,
-            PLAYER_STATE_SHIELD_FORTIFY,
+            PLAYER_STATE_UTILITY_DASH,
+            PLAYER_STATE_UTILITY_FORTIFY,
             PLAYER_STATE_SHIELD_ROAR,
             PLAYER_STATE_SHIELD_REFLECT,
             PLAYER_STATE_SHIELD_MAGNETIZE
@@ -176,7 +176,7 @@ public class Player extends Thread implements GameEntity {
             PLAYER_STATE_BOW_FROST,
             PLAYER_STATE_BOW_VOLLEY,
             PLAYER_STATE_SHIELD_CHARGE,
-            PLAYER_STATE_SHIELD_DASH,
+            PLAYER_STATE_UTILITY_DASH,
             PLAYER_STATE_SHIELD_ROAR,
             PLAYER_STATE_SHIELD_MAGNETIZE
         };
@@ -195,8 +195,8 @@ public class Player extends Thread implements GameEntity {
         PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_BOW_STORM, Globals.BOW_STORM);
         PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_BOW_VOLLEY, Globals.BOW_VOLLEY);
         PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SHIELD_CHARGE, Globals.SHIELD_CHARGE);
-        PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SHIELD_DASH, Globals.UTILITY_DASH);
-        PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SHIELD_FORTIFY, Globals.UTILITY_FORTIFY);
+        PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_UTILITY_DASH, Globals.UTILITY_DASH);
+        PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_UTILITY_FORTIFY, Globals.UTILITY_FORTIFY);
         PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SHIELD_ROAR, Globals.SHIELD_ROAR);
         PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SHIELD_REFLECT, Globals.SHIELD_REFLECT);
         PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SHIELD_MAGNETIZE, Globals.SHIELD_MAGNETIZE);
@@ -1367,7 +1367,7 @@ public class Player extends Thread implements GameEntity {
                     this.lastFrameTime = this.logic.getTime();
                 }
                 break;
-            case PLAYER_STATE_SHIELD_DASH:
+            case PLAYER_STATE_UTILITY_DASH:
                 this.animState = Globals.PLAYER_ANIM_STATE_ROLL;
                 if (frameDuration >= 40 && this.frame < 9) {
                     this.frame++;
@@ -1381,7 +1381,7 @@ public class Player extends Thread implements GameEntity {
                     this.lastFrameTime = this.logic.getTime();
                 }
                 break;
-            case PLAYER_STATE_SHIELD_FORTIFY:
+            case PLAYER_STATE_UTILITY_FORTIFY:
                 this.animState = Globals.PLAYER_ANIM_STATE_BUFF;
                 if (frameDuration >= 30 && this.frame < 4) {
                     this.frame++;
