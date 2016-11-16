@@ -314,4 +314,8 @@ public class Room {
     public void setMaxLevel(int maxLevel) {
         this.maxLevel = maxLevel;
     }
+
+    public boolean isComplete() {
+        return false;
+    }
 }

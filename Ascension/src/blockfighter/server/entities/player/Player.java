@@ -10,10 +10,10 @@ import blockfighter.server.entities.buff.BuffDmgTakenAmp;
 import blockfighter.server.entities.buff.BuffKnockback;
 import blockfighter.server.entities.buff.BuffPassiveBarrier;
 import blockfighter.server.entities.buff.BuffPassiveResist;
-import blockfighter.server.entities.buff.BuffUtilityDash;
 import blockfighter.server.entities.buff.BuffShieldReflect;
 import blockfighter.server.entities.buff.BuffStun;
 import blockfighter.server.entities.buff.BuffSwordSlash;
+import blockfighter.server.entities.buff.BuffUtilityDash;
 import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.items.Items;
 import blockfighter.server.entities.player.skills.Skill;
@@ -36,8 +36,6 @@ import blockfighter.server.entities.player.skills.SkillPassiveTough;
 import blockfighter.server.entities.player.skills.SkillPassiveVitalHit;
 import blockfighter.server.entities.player.skills.SkillPassiveWillpower;
 import blockfighter.server.entities.player.skills.SkillShieldCharge;
-import blockfighter.server.entities.player.skills.SkillUtilityDash;
-import blockfighter.server.entities.player.skills.SkillUtilityFortify;
 import blockfighter.server.entities.player.skills.SkillShieldMagnetize;
 import blockfighter.server.entities.player.skills.SkillShieldReflect;
 import blockfighter.server.entities.player.skills.SkillShieldRoar;
@@ -47,6 +45,8 @@ import blockfighter.server.entities.player.skills.SkillSwordPhantom;
 import blockfighter.server.entities.player.skills.SkillSwordSlash;
 import blockfighter.server.entities.player.skills.SkillSwordTaunt;
 import blockfighter.server.entities.player.skills.SkillSwordVorpal;
+import blockfighter.server.entities.player.skills.SkillUtilityDash;
+import blockfighter.server.entities.player.skills.SkillUtilityFortify;
 import blockfighter.server.maps.GameMap;
 import blockfighter.server.net.PacketSender;
 import blockfighter.shared.Globals;
@@ -861,7 +861,7 @@ public class Player extends Thread implements GameEntity {
         }
     }
 
-    private void die(final Player killer) {
+    protected void die(final Player killer) {
         if (killer != null) {
             killer.giveEXP(this.stats[Globals.STAT_MAXEXP] * Globals.EXP_MULTIPLIER);
             killer.giveDrop(this.stats[Globals.STAT_LEVEL]);
@@ -881,7 +881,7 @@ public class Player extends Thread implements GameEntity {
         this.deathTime = this.logic.getTime();
     }
 
-    private void respawn() {
+    protected void respawn() {
         this.stats[Globals.STAT_MINHP] = this.stats[Globals.STAT_MAXHP];
         setXSpeed(0);
         Point2D.Double spawn = map.getRandomSpawnPoint();
