@@ -17,4 +17,4 @@ false
 [maxlevelbuffdamage]
 0.01
 [maxlevelbuffduration]
-4000
+7000

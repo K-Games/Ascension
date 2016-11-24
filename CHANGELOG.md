@@ -4,8 +4,48 @@
 
 ## Version 0.21 Release
 ### Gameplay Changes
-* Blade Flurry, Rend, Firebrand, Aggression, Rapid Fire, Vortex Bolts, Overwhelm, Magnetize have increased knockback.
+* Movement speed reduced from 4.5 to 3.8.
 
+### Skill Changes
+#### Sword
+* Blade Flurry
+ * Added knockback.
+* Rend
+ * Added knockback.
+* Firebrand
+ * Increased knockback from 30 to 210.
+* Aggression
+ * Increased knockback 30 to 300.
+* Vorpal Strike
+ * Increased knockback 20 to 60.
+
+#### Bow
+* Arc Shot
+ * Increased knockback from 5 to 40.
+* Rapid Fire
+ * Increased knockback from 15 to 30.
+* Vortex Bolts
+ * Level 30 Bonus - Increased buff duration from 4 to 7 seconds.
+ * Increased knockback 5 to 12.5.
+
+#### Shield
+* Overwhelm
+ * Increased knockback 120 to 600.
+* Magnetize
+ * Added knockback.
+
+#### Utility
+* Fortify
+ * Cooldown reduced from 24 to 19 seconds.
+
+#### Passive
+* Defender Mastery
+ * Decreased Damage Reduction from 5% + 0.5% per Lvl to 4% + 0.3% per Lvl
+* Keen Eye
+ * Increased Critical Hit Chance from 1% + 0.3% per Lvl to 5% + 0.03 per Lvl
+* Vital Hit
+ * Increased Critical Hit Damage from 10% + 2% per Lvl to 25% + 2% per Lvl
+ 
 ### Client Changes
 * Fixed unable to draw ingame equips without offsets set in its item data.
 * Fixed sword attack animation having 1 extra frame.

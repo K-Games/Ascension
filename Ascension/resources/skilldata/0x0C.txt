@@ -6,7 +6,7 @@ Reduce damage taken for 5 seconds.
 [reqweapon]
 -1
 [maxcooldown]
-24000
+19000
 [basevalue]
 0.01
 [multvalue]

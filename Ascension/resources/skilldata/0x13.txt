@@ -8,7 +8,7 @@ Increases Critical Hit Chance.
 [maxcooldown]
 0
 [basevalue]
-0.01
+0.05
 [multvalue]
 0.003
 [passive]

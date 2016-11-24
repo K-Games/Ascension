@@ -8,7 +8,7 @@ Increases Critical Hit Damage.
 [maxcooldown]
 0
 [basevalue]
-0.1
+0.25
 [multvalue]
 0.02
 [passive]
