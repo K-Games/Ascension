@@ -245,6 +245,8 @@ public class ScreenServerList extends ScreenMenu {
                 this.status = "Connecting...";
                 break;
             case STATUS_NORMAL_SHUTDOWN:
+                enableFields();
+                this.status = "Could not connect: Connection closed.";
                 break;
             case STATUS_DISCONNECTED:
                 enableFields();
