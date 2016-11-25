@@ -14,16 +14,17 @@ public class ParticleBlood extends Particle {
         this.y = y - 75 + Globals.rng(30);
         this.xDouble = this.x;
         this.yDouble = this.y;
-        this.xSpeed = ((f != Globals.RIGHT) ? 1 : -1) * (.15 * Globals.rng(38) + 5.5);
-        this.ySpeed = (.15 * Globals.rng(48) - 4);
+        this.xSpeed = ((f != Globals.RIGHT) ? 1 : -1) * (.075 * Globals.rng(80) + 5.5);
+        this.ySpeed = (.1 * Globals.rng(100) - 11);
         this.frame = 0;
-        this.duration = 300;
+        this.duration = 300 + Globals.rng(30) * 10;
     }
 
     @Override
     public void update() {
         super.update();
-        this.drawSize -= .1;
+        this.drawSize -= .03;
+        this.ySpeed += Globals.GRAVITY * 1.5;
         this.xDouble += this.xSpeed;
         this.yDouble += this.ySpeed;
         this.x = (int) this.xDouble;
