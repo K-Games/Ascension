@@ -14,6 +14,16 @@ import javax.swing.SwingUtilities;
 
 public class ScreenSkills extends ScreenMenu {
 
+    private static final String RESET_SKILLS_TEXT = "Reset Skills";
+    private static final String SKILL_POINTS_TEXT = "Skill Points: ";
+    private static final String ADD_POINT_BUTTON_TEXT = "+";
+    private static final String UNKNOWN_KEY_TEXT = "Unknown Key";
+    private static final String SKILL_PASSIVE_TEXT = "Passive";
+    private static final String SKILL_SHIELD_TEXT = "Shield";
+    private static final String SKILL_UTILITY_TEXT = "Utility";
+    private static final String SKILL_BOW_TEXT = "Bow";
+    private static final String SKILL_SWORD_TEXT = "Sword";
+
     private final SaveData c;
     // Slots(x,y) in the GUI
     private static final Rectangle2D.Double[] HOTKEY_SLOTS = new Rectangle2D.Double[12];
@@ -106,16 +116,16 @@ public class ScreenSkills extends ScreenMenu {
         g.drawImage(bg, 0, 0, null);
 
         g.setFont(Globals.ARIAL_18PT);
-        drawStringOutline(g, "Skill Points: " + (int) this.c.getBaseStats()[Globals.STAT_SKILLPOINTS], 1080, 620, 1);
+        drawStringOutline(g, SKILL_POINTS_TEXT + (int) this.c.getBaseStats()[Globals.STAT_SKILLPOINTS], 1080, 620, 1);
         g.setColor(Color.WHITE);
-        g.drawString("Skill Points: " + (int) this.c.getBaseStats()[Globals.STAT_SKILLPOINTS], 1080, 620);
+        g.drawString(SKILL_POINTS_TEXT + (int) this.c.getBaseStats()[Globals.STAT_SKILLPOINTS], 1080, 620);
 
         final BufferedImage button = Globals.MENU_BUTTON[Globals.BUTTON_SMALLRECT];
         g.drawImage(button, (int) RESET_BOX.x, (int) RESET_BOX.y, null);
         g.setFont(Globals.ARIAL_18PT);
-        drawStringOutline(g, "Reset Skills", 1090, 657, 1);
+        drawStringOutline(g, RESET_SKILLS_TEXT, 1090, 657, 1);
         g.setColor(Color.WHITE);
-        g.drawString("Reset Skills", 1090, 657);
+        g.drawString(RESET_SKILLS_TEXT, 1090, 657);
         drawSlots(g);
         drawMenuButton(g);
 
@@ -149,31 +159,31 @@ public class ScreenSkills extends ScreenMenu {
         g.fillRoundRect(HOTKEY_BOX_X - 10, HOTKEY_BOX_Y - 10, 784, 90, 15, 15);
 
         g.setFont(Globals.ARIAL_18PT);
-        drawStringOutline(g, "Sword", SWORD_BOX_X + 65, SWORD_BOX_Y - 5, 1);
+        drawStringOutline(g, SKILL_SWORD_TEXT, SWORD_BOX_X + 65, SWORD_BOX_Y - 5, 1);
         g.setColor(Color.WHITE);
-        g.drawString("Sword", SWORD_BOX_X + 65, SWORD_BOX_Y - 5);
+        g.drawString(SKILL_SWORD_TEXT, SWORD_BOX_X + 65, SWORD_BOX_Y - 5);
 
-        drawStringOutline(g, "Bow", BOW_BOX_X + 75, BOW_BOX_Y - 5, 1);
+        drawStringOutline(g, SKILL_BOW_TEXT, BOW_BOX_X + 75, BOW_BOX_Y - 5, 1);
         g.setColor(Color.WHITE);
-        g.drawString("Bow", BOW_BOX_X + 75, BOW_BOX_Y - 5);
+        g.drawString(SKILL_BOW_TEXT, BOW_BOX_X + 75, BOW_BOX_Y - 5);
 
-        drawStringOutline(g, "Utility", UTIL_BOX_X + 75, UTIL_BOX_Y - 5, 1);
+        drawStringOutline(g, SKILL_UTILITY_TEXT, UTIL_BOX_X + 75, UTIL_BOX_Y - 5, 1);
         g.setColor(Color.WHITE);
-        g.drawString("Utility", UTIL_BOX_X + 75, UTIL_BOX_Y - 5);
+        g.drawString(SKILL_UTILITY_TEXT, UTIL_BOX_X + 75, UTIL_BOX_Y - 5);
 
-        drawStringOutline(g, "Shield", SHIELD_BOX_X + 65, SHIELD_BOX_Y - 5, 1);
+        drawStringOutline(g, SKILL_SHIELD_TEXT, SHIELD_BOX_X + 65, SHIELD_BOX_Y - 5, 1);
         g.setColor(Color.WHITE);
-        g.drawString("Shield", SHIELD_BOX_X + 65, SHIELD_BOX_Y - 5);
+        g.drawString(SKILL_SHIELD_TEXT, SHIELD_BOX_X + 65, SHIELD_BOX_Y - 5);
 
-        drawStringOutline(g, "Passive", PASSIVE_BOX_X + 60, PASSIVE_BOX_Y - 5, 1);
+        drawStringOutline(g, SKILL_PASSIVE_TEXT, PASSIVE_BOX_X + 60, PASSIVE_BOX_Y - 5, 1);
         g.setColor(Color.WHITE);
-        g.drawString("Passive", PASSIVE_BOX_X + 60, PASSIVE_BOX_Y - 5);
+        g.drawString(SKILL_PASSIVE_TEXT, PASSIVE_BOX_X + 60, PASSIVE_BOX_Y - 5);
         for (int i = 0; i < HOTKEY_SLOTS.length; i++) {
             g.drawImage(button, (int) HOTKEY_SLOTS[i].x, (int) HOTKEY_SLOTS[i].y, null);
             if (this.hotkeyList[i] != null) {
                 this.hotkeyList[i].draw(g, (int) HOTKEY_SLOTS[i].x, (int) HOTKEY_SLOTS[i].y);
             }
-            String key = "?";
+            String key = UNKNOWN_KEY_TEXT;
             if (this.c.getKeyBind()[i] != -1) {
                 key = KeyEvent.getKeyText(this.c.getKeyBind()[i]);
             }
@@ -189,19 +199,19 @@ public class ScreenSkills extends ScreenMenu {
             this.skillList[i].draw(g, (int) SKILL_SLOTS[i].x, (int) SKILL_SLOTS[i].y);
             g.setFont(Globals.ARIAL_15PT);
             drawStringOutline(g, this.skillList[i].getSkillName(), (int) SKILL_SLOTS[i].x + 70, (int) SKILL_SLOTS[i].y + 20, 1);
-            drawStringOutline(g, "Level: " + this.skillList[i].getLevel(), (int) SKILL_SLOTS[i].x + 70, (int) SKILL_SLOTS[i].y + 50,
+            drawStringOutline(g, Globals.getStatName(Globals.STAT_LEVEL) + Globals.COLON_SPACE_TEXT + this.skillList[i].getLevel(), (int) SKILL_SLOTS[i].x + 70, (int) SKILL_SLOTS[i].y + 50,
                     1);
             g.setColor(Color.WHITE);
             g.drawString(this.skillList[i].getSkillName(), (int) SKILL_SLOTS[i].x + 70, (int) SKILL_SLOTS[i].y + 20);
-            g.drawString("Level: " + this.skillList[i].getLevel(), (int) SKILL_SLOTS[i].x + 70, (int) SKILL_SLOTS[i].y + 50);
+            g.drawString(Globals.getStatName(Globals.STAT_LEVEL) + Globals.COLON_SPACE_TEXT + this.skillList[i].getLevel(), (int) SKILL_SLOTS[i].x + 70, (int) SKILL_SLOTS[i].y + 50);
 
             if (this.c.getBaseStats()[Globals.STAT_SKILLPOINTS] > 0 && !this.skillList[i].isMaxed()) {
                 button = Globals.MENU_BUTTON[Globals.BUTTON_ADDSTAT];
                 g.drawImage(button, (int) ADD_SKILL_BOX[i].x, (int) ADD_SKILL_BOX[i].y, null);
                 g.setFont(Globals.ARIAL_15PT);
-                drawStringOutline(g, "+", (int) ADD_SKILL_BOX[i].x + 11, (int) ADD_SKILL_BOX[i].y + 18, 1);
+                drawStringOutline(g, ADD_POINT_BUTTON_TEXT, (int) ADD_SKILL_BOX[i].x + 11, (int) ADD_SKILL_BOX[i].y + 18, 1);
                 g.setColor(Color.WHITE);
-                g.drawString("+", (int) ADD_SKILL_BOX[i].x + 11, (int) ADD_SKILL_BOX[i].y + 18);
+                g.drawString(ADD_POINT_BUTTON_TEXT, (int) ADD_SKILL_BOX[i].x + 11, (int) ADD_SKILL_BOX[i].y + 18);
             }
         }
 
@@ -209,17 +219,17 @@ public class ScreenSkills extends ScreenMenu {
             g.drawImage(button, (int) SKILL_SLOTS[i].x, (int) SKILL_SLOTS[i].y, null);
             this.skillList[i].draw(g, (int) SKILL_SLOTS[i].x, (int) SKILL_SLOTS[i].y);
             g.setFont(Globals.ARIAL_15PT);
-            drawStringOutline(g, "Level: " + this.skillList[i].getLevel(), (int) SKILL_SLOTS[i].x, (int) SKILL_SLOTS[i].y + 80, 1);
+            drawStringOutline(g, Globals.getStatName(Globals.STAT_LEVEL) + Globals.COLON_SPACE_TEXT + this.skillList[i].getLevel(), (int) SKILL_SLOTS[i].x, (int) SKILL_SLOTS[i].y + 80, 1);
             g.setColor(Color.WHITE);
-            g.drawString("Level: " + this.skillList[i].getLevel(), (int) SKILL_SLOTS[i].x, (int) SKILL_SLOTS[i].y + 80);
+            g.drawString(Globals.getStatName(Globals.STAT_LEVEL) + Globals.COLON_SPACE_TEXT + this.skillList[i].getLevel(), (int) SKILL_SLOTS[i].x, (int) SKILL_SLOTS[i].y + 80);
 
             if (this.c.getBaseStats()[Globals.STAT_SKILLPOINTS] > 0 && !this.skillList[i].isMaxed()) {
                 button = Globals.MENU_BUTTON[Globals.BUTTON_ADDSTAT];
                 g.drawImage(button, (int) ADD_SKILL_BOX[i].x, (int) ADD_SKILL_BOX[i].y, null);
                 g.setFont(Globals.ARIAL_15PT);
-                drawStringOutline(g, "+", (int) ADD_SKILL_BOX[i].x + 11, (int) ADD_SKILL_BOX[i].y + 18, 1);
+                drawStringOutline(g, ADD_POINT_BUTTON_TEXT, (int) ADD_SKILL_BOX[i].x + 11, (int) ADD_SKILL_BOX[i].y + 18, 1);
                 g.setColor(Color.WHITE);
-                g.drawString("+", (int) ADD_SKILL_BOX[i].x + 11, (int) ADD_SKILL_BOX[i].y + 18);
+                g.drawString(ADD_POINT_BUTTON_TEXT, (int) ADD_SKILL_BOX[i].x + 11, (int) ADD_SKILL_BOX[i].y + 18);
             }
         }
     }

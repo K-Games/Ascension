@@ -13,6 +13,11 @@ import java.awt.image.BufferedImage;
 public class ScreenStats extends ScreenMenu {
 
     private final SaveData c;
+
+    private static final String RESET_STATS_TEXT = "Reset Stats";
+    private static final String DAMAGE_TEXT = "Damage: ";
+    private static final String EFFECTIVE_HP_TEXT = "Effective HP: ";
+    private static final String SECONDARY_STATS_TEXT = "Secondary Stats";
     private static final Rectangle2D.Double[] ADD_STAT_BOX = new Rectangle2D.Double[9];
     private static final Rectangle2D.Double RESET_BOX;
     private static final int MAINSTAT_BOX_X = 255, MAINSTAT_BOX_Y = 130;
@@ -71,11 +76,11 @@ public class ScreenStats extends ScreenMenu {
         double[] totalStats = this.c.getTotalStats();
         double[] bonusStats = this.c.getBonusStats();
         String[] statString = {
-            "Level: " + (int) totalStats[Globals.STAT_LEVEL],
-            "Power: " + (int) baseStats[Globals.STAT_POWER] + " + " + (int) bonusStats[Globals.STAT_POWER] + " (" + (int) totalStats[Globals.STAT_POWER] + ")",
-            "Defense: " + (int) baseStats[Globals.STAT_DEFENSE] + " + " + (int) bonusStats[Globals.STAT_DEFENSE] + " (" + (int) totalStats[Globals.STAT_DEFENSE] + ")",
-            "Spirit: " + (int) baseStats[Globals.STAT_SPIRIT] + " + " + (int) bonusStats[Globals.STAT_SPIRIT] + " (" + (int) totalStats[Globals.STAT_SPIRIT] + ")",
-            "Points: " + (int) baseStats[Globals.STAT_POINTS]};
+            Globals.getStatName(Globals.STAT_LEVEL) + Globals.COLON_SPACE_TEXT + (int) totalStats[Globals.STAT_LEVEL],
+            Globals.getStatName(Globals.STAT_POWER) + Globals.COLON_SPACE_TEXT + (int) baseStats[Globals.STAT_POWER] + " + " + (int) bonusStats[Globals.STAT_POWER] + " (" + (int) totalStats[Globals.STAT_POWER] + ")",
+            Globals.getStatName(Globals.STAT_DEFENSE) + Globals.COLON_SPACE_TEXT + (int) baseStats[Globals.STAT_DEFENSE] + " + " + (int) bonusStats[Globals.STAT_DEFENSE] + " (" + (int) totalStats[Globals.STAT_DEFENSE] + ")",
+            Globals.getStatName(Globals.STAT_SPIRIT) + Globals.COLON_SPACE_TEXT + (int) baseStats[Globals.STAT_SPIRIT] + " + " + (int) bonusStats[Globals.STAT_SPIRIT] + " (" + (int) totalStats[Globals.STAT_SPIRIT] + ")",
+            Globals.getStatName(Globals.STAT_POINTS) + Globals.COLON_SPACE_TEXT + (int) baseStats[Globals.STAT_POINTS]};
 
         for (byte i = 1; i < 4; i++) {
             g.setFont(Globals.ARIAL_18PT);
@@ -97,9 +102,9 @@ public class ScreenStats extends ScreenMenu {
         final BufferedImage button = Globals.MENU_BUTTON[Globals.BUTTON_SMALLRECT];
         g.drawImage(button, (int) RESET_BOX.x, (int) RESET_BOX.y, null);
         g.setFont(Globals.ARIAL_18PT);
-        drawStringOutline(g, "Reset Stats", (int) (RESET_BOX.x + 45), (int) (RESET_BOX.y + 25), 1);
+        drawStringOutline(g, RESET_STATS_TEXT, (int) (RESET_BOX.x + 45), (int) (RESET_BOX.y + 25), 1);
         g.setColor(Color.WHITE);
-        g.drawString("Reset Stats", (int) (RESET_BOX.x + 45), (int) (RESET_BOX.y + 25));
+        g.drawString(RESET_STATS_TEXT, (int) (RESET_BOX.x + 45), (int) (RESET_BOX.y + 25));
     }
 
     private void drawSecondaryStats(final Graphics2D g) {
@@ -109,16 +114,16 @@ public class ScreenStats extends ScreenMenu {
         double[] totalStats = this.c.getTotalStats();
         double[] bonusStats = this.c.getBonusStats();
         String[] statString = {
-            "Secondary Stats",
-            "HP: " + (int) totalStats[Globals.STAT_MAXHP],
-            "Effective HP: " + this.df.format((int) Globals.calcEHP(totalStats[Globals.STAT_DAMAGEREDUCT], totalStats[Globals.STAT_MAXHP])),
-            "Damage: " + (int) totalStats[Globals.STAT_MINDMG] + " - " + (int) totalStats[Globals.STAT_MAXDMG],
-            "Armor: " + (int) baseStats[Globals.STAT_ARMOR] + " + " + (int) bonusStats[Globals.STAT_ARMOR] + " (" + (int) totalStats[Globals.STAT_ARMOR] + ")",
-            "Regen: " + this.df.format(baseStats[Globals.STAT_REGEN]) + " + " + this.df.format(bonusStats[Globals.STAT_REGEN]) + " (" + this.df.format(totalStats[Globals.STAT_REGEN]) + ") HP/Sec",
-            "Critical Hit Chance: " + this.df.format(baseStats[Globals.STAT_CRITCHANCE] * 100)
+            SECONDARY_STATS_TEXT,
+            Globals.getStatName(Globals.STAT_MAXHP) + Globals.COLON_SPACE_TEXT + (int) totalStats[Globals.STAT_MAXHP],
+            EFFECTIVE_HP_TEXT + this.df.format((int) Globals.calcEHP(totalStats[Globals.STAT_DAMAGEREDUCT], totalStats[Globals.STAT_MAXHP])),
+            DAMAGE_TEXT + (int) totalStats[Globals.STAT_MINDMG] + " - " + (int) totalStats[Globals.STAT_MAXDMG],
+            Globals.getStatName(Globals.STAT_ARMOR) + Globals.COLON_SPACE_TEXT + (int) baseStats[Globals.STAT_ARMOR] + " + " + (int) bonusStats[Globals.STAT_ARMOR] + " (" + (int) totalStats[Globals.STAT_ARMOR] + ")",
+            Globals.getStatName(Globals.STAT_REGEN) + Globals.COLON_SPACE_TEXT + this.df.format(baseStats[Globals.STAT_REGEN]) + " + " + this.df.format(bonusStats[Globals.STAT_REGEN]) + " (" + this.df.format(totalStats[Globals.STAT_REGEN]) + ") HP/Sec",
+            Globals.getStatName(Globals.STAT_CRITCHANCE) + Globals.COLON_SPACE_TEXT + this.df.format(baseStats[Globals.STAT_CRITCHANCE] * 100)
             + " + " + this.df.format(bonusStats[Globals.STAT_CRITCHANCE] * 100) + "% ("
             + this.df.format(totalStats[Globals.STAT_CRITCHANCE] * 100) + "%)",
-            "Critical Hit Damage: " + this.df.format((1 + baseStats[Globals.STAT_CRITDMG]) * 100)
+            Globals.getStatName(Globals.STAT_CRITDMG) + Globals.COLON_SPACE_TEXT + this.df.format((1 + baseStats[Globals.STAT_CRITDMG]) * 100)
             + " + " + this.df.format(bonusStats[Globals.STAT_CRITDMG] * 100) + "% ("
             + this.df.format((1 + totalStats[Globals.STAT_CRITDMG]) * 100) + "%)"
         };
@@ -141,7 +146,7 @@ public class ScreenStats extends ScreenMenu {
         g.fillRoundRect(EXPBAR_BOX_X - 10, EXPBAR_BOX_Y - 20, 470, 75, 15, 15);
 
         double[] baseStats = this.c.getBaseStats();
-        String exp = "Exp: " + this.df.format((baseStats[Globals.STAT_EXP])) + "/"
+        String exp = Globals.getStatName(Globals.STAT_EXP) + Globals.COLON_SPACE_TEXT + this.df.format((baseStats[Globals.STAT_EXP])) + "/"
                 + this.df.format(baseStats[Globals.STAT_MAXEXP])
                 + "(" + this.df.format((baseStats[Globals.STAT_EXP] / baseStats[Globals.STAT_MAXEXP]) * 100) + "%)";
 

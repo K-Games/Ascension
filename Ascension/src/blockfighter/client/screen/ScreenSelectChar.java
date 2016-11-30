@@ -17,6 +17,14 @@ import javax.swing.SwingUtilities;
 
 public class ScreenSelectChar extends ScreenMenu {
 
+    private static final String LESS_THAN_FIFTEEN_CHAR_ERR_TEXT = "Name must be less than 15 characters!";
+    private static final String MIN_ONE_CHARACTER_ERR_TEXT = "Name must have at least 1 character!";
+    private static final String CANCEL_BUTTON_TEXT = "Cancel";
+    private static final String CREATE_BUTTON_TEXT = "Create";
+    private static final String ENTER_NEW_NAME_TEXT = "Enter New Character Name";
+    private static final String SELECT_A_CHARACTER_TEXT = "Select a Character";
+    private static final String NEW_CHARACTER_TEXT = "New Character";
+
     private static final SaveData[] CHARACTER_DATA = new SaveData[3];
 
     private boolean createPrompt = false;
@@ -82,13 +90,11 @@ public class ScreenSelectChar extends ScreenMenu {
         for (int j = 0; j < 3; j++) {
             if (CHARACTER_DATA[j] == null) {
                 g.setFont(Globals.ARIAL_30PT);
-                drawStringOutline(g, "Create", 170 + 420 * j, 260, 2);
-                drawStringOutline(g, "New", 185 + 420 * j, 310, 2);
-                drawStringOutline(g, "Character", 150 + 420 * j, 360, 2);
+                drawStringOutline(g, NEW_CHARACTER_TEXT, 20 + 420 * j + 200 - g.getFontMetrics().stringWidth(NEW_CHARACTER_TEXT) / 2, 310, 2);
+
                 g.setColor(Color.WHITE);
-                g.drawString("Create", 170 + 420 * j, 260);
-                g.drawString("New", 185 + 420 * j, 310);
-                g.drawString("Character", 150 + 420 * j, 360);
+                g.drawString(NEW_CHARACTER_TEXT, 20 + 420 * j + 200 - g.getFontMetrics().stringWidth(NEW_CHARACTER_TEXT) / 2, 310);
+
             } else {
                 final double[] stats = CHARACTER_DATA[j].getBaseStats(), bonus = CHARACTER_DATA[j].getBonusStats();
                 g.setFont(Globals.ARIAL_30PT);
@@ -97,47 +103,45 @@ public class ScreenSelectChar extends ScreenMenu {
                 g.drawString(CHARACTER_DATA[j].getPlayerName(), 120 + 420 * j, 380);
 
                 g.setFont(Globals.ARIAL_24PT);
-                drawStringOutline(g, "Level: " + (int) stats[Globals.STAT_LEVEL], 120 + 420 * j, 415, 2);
-                drawStringOutline(g, "Power: " + (int) stats[Globals.STAT_POWER] + " + " + (int) bonus[Globals.STAT_POWER], 120 + 420 * j,
-                        445, 2);
-                drawStringOutline(g, "Defense: " + (int) stats[Globals.STAT_DEFENSE] + " + " + (int) bonus[Globals.STAT_DEFENSE],
-                        120 + 420 * j, 475, 2);
-                drawStringOutline(g, "Spirit: " + (int) stats[Globals.STAT_SPIRIT] + " + " + (int) bonus[Globals.STAT_SPIRIT],
-                        120 + 420 * j, 505, 2);
+                String[] statString = {
+                    Globals.getStatName(Globals.STAT_LEVEL) + Globals.COLON_SPACE_TEXT + (int) stats[Globals.STAT_LEVEL],
+                    Globals.getStatName(Globals.STAT_POWER) + Globals.COLON_SPACE_TEXT + (int) stats[Globals.STAT_POWER] + " + " + (int) bonus[Globals.STAT_POWER],
+                    Globals.getStatName(Globals.STAT_DEFENSE) + Globals.COLON_SPACE_TEXT + (int) stats[Globals.STAT_DEFENSE] + " + " + (int) bonus[Globals.STAT_DEFENSE],
+                    Globals.getStatName(Globals.STAT_SPIRIT) + Globals.COLON_SPACE_TEXT + (int) stats[Globals.STAT_SPIRIT] + " + " + (int) bonus[Globals.STAT_SPIRIT]
+                };
 
-                g.setColor(Color.WHITE);
-                g.drawString("Level: " + (int) stats[Globals.STAT_LEVEL], 120 + 420 * j, 415);
-                g.drawString("Power: " + (int) stats[Globals.STAT_POWER] + " + " + (int) bonus[Globals.STAT_POWER], 120 + 420 * j, 445);
-                g.drawString("Defense: " + (int) stats[Globals.STAT_DEFENSE] + " + " + (int) bonus[Globals.STAT_DEFENSE], 120 + 420 * j,
-                        475);
-                g.drawString("Spirit: " + (int) stats[Globals.STAT_SPIRIT] + " + " + (int) bonus[Globals.STAT_SPIRIT], 120 + 420 * j, 505);
+                for (byte i = 0; i < statString.length; i++) {
+                    drawStringOutline(g, statString[i], 120 + 420 * j, 415 + 30 * i, 2);
+                    g.setColor(Color.WHITE);
+                    g.drawString(statString[i], 120 + 420 * j, 415 + 30 * i);
+                }
                 if (Globals.DEBUG_MODE) {
                     g.drawString("ID: " + CHARACTER_DATA[j].getUniqueID(), 120 + 420 * j, 535);
                 }
             }
         }
 
-        drawStringOutline(g, "Select a Character", 520, 640, 2);
+        drawStringOutline(g, SELECT_A_CHARACTER_TEXT, 520, 640, 2);
         g.setColor(Color.WHITE);
-        g.drawString("Select a Character", 520, 640);
+        g.drawString(SELECT_A_CHARACTER_TEXT, 520, 640);
 
         if (this.createPrompt) {
             final BufferedImage window = Globals.MENU_WINDOW[Globals.WINDOW_CREATECHAR];
             g.drawImage(window, 265, 135, null);
-            drawStringOutline(g, "Enter New Character Name", 460, 250, 2);
+            drawStringOutline(g, ENTER_NEW_NAME_TEXT, 460, 250, 2);
             g.setColor(Color.WHITE);
-            g.drawString("Enter New Character Name", 460, 250);
+            g.drawString(ENTER_NEW_NAME_TEXT, 460, 250);
 
             button = Globals.MENU_BUTTON[Globals.BUTTON_BIGRECT];
             g.drawImage(button, 401, 400, null);
-            drawStringOutline(g, "Create", 460, 465, 2);
+            drawStringOutline(g, CREATE_BUTTON_TEXT, 460, 465, 2);
             g.setColor(Color.WHITE);
-            g.drawString("Create", 460, 465);
+            g.drawString(CREATE_BUTTON_TEXT, 460, 465);
 
             g.drawImage(button, 665, 400, null);
-            drawStringOutline(g, "Cancel", 725, 465, 2);
+            drawStringOutline(g, CANCEL_BUTTON_TEXT, 725, 465, 2);
             g.setColor(Color.WHITE);
-            g.drawString("Cancel", 725, 465);
+            g.drawString(CANCEL_BUTTON_TEXT, 725, 465);
 
             g.setFont(Globals.ARIAL_24PT);
             drawStringOutline(g, this.CREATE_ERR, 450, 550, 2);
@@ -181,9 +185,9 @@ public class ScreenSelectChar extends ScreenMenu {
                         loadSaveData();
                     } else {
                         if (CREATE_NAMEFIELD.getText().length() <= 0) {
-                            this.CREATE_ERR = "Name must have at least 1 character!";
+                            this.CREATE_ERR = MIN_ONE_CHARACTER_ERR_TEXT;
                         } else if (CREATE_NAMEFIELD.getText().length() > 15) {
-                            this.CREATE_ERR = "Name must be less than 15 characters!";
+                            this.CREATE_ERR = LESS_THAN_FIFTEEN_CHAR_ERR_TEXT;
                         }
                         break;
                     }

@@ -11,6 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class ScreenTitle extends Screen {
 
+    private final static String CLICK_TEXT = "Click to continue";
     private long fadeInStart = System.nanoTime();
     private long fadeOutStart, lastUpdateTime, fontFadeStart;
     private Color fadeInColor, fadeOutColor, fontColor;
@@ -69,8 +70,7 @@ public class ScreenTitle extends Screen {
 
         g.setFont(Globals.ARIAL_24PT);
         g.setColor(fontColor);
-        String click = "Click to continue";
-        g.drawString(click, Globals.WINDOW_WIDTH / 2 - g.getFontMetrics().stringWidth(click) / 2, 500);
+        g.drawString(CLICK_TEXT, Globals.WINDOW_WIDTH / 2 - g.getFontMetrics().stringWidth(CLICK_TEXT) / 2, 500);
 
         if (!finishedFadeIn) {
             g.setColor(fadeInColor);

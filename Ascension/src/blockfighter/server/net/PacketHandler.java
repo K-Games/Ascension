@@ -288,7 +288,7 @@ public class PacketHandler {
         desc += "Name: " + newPlayer.getPlayerName() + "\n";
         desc += "ID: " + newPlayer.getUniqueID() + "\n";
         for (byte i = 0; i < newPlayer.getStats().length; i++) {
-            desc += Globals.getStatName(i) + ": " + newPlayer.getStats()[i] + "\n";
+            desc += Globals.getStatName(i) + Globals.COLON_SPACE_TEXT + newPlayer.getStats()[i] + "\n";
         }
         desc += "Equips=" + Arrays.toString(newPlayer.getEquips()) + "\n";
         Globals.log(PacketHandler.class, "DATA_PLAYER_CREATE " + c + " Queueing new player <" + newPlayer.getPlayerName() + "> into room " + roomIndex + ". Key: " + freeKey + desc, Globals.LOG_TYPE_DATA, true);
