@@ -61,8 +61,8 @@ public class AscensionServer {
         if (args.length > 0) {
             final HashSet<String> arguments = new HashSet<>();
             arguments.addAll(Arrays.asList(args));
-            isGUI = arguments.contains("--gui");
-            isDefault = arguments.contains("--default");
+            isGUI = arguments.contains("-gui");
+            isDefault = arguments.contains("-default");
         }
 
         if (!isDefault) {

@@ -12,11 +12,11 @@ public class Main {
     public static void main(final String[] args) {
         final HashSet<String> arguments = new HashSet<>();
         arguments.addAll(Arrays.asList(args));
-        if (arguments.contains("--server")) {
+        if (arguments.contains("-server")) {
             asc = new AscensionServer();
             asc.launch(args);
-        } else {
-            AscensionClient.launch(args);
         }
+        AscensionClient.launch(args);
+
     }
 }
