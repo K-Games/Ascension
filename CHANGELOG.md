@@ -42,7 +42,7 @@
 * Defender Mastery
  * Decreased Damage Reduction from 5% + 0.5% per Lvl to 4% + 0.3% per Lvl
 * Keen Eye
- * Increased Critical Hit Chance from 1% + 0.3% per Lvl to 5% + 0.03 per Lvl
+ * Increased Critical Hit Chance from 1% + 0.3% per Lvl to 5% + 0.3% per Lvl
 * Vital Hit
  * Increased Critical Hit Damage from 10% + 2% per Lvl to 25% + 2% per Lvl
  
