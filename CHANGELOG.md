@@ -54,6 +54,7 @@
 * Tome of Enhancement now shows Tome's level its the icon.
 * Various performance improvements.
 * Can now start up a server by using the `-server` option.
+* Disable launching client with `-noclient` option
 
 ### Server Changes
 * Improve netcode for player position.

@@ -16,7 +16,9 @@ public class Main {
             asc = new AscensionServer();
             asc.launch(args);
         }
-        AscensionClient.launch(args);
+        if (!arguments.contains("-noclient")) {
+            AscensionClient.launch(args);
+        }
 
     }
 }
