@@ -18,6 +18,9 @@ public class LogicModule implements Runnable {
     private Screen screen;
     private final SoundModule soundModule;
 
+    private long connectStartTime = 0;
+    private boolean connecting = false;
+
     public LogicModule(final SoundModule s) {
         this.soundModule = s;
     }
@@ -27,6 +30,12 @@ public class LogicModule implements Runnable {
         try {
             this.currentTime = System.nanoTime();
             this.screen.update();
+
+            if (connecting && this.currentTime - connectStartTime >= Globals.msToNs(3000)) {
+                connecting = false;
+                shutdownClient();
+            }
+
         } catch (final Exception ex) {
             Globals.logError(ex.getStackTrace()[0].toString(), ex, true);
         }
@@ -146,4 +155,14 @@ public class LogicModule implements Runnable {
         client.shutdownClient(status);
         setMyPlayerKey((byte) -1);
     }
+
+    public void startCharacterCreateTimeout() {
+        this.connectStartTime = this.currentTime;
+        this.connecting = true;
+    }
+
+    public void stopCharacterCreateTimeout() {
+        this.connecting = false;
+    }
+
 }

@@ -9,6 +9,7 @@ import blockfighter.client.entities.particles.Particle;
 import blockfighter.client.entities.player.Player;
 import blockfighter.client.entities.player.skills.Skill;
 import blockfighter.client.maps.GameMap;
+import blockfighter.client.net.PacketHandler;
 import blockfighter.client.net.PacketReceiver;
 import blockfighter.client.render.RenderModule;
 import blockfighter.client.render.RenderPanel;
@@ -59,6 +60,7 @@ public class AscensionClient {
             Player.class,
             Mob.class,
             PacketReceiver.class,
+            PacketHandler.class,
             IngameNumber.class,
             Skill.class,
             ItemEquip.class,
