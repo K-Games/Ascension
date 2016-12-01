@@ -5,6 +5,7 @@
 ## Version 0.21 Release
 ### Gameplay Changes
 * Movement speed reduced from 4.5 to 3.8.
+* Lowered HP per Defense from 200 to 170.
 
 ### Skill Changes
 #### Sword
