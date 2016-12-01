@@ -69,6 +69,10 @@ public class ItemUpgrade implements Item {
             final BufferedImage sprite = ITEM_ICONS.get(this.itemCode);
             if (sprite != null) {
                 g.drawImage(sprite, x, y, null);
+                g.setFont(Globals.ARIAL_15PT);
+                g.setColor(Color.WHITE);
+                g.drawString(Integer.toString(getLevel()), x + 2, y + 55);
+
             } else {
                 g.setFont(Globals.ARIAL_15PT);
                 g.setColor(Color.WHITE);

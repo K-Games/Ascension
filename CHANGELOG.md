@@ -51,6 +51,7 @@
 * Fixed sword attack animation having 1 extra frame.
 * Fixed EXP bar not filling more than once when leveling up more than once.
 * Skill UI values are read from data files.
+* Tome of Enhancement now shows Tome's level its the icon.
 * Various performance improvements.
 * Can now start up a server by using the `-server` option.
 
