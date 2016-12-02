@@ -113,11 +113,11 @@
 
 ---
 
-# Version 0.20 Release
-## Gameplay Changes
+## Version 0.20 Release
+### Gameplay Changes
 * Some skills now have screen shake when dealing damage.
 
-## Client Changes
+### Client Changes
 * Moved the client player key to Logic Module.
 * Fixed getting stuck logging in when receiving an invalid packet response.
 * Client version check now checks Update Number.
@@ -126,7 +126,7 @@
 * Added EXP bar to ingame HUD.
 * Fixed 'Reset' buttons click area being slightly too small.
 
-## Server Changes
+### Server Changes
 * Server now sends client Update Number for version check.
 * Send screen shake when some projectiles deal damage.
 * Improved performance on projectile collision detection with spatial hashing implementation.
@@ -137,14 +137,14 @@
 
 ---
 
-# Version 0.19 Release
-## Gameplay Changes
+## Version 0.19 Release
+### Gameplay Changes
 * Players can now control their direction in midair.
 * Map - Moved platforms slightly closer.
 * Fixed Firebrand burn damage missing one tick.
 * Magnetize pull time increased from 0.2s to 0.35s.
 
-## Client Changes
+### Client Changes
 * Fixed a typo in the Title in the title screen.
 * Critical hit damage in the Stats screen now match with the Inventory screen.
 * Players cannot login with no weapon or skills equipped.
@@ -152,7 +152,7 @@
 * Update map visuals.
 * Fixed being disconnected if loading took too long.
 
-## Server Changes
+### Server Changes
 * Fixed a rare concurrentcy bug with Reflect and Resist.
 * EXP gains is a modifiable property in config using `expmult`. Defaults to 0.05.
 * Max packets per connection can now be configured with `maxpackets`. Defaults to 1000.
@@ -162,19 +162,18 @@
 
 ---
 
-# Version 0.18 Update 2
-## Gameplay Changes
+## Version 0.18 Update 2
 
-## Client Changes
+### Client Changes
 * Critical hit damage in the Stats screen now match with the Inventory screen.
 * Players cannot login with no weapon or skills equipped.
 
-## Server Changes
+### Server Changes
 
 ---
 
-# Version 0.18 Update 1
-## Gameplay Changes
+## Version 0.18 Update 1
+### Gameplay Changes
 * Passives Removed: Tactical Execution
 * Shield Skill Removed: Shield Toss
 * New Shield Skill - Magnetize - Pull nearby enemies towards you.
@@ -187,7 +186,7 @@
 * Vortex Bolts damage increased from 75 + 3/Lvl% to 85% + 3/Lvl%
 * Aggression damage increased from 600 + 20/Lvl% to 800 + 20/Lvl%
 
-## Client Changes
+### Client Changes
 * Fixed never timing out when trying to login to a live server with an invalid room.
 * New Soundtrack!
 * Text changes in Connect menu
@@ -198,7 +197,7 @@
 * Improved standards for Equipment sprite file structure.
 * Fixed a rare bug where Charge not showing visuals.
 
-## Server Changes
+### Server Changes
 * Added batched packet sending. Disabled by default.
 * Fixed some items not dropping.
 * Moved getItemType from Player to Item class.
