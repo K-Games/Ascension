@@ -123,17 +123,21 @@ public class LogicModule extends Thread {
     private void updatePlayers() {
         final ConcurrentHashMap<Byte, Player> players = this.room.getPlayers();
         final ArrayList<byte[]> posDatas = new ArrayList<>();
+
+        this.room.clearPlayerBuckets();
+        for (final Map.Entry<Byte, Player> player : players.entrySet()) {
+            this.room.putPlayerIntoBuckets(player.getValue());
+        }
+
         for (final Map.Entry<Byte, Player> player : players.entrySet()) {
             LOGIC_THREAD_POOL.execute(player.getValue());
         }
 
-        this.room.clearPlayerBuckets();
         Iterator<Entry<Byte, Player>> playersIter = players.entrySet().iterator();
         while (playersIter.hasNext()) {
             Entry<Byte, Player> player = playersIter.next();
             try {
                 player.getValue().join();
-                this.room.putPlayerIntoBuckets(player.getValue());
 
                 if (player.getValue().isUpdatePos()) {
                     byte[] posData = player.getValue().getPosData();

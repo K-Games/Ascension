@@ -18,7 +18,7 @@ public class Room {
 
     private byte roomNumber = -1;
     private byte roomIndex = -1;
-    private ConcurrentHashMap<Integer, ConcurrentHashMap<Byte, Player>> playerBuckets;
+    private HashMap<Integer, ConcurrentHashMap<Byte, Player>> playerBuckets;
 
     private ConcurrentHashMap<Byte, Player> players = new ConcurrentHashMap<>(Globals.SERVER_MAX_PLAYERS, 0.9f,
             Math.max(Globals.SERVER_MAX_PLAYERS / 5, 3));
@@ -74,7 +74,7 @@ public class Room {
         double numRows = this.map.getMapHeight() / Globals.SERVER_LOGIC_BUCKET_CELLSIZE;
         double numCols = this.map.getMapWidth() / Globals.SERVER_LOGIC_BUCKET_CELLSIZE;
         int numBuckets = (int) Math.ceil(numRows * numCols);
-        this.playerBuckets = new ConcurrentHashMap<>(numBuckets);
+        this.playerBuckets = new HashMap<>(numBuckets);
         Integer[] bucketIDs = getBucketIDsForRect(this.map.getBoundaryRectangle());
         for (int bucketID : bucketIDs) {
             this.playerBuckets.put(bucketID, new ConcurrentHashMap<>(10));
