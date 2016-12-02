@@ -123,6 +123,10 @@ public class TestPacketSender {
     }
 
     private static void sendPacket(final byte[] packet, final Client client) {
-        client.sendTCP(packet);
+        if (Globals.UDP_MODE) {
+            client.sendUDP(packet);
+        } else {
+            client.sendTCP(packet);
+        }
     }
 }
