@@ -37,7 +37,7 @@ public class ProjSwordGash extends Projectile {
         final boolean isCrit = owner.rollCrit();
         final int damage = calculateDamage(isCrit);
         target.queueDamage(new Damage(damage, true, owner, target, isCrit, this.hitbox[0], target.getHitbox()));
-        target.queueBuff(new BuffKnockback(this.logic, 100, (owner.getFacing() == Globals.RIGHT) ? 4 : -4, -1, owner, target));
+        target.queueBuff(new BuffKnockback(this.logic, 100, (owner.getFacing() == Globals.RIGHT) ? 4 : -4, 0, owner, target));
         if (!this.healed && owner.isSkillMaxed(Globals.SWORD_GASH)) {
             final double heal = owner.getStats()[Globals.STAT_MAXHP] * owner.getSkill(Globals.SWORD_GASH).getCustomValue(SkillSwordGash.CUSTOMHEADER_LIFESTEAL);
             owner.queueHeal((int) heal);

@@ -6,6 +6,7 @@
 ### Gameplay Changes
 * Movement speed reduced from 4.5 to 3.8.
 * Lowered HP per Defense from 200 to 170.
+* Allow facing direciton to be changed while knocked back.
 
 ### Skill Changes
 #### Sword
