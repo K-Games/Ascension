@@ -59,11 +59,13 @@
 * Disable launching client with `-noclient` option
 * Skill UI values read from data files to sync with server data.
 * Various performance improvements.
+* Added UDP connection mode. Connections now use UDP by default. Use `-tcpmode` option to use TCP mode.
 
 ### Server Changes
 * Improve netcode for player position.
 * Uses Skill data values from data files. Data values no longer hard coded and can be modified in data files.
 * Options are now `-gui` and `-default`
+* UDP socket is now used by default. Use `udpmode` config property to use UDP/TCP mode.
 
 ---
 
