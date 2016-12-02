@@ -505,11 +505,14 @@ public class Player extends Thread implements GameEntity {
                 setXSpeed(0);
             }
 
-            if (!isImmovableUsingSkill() && !isStunned() && !isKnockback()) {
+            updateFacing();
+            if (!isImmovableUsingSkill() && !isStunned()) {
                 updateFacing();
-                updateMove(xChanged);
-                if (!this.isJumping && !this.isFalling) {
-                    updateJump();
+                if (!isKnockback()) {
+                    updateMove(xChanged);
+                    if (!this.isJumping && !this.isFalling) {
+                        updateJump();
+                    }
                 }
             }
 

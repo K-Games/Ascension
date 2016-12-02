@@ -32,7 +32,7 @@ public class ProjSwordSlash extends Projectile {
         final Player owner = getOwner();
         final boolean isCrit = owner.rollCrit();
         final int damage = calculateDamage(isCrit);
-        target.queueBuff(new BuffKnockback(this.logic, 100, (owner.getFacing() == Globals.RIGHT) ? 4 : -4, -3, owner, target));
+        target.queueBuff(new BuffKnockback(this.logic, 100, (owner.getFacing() == Globals.RIGHT) ? 4 : -4, 0, owner, target));
         target.queueDamage(new Damage(damage, true, owner, target, isCrit, this.hitbox[0], target.getHitbox()));
     }
 
