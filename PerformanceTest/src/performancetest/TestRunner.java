@@ -16,16 +16,11 @@ public class TestRunner implements Runnable {
                 .priority(Thread.NORM_PRIORITY)
                 .build());
 
-        int i = 0;
-        for (byte room = 0; room < 10; room++) {
-            for (byte player = 0; player < 10; player++) {
-                if (i < 99) {
-                    logic[i] = new TestLogicModule(i, room);
-                    logic[i].connect(server, Globals.SERVER_TCP_PORT, Globals.SERVER_UDP_PORT, room);
-                    i++;
-                }
-            }
+        for (byte player = 0; player < Globals.PLAYERS; player++) {
+            logic[player] = new TestLogicModule(player, (byte) Globals.ROOM);
+            logic[player].connect(server, Globals.SERVER_TCP_PORT, Globals.SERVER_UDP_PORT, (byte) Globals.ROOM);
         }
+
         service.scheduleAtFixedRate(this, 0, 300, TimeUnit.MILLISECONDS);
     }
 

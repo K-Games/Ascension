@@ -26,7 +26,7 @@ public class TestGameClient {
         if (this.receiver != null && this.receiver.isConnected()) {
             return;
         }
-        this.client = new Client(Globals.PACKET_MAX_SIZE * 35, Globals.PACKET_MAX_SIZE);
+        this.client = new Client(Globals.PACKET_MAX_SIZE * 500, Globals.PACKET_MAX_SIZE);
         this.client.start();
 
         Kryo kyro = this.client.getKryo();
@@ -36,7 +36,11 @@ public class TestGameClient {
 
         System.out.println("Connecting to " + server + ":" + tcpPort + " with " + logic.getSelectedChar().getPlayerName());
         try {
-            client.connect(5000, server, tcpPort);
+            if (Globals.UDP_MODE) {
+                client.connect(5000, server, tcpPort, udpPort);
+            } else {
+                client.connect(5000, server, tcpPort);
+            }
             TestPacketSender.sendPlayerLogin(logic.getSelectedRoom(), logic.getSelectedChar(), this.client);
         } catch (IOException ex) {
             client.close();
@@ -52,7 +56,6 @@ public class TestGameClient {
     }
 
     public void receiveLogin(final byte[] data) {
-        byte attempts = 0;
         this.loggedIn = false;
 
         byte loginResponse = data[1];
@@ -64,19 +67,17 @@ public class TestGameClient {
                 return;
         }
 
-        while (!this.loggedIn && attempts < 5) {
-            System.out.println("Attempting to login with " + this.logic.getSelectedChar().getPlayerName() + "." + (attempts + 1) + "/5");
-            TestPacketSender.sendPlayerCreate(logic.getSelectedRoom(), logic.getSelectedChar(), this.client);
-            attempts++;
-            synchronized (this) {
-                try {
-                    this.wait(900);
-                } catch (final InterruptedException e) {
-                    break;
-                }
+        System.out.println("Attempting to login with " + this.logic.getSelectedChar().getPlayerName() + ".");
+        TestPacketSender.sendPlayerCreate(logic.getSelectedRoom(), logic.getSelectedChar(), this.client);
+        synchronized (this) {
+            try {
+                this.wait(3000);
+            } catch (final InterruptedException e) {
+                return;
             }
         }
-        if (attempts >= 5) {
+
+        if (!this.loggedIn) {
             System.out.println("Failed to login with " + this.logic.getSelectedChar().getPlayerName());
             shutdownClient();
         }
@@ -105,5 +106,4 @@ public class TestGameClient {
     public int getPing() {
         return this.client.getReturnTripTime();
     }
-
 }
