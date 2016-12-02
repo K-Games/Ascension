@@ -130,7 +130,11 @@ public class PacketSender implements Runnable {
         if (Globals.SERVER_BATCH_PACKETSEND) {
             OUT_PACKET_QUEUE.add(new GamePacket(data, c));
         } else if (c.getTcpWriteBufferSize() < Globals.PACKET_MAX_SIZE * Globals.PACKET_MAX_PER_CON * 0.75) {
-            c.sendTCP(data);
+            if (!Globals.UDP_MODE) {
+                c.sendTCP(data);
+            } else {
+                c.sendUDP(data);
+            }
         }
     }
 
@@ -140,7 +144,11 @@ public class PacketSender implements Runnable {
                 if (Globals.SERVER_BATCH_PACKETSEND) {
                     OUT_PACKET_QUEUE.add(new GamePacket(data, player));
                 } else if (player.getConnection().getTcpWriteBufferSize() < Globals.PACKET_MAX_SIZE * Globals.PACKET_MAX_PER_CON * 0.75) {
-                    player.getConnection().sendTCP(data);
+                    if (!Globals.UDP_MODE) {
+                        player.getConnection().sendTCP(data);
+                    } else {
+                        player.getConnection().sendUDP(data);
+                    }
                 }
             } catch (Exception e) {
                 Globals.logError(e.getStackTrace()[0].toString(), e, true);

@@ -44,7 +44,11 @@ public class GameClient extends Thread {
 
         Globals.log(GameClient.class, "Connecting to " + Globals.SERVER_ADDRESS, Globals.LOG_TYPE_DATA, true);
         try {
-            client.connect(3000, Globals.SERVER_ADDRESS, Globals.SERVER_TCP_PORT);
+            if (Globals.UDP_MODE) {
+                client.connect(3000, Globals.SERVER_ADDRESS, Globals.SERVER_TCP_PORT, Globals.SERVER_UDP_PORT);
+            } else {
+                client.connect(3000, Globals.SERVER_ADDRESS, Globals.SERVER_TCP_PORT);
+            }
             PacketSender.sendPlayerLogin(logic.getSelectedRoom(), logic.getSelectedChar());
         } catch (IOException ex) {
             client.close();

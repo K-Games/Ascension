@@ -26,7 +26,7 @@ public class PacketSender {
         temp = Globals.intToBytes((int) stats[Globals.STAT_LEVEL]);
         System.arraycopy(temp, 0, bytes, 18, temp.length);
 
-        sendTCPPacket(bytes);
+        sendPacket(bytes);
     }
 
     public static void sendPlayerCreate(final byte room, final SaveData c) {
@@ -115,7 +115,7 @@ public class PacketSender {
             System.arraycopy(temp, 0, bytes, pos, temp.length);
             pos += temp.length;
         }
-        sendTCPPacket(bytes);
+        sendPacket(bytes);
     }
 
     public static void sendSetMobType(final byte room, final int key) {
@@ -124,7 +124,7 @@ public class PacketSender {
         bytes[1] = room;
         final byte[] intKey = Globals.intToBytes(key);
         System.arraycopy(intKey, 0, bytes, 2, intKey.length);
-        sendTCPPacket(bytes);
+        sendPacket(bytes);
     }
 
     public static void sendGetMobStat(final byte room, final int key, final byte stat) {
@@ -134,7 +134,7 @@ public class PacketSender {
         final byte[] intKey = Globals.intToBytes(key);
         System.arraycopy(intKey, 0, bytes, 2, intKey.length);
         bytes[6] = stat;
-        sendTCPPacket(bytes);
+        sendPacket(bytes);
     }
 
     public static void sendGetAll(final byte room, final byte myKey) {
@@ -142,7 +142,7 @@ public class PacketSender {
         bytes[0] = Globals.DATA_PLAYER_GET_ALL;
         bytes[1] = room;
         bytes[2] = myKey;
-        sendTCPPacket(bytes);
+        sendPacket(bytes);
     }
 
     public static void sendMove(final byte room, final byte key, final byte direction, final boolean move) {
@@ -152,7 +152,7 @@ public class PacketSender {
         bytes[2] = key;
         bytes[3] = direction;
         bytes[4] = (byte) (move ? 1 : 0);
-        sendTCPPacket(bytes);
+        sendPacket(bytes);
     }
 
     public static void sendUseSkill(final byte room, final byte key, final byte skillCode) {
@@ -161,7 +161,7 @@ public class PacketSender {
         bytes[1] = room;
         bytes[2] = key;
         bytes[3] = skillCode;
-        sendTCPPacket(bytes);
+        sendPacket(bytes);
     }
 
     public static void sendUseEmote(final byte room, final byte key, final byte emoteID) {
@@ -170,7 +170,7 @@ public class PacketSender {
         bytes[1] = room;
         bytes[2] = key;
         bytes[3] = emoteID;
-        sendTCPPacket(bytes);
+        sendPacket(bytes);
     }
 
     public static void sendGetPing() {
@@ -182,7 +182,7 @@ public class PacketSender {
         bytes[0] = Globals.DATA_PLAYER_DISCONNECT;
         bytes[1] = room;
         bytes[2] = myKey;
-        sendTCPPacket(bytes);
+        sendPacket(bytes);
     }
 
     public static void sendGetName(final byte room, final byte key) {
@@ -190,7 +190,7 @@ public class PacketSender {
         bytes[0] = Globals.DATA_PLAYER_GET_NAME;
         bytes[1] = room;
         bytes[2] = key;
-        sendTCPPacket(bytes);
+        sendPacket(bytes);
     }
 
     public static void sendGetStat(final byte room, final byte key, final byte stat) {
@@ -199,7 +199,7 @@ public class PacketSender {
         bytes[1] = room;
         bytes[2] = key;
         bytes[3] = stat;
-        sendTCPPacket(bytes);
+        sendPacket(bytes);
     }
 
     public static void sendGetEquip(final byte room, final byte key) {
@@ -207,14 +207,15 @@ public class PacketSender {
         bytes[0] = Globals.DATA_PLAYER_GET_EQUIP;
         bytes[1] = room;
         bytes[2] = key;
-        sendTCPPacket(bytes);
+        sendPacket(bytes);
     }
 
-    private static void sendTCPPacket(final byte[] packet) {
-        GameClient.getClient().sendTCP(packet);
+    private static void sendPacket(final byte[] packet) {
+        if (!Globals.UDP_MODE) {
+            GameClient.getClient().sendTCP(packet);
+        } else {
+            GameClient.getClient().sendUDP(packet);
+        }
     }
 
-    private static void sendUDPPacket(final byte[] packet) {
-        GameClient.getClient().sendUDP(packet);
-    }
 }

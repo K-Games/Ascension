@@ -36,8 +36,9 @@ public class Globals {
 
     public static boolean SKIP_TITLE = false;
     public static int SERVER_TCP_PORT = 25565;
-    public static int SERVER_UDP_PORT = 25566;
+    public static int SERVER_UDP_PORT = 35565;
     public static String SERVER_ADDRESS;
+    public static boolean UDP_MODE = true;
 
     public static final String DEV_PASSPHRASE = "amFwAkjuy0K/lSvUUyZvdiIFdn/Dzu/OAxStgUEdLKk=";
     public static final String COLON_SPACE_TEXT = ": ";
@@ -248,7 +249,7 @@ public class Globals {
             PLAYER_ANIM_STATE_ROLL = 0x08;
 
     // Packet globals
-    public final static int PACKET_MAX_SIZE = 150;
+    public final static int PACKET_MAX_SIZE = 500;
     public final static int PACKET_BYTE = 1;
     public final static int PACKET_INT = 4;
     public final static int PACKET_LONG = 8;
@@ -855,6 +856,9 @@ public class Globals {
             if (prop.getProperty("packetsenderthreads") != null) {
                 SERVER_PACKETSENDER_THREADS = Byte.parseByte(prop.getProperty("packetsenderthreads"));
             }
+            if (prop.getProperty("udpmode") != null) {
+                UDP_MODE = Boolean.parseBoolean(prop.getProperty("udpmode"));
+            }
         } catch (final FileNotFoundException e) {
             log(Globals.class, "Config", "config.properties not found in root directory. Using default server values.", Globals.LOG_TYPE_DATA, true);
         } catch (final IOException ex) {
@@ -875,6 +879,7 @@ public class Globals {
             log(Globals.class, "Config", "Logic Module Threads: " + SERVER_LOGIC_THREADS, Globals.LOG_TYPE_DATA, true);
             log(Globals.class, "Config", "Max Packet Sender Threads: " + SERVER_PACKETSENDER_THREADS, Globals.LOG_TYPE_DATA, true);
             log(Globals.class, "Config", "Max Packets Per Connection: " + PACKET_MAX_PER_CON, Globals.LOG_TYPE_DATA, true);
+            log(Globals.class, "Config", "UDP Mode: " + UDP_MODE, Globals.LOG_TYPE_DATA, true);
         }
     }
 
