@@ -55,6 +55,8 @@
 * Various performance improvements.
 * Can now start up a server by using the `-server` option.
 * Disable launching client with `-noclient` option
+* Skill UI values read from data files to sync with server data.
+* Various performance improvements.
 
 ### Server Changes
 * Improve netcode for player position.

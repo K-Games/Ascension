@@ -40,6 +40,7 @@ public class Globals {
     public static String SERVER_ADDRESS;
 
     public static final String DEV_PASSPHRASE = "amFwAkjuy0K/lSvUUyZvdiIFdn/Dzu/OAxStgUEdLKk=";
+    public static final String COLON_SPACE_TEXT = ": ";
 
     public static boolean TEST_MAX_LEVEL = false,
             DEBUG_MODE = false;
@@ -586,42 +587,60 @@ public class Globals {
         SOUND_SFX[SFX_IRON] = "sfx/shield/iron/0.wav";
     }
 
+    private static final String STAT_NAME_MAXEXP = "Required EXP";
+    private static final String STAT_NAME_DMGREDUCT = "Damage Reduction";
+    private static final String STAT_NAME_SKILLPOINTS = "Skill Points";
+    private static final String STAT_NAME_EXP = "Experience";
+    private static final String STAT_NAME_POINTS = "Stat Points";
+    private static final String STAT_NAME_LEVEL = "Level";
+    private static final String STAT_NAME_ARMOR = "Armor";
+    private static final String STAT_NAME_REGEN = "Regen(HP/Sec)";
+    private static final String STAT_NAME_CRITDMG = "Critical Hit Damage";
+    private static final String STAT_NAME_CRITCHC = "Critical Hit Chance";
+    private static final String STAT_NAME_MAXDMG = "Maximum Damage";
+    private static final String STAT_NAME_MINDMG = "Minimum Damage";
+    private static final String STAT_NAME_MAXHP = "Max HP";
+    private static final String STAT_NAME_MINHP = "Current HP";
+    private static final String STAT_NAME_SPIRIT = "Spirit";
+    private static final String STAT_NAME_DEFENSE = "Defense";
+    private static final String STAT_NAME_POWER = "Power";
+
     public static final String getStatName(final byte statID) {
         switch (statID) {
             case STAT_POWER:
-                return "Power";
+                return STAT_NAME_POWER;
             case STAT_DEFENSE:
-                return "Defense";
+                return STAT_NAME_DEFENSE;
             case STAT_SPIRIT:
-                return "Spirit";
+                return STAT_NAME_SPIRIT;
             case STAT_MINHP:
-                return "Current HP";
+                return STAT_NAME_MINHP;
             case STAT_MAXHP:
-                return "Max HP";
+                return STAT_NAME_MAXHP;
             case STAT_MINDMG:
-                return "Minimum Damage";
+                return STAT_NAME_MINDMG;
             case STAT_MAXDMG:
-                return "Maximum Damage";
+                return STAT_NAME_MAXDMG;
             case STAT_CRITCHANCE:
-                return "Critical Hit Chance";
+                return STAT_NAME_CRITCHC;
             case STAT_CRITDMG:
-                return "Critical Hit Damage";
+                return STAT_NAME_CRITDMG;
             case STAT_REGEN:
-                return "Regen(HP/Sec)";
+                return STAT_NAME_REGEN;
             case STAT_ARMOR:
-                return "Armor";
+                return STAT_NAME_ARMOR;
             case STAT_LEVEL:
-                return "Level";
+                return STAT_NAME_LEVEL;
             case STAT_POINTS:
-                return "Stat Points";
+                return STAT_NAME_POINTS;
             case STAT_EXP:
-                return "Experience";
+                return STAT_NAME_EXP;
             case STAT_SKILLPOINTS:
-                return "Skill Points";
+                return STAT_NAME_SKILLPOINTS;
             case STAT_DAMAGEREDUCT:
-                return "Damage Reduction";
+                return STAT_NAME_DMGREDUCT;
             case STAT_MAXEXP:
-                return "Required EXP";
+                return STAT_NAME_MAXEXP;
         }
         return "INVALID STAT";
     }

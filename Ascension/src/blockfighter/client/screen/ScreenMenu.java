@@ -17,6 +17,14 @@ import javax.swing.SwingUtilities;
 
 public abstract class ScreenMenu extends Screen {
 
+    private static final String CHARACTERS_TEXT = "Characters";
+    private static final String KEY_BINDINGS_TEXT = "Key Bindings";
+    private static final String LOGIN_TEXT = "Login";
+    private static final String SKILLS_TEXT = "Skills";
+    private static final String UPGRADES_TEXT = "Upgrades";
+    private static final String INVENTORY_TEXT = "Inventory";
+    private static final String STATS_TEXT = "Stats";
+
     protected long lastUpdateTime = 0;
     protected static ConcurrentHashMap<Integer, Particle> particles = new ConcurrentHashMap<>(3);
     private static final Rectangle2D.Double[] MENU_BOX = new Rectangle2D.Double[7];
@@ -91,22 +99,22 @@ public abstract class ScreenMenu extends Screen {
             g.drawImage(button, (int) menuBox1.x, (int) menuBox1.y, null);
         }
         g.setFont(Globals.ARIAL_24PT);
-        drawStringOutline(g, "Stats", 40, 62, 2);
-        drawStringOutline(g, "Inventory", 40, 112, 2);
-        drawStringOutline(g, "Upgrades", 40, 162, 2);
-        drawStringOutline(g, "Skills", 40, 212, 2);
-        drawStringOutline(g, "Login", 40, 262, 2);
-        drawStringOutline(g, "Key Bindings", 40, 312, 2);
-        drawStringOutline(g, "Characters", 40, 362, 2);
+        drawStringOutline(g, STATS_TEXT, 40, 62, 2);
+        drawStringOutline(g, INVENTORY_TEXT, 40, 112, 2);
+        drawStringOutline(g, UPGRADES_TEXT, 40, 162, 2);
+        drawStringOutline(g, SKILLS_TEXT, 40, 212, 2);
+        drawStringOutline(g, LOGIN_TEXT, 40, 262, 2);
+        drawStringOutline(g, KEY_BINDINGS_TEXT, 40, 312, 2);
+        drawStringOutline(g, CHARACTERS_TEXT, 40, 362, 2);
 
         g.setColor(Color.WHITE);
-        g.drawString("Stats", 40, 62);
-        g.drawString("Inventory", 40, 112);
-        g.drawString("Upgrades", 40, 162);
-        g.drawString("Skills", 40, 212);
-        g.drawString("Login", 40, 262);
-        g.drawString("Key Bindings", 40, 312);
-        g.drawString("Characters", 40, 362);
+        g.drawString(STATS_TEXT, 40, 62);
+        g.drawString(INVENTORY_TEXT, 40, 112);
+        g.drawString(UPGRADES_TEXT, 40, 162);
+        g.drawString(SKILLS_TEXT, 40, 212);
+        g.drawString(LOGIN_TEXT, 40, 262);
+        g.drawString(KEY_BINDINGS_TEXT, 40, 312);
+        g.drawString(CHARACTERS_TEXT, 40, 362);
     }
 
     @Override
