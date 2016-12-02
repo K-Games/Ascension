@@ -119,7 +119,7 @@ public abstract class Projectile extends Thread implements GameEntity {
         try {
             update();
         } catch (final Exception ex) {
-            Globals.logError(ex.getStackTrace()[0].toString(), ex, true);
+            Globals.logError(ex.toString(), ex, true);
         }
     }
 

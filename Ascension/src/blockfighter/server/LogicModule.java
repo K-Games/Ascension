@@ -96,7 +96,7 @@ public class LogicModule extends Thread {
             }
 
         } catch (final Exception ex) {
-            Globals.logError(ex.getStackTrace()[0].toString(), ex, true);
+            Globals.logError(ex.toString(), ex, true);
         }
     }
 
@@ -115,7 +115,7 @@ public class LogicModule extends Thread {
                     this.room.returnMobKey(mob.getKey());
                 }
             } catch (final InterruptedException ex) {
-                Globals.logError(ex.getStackTrace()[0].toString(), ex, true);
+                Globals.logError(ex.toString(), ex, true);
             }
         }
     }
@@ -149,7 +149,7 @@ public class LogicModule extends Thread {
                     this.room.returnPlayerKey(player.getKey());
                 }
             } catch (final InterruptedException ex) {
-                Globals.logError(ex.getStackTrace()[0].toString(), ex, true);
+                Globals.logError(ex.toString(), ex, true);
             }
         }
 
@@ -183,7 +183,7 @@ public class LogicModule extends Thread {
                     this.room.returnProjKey(projectile.getValue().getKey());
                 }
             } catch (final InterruptedException ex) {
-                Globals.logError(ex.getStackTrace()[0].toString(), ex, true);
+                Globals.logError(ex.toString(), ex, true);
             }
         }
     }
@@ -243,7 +243,7 @@ public class LogicModule extends Thread {
                     }
                 }
             } catch (final Exception ex) {
-                Globals.logError(ex.getStackTrace()[0].toString(), ex, true);
+                Globals.logError(ex.toString(), ex, true);
             }
         };
 
@@ -259,7 +259,7 @@ public class LogicModule extends Thread {
                     }
                 }
             } catch (final Exception ex) {
-                Globals.logError(ex.getStackTrace()[0].toString(), ex, true);
+                Globals.logError(ex.toString(), ex, true);
             }
         };
 
@@ -272,7 +272,7 @@ public class LogicModule extends Thread {
                     }
                 }
             } catch (final Exception ex) {
-                Globals.logError(ex.getStackTrace()[0].toString(), ex, true);
+                Globals.logError(ex.toString(), ex, true);
             }
         };
 
@@ -285,7 +285,7 @@ public class LogicModule extends Thread {
                     }
                 }
             } catch (final Exception ex) {
-                Globals.logError(ex.getStackTrace()[0].toString(), ex, true);
+                Globals.logError(ex.toString(), ex, true);
             }
         };
 
@@ -298,7 +298,7 @@ public class LogicModule extends Thread {
                     }
                 }
             } catch (final Exception ex) {
-                Globals.logError(ex.getStackTrace()[0].toString(), ex, true);
+                Globals.logError(ex.toString(), ex, true);
             }
         };
 

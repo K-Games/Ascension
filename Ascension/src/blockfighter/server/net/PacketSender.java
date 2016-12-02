@@ -151,7 +151,7 @@ public class PacketSender implements Runnable {
                     }
                 }
             } catch (Exception e) {
-                Globals.logError(e.getStackTrace()[0].toString(), e, true);
+                Globals.logError(e.toString(), e, true);
             }
         }
     }

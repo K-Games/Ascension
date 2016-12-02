@@ -34,7 +34,7 @@ public class GameServer {
             server.start();
 
         } catch (IOException ex) {
-            Globals.logError(ex.getStackTrace()[0].toString(), ex, true);
+            Globals.logError(ex.toString(), ex, true);
             System.exit(1);
         }
     }

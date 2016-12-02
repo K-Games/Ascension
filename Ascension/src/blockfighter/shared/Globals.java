@@ -494,7 +494,7 @@ public class Globals {
         try {
             return Boolean.parseBoolean(data[dataHeaders.get(header) + 1]);
         } catch (Exception e) {
-            Globals.logError(e.getStackTrace()[0].toString(), e, true);
+            Globals.logError(e.toString(), e, true);
         }
         return false;
     }
@@ -503,7 +503,7 @@ public class Globals {
         try {
             return Double.parseDouble(data[dataHeaders.get(header) + 1]);
         } catch (Exception e) {
-            Globals.logError(e.getStackTrace()[0].toString(), e, true);
+            Globals.logError(e.toString(), e, true);
         }
         return 0;
     }
@@ -513,7 +513,7 @@ public class Globals {
             byte weaponData = Byte.parseByte(data[dataHeaders.get(SKILL_REQWEAPON_HEADER) + 1]);
             return (weaponData >= Globals.NUM_ITEM_TYPES) ? -1 : weaponData;
         } catch (Exception e) {
-            Globals.logError(e.getStackTrace()[0].toString(), e, true);
+            Globals.logError(e.toString(), e, true);
         }
         return -1;
     }
@@ -525,7 +525,7 @@ public class Globals {
             List<String> fileLines = IOUtils.readLines(skillDataFile);
             return fileLines.toArray(new String[fileLines.size()]);
         } catch (IOException | NullPointerException e) {
-            Globals.logError("Could not load Skill " + String.format("0x%02X", skillCode) + " Data." + e.getStackTrace()[0].toString(), e, true);
+            Globals.logError("Could not load Skill " + String.format("0x%02X", skillCode) + " Data." + e.toString(), e, true);
             System.exit(101);
             return null;
         }
@@ -540,7 +540,7 @@ public class Globals {
             }
             return description;
         } catch (Exception e) {
-            Globals.logError(e.getStackTrace()[0].toString(), e, true);
+            Globals.logError(e.toString(), e, true);
         }
         return new String[0];
     }
@@ -549,7 +549,7 @@ public class Globals {
         try {
             return data[dataHeaders.get(SKILL_NAME_HEADER) + 1];
         } catch (Exception e) {
-            Globals.logError(e.getStackTrace()[0].toString(), e, true);
+            Globals.logError(e.toString(), e, true);
         }
         return "NO_NAME";
     }
