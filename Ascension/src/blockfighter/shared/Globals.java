@@ -218,7 +218,7 @@ public class Globals {
             STAT_MAXEXP = 16;
 
     public final static double HP_BASE = 3000, // PvE = 100
-            HP_MULT = 200, // PvE = 30
+            HP_MULT = 170, // PvE = 30
             REDUCT_CONST = 150,
             ARMOR_MULT = 6,
             REGEN_MULT = 1.5,
