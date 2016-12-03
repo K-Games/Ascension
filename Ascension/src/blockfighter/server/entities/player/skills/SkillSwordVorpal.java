@@ -29,7 +29,10 @@ public class SkillSwordVorpal extends Skill {
     private static final double BASE_VALUE, MULT_VALUE;
     private static final byte REQ_EQUIP_SLOT = Globals.ITEM_WEAPON;
     private static final byte PLAYER_STATE = Player.PLAYER_STATE_SWORD_VORPAL;
-    private static final int SKILL_DURATION = 800;
+    private static final int SKILL_DURATION = 550;
+
+    private double projX, projY, destX;
+    private boolean dashed = false;
 
     static {
         String[] data = Globals.loadSkillData(SKILL_CODE);
@@ -103,16 +106,35 @@ public class SkillSwordVorpal extends Skill {
     @Override
     public void updateSkillUse(Player player) {
         final long duration = Globals.nsToMs(this.logic.getTime() - player.getSkillCastTime());
-        int skillTime = player.isSkillMaxed(Globals.SWORD_VORPAL) ? 150 : 170,
-                numHits = player.isSkillMaxed(Globals.SWORD_VORPAL) ? 5 : 3;
-        if (Globals.hasPastDuration(duration, skillTime * player.getSkillCounter()) && player.getSkillCounter() < numHits) {
-            final ProjSwordVorpal proj = new ProjSwordVorpal(this.logic, player, player.getX(), player.getY());
-            this.logic.queueAddProj(proj);
-            player.setFrame((byte) 0);
-            PacketSender.sendParticle(this.logic.getRoom().getRoomNumber(), Globals.PARTICLE_SWORD_VORPAL, player.getX(), player.getY(), player.getFacing());
+
+        int skillTime = 70, numHits = player.isSkillMaxed(Globals.SWORD_VORPAL) ? 5 : 3;
+        final int dashDistance = 300, dashDuration = 80;
+        if (Globals.hasPastDuration(duration, 100) && player.getSkillCounter() == 0) {
+            this.destX = player.getX() + ((player.getFacing() == Globals.RIGHT) ? 1 : -1) * dashDistance;
+            this.dashed = false;
+            this.projX = player.getX();
+            this.projY = player.getY();
             player.incrementSkillCounter();
         }
 
-        player.updateSkillEnd(duration, getSkillDuration(), true, false);
+        if (!dashed && Globals.hasPastDuration(duration, 100 + dashDuration)) {
+            this.dashed = true;
+            player.setRemovingDebuff(false);
+            player.setXSpeed(0);
+            player.setPos(this.destX, player.getY());
+        } else if (!dashed && player.getSkillCounter() > 0) {
+            player.setXSpeed(((player.getFacing() == Globals.RIGHT) ? 1 : -1) * dashDistance / (dashDuration / Globals.nsToMs(Globals.SERVER_LOGIC_UPDATE)));
+            player.setRemovingDebuff(true);
+        }
+
+        if (player.getSkillCounter() > 0 && Globals.hasPastDuration(duration, 100 + skillTime * (player.getSkillCounter() - 1)) && player.getSkillCounter() - 1 < numHits) {
+            double randomY = this.projY + (Globals.rng(5) * 5 - 10);
+            final ProjSwordVorpal proj = new ProjSwordVorpal(this.logic, player, this.projX, randomY);
+            this.logic.queueAddProj(proj);
+            PacketSender.sendParticle(this.logic.getRoom().getRoomNumber(), Globals.PARTICLE_SWORD_VORPAL, this.projX, randomY, player.getFacing());
+            player.incrementSkillCounter();
+        }
+
+        player.updateSkillEnd(duration, getSkillDuration(), false, false);
     }
 }

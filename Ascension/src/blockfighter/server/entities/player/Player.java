@@ -1235,7 +1235,6 @@ public class Player extends Thread implements GameEntity {
 
     private void updateAnimState() {
         final byte prevAnimState = this.animState, prevFrame = this.frame;
-        final long skillDuration = Globals.nsToMs(this.logic.getTime() - this.skillCastTime);
         final long frameDuration = Globals.nsToMs(this.logic.getTime() - this.lastFrameTime);
         switch (this.playerState) {
             case PLAYER_STATE_STAND:
@@ -1304,7 +1303,7 @@ public class Player extends Thread implements GameEntity {
                 break;
             case PLAYER_STATE_SWORD_VORPAL:
                 this.animState = Globals.PLAYER_ANIM_STATE_ATTACK;
-                if (frameDuration >= 20 && this.frame < 5) {
+                if (frameDuration >= 100 && this.frame == 0 || frameDuration >= 40 && this.frame < 5 && this.frame > 0) {
                     this.frame++;
                     this.lastFrameTime = this.logic.getTime();
                 }

@@ -19,8 +19,7 @@
 * Aggression
  * Increased knockback 30 to 300.
 * Vorpal Strike
- * Increased knockback 20 to 60.
-
+ * Reworked - Dash a short distance and strike enemies.
 * Phantom Reaper
  * Fixed no being at a valid Y position if Phantom Reaper ends inside a platform.
  

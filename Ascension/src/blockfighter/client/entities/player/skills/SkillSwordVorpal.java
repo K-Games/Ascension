@@ -93,7 +93,7 @@ public class SkillSwordVorpal extends Skill {
         };
         this.maxBonusDesc = new String[]{
             "This attack has +" + NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_BONUSCRITCHC)) + "% Critical Hit Chance.",
-            "Stab rapidly hit 5 times."
+            "Strikes 5 times."
         };
     }
 }

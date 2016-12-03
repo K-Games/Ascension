@@ -8,7 +8,7 @@ public class ParticleSwordVorpal extends Particle {
 
     public ParticleSwordVorpal(final int x, final int y, final byte f) {
         super(x, y, f);
-        this.y -= 110;
+        this.y -= 100;
         this.frame = 0;
         this.frameDuration = 50;
         this.duration = 200;

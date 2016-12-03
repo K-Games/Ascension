@@ -2,7 +2,7 @@
 Vorpal Strike
 [desc]
 1
-Stab rapidly 3 times.
+Dash a short distance and strike 3 times.
 [reqweapon]
 0
 [maxcooldown]
