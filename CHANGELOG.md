@@ -21,6 +21,9 @@
 * Vorpal Strike
  * Increased knockback 20 to 60.
 
+* Phantom Reaper
+ * Fixed no being at a valid Y position if Phantom Reaper ends inside a platform.
+ 
 #### Bow
 * Arc Shot
  * Increased knockback from 5 to 40.
