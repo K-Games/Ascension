@@ -16,9 +16,9 @@ public class ProjSwordVorpal extends Projectile {
         this.screenshake = true;
         this.hitbox = new Rectangle2D.Double[1];
         if (o.getFacing() == Globals.RIGHT) {
-            this.hitbox[0] = new Rectangle2D.Double(this.x - 60, this.y - 90, 350, 90);
+            this.hitbox[0] = new Rectangle2D.Double(this.x - 60, this.y - 100, 350, 90);
         } else {
-            this.hitbox[0] = new Rectangle2D.Double(this.x - 350 + 60, this.y - 90, 350, 90);
+            this.hitbox[0] = new Rectangle2D.Double(this.x - 350 + 60, this.y - 100, 350, 90);
         }
     }
 
@@ -41,7 +41,7 @@ public class ProjSwordVorpal extends Projectile {
         final boolean isCrit = owner.rollCrit(owner.isSkillMaxed(Globals.SWORD_VORPAL) ? owner.getSkill(Globals.SWORD_VORPAL).getCustomValue(SkillSwordVorpal.CUSTOMHEADER_BONUSCRITCHC) : 0);
         final int damage = calculateDamage(isCrit);
         target.queueDamage(new Damage(damage, true, owner, target, isCrit, this.hitbox[0], target.getHitbox()));
-        target.queueBuff(new BuffKnockback(this.logic, 200, (owner.getFacing() == Globals.RIGHT) ? 3 : -3, -3, owner, target));
+        target.queueBuff(new BuffKnockback(this.logic, 200, (owner.getFacing() == Globals.RIGHT) ? 3 : -3, 0.1, owner, target));
     }
 
     @Override
