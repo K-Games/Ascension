@@ -101,15 +101,15 @@ public class SkillUtilityFortify extends Skill {
         final long duration = Globals.nsToMs(this.logic.getTime() - player.getSkillCastTime());
         if (player.getSkillCounter() == 0) {
             player.incrementSkillCounter();
-            PacketSender.sendParticle(this.logic.getRoom().getRoomNumber(), Globals.PARTICLE_SHIELD_FORTIFY, player.getKey());
-            PacketSender.sendSFX(this.logic.getRoom().getRoomNumber(), Globals.SFX_FORTIFY, player.getX(), player.getY());
+            PacketSender.sendParticle(this.logic, Globals.PARTICLE_SHIELD_FORTIFY, player.getKey());
+            PacketSender.sendSFX(this.logic, Globals.SFX_FORTIFY, player.getX(), player.getY());
         }
 
         if (Globals.hasPastDuration(duration, getSkillDuration()) && player.getSkillCounter() == 1) {
             player.incrementSkillCounter();
             double buffDuration = getCustomValue(CUSTOMHEADER_BUFFDURATION);
             player.queueBuff(new BuffUtilityFortify(this.logic, (int) buffDuration, BASE_VALUE + MULT_VALUE * player.getSkillLevel(Globals.UTILITY_FORTIFY), player));
-            PacketSender.sendParticle(this.logic.getRoom().getRoomNumber(), Globals.PARTICLE_SHIELD_FORTIFYBUFF, player.getKey());
+            PacketSender.sendParticle(this.logic, Globals.PARTICLE_SHIELD_FORTIFYBUFF, player.getKey());
         }
 
         player.updateSkillEnd(duration, getSkillDuration(), false, false);

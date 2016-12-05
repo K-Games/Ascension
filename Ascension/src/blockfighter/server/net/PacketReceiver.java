@@ -20,6 +20,7 @@ public class PacketReceiver extends Listener {
                 GameServer.getPlayerFromConnection(c).disconnect();
                 GameServer.removeConnectionPlayer(c);
             }
+            GameServer.removeConnectionPlayerKey(c);
             Globals.log(PacketReceiver.class, "Disconnected " + c, Globals.LOG_TYPE_DATA, true);
         } catch (Exception e) {
             Globals.logError(e.toString(), e, true);

@@ -53,7 +53,7 @@ public class ProjBowVolley extends Projectile {
                     bytes[0] = Globals.DATA_PARTICLE_EFFECT;
                     bytes[1] = Globals.PARTICLE_BOW_VOLLEYBUFF;
                     bytes[2] = owner.getKey();
-                    PacketSender.sendAll(bytes, this.logic.getRoom().getRoomNumber());
+                    PacketSender.sendAll(bytes, this.logic);
                 }
             }
         }
@@ -77,7 +77,7 @@ public class ProjBowVolley extends Projectile {
                     bytes[0] = Globals.DATA_PARTICLE_EFFECT;
                     bytes[1] = Globals.PARTICLE_BOW_VOLLEYBUFF;
                     bytes[2] = owner.getKey();
-                    PacketSender.sendAll(bytes, this.logic.getRoom().getRoomNumber());
+                    PacketSender.sendAll(bytes, this.logic);
                 }
             }
         }

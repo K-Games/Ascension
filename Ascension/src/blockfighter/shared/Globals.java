@@ -14,7 +14,6 @@ import java.io.PrintWriter;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -255,6 +254,10 @@ public class Globals {
     public final static int PACKET_LONG = 8;
     public final static int PACKET_CHAR = 1;
 
+    public final static byte HUB_DATA_PING = 0x00,
+            HUB_DATA_GET_SERVERINFOS = 0x01,
+            HUB_DATA_GET_SERVERSTATS = 0x02;
+
     // Datatypes
     public final static byte DATA_PING = 0x00,
             DATA_PLAYER_LOGIN = 0x01,
@@ -287,7 +290,7 @@ public class Globals {
     public static final byte LOGIN_SUCCESS = 0x00,
             LOGIN_FAIL_UID_IN_ROOM = 0x01,
             LOGIN_FAIL_FULL_ROOM = 0x02,
-            LOGIN_FAIL_OUTSIDE_LEVEL_RANGE = 0x03;
+            LOGIN_FAIL_NO_ROOMS = 0x03;
 
     public static final byte NUM_EMOTES = 10,
             EMOTE_ALERT = 0x00,
@@ -418,11 +421,16 @@ public class Globals {
             .priority(Thread.MIN_PRIORITY)
             .build());
 
-    public static byte SERVER_MAX_PLAYERS = 10;
-    public final static HashMap<Byte, Byte> SERVER_ROOMNUM_TO_ROOMINDEX = new HashMap<>();
-    public static int SERVER_MAX_IDLE = 120000;
-    public static byte SERVER_LOGIC_THREADS = 3,
-            SERVER_PACKETSENDER_THREADS = 5;
+    public static byte SERVER_MAX_ROOM_PLAYERS = 10;
+    public static int SERVER_PLAYER_MAX_IDLE = 120000;
+    public static int SERVER_ROOM_MAX_ILDE = 300000;
+    public static byte SERVER_LOGIC_THREADS = 3;
+    public static byte SERVER_PACKETSENDER_THREADS = 5;
+    public static int SERVER_MAX_ROOMS = 10;
+    public static boolean SERVER_HUB_CONNECT = false;
+
+    public static int HUB_SERVER_TCP_PORT = 25566;
+    public static String HUB_SERVER_ADDRESS = "asc-hub.servegame.com";
 
     public final static long PROCESS_QUEUE_TICKS_PER_SEC = 100;
     public final static long PROCESS_QUEUE = 1000000000 / PROCESS_QUEUE_TICKS_PER_SEC;
@@ -462,13 +470,6 @@ public class Globals {
         SKILL_BASEVALUE_HEADER,
         SKILL_MULTVALUE_HEADER,
         SKILL_PASSIVE_HEADER};
-
-    static {
-        for (byte i = 0; i < 10; i++) {
-            SERVER_ROOMNUM_TO_ROOMINDEX.put(i, i);
-        }
-        loadItemCodes();
-    }
 
     public static HashMap<String, Integer> getDataHeaders(final String[] data, final String[] customDataHeaders) {
         HashMap<String, Integer> dataHeader = new HashMap<>();
@@ -833,18 +834,13 @@ public class Globals {
                 SERVER_UDP_PORT = Integer.parseInt(prop.getProperty("udpport"));
             }
             if (prop.getProperty("maxplayers") != null) {
-                SERVER_MAX_PLAYERS = Byte.parseByte(prop.getProperty("maxplayers"));
+                SERVER_MAX_ROOM_PLAYERS = Byte.parseByte(prop.getProperty("maxplayers"));
             }
             if (prop.getProperty("expmult") != null) {
                 EXP_MULTIPLIER = Double.parseDouble(prop.getProperty("expmult"));
             }
-            if (prop.getProperty("rooms") != null) {
-                SERVER_ROOMNUM_TO_ROOMINDEX.clear();
-                String[] rooms = prop.getProperty("rooms").split(",");
-                Object[] roomNums = Arrays.asList(rooms).stream().map(Byte::parseByte).toArray();
-                for (byte i = 0; i < roomNums.length; i++) {
-                    SERVER_ROOMNUM_TO_ROOMINDEX.put((Byte) roomNums[i], i);
-                }
+            if (prop.getProperty("maxrooms") != null) {
+                SERVER_MAX_ROOMS = Integer.parseInt(prop.getProperty("maxrooms"));
             }
             if (prop.getProperty("maxpackets") != null) {
                 PACKET_MAX_PER_CON = Integer.parseInt(prop.getProperty("maxpackets"));
@@ -857,6 +853,15 @@ public class Globals {
             }
             if (prop.getProperty("udpmode") != null) {
                 UDP_MODE = Boolean.parseBoolean(prop.getProperty("udpmode"));
+            }
+            if (prop.getProperty("hubconnect") != null) {
+                SERVER_HUB_CONNECT = Boolean.parseBoolean(prop.getProperty("hubconnect"));
+            }
+            if (prop.getProperty("hubaddress") != null) {
+                HUB_SERVER_ADDRESS = prop.getProperty("hubaddress");
+            }
+            if (prop.getProperty("hubport") != null) {
+                HUB_SERVER_TCP_PORT = Integer.parseInt(prop.getProperty("hubport"));
             }
         } catch (final FileNotFoundException e) {
             log(Globals.class, "Config", "config.properties not found in root directory. Using default server values.", Globals.LOG_TYPE_DATA, true);
@@ -872,13 +877,16 @@ public class Globals {
             }
             log(Globals.class, "Config", "Server TCP Port: " + SERVER_TCP_PORT, Globals.LOG_TYPE_DATA, true);
             log(Globals.class, "Config", "Server UDP Port: " + SERVER_UDP_PORT, Globals.LOG_TYPE_DATA, true);
-            log(Globals.class, "Config", "Max Players per Room: " + SERVER_MAX_PLAYERS, Globals.LOG_TYPE_DATA, true);
-            log(Globals.class, "Config", "Rooms: " + SERVER_ROOMNUM_TO_ROOMINDEX, Globals.LOG_TYPE_DATA, true);
+            log(Globals.class, "Config", "Max Players per Room: " + SERVER_MAX_ROOM_PLAYERS, Globals.LOG_TYPE_DATA, true);
+            log(Globals.class, "Config", "Max Rooms: " + SERVER_MAX_ROOMS, Globals.LOG_TYPE_DATA, true);
             log(Globals.class, "Config", "EXP Multiplier: " + EXP_MULTIPLIER, Globals.LOG_TYPE_DATA, true);
             log(Globals.class, "Config", "Logic Module Threads: " + SERVER_LOGIC_THREADS, Globals.LOG_TYPE_DATA, true);
             log(Globals.class, "Config", "Max Packet Sender Threads: " + SERVER_PACKETSENDER_THREADS, Globals.LOG_TYPE_DATA, true);
             log(Globals.class, "Config", "Max Packets Per Connection: " + PACKET_MAX_PER_CON, Globals.LOG_TYPE_DATA, true);
             log(Globals.class, "Config", "UDP Mode: " + UDP_MODE, Globals.LOG_TYPE_DATA, true);
+            log(Globals.class, "Config", "Hub Connect: " + SERVER_HUB_CONNECT, Globals.LOG_TYPE_DATA, true);
+            log(Globals.class, "Config", "Hub Address: " + HUB_SERVER_ADDRESS, Globals.LOG_TYPE_DATA, true);
+            log(Globals.class, "Config", "Hub Port: " + HUB_SERVER_TCP_PORT, Globals.LOG_TYPE_DATA, true);
         }
     }
 
@@ -1004,7 +1012,7 @@ public class Globals {
         return currentDuration >= durationToPast;
     }
 
-    private static void loadItemCodes() {
+    public static void loadItemCodes() {
         ITEM_UPGRADE_CODES.add(100);
 
         try {

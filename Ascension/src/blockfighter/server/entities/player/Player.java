@@ -1,7 +1,7 @@
 package blockfighter.server.entities.player;
 
 import blockfighter.server.LogicModule;
-import blockfighter.server.Room;
+import blockfighter.server.RoomData;
 import blockfighter.server.entities.GameEntity;
 import blockfighter.server.entities.buff.Buff;
 import blockfighter.server.entities.buff.BuffDmgIncrease;
@@ -95,7 +95,7 @@ public class Player extends Thread implements GameEntity {
 
     private final byte key;
     private final LogicModule logic;
-    private final Room room;
+    private final RoomData room;
 
     private UUID uniqueID;
     private String name = "";
@@ -206,7 +206,7 @@ public class Player extends Thread implements GameEntity {
     public Player(final LogicModule l, final byte key, final Connection c, final GameMap map) {
         this.resistDamageSum = new ConcurrentLinkedQueue<>();
         this.logic = l;
-        this.room = l.getRoom();
+        this.room = l.getRoomData();
         this.lastActionTime = l.getTime();
         this.key = key;
         this.connection = c;
@@ -534,7 +534,7 @@ public class Player extends Thread implements GameEntity {
             sendState();
         }
 
-        if (this.connected && Globals.nsToMs(this.logic.getTime() - this.lastActionTime) >= Globals.SERVER_MAX_IDLE) {
+        if (this.connected && Globals.nsToMs(this.logic.getTime() - this.lastActionTime) >= Globals.SERVER_PLAYER_MAX_IDLE) {
             Globals.log(Player.class, this.connection + " Disconnecting <" + this.name + "> due to idling.", Globals.LOG_TYPE_DATA, true);
             disconnect();
         }
@@ -572,7 +572,7 @@ public class Player extends Thread implements GameEntity {
         }
         this.skillCounter = 0;
         this.skillCastTime = this.logic.getTime();
-        // Globals.log("DATA_PLAYER_CASTSKILL", "Key: " + key + " Room: " + logic.getRoom() + " Player: " + getPlayerName() + " Skill: " +
+        // Globals.log("DATA_PLAYER_CASTSKILL", "Key: " + key + " RoomData: " + logic.getRoomData() + " Player: " + getPlayerName() + " Skill: " +
         // data[3], Globals.LOG_TYPE_DATA, true);
 
         queuePlayerState(this.skills.get(skillCode).castPlayerState());
@@ -686,17 +686,17 @@ public class Player extends Thread implements GameEntity {
                 // Barrier reduction
                 if (this.barrierBuff != null) {
                     finalDamage = ((BuffPassiveBarrier) this.barrierBuff).reduceDmg(finalDamage);
-                    PacketSender.sendParticle(this.room.getRoomNumber(), Globals.PARTICLE_PASSIVE_BARRIER, dmg.getDmgPoint().x, dmg.getDmgPoint().y);
+                    PacketSender.sendParticle(this.logic, Globals.PARTICLE_PASSIVE_BARRIER, dmg.getDmgPoint().x, dmg.getDmgPoint().y);
                 }
 
                 if (this.resistBuff != null) {
-                    PacketSender.sendParticle(this.room.getRoomNumber(), Globals.PARTICLE_PASSIVE_RESIST, dmg.getDmgPoint().x, dmg.getDmgPoint().y);
+                    PacketSender.sendParticle(this.logic, Globals.PARTICLE_PASSIVE_RESIST, dmg.getDmgPoint().x, dmg.getDmgPoint().y);
                 }
 
                 // Send client damage display
                 if (!dmg.isHidden()) {
                     if (dmg.getOwner() != null && dmg.isCrit()) {
-                        PacketSender.sendParticle(this.room.getRoomNumber(), Globals.PARTICLE_BLOOD_HIT, dmg.getOwner().getKey(), this.key);
+                        PacketSender.sendParticle(this.logic, Globals.PARTICLE_BLOOD_HIT, dmg.getOwner().getKey(), this.key);
                     }
                     sendDamage(dmg, (int) finalDamage);
                 }
@@ -715,7 +715,7 @@ public class Player extends Thread implements GameEntity {
                         queueBuff(new BuffPassiveBarrier(this.logic,
                                 this.stats[Globals.STAT_MAXHP] * (baseValue + multValue * getSkillLevel(Globals.PASSIVE_BARRIER)),
                                 this));
-                        PacketSender.sendParticle(this.room.getRoomNumber(), Globals.PARTICLE_PASSIVE_BARRIER, dmg.getDmgPoint().x, dmg.getDmgPoint().y);
+                        PacketSender.sendParticle(this.logic, Globals.PARTICLE_PASSIVE_BARRIER, dmg.getDmgPoint().x, dmg.getDmgPoint().y);
                         this.skills.get(Globals.PASSIVE_BARRIER).setCooldown();
                         sendCooldown(Globals.PASSIVE_BARRIER);
                     }
@@ -774,7 +774,7 @@ public class Player extends Thread implements GameEntity {
             bytes[1] = this.key;
             bytes[2] = Globals.STAT_MINHP;
             System.arraycopy(stat, 0, bytes, 3, stat.length);
-            PacketSender.sendAll(bytes, this.room.getRoomNumber());
+            PacketSender.sendAll(bytes, this.logic);
             //this.nextHPSend = 150;
             this.lastHPSendTime = this.logic.getTime();
         }
@@ -868,7 +868,7 @@ public class Player extends Thread implements GameEntity {
             killer.giveEXP(this.stats[Globals.STAT_MAXEXP] * Globals.EXP_MULTIPLIER);
             killer.giveDrop(this.stats[Globals.STAT_LEVEL]);
         }
-        PacketSender.sendParticle(this.room.getRoomNumber(), Globals.PARTICLE_BLOOD, this.key);
+        PacketSender.sendParticle(this.logic, Globals.PARTICLE_BLOOD, this.key);
         setInvulnerable(false);
         setRemovingDebuff(false);
         setDead(true);
@@ -1424,7 +1424,7 @@ public class Player extends Thread implements GameEntity {
             bytes[0] = Globals.DATA_PLAYER_EMOTE;
             bytes[1] = this.key;
             bytes[2] = emoteID;
-            PacketSender.sendAll(bytes, this.room.getRoomNumber());
+            PacketSender.sendAll(bytes, this.logic);
             this.lastEmoteTime = this.logic.getTime();
         }
     }
@@ -1447,7 +1447,7 @@ public class Player extends Thread implements GameEntity {
             bytes[12] = this.frame;
         }
 
-        PacketSender.sendAll(bytes, this.room.getRoomNumber());
+        PacketSender.sendAll(bytes, this.logic);
         this.updatePos = false;
         this.updateFacing = false;
         this.updateAnimState = false;
@@ -1493,7 +1493,7 @@ public class Player extends Thread implements GameEntity {
         bytes[0] = Globals.DATA_PLAYER_SET_FACING;
         bytes[1] = this.key;
         bytes[2] = this.facing;
-        PacketSender.sendAll(bytes, this.room.getRoomNumber());
+        PacketSender.sendAll(bytes, this.logic);
         this.updateFacing = false;
     }
 
@@ -1507,7 +1507,7 @@ public class Player extends Thread implements GameEntity {
         } else {
             bytes[3] = this.frame;
         }
-        PacketSender.sendAll(bytes, this.room.getRoomNumber());
+        PacketSender.sendAll(bytes, this.logic);
         this.updateAnimState = false;
     }
 
@@ -1546,7 +1546,7 @@ public class Player extends Thread implements GameEntity {
             pvpBytes[1] = Globals.NUMBER_TYPE_MOB;
             PacketSender.sendPlayer(pvpBytes, this);
         } else {
-            PacketSender.sendAll(bytes, this.room.getRoomNumber());
+            PacketSender.sendAll(bytes, this.logic);
         }
     }
 
@@ -1556,7 +1556,7 @@ public class Player extends Thread implements GameEntity {
         bytes[0] = Globals.DATA_PLAYER_GET_NAME;
         bytes[1] = this.key;
         System.arraycopy(data, 0, bytes, 2, data.length);
-        PacketSender.sendAll(bytes, this.room.getRoomNumber());
+        PacketSender.sendAll(bytes, this.logic);
     }
 
     public void sendStat(final byte statID) {
@@ -1566,7 +1566,7 @@ public class Player extends Thread implements GameEntity {
         bytes[1] = this.key;
         bytes[2] = statID;
         System.arraycopy(stat, 0, bytes, 3, stat.length);
-        PacketSender.sendAll(bytes, this.room.getRoomNumber());
+        PacketSender.sendAll(bytes, this.logic);
     }
 
     public void setInvulnerable(final boolean set) {
@@ -1633,7 +1633,7 @@ public class Player extends Thread implements GameEntity {
             final byte[] bytes = new byte[2];
             bytes[0] = Globals.DATA_PLAYER_DISCONNECT;
             bytes[1] = this.key;
-            PacketSender.sendAll(bytes, this.room.getRoomNumber());
+            PacketSender.sendAll(bytes, this.logic);
             this.connection.close();
             Globals.log(Player.class, "Disconnected <" + getPlayerName() + ">", Globals.LOG_TYPE_DATA, true);
         }

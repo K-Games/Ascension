@@ -7,6 +7,7 @@
 * Movement speed reduced from 4.5 to 3.8.
 * Lowered HP per Defense from 200 to 170.
 * Allow facing direciton to be changed while knocked back.
+* A new Server List browser.
 
 ### Skill Changes
 #### Sword
@@ -62,6 +63,7 @@
 * Skill UI values read from data files to sync with server data.
 * Various performance improvements.
 * Added UDP connection mode. Connections now use UDP by default. Use `-tcpmode` option to use TCP mode.
+* Can retrieve a list of avaliable servers from a remote Hub. Use `-hubaddress` and `-hubport` to get server list from a specific Hub.
 
 ### Server Changes
 * Improve netcode for player position.
@@ -69,6 +71,7 @@
 * Options are now `-gui` and `-default`
 * UDP socket is now used by default. Use `udpmode` config property to use UDP/TCP mode.
 * Removed outdated batch packet sending.
+* Sends server information to a central Hub for clients to retrieve. `hubconnect`, `hubport` and `hubaddress` configuration option can be set to send to specific hub.
 
 ---
 

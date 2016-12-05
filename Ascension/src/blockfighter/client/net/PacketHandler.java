@@ -91,14 +91,14 @@ public class PacketHandler {
                 case Globals.LOGIN_FAIL_FULL_ROOM:
                     gameClient.shutdownClient(ScreenServerList.STATUS_FULLROOM);
                     return;
-                case Globals.LOGIN_FAIL_OUTSIDE_LEVEL_RANGE:
-                    gameClient.shutdownClient(ScreenServerList.STATUS_OUTSIDELEVEL);
+                case Globals.LOGIN_FAIL_NO_ROOMS:
+                    gameClient.shutdownClient(ScreenServerList.STATUS_NO_ROOMS);
                     return;
                 default:
                     gameClient.shutdownClient((byte) -1);
                     return;
             }
-
+            logic.setSelectedRoom(data[5]);
             PacketSender.sendPlayerCreate(logic.getSelectedRoom(), logic.getSelectedChar());
             logic.startCharacterCreateTimeout();
         } catch (Exception e) {

@@ -105,11 +105,11 @@ public class SkillBowVolley extends Skill {
             final ProjBowVolley proj = new ProjBowVolley(this.logic, player, player.getX(),
                     player.getY());
             this.logic.queueAddProj(proj);
-            PacketSender.sendParticle(this.logic.getRoom().getRoomNumber(), Globals.PARTICLE_BOW_VOLLEYARROW, player.getX(), proj.getHitbox()[0].getY(),
+            PacketSender.sendParticle(this.logic, Globals.PARTICLE_BOW_VOLLEYARROW, player.getX(), proj.getHitbox()[0].getY(),
                     player.getFacing());
-            PacketSender.sendParticle(this.logic.getRoom().getRoomNumber(), Globals.PARTICLE_BOW_VOLLEYBOW, player.getKey(), player.getFacing());
+            PacketSender.sendParticle(this.logic, Globals.PARTICLE_BOW_VOLLEYBOW, player.getKey(), player.getFacing());
             player.incrementSkillCounter();
-            PacketSender.sendSFX(this.logic.getRoom().getRoomNumber(), Globals.SFX_VOLLEY, player.getX(), player.getY());
+            PacketSender.sendSFX(this.logic, Globals.SFX_VOLLEY, player.getX(), player.getY());
         }
         player.updateSkillEnd(duration, getSkillDuration(), true, true);
     }

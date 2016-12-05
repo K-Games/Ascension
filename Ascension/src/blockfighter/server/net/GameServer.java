@@ -11,7 +11,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class GameServer {
 
-    public static ConcurrentHashMap<Connection, Player> connectionPlayerMap = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<Connection, Player> CONN_PLAYER_MAP = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<Connection, Byte> CONN_PLAYER_KEY_MAP = new ConcurrentHashMap<>();
 
     private Server server;
     private PacketReceiver receiver;
@@ -42,15 +43,27 @@ public class GameServer {
     public static void addPlayerConnection(final Connection c, final Player p) {
         c.setKeepAliveTCP(1500);
         c.setTimeout(15000);
-        connectionPlayerMap.put(c, p);
+        CONN_PLAYER_MAP.put(c, p);
     }
 
     public static Player getPlayerFromConnection(final Connection c) {
-        return connectionPlayerMap.get(c);
+        return CONN_PLAYER_MAP.get(c);
     }
 
     public static void removeConnectionPlayer(final Connection c) {
-        connectionPlayerMap.remove(c);
+        CONN_PLAYER_MAP.remove(c);
+    }
+
+    public static byte getPlayerKeyFromConnection(final Connection c) {
+        return CONN_PLAYER_KEY_MAP.get(c);
+    }
+
+    public static void removeConnectionPlayerKey(final Connection c) {
+        CONN_PLAYER_KEY_MAP.remove(c);
+    }
+
+    public static void addPlayerKeyConnection(final Connection c, final byte b) {
+        CONN_PLAYER_KEY_MAP.put(c, b);
     }
 
     public void shutdown() {

@@ -108,15 +108,15 @@ public class SkillShieldReflect extends Skill {
             player.incrementSkillCounter();
             double buffDuration = getCustomValue(CUSTOMHEADER_BUFFDURATION);
             player.queueBuff(new BuffShieldReflect(this.logic, (int) buffDuration, getBaseValue() + getMultValue() * player.getSkillLevel(Globals.SHIELD_REFLECT), player, player));
-            PacketSender.sendParticle(this.logic.getRoom().getRoomNumber(), Globals.PARTICLE_SHIELD_REFLECTCAST, player.getKey());
-            PacketSender.sendParticle(this.logic.getRoom().getRoomNumber(), Globals.PARTICLE_SHIELD_REFLECTBUFF, player.getKey());
+            PacketSender.sendParticle(this.logic, Globals.PARTICLE_SHIELD_REFLECTCAST, player.getKey());
+            PacketSender.sendParticle(this.logic, Globals.PARTICLE_SHIELD_REFLECTBUFF, player.getKey());
             if (player.isSkillMaxed(Globals.SHIELD_REFLECT)) {
-                for (final Map.Entry<Byte, Player> pEntry : this.logic.getRoom().getPlayers().entrySet()) {
+                for (final Map.Entry<Byte, Player> pEntry : this.logic.getRoomData().getPlayers().entrySet()) {
                     final Player p = pEntry.getValue();
                     if (p != player && !p.isDead()) {
                         p.queueBuff(new BuffShieldReflect(this.logic, (int) buffDuration, getCustomValue(CUSTOMHEADER_MAXLVLREFLECT), player, p));
-                        if (!this.logic.getRoom().getMap().isPvP()) {
-                            PacketSender.sendParticle(this.logic.getRoom().getRoomNumber(), Globals.PARTICLE_SHIELD_REFLECTCAST, p.getKey());
+                        if (!this.logic.getRoomData().getMap().isPvP()) {
+                            PacketSender.sendParticle(this.logic, Globals.PARTICLE_SHIELD_REFLECTCAST, p.getKey());
                         }
                     }
                 }
@@ -127,8 +127,8 @@ public class SkillShieldReflect extends Skill {
 
     public void updateSkillReflectHit(final double dmgTaken, final double mult, final Player player) {
         double radius = 300;
-        if (this.logic.getRoom().getMap().isPvP()) {
-            ArrayList<Player> playersInRange = this.logic.getRoom().getPlayersInRange(player, radius);
+        if (this.logic.getRoomData().getMap().isPvP()) {
+            ArrayList<Player> playersInRange = this.logic.getRoomData().getPlayersInRange(player, radius);
             if (!playersInRange.isEmpty()) {
                 for (Player p : playersInRange) {
                     final Damage dmgEntity = new Damage((int) (dmgTaken * mult), true, player, p, false, p.getHitbox(), p.getHitbox());
@@ -137,7 +137,7 @@ public class SkillShieldReflect extends Skill {
                 }
             }
         } else {
-            ArrayList<Mob> mobsInRange = this.logic.getRoom().getMobsInRange(player, radius);
+            ArrayList<Mob> mobsInRange = this.logic.getRoomData().getMobsInRange(player, radius);
             if (!mobsInRange.isEmpty()) {
                 for (Mob mob : mobsInRange) {
                     final Damage dmgEntity = new Damage((int) (dmgTaken * mult), true, player, mob, false, mob.getHitbox(), mob.getHitbox());
@@ -146,6 +146,6 @@ public class SkillShieldReflect extends Skill {
                 }
             }
         }
-        PacketSender.sendParticle(this.logic.getRoom().getRoomNumber(), Globals.PARTICLE_SHIELD_REFLECTHIT, player.getX(), player.getY());
+        PacketSender.sendParticle(this.logic, Globals.PARTICLE_SHIELD_REFLECTHIT, player.getX(), player.getY());
     }
 }

@@ -98,19 +98,19 @@ public class SkillBowPower extends Skill {
     public void updateSkillUse(Player player) {
         final long duration = Globals.nsToMs(this.logic.getTime() - player.getSkillCastTime());
         if (player.getSkillCounter() == 0) {
-            PacketSender.sendSFX(this.logic.getRoom().getRoomNumber(), Globals.SFX_POWER2, player.getX(), player.getY());
+            PacketSender.sendSFX(this.logic, Globals.SFX_POWER2, player.getX(), player.getY());
         }
         if (duration <= 400 && Globals.hasPastDuration(duration, player.getSkillCounter() * 20) && player.getSkillCounter() < 20) {
-            PacketSender.sendParticle(this.logic.getRoom().getRoomNumber(), Globals.PARTICLE_BOW_POWERCHARGE, player.getKey());
+            PacketSender.sendParticle(this.logic, Globals.PARTICLE_BOW_POWERCHARGE, player.getKey());
             player.incrementSkillCounter();
         }
         if (Globals.hasPastDuration(duration, 800) && player.getSkillCounter() < 21) {
             player.incrementSkillCounter();
             final ProjBowPower proj = new ProjBowPower(this.logic, player, player.getX(), player.getY());
             this.logic.queueAddProj(proj);
-            PacketSender.sendParticle(this.logic.getRoom().getRoomNumber(), Globals.PARTICLE_BOW_POWER, player.getX(), player.getY(),
+            PacketSender.sendParticle(this.logic, Globals.PARTICLE_BOW_POWER, player.getX(), player.getY(),
                     player.getFacing());
-            PacketSender.sendSFX(this.logic.getRoom().getRoomNumber(), Globals.SFX_POWER, player.getX(), player.getY());
+            PacketSender.sendSFX(this.logic, Globals.SFX_POWER, player.getX(), player.getY());
         }
         player.updateSkillEnd(duration >= getSkillDuration() || (!player.isSkillMaxed(Globals.BOW_POWER) && duration < 800 && (player.isStunned() || player.isKnockback())));
     }

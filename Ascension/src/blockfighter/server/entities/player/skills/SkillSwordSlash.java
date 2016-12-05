@@ -106,7 +106,7 @@ public class SkillSwordSlash extends Skill {
             if (player.isSkillMaxed(Globals.SWORD_SLASH)) {
                 double buffDuration = getCustomValue(CUSTOMHEADER_BUFFDURATION);
                 player.queueBuff(new BuffSwordSlash(this.logic, (int) buffDuration, getCustomValue(CUSTOMHEADER_DMGREDUCT), player));
-                PacketSender.sendParticle(this.logic.getRoom().getRoomNumber(), Globals.PARTICLE_SWORD_SLASHBUFF, player.getKey());
+                PacketSender.sendParticle(this.logic, Globals.PARTICLE_SWORD_SLASHBUFF, player.getKey());
             }
         }
         if (Globals.hasPastDuration(duration, (30 + 110 * (player.getSkillCounter() - 1))) && (player.getSkillCounter() - 1) < numHits) {
@@ -116,16 +116,16 @@ public class SkillSwordSlash extends Skill {
             this.logic.queueAddProj(proj);
             switch (player.getSkillCounter() - 1) {
                 case 1:
-                    PacketSender.sendParticle(this.logic.getRoom().getRoomNumber(), Globals.PARTICLE_SWORD_SLASH1, player.getX(), player.getY(), player.getFacing());
-                    PacketSender.sendSFX(this.logic.getRoom().getRoomNumber(), Globals.SFX_SLASH, player.getX(), player.getY());
+                    PacketSender.sendParticle(this.logic, Globals.PARTICLE_SWORD_SLASH1, player.getX(), player.getY(), player.getFacing());
+                    PacketSender.sendSFX(this.logic, Globals.SFX_SLASH, player.getX(), player.getY());
                     break;
                 case 2:
-                    PacketSender.sendParticle(this.logic.getRoom().getRoomNumber(), Globals.PARTICLE_SWORD_SLASH2, player.getX(), player.getY(), player.getFacing());
-                    PacketSender.sendSFX(this.logic.getRoom().getRoomNumber(), Globals.SFX_SLASH, player.getX(), player.getY());
+                    PacketSender.sendParticle(this.logic, Globals.PARTICLE_SWORD_SLASH2, player.getX(), player.getY(), player.getFacing());
+                    PacketSender.sendSFX(this.logic, Globals.SFX_SLASH, player.getX(), player.getY());
                     break;
                 case 3:
-                    PacketSender.sendParticle(this.logic.getRoom().getRoomNumber(), Globals.PARTICLE_SWORD_SLASH3, player.getX(), player.getY(), player.getFacing());
-                    PacketSender.sendSFX(this.logic.getRoom().getRoomNumber(), Globals.SFX_SLASH, player.getX(), player.getY());
+                    PacketSender.sendParticle(this.logic, Globals.PARTICLE_SWORD_SLASH3, player.getX(), player.getY(), player.getFacing());
+                    PacketSender.sendSFX(this.logic, Globals.SFX_SLASH, player.getX(), player.getY());
                     break;
                 default:
                     break;

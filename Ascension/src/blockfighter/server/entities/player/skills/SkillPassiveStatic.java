@@ -71,8 +71,8 @@ public class SkillPassiveStatic extends SkillPassive {
             double multValue = getMultValue();
             int damage = (int) (player.getStats()[Globals.STAT_ARMOR] * (baseValue + multValue * player.getSkillLevel(Globals.PASSIVE_STATIC)));
 
-            if (this.logic.getRoom().getMap().isPvP()) {
-                ArrayList<Player> playersInRange = this.logic.getRoom().getPlayersInRange(player, radius);
+            if (this.logic.getRoomData().getMap().isPvP()) {
+                ArrayList<Player> playersInRange = this.logic.getRoomData().getPlayersInRange(player, radius);
                 if (!playersInRange.isEmpty()) {
                     Player target = playersInRange.get(Globals.rng(playersInRange.size()));
                     final boolean crit = player.rollCrit();
@@ -80,10 +80,10 @@ public class SkillPassiveStatic extends SkillPassive {
                         damage = (int) player.criticalDamage(damage);
                     }
                     target.queueDamage(new Damage(damage, false, player, target, crit, target.getHitbox(), target.getHitbox()));
-                    PacketSender.sendParticle(this.logic.getRoom().getRoomNumber(), Globals.PARTICLE_PASSIVE_STATIC, player.getKey(), target.getKey());
+                    PacketSender.sendParticle(this.logic, Globals.PARTICLE_PASSIVE_STATIC, player.getKey(), target.getKey());
                 }
             } else {
-                ArrayList<Mob> mobsInRange = this.logic.getRoom().getMobsInRange(player, radius);
+                ArrayList<Mob> mobsInRange = this.logic.getRoomData().getMobsInRange(player, radius);
                 if (!mobsInRange.isEmpty()) {
                     Mob target = mobsInRange.get(Globals.rng(mobsInRange.size()));
                     final boolean crit = player.rollCrit();

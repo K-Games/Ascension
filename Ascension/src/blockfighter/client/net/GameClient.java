@@ -9,7 +9,7 @@ import com.esotericsoftware.kryonet.Listener;
 import java.io.IOException;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-public class GameClient extends Thread {
+public class GameClient implements Runnable {
 
     private static Client client;
     private final LogicModule logic;

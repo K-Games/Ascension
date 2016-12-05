@@ -111,7 +111,7 @@ public class SkillSwordCinder extends Skill {
         if (player.getSkillCounter() == 0) {
             player.incrementSkillCounter();
             proj = new ProjSwordCinder(this.logic, player, player.getX(), player.getY());
-            PacketSender.sendParticle(this.logic.getRoom().getRoomNumber(), Globals.PARTICLE_SWORD_CINDER, player.getX(), player.getY(), player.getFacing());
+            PacketSender.sendParticle(this.logic, Globals.PARTICLE_SWORD_CINDER, player.getX(), player.getY(), player.getFacing());
         }
         if (Globals.hasPastDuration(duration, 100) && player.getSkillCounter() == 1) {
             player.incrementSkillCounter();

@@ -50,7 +50,7 @@ public class ProjSwordCinder extends Projectile {
         bytes[0] = Globals.DATA_PARTICLE_EFFECT;
         bytes[1] = Globals.PARTICLE_BURN;
         bytes[2] = target.getKey();
-        PacketSender.sendAll(bytes, this.logic.getRoom().getRoomNumber());
+        PacketSender.sendAll(bytes, this.logic);
     }
 
     @Override

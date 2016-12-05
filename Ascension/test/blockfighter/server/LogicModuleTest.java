@@ -3,6 +3,7 @@ package blockfighter.server;
 import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.proj.Projectile;
+import blockfighter.shared.Globals;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -45,7 +46,7 @@ public class LogicModuleTest {
     public void testQueueAddPlayer() {
         ConcurrentLinkedQueue<Player> playAddQueue = new ConcurrentLinkedQueue<>();
         Player mockPlayer = mock(Player.class);
-        LogicModule lm = new LogicModule((byte) 0, (byte) 0);
+        LogicModule lm = new LogicModule((byte) 0, (byte) Globals.rng(65), (byte) ((byte) Globals.rng(65) + 64));
         lm.setPlayAddQueue(playAddQueue);
         lm.queueAddPlayer(mockPlayer);
 
@@ -56,7 +57,7 @@ public class LogicModuleTest {
     public void testQueuePlayerDirKeydown() {
         ConcurrentLinkedQueue<byte[]> playDirKeydownQueue = new ConcurrentLinkedQueue<>();
         byte[] data = new byte[0];
-        LogicModule lm = new LogicModule((byte) 0, (byte) 0);
+        LogicModule lm = new LogicModule((byte) 0, (byte) Globals.rng(65), (byte) ((byte) Globals.rng(65) + 64));
         lm.setPlayDirKeydownQueue(playDirKeydownQueue);
         lm.queuePlayerDirKeydown(data);
 
@@ -67,7 +68,7 @@ public class LogicModuleTest {
     public void testQueuePlayerUseSkill() {
         ConcurrentLinkedQueue<byte[]> useSkillQueue = new ConcurrentLinkedQueue<>();
         byte[] data = new byte[0];
-        LogicModule lm = new LogicModule((byte) 0, (byte) 0);
+        LogicModule lm = new LogicModule((byte) 0, (byte) Globals.rng(65), (byte) ((byte) Globals.rng(65) + 64));
         lm.setPlayUseSkillQueue(useSkillQueue);
         lm.queuePlayerUseSkill(data);
 
@@ -78,7 +79,7 @@ public class LogicModuleTest {
     public void testQueueAddProj() {
         ConcurrentLinkedQueue<Projectile> projAddQueue = new ConcurrentLinkedQueue<>();
         Projectile projectile = mock(Projectile.class);
-        LogicModule lm = new LogicModule((byte) 0, (byte) 0);
+        LogicModule lm = new LogicModule((byte) 0, (byte) Globals.rng(65), (byte) ((byte) Globals.rng(65) + 64));
         lm.setProjAddQueue(projAddQueue);
         lm.queueAddProj(projectile);
 
@@ -89,7 +90,7 @@ public class LogicModuleTest {
     public void testQueueAddMob() {
         ConcurrentLinkedQueue<Mob> mobQueue = new ConcurrentLinkedQueue<>();
         Mob mob = mock(Mob.class);
-        LogicModule lm = new LogicModule((byte) 0, (byte) 0);
+        LogicModule lm = new LogicModule((byte) 0, (byte) Globals.rng(65), (byte) ((byte) Globals.rng(65) + 64));
         lm.setMobAddQueue(mobQueue);
         lm.queueAddMob(mob);
 
@@ -100,7 +101,7 @@ public class LogicModuleTest {
     public void testQueueProjEffect() {
         ConcurrentLinkedQueue<Projectile> projQueue = new ConcurrentLinkedQueue<>();
         Projectile projectile = mock(Projectile.class);
-        LogicModule lm = new LogicModule((byte) 0, (byte) 0);
+        LogicModule lm = new LogicModule((byte) 0, (byte) Globals.rng(65), (byte) ((byte) Globals.rng(65) + 64));
         lm.setProjEffectQueue(projQueue);
         lm.queueProjEffect(projectile);
 
