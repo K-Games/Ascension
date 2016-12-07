@@ -29,7 +29,7 @@ public class SkillSwordVorpal extends Skill {
     private static final double BASE_VALUE, MULT_VALUE;
     private static final byte REQ_EQUIP_SLOT = Globals.ITEM_WEAPON;
     private static final byte PLAYER_STATE = Player.PLAYER_STATE_SWORD_VORPAL;
-    private static final int SKILL_DURATION = 550;
+    private static final int SKILL_DURATION = 400;
 
     private double projX, projY, destX;
     private boolean dashed = false;
@@ -107,7 +107,7 @@ public class SkillSwordVorpal extends Skill {
     public void updateSkillUse(Player player) {
         final long duration = Globals.nsToMs(this.logic.getTime() - player.getSkillCastTime());
 
-        int skillTime = 70, numHits = player.isSkillMaxed(Globals.SWORD_VORPAL) ? 5 : 3;
+        int skillTime = 50, numHits = player.isSkillMaxed(Globals.SWORD_VORPAL) ? 5 : 3;
         final int dashDistance = 300, dashDuration = 80;
         if (Globals.hasPastDuration(duration, 100) && player.getSkillCounter() == 0) {
             this.destX = player.getX() + ((player.getFacing() == Globals.RIGHT) ? 1 : -1) * dashDistance;
