@@ -54,6 +54,7 @@ public class LogicModule extends Thread {
         this.projAddQueue.clear();
 
         this.resetStartTime = 0;
+        this.currentTime = System.nanoTime();
         this.room.reset();
     }
 
