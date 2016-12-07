@@ -20,15 +20,9 @@ import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
 public class AscensionServer {
 
-    private final ScheduledExecutorService PACKETSENDER_SCHEDULER = Executors.newSingleThreadScheduledExecutor(new BasicThreadFactory.Builder()
-            .namingPattern("PACKETSENDER_SCHEDULER-%d")
-            .daemon(true)
-            .priority(Thread.NORM_PRIORITY)
-            .build());
-
     private final ScheduledExecutorService LOGIC_SCHEDULER = Executors.newScheduledThreadPool(Math.max(Globals.SERVER_ROOMNUM_TO_ROOMINDEX.size() / 30, 1),
             new BasicThreadFactory.Builder()
-            .namingPattern("LOGIC_SCHEDULER-%d")
+            .namingPattern("Logic-Runner-%d")
             .daemon(false)
             .priority(Thread.NORM_PRIORITY)
             .build());
@@ -44,7 +38,6 @@ public class AscensionServer {
     public void shutdown() {
         Globals.log(AscensionServer.class, "Shutting down server...", Globals.LOG_TYPE_DATA, true);
         SERVER.shutdown();
-        PACKETSENDER_SCHEDULER.shutdown();
         LOGIC_SCHEDULER.shutdown();
         SERVER_ROOMS = null;
         System.gc();
@@ -87,10 +80,7 @@ public class AscensionServer {
 
             Globals.log(AscensionServer.class, "Server started ", Globals.LOG_TYPE_ERR, false);
             Globals.log(AscensionServer.class, "Server started", Globals.LOG_TYPE_DATA, true);
-            if (Globals.SERVER_BATCH_PACKETSEND) {
-                PacketSender.init();
-                PACKETSENDER_SCHEDULER.scheduleAtFixedRate(new PacketSender(), 0, 100, TimeUnit.MICROSECONDS);
-            }
+
             for (final Map.Entry<Byte, Byte> b : Globals.SERVER_ROOMNUM_TO_ROOMINDEX.entrySet()) {
                 SERVER_ROOMS[b.getValue()] = new LogicModule(b.getKey(), b.getValue());
                 LOGIC_SCHEDULER.scheduleAtFixedRate(SERVER_ROOMS[b.getValue()], 0, 750, TimeUnit.MICROSECONDS);

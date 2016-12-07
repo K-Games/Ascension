@@ -8,7 +8,6 @@ import blockfighter.client.entities.notification.Notification;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.client.entities.player.Player;
 import blockfighter.client.entities.player.skills.Skill;
-import blockfighter.client.maps.GameMap;
 import blockfighter.client.net.PacketHandler;
 import blockfighter.client.net.PacketReceiver;
 import blockfighter.client.render.RenderModule;
@@ -39,9 +38,9 @@ public class AscensionClient {
     private static final SoundModule SOUND_MODULE = new SoundModule();
 
     private static final LogicModule LOGIC_MODULE = new LogicModule(SOUND_MODULE);
-    private static final ExecutorService SHARED_THREADPOOL = Executors.newFixedThreadPool(4,
+    public static final ExecutorService SHARED_THREADPOOL = Executors.newFixedThreadPool(4,
             new BasicThreadFactory.Builder()
-            .namingPattern("SHARED_THREADPOOL-%d")
+            .namingPattern("Shared-Thread-%d")
             .daemon(true)
             .priority(Thread.NORM_PRIORITY)
             .build());
@@ -170,9 +169,6 @@ public class AscensionClient {
 
         Screen.setRenderPanel(panel);
 
-        Screen.setThreadPool(SHARED_THREADPOOL);
-        GameMap.setThreadPool(SHARED_THREADPOOL);
-
         // frame.setUndecorated(true);
         frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -202,7 +198,7 @@ public class AscensionClient {
             }
         });
         final ScheduledExecutorService service = Executors.newScheduledThreadPool(2, new BasicThreadFactory.Builder()
-                .namingPattern("RunScheduler-%d")
+                .namingPattern("Client-Runner-%d")
                 .daemon(true)
                 .priority(Thread.NORM_PRIORITY)
                 .build());

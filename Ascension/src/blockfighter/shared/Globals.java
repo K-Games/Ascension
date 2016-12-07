@@ -419,7 +419,6 @@ public class Globals {
             .build());
 
     public static byte SERVER_MAX_PLAYERS = 10;
-    public static boolean SERVER_BATCH_PACKETSEND = false;
     public final static HashMap<Byte, Byte> SERVER_ROOMNUM_TO_ROOMINDEX = new HashMap<>();
     public static int SERVER_MAX_IDLE = 120000;
     public static byte SERVER_LOGIC_THREADS = 3,

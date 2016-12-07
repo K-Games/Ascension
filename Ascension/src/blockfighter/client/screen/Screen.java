@@ -15,7 +15,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.ExecutorService;
 
 public abstract class Screen implements KeyListener, MouseListener, MouseMotionListener, FocusListener {
 
@@ -27,7 +26,6 @@ public abstract class Screen implements KeyListener, MouseListener, MouseMotionL
 
     public abstract ConcurrentHashMap<Integer, Particle> getParticles();
 
-    protected static ExecutorService threadPool;
     protected static RenderPanel panel;
     protected static LogicModule logic;
 
@@ -41,10 +39,6 @@ public abstract class Screen implements KeyListener, MouseListener, MouseMotionL
         }
     }
 
-    public static void setThreadPool(final ExecutorService tp) {
-        threadPool = tp;
-    }
-
     public void drawStringOutline(final Graphics2D g, final String s, final int x, final int y, final int width) {
         for (int i = 0; i < 2; i++) {
             g.setColor(Color.BLACK);
@@ -55,7 +49,7 @@ public abstract class Screen implements KeyListener, MouseListener, MouseMotionL
 
     public void updateParticles(final ConcurrentHashMap<Integer, Particle> updateParticles) {
         for (final Map.Entry<Integer, Particle> pEntry : updateParticles.entrySet()) {
-            threadPool.execute(pEntry.getValue());
+            AscensionClient.SHARED_THREADPOOL.execute(pEntry.getValue());
         }
         Iterator<Map.Entry<Integer, Particle>> particlesIter = updateParticles.entrySet().iterator();
         while (particlesIter.hasNext()) {

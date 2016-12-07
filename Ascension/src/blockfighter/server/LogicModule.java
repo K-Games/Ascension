@@ -32,7 +32,7 @@ public class LogicModule extends Thread {
 
     private static final ExecutorService LOGIC_THREAD_POOL = Executors.newFixedThreadPool(Globals.SERVER_LOGIC_THREADS,
             new BasicThreadFactory.Builder()
-            .namingPattern("LogicModule-%d")
+            .namingPattern("Logic-Processor-%d")
             .daemon(true)
             .priority(Thread.NORM_PRIORITY)
             .build());

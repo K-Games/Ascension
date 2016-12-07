@@ -68,6 +68,7 @@
 * Uses Skill data values from data files. Data values no longer hard coded and can be modified in data files.
 * Options are now `-gui` and `-default`
 * UDP socket is now used by default. Use `udpmode` config property to use UDP/TCP mode.
+* Removed outdated batch packet sending.
 
 ---
 

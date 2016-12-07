@@ -1,5 +1,6 @@
 package blockfighter.client.maps;
 
+import blockfighter.client.AscensionClient;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.shared.Globals;
 import java.awt.Graphics2D;
@@ -8,13 +9,11 @@ import java.awt.image.BufferedImage;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
 
 public abstract class GameMap {
 
     protected ConcurrentHashMap<Integer, Particle> particles = new ConcurrentHashMap<>(20);
     protected long lastUpdateTime = 0;
-    protected static ExecutorService threadPool;
     protected int mapHeight, mapWidth, mapXOrigin = 0, mapYOrigin = 0;
     private final static double PARALLAX_FACTOR = 0.35;
     private int mapID = -1;
@@ -22,10 +21,6 @@ public abstract class GameMap {
 
     public ConcurrentHashMap<Integer, Particle> getParticles() {
         return this.particles;
-    }
-
-    public static void setThreadPool(final ExecutorService tp) {
-        threadPool = tp;
     }
 
     public byte getBGM() {
@@ -54,7 +49,7 @@ public abstract class GameMap {
 
     public void updateParticles() {
         for (final Map.Entry<Integer, Particle> pEntry : this.particles.entrySet()) {
-            threadPool.execute(pEntry.getValue());
+            AscensionClient.SHARED_THREADPOOL.execute(pEntry.getValue());
         }
         Iterator<Map.Entry<Integer, Particle>> particlesIter = this.particles.entrySet().iterator();
         while (particlesIter.hasNext()) {

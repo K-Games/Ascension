@@ -1,5 +1,6 @@
 package blockfighter.client.screen;
 
+import blockfighter.client.AscensionClient;
 import blockfighter.client.SaveData;
 import blockfighter.client.entities.emotes.Emote;
 import blockfighter.client.entities.emotes.EmoteAlert;
@@ -164,7 +165,7 @@ public class ScreenIngame extends Screen {
 
     private void updateEmotes() {
         for (Emote emote : this.emotes) {
-            threadPool.execute(emote);
+            AscensionClient.SHARED_THREADPOOL.execute(emote);
         }
         for (Emote n : this.emotes) {
             try {
@@ -179,7 +180,7 @@ public class ScreenIngame extends Screen {
 
     private void updateIngameNumber() {
         for (final Map.Entry<Integer, IngameNumber> pEntry : this.ingameNumber.entrySet()) {
-            threadPool.execute(pEntry.getValue());
+            AscensionClient.SHARED_THREADPOOL.execute(pEntry.getValue());
         }
 
         Iterator<Entry<Integer, IngameNumber>> numbersIter = this.ingameNumber.entrySet().iterator();
@@ -198,7 +199,7 @@ public class ScreenIngame extends Screen {
 
     private void updateNotifications() {
         for (Notification n : this.notifications) {
-            threadPool.execute(n);
+            AscensionClient.SHARED_THREADPOOL.execute(n);
         }
         for (Notification n : this.notifications) {
             try {
@@ -213,7 +214,7 @@ public class ScreenIngame extends Screen {
 
     private void updateMobs() {
         for (final Map.Entry<Integer, Mob> pEntry : this.mobs.entrySet()) {
-            threadPool.execute(pEntry.getValue());
+            AscensionClient.SHARED_THREADPOOL.execute(pEntry.getValue());
         }
         for (final Map.Entry<Integer, Mob> pEntry : this.mobs.entrySet()) {
             try {
@@ -225,7 +226,7 @@ public class ScreenIngame extends Screen {
 
     private void updatePlayers() {
         for (final Map.Entry<Byte, Player> pEntry : this.players.entrySet()) {
-            threadPool.execute(pEntry.getValue());
+            AscensionClient.SHARED_THREADPOOL.execute(pEntry.getValue());
         }
 
         Iterator<Entry<Byte, Player>> playersIter = this.players.entrySet().iterator();

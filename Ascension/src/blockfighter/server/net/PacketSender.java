@@ -5,14 +5,8 @@ import blockfighter.server.entities.player.Player;
 import blockfighter.shared.Globals;
 import com.esotericsoftware.kryonet.Connection;
 import java.util.Map;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
-public class PacketSender implements Runnable {
+public class PacketSender {
 
     private static LogicModule[] logic;
 
@@ -78,77 +72,30 @@ public class PacketSender implements Runnable {
         System.arraycopy(posYInt, 0, bytes, 6, posYInt.length);
         sendAll(bytes, roomNumber);
     }
-    private int dataSent = 0;
-    private static final ConcurrentLinkedQueue<GamePacket> OUT_PACKET_QUEUE = new ConcurrentLinkedQueue<>();
-
-    private static ExecutorService SENDER_THREAD_POOL;
-
-    public static void init() {
-        SENDER_THREAD_POOL = new ThreadPoolExecutor(1, Globals.SERVER_PACKETSENDER_THREADS,
-                10L, TimeUnit.SECONDS,
-                new LinkedBlockingQueue<>(),
-                new BasicThreadFactory.Builder()
-                .namingPattern("PacketSender-%d")
-                .daemon(true)
-                .priority(Thread.MAX_PRIORITY)
-                .build());
-    }
-
-    @Override
-    public void run() {
-        while (!OUT_PACKET_QUEUE.isEmpty()) {
-            final GamePacket packet = OUT_PACKET_QUEUE.poll();
-            if (packet != null) {
-                SENDER_THREAD_POOL.execute(() -> {
-                    if (packet.getPlayer() != null) {
-                        if (packet.getPlayer().getConnection().getTcpWriteBufferSize() < Globals.PACKET_MAX_SIZE * Globals.PACKET_MAX_PER_CON * 0.75) {
-                            packet.getPlayer().getConnection().sendTCP(packet.getData());
-                        }
-                    } else if (packet.getConnection() != null) {
-                        if (packet.getConnection().getTcpWriteBufferSize() < Globals.PACKET_MAX_SIZE * Globals.PACKET_MAX_PER_CON * 0.75) {
-                            packet.getConnection().sendTCP(packet.getData());
-                        }
-                    }
-                });
-            }
-        }
-    }
-
-    public void resetByte() {
-        this.dataSent = 0;
-    }
-
-    public int getBytes() {
-        return this.dataSent;
-    }
 
     public static void setLogic(final LogicModule[] l) {
         logic = l;
     }
 
     public static void sendConnection(final byte[] data, final Connection c) {
-        if (Globals.SERVER_BATCH_PACKETSEND) {
-            OUT_PACKET_QUEUE.add(new GamePacket(data, c));
-        } else if (c.getTcpWriteBufferSize() < Globals.PACKET_MAX_SIZE * Globals.PACKET_MAX_PER_CON * 0.75) {
-            if (!Globals.UDP_MODE) {
+        if (!Globals.UDP_MODE) {
+            if (c.getTcpWriteBufferSize() < Globals.PACKET_MAX_SIZE * Globals.PACKET_MAX_PER_CON * 0.75) {
                 c.sendTCP(data);
-            } else {
-                c.sendUDP(data);
             }
+        } else {
+            c.sendUDP(data);
         }
     }
 
     public static void sendPlayer(final byte[] data, final Player player) {
         if (player.isConnected()) {
             try {
-                if (Globals.SERVER_BATCH_PACKETSEND) {
-                    OUT_PACKET_QUEUE.add(new GamePacket(data, player));
-                } else if (player.getConnection().getTcpWriteBufferSize() < Globals.PACKET_MAX_SIZE * Globals.PACKET_MAX_PER_CON * 0.75) {
-                    if (!Globals.UDP_MODE) {
+                if (!Globals.UDP_MODE) {
+                    if (player.getConnection().getTcpWriteBufferSize() < Globals.PACKET_MAX_SIZE * Globals.PACKET_MAX_PER_CON * 0.75) {
                         player.getConnection().sendTCP(data);
-                    } else {
-                        player.getConnection().sendUDP(data);
                     }
+                } else {
+                    player.getConnection().sendUDP(data);
                 }
             } catch (Exception e) {
                 Globals.logError(e.toString(), e, true);
