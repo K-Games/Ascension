@@ -12,8 +12,6 @@ public class PacketReceiver extends Listener {
 
     private static LogicModule logic;
 
-    private boolean isConnected = true;
-
     public static void init() {
         logic = AscensionClient.getLogicModule();
     }
@@ -32,10 +30,6 @@ public class PacketReceiver extends Listener {
         } else if (logic.getScreen() instanceof ScreenServerList) {
             logic.shutdownClient(ScreenServerList.STATUS_DISCONNECTED);
         }
-        this.isConnected = false;
     }
 
-    public boolean isConnected() {
-        return this.isConnected;
-    }
 }

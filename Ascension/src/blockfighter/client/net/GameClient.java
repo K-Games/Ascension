@@ -12,7 +12,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class GameClient extends Thread {
 
     private static Client client;
-    private PacketReceiver receiver;
     private final LogicModule logic;
 
     private final ConcurrentLinkedQueue<byte[]> dataQueue = new ConcurrentLinkedQueue<>();
@@ -24,32 +23,32 @@ public class GameClient extends Thread {
 
     @Override
     public void run() {
-        if (this.receiver != null && this.receiver.isConnected()) {
-            return;
-        }
+
         if (logic.getScreen() instanceof ScreenServerList) {
             ((ScreenServerList) logic.getScreen()).setStatus(ScreenServerList.STATUS_CONNECTING);
         }
+        if (client == null) {
+            client = new Client(Globals.PACKET_MAX_SIZE * 800, Globals.PACKET_MAX_SIZE);
+            client.setTimeout(3000);
+            client.setKeepAliveTCP(500);
+            PacketHandler.setGameClient(this);
+            client.start();
 
-        client = new Client(Globals.PACKET_MAX_SIZE * 800, Globals.PACKET_MAX_SIZE);
-        client.setTimeout(3000);
-        client.setKeepAliveTCP(500);
-        PacketHandler.setGameClient(this);
-        client.start();
+            Kryo kyro = client.getKryo();
+            kyro.register(byte[].class);
+            client.addListener(new Listener.ThreadedListener(new PacketReceiver()));
+        }
 
-        Kryo kyro = client.getKryo();
-        kyro.register(byte[].class);
-        this.receiver = new PacketReceiver();
-        client.addListener(new Listener.ThreadedListener(this.receiver));
-
-        Globals.log(GameClient.class, "Connecting to " + Globals.SERVER_ADDRESS, Globals.LOG_TYPE_DATA, true);
         try {
-            if (Globals.UDP_MODE) {
-                client.connect(3000, Globals.SERVER_ADDRESS, Globals.SERVER_TCP_PORT, Globals.SERVER_UDP_PORT);
-            } else {
-                client.connect(3000, Globals.SERVER_ADDRESS, Globals.SERVER_TCP_PORT);
+            if (!client.isConnected()) {
+                Globals.log(GameClient.class, "Connecting to " + Globals.SERVER_ADDRESS, Globals.LOG_TYPE_DATA, true);
+                if (Globals.UDP_MODE) {
+                    client.connect(3000, Globals.SERVER_ADDRESS, Globals.SERVER_TCP_PORT, Globals.SERVER_UDP_PORT);
+                } else {
+                    client.connect(3000, Globals.SERVER_ADDRESS, Globals.SERVER_TCP_PORT);
+                }
+                PacketSender.sendPlayerLogin(logic.getSelectedRoom(), logic.getSelectedChar());
             }
-            PacketSender.sendPlayerLogin(logic.getSelectedRoom(), logic.getSelectedChar());
         } catch (IOException ex) {
             client.close();
             if (logic.getScreen() instanceof ScreenServerList) {
@@ -61,7 +60,6 @@ public class GameClient extends Thread {
 
     public void shutdownClient(final byte status) {
         client.close();
-        this.receiver = null;
         if (logic.getScreen() instanceof ScreenServerList) {
             ((ScreenServerList) logic.getScreen()).setStatus(status);
         }
