@@ -567,7 +567,7 @@ public class Player extends Thread implements GameEntity {
     }
 
     private void castSkill(final byte skillCode) {
-        if (!this.skills.get(skillCode).canCast(this)) {
+        if (this.skills.get(skillCode).isPassive() || !this.skills.get(skillCode).canCast(this)) {
             return;
         }
         this.skillCounter = 0;
