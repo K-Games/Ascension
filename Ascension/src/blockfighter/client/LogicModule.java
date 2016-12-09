@@ -49,8 +49,7 @@ public class LogicModule implements Runnable {
         return this.screen;
     }
 
-    public void connect(final String server, final byte r) {
-        this.selectedRoom = r;
+    public void connect(final String server) {
         boolean skillReady = false;
         boolean equipReady = false;
         for (Skill s : this.selectedChar.getHotkeys()) {
@@ -64,8 +63,11 @@ public class LogicModule implements Runnable {
         }
 
         if (skillReady && equipReady) {
+            if (client != null) {
+                shutdownClient();
+            }
             client = new GameClient(this, server);
-            client.start();
+            AscensionClient.SHARED_THREADPOOL.execute(client);
         } else if (!skillReady && !equipReady) {
             if (getScreen() instanceof ScreenServerList) {
                 ((ScreenServerList) getScreen()).setStatus(ScreenServerList.STATUS_NOSKILL_NOEQUIP);

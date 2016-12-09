@@ -14,14 +14,13 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-public class Room {
+public class RoomData {
 
-    private byte roomNumber = -1;
     private byte roomIndex = -1;
     private HashMap<Integer, ConcurrentHashMap<Byte, Player>> playerBuckets;
 
-    private ConcurrentHashMap<Byte, Player> players = new ConcurrentHashMap<>(Globals.SERVER_MAX_PLAYERS, 0.9f,
-            Math.max(Globals.SERVER_MAX_PLAYERS / 5, 3));
+    private ConcurrentHashMap<Byte, Player> players = new ConcurrentHashMap<>(Globals.SERVER_MAX_ROOM_PLAYERS, 0.9f,
+            Math.max(Globals.SERVER_MAX_ROOM_PLAYERS / 5, 3));
     private ConcurrentHashMap<Integer, Mob> mobs = new ConcurrentHashMap<>(1, 0.9f, 1);
     private ConcurrentHashMap<Integer, Projectile> projectiles = new ConcurrentHashMap<>(500, 0.75f, 3);
 
@@ -34,8 +33,9 @@ public class Room {
     private ConcurrentLinkedQueue<Integer> projKeys = new ConcurrentLinkedQueue<>();
     private ConcurrentLinkedQueue<Integer> mobKeys = new ConcurrentLinkedQueue<>();
 
-    public Room(final byte roomNumber, final byte roomIndex) {
-        this.roomNumber = roomNumber;
+    public RoomData(final byte roomIndex, final byte minLevel, final byte maxLevel) {
+        this.minLevel = minLevel;
+        this.maxLevel = maxLevel;
         this.roomIndex = roomIndex;
         reset();
     }
@@ -65,7 +65,7 @@ public class Room {
         }
 
         this.playerKeys.clear();
-        for (byte i = 0; i < Globals.SERVER_MAX_PLAYERS; i++) {
+        for (byte i = 0; i < Globals.SERVER_MAX_ROOM_PLAYERS; i++) {
             this.playerKeys.add(i);
         }
     }
@@ -87,8 +87,6 @@ public class Room {
         this.projectiles.clear();
 
         this.setMap(new GameMapArena());
-        this.setMinLevel(this.roomNumber * 10 + 1);
-        this.setMaxLevel((this.roomNumber + 1) * 10);
 
         resetKeys();
         resetPlayerBuckets();
@@ -187,10 +185,6 @@ public class Room {
         return this.map;
     }
 
-    public byte getRoomNumber() {
-        return this.roomNumber;
-    }
-
     public byte getNextPlayerKey() {
         if (this.playerKeys.isEmpty()) {
             return -1;
@@ -225,7 +219,7 @@ public class Room {
 
     public void returnPlayerKey(final byte key) {
         this.playerKeys.add(key);
-        Globals.log(Room.class, "Room: " + this.roomNumber + " Returned player key: " + key + " Keys Remaining: " + this.playerKeys.size(), Globals.LOG_TYPE_DATA, true);
+        Globals.log(RoomData.class, "Room: " + this.roomIndex + " Returned player key: " + key + " Keys Remaining: " + this.playerKeys.size(), Globals.LOG_TYPE_DATA, true);
     }
 
     public boolean containsPlayerID(final UUID id) {
@@ -253,7 +247,7 @@ public class Room {
 
     public ArrayList<Player> getPlayersInRange(final Player player, final double radius) {
         Rectangle2D.Double rect = new Rectangle2D.Double(player.getX() - radius, player.getY() - radius, radius * 2, radius * 2);
-        ArrayList<Player> playersInRange = new ArrayList<>(Globals.SERVER_MAX_PLAYERS);
+        ArrayList<Player> playersInRange = new ArrayList<>(Globals.SERVER_MAX_ROOM_PLAYERS);
         for (final Map.Entry<Byte, Player> pEntry : getPlayersNearRect(rect).entrySet()) {
             final Player p = pEntry.getValue();
             if (p != player && !p.isDead() && !p.isInvulnerable()) {

@@ -5,23 +5,22 @@ import java.nio.charset.StandardCharsets;
 
 public class TestPacketSender {
 
-    public static void sendPlayerLogin(final byte room, final TestSaveData c, final Client client) {
-        final byte[] bytes = new byte[Globals.PACKET_BYTE * 2 // Data type + room
+    public static void sendPlayerLogin(final TestSaveData c, final Client client) {
+        final byte[] bytes = new byte[Globals.PACKET_BYTE * 1 // Data type + room
                 + Globals.PACKET_LONG * 2 // uID
                 + Globals.PACKET_INT //Level
                 ];
         bytes[0] = Globals.DATA_PLAYER_LOGIN;
-        bytes[1] = room;
 
         byte[] temp = Globals.longToBytes(c.getUniqueID().getLeastSignificantBits());
-        System.arraycopy(temp, 0, bytes, 2, temp.length);
+        System.arraycopy(temp, 0, bytes, 1, temp.length);
 
         temp = Globals.longToBytes(c.getUniqueID().getMostSignificantBits());
-        System.arraycopy(temp, 0, bytes, 10, temp.length);
+        System.arraycopy(temp, 0, bytes, 9, temp.length);
 
         double[] stats = c.getTotalStats();
         temp = Globals.intToBytes((int) stats[Globals.STAT_LEVEL]);
-        System.arraycopy(temp, 0, bytes, 18, temp.length);
+        System.arraycopy(temp, 0, bytes, 17, temp.length);
 
         sendPacket(bytes, client);
     }

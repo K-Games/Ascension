@@ -1,7 +1,9 @@
 package blockfighter.client.screen;
 
 import blockfighter.client.AscensionClient;
+import blockfighter.client.net.hub.HubClient;
 import blockfighter.shared.Globals;
+import blockfighter.shared.ServerInfo;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
@@ -12,12 +14,26 @@ import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
-import javax.swing.JComboBox;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import org.apache.commons.io.FileUtils;
 
 public class ScreenServerList extends ScreenMenu {
+
+    private static final int SERVER_LIST_AREA_Y = 80;
+    private static final int SERVER_LIST_AREA_X = 260;
+    private static final int SERVER_LIST_AREA_WIDTH = 970;
+    private static final int SERVER_LIST_AREA_HEIGHT = 490;
+    private static final int SERVER_LIST_ADDRESS_COL_WIDTH = 395;
+    private static final int SERVER_LIST_REGION_COL_WIDTH = 395;
+    private static final int SERVER_LIST_CAPACITY_COL_WIDTH = 170;
+    private static final Color[] CAPACITY_BAR_COLOR = {
+        new Color(12, 255, 0),
+        new Color(128, 255, 0),
+        new Color(255, 255, 0),
+        new Color(255, 128, 0),
+        new Color(255, 12, 0)
+    };
 
     public static final byte STATUS_CONNECTING = 0,
             STATUS_NORMAL_SHUTDOWN = 1,
@@ -26,33 +42,36 @@ public class ScreenServerList extends ScreenMenu {
             STATUS_WRONGVERSION = 4,
             STATUS_FULLROOM = 5,
             STATUS_UIDINROOM = 6,
-            STATUS_OUTSIDELEVEL = 7,
+            STATUS_NO_ROOMS = 7,
             STATUS_NOEQUIP = 8,
             STATUS_NOSKILL_NOEQUIP = 9,
-            STATUS_DISCONNECTED = 10;
+            STATUS_DISCONNECTED = 10,
+            STATUS_REFRESHING = 11,
+            STATUS_REFRESHING_DONE = 12,
+            STATUS_REFRESHING_FAILED = 13;
 
     private static final JTextField SERVERADDRESS_FIELD = new JTextField();
-    private static final JComboBox<String> SERVER_ROOMS;
-    private static final Rectangle CONNECT_BOX = new Rectangle(650, 230, 200, 70);
-    private String status = "Waiting to login...";
+    private static final Rectangle CONNECT_BOX = new Rectangle(1030, 620, 200, 70);
+    private static final Rectangle REFRESH_BOX = new Rectangle(SERVER_LIST_AREA_X, SERVER_LIST_AREA_Y + SERVER_LIST_AREA_HEIGHT, 120, 35);
+
+    private static final Rectangle PREV_PAGE_BOX = new Rectangle(SERVER_LIST_AREA_X + 125, SERVER_LIST_AREA_Y + SERVER_LIST_AREA_HEIGHT, 120, 35);
+    private static final Rectangle NEXT_PAGE_BOX = new Rectangle(SERVER_LIST_AREA_X + 125 + 125, SERVER_LIST_AREA_Y + SERVER_LIST_AREA_HEIGHT, 120, 35);
+
+    private String status = "Getting servers...";
     private boolean connecting = false, enabledInput = false;
     private byte statusCode = -1;
+    private final ServerList serverList = new ServerList();
+
+    private long lastRefreshTime = 0;
 
     static {
-        String[] listItems = new String[10];
-
-        for (int i = 0; i < listItems.length; i++) {
-            listItems[i] = "Lvl " + (i * 10 + 1) + "-" + ((i + 1) * 10);
-        }
-        SERVER_ROOMS = new JComboBox<>(listItems);
         SERVERADDRESS_FIELD.addFocusListener(AscensionClient.FOCUS_HANDLER);
-        SERVER_ROOMS.addFocusListener(AscensionClient.FOCUS_HANDLER);
 
         if (Globals.WINDOW_SCALE_ENABLED) {
-            SERVERADDRESS_FIELD.setBounds((int) (550 * Globals.WINDOW_SCALE), (int) (150 * Globals.WINDOW_SCALE), (int) (400 * Globals.WINDOW_SCALE), (int) (40 * Globals.WINDOW_SCALE));
+            SERVERADDRESS_FIELD.setBounds((int) (330 * Globals.WINDOW_SCALE), (int) (640 * Globals.WINDOW_SCALE), (int) (670 * Globals.WINDOW_SCALE), (int) (40 * Globals.WINDOW_SCALE));
             SERVERADDRESS_FIELD.setFont(new Font(Globals.ARIAL_24PT.getFontName(), Globals.ARIAL_24PT.getStyle(), (int) (Globals.ARIAL_24PT.getSize() * Globals.WINDOW_SCALE)));
         } else {
-            SERVERADDRESS_FIELD.setBounds(550, 150, 400, 40);
+            SERVERADDRESS_FIELD.setBounds(330, 640, 670, 40);
             SERVERADDRESS_FIELD.setFont(Globals.ARIAL_24PT);
         }
         SERVERADDRESS_FIELD.setForeground(Color.WHITE);
@@ -60,28 +79,17 @@ public class ScreenServerList extends ScreenMenu {
         SERVERADDRESS_FIELD.setCaretColor(Color.WHITE);
         SERVERADDRESS_FIELD.setOpaque(true);
         SERVERADDRESS_FIELD.setText(loadServerList());
-        if (Globals.WINDOW_SCALE_ENABLED) {
-            SERVER_ROOMS.setBounds((int) (1000 * Globals.WINDOW_SCALE), (int) (150 * Globals.WINDOW_SCALE), (int) (150 * Globals.WINDOW_SCALE), (int) (40 * Globals.WINDOW_SCALE));
-            SERVER_ROOMS.setFont(new Font(Globals.ARIAL_24PT.getFontName(), Globals.ARIAL_24PT.getStyle(), (int) (Globals.ARIAL_24PT.getSize() * Globals.WINDOW_SCALE)));
-        } else {
-            SERVER_ROOMS.setBounds(1000, 150, 150, 40);
-            SERVER_ROOMS.setFont(Globals.ARIAL_24PT);
-        }
-        SERVER_ROOMS.setForeground(Color.WHITE);
-        SERVER_ROOMS.setBackground(Color.BLACK);
-        SERVER_ROOMS.setOpaque(true);
-
     }
 
     public ScreenServerList() {
         this(false);
+        AscensionClient.SHARED_THREADPOOL.execute(new HubClient());
     }
 
     public ScreenServerList(final boolean fadeIn) {
         super(fadeIn);
         javax.swing.SwingUtilities.invokeLater(() -> {
             panel.add(SERVERADDRESS_FIELD);
-            panel.add(SERVER_ROOMS);
             panel.revalidate();
         });
         this.enabledInput = !fadeIn;
@@ -93,6 +101,9 @@ public class ScreenServerList extends ScreenMenu {
         if (this.fadeIn && this.finishedFadeIn && !this.enabledInput) {
             enableFields();
             this.enabledInput = true;
+        }
+        if (HubClient.getServerInfo() != null) {
+            serverList.setServerInfo(HubClient.getServerInfo());
         }
     }
 
@@ -117,17 +128,34 @@ public class ScreenServerList extends ScreenMenu {
         final BufferedImage bg = Globals.MENU_BG[1];
         g.drawImage(bg, 0, 0, null);
 
-        String title = "Login to Server";
-        g.setFont(Globals.ARIAL_30PT);
-        final int titleX = 750 - g.getFontMetrics().stringWidth(title) / 2, titleY = 90;
+        g.setColor(SKILL_BOX_BG_COLOR);
+        g.fillRoundRect(SERVER_LIST_AREA_X, SERVER_LIST_AREA_Y - 35, SERVER_LIST_ADDRESS_COL_WIDTH, 30, 10, 10);
+        g.fillRoundRect(SERVER_LIST_AREA_X + SERVER_LIST_ADDRESS_COL_WIDTH + 5, SERVER_LIST_AREA_Y - 35, SERVER_LIST_REGION_COL_WIDTH, 30, 10, 10);
+        g.fillRoundRect(SERVER_LIST_AREA_X + SERVER_LIST_ADDRESS_COL_WIDTH + 10 + SERVER_LIST_REGION_COL_WIDTH, SERVER_LIST_AREA_Y - 35, SERVER_LIST_CAPACITY_COL_WIDTH, 30, 10, 10);
+        g.fillRoundRect(SERVER_LIST_AREA_X, SERVER_LIST_AREA_Y, SERVER_LIST_AREA_WIDTH, SERVER_LIST_AREA_HEIGHT, 15, 15);
 
-        drawStringOutline(g, title, titleX, titleY, 2);
+        String label = "Address";
+        g.setFont(Globals.ARIAL_15PT);
+        drawStringOutline(g, label, SERVER_LIST_AREA_X + 15, SERVER_LIST_AREA_Y - 15, 2);
         g.setColor(Color.WHITE);
-        g.drawString(title, titleX, titleY);
+        g.drawString(label, SERVER_LIST_AREA_X + 15, SERVER_LIST_AREA_Y - 15);
 
-        String label = "Server:";
+        label = "Region";
+        g.setFont(Globals.ARIAL_15PT);
+        drawStringOutline(g, label, SERVER_LIST_AREA_X + SERVER_LIST_ADDRESS_COL_WIDTH + 20, SERVER_LIST_AREA_Y - 15, 2);
+        g.setColor(Color.WHITE);
+        g.drawString(label, SERVER_LIST_AREA_X + SERVER_LIST_ADDRESS_COL_WIDTH + 20, SERVER_LIST_AREA_Y - 15);
+
+        label = "Capacity";
+        g.setFont(Globals.ARIAL_15PT);
+        drawStringOutline(g, label, SERVER_LIST_AREA_X + SERVER_LIST_ADDRESS_COL_WIDTH + SERVER_LIST_REGION_COL_WIDTH + 30, SERVER_LIST_AREA_Y - 15, 2);
+        g.setColor(Color.WHITE);
+        g.drawString(label, SERVER_LIST_AREA_X + SERVER_LIST_ADDRESS_COL_WIDTH + SERVER_LIST_REGION_COL_WIDTH + 30, SERVER_LIST_AREA_Y - 15);
+
+        label = "Server:";
         g.setFont(Globals.ARIAL_24PT);
-        final int labelX = 550 - g.getFontMetrics().stringWidth(label) - 5, labelY = 177;
+        final int labelX = (int) (SERVERADDRESS_FIELD.getBounds().getX() - g.getFontMetrics().stringWidth(label) - 5), labelY = (int) (SERVERADDRESS_FIELD.getBounds().getY() + 27);
+        g.setColor(Color.BLACK);
         drawStringOutline(g, label, labelX, labelY, 2);
         g.setColor(Color.WHITE);
         g.drawString(label, labelX, labelY);
@@ -141,14 +169,53 @@ public class ScreenServerList extends ScreenMenu {
 
         g.setFont(Globals.ARIAL_24PT);
         g.setColor(Color.WHITE);
-        String buttonLabel = "Login";
+        String buttonLabel = "Connect";
         g.drawString(buttonLabel, CONNECT_BOX.x + CONNECT_BOX.width / 2 - g.getFontMetrics().stringWidth(buttonLabel) / 2, CONNECT_BOX.y + CONNECT_BOX.height / 2 + g.getFontMetrics().getHeight() / 3);
 
-        g.setFont(Globals.ARIAL_24PT);
-        final int strWidth = g.getFontMetrics().stringWidth(this.status);
-        drawStringOutline(g, this.status, 750 - strWidth / 2, 350, 2);
+        g.drawRect(REFRESH_BOX.x, REFRESH_BOX.y, REFRESH_BOX.width, REFRESH_BOX.height);
+        g.setColor(new Color(30, 30, 30, 255));
+        g.fillRect(REFRESH_BOX.x, REFRESH_BOX.y, REFRESH_BOX.width, REFRESH_BOX.height);
+        g.setColor(Color.BLACK);
+        g.drawRect(REFRESH_BOX.x, REFRESH_BOX.y, REFRESH_BOX.width, REFRESH_BOX.height);
+        g.drawRect(REFRESH_BOX.x + 1, REFRESH_BOX.y + 1, REFRESH_BOX.width - 2, REFRESH_BOX.height - 2);
+
+        g.setFont(Globals.ARIAL_15PT);
         g.setColor(Color.WHITE);
-        g.drawString(this.status, 750 - strWidth / 2, 350);
+        buttonLabel = "Refresh";
+        g.drawString(buttonLabel, REFRESH_BOX.x + REFRESH_BOX.width / 2 - g.getFontMetrics().stringWidth(buttonLabel) / 2, REFRESH_BOX.y + REFRESH_BOX.height / 2 + g.getFontMetrics().getHeight() / 3);
+
+        g.drawRect(NEXT_PAGE_BOX.x, NEXT_PAGE_BOX.y, NEXT_PAGE_BOX.width, NEXT_PAGE_BOX.height);
+        g.setColor(new Color(30, 30, 30, 255));
+        g.fillRect(NEXT_PAGE_BOX.x, NEXT_PAGE_BOX.y, NEXT_PAGE_BOX.width, NEXT_PAGE_BOX.height);
+        g.setColor(Color.BLACK);
+        g.drawRect(NEXT_PAGE_BOX.x, NEXT_PAGE_BOX.y, NEXT_PAGE_BOX.width, NEXT_PAGE_BOX.height);
+        g.drawRect(NEXT_PAGE_BOX.x + 1, NEXT_PAGE_BOX.y + 1, NEXT_PAGE_BOX.width - 2, NEXT_PAGE_BOX.height - 2);
+
+        g.setFont(Globals.ARIAL_15PT);
+        g.setColor(Color.WHITE);
+        buttonLabel = "Next Page";
+        g.drawString(buttonLabel, NEXT_PAGE_BOX.x + NEXT_PAGE_BOX.width / 2 - g.getFontMetrics().stringWidth(buttonLabel) / 2, NEXT_PAGE_BOX.y + NEXT_PAGE_BOX.height / 2 + g.getFontMetrics().getHeight() / 3);
+
+        g.drawRect(PREV_PAGE_BOX.x, PREV_PAGE_BOX.y, PREV_PAGE_BOX.width, PREV_PAGE_BOX.height);
+        g.setColor(new Color(30, 30, 30, 255));
+        g.fillRect(PREV_PAGE_BOX.x, PREV_PAGE_BOX.y, PREV_PAGE_BOX.width, PREV_PAGE_BOX.height);
+        g.setColor(Color.BLACK);
+        g.drawRect(PREV_PAGE_BOX.x, PREV_PAGE_BOX.y, PREV_PAGE_BOX.width, PREV_PAGE_BOX.height);
+        g.drawRect(PREV_PAGE_BOX.x + 1, PREV_PAGE_BOX.y + 1, PREV_PAGE_BOX.width - 2, PREV_PAGE_BOX.height - 2);
+
+        g.setFont(Globals.ARIAL_15PT);
+        g.setColor(Color.WHITE);
+        buttonLabel = "Prev Page";
+        g.drawString(buttonLabel, PREV_PAGE_BOX.x + PREV_PAGE_BOX.width / 2 - g.getFontMetrics().stringWidth(buttonLabel) / 2, PREV_PAGE_BOX.y + PREV_PAGE_BOX.height / 2 + g.getFontMetrics().getHeight() / 3);
+
+        g.setFont(Globals.ARIAL_15PT);
+        drawStringOutline(g, "Status: " + this.status, 650, SERVER_LIST_AREA_Y + SERVER_LIST_AREA_HEIGHT + 25, 2);
+        g.setColor(Color.WHITE);
+        g.drawString("Status: " + this.status, 650, SERVER_LIST_AREA_Y + SERVER_LIST_AREA_HEIGHT + 25);
+
+        if (serverList != null) {
+            serverList.draw(g);
+        }
 
         drawMenuButton(g);
         super.draw(g);
@@ -191,16 +258,31 @@ public class ScreenServerList extends ScreenMenu {
             return;
         }
         super.mouseReleased(e);
+        if (this.serverList != null) {
+            this.serverList.mouseReleased(e, scaled);
+        }
         if (SwingUtilities.isLeftMouseButton(e)) {
             if (CONNECT_BOX.contains(scaled)) {
                 // Connect
                 if (SERVERADDRESS_FIELD.getText().trim().length() > 0) {
                     connecting = true;
-                    SERVER_ROOMS.setEnabled(false);
                     SERVERADDRESS_FIELD.setEnabled(false);
                     saveServerList(SERVERADDRESS_FIELD.getText().trim());
-                    logic.connect(SERVERADDRESS_FIELD.getText().trim(), (byte) SERVER_ROOMS.getSelectedIndex());
+                    logic.connect(SERVERADDRESS_FIELD.getText().trim());
                 }
+            }
+            if (REFRESH_BOX.contains(scaled) && logic.getTime() - this.lastRefreshTime >= Globals.msToNs(2000)) {
+                setStatus(STATUS_REFRESHING);
+                this.serverList.setServerInfo(null);
+                AscensionClient.SHARED_THREADPOOL.execute(new HubClient());
+                this.lastRefreshTime = logic.getTime();
+            }
+
+            if (PREV_PAGE_BOX.contains(scaled)) {
+                this.serverList.prevPage();
+            }
+            if (NEXT_PAGE_BOX.contains(scaled)) {
+                this.serverList.nextPage();
             }
         }
     }
@@ -229,7 +311,6 @@ public class ScreenServerList extends ScreenMenu {
     public void unload() {
         javax.swing.SwingUtilities.invokeLater(() -> {
             panel.remove(SERVERADDRESS_FIELD);
-            panel.remove(SERVER_ROOMS);
             panel.revalidate();
         });
         saveServerList(SERVERADDRESS_FIELD.getText().trim());
@@ -268,9 +349,9 @@ public class ScreenServerList extends ScreenMenu {
                 enableFields();
                 this.status = "Could not connect: This character is already in the room.";
                 break;
-            case STATUS_OUTSIDELEVEL:
+            case STATUS_NO_ROOMS:
                 enableFields();
-                this.status = "Could not connect: This character does not meet the level requirements.";
+                this.status = "Could not connect: No rooms available for your level.";
                 break;
             case STATUS_NOSKILL:
                 enableFields();
@@ -284,6 +365,15 @@ public class ScreenServerList extends ScreenMenu {
                 enableFields();
                 this.status = "Character is not ready: You haven't equipped any Skills or Weapons!";
                 break;
+            case STATUS_REFRESHING:
+                this.status = "Refresing server list...";
+                break;
+            case STATUS_REFRESHING_DONE:
+                this.status = "Done refreshing server list.";
+                break;
+            case STATUS_REFRESHING_FAILED:
+                this.status = "Failed to get server list.";
+                break;
             default:
                 enableFields();
                 this.status = "Could not connect: Unknown Status";
@@ -294,6 +384,104 @@ public class ScreenServerList extends ScreenMenu {
         connecting = false;
         SERVERADDRESS_FIELD.setVisible(true);
         SERVERADDRESS_FIELD.setEnabled(true);
-        SERVER_ROOMS.setEnabled(true);
+    }
+
+    private class ServerList {
+
+        private static final int SERVERS_PER_PAGE = 14;
+        private int page = 0, selectedIndex = -1;
+        private ServerInfo[] serverInfo;
+        private Rectangle[] serverListBox;
+
+        public void draw(final Graphics2D g) {
+            if (serverInfo == null || serverListBox == null) {
+                return;
+            }
+            for (int i = page * SERVERS_PER_PAGE; i < page * SERVERS_PER_PAGE + SERVERS_PER_PAGE; i++) {
+                if (i < serverInfo.length) {
+                    if (serverInfo[i] != null) {
+                        g.setColor(Color.BLACK);
+                        g.fillRoundRect(serverListBox[i].x, serverListBox[i].y, SERVER_LIST_ADDRESS_COL_WIDTH, serverListBox[i].height, 10, 10);
+                        g.fillRoundRect(serverListBox[i].x + SERVER_LIST_ADDRESS_COL_WIDTH + 5, serverListBox[i].y, SERVER_LIST_REGION_COL_WIDTH, serverListBox[i].height, 10, 10);
+                        g.fillRoundRect(serverListBox[i].x + SERVER_LIST_ADDRESS_COL_WIDTH + SERVER_LIST_REGION_COL_WIDTH + 10, serverListBox[i].y, SERVER_LIST_CAPACITY_COL_WIDTH, serverListBox[i].height, 10, 10);
+
+                        if (selectedIndex == i) {
+                            g.setColor(Color.WHITE);
+                            g.drawRoundRect(serverListBox[i].x, serverListBox[i].y, SERVER_LIST_ADDRESS_COL_WIDTH, serverListBox[i].height, 10, 10);
+                            g.drawRoundRect(serverListBox[i].x + SERVER_LIST_ADDRESS_COL_WIDTH + 5, serverListBox[i].y, SERVER_LIST_REGION_COL_WIDTH, serverListBox[i].height, 10, 10);
+                            g.drawRoundRect(serverListBox[i].x + SERVER_LIST_ADDRESS_COL_WIDTH + SERVER_LIST_REGION_COL_WIDTH + 10, serverListBox[i].y, SERVER_LIST_CAPACITY_COL_WIDTH, serverListBox[i].height, 10, 10);
+
+                        }
+                        g.setColor(Color.WHITE);
+                        g.setFont(Globals.ARIAL_15PT);
+                        g.drawString(serverInfo[i].getAddress(), serverListBox[i].x + 15, serverListBox[i].y + 20);
+                        g.drawString(serverInfo[i].getRegion(), serverListBox[i].x + SERVER_LIST_ADDRESS_COL_WIDTH + 20, serverListBox[i].y + 20);
+                        for (int capacity = 0; capacity < Math.round(serverInfo[i].getCapacity() / 10f); capacity++) {
+                            g.setColor(CAPACITY_BAR_COLOR[capacity / 2]);
+                            g.fillRect(capacity * 13 + serverListBox[i].x + SERVER_LIST_ADDRESS_COL_WIDTH + SERVER_LIST_REGION_COL_WIDTH + 30, serverListBox[i].y + 10, 8, 10);
+                        }
+                        for (int capBack = 0; capBack < 10; capBack++) {
+                            g.setColor(Color.WHITE);
+                            g.drawRect(capBack * 13 + serverListBox[i].x + SERVER_LIST_ADDRESS_COL_WIDTH + SERVER_LIST_REGION_COL_WIDTH + 30, serverListBox[i].y + 10, 8, 10);
+                        }
+
+                    }
+                }
+            }
+        }
+
+        public void setServerInfo(final ServerInfo[] list) {
+            if (list == null) {
+                this.serverInfo = null;
+                this.serverListBox = null;
+                this.page = 0;
+                this.selectedIndex = -1;
+                return;
+            }
+
+            if (this.serverInfo != list) {
+                setStatus(STATUS_REFRESHING_DONE);
+                this.serverInfo = list;
+                this.serverListBox = new Rectangle[this.serverInfo.length];
+                this.page = 0;
+                this.selectedIndex = -1;
+                for (int i = 0; i < this.serverListBox.length; i++) {
+                    this.serverListBox[i % SERVERS_PER_PAGE] = new Rectangle(SERVER_LIST_AREA_X, SERVER_LIST_AREA_Y + i % SERVERS_PER_PAGE * 35, SERVER_LIST_AREA_WIDTH, 30);
+                }
+            }
+        }
+
+        public void mouseReleased(final MouseEvent e, final Point2D.Double scaled) {
+            if (serverListBox != null) {
+                for (int i = 0; i < this.serverListBox.length; i++) {
+                    if (this.serverListBox[i].contains(scaled)) {
+                        this.selectedIndex = i;
+                        SERVERADDRESS_FIELD.setText(getSelectedServer().getAddress());
+                        break;
+                    }
+                }
+            }
+        }
+
+        private ServerInfo getSelectedServer() {
+            return this.serverInfo[this.selectedIndex];
+        }
+
+        public void nextPage() {
+            int nextPage = page + 1;
+            if (nextPage * SERVERS_PER_PAGE < serverInfo.length) {
+                this.page++;
+                if (this.page < 0) {
+                    this.page = 0;
+                }
+            }
+        }
+
+        public void prevPage() {
+            int nextPage = page - 1;
+            if (nextPage * SERVERS_PER_PAGE >= 0) {
+                this.page--;
+            }
+        }
     }
 }

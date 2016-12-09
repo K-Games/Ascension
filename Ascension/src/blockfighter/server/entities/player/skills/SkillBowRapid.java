@@ -115,11 +115,11 @@ public class SkillBowRapid extends Skill {
             }
             final ProjBowRapid proj = new ProjBowRapid(this.logic, player, player.getX(), projY);
             this.logic.queueAddProj(proj);
-            PacketSender.sendParticle(this.logic.getRoom().getRoomNumber(), Globals.PARTICLE_BOW_RAPID, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
+            PacketSender.sendParticle(this.logic, Globals.PARTICLE_BOW_RAPID, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
                     player.getFacing());
-            PacketSender.sendParticle(this.logic.getRoom().getRoomNumber(), Globals.PARTICLE_BOW_RAPID2, (player.getFacing() == Globals.LEFT) ? player.getX() - 20 : player.getX() - 40, proj.getHitbox()[0].getY() - 40,
+            PacketSender.sendParticle(this.logic, Globals.PARTICLE_BOW_RAPID2, (player.getFacing() == Globals.LEFT) ? player.getX() - 20 : player.getX() - 40, proj.getHitbox()[0].getY() - 40,
                     player.getFacing());
-            PacketSender.sendSFX(this.logic.getRoom().getRoomNumber(), Globals.SFX_RAPID, player.getX(), player.getY());
+            PacketSender.sendSFX(this.logic, Globals.SFX_RAPID, player.getX(), player.getY());
         }
         player.updateSkillEnd(duration, getSkillDuration(), true, false);
     }

@@ -1,13 +1,14 @@
 package blockfighter.server;
 
 import blockfighter.server.net.GameServer;
-import blockfighter.server.net.PacketHandler;
-import blockfighter.server.net.PacketSender;
+import blockfighter.server.net.hub.HubClient;
 import blockfighter.shared.Globals;
 import java.awt.Dimension;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -20,16 +21,16 @@ import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
 public class AscensionServer {
 
-    private final ScheduledExecutorService LOGIC_SCHEDULER = Executors.newScheduledThreadPool(Math.max(Globals.SERVER_ROOMNUM_TO_ROOMINDEX.size() / 30, 1),
+    private static final ScheduledExecutorService LOGIC_SCHEDULER = Executors.newScheduledThreadPool(Math.max(Globals.SERVER_MAX_ROOMS / 30, 1),
             new BasicThreadFactory.Builder()
             .namingPattern("Logic-Runner-%d")
             .daemon(false)
             .priority(Thread.NORM_PRIORITY)
             .build());
 
-    private JTextArea DATA_LOG, ERROR_LOG;
-    private LogicModule[] SERVER_ROOMS;
-    private GameServer SERVER;
+    private static JTextArea DATA_LOG, ERROR_LOG;
+    private static ConcurrentHashMap<Byte, LogicModule> SERVER_ROOMS = new ConcurrentHashMap<>(Globals.SERVER_MAX_ROOMS);
+    private static GameServer SERVER;
 
     static {
         Globals.loadServer();
@@ -71,23 +72,13 @@ public class AscensionServer {
             });
         }
         try {
-            SERVER_ROOMS = new LogicModule[Globals.SERVER_ROOMNUM_TO_ROOMINDEX.size()];
             SERVER = new GameServer();
-            PacketSender.setLogic(SERVER_ROOMS);
-            PacketHandler.setLogic(SERVER_ROOMS);
-
             SERVER.start();
-
             Globals.log(AscensionServer.class, "Server started ", Globals.LOG_TYPE_ERR, false);
             Globals.log(AscensionServer.class, "Server started", Globals.LOG_TYPE_DATA, true);
-
-            for (final Map.Entry<Byte, Byte> b : Globals.SERVER_ROOMNUM_TO_ROOMINDEX.entrySet()) {
-                SERVER_ROOMS[b.getValue()] = new LogicModule(b.getKey(), b.getValue());
-                LOGIC_SCHEDULER.scheduleAtFixedRate(SERVER_ROOMS[b.getValue()], 0, 750, TimeUnit.MICROSECONDS);
+            if (Globals.SERVER_HUB_CONNECT) {
+                LOGIC_SCHEDULER.scheduleAtFixedRate(new HubClient(), 0, 10, TimeUnit.SECONDS);
             }
-            Globals.log(AscensionServer.class, "Initialized " + SERVER_ROOMS.length + " rooms", Globals.LOG_TYPE_ERR, false);
-            Globals.log(AscensionServer.class, "Initialized " + SERVER_ROOMS.length + " rooms", Globals.LOG_TYPE_DATA, true);
-
         } catch (final Exception ex) {
             Globals.logError(ex.toString(), ex, true);
         }
@@ -123,5 +114,64 @@ public class AscensionServer {
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+    }
+
+    public static ConcurrentHashMap<Byte, LogicModule> getServerRooms() {
+        return SERVER_ROOMS;
+    }
+
+    public static LogicModule addRoom(final int level) {
+        Byte nextRoomIndex = getNextRoomIndex();
+        if (nextRoomIndex != null) {
+
+            byte minLevel = (byte) ((Math.ceil(level / 10D) - 1) * 10 + 1);
+            byte maxLevel = (byte) (Math.ceil((level / 10D)) * 10);
+            LogicModule newRoom = new LogicModule(nextRoomIndex, minLevel, maxLevel);
+            SERVER_ROOMS.put(nextRoomIndex, newRoom);
+            newRoom.setFuture(LOGIC_SCHEDULER.scheduleAtFixedRate(newRoom, 0, 750, TimeUnit.MICROSECONDS));
+            Globals.log(AscensionServer.class, "New room instance - Room: " + newRoom.getRoomData().getRoomIndex() + " Level Range: " + minLevel + "-" + maxLevel, Globals.LOG_TYPE_DATA, true);
+            return newRoom;
+        }
+        return null;
+    }
+
+    public static void removeRoom(final byte roomIndex) {
+        SERVER_ROOMS.remove(roomIndex);
+    }
+
+    public static boolean canCreateRoom() {
+        return SERVER_ROOMS.size() < Globals.SERVER_MAX_ROOMS;
+    }
+
+    private static Byte getNextRoomIndex() {
+        if (SERVER_ROOMS.size() >= Globals.SERVER_MAX_ROOMS) {
+            return null;
+        }
+        byte index = 0;
+        while (SERVER_ROOMS.containsKey(index)) {
+            index++;
+        }
+        return index;
+    }
+
+    public static LogicModule getOpenRoom(final int level) {
+        Iterator<Map.Entry<Byte, LogicModule>> iter = SERVER_ROOMS.entrySet().iterator();
+        while (iter.hasNext()) {
+            Map.Entry<Byte, LogicModule> room = iter.next();
+            if (!room.getValue().getRoomData().isFull() && room.getValue().getRoomData().isInLevelRange(level)) {
+                return room.getValue();
+            }
+        }
+        return null;
+    }
+
+    public static int getServerCapacityStatus() {
+        int totalPlayers = 0;
+        Iterator<Map.Entry<Byte, LogicModule>> iter = SERVER_ROOMS.entrySet().iterator();
+        while (iter.hasNext()) {
+            Map.Entry<Byte, LogicModule> room = iter.next();
+            totalPlayers += room.getValue().getRoomData().getPlayers().size();
+        }
+        return Math.round(100f * totalPlayers / (Globals.SERVER_MAX_ROOMS * Globals.SERVER_MAX_ROOM_PLAYERS));
     }
 }

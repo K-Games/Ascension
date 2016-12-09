@@ -13,12 +13,14 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledFuture;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
 public class LogicModule extends Thread {
 
     private long currentTime = 0;
-    private final Room room;
+    private final RoomData room;
+    private ScheduledFuture future;
 
     private ConcurrentLinkedQueue<Player> playAddQueue = new ConcurrentLinkedQueue<>();
     private ConcurrentLinkedQueue<byte[]> playDirKeydownQueue = new ConcurrentLinkedQueue<>();
@@ -28,7 +30,7 @@ public class LogicModule extends Thread {
     private ConcurrentLinkedQueue<Mob> mobAddQueue = new ConcurrentLinkedQueue<>();
 
     private long lastRefreshAll = 0;
-    private long lastUpdateTime = 0, lastProcessQueue = 0, lastResetCheckTime = 0, resetStartTime = 0;
+    private long lastUpdateTime = 0, lastProcessQueue = 0, lastResetCheckTime = 0, resetStartTime = 0, roomIdleStartTime = 0;
 
     private static final ExecutorService LOGIC_THREAD_POOL = Executors.newFixedThreadPool(Globals.SERVER_LOGIC_THREADS,
             new BasicThreadFactory.Builder()
@@ -37,8 +39,8 @@ public class LogicModule extends Thread {
             .priority(Thread.NORM_PRIORITY)
             .build());
 
-    public LogicModule(final byte r, final byte roomIndex) {
-        this.room = new Room(r, roomIndex);
+    public LogicModule(final byte roomIndex, final byte minLevel, final byte maxLevel) {
+        this.room = new RoomData(roomIndex, minLevel, maxLevel);
         reset();
     }
 
@@ -55,6 +57,7 @@ public class LogicModule extends Thread {
 
         this.resetStartTime = 0;
         this.currentTime = System.nanoTime();
+        this.roomIdleStartTime = System.nanoTime();
         this.room.reset();
     }
 
@@ -67,11 +70,17 @@ public class LogicModule extends Thread {
                 this.lastProcessQueue = currentTime;
             }
             if (this.room.getPlayers().isEmpty()) {
+                if (currentTime - this.roomIdleStartTime >= Globals.msToNs(Globals.SERVER_ROOM_MAX_ILDE)) {
+                    this.future.cancel(true);
+                    AscensionServer.removeRoom(this.room.getRoomIndex());
+                    Globals.log(AscensionServer.class, "Room instance removed - Room: " + getRoomData().getRoomIndex(), Globals.LOG_TYPE_DATA, true);
+                }
                 return;
             }
             final long nowMs = System.currentTimeMillis();
 
             if (currentTime - this.lastUpdateTime >= Globals.SERVER_LOGIC_UPDATE) {
+                this.roomIdleStartTime = currentTime;
                 updatePlayers();
                 updateMobs();
                 updateProjectiles();
@@ -164,7 +173,7 @@ public class LogicModule extends Thread {
                 System.arraycopy(posData, 0, bytes, bytePos, posData.length);
                 bytePos += posData.length;
             }
-            PacketSender.sendAll(bytes, this.room.getRoomNumber());
+            PacketSender.sendAll(bytes, this);
         }
     }
 
@@ -189,7 +198,7 @@ public class LogicModule extends Thread {
         }
     }
 
-    public Room getRoom() {
+    public RoomData getRoomData() {
         return this.room;
     }
 
@@ -347,5 +356,9 @@ public class LogicModule extends Thread {
 
     public void setMobAddQueue(ConcurrentLinkedQueue<Mob> mobAddQueue) {
         this.mobAddQueue = mobAddQueue;
+    }
+
+    public void setFuture(final ScheduledFuture f) {
+        this.future = f;
     }
 }

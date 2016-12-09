@@ -101,7 +101,7 @@ public class SkillShieldCharge extends Skill {
         if (player.getSkillCounter() == 0) {
             final ProjShieldCharge proj = new ProjShieldCharge(this.logic, player, player.getX(), player.getY());
             this.logic.queueAddProj(proj);
-            PacketSender.sendParticle(this.logic.getRoom().getRoomNumber(), Globals.PARTICLE_SHIELD_CHARGE, player.getKey(), player.getFacing());
+            PacketSender.sendParticle(this.logic, Globals.PARTICLE_SHIELD_CHARGE, player.getKey(), player.getFacing());
             player.incrementSkillCounter();
         }
         player.updateSkillEnd(duration, getSkillDuration(), false, false);

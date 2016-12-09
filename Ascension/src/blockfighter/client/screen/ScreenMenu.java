@@ -19,7 +19,7 @@ public abstract class ScreenMenu extends Screen {
 
     private static final String CHARACTERS_TEXT = "Characters";
     private static final String KEY_BINDINGS_TEXT = "Key Bindings";
-    private static final String LOGIN_TEXT = "Login";
+    private static final String LOGIN_TEXT = "Play";
     private static final String SKILLS_TEXT = "Skills";
     private static final String UPGRADES_TEXT = "Upgrades";
     private static final String INVENTORY_TEXT = "Inventory";

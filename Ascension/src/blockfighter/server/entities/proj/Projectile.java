@@ -1,7 +1,7 @@
 package blockfighter.server.entities.proj;
 
 import blockfighter.server.LogicModule;
-import blockfighter.server.Room;
+import blockfighter.server.RoomData;
 import blockfighter.server.entities.GameEntity;
 import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
@@ -17,7 +17,7 @@ public abstract class Projectile extends Thread implements GameEntity {
     protected final int key;
 
     protected final LogicModule logic;
-    protected final Room room;
+    protected final RoomData room;
 
     protected double x, y;
 
@@ -40,7 +40,7 @@ public abstract class Projectile extends Thread implements GameEntity {
 
     public Projectile(final LogicModule l) {
         this.logic = l;
-        this.room = l.getRoom();
+        this.room = l.getRoomData();
         this.key = this.room.getNextProjKey();
         projStartTime = this.logic.getTime();
     }

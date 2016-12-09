@@ -15,13 +15,13 @@ public class DamageTest {
     @Test
     public void testDamageMobOwnerConstructors() {
         int expDamage = Globals.rng(1000);
-        Mob expMob = new Mob(new LogicModule((byte) 0, (byte) 0), null, 0, 0, (byte) 0) {
+        Mob expMob = new Mob(new LogicModule((byte) 0, (byte) Globals.rng(65), (byte) ((byte) Globals.rng(65) + 64)), null, 0, 0, (byte) 0) {
             @Override
             public void update() {
             }
         };
 
-        Player expPlayer = new Player(new LogicModule((byte) 0, (byte) 0), (byte) 0, null, new GameMapArena());
+        Player expPlayer = new Player(new LogicModule((byte) 0, (byte) Globals.rng(65), (byte) ((byte) Globals.rng(65) + 64)), (byte) 0, null, new GameMapArena());
         Point2D.Double expPoint = new Point2D.Double(0, 0);
         Damage instance = new Damage(expDamage, expMob, expPlayer, expPoint);
         assertEquals(expDamage, instance.getDamage());
@@ -105,12 +105,12 @@ public class DamageTest {
     @Test
     public void testDamagePlayerOwnerMobTargetConstructors() {
         int expDamage = Globals.rng(1000);
-        Mob expMob = new Mob(new LogicModule((byte) 0, (byte) 0), null, 0, 0, (byte) 0) {
+        Mob expMob = new Mob(new LogicModule((byte) 0, (byte) Globals.rng(65), (byte) ((byte) Globals.rng(65) + 64)), null, 0, 0, (byte) 0) {
             @Override
             public void update() {
             }
         };
-        Player expOwner = new Player(new LogicModule((byte) 0, (byte) 0), (byte) 0, null, new GameMapArena());
+        Player expOwner = new Player(new LogicModule((byte) 0, (byte) Globals.rng(65), (byte) ((byte) Globals.rng(65) + 64)), (byte) 0, null, new GameMapArena());
         Point2D.Double expPoint = new Point2D.Double(0, 0);
         Damage instance = new Damage(expDamage, expOwner, expMob, true, expPoint);
         assertEquals(expDamage, instance.getDamage());
@@ -219,8 +219,8 @@ public class DamageTest {
     @Test
     public void testDamagePlayerOwnerPlayerTargetConstructors() {
         int expDamage = Globals.rng(1000);
-        Player expOwner = new Player(new LogicModule((byte) 0, (byte) 0), (byte) 0, null, new GameMapArena());
-        Player expTarget = new Player(new LogicModule((byte) 0, (byte) 0), (byte) 0, null, new GameMapArena());
+        Player expOwner = new Player(new LogicModule((byte) 0, (byte) Globals.rng(65), (byte) ((byte) Globals.rng(65) + 64)), (byte) 0, null, new GameMapArena());
+        Player expTarget = new Player(new LogicModule((byte) 0, (byte) Globals.rng(65), (byte) ((byte) Globals.rng(65) + 64)), (byte) 0, null, new GameMapArena());
         Point2D.Double expPoint = new Point2D.Double(0, 0);
         Damage instance = new Damage(expDamage, true, expOwner, expTarget, true, expPoint);
         assertEquals(expDamage, instance.getDamage());

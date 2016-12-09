@@ -110,11 +110,11 @@ public class SkillSwordTaunt extends Skill {
             if (player.isSkillMaxed(Globals.SWORD_TAUNT)) {
                 double buffDuration = getCustomValue(CUSTOMHEADER_BUFFDURATION);
                 player.queueBuff(new BuffSwordTaunt(this.logic, (int) buffDuration, getCustomValue(CUSTOMHEADER_DMGREDUCT), getCustomValue(CUSTOMHEADER_DMGINC), player));
-                PacketSender.sendParticle(this.logic.getRoom().getRoomNumber(), Globals.PARTICLE_SWORD_TAUNTBUFF, player.getKey());
+                PacketSender.sendParticle(this.logic, Globals.PARTICLE_SWORD_TAUNTBUFF, player.getKey());
             }
             proj = new ProjSwordTaunt(this.logic, player, player.getX(), player.getY());
-            PacketSender.sendParticle(this.logic.getRoom().getRoomNumber(), Globals.PARTICLE_SWORD_TAUNTAURA1, player.getKey());
-            PacketSender.sendParticle(this.logic.getRoom().getRoomNumber(), Globals.PARTICLE_SWORD_TAUNT, player.getX(), player.getY(), player.getFacing());
+            PacketSender.sendParticle(this.logic, Globals.PARTICLE_SWORD_TAUNTAURA1, player.getKey());
+            PacketSender.sendParticle(this.logic, Globals.PARTICLE_SWORD_TAUNT, player.getX(), player.getY(), player.getFacing());
         }
         if (Globals.hasPastDuration(duration, 100) && player.getSkillCounter() == 1) {
             player.incrementSkillCounter();

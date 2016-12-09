@@ -108,7 +108,7 @@ public class SkillShieldRoar extends Skill {
         final long duration = Globals.nsToMs(this.logic.getTime() - this.skillCastTime);
         //Send roar particle
         if (player.getSkillCounter() == 0) {
-            PacketSender.sendParticle(this.logic.getRoom().getRoomNumber(), Globals.PARTICLE_SHIELD_ROAR, player.getKey(), player.getFacing());
+            PacketSender.sendParticle(this.logic, Globals.PARTICLE_SHIELD_ROAR, player.getKey(), player.getFacing());
             player.incrementSkillCounter();
         }
         //Spawn projectile.

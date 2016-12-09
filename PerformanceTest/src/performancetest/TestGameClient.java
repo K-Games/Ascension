@@ -41,7 +41,7 @@ public class TestGameClient {
             } else {
                 client.connect(5000, server, tcpPort);
             }
-            TestPacketSender.sendPlayerLogin(logic.getSelectedRoom(), logic.getSelectedChar(), this.client);
+            TestPacketSender.sendPlayerLogin(logic.getSelectedChar(), this.client);
         } catch (IOException ex) {
             client.close();
         }
@@ -61,6 +61,7 @@ public class TestGameClient {
         byte loginResponse = data[1];
         switch (loginResponse) {
             case Globals.LOGIN_SUCCESS:
+                logic.setSelectedRoom(data[5]);
                 break;
             default:
                 shutdownClient();
