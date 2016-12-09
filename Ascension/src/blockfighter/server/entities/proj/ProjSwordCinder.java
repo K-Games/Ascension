@@ -41,7 +41,7 @@ public class ProjSwordCinder extends Projectile {
         final boolean isCrit = owner.rollCrit((owner.isSkillMaxed(Globals.SWORD_CINDER)) ? bonusCritChc : 0);
         final int damage = calculateDamage(isCrit);
         target.queueDamage(new Damage(damage, true, owner, target, isCrit, this.hitbox[0], target.getHitbox()));
-        target.queueBuff(new BuffKnockback(this.logic, 300, (owner.getFacing() == Globals.RIGHT) ? 7 : -7, -8, owner, target));
+        target.queueBuff(new BuffKnockback(this.logic, 300, (owner.getFacing() == Globals.RIGHT) ? 5 : -5, -8, owner, target));
         double buffDuration = owner.getSkill(Globals.SWORD_CINDER).getCustomValue(SkillSwordCinder.CUSTOMHEADER_BUFFDURATION);
         double damageAmp = owner.getSkill(Globals.SWORD_CINDER).getCustomValue(SkillSwordCinder.CUSTOMHEADER_DMGAMP);
         target.queueBuff(new BuffBurn(this.logic, (int) buffDuration, owner.getSkillLevel(Globals.SWORD_CINDER) * damageAmp,

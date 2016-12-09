@@ -16,13 +16,13 @@
 * Rend
  * Added knockback.
 * Firebrand
- * Increased knockback from 30 to 210.
+ * Increased knockback from 30 to 150.
 * Aggression
  * Increased knockback 30 to 300.
 * Vorpal Strike
  * Reworked - Dash a short distance and strike enemies.
 * Phantom Reaper
- * Fixed no being at a valid Y position if Phantom Reaper ends inside a platform.
+ * Fixed not being at a valid Y position if Phantom Reaper ends inside a platform.
  
 #### Bow
 * Arc Shot
