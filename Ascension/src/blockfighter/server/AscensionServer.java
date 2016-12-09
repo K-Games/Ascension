@@ -28,6 +28,13 @@ public class AscensionServer {
             .priority(Thread.NORM_PRIORITY)
             .build());
 
+    private static final ScheduledExecutorService HUB_SCHEDULER = Executors.newSingleThreadScheduledExecutor(
+            new BasicThreadFactory.Builder()
+            .namingPattern("Logic-Runner-%d")
+            .daemon(false)
+            .priority(Thread.NORM_PRIORITY)
+            .build());
+
     private static JTextArea DATA_LOG, ERROR_LOG;
     private static ConcurrentHashMap<Byte, LogicModule> SERVER_ROOMS = new ConcurrentHashMap<>(Globals.SERVER_MAX_ROOMS);
     private static GameServer SERVER;
@@ -77,7 +84,7 @@ public class AscensionServer {
             Globals.log(AscensionServer.class, "Server started ", Globals.LOG_TYPE_ERR, false);
             Globals.log(AscensionServer.class, "Server started", Globals.LOG_TYPE_DATA, true);
             if (Globals.SERVER_HUB_CONNECT) {
-                LOGIC_SCHEDULER.scheduleAtFixedRate(new HubClient(), 0, 10, TimeUnit.SECONDS);
+                HUB_SCHEDULER.scheduleAtFixedRate(new HubClient(), 0, 10, TimeUnit.SECONDS);
             }
         } catch (final Exception ex) {
             Globals.logError(ex.toString(), ex, true);
