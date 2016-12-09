@@ -446,15 +446,15 @@ public class ScreenServerList extends ScreenMenu {
                 this.page = 0;
                 this.selectedIndex = -1;
                 for (int i = 0; i < this.serverListBox.length; i++) {
-                    this.serverListBox[i % SERVERS_PER_PAGE] = new Rectangle(SERVER_LIST_AREA_X, SERVER_LIST_AREA_Y + i % SERVERS_PER_PAGE * 35, SERVER_LIST_AREA_WIDTH, 30);
+                    this.serverListBox[i] = new Rectangle(SERVER_LIST_AREA_X, SERVER_LIST_AREA_Y + i % SERVERS_PER_PAGE * 35, SERVER_LIST_AREA_WIDTH, 30);
                 }
             }
         }
 
         public void mouseReleased(final MouseEvent e, final Point2D.Double scaled) {
             if (serverListBox != null) {
-                for (int i = 0; i < this.serverListBox.length; i++) {
-                    if (this.serverListBox[i].contains(scaled)) {
+                for (int i = page * SERVERS_PER_PAGE; i < page * SERVERS_PER_PAGE + SERVERS_PER_PAGE; i++) {
+                    if (i < serverInfo.length && this.serverListBox[i].contains(scaled)) {
                         this.selectedIndex = i;
                         SERVERADDRESS_FIELD.setText(getSelectedServer().getAddress());
                         break;
