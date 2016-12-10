@@ -45,7 +45,8 @@ public class ParticleSwordPhantom2 extends Particle {
 
     @Override
     public void draw(final Graphics2D g) {
-        if (this.trailX[0] != null && this.trailX[1] != null) {
+        if (this.trailX[0] != null && this.trailX[1] != null
+                && this.trailY[0] != null && this.trailY[1] != null && this.trailY[2] != null && this.trailY[3] != null) {
             final int[] xPoints = {this.trailX[0], this.trailX[0], this.trailX[1], this.trailX[1]};
             final int[] yPoints = {this.trailY[0], this.trailY[1], this.trailY[2], this.trailY[3]};
             g.setColor(trailColor);
