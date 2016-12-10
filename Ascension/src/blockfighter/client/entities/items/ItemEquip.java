@@ -1,6 +1,7 @@
 package blockfighter.client.entities.items;
 
 import blockfighter.shared.Globals;
+import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -55,6 +56,8 @@ public class ItemEquip implements Item {
     protected byte tier = TIER_COMMON;
     protected int itemCode;
 
+    private float overlayColour = 0, overlayColourDelta = 0.005f;
+
     static {
         loadItemTypeNames();
         loadTierColours();
@@ -67,12 +70,12 @@ public class ItemEquip implements Item {
 
     private static void loadTierColours() {
         TIER_COLOURS.put(TIER_COMMON, Color.WHITE);
-        TIER_COLOURS.put(TIER_UNCOMMON, new Color(180, 0, 255));
-        TIER_COLOURS.put(TIER_RARE, new Color(255, 225, 0));
-        TIER_COLOURS.put(TIER_RUNIC, new Color(255, 130, 0));
-        TIER_COLOURS.put(TIER_LEGENDARY, new Color(205, 15, 0));
-        TIER_COLOURS.put(TIER_MYSTIC, new Color(0, 220, 0));
-        TIER_COLOURS.put(TIER_DIVINE, new Color(0, 255, 160));
+        TIER_COLOURS.put(TIER_UNCOMMON, new Color(0, 210, 0));
+        TIER_COLOURS.put(TIER_RARE, new Color(255, 235, 0));
+        TIER_COLOURS.put(TIER_RUNIC, new Color(255, 120, 0));
+        TIER_COLOURS.put(TIER_LEGENDARY, new Color(210, 0, 0));
+        TIER_COLOURS.put(TIER_MYSTIC, new Color(0, 105, 205));
+        TIER_COLOURS.put(TIER_DIVINE, new Color(0, 175, 255));
     }
 
     private static void loadItemTypeNames() {
@@ -530,10 +533,28 @@ public class ItemEquip implements Item {
         if (ITEM_ICONS.containsKey(this.itemCode)) {
             final BufferedImage sprite = ITEM_ICONS.get(this.itemCode);
             if (sprite != null) {
-                g.drawImage(sprite, x, y, null);
+                if (getTier() != TIER_COMMON) {
+                    overlayColour += overlayColourDelta;
+                    if (overlayColour <= 0) {
+                        overlayColour = 0;
+                        overlayColourDelta = 0.005f;
+                    } else if (overlayColour >= 0.7f) {
+                        overlayColour = 0.7f;
+                        overlayColourDelta = -0.005f;
+                    }
+                    BufferedImage colouredIcon = new BufferedImage(sprite.getWidth(), sprite.getHeight(), BufferedImage.TYPE_INT_ARGB);
+                    Graphics2D gbi = colouredIcon.createGraphics();
+                    gbi.drawImage(sprite, 0, 0, null);
+                    gbi.setColor(TIER_COLOURS.get(getTier()));
+                    gbi.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, overlayColour));
+                    gbi.fillRect(0, 0, colouredIcon.getWidth(), colouredIcon.getHeight());
+                    g.drawImage(colouredIcon, x, y, null);
+                } else {
+                    g.drawImage(sprite, x, y, null);
+                }
             } else {
                 g.setFont(Globals.ARIAL_15PT);
-                g.setColor(Color.WHITE);
+                g.setColor(TIER_COLOURS.get(getTier()));
                 g.drawString("PH", x + 20, y + 30);
             }
         } else {

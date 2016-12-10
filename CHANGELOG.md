@@ -2,6 +2,18 @@
 
 ![Game Updates](https://github.com/kenofnz/AscensionInfo/raw/master/images/updates.png)
 
+## Version 0.21 Upate 1
+### Gameplay Changes
+* Equipment icons now show its Tier colour.
+* Equipment Tier colours updated.
+
+### Client Changes
+* Minor Server List browser performance improvement.
+
+### Server Changes
+
+---
+
 ## Version 0.21 Release
 ### Gameplay Changes
 * Movement speed reduced from 4.5 to 3.8.
