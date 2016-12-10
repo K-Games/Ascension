@@ -298,7 +298,7 @@ public class ItemEquip implements Item {
         this.itemCode = ic;
         this.baseStats = newEquipStat(ic, level);
         if (legendary) {
-            this.bonusMult = (Globals.rng(10) + 90) / 100D;
+            this.bonusMult = (Globals.rng(7) + 90) / 100D;
         } else {
             this.bonusMult = Globals.rng(90) / 100D;
         }

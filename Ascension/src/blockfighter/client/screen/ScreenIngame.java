@@ -586,7 +586,7 @@ public class ScreenIngame extends Screen {
         }
 
         if (ItemEquip.isValidItem(dropCode)) {
-            dropItem = new ItemEquip(dropCode, lvl, Globals.rng(100) < 20);
+            dropItem = new ItemEquip(dropCode, lvl, Globals.rng(100) < 7);
         }
 
         if (dropItem != null) {
