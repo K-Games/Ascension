@@ -20,6 +20,16 @@ import org.apache.commons.io.FileUtils;
 
 public class ScreenServerList extends ScreenMenu {
 
+    private static final String STATUS_LABEL_TEXT = "Status: ";
+    private static final String PREV_PAGE_BUTTON_TEXT = "Prev Page";
+    private static final String NEXT_PAGE_BUTTON_TEXT = "Next Page";
+    private static final String REFRESH_BUTTON_TEXT = "Refresh";
+    private static final String CONNECT_BUTTON_TEXT = "Connect";
+    private static final String SERVER_LABEL_TEXT = "Server:";
+    private static final String CAPACITY_COL_TEXT = "Capacity";
+    private static final String REGION_COL_TEXT = "Region";
+    private static final String ADDRESS_COL_TEXT = "Address";
+
     private static final int SERVER_LIST_AREA_Y = 80;
     private static final int SERVER_LIST_AREA_X = 260;
     private static final int SERVER_LIST_AREA_WIDTH = 970;
@@ -134,25 +144,25 @@ public class ScreenServerList extends ScreenMenu {
         g.fillRoundRect(SERVER_LIST_AREA_X + SERVER_LIST_ADDRESS_COL_WIDTH + 10 + SERVER_LIST_REGION_COL_WIDTH, SERVER_LIST_AREA_Y - 35, SERVER_LIST_CAPACITY_COL_WIDTH, 30, 10, 10);
         g.fillRoundRect(SERVER_LIST_AREA_X, SERVER_LIST_AREA_Y, SERVER_LIST_AREA_WIDTH, SERVER_LIST_AREA_HEIGHT, 15, 15);
 
-        String label = "Address";
+        String label = ADDRESS_COL_TEXT;
         g.setFont(Globals.ARIAL_15PT);
         drawStringOutline(g, label, SERVER_LIST_AREA_X + 15, SERVER_LIST_AREA_Y - 15, 2);
         g.setColor(Color.WHITE);
         g.drawString(label, SERVER_LIST_AREA_X + 15, SERVER_LIST_AREA_Y - 15);
 
-        label = "Region";
+        label = REGION_COL_TEXT;
         g.setFont(Globals.ARIAL_15PT);
         drawStringOutline(g, label, SERVER_LIST_AREA_X + SERVER_LIST_ADDRESS_COL_WIDTH + 20, SERVER_LIST_AREA_Y - 15, 2);
         g.setColor(Color.WHITE);
         g.drawString(label, SERVER_LIST_AREA_X + SERVER_LIST_ADDRESS_COL_WIDTH + 20, SERVER_LIST_AREA_Y - 15);
 
-        label = "Capacity";
+        label = CAPACITY_COL_TEXT;
         g.setFont(Globals.ARIAL_15PT);
         drawStringOutline(g, label, SERVER_LIST_AREA_X + SERVER_LIST_ADDRESS_COL_WIDTH + SERVER_LIST_REGION_COL_WIDTH + 30, SERVER_LIST_AREA_Y - 15, 2);
         g.setColor(Color.WHITE);
         g.drawString(label, SERVER_LIST_AREA_X + SERVER_LIST_ADDRESS_COL_WIDTH + SERVER_LIST_REGION_COL_WIDTH + 30, SERVER_LIST_AREA_Y - 15);
 
-        label = "Server:";
+        label = SERVER_LABEL_TEXT;
         g.setFont(Globals.ARIAL_24PT);
         final int labelX = (int) (SERVERADDRESS_FIELD.getBounds().getX() - g.getFontMetrics().stringWidth(label) - 5), labelY = (int) (SERVERADDRESS_FIELD.getBounds().getY() + 27);
         g.setColor(Color.BLACK);
@@ -169,7 +179,7 @@ public class ScreenServerList extends ScreenMenu {
 
         g.setFont(Globals.ARIAL_24PT);
         g.setColor(Color.WHITE);
-        String buttonLabel = "Connect";
+        String buttonLabel = CONNECT_BUTTON_TEXT;
         g.drawString(buttonLabel, CONNECT_BOX.x + CONNECT_BOX.width / 2 - g.getFontMetrics().stringWidth(buttonLabel) / 2, CONNECT_BOX.y + CONNECT_BOX.height / 2 + g.getFontMetrics().getHeight() / 3);
 
         g.drawRect(REFRESH_BOX.x, REFRESH_BOX.y, REFRESH_BOX.width, REFRESH_BOX.height);
@@ -181,7 +191,7 @@ public class ScreenServerList extends ScreenMenu {
 
         g.setFont(Globals.ARIAL_15PT);
         g.setColor(Color.WHITE);
-        buttonLabel = "Refresh";
+        buttonLabel = REFRESH_BUTTON_TEXT;
         g.drawString(buttonLabel, REFRESH_BOX.x + REFRESH_BOX.width / 2 - g.getFontMetrics().stringWidth(buttonLabel) / 2, REFRESH_BOX.y + REFRESH_BOX.height / 2 + g.getFontMetrics().getHeight() / 3);
 
         g.drawRect(NEXT_PAGE_BOX.x, NEXT_PAGE_BOX.y, NEXT_PAGE_BOX.width, NEXT_PAGE_BOX.height);
@@ -193,7 +203,7 @@ public class ScreenServerList extends ScreenMenu {
 
         g.setFont(Globals.ARIAL_15PT);
         g.setColor(Color.WHITE);
-        buttonLabel = "Next Page";
+        buttonLabel = NEXT_PAGE_BUTTON_TEXT;
         g.drawString(buttonLabel, NEXT_PAGE_BOX.x + NEXT_PAGE_BOX.width / 2 - g.getFontMetrics().stringWidth(buttonLabel) / 2, NEXT_PAGE_BOX.y + NEXT_PAGE_BOX.height / 2 + g.getFontMetrics().getHeight() / 3);
 
         g.drawRect(PREV_PAGE_BOX.x, PREV_PAGE_BOX.y, PREV_PAGE_BOX.width, PREV_PAGE_BOX.height);
@@ -205,13 +215,13 @@ public class ScreenServerList extends ScreenMenu {
 
         g.setFont(Globals.ARIAL_15PT);
         g.setColor(Color.WHITE);
-        buttonLabel = "Prev Page";
+        buttonLabel = PREV_PAGE_BUTTON_TEXT;
         g.drawString(buttonLabel, PREV_PAGE_BOX.x + PREV_PAGE_BOX.width / 2 - g.getFontMetrics().stringWidth(buttonLabel) / 2, PREV_PAGE_BOX.y + PREV_PAGE_BOX.height / 2 + g.getFontMetrics().getHeight() / 3);
 
         g.setFont(Globals.ARIAL_15PT);
-        drawStringOutline(g, "Status: " + this.status, 650, SERVER_LIST_AREA_Y + SERVER_LIST_AREA_HEIGHT + 25, 2);
+        drawStringOutline(g, STATUS_LABEL_TEXT + this.status, 650, SERVER_LIST_AREA_Y + SERVER_LIST_AREA_HEIGHT + 25, 2);
         g.setColor(Color.WHITE);
-        g.drawString("Status: " + this.status, 650, SERVER_LIST_AREA_Y + SERVER_LIST_AREA_HEIGHT + 25);
+        g.drawString(STATUS_LABEL_TEXT + this.status, 650, SERVER_LIST_AREA_Y + SERVER_LIST_AREA_HEIGHT + 25);
 
         if (serverList != null) {
             serverList.draw(g);
