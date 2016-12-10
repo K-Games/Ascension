@@ -1,5 +1,6 @@
 package blockfighter.server.net;
 
+import blockfighter.server.LogicModule;
 import blockfighter.server.entities.player.Player;
 import blockfighter.shared.Globals;
 import com.esotericsoftware.kryo.Kryo;
@@ -12,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class GameServer {
 
     private static final ConcurrentHashMap<Connection, Player> CONN_PLAYER_MAP = new ConcurrentHashMap<>();
-    private static final ConcurrentHashMap<Connection, Byte> CONN_PLAYER_KEY_MAP = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<Connection, RoomPlayerKey> CONN_PLAYER_KEY_MAP = new ConcurrentHashMap<>();
 
     private Server server;
     private PacketReceiver receiver;
@@ -55,18 +56,32 @@ public class GameServer {
     }
 
     public static byte getPlayerKeyFromConnection(final Connection c) {
-        return CONN_PLAYER_KEY_MAP.get(c);
+        return CONN_PLAYER_KEY_MAP.get(c).playerKey;
     }
 
     public static void removeConnectionPlayerKey(final Connection c) {
-        CONN_PLAYER_KEY_MAP.remove(c);
+        if (CONN_PLAYER_KEY_MAP.containsKey(c)) {
+            RoomPlayerKey rpk = CONN_PLAYER_KEY_MAP.remove(c);
+            rpk.room.getRoomData().returnPlayerKey(rpk.playerKey);
+        }
     }
 
-    public static void addPlayerKeyConnection(final Connection c, final byte b) {
-        CONN_PLAYER_KEY_MAP.put(c, b);
+    public static void addPlayerKeyConnection(final Connection c, final LogicModule room, final byte key) {
+        CONN_PLAYER_KEY_MAP.put(c, new RoomPlayerKey(room, key));
     }
 
     public void shutdown() {
         server.stop();
+    }
+
+    private static class RoomPlayerKey {
+
+        private LogicModule room;
+        private Byte playerKey;
+
+        public RoomPlayerKey(final LogicModule room, final byte key) {
+            this.room = room;
+            this.playerKey = key;
+        }
     }
 }

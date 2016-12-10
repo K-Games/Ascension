@@ -11,6 +11,7 @@
 * Minor Server List browser performance improvement.
 
 ### Server Changes
+* Fixed a room not returning a player key if a player does not fully connect.
 
 ---
 

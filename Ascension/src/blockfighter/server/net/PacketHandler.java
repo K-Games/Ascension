@@ -239,7 +239,6 @@ public class PacketHandler {
         }
 
         final byte freeKey = GameServer.getPlayerKeyFromConnection(c);
-        GameServer.removeConnectionPlayerKey(c);
 
         Globals.log(PacketHandler.class, "DATA_PLAYER_CREATE " + c + " Creating a new player. Room: " + roomData.getRoomIndex(), Globals.LOG_TYPE_DATA, true);
 
@@ -361,7 +360,7 @@ public class PacketHandler {
             return;
         }
 
-        GameServer.addPlayerKeyConnection(c, freeKey);
+        GameServer.addPlayerKeyConnection(c, room, freeKey);
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 6];
         bytes[0] = Globals.DATA_PLAYER_LOGIN;
         bytes[1] = Globals.LOGIN_SUCCESS;

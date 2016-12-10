@@ -218,8 +218,10 @@ public class RoomData {
     }
 
     public void returnPlayerKey(final byte key) {
-        this.playerKeys.add(key);
-        Globals.log(RoomData.class, "Room: " + this.roomIndex + " Returned player key: " + key + " Keys Remaining: " + this.playerKeys.size(), Globals.LOG_TYPE_DATA, true);
+        if (!this.playerKeys.contains(key)) {
+            this.playerKeys.add(key);
+            Globals.log(RoomData.class, "Room: " + this.roomIndex + " Returned player key: " + key + " Keys Remaining: " + this.playerKeys.size(), Globals.LOG_TYPE_DATA, true);
+        }
     }
 
     public boolean containsPlayerID(final UUID id) {
