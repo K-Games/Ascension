@@ -164,7 +164,7 @@ public class ScreenServerList extends ScreenMenu {
 
         label = SERVER_LABEL_TEXT;
         g.setFont(Globals.ARIAL_24PT);
-        final int labelX = (int) (SERVERADDRESS_FIELD.getBounds().getX() - g.getFontMetrics().stringWidth(label) - 5), labelY = (int) (SERVERADDRESS_FIELD.getBounds().getY() + 27);
+        final int labelX = (int) (330 - g.getFontMetrics().stringWidth(label) - 5), labelY = (int) (640 + 27);
         g.setColor(Color.BLACK);
         drawStringOutline(g, label, labelX, labelY, 2);
         g.setColor(Color.WHITE);
