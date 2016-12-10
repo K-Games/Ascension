@@ -21,7 +21,7 @@ import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
 public class AscensionServer {
 
-    private static final ScheduledExecutorService LOGIC_SCHEDULER = Executors.newScheduledThreadPool(Math.max(Globals.SERVER_MAX_ROOMS / 30, 1),
+    private static final ScheduledExecutorService LOGIC_SCHEDULER = Executors.newScheduledThreadPool(Math.max(Globals.SERVER_MAX_ROOMS / 3, 1),
             new BasicThreadFactory.Builder()
             .namingPattern("Logic-Runner-%d")
             .daemon(false)
@@ -30,7 +30,7 @@ public class AscensionServer {
 
     private static final ScheduledExecutorService HUB_SCHEDULER = Executors.newSingleThreadScheduledExecutor(
             new BasicThreadFactory.Builder()
-            .namingPattern("Logic-Runner-%d")
+            .namingPattern("Hub-Runner-%d")
             .daemon(false)
             .priority(Thread.NORM_PRIORITY)
             .build());
