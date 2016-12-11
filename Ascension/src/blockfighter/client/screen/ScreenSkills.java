@@ -16,6 +16,7 @@ public class ScreenSkills extends ScreenMenu {
 
     private static final String RESET_SKILLS_TEXT = "Reset Skills";
     private static final String SKILL_POINTS_TEXT = "Skill Points: ";
+    private static final String MAX_BUTTON_TEXT = "Max";
     private static final String ADD_POINT_BUTTON_TEXT = "+";
     private static final String UNKNOWN_KEY_TEXT = "Unknown Key";
     private static final String SKILL_PASSIVE_TEXT = "Passive";
@@ -29,6 +30,8 @@ public class ScreenSkills extends ScreenMenu {
     private static final Rectangle2D.Double[] HOTKEY_SLOTS = new Rectangle2D.Double[12];
     private static final Rectangle2D.Double[] SKILL_SLOTS = new Rectangle2D.Double[Globals.NUM_SKILLS];
     private static final Rectangle2D.Double[] ADD_SKILL_BOX = new Rectangle2D.Double[Globals.NUM_SKILLS];
+    private static final Rectangle2D.Double[] ADD_MAX_SKILL_BOX = new Rectangle2D.Double[Globals.NUM_SKILLS];
+
     private static final Rectangle2D.Double RESET_BOX;
 
     private static final int SWORD_BOX_X = 260, SWORD_BOX_Y = 55;
@@ -95,11 +98,13 @@ public class ScreenSkills extends ScreenMenu {
             HOTKEY_SLOTS[i] = new Rectangle2D.Double(HOTKEY_BOX_X + (i * 64), HOTKEY_BOX_Y, 60, 60);
         }
         for (int i = 0; i < 18; i++) {
-            ADD_SKILL_BOX[i] = new Rectangle2D.Double(SKILL_SLOTS[i].x + 140, SKILL_SLOTS[i].y + 32, 30, 23);
+            ADD_SKILL_BOX[i] = new Rectangle2D.Double(SKILL_SLOTS[i].x + 135, SKILL_SLOTS[i].y + 32, 30, 23);
+            ADD_MAX_SKILL_BOX[i] = new Rectangle2D.Double(ADD_SKILL_BOX[i].x + ADD_SKILL_BOX[i].width + 3, SKILL_SLOTS[i].y + 32, 30, 23);
         }
 
         for (int i = 18; i < ADD_SKILL_BOX.length; i++) {
-            ADD_SKILL_BOX[i] = new Rectangle2D.Double(SKILL_SLOTS[i].x + 59, SKILL_SLOTS[i].y + 37, 30, 23);
+            ADD_SKILL_BOX[i] = new Rectangle2D.Double(SKILL_SLOTS[i].x + 60, SKILL_SLOTS[i].y + 37, 30, 23);
+            ADD_MAX_SKILL_BOX[i] = new Rectangle2D.Double(ADD_SKILL_BOX[i].x, ADD_SKILL_BOX[i].y - 28, 30, 23);
         }
         RESET_BOX = new Rectangle2D.Double(1050, 630, 180, 40);
     }
@@ -204,15 +209,7 @@ public class ScreenSkills extends ScreenMenu {
             g.setColor(Color.WHITE);
             g.drawString(this.skillList[i].getSkillName(), (int) SKILL_SLOTS[i].x + 70, (int) SKILL_SLOTS[i].y + 20);
             g.drawString(Globals.getStatName(Globals.STAT_LEVEL) + Globals.COLON_SPACE_TEXT + this.skillList[i].getLevel(), (int) SKILL_SLOTS[i].x + 70, (int) SKILL_SLOTS[i].y + 50);
-
-            if (this.c.getBaseStats()[Globals.STAT_SKILLPOINTS] > 0 && !this.skillList[i].isMaxed()) {
-                button = Globals.MENU_BUTTON[Globals.BUTTON_ADDSTAT];
-                g.drawImage(button, (int) ADD_SKILL_BOX[i].x, (int) ADD_SKILL_BOX[i].y, null);
-                g.setFont(Globals.ARIAL_15PT);
-                drawStringOutline(g, ADD_POINT_BUTTON_TEXT, (int) ADD_SKILL_BOX[i].x + 11, (int) ADD_SKILL_BOX[i].y + 18, 1);
-                g.setColor(Color.WHITE);
-                g.drawString(ADD_POINT_BUTTON_TEXT, (int) ADD_SKILL_BOX[i].x + 11, (int) ADD_SKILL_BOX[i].y + 18);
-            }
+            drawSkillAddButton(g, i);
         }
 
         for (int i = 18; i < SKILL_SLOTS.length; i++) {
@@ -222,15 +219,25 @@ public class ScreenSkills extends ScreenMenu {
             drawStringOutline(g, Globals.getStatName(Globals.STAT_LEVEL) + Globals.COLON_SPACE_TEXT + this.skillList[i].getLevel(), (int) SKILL_SLOTS[i].x, (int) SKILL_SLOTS[i].y + 80, 1);
             g.setColor(Color.WHITE);
             g.drawString(Globals.getStatName(Globals.STAT_LEVEL) + Globals.COLON_SPACE_TEXT + this.skillList[i].getLevel(), (int) SKILL_SLOTS[i].x, (int) SKILL_SLOTS[i].y + 80);
+            drawSkillAddButton(g, i);
+        }
+    }
 
-            if (this.c.getBaseStats()[Globals.STAT_SKILLPOINTS] > 0 && !this.skillList[i].isMaxed()) {
-                button = Globals.MENU_BUTTON[Globals.BUTTON_ADDSTAT];
-                g.drawImage(button, (int) ADD_SKILL_BOX[i].x, (int) ADD_SKILL_BOX[i].y, null);
-                g.setFont(Globals.ARIAL_15PT);
-                drawStringOutline(g, ADD_POINT_BUTTON_TEXT, (int) ADD_SKILL_BOX[i].x + 11, (int) ADD_SKILL_BOX[i].y + 18, 1);
-                g.setColor(Color.WHITE);
-                g.drawString(ADD_POINT_BUTTON_TEXT, (int) ADD_SKILL_BOX[i].x + 11, (int) ADD_SKILL_BOX[i].y + 18);
-            }
+    private void drawSkillAddButton(final Graphics2D g, final int skillIndex) {
+        if (this.c.getBaseStats()[Globals.STAT_SKILLPOINTS] > 0 && !this.skillList[skillIndex].isMaxed()) {
+            BufferedImage button = Globals.MENU_BUTTON[Globals.BUTTON_ADDSTAT];
+            g.drawImage(button, (int) ADD_SKILL_BOX[skillIndex].x, (int) ADD_SKILL_BOX[skillIndex].y, null);
+            g.setFont(Globals.ARIAL_15PT);
+            drawStringOutline(g, ADD_POINT_BUTTON_TEXT, (int) ADD_SKILL_BOX[skillIndex].x + 11, (int) ADD_SKILL_BOX[skillIndex].y + 18, 1);
+            g.setColor(Color.WHITE);
+            g.drawString(ADD_POINT_BUTTON_TEXT, (int) ADD_SKILL_BOX[skillIndex].x + 11, (int) ADD_SKILL_BOX[skillIndex].y + 18);
+
+            button = Globals.MENU_BUTTON[Globals.BUTTON_ADDSTAT];
+            g.drawImage(button, (int) ADD_MAX_SKILL_BOX[skillIndex].x, (int) ADD_MAX_SKILL_BOX[skillIndex].y, null);
+            g.setFont(Globals.ARIAL_12PT);
+            drawStringOutline(g, MAX_BUTTON_TEXT, (int) ADD_MAX_SKILL_BOX[skillIndex].x + 4, (int) ADD_MAX_SKILL_BOX[skillIndex].y + 16, 1);
+            g.setColor(Color.WHITE);
+            g.drawString(MAX_BUTTON_TEXT, (int) ADD_MAX_SKILL_BOX[skillIndex].x + 4, (int) ADD_MAX_SKILL_BOX[skillIndex].y + 16);
         }
     }
 
@@ -297,13 +304,18 @@ public class ScreenSkills extends ScreenMenu {
             }
             for (byte i = 0; i < ADD_SKILL_BOX.length; i++) {
                 if (ADD_SKILL_BOX[i].contains(scaled)) {
-                    if (this.c.getBaseStats()[Globals.STAT_SKILLPOINTS] > 0 && !this.skillList[i].isMaxed()) {
-                        this.c.addSkill(i);
-                        return;
-                    }
+                    this.c.addSkill(i, false);
+                    return;
+
                 }
             }
 
+            for (byte i = 0; i < ADD_MAX_SKILL_BOX.length; i++) {
+                if (ADD_MAX_SKILL_BOX[i].contains(scaled)) {
+                    this.c.addSkill(i, true);
+                    return;
+                }
+            }
         }
     }
 

@@ -23,8 +23,6 @@ import blockfighter.client.entities.player.skills.SkillPassiveTough;
 import blockfighter.client.entities.player.skills.SkillPassiveVitalHit;
 import blockfighter.client.entities.player.skills.SkillPassiveWillpower;
 import blockfighter.client.entities.player.skills.SkillShieldCharge;
-import blockfighter.client.entities.player.skills.SkillUtilityDash;
-import blockfighter.client.entities.player.skills.SkillUtilityFortify;
 import blockfighter.client.entities.player.skills.SkillShieldMagnetize;
 import blockfighter.client.entities.player.skills.SkillShieldReflect;
 import blockfighter.client.entities.player.skills.SkillShieldRoar;
@@ -34,6 +32,8 @@ import blockfighter.client.entities.player.skills.SkillSwordPhantom;
 import blockfighter.client.entities.player.skills.SkillSwordSlash;
 import blockfighter.client.entities.player.skills.SkillSwordTaunt;
 import blockfighter.client.entities.player.skills.SkillSwordVorpal;
+import blockfighter.client.entities.player.skills.SkillUtilityDash;
+import blockfighter.client.entities.player.skills.SkillUtilityFortify;
 import blockfighter.shared.Globals;
 import java.awt.event.KeyEvent;
 import java.io.File;
@@ -678,11 +678,11 @@ public class SaveData {
         saveData(this.saveNum, this);
     }
 
-    public void addSkill(final byte skillCode) {
+    public void addSkill(final byte skillCode, final boolean isMax) {
         if (this.baseStats[Globals.STAT_SKILLPOINTS] <= 0 || this.skills[skillCode].getLevel() >= 30) {
             return;
         }
-        if (!Globals.TEST_MAX_LEVEL) {
+        if (!isMax) {
             this.baseStats[Globals.STAT_SKILLPOINTS]--;
             this.skills[skillCode].addLevel((byte) 1);
         } else {
