@@ -24,6 +24,8 @@ public class ItemEquip implements Item {
 
     private static final String DRAWOFFSET_KEY_OFFHAND = "_offhand_";
     private static final String DRAWOFFSET_KEY_MAINHAND = "_mainhand_";
+    private static final String FOLDER_OFFHAND = "offhand";
+    private static final String FOLDER_MAINHAND = "mainhand";
 
     private final static double UPGRADE_CRITCHANCE = 0.001, // 0.1%
             UPGRADE_CRITDMG = 0.02, // 2%
@@ -235,7 +237,7 @@ public class ItemEquip implements Item {
 
     public static void loadItemSprite(final int code, final boolean offhand) {
         final BufferedImage[][] load = new BufferedImage[Globals.NUM_PLAYER_ANIM_STATE][];
-        String hand = (!offhand) ? DRAWOFFSET_KEY_MAINHAND : DRAWOFFSET_KEY_OFFHAND;
+        String hand = (!offhand) ? FOLDER_MAINHAND : FOLDER_OFFHAND;
         for (int state = 0; state < load.length; state++) {
             if (Globals.PLAYER_NUM_ANIM_FRAMES[state] > 0) {
                 load[state] = new BufferedImage[Globals.PLAYER_NUM_ANIM_FRAMES[state]];
@@ -571,7 +573,7 @@ public class ItemEquip implements Item {
         if (!isValidItem(this.itemCode)) {
             return;
         }
-        String hand = (!offhand) ? DRAWOFFSET_KEY_MAINHAND : DRAWOFFSET_KEY_OFFHAND;
+        String hand = (!offhand) ? FOLDER_MAINHAND : FOLDER_OFFHAND;
         if (ITEM_SPRITES.containsKey(this.itemCode + hand)) {
             int offsetX = 0, offsetY = 0;
             if (ITEM_DRAWOFFSET.containsKey(this.itemCode + hand + state)) {
