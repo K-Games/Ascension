@@ -105,7 +105,7 @@ public class ItemEquip implements Item {
         for (final int itemCode : Globals.ITEM_CODES) {
             try {
                 InputStream itemFile = Globals.loadResourceAsStream("itemdata/equip/" + itemCode + ".txt");
-                List<String> fileLines = IOUtils.readLines(itemFile);
+                List<String> fileLines = IOUtils.readLines(itemFile, "UTF-8");
                 String[] data = fileLines.toArray(new String[fileLines.size()]);
                 for (int i = 0; i < data.length; i++) {
                     if (i + 1 < data.length && data[i + 1] != null) {

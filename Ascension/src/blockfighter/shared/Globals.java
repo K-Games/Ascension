@@ -522,7 +522,7 @@ public class Globals {
         Globals.log(Skill.class, "Loading Skill " + String.format("0x%02X", skillCode) + " Data...", Globals.LOG_TYPE_DATA, true);
         try {
             InputStream skillDataFile = Globals.loadResourceAsStream("skilldata/" + String.format("0x%02X", skillCode) + ".txt");
-            List<String> fileLines = IOUtils.readLines(skillDataFile);
+            List<String> fileLines = IOUtils.readLines(skillDataFile, "UTF-8");
             return fileLines.toArray(new String[fileLines.size()]);
         } catch (IOException | NullPointerException e) {
             Globals.logError("Could not load Skill " + String.format("0x%02X", skillCode) + " Data." + e.toString(), e, true);

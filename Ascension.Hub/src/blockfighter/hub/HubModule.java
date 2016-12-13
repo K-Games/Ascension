@@ -37,7 +37,7 @@ public class HubModule implements Runnable {
         long start = System.currentTimeMillis();
         try {
             URL ipURL = new URL("https://ip-ranges.amazonaws.com/ip-ranges.json");
-            JSONObject json = new JSONObject(IOUtils.toString(ipURL));
+            JSONObject json = new JSONObject(IOUtils.toString(ipURL, "UTF-8"));
             Iterator<Object> prefixes = json.getJSONArray("prefixes").iterator();
             while (prefixes.hasNext()) {
                 JSONObject prefix = (JSONObject) prefixes.next();
