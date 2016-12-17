@@ -10,12 +10,13 @@ public class GameMapPlatform {
 
     private Path2D.Double polygon;
     private Area polygonArea;
-    private final boolean isRect, isSolid;
+    private final boolean isRect;
+    private boolean isSolid;
     private final double x1, y1, x2, y2;
 
     public GameMapPlatform(final Rectangle2D.Double rect) {
         this.isRect = true;
-        this.isSolid = true;
+        this.isSolid = false;
         this.rect = rect;
         this.x1 = 0;
         this.y1 = 0;
@@ -31,13 +32,11 @@ public class GameMapPlatform {
         this.x2 = x2;
         this.y2 = y2;
 
-        final double lowestY = Math.max(y1, y2) + 20;
-
         this.polygon = new Path2D.Double();
         this.polygon.moveTo(x1, y1);
         this.polygon.lineTo(x2, y2);
-        this.polygon.lineTo(x2, lowestY);
-        this.polygon.lineTo(x1, lowestY);
+        this.polygon.lineTo(x2, y2 + 30);
+        this.polygon.lineTo(x1, y1 + 30);
         this.polygon.closePath();
         this.polygonArea = new Area(this.polygon);
 
@@ -47,6 +46,14 @@ public class GameMapPlatform {
                 this.polygon.getBounds2D().getWidth(),
                 this.polygon.getBounds2D().getHeight()
         );
+    }
+
+    public boolean isSolid() {
+        return this.isSolid;
+    }
+
+    public void setIsSolid(final boolean solid) {
+        this.isSolid = solid;
     }
 
     public Rectangle2D.Double getRect() {

@@ -137,9 +137,9 @@ public class GameMapTest {
 
     @Test
     public void testGetValidX() {
-        assertEquals(this.testMap.getBoundary()[Globals.MAP_LEFT], this.testMap.getValidX(this.testMap.getBoundary()[Globals.MAP_LEFT] - 100), 0.0);
-        assertEquals(this.testMap.getBoundary()[Globals.MAP_RIGHT], this.testMap.getValidX(this.testMap.getBoundary()[Globals.MAP_RIGHT] + 100), 0.0);
-        assertEquals(3000, this.testMap.getValidX(3000), 0.0);
+        assertEquals(this.testMap.getBoundary()[Globals.MAP_LEFT], this.testMap.getValidX(this.testMap.getBoundary()[Globals.MAP_LEFT] - 100, 300), 0.0);
+        assertEquals(this.testMap.getBoundary()[Globals.MAP_RIGHT], this.testMap.getValidX(this.testMap.getBoundary()[Globals.MAP_RIGHT] + 100, 300), 0.0);
+        assertEquals(3000, this.testMap.getValidX(3000, -50), 0.0);
     }
 
     @Test
