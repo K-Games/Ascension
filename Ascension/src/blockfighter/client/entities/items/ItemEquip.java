@@ -12,10 +12,20 @@ import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
 public class ItemEquip implements Item {
+
+    private static final ExecutorService SPRITE_THREADPOOL = Executors.newFixedThreadPool(2,
+            new BasicThreadFactory.Builder()
+            .namingPattern("Sprite-Loader-%d")
+            .daemon(true)
+            .priority(Thread.NORM_PRIORITY)
+            .build());
 
     private static final String OFFSET_DELIMITER = ",";
     private static DecimalFormat df = new DecimalFormat("###,###,##0.##");
@@ -67,7 +77,6 @@ public class ItemEquip implements Item {
         ITEM_ICONS = new HashMap<>(Globals.ITEM_CODES.size());
         ITEM_DESC = new HashMap<>(Globals.ITEM_CODES.size());
         loadItemData();
-        loadItemDrawOffset();
     }
 
     private static void loadTierColours() {
@@ -221,11 +230,6 @@ public class ItemEquip implements Item {
         Globals.log(ItemEquip.class, "Loaded Item Data.", Globals.LOG_TYPE_DATA, true);
     }
 
-    private static void loadItemDrawOffset() {
-        //Standard for naming item offset
-        //Key = CODE_STATECODE, or CODE_offhand_STATECODE
-    }
-
     public static void unloadSprites() {
         ITEM_SPRITES.clear();
     }
@@ -236,44 +240,50 @@ public class ItemEquip implements Item {
     }
 
     public static void loadItemSprite(final int code, final boolean offhand) {
-        final BufferedImage[][] load = new BufferedImage[Globals.NUM_PLAYER_ANIM_STATE][];
-        String hand = (!offhand) ? FOLDER_MAINHAND : FOLDER_OFFHAND;
-        for (int state = 0; state < load.length; state++) {
-            if (Globals.PLAYER_NUM_ANIM_FRAMES[state] > 0) {
-                load[state] = new BufferedImage[Globals.PLAYER_NUM_ANIM_FRAMES[state]];
-                for (int frames = 0; frames < load[state].length; frames++) {
-                    String stateFolder = "";
-                    switch (state) {
-                        case Globals.PLAYER_ANIM_STATE_ATTACK:
-                            stateFolder = "attack/swing";
-                            break;
-                        case Globals.PLAYER_ANIM_STATE_ATTACKBOW:
-                            stateFolder = "attack/bow";
-                            break;
-                        case Globals.PLAYER_ANIM_STATE_STAND:
-                            stateFolder = "stand";
-                            break;
-                        case Globals.PLAYER_ANIM_STATE_WALK:
-                            stateFolder = "walk";
-                            break;
-                        case Globals.PLAYER_ANIM_STATE_BUFF:
-                            stateFolder = "buff";
-                            break;
-                        case Globals.PLAYER_ANIM_STATE_DEAD:
-                            stateFolder = "dead";
-                            break;
-                        case Globals.PLAYER_ANIM_STATE_JUMP:
-                            stateFolder = "jump";
-                            break;
-                        case Globals.PLAYER_ANIM_STATE_ROLL:
-                            stateFolder = "roll";
-                            break;
+        SPRITE_THREADPOOL.submit(() -> {
+            String hand = (!offhand) ? FOLDER_MAINHAND : FOLDER_OFFHAND;
+
+            if (!ITEM_SPRITES.containsKey(Integer.toString(code) + hand)) {
+                Globals.log(ItemEquip.class, "Loading item " + code + " sprites...", Globals.LOG_TYPE_DATA, true);
+                final BufferedImage[][] load = new BufferedImage[Globals.NUM_PLAYER_ANIM_STATE][];
+                ITEM_SPRITES.put(Integer.toString(code) + hand, load);
+                for (int state = 0; state < load.length; state++) {
+                    if (Globals.PLAYER_NUM_ANIM_FRAMES[state] > 0) {
+                        load[state] = new BufferedImage[Globals.PLAYER_NUM_ANIM_FRAMES[state]];
+                        for (int frames = 0; frames < load[state].length; frames++) {
+                            String stateFolder = "";
+                            switch (state) {
+                                case Globals.PLAYER_ANIM_STATE_ATTACK:
+                                    stateFolder = "attack/swing";
+                                    break;
+                                case Globals.PLAYER_ANIM_STATE_ATTACKBOW:
+                                    stateFolder = "attack/bow";
+                                    break;
+                                case Globals.PLAYER_ANIM_STATE_STAND:
+                                    stateFolder = "stand";
+                                    break;
+                                case Globals.PLAYER_ANIM_STATE_WALK:
+                                    stateFolder = "walk";
+                                    break;
+                                case Globals.PLAYER_ANIM_STATE_BUFF:
+                                    stateFolder = "buff";
+                                    break;
+                                case Globals.PLAYER_ANIM_STATE_DEAD:
+                                    stateFolder = "dead";
+                                    break;
+                                case Globals.PLAYER_ANIM_STATE_JUMP:
+                                    stateFolder = "jump";
+                                    break;
+                                case Globals.PLAYER_ANIM_STATE_ROLL:
+                                    stateFolder = "roll";
+                                    break;
+                            }
+                            load[state][frames] = Globals.loadTextureResource("sprites/equip/" + code + "/" + hand + "/" + stateFolder + "/" + frames + ".png");
+                        }
                     }
-                    load[state][frames] = Globals.loadTextureResource("sprites/equip/" + code + "/" + hand + "/" + stateFolder + "/" + frames + ".png");
                 }
             }
-        }
-        ITEM_SPRITES.put(Integer.toString(code) + hand, load);
+        });
     }
 
     public double[] getTotalStats() {
