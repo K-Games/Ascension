@@ -23,17 +23,17 @@ public class AscensionServer {
 
     private static final ScheduledExecutorService LOGIC_SCHEDULER = Executors.newScheduledThreadPool(Math.max(Globals.SERVER_MAX_ROOMS / 3, 1),
             new BasicThreadFactory.Builder()
-            .namingPattern("Logic-Runner-%d")
-            .daemon(false)
-            .priority(Thread.NORM_PRIORITY)
-            .build());
+                    .namingPattern("Logic-Runner-%d")
+                    .daemon(false)
+                    .priority(Thread.NORM_PRIORITY)
+                    .build());
 
     private static final ScheduledExecutorService HUB_SCHEDULER = Executors.newSingleThreadScheduledExecutor(
             new BasicThreadFactory.Builder()
-            .namingPattern("Hub-Runner-%d")
-            .daemon(false)
-            .priority(Thread.NORM_PRIORITY)
-            .build());
+                    .namingPattern("Hub-Runner-%d")
+                    .daemon(false)
+                    .priority(Thread.NORM_PRIORITY)
+                    .build());
 
     private static JTextArea DATA_LOG, ERROR_LOG;
     private static ConcurrentHashMap<Byte, LogicModule> SERVER_ROOMS = new ConcurrentHashMap<>(Globals.SERVER_MAX_ROOMS);

@@ -40,10 +40,10 @@ public class AscensionClient {
     private static final LogicModule LOGIC_MODULE = new LogicModule(SOUND_MODULE);
     public static final ExecutorService SHARED_THREADPOOL = Executors.newFixedThreadPool(4,
             new BasicThreadFactory.Builder()
-            .namingPattern("Shared-Thread-%d")
-            .daemon(true)
-            .priority(Thread.NORM_PRIORITY)
-            .build());
+                    .namingPattern("Shared-Thread-%d")
+                    .daemon(true)
+                    .priority(Thread.NORM_PRIORITY)
+                    .build());
 
     static {
         SHARED_THREADPOOL.execute(SOUND_MODULE);

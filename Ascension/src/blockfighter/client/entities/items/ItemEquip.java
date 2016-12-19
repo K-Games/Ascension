@@ -22,10 +22,10 @@ public class ItemEquip implements Item {
 
     private static final ExecutorService SPRITE_THREADPOOL = Executors.newFixedThreadPool(2,
             new BasicThreadFactory.Builder()
-            .namingPattern("Sprite-Loader-%d")
-            .daemon(true)
-            .priority(Thread.NORM_PRIORITY)
-            .build());
+                    .namingPattern("Sprite-Loader-%d")
+                    .daemon(true)
+                    .priority(Thread.NORM_PRIORITY)
+                    .build());
 
     private static final String OFFSET_DELIMITER = ",";
     private static DecimalFormat df = new DecimalFormat("###,###,##0.##");

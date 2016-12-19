@@ -416,10 +416,10 @@ public class Globals {
 
     public static ExecutorService LOG_THREAD = Executors.newSingleThreadExecutor(
             new BasicThreadFactory.Builder()
-            .namingPattern("Logger-%d")
-            .daemon(true)
-            .priority(Thread.MIN_PRIORITY)
-            .build());
+                    .namingPattern("Logger-%d")
+                    .daemon(true)
+                    .priority(Thread.MIN_PRIORITY)
+                    .build());
 
     public static byte SERVER_MAX_ROOM_PLAYERS = 10;
     public static int SERVER_PLAYER_MAX_IDLE = 120000;

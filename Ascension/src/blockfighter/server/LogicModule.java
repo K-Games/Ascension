@@ -34,10 +34,10 @@ public class LogicModule extends Thread {
 
     private static final ExecutorService LOGIC_THREAD_POOL = Executors.newFixedThreadPool(Globals.SERVER_LOGIC_THREADS,
             new BasicThreadFactory.Builder()
-            .namingPattern("Logic-Processor-%d")
-            .daemon(true)
-            .priority(Thread.NORM_PRIORITY)
-            .build());
+                    .namingPattern("Logic-Processor-%d")
+                    .daemon(true)
+                    .priority(Thread.NORM_PRIORITY)
+                    .build());
 
     public LogicModule(final byte roomIndex, final byte minLevel, final byte maxLevel) {
         this.room = new RoomData(roomIndex, minLevel, maxLevel);
