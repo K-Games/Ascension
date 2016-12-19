@@ -6,10 +6,25 @@
 ### Gameplay Changes
 * Equipment icons now show its Tier colour.
 * Equipment Tier colours updated.
+* Skills now have a `Max` button to allocates maximum amount of points into the Skill.
+* Equipment Rarity drop rate adjusted. Divine rarity remains only achievable via Upgrades.
 
+| Tier | Drop Rate|
+| --- | ---|
+| Common   | ~51.6% |
+| Uncommon | ~20.7% |
+| Rare | ~15.5% |
+| Runic | ~5.2 |
+| Legendary | ~5% |
+| Mystic | ~2% |
+| Divine | 0% |
+ 
 ### Client Changes
 * Minor Server List browser performance improvement.
 * Added a Max button in Skill screen to add maximum about of possible Skill Points into a Skill.
+* Loading ingame item sprites on a different thread to avoid frame freezes.
+* Added a check for game updates when going through the Title screen.
+* Fixed a rare crash caused by Phantom Reaper particles.
 
 ### Server Changes
 * Fixed a room not returning a player key if a player does not fully connect.

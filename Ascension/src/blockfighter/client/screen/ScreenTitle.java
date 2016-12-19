@@ -1,29 +1,67 @@
 package blockfighter.client.screen;
 
+import blockfighter.client.AscensionClient;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.shared.Globals;
 import java.awt.Color;
+import java.awt.Desktop;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URI;
+import java.net.URL;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ScreenTitle extends Screen {
 
-    private final static String CLICK_TEXT = "Click to continue";
-    private long fadeInStart = System.nanoTime();
+    private final static String CLICK_TEXT = "Click to start";
+    private final long FADE_IN_START_TIME = System.nanoTime();
     private long fadeOutStart, lastUpdateTime, fontFadeStart;
     private Color fadeInColor, fadeOutColor, fontColor;
-    private boolean exitingTitle = false, finishedFadeIn = false, fontFadeIn = false;
+    private boolean exitingTitle = false, finishedFadeIn = false, fontFadeIn = false, checkingVersion = false;
     private int bg1y = 0, bg2y = 720;
+
+    private byte checkVersionStatus = CHECK_VERSION_STATUS_CHECKING;
+    private boolean updatePrompt = false;
+    private float checkVerisionCircleFactor = 0f;
+    private byte checkVersionMajor, checkVersionMinor, checkVersionUpdate;
+    private String updateVersion;
+
+    private final Color CHECK_UPDATE_COLOR = new Color(0, 0, 0, 125);
+    private final static String[] CHECK_VERSION_STATUS_TEXT = {
+        "Checking for updates...",
+        "Game is up to date.",
+        "A new update is available.",
+        "Unable to get version data."
+    };
+
+    private final static String[] CHECK_VERSION_BUTTON_TEXT = {
+        "Continue", "Get "
+    };
+
+    private final static byte CHECK_VERSION_STATUS_CHECKING = 0;
+    private final static byte CHECK_VERSION_STATUS_UPTODATE = 1;
+    private final static byte CHECK_VERSION_STATUS_OUTDATED = 2;
+    private final static byte CHECK_VERSION_STATUS_UNAVAILABLE = 3;
+    private final static Rectangle[] UPDATE_PROMPT_BOX = new Rectangle[2];
+
+    static {
+        UPDATE_PROMPT_BOX[0] = new Rectangle(Globals.WINDOW_WIDTH / 2 - 175, Globals.WINDOW_HEIGHT / 2 - 75, 350, 150);
+        UPDATE_PROMPT_BOX[1] = new Rectangle(UPDATE_PROMPT_BOX[0].x + UPDATE_PROMPT_BOX[0].width / 2 - 75, UPDATE_PROMPT_BOX[0].y + 70, 150, 50);
+    }
 
     @Override
     public void update() {
         final long now = logic.getTime(); // Get time now
 
-        if (Globals.nsToMs(now - fadeInStart) < 5000) {
-            int transparency = (int) (255 * (1f - Globals.nsToMs(now - fadeInStart) / 5000f));
+        if (Globals.nsToMs(now - FADE_IN_START_TIME) < 5000) {
+            int transparency = (int) (255 * (1f - Globals.nsToMs(now - FADE_IN_START_TIME) / 5000f));
             fadeInColor = new Color(255, 255, 255, (transparency < 0) ? 0 : transparency);
         } else {
             fadeInColor = new Color(255, 255, 255, 0);
@@ -34,6 +72,11 @@ public class ScreenTitle extends Screen {
             fadeOutColor = new Color(0, 0, 0, (transparency < 0) ? 0 : transparency);
         }
         if (now - this.lastUpdateTime >= Globals.CLIENT_LOGIC_UPDATE) {
+            logic.playBGM(getBGM());
+            if (this.checkingVersion && this.checkVersionStatus == CHECK_VERSION_STATUS_CHECKING) {
+                checkVerisionCircleFactor += 0.01;
+                checkVerisionCircleFactor = (checkVerisionCircleFactor >= 1) ? 0 : checkVerisionCircleFactor;
+            }
             bg1y--;
             bg2y--;
             if (bg1y <= -720) {
@@ -76,6 +119,42 @@ public class ScreenTitle extends Screen {
             g.setColor(fadeInColor);
             g.fillRect(0, 0, Globals.WINDOW_WIDTH, Globals.WINDOW_HEIGHT);
         }
+
+        if (checkingVersion) {
+            g.setColor(CHECK_UPDATE_COLOR);
+            g.fillRect(0, 0, Globals.WINDOW_WIDTH, Globals.WINDOW_HEIGHT);
+
+            g.drawRect(UPDATE_PROMPT_BOX[0].x, UPDATE_PROMPT_BOX[0].y, UPDATE_PROMPT_BOX[0].width, UPDATE_PROMPT_BOX[0].height);
+            g.setColor(CHECK_UPDATE_COLOR);
+            g.fillRect(UPDATE_PROMPT_BOX[0].x, UPDATE_PROMPT_BOX[0].y, UPDATE_PROMPT_BOX[0].width, UPDATE_PROMPT_BOX[0].height);
+            g.setColor(Color.BLACK);
+            g.drawRect(UPDATE_PROMPT_BOX[0].x, UPDATE_PROMPT_BOX[0].y, UPDATE_PROMPT_BOX[0].width, UPDATE_PROMPT_BOX[0].height);
+            g.drawRect(UPDATE_PROMPT_BOX[0].x + 1, UPDATE_PROMPT_BOX[0].y + 1, UPDATE_PROMPT_BOX[0].width - 2, UPDATE_PROMPT_BOX[0].height - 2);
+
+            g.setFont(Globals.ARIAL_24PT);
+            g.setColor(Color.WHITE);
+            g.drawString(CHECK_VERSION_STATUS_TEXT[checkVersionStatus], (UPDATE_PROMPT_BOX[0].x + UPDATE_PROMPT_BOX[0].width / 2) - g.getFontMetrics().stringWidth(CHECK_VERSION_STATUS_TEXT[checkVersionStatus]) / 2, UPDATE_PROMPT_BOX[0].y + 50);
+            if (this.checkVersionStatus == CHECK_VERSION_STATUS_CHECKING) {
+                g.fillArc((UPDATE_PROMPT_BOX[0].x + UPDATE_PROMPT_BOX[0].width / 2) - 15, (UPDATE_PROMPT_BOX[0].y + 20 + UPDATE_PROMPT_BOX[0].height / 2) - 15, 30, 30, 90, (int) (checkVerisionCircleFactor * 360));
+                g.drawOval((UPDATE_PROMPT_BOX[0].x + UPDATE_PROMPT_BOX[0].width / 2) - 15, (UPDATE_PROMPT_BOX[0].y + 20 + UPDATE_PROMPT_BOX[0].height / 2) - 15, 30, 30);
+            }
+            if (updatePrompt) {
+                g.drawRect(UPDATE_PROMPT_BOX[1].x, UPDATE_PROMPT_BOX[1].y, UPDATE_PROMPT_BOX[1].width, UPDATE_PROMPT_BOX[1].height);
+                g.setColor(CHECK_UPDATE_COLOR);
+                g.fillRect(UPDATE_PROMPT_BOX[1].x, UPDATE_PROMPT_BOX[1].y, UPDATE_PROMPT_BOX[1].width, UPDATE_PROMPT_BOX[1].height);
+                g.setColor(Color.BLACK);
+                g.drawRect(UPDATE_PROMPT_BOX[1].x, UPDATE_PROMPT_BOX[1].y, UPDATE_PROMPT_BOX[1].width, UPDATE_PROMPT_BOX[1].height);
+                g.drawRect(UPDATE_PROMPT_BOX[1].x + 1, UPDATE_PROMPT_BOX[1].y + 1, UPDATE_PROMPT_BOX[1].width - 2, UPDATE_PROMPT_BOX[1].height - 2);
+                g.setFont(Globals.ARIAL_24PT);
+                g.setColor(Color.WHITE);
+                if (checkVersionStatus == CHECK_VERSION_STATUS_UPTODATE || checkVersionStatus == CHECK_VERSION_STATUS_UNAVAILABLE) {
+                    g.drawString(CHECK_VERSION_BUTTON_TEXT[0], UPDATE_PROMPT_BOX[1].x + UPDATE_PROMPT_BOX[1].width / 2 - g.getFontMetrics().stringWidth(CHECK_VERSION_BUTTON_TEXT[0]) / 2, UPDATE_PROMPT_BOX[1].y + 32);
+                } else if (checkVersionStatus == CHECK_VERSION_STATUS_OUTDATED) {
+                    g.drawString(CHECK_VERSION_BUTTON_TEXT[1] + this.updateVersion, UPDATE_PROMPT_BOX[1].x + UPDATE_PROMPT_BOX[1].width / 2 - g.getFontMetrics().stringWidth(CHECK_VERSION_BUTTON_TEXT[1] + this.updateVersion) / 2, UPDATE_PROMPT_BOX[1].y + 32);
+                }
+            }
+        }
+
         if (exitingTitle) {
             g.setColor(fadeOutColor);
             g.fillRect(0, 0, Globals.WINDOW_WIDTH, Globals.WINDOW_HEIGHT);
@@ -94,9 +173,55 @@ public class ScreenTitle extends Screen {
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        if (!exitingTitle) {
-            exitingTitle = true;
-            fadeOutStart = System.nanoTime();
+        Point2D.Double scaled;
+        if (Globals.WINDOW_SCALE_ENABLED) {
+            scaled = new Point2D.Double(e.getX() / Globals.WINDOW_SCALE, e.getY() / Globals.WINDOW_SCALE);
+        } else {
+            scaled = new Point2D.Double(e.getX(), e.getY());
+        }
+        if (!checkingVersion) {
+            this.checkingVersion = true;
+            AscensionClient.SHARED_THREADPOOL.execute(() -> {
+                BufferedReader in;
+                try {
+                    URL versionURL = new URL("https://raw.githubusercontent.com/K-Games/AscensionInfo/master/version");
+                    in = new BufferedReader(new InputStreamReader(versionURL.openStream()));
+                    this.checkVersionMajor = Byte.parseByte(in.readLine());
+                    this.checkVersionMinor = Byte.parseByte(in.readLine());
+                    this.checkVersionUpdate = Byte.parseByte(in.readLine());
+
+                    this.updateVersion = checkVersionMajor + "." + checkVersionMinor + "." + checkVersionUpdate;
+                    if (this.checkVersionMajor == Globals.GAME_MAJOR_VERSION
+                            && this.checkVersionMinor == Globals.GAME_MINOR_VERSION
+                            && this.checkVersionUpdate == Globals.GAME_UPDATE_NUMBER) {
+                        this.updatePrompt = true;
+                        this.checkVersionStatus = CHECK_VERSION_STATUS_UPTODATE;
+                    } else {
+                        this.updatePrompt = true;
+                        this.checkVersionStatus = CHECK_VERSION_STATUS_OUTDATED;
+                    }
+                } catch (IOException ex) {
+                    this.updatePrompt = true;
+                    this.checkVersionStatus = CHECK_VERSION_STATUS_UNAVAILABLE;
+                }
+            });
+        }
+        if (!exitingTitle && updatePrompt && UPDATE_PROMPT_BOX[1].contains(scaled)) {
+            if (checkVersionStatus == CHECK_VERSION_STATUS_UPTODATE || checkVersionStatus == CHECK_VERSION_STATUS_UNAVAILABLE) {
+                exitingTitle = true;
+                fadeOutStart = System.nanoTime();
+            } else if (checkVersionStatus == CHECK_VERSION_STATUS_OUTDATED) {
+                Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
+                if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
+                    try {
+                        desktop.browse(URI.create("https://kenofnz.itch.io/ascension"));
+                    } catch (IOException ex) {
+                        Globals.logError(ex.getMessage(), ex, true);
+                    } finally {
+                        System.exit(0);
+                    }
+                }
+            }
         }
     }
 
