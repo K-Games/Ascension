@@ -403,7 +403,8 @@ public class Globals {
             NUMBER_TYPE_MOB = 2;
 
     public static final byte NOTIFICATION_EXP = 0,
-            NOTIFICATION_ITEM = 1;
+            NOTIFICATION_ITEM = 1,
+            NOTIFICATION_KILL = 2;
 
     public static boolean LOGGING = false;
     private final static String LOG_DIR = "logs/",
