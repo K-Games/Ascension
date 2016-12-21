@@ -285,7 +285,8 @@ public class Globals {
             DATA_PLAYER_GIVEDROP = 0x17,
             DATA_PLAYER_CREATE = 0x18,
             DATA_SCREEN_SHAKE = 0x19,
-            DATA_PLAYER_EMOTE = 0x1A;
+            DATA_PLAYER_EMOTE = 0x1A,
+            DATA_NOTIFICATION_KILL = 0x1B;
 
     public static final byte LOGIN_SUCCESS = 0x00,
             LOGIN_FAIL_UID_IN_ROOM = 0x01,

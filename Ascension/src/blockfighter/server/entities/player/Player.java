@@ -869,6 +869,12 @@ public class Player implements GameEntity, Callable<Player> {
         if (killer != null) {
             killer.giveEXP(this.stats[Globals.STAT_MAXEXP] * Globals.EXP_MULTIPLIER);
             killer.giveDrop(this.stats[Globals.STAT_LEVEL]);
+
+            final byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
+            bytes[0] = Globals.DATA_NOTIFICATION_KILL;
+            bytes[1] = killer.getKey();
+            bytes[2] = this.key;
+            PacketSender.sendAll(bytes, this.logic);
         }
         PacketSender.sendParticle(this.logic, Globals.PARTICLE_BLOOD, this.key);
         setInvulnerable(false);

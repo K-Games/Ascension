@@ -514,7 +514,18 @@ public class ScreenIngame extends Screen {
                 case Globals.DATA_PLAYER_EMOTE:
                     dataPlayerEmote(data);
                     break;
+                case Globals.DATA_NOTIFICATION_KILL:
+                    dataNotificationKill(data);
+                    break;
             }
+        }
+    }
+
+    private void dataNotificationKill(final byte[] data) {
+        final byte killerKey = data[1];
+        final byte victimKey = data[2];
+        if (this.players.containsKey(killerKey) && this.players.containsKey(victimKey)) {
+            this.notifications.add(new Notification(this.players.get(killerKey), this.players.get(victimKey)));
         }
     }
 
