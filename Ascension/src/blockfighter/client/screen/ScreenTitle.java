@@ -72,7 +72,6 @@ public class ScreenTitle extends Screen {
             fadeOutColor = new Color(0, 0, 0, (transparency < 0) ? 0 : transparency);
         }
         if (now - this.lastUpdateTime >= Globals.CLIENT_LOGIC_UPDATE) {
-            logic.playBGM(getBGM());
             if (this.checkingVersion && this.checkVersionStatus == CHECK_VERSION_STATUS_CHECKING) {
                 checkVerisionCircleFactor += 0.01;
                 checkVerisionCircleFactor = (checkVerisionCircleFactor >= 1) ? 0 : checkVerisionCircleFactor;

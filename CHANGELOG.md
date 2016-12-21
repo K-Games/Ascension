@@ -9,8 +9,8 @@
 * Skills now have a `Max` button to allocates maximum amount of points into the Skill.
 * Equipment Rarity drop rate adjusted. Divine rarity remains only achievable via Upgrades.
 
-| Tier | Drop Rate|
-| --- | ---|
+| Tier | Drop Rate |
+| --- | --- |
 | Common   | ~51.6% |
 | Uncommon | ~20.7% |
 | Rare | ~15.5% |
@@ -19,7 +19,7 @@
 | Mystic | ~2% |
 | Divine | 0% |
 
-* EXP is now given to every player that dealt damage to the dying player. The killer receives a 10% EXP bonus.
+* EXP is now split between every player that dealt damage to the dying player in proportion to damage dealt. The killer receives a 10% EXP bonus.
 * Notifications have been improved.
 * Added Player Kill notifications.
 * Critical hit numbers are now larger.
@@ -30,6 +30,7 @@
 * Loading ingame item sprites on a different thread to avoid frame freezes.
 * Added a check for game updates when going through the Title screen.
 * Fixed a rare crash caused by Phantom Reaper particles.
+* Improve Sound Module performance and consistency.
 
 ### Server Changes
 * Fixed a room not returning a player key if a player does not fully connect.
