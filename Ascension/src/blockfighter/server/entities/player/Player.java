@@ -126,6 +126,7 @@ public class Player implements GameEntity, Callable<Player> {
     private final ConcurrentLinkedQueue<Integer> healQueue = new ConcurrentLinkedQueue<>();
     private final ConcurrentLinkedQueue<byte[]> skillUseQueue = new ConcurrentLinkedQueue<>();
     private final ConcurrentLinkedQueue<Buff> buffQueue = new ConcurrentLinkedQueue<>();
+    private final HashMap<Player, Double> playerDamageCount = new HashMap<>();
 
     private final ConcurrentLinkedQueue<Integer> buffKeys = new ConcurrentLinkedQueue<>();
     private final ConcurrentLinkedQueue<Double> resistDamageSum;
@@ -705,6 +706,15 @@ public class Player implements GameEntity, Callable<Player> {
                 // Final damage taken
                 this.stats[Globals.STAT_MINHP] -= (int) finalDamage;
                 totalDamageInTick += finalDamage;
+
+                if (this.playerDamageCount.containsKey(dmg.getOwner())) {
+                    double damageCount = this.playerDamageCount.get(dmg.getOwner());
+                    damageCount += finalDamage;
+                    this.playerDamageCount.put(dmg.getOwner(), damageCount);
+                } else {
+                    this.playerDamageCount.put(dmg.getOwner(), finalDamage);
+                }
+
                 if (finalDamage > 0) {
                     sinceLastHPSend = 150;
                 }
@@ -722,11 +732,6 @@ public class Player implements GameEntity, Callable<Player> {
                         sendCooldown(Globals.PASSIVE_BARRIER);
                     }
                 }
-                //Globals.log(Player.class.getSimpleName(), "<" + this.getPlayerName() + "> taking damage"
-                //        + " | Source: <" + ((dmg.getOwner() != null) ? dmg.getOwner().getPlayerName() : dmg.getMobOwner().getClass().getSimpleName()) + ">"
-                //        + " | Damage Amp: " + this.dmgAmp
-                //        + " | Raw: " + dmg.getDamage()
-                //        + " | Taken: " + amount, Globals.LOG_TYPE_DATA, true);
             }
         }
 
@@ -867,9 +872,33 @@ public class Player implements GameEntity, Callable<Player> {
 
     protected void die(final Player killer) {
         if (killer != null) {
-            killer.giveEXP(this.stats[Globals.STAT_MAXEXP] * Globals.EXP_MULTIPLIER);
             killer.giveDrop(this.stats[Globals.STAT_LEVEL]);
         }
+
+        double totalDamageTaken = 0;
+        Iterator<Entry<Player, Double>> iter = this.playerDamageCount.entrySet().iterator();
+        while (iter.hasNext()) {
+            Entry<Player, Double> damageCount = iter.next();
+            Player source = damageCount.getKey();
+            if (source.isConnected()) {
+                double damage = damageCount.getValue();
+                totalDamageTaken += damage;
+            } else {
+                iter.remove();
+            }
+        }
+
+        double totalExpGiven = this.stats[Globals.STAT_MAXEXP] * Globals.EXP_MULTIPLIER;
+        for (final Entry<Player, Double> damageCount : this.playerDamageCount.entrySet()) {
+            Player source = damageCount.getKey();
+            double damage = damageCount.getValue();
+            if (source.isConnected()) {
+                double expGivenFactor = damage / totalDamageTaken;
+                source.giveEXP(expGivenFactor * totalExpGiven * ((killer != null && source == killer) ? 1.1 : 1));
+            }
+        }
+        this.playerDamageCount.clear();
+
         PacketSender.sendParticle(this.logic, Globals.PARTICLE_BLOOD, this.key);
         setInvulnerable(false);
         setRemovingDebuff(false);
@@ -1052,6 +1081,7 @@ public class Player implements GameEntity, Callable<Player> {
         bytes[3] = exp[2];
         bytes[4] = exp[3];
         PacketSender.sendPlayer(bytes, this);
+        Globals.log(Player.class, "Giving " + this.name + " " + (int) amount + " EXP", Globals.LOG_TYPE_DATA, true);
     }
 
     public boolean intersectHitbox(final Rectangle2D.Double box) {
