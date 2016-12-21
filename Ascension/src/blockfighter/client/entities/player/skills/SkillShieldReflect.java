@@ -81,13 +81,13 @@ public class SkillShieldReflect extends Skill {
     @Override
     public void updateDesc() {
         this.skillCurLevelDesc = new String[]{
-            "Deals " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * this.level) + "% of damage taken."
+            "Deals " + Globals.NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * this.level) + "% of damage taken."
         };
         this.skillNextLevelDesc = new String[]{
-            "Deals " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "% of damage taken."
+            "Deals " + Globals.NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "% of damage taken."
         };
         this.maxBonusDesc = new String[]{
-            "You reflect " + NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_MAXLVLREFLECT)) + "% of damage taken by other players."
+            "You reflect " + Globals.NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_MAXLVLREFLECT)) + "% of damage taken by other players."
         };
     }
 }

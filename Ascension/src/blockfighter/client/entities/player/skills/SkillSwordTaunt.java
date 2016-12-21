@@ -83,14 +83,14 @@ public class SkillSwordTaunt extends Skill {
     @Override
     public void updateDesc() {
         this.skillCurLevelDesc = new String[]{
-            "Deals " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * this.level) + "% damage."
+            "Deals " + Globals.NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * this.level) + "% damage."
         };
         this.skillNextLevelDesc = new String[]{
-            "Deals " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "% damage."
+            "Deals " + Globals.NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "% damage."
         };
         this.maxBonusDesc = new String[]{
-            "Take " + NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_DMGREDUCT)) + "% less damage for " + TIME_NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_BUFFDURATION)) + " seconds.",
-            "Deal  " + NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_DMGINC)) + "% increased damage for " + TIME_NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_BUFFDURATION)) + " seconds."
+            "Take " + Globals.NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_DMGREDUCT)) + "% less damage for " + Globals.TIME_NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_BUFFDURATION)) + " seconds.",
+            "Deal  " + Globals.NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_DMGINC)) + "% increased damage for " + Globals.TIME_NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_BUFFDURATION)) + " seconds."
         };
     }
 }

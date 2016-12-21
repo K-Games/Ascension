@@ -68,10 +68,10 @@ public class SkillPassiveBowMastery extends Skill {
     @Override
     public void updateDesc() {
         this.skillCurLevelDesc = new String[]{
-            "Additional " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * this.level) + "% Critical Hit Damage."
+            "Additional " + Globals.NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * this.level) + "% Critical Hit Damage."
         };
         this.skillNextLevelDesc = new String[]{
-            "Additional " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "% Critical Hit Damage."
+            "Additional " + Globals.NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "% Critical Hit Damage."
         };
     }
 }

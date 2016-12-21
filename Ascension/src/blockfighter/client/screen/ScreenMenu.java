@@ -10,7 +10,6 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-import java.text.DecimalFormat;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.swing.SwingUtilities;
@@ -33,8 +32,6 @@ public abstract class ScreenMenu extends Screen {
     private long fadeInStart = System.nanoTime();
     private Color fadeInColor;
     protected boolean finishedFadeIn = false;
-
-    protected DecimalFormat df = new DecimalFormat("###,###,##0.##");
 
     static {
         for (int i = 0; i < MENU_BOX.length; i++) {

@@ -55,11 +55,11 @@ public class ScreenInventory extends ScreenItemManagement {
             statString[4] = Globals.getStatName(Globals.STAT_MAXHP) + Globals.COLON_SPACE_TEXT + (int) totalStats[Globals.STAT_MAXHP];
             statString[5] = DAMAGE_TEXT + (int) totalStats[Globals.STAT_MINDMG] + " - " + (int) totalStats[Globals.STAT_MAXDMG];
             statString[6] = Globals.getStatName(Globals.STAT_ARMOR) + Globals.COLON_SPACE_TEXT + (int) baseStats[Globals.STAT_ARMOR] + " + " + (int) bonusStats[Globals.STAT_ARMOR];
-            statString[7] = Globals.getStatName(Globals.STAT_REGEN) + Globals.COLON_SPACE_TEXT + this.df.format(baseStats[Globals.STAT_REGEN]) + " + " + this.df.format(bonusStats[Globals.STAT_REGEN]) + " HP/Sec";
-            statString[8] = Globals.getStatName(Globals.STAT_CRITCHANCE) + Globals.COLON_SPACE_TEXT + this.df.format(baseStats[Globals.STAT_CRITCHANCE] * 100) + " + "
-                    + this.df.format(bonusStats[Globals.STAT_CRITCHANCE] * 100) + "%";
-            statString[9] = Globals.getStatName(Globals.STAT_CRITDMG) + Globals.COLON_SPACE_TEXT + this.df.format((1 + baseStats[Globals.STAT_CRITDMG]) * 100) + " + "
-                    + this.df.format(bonusStats[Globals.STAT_CRITDMG] * 100) + "%";
+            statString[7] = Globals.getStatName(Globals.STAT_REGEN) + Globals.COLON_SPACE_TEXT + Globals.NUMBER_FORMAT.format(baseStats[Globals.STAT_REGEN]) + " + " + Globals.NUMBER_FORMAT.format(bonusStats[Globals.STAT_REGEN]) + " HP/Sec";
+            statString[8] = Globals.getStatName(Globals.STAT_CRITCHANCE) + Globals.COLON_SPACE_TEXT + Globals.NUMBER_FORMAT.format(baseStats[Globals.STAT_CRITCHANCE] * 100) + " + "
+                    + Globals.NUMBER_FORMAT.format(bonusStats[Globals.STAT_CRITCHANCE] * 100) + "%";
+            statString[9] = Globals.getStatName(Globals.STAT_CRITDMG) + Globals.COLON_SPACE_TEXT + Globals.NUMBER_FORMAT.format((1 + baseStats[Globals.STAT_CRITDMG]) * 100) + " + "
+                    + Globals.NUMBER_FORMAT.format(bonusStats[Globals.STAT_CRITDMG] * 100) + "%";
 
             updateParticles(particles);
             this.lastUpdateTime = now;

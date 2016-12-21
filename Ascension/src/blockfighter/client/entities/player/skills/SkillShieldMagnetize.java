@@ -83,13 +83,13 @@ public class SkillShieldMagnetize extends Skill {
     @Override
     public void updateDesc() {
         this.skillCurLevelDesc = new String[]{
-            "Deals " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * this.level) + "% damage + Defense multiplied by " + NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_BASEDEF) + CUSTOM_VALUES.get(CUSTOMHEADER_MULTDEF) * this.level) + "."
+            "Deals " + Globals.NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * this.level) + "% damage + Defense multiplied by " + Globals.NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_BASEDEF) + CUSTOM_VALUES.get(CUSTOMHEADER_MULTDEF) * this.level) + "."
         };
         this.skillNextLevelDesc = new String[]{
-            "Deals " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "% damage + Defense multiplied by " + NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_BASEDEF) + CUSTOM_VALUES.get(CUSTOMHEADER_MULTDEF) * (this.level + 1)) + "."
+            "Deals " + Globals.NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "% damage + Defense multiplied by " + Globals.NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_BASEDEF) + CUSTOM_VALUES.get(CUSTOMHEADER_MULTDEF) * (this.level + 1)) + "."
         };
         this.maxBonusDesc = new String[]{
-            "Deals " + NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_MAXLEVELMULT)) + "x damage."
+            "Deals " + Globals.NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_MAXLEVELMULT)) + "x damage."
         };
     }
 }

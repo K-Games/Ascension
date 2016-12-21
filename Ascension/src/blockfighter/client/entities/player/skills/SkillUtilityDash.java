@@ -68,10 +68,10 @@ public class SkillUtilityDash extends Skill {
     @Override
     public void updateDesc() {
         this.skillCurLevelDesc = new String[]{
-            "Increases damage dealt by " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * this.level) + "%."
+            "Increases damage dealt by " + Globals.NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * this.level) + "%."
         };
         this.skillNextLevelDesc = new String[]{
-            "Increases damage dealt by " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "%."
+            "Increases damage dealt by " + Globals.NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "%."
         };
         this.maxBonusDesc = new String[]{
             "Invulnerable during dash."

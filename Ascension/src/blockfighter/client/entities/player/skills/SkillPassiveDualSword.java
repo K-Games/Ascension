@@ -78,12 +78,12 @@ public class SkillPassiveDualSword extends Skill {
     @Override
     public void updateDesc() {
         this.skillCurLevelDesc = new String[]{
-            "Additional " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * this.level) + "% Critical Hit Chance.",
-            "Take " + NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_DMGREDUCTMULT) * this.level) + "% reduced damage."
+            "Additional " + Globals.NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * this.level) + "% Critical Hit Chance.",
+            "Take " + Globals.NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_DMGREDUCTMULT) * this.level) + "% reduced damage."
         };
         this.skillNextLevelDesc = new String[]{
-            "Additional " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "% Critical Hit Chance.",
-            "Take " + NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_DMGREDUCTMULT) * (this.level + 1)) + "% reduced damage."
+            "Additional " + Globals.NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "% Critical Hit Chance.",
+            "Take " + Globals.NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_DMGREDUCTMULT) * (this.level + 1)) + "% reduced damage."
         };
     }
 }

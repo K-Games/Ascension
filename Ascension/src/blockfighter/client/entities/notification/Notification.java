@@ -30,7 +30,7 @@ public class Notification implements Callable<Notification> {
     public Notification(final int EXP) {
         this.startTime = logic.getTime();
         this.type = Globals.NOTIFICATION_EXP;
-        this.output = "Gained " + Integer.toString(EXP) + " EXP";
+        this.output = "Gained " + Globals.NUMBER_FORMAT.format(EXP) + " EXP";
     }
 
     public Notification(final Player killer, final Player victim) {

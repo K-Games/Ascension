@@ -9,7 +9,6 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -28,7 +27,6 @@ public class ItemEquip implements Item {
                     .build());
 
     private static final String OFFSET_DELIMITER = ",";
-    private static DecimalFormat df = new DecimalFormat("###,###,##0.##");
 
     private final static HashMap<Byte, Color> TIER_COLOURS = new HashMap<>(7);
 
@@ -468,12 +466,12 @@ public class ItemEquip implements Item {
                     case Globals.STAT_CRITCHANCE:
                     case Globals.STAT_CRITDMG:
                         maxWidth = Math.max(maxWidth,
-                                g.getFontMetrics().stringWidth(Globals.getStatName(i) + Globals.COLON_SPACE_TEXT + df.format(getTotalStats()[i] * 100) + "%"));
+                                g.getFontMetrics().stringWidth(Globals.getStatName(i) + Globals.COLON_SPACE_TEXT + Globals.NUMBER_FORMAT.format(getTotalStats()[i] * 100) + "%"));
                         break;
 
                     case Globals.STAT_REGEN:
                         maxWidth = Math.max(maxWidth,
-                                g.getFontMetrics().stringWidth(Globals.getStatName(i) + Globals.COLON_SPACE_TEXT + df.format(getTotalStats()[i])));
+                                g.getFontMetrics().stringWidth(Globals.getStatName(i) + Globals.COLON_SPACE_TEXT + Globals.NUMBER_FORMAT.format(getTotalStats()[i])));
                         break;
                     default:
                         maxWidth = Math.max(maxWidth,
@@ -520,10 +518,10 @@ public class ItemEquip implements Item {
                 switch (i) {
                     case Globals.STAT_CRITCHANCE:
                     case Globals.STAT_CRITDMG:
-                        g.drawString(Globals.getStatName(i) + Globals.COLON_SPACE_TEXT + df.format(getTotalStats()[i] * 100) + "%", x + 40, y + rowY);
+                        g.drawString(Globals.getStatName(i) + Globals.COLON_SPACE_TEXT + Globals.NUMBER_FORMAT.format(getTotalStats()[i] * 100) + "%", x + 40, y + rowY);
                         break;
                     case Globals.STAT_REGEN:
-                        g.drawString(Globals.getStatName(i) + Globals.COLON_SPACE_TEXT + df.format(getTotalStats()[i]), x + 40, y + rowY);
+                        g.drawString(Globals.getStatName(i) + Globals.COLON_SPACE_TEXT + Globals.NUMBER_FORMAT.format(getTotalStats()[i]), x + 40, y + rowY);
                         break;
                     default:
                         g.drawString(Globals.getStatName(i) + Globals.COLON_SPACE_TEXT + (int) getTotalStats()[i], x + 40, y + rowY);

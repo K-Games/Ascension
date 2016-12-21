@@ -77,13 +77,13 @@ public class SkillShieldCharge extends Skill {
     @Override
     public void updateDesc() {
         this.skillCurLevelDesc = new String[]{
-            "Deals " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * this.level) + "% damage."
+            "Deals " + Globals.NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * this.level) + "% damage."
         };
         this.skillNextLevelDesc = new String[]{
-            "Deals " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "% damage."
+            "Deals " + Globals.NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "% damage."
         };
         this.maxBonusDesc = new String[]{
-            "Stun enemies hit for " + TIME_NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_STUN)) + " second."
+            "Stun enemies hit for " + Globals.TIME_NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_STUN)) + " second."
         };
     }
 }

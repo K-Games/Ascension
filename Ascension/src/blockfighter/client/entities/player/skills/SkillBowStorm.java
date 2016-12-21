@@ -81,13 +81,13 @@ public class SkillBowStorm extends Skill {
     @Override
     public void updateDesc() {
         this.skillCurLevelDesc = new String[]{
-            "Deals " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * this.level) + "% damage per second for " + TIME_NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_DURATION)) + " seconds."
+            "Deals " + Globals.NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * this.level) + "% damage per second for " + Globals.TIME_NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_DURATION)) + " seconds."
         };
         this.skillNextLevelDesc = new String[]{
-            "Deals " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "% damage per second for " + TIME_NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_DURATION)) + " seconds."
+            "Deals " + Globals.NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "% damage per second for " + Globals.TIME_NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_DURATION)) + " seconds."
         };
         this.maxBonusDesc = new String[]{
-            "Critical Hits have bonus +" + NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_MAXLVLBONUSCRITDMG)) + "% Critical Hit Damage."
+            "Critical Hits have bonus +" + Globals.NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_MAXLVLBONUSCRITDMG)) + "% Critical Hit Damage."
         };
     }
 

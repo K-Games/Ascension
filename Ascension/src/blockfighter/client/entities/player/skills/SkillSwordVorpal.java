@@ -84,15 +84,15 @@ public class SkillSwordVorpal extends Skill {
     @Override
     public void updateDesc() {
         this.skillCurLevelDesc = new String[]{
-            "Deals " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * this.level) + "% damage per hit.",
-            "Critical Hits deal additional +" + NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_BASEBONUSCRITDMG) + CUSTOM_VALUES.get(CUSTOMHEADER_MULTBONUSCRITDMG) * this.level) + "% Critical Damage."
+            "Deals " + Globals.NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * this.level) + "% damage per hit.",
+            "Critical Hits deal additional +" + Globals.NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_BASEBONUSCRITDMG) + CUSTOM_VALUES.get(CUSTOMHEADER_MULTBONUSCRITDMG) * this.level) + "% Critical Damage."
         };
         this.skillNextLevelDesc = new String[]{
-            "Deals " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "% damage per hit.",
-            "Critical Hits deal additional +" + NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_BASEBONUSCRITDMG) + CUSTOM_VALUES.get(CUSTOMHEADER_MULTBONUSCRITDMG) * (this.level + 1)) + "% Critical Damage."
+            "Deals " + Globals.NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "% damage per hit.",
+            "Critical Hits deal additional +" + Globals.NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_BASEBONUSCRITDMG) + CUSTOM_VALUES.get(CUSTOMHEADER_MULTBONUSCRITDMG) * (this.level + 1)) + "% Critical Damage."
         };
         this.maxBonusDesc = new String[]{
-            "This attack has +" + NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_BONUSCRITCHC)) + "% Critical Hit Chance.",
+            "This attack has +" + Globals.NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_BONUSCRITCHC)) + "% Critical Hit Chance.",
             "Strikes 5 times."
         };
     }

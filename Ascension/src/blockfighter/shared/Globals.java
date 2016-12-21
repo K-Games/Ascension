@@ -14,6 +14,7 @@ import java.io.PrintWriter;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -32,6 +33,9 @@ import org.apache.commons.io.LineIterator;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
 public class Globals {
+
+    public static DecimalFormat NUMBER_FORMAT = new DecimalFormat();
+    public static DecimalFormat TIME_NUMBER_FORMAT = new DecimalFormat();
 
     public static boolean SKIP_TITLE = false;
     public static int SERVER_TCP_PORT = 25565;
@@ -558,6 +562,7 @@ public class Globals {
     }
 
     public static void loadServer() {
+        loadNumberFormats();
     }
 
     public static void loadClient() {
@@ -571,6 +576,17 @@ public class Globals {
         PLAYER_NUM_ANIM_FRAMES[PLAYER_ANIM_STATE_JUMP] = 3;
         loadSound();
         loadGFX();
+        loadNumberFormats();
+    }
+
+    private static void loadNumberFormats() {
+        NUMBER_FORMAT.setGroupingSize(3);
+        NUMBER_FORMAT.setGroupingUsed(true);
+        NUMBER_FORMAT.setDecimalSeparatorAlwaysShown(false);
+        NUMBER_FORMAT.setMaximumFractionDigits(2);
+
+        TIME_NUMBER_FORMAT.setDecimalSeparatorAlwaysShown(false);
+        TIME_NUMBER_FORMAT.setMaximumFractionDigits(1);
     }
 
     private static void loadSound() {

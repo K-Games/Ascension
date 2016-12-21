@@ -116,16 +116,16 @@ public class ScreenStats extends ScreenMenu {
         String[] statString = {
             SECONDARY_STATS_TEXT,
             Globals.getStatName(Globals.STAT_MAXHP) + Globals.COLON_SPACE_TEXT + (int) totalStats[Globals.STAT_MAXHP],
-            EFFECTIVE_HP_TEXT + this.df.format((int) Globals.calcEHP(totalStats[Globals.STAT_DAMAGEREDUCT], totalStats[Globals.STAT_MAXHP])),
+            EFFECTIVE_HP_TEXT + Globals.NUMBER_FORMAT.format((int) Globals.calcEHP(totalStats[Globals.STAT_DAMAGEREDUCT], totalStats[Globals.STAT_MAXHP])),
             DAMAGE_TEXT + (int) totalStats[Globals.STAT_MINDMG] + " - " + (int) totalStats[Globals.STAT_MAXDMG],
             Globals.getStatName(Globals.STAT_ARMOR) + Globals.COLON_SPACE_TEXT + (int) baseStats[Globals.STAT_ARMOR] + " + " + (int) bonusStats[Globals.STAT_ARMOR] + " (" + (int) totalStats[Globals.STAT_ARMOR] + ")",
-            Globals.getStatName(Globals.STAT_REGEN) + Globals.COLON_SPACE_TEXT + this.df.format(baseStats[Globals.STAT_REGEN]) + " + " + this.df.format(bonusStats[Globals.STAT_REGEN]) + " (" + this.df.format(totalStats[Globals.STAT_REGEN]) + ") HP/Sec",
-            Globals.getStatName(Globals.STAT_CRITCHANCE) + Globals.COLON_SPACE_TEXT + this.df.format(baseStats[Globals.STAT_CRITCHANCE] * 100)
-            + " + " + this.df.format(bonusStats[Globals.STAT_CRITCHANCE] * 100) + "% ("
-            + this.df.format(totalStats[Globals.STAT_CRITCHANCE] * 100) + "%)",
-            Globals.getStatName(Globals.STAT_CRITDMG) + Globals.COLON_SPACE_TEXT + this.df.format((1 + baseStats[Globals.STAT_CRITDMG]) * 100)
-            + " + " + this.df.format(bonusStats[Globals.STAT_CRITDMG] * 100) + "% ("
-            + this.df.format((1 + totalStats[Globals.STAT_CRITDMG]) * 100) + "%)"
+            Globals.getStatName(Globals.STAT_REGEN) + Globals.COLON_SPACE_TEXT + Globals.NUMBER_FORMAT.format(baseStats[Globals.STAT_REGEN]) + " + " + Globals.NUMBER_FORMAT.format(bonusStats[Globals.STAT_REGEN]) + " (" + Globals.NUMBER_FORMAT.format(totalStats[Globals.STAT_REGEN]) + ") HP/Sec",
+            Globals.getStatName(Globals.STAT_CRITCHANCE) + Globals.COLON_SPACE_TEXT + Globals.NUMBER_FORMAT.format(baseStats[Globals.STAT_CRITCHANCE] * 100)
+            + " + " + Globals.NUMBER_FORMAT.format(bonusStats[Globals.STAT_CRITCHANCE] * 100) + "% ("
+            + Globals.NUMBER_FORMAT.format(totalStats[Globals.STAT_CRITCHANCE] * 100) + "%)",
+            Globals.getStatName(Globals.STAT_CRITDMG) + Globals.COLON_SPACE_TEXT + Globals.NUMBER_FORMAT.format((1 + baseStats[Globals.STAT_CRITDMG]) * 100)
+            + " + " + Globals.NUMBER_FORMAT.format(bonusStats[Globals.STAT_CRITDMG] * 100) + "% ("
+            + Globals.NUMBER_FORMAT.format((1 + totalStats[Globals.STAT_CRITDMG]) * 100) + "%)"
         };
 
         g.setFont(Globals.ARIAL_18PT);
@@ -146,9 +146,9 @@ public class ScreenStats extends ScreenMenu {
         g.fillRoundRect(EXPBAR_BOX_X - 10, EXPBAR_BOX_Y - 20, 470, 75, 15, 15);
 
         double[] baseStats = this.c.getBaseStats();
-        String exp = Globals.getStatName(Globals.STAT_EXP) + Globals.COLON_SPACE_TEXT + this.df.format((baseStats[Globals.STAT_EXP])) + "/"
-                + this.df.format(baseStats[Globals.STAT_MAXEXP])
-                + "(" + this.df.format((baseStats[Globals.STAT_EXP] / baseStats[Globals.STAT_MAXEXP]) * 100) + "%)";
+        String exp = Globals.getStatName(Globals.STAT_EXP) + Globals.COLON_SPACE_TEXT + Globals.NUMBER_FORMAT.format((baseStats[Globals.STAT_EXP])) + "/"
+                + Globals.NUMBER_FORMAT.format(baseStats[Globals.STAT_MAXEXP])
+                + "(" + Globals.NUMBER_FORMAT.format((baseStats[Globals.STAT_EXP] / baseStats[Globals.STAT_MAXEXP]) * 100) + "%)";
 
         g.setFont(Globals.ARIAL_18PT);
         drawStringOutline(g, exp, EXPBAR_BOX_X, EXPBAR_BOX_Y, 1);

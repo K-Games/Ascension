@@ -68,10 +68,10 @@ public class SkillPassiveStatic extends Skill {
     @Override
     public void updateDesc() {
         this.skillCurLevelDesc = new String[]{
-            "20% Chance to shock a nearby enemy for " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * this.level) + "% of Armor as damage."
+            "20% Chance to shock a nearby enemy for " + Globals.NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * this.level) + "% of Armor as damage."
         };
         this.skillNextLevelDesc = new String[]{
-            "20% Chance to shock a nearby enemy for " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "% of Armor as damage."
+            "20% Chance to shock a nearby enemy for " + Globals.NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "% of Armor as damage."
         };
     }
 }

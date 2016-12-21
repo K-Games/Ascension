@@ -73,10 +73,10 @@ public class SkillPassiveResistance extends Skill {
     @Override
     public void updateDesc() {
         this.skillCurLevelDesc = new String[]{
-            "Reduce cooldown by " + TIME_NUMBER_FORMAT.format(BASE_VALUE / 1000 + MULT_VALUE / 1000 * this.level) + ((BASE_VALUE / 1000 + MULT_VALUE / 1000 * this.level > 1) ? " seconds." : " second.")
+            "Reduce cooldown by " + Globals.TIME_NUMBER_FORMAT.format(BASE_VALUE / 1000 + MULT_VALUE / 1000 * this.level) + ((BASE_VALUE / 1000 + MULT_VALUE / 1000 * this.level > 1) ? " seconds." : " second.")
         };
         this.skillNextLevelDesc = new String[]{
-            "Reduce cooldown by " + NUMBER_FORMAT.format(BASE_VALUE / 1000 + MULT_VALUE / 1000 * (this.level + 1)) + ((BASE_VALUE / 1000 + MULT_VALUE / 1000 * (this.level + 1) > 1) ? " seconds." : " second.")
+            "Reduce cooldown by " + Globals.NUMBER_FORMAT.format(BASE_VALUE / 1000 + MULT_VALUE / 1000 * (this.level + 1)) + ((BASE_VALUE / 1000 + MULT_VALUE / 1000 * (this.level + 1) > 1) ? " seconds." : " second.")
         };
     }
 }

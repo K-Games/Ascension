@@ -68,10 +68,10 @@ public class SkillPassiveShadowAttack extends Skill {
     @Override
     public void updateDesc() {
         this.skillCurLevelDesc = new String[]{
-            NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * this.level) + "% chance to summon a shadow blade."
+            Globals.NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * this.level) + "% chance to summon a shadow blade."
         };
         this.skillNextLevelDesc = new String[]{
-            NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "% chance to summon a shadow blade."
+            Globals.NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "% chance to summon a shadow blade."
         };
     }
 }

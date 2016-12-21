@@ -69,10 +69,10 @@ public class SkillPassiveWillpower extends Skill {
     public void updateDesc() {
 
         this.skillCurLevelDesc = new String[]{
-            "Increase damage dealt up to " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * this.level) + "%."
+            "Increase damage dealt up to " + Globals.NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * this.level) + "%."
         };
         this.skillNextLevelDesc = new String[]{
-            "Increase damage dealt up to " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "%."
+            "Increase damage dealt up to " + Globals.NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "%."
         };
     }
 }

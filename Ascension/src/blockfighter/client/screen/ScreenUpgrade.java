@@ -155,11 +155,11 @@ public class ScreenUpgrade extends ScreenItemManagement {
         if (selTemp1 >= 0 && selTemp2 >= 0) {
             g.setFont(Globals.ARIAL_15PT);
             drawStringOutline(g, CHANCE_OF_SUCCESS_TEXT
-                    + this.df.format(ItemUpgrade.upgradeChance(this.character.getUpgrades()[selTemp1], this.character.getEquip()[selTemp2]) * 100) + "%",
+                    + Globals.NUMBER_FORMAT.format(ItemUpgrade.upgradeChance(this.character.getUpgrades()[selTemp1], this.character.getEquip()[selTemp2]) * 100) + "%",
                     UPGRADE_BOX_X + 20, UPGRADE_BOX_Y + 115, 1);
             g.setColor(Color.WHITE);
             g.drawString(CHANCE_OF_SUCCESS_TEXT
-                    + this.df.format(ItemUpgrade.upgradeChance(this.character.getUpgrades()[selTemp1], this.character.getEquip()[selTemp2]) * 100) + "%",
+                    + Globals.NUMBER_FORMAT.format(ItemUpgrade.upgradeChance(this.character.getUpgrades()[selTemp1], this.character.getEquip()[selTemp2]) * 100) + "%",
                     UPGRADE_BOX_X + 20, UPGRADE_BOX_Y + 115);
         }
 

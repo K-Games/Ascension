@@ -2,8 +2,8 @@ package blockfighter.server.entities.player.skills;
 
 import blockfighter.shared.Globals;
 import java.util.HashMap;
-import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Test;
 
 public class SkillPassiveStaticTest {
 

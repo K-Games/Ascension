@@ -68,10 +68,10 @@ public class SkillPassiveBarrier extends Skill {
     @Override
     public void updateDesc() {
         this.skillCurLevelDesc = new String[]{
-            "Absorbs up to " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * this.level) + "% of Max HP."
+            "Absorbs up to " + Globals.NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * this.level) + "% of Max HP."
         };
         this.skillNextLevelDesc = new String[]{
-            "Absorbs up to " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "% of Max HP."
+            "Absorbs up to " + Globals.NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "% of Max HP."
         };
     }
 }

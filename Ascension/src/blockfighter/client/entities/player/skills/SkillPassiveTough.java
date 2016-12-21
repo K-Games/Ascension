@@ -68,10 +68,10 @@ public class SkillPassiveTough extends Skill {
     @Override
     public void updateDesc() {
         this.skillCurLevelDesc = new String[]{
-            "Take " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * this.level) + "% reduced damage."
+            "Take " + Globals.NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * this.level) + "% reduced damage."
         };
         this.skillNextLevelDesc = new String[]{
-            "Take " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "% reduced damage."
+            "Take " + Globals.NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "% reduced damage."
         };
     }
 }

@@ -81,13 +81,13 @@ public class SkillUtilityFortify extends Skill {
     @Override
     public void updateDesc() {
         this.skillCurLevelDesc = new String[]{
-            "Reduce damage taken by " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * this.level) + "%."
+            "Reduce damage taken by " + Globals.NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * this.level) + "%."
         };
         this.skillNextLevelDesc = new String[]{
-            "Reduce damage taken by " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "%."
+            "Reduce damage taken by " + Globals.NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "%."
         };
         this.maxBonusDesc = new String[]{
-            "Restore " + NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_HEAL)) + "% HP over " + TIME_NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_BUFFDURATION)) + " seconds."
+            "Restore " + Globals.NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_HEAL)) + "% HP over " + Globals.TIME_NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_BUFFDURATION)) + " seconds."
         };
     }
 }

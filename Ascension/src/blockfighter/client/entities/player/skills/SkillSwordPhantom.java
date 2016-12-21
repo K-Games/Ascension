@@ -68,11 +68,11 @@ public class SkillSwordPhantom extends Skill {
     @Override
     public void updateDesc() {
         this.skillCurLevelDesc = new String[]{
-            "Perform " + (5 + (this.level / 2)) + " attacks for " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * this.level) + "% damage."
+            "Perform " + (5 + (this.level / 2)) + " attacks for " + Globals.NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * this.level) + "% damage."
         };
 
         this.skillNextLevelDesc = new String[]{
-            "Perform " + (5 + ((this.level + 1) / 2)) + " attacks for " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "% damage."
+            "Perform " + (5 + ((this.level + 1) / 2)) + " attacks for " + Globals.NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "% damage."
         };
 
         this.maxBonusDesc = new String[]{

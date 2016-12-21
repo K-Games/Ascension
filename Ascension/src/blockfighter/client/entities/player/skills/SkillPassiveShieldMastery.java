@@ -85,12 +85,12 @@ public class SkillPassiveShieldMastery extends Skill {
 //            "additional damage and take reduced damage."
 //        };
         this.skillCurLevelDesc = new String[]{
-            "Deal additional " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * this.level) + "% damage.",
-            "Take " + NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_BASEDMGREDUCT) + CUSTOM_VALUES.get(CUSTOMHEADER_MULTDMGREDUCT) * this.level) + "% reduced damage."
+            "Deal additional " + Globals.NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * this.level) + "% damage.",
+            "Take " + Globals.NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_BASEDMGREDUCT) + CUSTOM_VALUES.get(CUSTOMHEADER_MULTDMGREDUCT) * this.level) + "% reduced damage."
         };
         this.skillNextLevelDesc = new String[]{
-            "Deal additional " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "% damage.",
-            "Take " + NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_BASEDMGREDUCT) + CUSTOM_VALUES.get(CUSTOMHEADER_MULTDMGREDUCT) * (this.level + 1)) + "% reduced damage."
+            "Deal additional " + Globals.NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "% damage.",
+            "Take " + Globals.NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_BASEDMGREDUCT) + CUSTOM_VALUES.get(CUSTOMHEADER_MULTDMGREDUCT) * (this.level + 1)) + "% reduced damage."
         };
     }
 }

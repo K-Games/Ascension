@@ -68,10 +68,10 @@ public class SkillPassiveHarmony extends Skill {
     @Override
     public void updateDesc() {
         this.skillCurLevelDesc = new String[]{
-            "Gain " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * this.level) + "% of Max HP as bonus damage."
+            "Gain " + Globals.NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * this.level) + "% of Max HP as bonus damage."
         };
         this.skillNextLevelDesc = new String[]{
-            "Gain " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "% of Max HP as bonus damage."
+            "Gain " + Globals.NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "% of Max HP as bonus damage."
         };
     }
 }

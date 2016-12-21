@@ -8,14 +8,10 @@ import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.text.DecimalFormat;
 
 public abstract class Skill {
 
     protected static LogicModule logic;
-    protected static DecimalFormat NUMBER_FORMAT = new DecimalFormat("0.##");
-    protected static DecimalFormat TIME_NUMBER_FORMAT = new DecimalFormat("0.#");
-
     private FontMetrics fontMetric;
     private int boxWidth, boxHeight;
 
@@ -28,8 +24,6 @@ public abstract class Skill {
 
     public static void init() {
         logic = AscensionClient.getLogicModule();
-        NUMBER_FORMAT.setGroupingSize(3);
-        NUMBER_FORMAT.setGroupingUsed(true);
     }
 
     public void draw(final Graphics2D g, final int x, final int y) {
@@ -67,7 +61,7 @@ public abstract class Skill {
             g.drawString("Level: " + this.level, drawX + 80, drawY + 50);
         }
         if (getMaxCooldown() > 0) {
-            g.drawString("Cooldown: " + TIME_NUMBER_FORMAT.format(getMaxCooldown() / 1000D) + " Seconds", drawX + 80, drawY + 70);
+            g.drawString("Cooldown: " + Globals.TIME_NUMBER_FORMAT.format(getMaxCooldown() / 1000D) + " Seconds", drawX + 80, drawY + 70);
         }
 
         int totalDescY = 0;

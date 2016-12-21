@@ -87,13 +87,13 @@ public class SkillShieldRoar extends Skill {
     @Override
     public void updateDesc() {
         this.skillCurLevelDesc = new String[]{
-            "Deals " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * this.level) + "% + Defense multiplied by " + NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_MULTBASEDEF) * (CUSTOM_VALUES.get(CUSTOMHEADER_BASEDEF) + CUSTOM_VALUES.get(CUSTOMHEADER_MULTDEF) * this.level)) + " damage."
+            "Deals " + Globals.NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * this.level) + "% + Defense multiplied by " + Globals.NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_MULTBASEDEF) * (CUSTOM_VALUES.get(CUSTOMHEADER_BASEDEF) + CUSTOM_VALUES.get(CUSTOMHEADER_MULTDEF) * this.level)) + " damage."
         };
         this.skillNextLevelDesc = new String[]{
-            "Deals " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "% + Defense multiplied by " + NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_MULTBASEDEF) * (CUSTOM_VALUES.get(CUSTOMHEADER_BASEDEF) + CUSTOM_VALUES.get(CUSTOMHEADER_MULTDEF) * (this.level + 1))) + " damage."
+            "Deals " + Globals.NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "% + Defense multiplied by " + Globals.NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_MULTBASEDEF) * (CUSTOM_VALUES.get(CUSTOMHEADER_BASEDEF) + CUSTOM_VALUES.get(CUSTOMHEADER_MULTDEF) * (this.level + 1))) + " damage."
         };
         this.maxBonusDesc = new String[]{
-            "Enemies are stunned for " + NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_STUN)) + " seconds."
+            "Enemies are stunned for " + Globals.NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_STUN)) + " seconds."
         };
     }
 }

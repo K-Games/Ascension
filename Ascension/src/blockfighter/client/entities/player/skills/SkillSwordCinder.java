@@ -87,16 +87,16 @@ public class SkillSwordCinder extends Skill {
     @Override
     public void updateDesc() {
         this.skillCurLevelDesc = new String[]{
-            "Deals " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * this.level) + "% damage.",
-            "Burning enemies take " + NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_DMGAMP) * this.level) + "% increased damage."
+            "Deals " + Globals.NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * this.level) + "% damage.",
+            "Burning enemies take " + Globals.NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_DMGAMP) * this.level) + "% increased damage."
         };
         this.skillNextLevelDesc = new String[]{
-            "Deals " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "% damage.",
-            "Burning enemies take " + NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_DMGAMP) * (this.level + 1)) + "% increased damage."
+            "Deals " + Globals.NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "% damage.",
+            "Burning enemies take " + Globals.NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_DMGAMP) * (this.level + 1)) + "% increased damage."
         };
         this.maxBonusDesc = new String[]{
-            "Burn also deals " + NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_BURNDMG)) + "% damage per second for " + TIME_NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_BUFFDURATION)) + " seconds.",
-            "Firebrand has " + NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_BONUSCRITCHC)) + "% Critical Hit Chance."
+            "Burn also deals " + Globals.NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_BURNDMG)) + "% damage per second for " + Globals.TIME_NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_BUFFDURATION)) + " seconds.",
+            "Firebrand has " + Globals.NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_BONUSCRITCHC)) + "% Critical Hit Chance."
         };
     }
 }

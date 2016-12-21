@@ -79,13 +79,13 @@ public class SkillBowArc extends Skill {
     @Override
     public void updateDesc() {
         this.skillCurLevelDesc = new String[]{
-            "Deal " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * this.level) + "% damage per hit."
+            "Deal " + Globals.NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * this.level) + "% damage per hit."
         };
         this.skillNextLevelDesc = new String[]{
-            "Deal " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "% damage per hit."
+            "Deal " + Globals.NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "% damage per hit."
         };
         this.maxBonusDesc = new String[]{
-            "Restore " + NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_LIFESTEAL)) + "% damage to HP. Maximum of " + Skill.NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_MAXLIFESTEAL)) + "% HP."
+            "Restore " + Globals.NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_LIFESTEAL)) + "% damage to HP. Maximum of " + Globals.NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_MAXLIFESTEAL)) + "% HP."
         };
     }
 }

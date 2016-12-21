@@ -46,7 +46,7 @@ public class ScreenIngame extends Screen {
     private final GameClient client;
     private final Rectangle2D.Double[] hotkeySlots = new Rectangle2D.Double[12];
 
-    private final DecimalFormat df = new DecimalFormat("0.0");
+    private final DecimalFormat COOLDOWN_FORMAT = new DecimalFormat("0.0");
     private final ConcurrentHashMap<Byte, Player> players;
     private final ConcurrentHashMap<Integer, Mob> mobs = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Integer, Particle> particles = new ConcurrentHashMap<>(500, 0.9f, 1);
@@ -320,7 +320,7 @@ public class ScreenIngame extends Screen {
     }
 
     private void drawNotifications(final Graphics2D g) {
-        Notification[] copy = this.notifications.toArray(new Notification[0]);
+        Notification[] copy = this.notifications.toArray(new Notification[this.notifications.size()]);
         int y = 580 - Math.min(Notification.MAX_NUM_NOTIFICATIONS, copy.length) * Notification.BG_HEIGHT;
         for (int i = 0; i < Math.min(Notification.MAX_NUM_NOTIFICATIONS, copy.length); i++) {
             copy[i].draw(g, 0, y);
@@ -340,11 +340,11 @@ public class ScreenIngame extends Screen {
                         cdHeight);
                 if (hotkey[j].getCooldown() > 0) {
                     g.setFont(Globals.ARIAL_18PT);
-                    final int width = g.getFontMetrics().stringWidth(this.df.format(hotkey[j].getCooldown() / 1000D));
-                    drawStringOutline(g, this.df.format(hotkey[j].getCooldown() / 1000D), (int) this.hotkeySlots[j].x + 28 - width / 2,
+                    final int width = g.getFontMetrics().stringWidth(this.COOLDOWN_FORMAT.format(hotkey[j].getCooldown() / 1000D));
+                    drawStringOutline(g, this.COOLDOWN_FORMAT.format(hotkey[j].getCooldown() / 1000D), (int) this.hotkeySlots[j].x + 28 - width / 2,
                             (int) this.hotkeySlots[j].y + 33, 1);
                     g.setColor(Color.white);
-                    g.drawString(this.df.format(hotkey[j].getCooldown() / 1000D), (int) this.hotkeySlots[j].x + 28 - width / 2,
+                    g.drawString(this.COOLDOWN_FORMAT.format(hotkey[j].getCooldown() / 1000D), (int) this.hotkeySlots[j].x + 28 - width / 2,
                             (int) this.hotkeySlots[j].y + 33);
                 }
             }

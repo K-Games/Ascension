@@ -85,14 +85,14 @@ public class SkillBowFrost extends Skill {
     @Override
     public void updateDesc() {
         this.skillCurLevelDesc = new String[]{
-            "Deals " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * this.level) + "% damage. Stuns for " + TIME_NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_BASESTUN)) + " seconds."
+            "Deals " + Globals.NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * this.level) + "% damage. Stuns for " + Globals.TIME_NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_BASESTUN)) + " seconds."
         };
         this.skillNextLevelDesc = new String[]{
-            "Deals " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "% damage. Stuns for " + TIME_NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_BASESTUN)) + " seconds."
+            "Deals " + Globals.NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "% damage. Stuns for " + Globals.TIME_NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_BASESTUN)) + " seconds."
         };
         this.maxBonusDesc = new String[]{
-            "Stun now lasts for " + TIME_NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_MAXLEVELSTUN)) + " seconds.",
-            "Hits an additional " + NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_MAXLEVELBONUSPROJ)) + " times dealing " + NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_MAXLEVELBONUSDAMAGE)) + "% damage."
+            "Stun now lasts for " + Globals.TIME_NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_MAXLEVELSTUN)) + " seconds.",
+            "Hits an additional " + Globals.NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_MAXLEVELBONUSPROJ)) + " times dealing " + Globals.NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_MAXLEVELBONUSDAMAGE)) + "% damage."
         };
     }
 }

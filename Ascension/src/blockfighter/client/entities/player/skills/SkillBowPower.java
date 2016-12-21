@@ -76,14 +76,14 @@ public class SkillBowPower extends Skill {
     @Override
     public void updateDesc() {
         this.skillCurLevelDesc = new String[]{
-            "Deals " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * this.level) + "% damage."
+            "Deals " + Globals.NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * this.level) + "% damage."
         };
         this.skillNextLevelDesc = new String[]{
-            "Deals " + NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "% damage."
+            "Deals " + Globals.NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "% damage."
         };
         this.maxBonusDesc = new String[]{
             "Can no longer be interrupted.",
-            "Critical Hits deal +" + NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_MAXLEVELBONUSCRITDMG)) + "% Critical Hit damage."
+            "Critical Hits deal +" + Globals.NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_MAXLEVELBONUSCRITDMG)) + "% Critical Hit damage."
         };
     }
 }
