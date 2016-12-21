@@ -31,7 +31,7 @@ public class AscensionServer {
     private static final ScheduledExecutorService HUB_SCHEDULER = Executors.newSingleThreadScheduledExecutor(
             new BasicThreadFactory.Builder()
                     .namingPattern("Hub-Runner-%d")
-                    .daemon(false)
+                    .daemon(true)
                     .priority(Thread.NORM_PRIORITY)
                     .build());
 

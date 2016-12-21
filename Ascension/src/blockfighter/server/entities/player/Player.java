@@ -61,10 +61,11 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-public class Player extends Thread implements GameEntity {
+public class Player implements GameEntity, Callable<Player> {
 
     private static HashSet<Byte> VALID_PLAYER_SKILL_STATES;
     private static HashSet<Byte> IMMOVABLE_PLAYER_SKILL_STATES;
@@ -472,12 +473,13 @@ public class Player extends Thread implements GameEntity {
     }
 
     @Override
-    public void run() {
+    public Player call() {
         try {
             update();
         } catch (final Exception ex) {
             Globals.logError(ex.getMessage(), ex, true);
         }
+        return this;
     }
 
     @Override

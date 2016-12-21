@@ -8,8 +8,6 @@ import blockfighter.client.screen.ScreenIngame;
 import blockfighter.client.screen.ScreenLoading;
 import blockfighter.client.screen.ScreenServerList;
 import blockfighter.shared.Globals;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class PacketHandler {
 
@@ -61,7 +59,7 @@ public class PacketHandler {
             logic.setScreen(ingameScreen);
             PacketSender.sendGetAll(logic.getSelectedRoom(), key);
         } catch (final Exception e) {
-            Logger.getLogger(PacketHandler.class.getName()).log(Level.SEVERE, null, e);
+            Globals.logError(e.toString(), e, true);
             Particle.unloadParticles();
             Emote.unloadEmotes();
             logic.disconnect();

@@ -11,10 +11,11 @@ import blockfighter.shared.Globals;
 import java.awt.geom.Rectangle2D;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-public abstract class Mob extends Thread implements GameEntity {
+public abstract class Mob implements GameEntity, Callable<Mob> {
 
     public final static int NUM_STATS = 3;
     public final static byte STAT_LEVEL = 0,
@@ -202,12 +203,13 @@ public abstract class Mob extends Thread implements GameEntity {
     }
 
     @Override
-    public void run() {
+    public Mob call() {
         try {
             update();
         } catch (final Exception ex) {
             Globals.logError(ex.toString(), ex, true);
         }
+        return this;
     }
 
     @Override
@@ -291,24 +293,19 @@ public abstract class Mob extends Thread implements GameEntity {
         this.dmgAmp = 1;
 
         // While buff queue has things
-            //Poll buff
-            //Get next buff key
-            //Ensure key and buff isnt null
-                //add buff
-
+        //Poll buff
+        //Get next buff key
+        //Ensure key and buff isnt null
+        //add buff
         //Iterate through buffs
-            //Update buffs
-
-            //Track stun if stun is null
-            //Track Knockback if it is null
-
-            // Add all the damage reduction buffs(Multiplicative)
-
-            // Add all the damage intake amplification(Additive)
-
-            //Check buff expired
-            //removed from iterator
-            //return buff key
+        //Update buffs
+        //Track stun if stun is null
+        //Track Knockback if it is null
+        // Add all the damage reduction buffs(Multiplicative)
+        // Add all the damage intake amplification(Additive)
+        //Check buff expired
+        //removed from iterator
+        //return buff key
     }
 
     public boolean intersectHitbox(final Rectangle2D.Double box) {
@@ -416,7 +413,7 @@ public abstract class Mob extends Thread implements GameEntity {
     }
 
     public void sendState() {
-        final byte[] bytes = new byte[Globals.PACKET_BYTE * 3+ Globals.PACKET_INT];
+        final byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT];
         bytes[0] = Globals.DATA_MOB_SET_STATE;
         final byte[] intKey = Globals.intToBytes(this.key);
         System.arraycopy(intKey, 0, bytes, 1, intKey.length);

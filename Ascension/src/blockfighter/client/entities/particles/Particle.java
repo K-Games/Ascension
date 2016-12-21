@@ -6,8 +6,9 @@ import blockfighter.client.entities.player.Player;
 import blockfighter.shared.Globals;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.util.concurrent.Callable;
 
-public abstract class Particle extends Thread {
+public abstract class Particle implements Callable<Particle> {
 
     protected int x, y;
     protected double size = 10.0;
@@ -163,8 +164,9 @@ public abstract class Particle extends Thread {
     }
 
     @Override
-    public void run() {
+    public Particle call() {
         update();
+        return this;
     }
 
     public boolean isExpired() {
@@ -187,7 +189,6 @@ public abstract class Particle extends Thread {
         if (owner != null) {
             this.facing = owner.getFacing();
         }
-        setDaemon(true);
     }
 
     public Particle(final int x, final int y) {

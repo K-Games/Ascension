@@ -6,8 +6,9 @@ import blockfighter.shared.Globals;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.util.concurrent.Callable;
 
-public class IngameNumber extends Thread {
+public class IngameNumber implements Callable<IngameNumber> {
 
     private static LogicModule logic;
     private final byte type;
@@ -28,7 +29,6 @@ public class IngameNumber extends Thread {
         this.y = loc.y - 18;
         this.speedY = -2;
         this.speedX = 0;
-        setDaemon(true);
     }
 
     public static void init() {
@@ -36,9 +36,10 @@ public class IngameNumber extends Thread {
     }
 
     @Override
-    public void run() {
+    public IngameNumber call() {
         this.y += this.speedY;
         this.x += this.speedX;
+        return this;
     }
 
     public boolean isExpired() {

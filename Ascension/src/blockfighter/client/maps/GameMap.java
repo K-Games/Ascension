@@ -6,9 +6,10 @@ import blockfighter.shared.Globals;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Future;
 
 public abstract class GameMap {
 
@@ -48,18 +49,19 @@ public abstract class GameMap {
     }
 
     public void updateParticles() {
+        LinkedList<Future<Particle>> futures = new LinkedList<>();
         for (final Map.Entry<Integer, Particle> pEntry : this.particles.entrySet()) {
-            AscensionClient.SHARED_THREADPOOL.execute(pEntry.getValue());
+            futures.add(AscensionClient.SHARED_THREADPOOL.submit(pEntry.getValue()));
         }
-        Iterator<Map.Entry<Integer, Particle>> particlesIter = this.particles.entrySet().iterator();
-        while (particlesIter.hasNext()) {
-            Map.Entry<Integer, Particle> particle = particlesIter.next();
+        for (Future<Particle> task : futures) {
+
             try {
-                particle.getValue().join();
-                if (particle.getValue().isExpired()) {
-                    particlesIter.remove();
+                Particle particle = task.get();
+                if (particle.isExpired()) {
+                    this.particles.remove(particle.getKey());
                 }
-            } catch (final InterruptedException ex) {
+            } catch (final Exception ex) {
+                Globals.logError(ex.toString(), ex, true);
             }
         }
     }

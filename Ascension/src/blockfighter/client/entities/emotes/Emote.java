@@ -6,8 +6,9 @@ import blockfighter.client.entities.player.Player;
 import blockfighter.shared.Globals;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.util.concurrent.Callable;
 
-public abstract class Emote extends Thread {
+public abstract class Emote implements Callable<Emote> {
 
     protected int x, y;
     protected double size = 10.0;
@@ -84,8 +85,9 @@ public abstract class Emote extends Thread {
     }
 
     @Override
-    public void run() {
+    public Emote call() {
         update();
+        return this;
     }
 
     public boolean isExpired() {
@@ -102,7 +104,6 @@ public abstract class Emote extends Thread {
         }
         this.duration = 1000;
         this.owner = owner;
-        setDaemon(true);
     }
 
     public void draw(final Graphics2D g) {

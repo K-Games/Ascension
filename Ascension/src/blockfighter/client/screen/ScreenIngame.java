@@ -34,10 +34,12 @@ import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.Future;
 
 public class ScreenIngame extends Screen {
 
@@ -48,12 +50,9 @@ public class ScreenIngame extends Screen {
     private final ConcurrentHashMap<Byte, Player> players;
     private final ConcurrentHashMap<Integer, Mob> mobs = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Integer, Particle> particles = new ConcurrentHashMap<>(500, 0.9f, 1);
-    private final ConcurrentHashMap<Integer, IngameNumber> ingameNumber = new ConcurrentHashMap<>(500, 0.9f, 1);
+    private final ConcurrentLinkedQueue<IngameNumber> ingameNumber = new ConcurrentLinkedQueue<>();
     private final ConcurrentLinkedQueue<Notification> notifications = new ConcurrentLinkedQueue<>();
     private final ConcurrentLinkedQueue<Emote> emotes = new ConcurrentLinkedQueue<>();
-
-    private final ConcurrentLinkedQueue<Integer> ingameNumKeys = new ConcurrentLinkedQueue<>();
-    private int numIngameNumKeys = 500;
 
     private double screenShakeX, screenShakeY;
     private double screenShakeXAmount, screenShakeYAmount;
@@ -164,47 +163,54 @@ public class ScreenIngame extends Screen {
     }
 
     private void updateEmotes() {
+        LinkedList<Future<Emote>> futures = new LinkedList<>();
         for (Emote emote : this.emotes) {
-            AscensionClient.SHARED_THREADPOOL.execute(emote);
+            futures.add(AscensionClient.SHARED_THREADPOOL.submit(emote));
         }
-        for (Emote n : this.emotes) {
+
+        for (Future<Emote> task : futures) {
             try {
-                n.join();
-            } catch (final InterruptedException ex) {
+                task.get();
+            } catch (final Exception ex) {
+                Globals.logError(ex.toString(), ex, true);
             }
         }
+
         if (this.emotes.peek() != null && this.emotes.peek().isExpired()) {
             this.emotes.remove();
         }
     }
 
     private void updateIngameNumber() {
-        for (final Map.Entry<Integer, IngameNumber> pEntry : this.ingameNumber.entrySet()) {
-            AscensionClient.SHARED_THREADPOOL.execute(pEntry.getValue());
+        LinkedList<Future<IngameNumber>> futures = new LinkedList<>();
+        for (final IngameNumber n : this.ingameNumber) {
+            futures.add(AscensionClient.SHARED_THREADPOOL.submit(n));
         }
 
-        Iterator<Entry<Integer, IngameNumber>> numbersIter = this.ingameNumber.entrySet().iterator();
-        while (numbersIter.hasNext()) {
-            Entry<Integer, IngameNumber> number = numbersIter.next();
+        for (Future<IngameNumber> task : futures) {
             try {
-                number.getValue().join();
-                if (number.getValue().isExpired()) {
-                    numbersIter.remove();
-                    returnDmgKey(number.getKey());
-                }
-            } catch (final InterruptedException ex) {
+                task.get();
+            } catch (final Exception ex) {
+                Globals.logError(ex.toString(), ex, true);
             }
+        }
+
+        if (this.ingameNumber.peek() != null && this.ingameNumber.peek().isExpired()) {
+            this.ingameNumber.remove();
         }
     }
 
     private void updateNotifications() {
+        LinkedList<Future<Notification>> futures = new LinkedList<>();
         for (Notification n : this.notifications) {
-            AscensionClient.SHARED_THREADPOOL.execute(n);
+            futures.add(AscensionClient.SHARED_THREADPOOL.submit(n));
         }
-        for (Notification n : this.notifications) {
+
+        for (Future<Notification> task : futures) {
             try {
-                n.join();
-            } catch (final InterruptedException ex) {
+                task.get();
+            } catch (final Exception ex) {
+                Globals.logError(ex.toString(), ex, true);
             }
         }
         if (this.notifications.peek() != null && this.notifications.peek().isExpired()) {
@@ -213,31 +219,33 @@ public class ScreenIngame extends Screen {
     }
 
     private void updateMobs() {
+        LinkedList<Future<Mob>> futures = new LinkedList<>();
         for (final Map.Entry<Integer, Mob> pEntry : this.mobs.entrySet()) {
-            AscensionClient.SHARED_THREADPOOL.execute(pEntry.getValue());
+            futures.add(AscensionClient.SHARED_THREADPOOL.submit(pEntry.getValue()));
         }
-        for (final Map.Entry<Integer, Mob> pEntry : this.mobs.entrySet()) {
+        for (Future<Mob> task : futures) {
             try {
-                pEntry.getValue().join();
-            } catch (final InterruptedException ex) {
+                task.get();
+            } catch (final Exception ex) {
+                Globals.logError(ex.toString(), ex, true);
             }
         }
     }
 
     private void updatePlayers() {
+        LinkedList<Future<Player>> futures = new LinkedList<>();
         for (final Map.Entry<Byte, Player> pEntry : this.players.entrySet()) {
-            AscensionClient.SHARED_THREADPOOL.execute(pEntry.getValue());
+            futures.add(AscensionClient.SHARED_THREADPOOL.submit(pEntry.getValue()));
         }
 
-        Iterator<Entry<Byte, Player>> playersIter = this.players.entrySet().iterator();
-        while (playersIter.hasNext()) {
-            Entry<Byte, Player> player = playersIter.next();
+        for (Future<Player> task : futures) {
             try {
-                player.getValue().join();
-                if (player.getValue().isDisconnected()) {
-                    playersIter.remove();
+                Player player = task.get();
+                if (player.isDisconnected()) {
+                    this.players.remove(player.getKey());
                 }
-            } catch (final InterruptedException ex) {
+            } catch (final Exception ex) {
+                Globals.logError(ex.toString(), ex, true);
             }
         }
     }
@@ -273,10 +281,10 @@ public class ScreenIngame extends Screen {
         for (final Map.Entry<Integer, Particle> pEntry : this.particles.entrySet()) {
             pEntry.getValue().draw(g);
         }
-        for (final Map.Entry<Integer, IngameNumber> pEntry : this.ingameNumber.entrySet()) {
-            pEntry.getValue().draw(g);
+        for (final IngameNumber number : this.ingameNumber) {
+            number.draw(g);
         }
-        for (Emote emote : this.emotes) {
+        for (final Emote emote : this.emotes) {
             emote.draw(g);
         }
 
@@ -426,20 +434,6 @@ public class ScreenIngame extends Screen {
             return null;
         }
         return new Point(this.players.get(key).getX(), this.players.get(key).getY());
-    }
-
-    public void returnDmgKey(final int key) {
-        this.ingameNumKeys.add(key);
-    }
-
-    public int getNextIngameNumKey() {
-        if (this.ingameNumKeys.isEmpty()) {
-            for (int i = this.numIngameNumKeys; i < this.numIngameNumKeys + 500; i++) {
-                this.ingameNumKeys.add(i);
-            }
-            this.numIngameNumKeys += 500;
-        }
-        return this.ingameNumKeys.remove();
     }
 
     private void processDataQueue() {
@@ -677,8 +671,7 @@ public class ScreenIngame extends Screen {
         final int x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
         final int y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
         final int value = Globals.bytesToInt(Arrays.copyOfRange(data, 10, 14));
-        final int key = getNextIngameNumKey();
-        this.ingameNumber.put(key, new IngameNumber(value, type, new Point(x, y)));
+        this.ingameNumber.add(new IngameNumber(value, type, new Point(x, y)));
     }
 
     private void dataParticleEffect(final byte[] data) {
@@ -1018,10 +1011,6 @@ public class ScreenIngame extends Screen {
         }
     }
 
-    public void addDmgNum(final IngameNumber d) {
-        this.ingameNumber.put(getNextIngameNumKey(), d);
-    }
-
     @Override
     public void addParticle(final Particle newParticle) {
         this.particles.put(newParticle.getKey(), newParticle);
@@ -1312,17 +1301,12 @@ public class ScreenIngame extends Screen {
 
     @Override
     public void unload() {
-
         Iterator<Entry<Integer, Particle>> particleIter = this.particles.entrySet().iterator();
         while (particleIter.hasNext()) {
             Entry<Integer, Particle> particle = particleIter.next();
-            try {
-                particle.getValue().join();
-                particle.getValue().setExpire();
-                particleIter.remove();
-                returnParticleKey(particle.getKey());
-            } catch (final InterruptedException ex) {
-            }
+            particle.getValue().setExpire();
+            particleIter.remove();
+            returnParticleKey(particle.getKey());
         }
 
         Particle.unloadParticles();
@@ -1331,7 +1315,6 @@ public class ScreenIngame extends Screen {
         for (final Map.Entry<Integer, Mob> mobEntry : this.mobs.entrySet()) {
             mobEntry.getValue().unload();
         }
-
     }
 
 }

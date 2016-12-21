@@ -8,8 +8,9 @@ import blockfighter.client.net.PacketSender;
 import blockfighter.shared.Globals;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.util.concurrent.Callable;
 
-public abstract class Mob extends Thread {
+public abstract class Mob implements Callable<Mob> {
 
     public final static int NUM_STATS = 3;
     public final static byte STAT_LEVEL = 0,
@@ -37,7 +38,6 @@ public abstract class Mob extends Thread {
         this.facing = Globals.RIGHT;
         this.animState = ANIM_STAND;
         this.frame = 0;
-        setDaemon(true);
     }
 
     public static void init() {
@@ -94,12 +94,13 @@ public abstract class Mob extends Thread {
     }
 
     @Override
-    public void run() {
+    public Mob call() {
         update();
         if (this.stats[STAT_MAXHP] <= 0) {
             // Get boss stat
             PacketSender.sendGetMobStat(logic.getSelectedRoom(), this.key, STAT_MAXHP);
         }
+        return this;
     }
 
     public abstract void update();

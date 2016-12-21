@@ -219,7 +219,7 @@ public class AscensionClient {
         });
         final ScheduledExecutorService service = Executors.newScheduledThreadPool(2, new BasicThreadFactory.Builder()
                 .namingPattern("Client-Runner-%d")
-                .daemon(true)
+                .daemon(false)
                 .priority(Thread.NORM_PRIORITY)
                 .build());
         LOGIC_MODULE.setScreen((!Globals.SKIP_TITLE) ? new ScreenTitle() : new ScreenSelectChar());

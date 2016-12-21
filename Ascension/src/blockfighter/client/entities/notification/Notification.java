@@ -6,8 +6,9 @@ import blockfighter.client.entities.items.Item;
 import blockfighter.shared.Globals;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.util.concurrent.Callable;
 
-public class Notification extends Thread {
+public class Notification implements Callable<Notification> {
 
     private static LogicModule logic;
     private final byte type;
@@ -21,7 +22,6 @@ public class Notification extends Thread {
         this.startTime = logic.getTime();
         this.exp = EXP;
         this.type = Globals.NOTIFICATION_EXP;
-        setDaemon(true);
     }
 
     public Notification(final Item i) {
@@ -29,7 +29,6 @@ public class Notification extends Thread {
         this.exp = 0;
         this.item = i;
         this.type = Globals.NOTIFICATION_ITEM;
-        setDaemon(true);
     }
 
     public static void init() {
@@ -37,11 +36,12 @@ public class Notification extends Thread {
     }
 
     @Override
-    public void run() {
+    public Notification call() {
         if (!isExpired()) {
             float transparency = 1f - Globals.nsToMs(logic.getTime() - this.startTime) * 1f / this.duration;
             this.colour = new Color(255, 255, 255, (int) (transparency * 255));
         }
+        return this;
     }
 
     public boolean isExpired() {

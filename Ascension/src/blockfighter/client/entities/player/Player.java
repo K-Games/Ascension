@@ -9,8 +9,9 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
+import java.util.concurrent.Callable;
 
-public class Player extends Thread {
+public class Player implements Callable<Player> {
 
     private int x, y;
     private final byte key;
@@ -33,7 +34,6 @@ public class Player extends Thread {
         this.name = "";
         this.frame = 0;
         this.lastUpdateTime = logic.getTime();
-        setDaemon(true);
     }
 
     public Player(final int x, final int y, final byte k, final byte f) {
@@ -43,6 +43,10 @@ public class Player extends Thread {
 
     public static void init() {
         logic = AscensionClient.getLogicModule();
+    }
+
+    public byte getKey() {
+        return this.key;
     }
 
     public Point getPos() {
@@ -172,7 +176,7 @@ public class Player extends Thread {
     }
 
     @Override
-    public void run() {
+    public Player call() {
         if (this.name.length() <= 0) {
             PacketSender.sendGetName(logic.getSelectedRoom(), this.key);
         }
@@ -185,6 +189,7 @@ public class Player extends Thread {
         if (this.stats[Globals.STAT_MAXHP] <= 0) {
             PacketSender.sendGetStat(logic.getSelectedRoom(), this.key, Globals.STAT_MAXHP);
         }
+        return this;
     }
 
     public boolean isDisconnected() {

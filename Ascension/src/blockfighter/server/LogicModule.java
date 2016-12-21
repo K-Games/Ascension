@@ -6,17 +6,17 @@ import blockfighter.server.entities.proj.Projectile;
 import blockfighter.server.net.PacketSender;
 import blockfighter.shared.Globals;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledFuture;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
-public class LogicModule extends Thread {
+public class LogicModule implements Runnable {
 
     private long currentTime = 0;
     private final RoomData room;
@@ -111,20 +111,19 @@ public class LogicModule extends Thread {
     }
 
     private void updateMobs() {
+        LinkedList<Future<Mob>> futures = new LinkedList<>();
         for (final Map.Entry<Integer, Mob> mob : this.room.getMobs().entrySet()) {
-            LOGIC_THREAD_POOL.execute(mob.getValue());
+            futures.add(LOGIC_THREAD_POOL.submit(mob.getValue()));
         }
 
-        Iterator<Entry<Integer, Mob>> mobsIter = this.room.getMobs().entrySet().iterator();
-        while (mobsIter.hasNext()) {
-            Entry<Integer, Mob> mob = mobsIter.next();
+        for (Future<Mob> task : futures) {
             try {
-                mob.getValue().join();
-                if (mob.getValue().isDead()) {
-                    mobsIter.remove();
+                Mob mob = task.get();
+                if (mob.isDead()) {
+                    this.room.getMobs().remove(mob.getKey());
                     this.room.returnMobKey(mob.getKey());
                 }
-            } catch (final InterruptedException ex) {
+            } catch (final Exception ex) {
                 Globals.logError(ex.toString(), ex, true);
             }
         }
@@ -132,6 +131,8 @@ public class LogicModule extends Thread {
 
     private void updatePlayers() {
         final ConcurrentHashMap<Byte, Player> players = this.room.getPlayers();
+        LinkedList<Future<Player>> futures = new LinkedList<>();
+
         final ArrayList<byte[]> posDatas = new ArrayList<>();
 
         this.room.clearPlayerBuckets();
@@ -140,25 +141,22 @@ public class LogicModule extends Thread {
         }
 
         for (final Map.Entry<Byte, Player> player : players.entrySet()) {
-            LOGIC_THREAD_POOL.execute(player.getValue());
+            futures.add(LOGIC_THREAD_POOL.submit(player.getValue()));
         }
 
-        Iterator<Entry<Byte, Player>> playersIter = players.entrySet().iterator();
-        while (playersIter.hasNext()) {
-            Entry<Byte, Player> player = playersIter.next();
+        for (Future<Player> task : futures) {
             try {
-                player.getValue().join();
-
-                if (player.getValue().isUpdatePos()) {
-                    byte[] posData = player.getValue().getPosData();
+                Player player = task.get();
+                if (player.isUpdatePos()) {
+                    byte[] posData = player.getPosData();
                     posDatas.add(posData);
                 }
 
-                if (!(player.getValue().isConnected())) {
-                    playersIter.remove();
+                if (!(player.isConnected())) {
+                    this.room.getPlayers().remove(player.getKey());
                     this.room.returnPlayerKey(player.getKey());
                 }
-            } catch (final InterruptedException ex) {
+            } catch (Exception ex) {
                 Globals.logError(ex.toString(), ex, true);
             }
         }
@@ -179,20 +177,20 @@ public class LogicModule extends Thread {
 
     private void updateProjectiles() {
         final ConcurrentHashMap<Integer, Projectile> projectiles = this.room.getProj();
+
+        LinkedList<Future<Projectile>> futures = new LinkedList<>();
         for (final Map.Entry<Integer, Projectile> p : projectiles.entrySet()) {
-            LOGIC_THREAD_POOL.execute(p.getValue());
+            futures.add(LOGIC_THREAD_POOL.submit(p.getValue()));
         }
 
-        Iterator<Entry<Integer, Projectile>> projectilesIter = projectiles.entrySet().iterator();
-        while (projectilesIter.hasNext()) {
-            Entry<Integer, Projectile> projectile = projectilesIter.next();
+        for (Future<Projectile> task : futures) {
             try {
-                projectile.getValue().join();
-                if (projectile.getValue().isExpired()) {
-                    projectilesIter.remove();
-                    this.room.returnProjKey(projectile.getValue().getKey());
+                Projectile projectile = task.get();
+                if (projectile.isExpired()) {
+                    this.room.getProj().remove(projectile.getKey());
+                    this.room.returnProjKey(projectile.getKey());
                 }
-            } catch (final InterruptedException ex) {
+            } catch (final Exception ex) {
                 Globals.logError(ex.toString(), ex, true);
             }
         }

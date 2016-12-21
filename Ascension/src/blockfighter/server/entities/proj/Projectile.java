@@ -11,8 +11,9 @@ import java.awt.geom.Rectangle2D;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.concurrent.Callable;
 
-public abstract class Projectile extends Thread implements GameEntity {
+public abstract class Projectile implements GameEntity, Callable<Projectile> {
 
     protected final int key;
 
@@ -115,12 +116,13 @@ public abstract class Projectile extends Thread implements GameEntity {
     }
 
     @Override
-    public void run() {
+    public Projectile call() {
         try {
             update();
         } catch (final Exception ex) {
             Globals.logError(ex.toString(), ex, true);
         }
+        return this;
     }
 
     public boolean isExpired() {
