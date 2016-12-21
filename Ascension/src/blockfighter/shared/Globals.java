@@ -285,7 +285,8 @@ public class Globals {
             DATA_PLAYER_GIVEDROP = 0x17,
             DATA_PLAYER_CREATE = 0x18,
             DATA_SCREEN_SHAKE = 0x19,
-            DATA_PLAYER_EMOTE = 0x1A;
+            DATA_PLAYER_EMOTE = 0x1A,
+            DATA_NOTIFICATION_KILL = 0x1B;
 
     public static final byte LOGIN_SUCCESS = 0x00,
             LOGIN_FAIL_UID_IN_ROOM = 0x01,
@@ -403,7 +404,8 @@ public class Globals {
             NUMBER_TYPE_MOB = 2;
 
     public static final byte NOTIFICATION_EXP = 0,
-            NOTIFICATION_ITEM = 1;
+            NOTIFICATION_ITEM = 1,
+            NOTIFICATION_KILL = 2;
 
     public static boolean LOGGING = false;
     private final static String LOG_DIR = "logs/",

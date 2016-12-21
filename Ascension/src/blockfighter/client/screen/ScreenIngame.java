@@ -131,11 +131,9 @@ public class ScreenIngame extends Screen {
             updateMobs();
             updateNotifications();
             updateEmotes();
-
             if (this.players.containsKey(logic.getMyPlayerKey())) {
                 logic.setSoundLisenterPos(this.players.get(logic.getMyPlayerKey()).getX(), this.players.get(logic.getMyPlayerKey()).getY());
             }
-
             this.ping = GameClient.getPing();
             this.lastUpdateTime = now;
         }
@@ -213,9 +211,16 @@ public class ScreenIngame extends Screen {
                 Globals.logError(ex.toString(), ex, true);
             }
         }
+
         if (this.notifications.peek() != null && this.notifications.peek().isExpired()) {
             this.notifications.remove();
         }
+
+        AscensionClient.SHARED_THREADPOOL.execute(() -> {
+            while (this.notifications.size() > Notification.MAX_NUM_NOTIFICATIONS) {
+                this.notifications.remove();
+            }
+        });
     }
 
     private void updateMobs() {
@@ -315,10 +320,11 @@ public class ScreenIngame extends Screen {
     }
 
     private void drawNotifications(final Graphics2D g) {
-        int x = 10, y = 710 + g.getFontMetrics(Globals.ARIAL_15PT).getHeight() - this.notifications.size() * (5 + g.getFontMetrics(Globals.ARIAL_15PT).getHeight());
-        for (Notification n : this.notifications) {
-            n.draw(g, x, y);
-            y += (5 + g.getFontMetrics(Globals.ARIAL_15PT).getHeight());
+        Notification[] copy = this.notifications.toArray(new Notification[0]);
+        int y = 580 - Math.min(Notification.MAX_NUM_NOTIFICATIONS, copy.length) * Notification.BG_HEIGHT;
+        for (int i = 0; i < Math.min(Notification.MAX_NUM_NOTIFICATIONS, copy.length); i++) {
+            copy[i].draw(g, 0, y);
+            y += 25;
         }
     }
 
@@ -508,7 +514,18 @@ public class ScreenIngame extends Screen {
                 case Globals.DATA_PLAYER_EMOTE:
                     dataPlayerEmote(data);
                     break;
+                case Globals.DATA_NOTIFICATION_KILL:
+                    dataNotificationKill(data);
+                    break;
             }
+        }
+    }
+
+    private void dataNotificationKill(final byte[] data) {
+        final byte killerKey = data[1];
+        final byte victimKey = data[2];
+        if (this.players.containsKey(killerKey) && this.players.containsKey(victimKey)) {
+            this.notifications.add(new Notification(this.players.get(killerKey), this.players.get(victimKey)));
         }
     }
 

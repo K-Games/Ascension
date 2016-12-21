@@ -873,6 +873,12 @@ public class Player implements GameEntity, Callable<Player> {
     protected void die(final Player killer) {
         if (killer != null) {
             killer.giveDrop(this.stats[Globals.STAT_LEVEL]);
+
+            final byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
+            bytes[0] = Globals.DATA_NOTIFICATION_KILL;
+            bytes[1] = killer.getKey();
+            bytes[2] = this.key;
+            PacketSender.sendAll(bytes, this.logic);
         }
 
         double totalDamageTaken = 0;
