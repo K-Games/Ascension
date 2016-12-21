@@ -17,6 +17,7 @@ public class ScreenLoading extends ScreenMenu {
     private GameMap map;
     private boolean particlesReady = false, mapAssetsReady = false;
     private boolean particlesRendered = false, mapAssetsRendered = false;
+    private int particleIndex;
 
     public void load(final byte mapID) throws Exception {
         Particle.loadParticles();
@@ -53,15 +54,16 @@ public class ScreenLoading extends ScreenMenu {
     public void draw(final Graphics2D g) {
         final BufferedImage bg = Globals.MENU_BG[0];
         if (this.particlesReady && !this.particlesRendered) {
-            Globals.log(ScreenLoading.class, "Prerendering Particles...", Globals.LOG_TYPE_DATA, true);
-            for (int i = 0; i < Globals.NUM_PARTICLE_EFFECTS; i++) {
-                if (Particle.getParticleSprites()[i] != null) {
-                    for (final BufferedImage sprite : Particle.getParticleSprites()[i]) {
-                        g.drawImage(sprite, 0, 0, null);
-                    }
+            Globals.log(ScreenLoading.class, "Prerendering " + particleIndex + " Particles...", Globals.LOG_TYPE_DATA, true);
+            if (Particle.getParticleSprites()[this.particleIndex] != null) {
+                for (final BufferedImage sprite : Particle.getParticleSprites()[this.particleIndex]) {
+                    g.drawImage(sprite, 0, 0, null);
                 }
             }
-            this.particlesRendered = true;
+            this.particleIndex++;
+            if (this.particleIndex >= Globals.NUM_PARTICLE_EFFECTS) {
+                this.particlesRendered = true;
+            }
         }
 
         if (this.mapAssetsReady && !this.mapAssetsRendered) {
