@@ -22,6 +22,7 @@
 * EXP is now given to every player that dealt damage to the dying player. The killer receives a 10% EXP bonus.
 * Notifications have been improved.
 * Added Player Kill notifications.
+* Critical hit numbers are now larger.
 
 ### Client Changes
 * Minor Server List browser performance improvement.

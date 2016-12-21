@@ -47,13 +47,10 @@ public class IngameNumber implements Callable<IngameNumber> {
     }
 
     public void draw(final Graphics2D g) {
-        //final char[] decimalArray = Integer.toString(this.number).toCharArray();
-        g.setFont(Globals.ARIAL_18PTBOLD);
+        g.setFont((this.type == Globals.NUMBER_TYPE_PLAYERCRIT) ? Globals.ARIAL_21PTBOLD : Globals.ARIAL_18PTBOLD);
 
-        //for (int i = 0; i < decimalArray.length; i++) {
-        //    g.drawImage(Globals.DAMAGE_FONT[this.type][decimalArray[i] - 48], (int) (this.x + i * 17), (int) this.y, null);
-        //}
         String output = Integer.toString(this.number);
+        output = (this.type == Globals.NUMBER_TYPE_PLAYERCRIT) ? output + "!" : output;
 
         int outputWidth = g.getFontMetrics().stringWidth(output);
         for (int i = 0; i < 2; i++) {
