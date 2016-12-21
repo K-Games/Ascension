@@ -2,7 +2,7 @@
 
 ![Game Updates](https://github.com/kenofnz/AscensionInfo/raw/master/images/updates.png)
 
-## Version 0.21 Upate 1
+## Version 0.22 Release
 ### Gameplay Changes
 * Equipment icons now show its Tier colour.
 * Equipment Tier colours updated.
@@ -18,7 +18,11 @@
 | Legendary | ~5% |
 | Mystic | ~2% |
 | Divine | 0% |
- 
+
+* EXP is now given to every player that dealt damage to the dying player. The killer receives a 10% EXP bonus.
+* Notifications have been improved.
+* Added Player Kill notifications.
+
 ### Client Changes
 * Minor Server List browser performance improvement.
 * Added a Max button in Skill screen to add maximum about of possible Skill Points into a Skill.
