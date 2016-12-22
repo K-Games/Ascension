@@ -13,10 +13,11 @@ import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URL;
 import java.util.concurrent.ConcurrentHashMap;
+import org.apache.commons.io.IOUtils;
+import org.json.JSONObject;
 
 public class ScreenTitle extends Screen {
 
@@ -31,7 +32,7 @@ public class ScreenTitle extends Screen {
     private boolean updatePrompt = false;
     private float checkVerisionCircleFactor = 0f;
     private byte checkVersionMajor, checkVersionMinor, checkVersionUpdate;
-    private String updateVersion;
+    private String remoteVerison;
 
     private final Color CHECK_UPDATE_COLOR = new Color(0, 0, 0, 125);
     private final static String[] CHECK_VERSION_STATUS_TEXT = {
@@ -149,7 +150,7 @@ public class ScreenTitle extends Screen {
                 if (checkVersionStatus == CHECK_VERSION_STATUS_UPTODATE || checkVersionStatus == CHECK_VERSION_STATUS_UNAVAILABLE) {
                     g.drawString(CHECK_VERSION_BUTTON_TEXT[0], UPDATE_PROMPT_BOX[1].x + UPDATE_PROMPT_BOX[1].width / 2 - g.getFontMetrics().stringWidth(CHECK_VERSION_BUTTON_TEXT[0]) / 2, UPDATE_PROMPT_BOX[1].y + 32);
                 } else if (checkVersionStatus == CHECK_VERSION_STATUS_OUTDATED) {
-                    g.drawString(CHECK_VERSION_BUTTON_TEXT[1] + this.updateVersion, UPDATE_PROMPT_BOX[1].x + UPDATE_PROMPT_BOX[1].width / 2 - g.getFontMetrics().stringWidth(CHECK_VERSION_BUTTON_TEXT[1] + this.updateVersion) / 2, UPDATE_PROMPT_BOX[1].y + 32);
+                    g.drawString(CHECK_VERSION_BUTTON_TEXT[1] + this.remoteVerison, UPDATE_PROMPT_BOX[1].x + UPDATE_PROMPT_BOX[1].width / 2 - g.getFontMetrics().stringWidth(CHECK_VERSION_BUTTON_TEXT[1] + this.remoteVerison) / 2, UPDATE_PROMPT_BOX[1].y + 32);
                 }
             }
         }
@@ -183,16 +184,11 @@ public class ScreenTitle extends Screen {
             AscensionClient.SHARED_THREADPOOL.execute(() -> {
                 BufferedReader in;
                 try {
-                    URL versionURL = new URL("https://raw.githubusercontent.com/K-Games/AscensionInfo/master/version");
-                    in = new BufferedReader(new InputStreamReader(versionURL.openStream()));
-                    this.checkVersionMajor = Byte.parseByte(in.readLine());
-                    this.checkVersionMinor = Byte.parseByte(in.readLine());
-                    this.checkVersionUpdate = Byte.parseByte(in.readLine());
-
-                    this.updateVersion = checkVersionMajor + "." + checkVersionMinor + "." + checkVersionUpdate;
-                    if (this.checkVersionMajor == Globals.GAME_MAJOR_VERSION
-                            && this.checkVersionMinor == Globals.GAME_MINOR_VERSION
-                            && this.checkVersionUpdate == Globals.GAME_UPDATE_NUMBER) {
+                    URL ipURL = new URL("https://itch.io/api/1/x/wharf/latest?target=kenofnz/ascension&channel_name=windows");
+                    JSONObject json = new JSONObject(IOUtils.toString(ipURL, "UTF-8"));
+                    this.remoteVerison = json.getString("latest");
+                    String gameVersion = Globals.GAME_MAJOR_VERSION + "." + Globals.GAME_MINOR_VERSION + "." + Globals.GAME_UPDATE_NUMBER;
+                    if (gameVersion.equals(this.remoteVerison)) {
                         this.updatePrompt = true;
                         this.checkVersionStatus = CHECK_VERSION_STATUS_UPTODATE;
                     } else {
