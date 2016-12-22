@@ -3,6 +3,7 @@
 ![Game Updates](https://github.com/kenofnz/AscensionInfo/raw/master/images/updates.png)
 
 ## Version 0.22 Release
+
 ### Gameplay Changes
 * Equipment icons now show its Tier colour.
 * Equipment Tier colours updated.
@@ -38,6 +39,7 @@
 ---
 
 ## Version 0.21 Release
+
 ### Gameplay Changes
 * Movement speed reduced from 4.5 to 3.8.
 * Lowered HP per Defense from 200 to 170.
@@ -45,46 +47,47 @@
 * A new Server List browser.
 
 ### Skill Changes
+
 #### Sword
 * Blade Flurry
- * Added knockback.
+	* Added knockback.
 * Rend
- * Added knockback.
+	* Added knockback.
 * Firebrand
- * Increased knockback from 30 to 150.
+	* Increased knockback from 30 to 150.
 * Aggression
- * Increased knockback 30 to 300.
+	* Increased knockback 30 to 300.
 * Vorpal Strike
- * Reworked - Dash a short distance and strike enemies.
+	* Reworked - Dash a short distance and strike enemies.
 * Phantom Reaper
- * Fixed not being at a valid Y position if Phantom Reaper ends inside a platform.
+	* Fixed not being at a valid Y position if Phantom Reaper ends inside a platform.
  
 #### Bow
 * Arc Shot
- * Increased knockback from 5 to 40.
+	* Increased knockback from 5 to 40.
 * Rapid Fire
- * Increased knockback from 15 to 30.
+	* Increased knockback from 15 to 30.
 * Vortex Bolts
- * Level 30 Bonus - Increased buff duration from 4 to 7 seconds.
- * Increased knockback 5 to 12.5.
+	* Level 30 Bonus - Increased buff duration from 4 to 7 seconds.
+	* Increased knockback 5 to 12.5.
 
 #### Shield
 * Overwhelm
- * Increased knockback 120 to 600.
+	* Increased knockback 120 to 600.
 * Magnetize
- * Added knockback.
+	* Added knockback.
 
 #### Utility
 * Fortify
- * Cooldown reduced from 24 to 19 seconds.
+	* Cooldown reduced from 24 to 19 seconds.
 
 #### Passive
 * Defender Mastery
- * Decreased Damage Reduction from 5% + 0.5% per Lvl to 4% + 0.3% per Lvl
+	* Decreased Damage Reduction from 5% + 0.5% per Lvl to 4% + 0.3% per Lvl
 * Keen Eye
- * Increased Critical Hit Chance from 1% + 0.3% per Lvl to 5% + 0.3% per Lvl
+	* Increased Critical Hit Chance from 1% + 0.3% per Lvl to 5% + 0.3% per Lvl
 * Vital Hit
- * Increased Critical Hit Damage from 10% + 2% per Lvl to 25% + 2% per Lvl
+	* Increased Critical Hit Damage from 10% + 2% per Lvl to 25% + 2% per Lvl
  
 ### Client Changes
 * Fixed unable to draw ingame equips without offsets set in its item data.
@@ -111,6 +114,7 @@
 ---
 
 ## Version 0.20 Update 2
+
 ### Gameplay Changes
 * Lowered Maximum Armor roll for new Rings.
 * Knockback no longer disables Skill casting.
@@ -137,6 +141,7 @@
 ---
 
 ## Version 0.20 Update 1
+
 ### Gameplay Changes
 * Added Emotes. Assign a key to use the Emotes in the Keybind menu.
 * Equipment Upgrades now add an additional flat 0.75 stats to existing Primary Stats(Power, Defense, Spirit) per upgrade.
@@ -159,6 +164,7 @@
 ---
 
 ## Version 0.20 Release
+
 ### Gameplay Changes
 * Some skills now have screen shake when dealing damage.
 
@@ -183,6 +189,7 @@
 ---
 
 ## Version 0.19 Release
+
 ### Gameplay Changes
 * Players can now control their direction in midair.
 * Map - Moved platforms slightly closer.
@@ -218,6 +225,7 @@
 ---
 
 ## Version 0.18 Update 1
+
 ### Gameplay Changes
 * Passives Removed: Tactical Execution
 * Shield Skill Removed: Shield Toss
@@ -259,6 +267,7 @@
 ---
 
 ## Version 0.18 Release
+
 ### Client Changes
 * Minor adjustments to sound effects.
 * Minor adjust to some particle visuals.
@@ -286,6 +295,7 @@
 ---
 
 ## Version 0.17 Update 1
+
 ### Client Changes
 * Fixed loading into map before loading completed.
 * Buff Particles are less visible. Less visual cluttering around players.
@@ -306,6 +316,7 @@
 ---
 
 ## Version 0.17 Release
+
 ### Client Changes
 * Added Debug Mode - Currently displays some hidden values in the menu.
 * Prototype screen shake - Nothing triggers this yet.
@@ -325,6 +336,7 @@
 ---
 
 ## Version 0.16 Update 18
+
 ### Client Changes
 * Renamed Global PLAYER_STATE constants to PLAYER_ANIM_STATE
 * Rendering now uses hardware acceleration.
@@ -345,6 +357,7 @@
 ---
 
 ## Version 0.16 Update 17
+
 ### Client Changes
 * Abstracted Particle Loading.
 * Particles now properly unload when leaving a game.
