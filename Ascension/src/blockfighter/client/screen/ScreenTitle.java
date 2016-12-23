@@ -21,7 +21,10 @@ import org.json.JSONObject;
 
 public class ScreenTitle extends Screen {
 
+    private static final String GAME_PORTAL_URL = "https://kenofnz.itch.io/ascension";
+    private static final String VERSION_API_URL = "https://itch.io/api/1/x/wharf/latest?target=kenofnz/ascension&channel_name=windows";
     private final static String CLICK_TEXT = "Click to start";
+
     private final long FADE_IN_START_TIME = System.nanoTime();
     private long fadeOutStart, lastUpdateTime, fontFadeStart;
     private Color fadeInColor, fadeOutColor, fontColor;
@@ -184,7 +187,7 @@ public class ScreenTitle extends Screen {
             AscensionClient.SHARED_THREADPOOL.execute(() -> {
                 BufferedReader in;
                 try {
-                    URL ipURL = new URL("https://itch.io/api/1/x/wharf/latest?target=kenofnz/ascension&channel_name=windows");
+                    URL ipURL = new URL(VERSION_API_URL);
                     JSONObject json = new JSONObject(IOUtils.toString(ipURL, "UTF-8"));
                     this.remoteVerison = json.getString("latest");
                     String gameVersion = Globals.GAME_MAJOR_VERSION + "." + Globals.GAME_MINOR_VERSION + "." + Globals.GAME_UPDATE_NUMBER;
@@ -195,7 +198,7 @@ public class ScreenTitle extends Screen {
                         this.updatePrompt = true;
                         this.checkVersionStatus = CHECK_VERSION_STATUS_OUTDATED;
                     }
-                } catch (IOException ex) {
+                } catch (Exception ex) {
                     this.updatePrompt = true;
                     this.checkVersionStatus = CHECK_VERSION_STATUS_UNAVAILABLE;
                 }
@@ -209,7 +212,7 @@ public class ScreenTitle extends Screen {
                 Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
                 if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
                     try {
-                        desktop.browse(URI.create("https://kenofnz.itch.io/ascension"));
+                        desktop.browse(URI.create(GAME_PORTAL_URL));
                     } catch (IOException ex) {
                         Globals.logError(ex.getMessage(), ex, true);
                     } finally {
