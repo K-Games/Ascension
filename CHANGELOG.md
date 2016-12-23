@@ -2,6 +2,16 @@
 
 ![Game Updates](https://github.com/kenofnz/AscensionInfo/raw/master/images/updates.png)
 
+## Version 0.22 Update 1
+
+### Gameplay Changes
+
+### Client Changes
+
+### Server Changes
+
+---
+
 ## Version 0.22 Release
 
 ### Gameplay Changes
