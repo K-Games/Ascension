@@ -7,6 +7,7 @@
 ### Gameplay Changes
 
 ### Client Changes
+* Fixed Max Skill button working incorrectly.
 
 ### Server Changes
 

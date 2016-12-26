@@ -686,13 +686,13 @@ public class SaveData {
             this.baseStats[Globals.STAT_SKILLPOINTS]--;
             this.skills[skillCode].addLevel((byte) 1);
         } else {
-            double max = 30;
-            if (this.baseStats[Globals.STAT_SKILLPOINTS] < 30) {
-                max = this.baseStats[Globals.STAT_SKILLPOINTS];
+            double skillPointsRequired = 30 - this.skills[skillCode].getLevel();
+            double amount = skillPointsRequired;
+            if (this.baseStats[Globals.STAT_SKILLPOINTS] < skillPointsRequired) {
+                amount = this.baseStats[Globals.STAT_SKILLPOINTS];
             }
-            final byte amount = (byte) (max - this.skills[skillCode].getLevel());
             this.baseStats[Globals.STAT_SKILLPOINTS] -= amount;
-            this.skills[skillCode].addLevel(amount);
+            this.skills[skillCode].addLevel((byte) amount);
         }
         saveData(this.saveNum, this);
     }
