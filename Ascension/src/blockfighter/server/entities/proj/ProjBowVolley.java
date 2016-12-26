@@ -58,7 +58,7 @@ public class ProjBowVolley extends Projectile {
             }
         }
         target.queueDamage(new Damage(damage, true, owner, target, isCrit, this.hitbox[0], target.getHitbox()));
-        target.queueBuff(new BuffKnockback(this.logic, 50, (owner.getFacing() == Globals.RIGHT) ? 2.5 : -2.5, -0.5, owner, target));
+        target.queueBuff(new BuffKnockback(this.logic, 50, (owner.getFacing() == Globals.RIGHT) ? 1.5 : -1.5, -0.5, owner, target));
     }
 
     @Override

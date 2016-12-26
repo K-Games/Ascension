@@ -7,7 +7,7 @@ Increases damage dealt for 5 seconds.
 [reqweapon]
 -1
 [maxcooldown]
-13000
+6500
 [basevalue]
 0.01
 [multvalue]

@@ -7,7 +7,7 @@ Can be interrupted by stuns and knockback.
 [reqweapon]
 11
 [maxcooldown]
-17000
+11000
 [basevalue]
 0.85
 [multvalue]

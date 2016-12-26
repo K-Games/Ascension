@@ -6,9 +6,9 @@ Deal an immense deadly blow.
 [reqweapon]
 0
 [maxcooldown]
-25000
+18000
 [basevalue]
-8
+6.5
 [multvalue]
 0.2
 [passive]

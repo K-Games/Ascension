@@ -6,7 +6,7 @@ Dash a short distance and strike 3 times.
 [reqweapon]
 0
 [maxcooldown]
-14000
+8000
 [basevalue]
 1.45
 [multvalue]

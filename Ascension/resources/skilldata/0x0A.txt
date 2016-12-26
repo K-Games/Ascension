@@ -6,7 +6,7 @@ Launch a hail of arrows, bombarding the area in front.
 [reqweapon]
 11
 [maxcooldown]
-20000
+12000
 [basevalue]
 3
 [multvalue]
@@ -16,4 +16,4 @@ false
 [maxlevelbonuscritdamage]
 5
 [duration]
-5000
+3500

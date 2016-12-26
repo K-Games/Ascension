@@ -7,7 +7,7 @@ and send enemies hit flying.
 [reqweapon]
 10
 [maxcooldown]
-17000
+9000
 [basevalue]
 1.5
 [multvalue]

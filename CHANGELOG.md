@@ -6,6 +6,55 @@
 
 ### Gameplay Changes
 
+#### Sword
+* Blade Flurry
+	* Removed knockback.
+* Rend
+	* Removed knockback.
+* Firebrand
+	* Cooldown decreased from 20 to 12 seconds.
+* Aggression
+	* Cooldown decreased from 25 to 18 seconds.
+* Vorpal Strike
+	* Cooldown decreased from 14 to 8 seconds.
+	* Damage decreased from 450 + 20% per level to 400 + 20% per level.
+* Phantom Reaper
+	* Cooldown decreased from 20 to 16 seconds.
+	* Damage decreased from 800 + 20% per level to 650 + 20% per level.
+	
+#### Bow
+* Cannon Fire
+	* Cooldown decreased from 16 to 8 seconds.
+* Bombardment
+	* Cooldown decreased from 20 to 12 seconds.
+	* Duration decreased from 5 to 3.5 seconds.
+* Vortex Bolts
+	* Cooldown decreased from 17 to 11 seconds.
+	* Knockback distance reduced.
+* Frost Bind
+	* Cooldown decreased from 22 to 12 seconds.
+	
+#### Shield
+* Hellion Roar
+	* Cooldown decreased from 20 to 13 seconds.
+* Overwhelm
+	* Cooldown decreased from 17 to 9 seconds.
+* Reflect Damage
+	* Cooldown decreased from 15 to 9 seconds.
+* Magnetize
+	* Cooldown decreased from 15 to 11 seconds.
+	* Level 30 Bonus - Decreased damage from 3x to 2x.
+
+#### Utility
+* Dash
+	* Cooldown decreased from 13 to 6.5 seconds.
+* Fortify
+	* Cooldown reduced from 19 to 12 seconds.
+
+#### Passive
+* Resistance
+	* Base cooldown increased from 35 to 40 seconds.
+	
 ### Client Changes
 * Fixed Max Skill button working incorrectly.
 
