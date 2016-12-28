@@ -14,7 +14,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.apache.commons.net.util.SubnetUtils;
@@ -79,6 +78,8 @@ public class HubModule implements Runnable {
         }
         if (!CONN_SERVERINFO_MAP.containsKey(c)) {
             Globals.log(HubModule.class, "Added " + info + " to server list", Globals.LOG_TYPE_DATA, true);
+        } else {
+            Globals.log(HubSender.class, "Updated " + c + " " + info, Globals.LOG_TYPE_DATA, true);
         }
         CONN_SERVERINFO_MAP.put(c, info);
     }
@@ -99,9 +100,9 @@ public class HubModule implements Runnable {
     public void run() {
         for (final Map.Entry<Connection, ServerInfo> infoEntry : CONN_SERVERINFO_MAP.entrySet()) {
             Connection c = infoEntry.getKey();
-            GET_SERVERSTAT_SCHEDULER.schedule(() -> {
+            GET_SERVERSTAT_SCHEDULER.submit(() -> {
                 HubSender.sendGetServerInfo(c);
-            }, 0, TimeUnit.SECONDS);
+            });
         }
     }
 

@@ -13,6 +13,7 @@ public class HubSender {
 
     public static void sendGetServerInfo(Connection c) {
         byte[] data = new byte[Globals.PACKET_BYTE];
+        Globals.log(HubSender.class, "Sending update request to " + c, Globals.LOG_TYPE_DATA, true);
         data[0] = Globals.HUB_DATA_GET_SERVERSTATS;
         c.sendTCP(data);
     }
