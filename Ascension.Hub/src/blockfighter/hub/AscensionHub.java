@@ -11,7 +11,7 @@ public class AscensionHub {
 
     private final static ScheduledExecutorService HUB_SCHEDULER = Executors.newSingleThreadScheduledExecutor(new BasicThreadFactory.Builder()
             .namingPattern("HUB-%d")
-            .daemon(true)
+            .daemon(false)
             .priority(Thread.NORM_PRIORITY)
             .build());
 
