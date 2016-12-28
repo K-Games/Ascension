@@ -42,6 +42,11 @@ public class SkillBowArc extends Skill {
     }
 
     @Override
+    public HashMap<String, Double> getCustomValues() {
+        return CUSTOM_VALUES;
+    }
+
+    @Override
     public String[] getDesc() {
         return DESCRIPTION;
     }

@@ -8,6 +8,7 @@ import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 
 public abstract class Skill {
 
@@ -121,6 +122,8 @@ public abstract class Skill {
     public abstract long getMaxCooldown();
 
     public abstract byte getReqWeapon();
+
+    public abstract HashMap<String, Double> getCustomValues();
 
     public void updateInfoBoxSize() {
         if (fontMetric == null) {

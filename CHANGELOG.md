@@ -2,6 +2,15 @@
 
 ![Game Updates](https://github.com/kenofnz/AscensionInfo/raw/master/images/updates.png)
 
+## Version 0.22 Update 2
+
+### Gameplay Changes
+
+### Client Changes
+* Exposed CUSTOM_VALUES to allow fetching custom data of Skills.
+
+---
+
 ## Version 0.22 Update 1
 
 ### Gameplay Changes

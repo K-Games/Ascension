@@ -31,6 +31,11 @@ public class SkillPassiveKeenEye extends Skill {
     }
 
     @Override
+    public HashMap<String, Double> getCustomValues() {
+        return null;
+    }
+
+    @Override
     public String[] getDesc() {
         return DESCRIPTION;
     }
