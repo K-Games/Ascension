@@ -1,6 +1,7 @@
 package blockfighter.client.entities.particles;
 
 import static blockfighter.client.entities.particles.Particle.logic;
+import blockfighter.client.entities.player.skills.SkillBowStorm;
 import blockfighter.shared.Globals;
 
 public class ParticleBowStormEmitter extends Particle {
@@ -10,7 +11,7 @@ public class ParticleBowStormEmitter extends Particle {
     public ParticleBowStormEmitter(final int x, final int y, final byte f) {
         super(x, y, f);
         this.frame = 0;
-        this.duration = 5000;
+        this.duration = (int) (new SkillBowStorm().getCustomValues().get(SkillBowStorm.CUSTOMHEADER_DURATION) * 1000);
     }
 
     @Override

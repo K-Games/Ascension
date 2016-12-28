@@ -5,6 +5,7 @@
 ## Version 0.22 Update 2
 
 ### Gameplay Changes
+* Fixed Bombardment particle effect not matching actual duration.
 
 ### Client Changes
 * Exposed CUSTOM_VALUES to allow fetching custom data of Skills.
