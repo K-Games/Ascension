@@ -102,7 +102,7 @@ public class Player implements GameEntity, Callable<Player> {
     private String name = "";
     private double x, y, ySpeed, xSpeed, targetXSpeed;
     private final boolean[] dirKeydown = new boolean[4];
-    private boolean isFalling = false, isJumping = false, isInvulnerable = false, isDead = false, isRemoveDebuff = false;
+    private boolean isFalling = false, isJumping = false, isInvulnerable = false, isDead = false, isRemoveDebuff = false, isHyperStance = false;
     private boolean updatePos = false, updateFacing = false, updateAnimState = false;
     private byte playerState, animState, facing, frame;
 
@@ -618,6 +618,7 @@ public class Player implements GameEntity, Callable<Player> {
     public boolean updateSkillEnd(boolean ended) {
         if (ended) {
             setInvulnerable(false);
+            setHyperStance(false);
             setPlayerState(PLAYER_STATE_STAND);
             return true;
         }
@@ -706,6 +707,7 @@ public class Player implements GameEntity, Callable<Player> {
                 // Final damage taken
                 this.stats[Globals.STAT_MINHP] -= (int) finalDamage;
                 totalDamageInTick += finalDamage;
+                //Globals.log(Player.class, dmg.getOwner().getPlayerName() + " dealt " + Globals.NUMBER_FORMAT.format(finalDamage) + "(" + dmg.getDamage() + ") Damage to " + getPlayerName(), Globals.LOG_TYPE_DATA, true);
 
                 if (this.playerDamageCount.containsKey(dmg.getOwner())) {
                     double damageCount = this.playerDamageCount.get(dmg.getOwner());
@@ -801,6 +803,10 @@ public class Player implements GameEntity, Callable<Player> {
         while (!this.buffQueue.isEmpty()) {
             final Buff b = this.buffQueue.poll();
             if (b != null) {
+                if (isHyperStance() && (b instanceof BuffKnockback || b instanceof BuffStun)) {
+                    // if in Hyper Stance and buff is a kb or stun don't apply
+                    continue;
+                }
                 if (!canDebuffAffect() && b.isDebuff()) {
                     // Don't apply debuff when invulnerable
                     continue;
@@ -820,7 +826,7 @@ public class Player implements GameEntity, Callable<Player> {
                 final Integer bKey = getNextBuffKey();
                 if (bKey != null) {
                     this.buffs.put(bKey, b);
-                    //System.out.println(this.getPlayerName() + ":Applied " + b.getClass().getSimpleName() + " Buff");
+                    //Globals.log(Player.class, "Applied " + b.getClass().getSimpleName() + " " + (b.isDebuff() ? "Debuff" : "Buff") + " to " + this.getPlayerName(), Globals.LOG_TYPE_DATA, true);
                 }
             }
         }
@@ -832,13 +838,17 @@ public class Player implements GameEntity, Callable<Player> {
             buff.update();
 
             // Track if stunned, knocked or has a barrier buff.
-            if (canDebuffAffect() && buff instanceof BuffStun) {
-                if (this.stunDebuff == null) {
-                    this.stunDebuff = buff;
-                }
-            } else if (canDebuffAffect() && buff instanceof BuffKnockback) {
-                if (this.knockbackDebuff == null) {
-                    this.knockbackDebuff = buff;
+            if (canDebuffAffect()) {
+                if (!isHyperStance()) {
+                    if (buff instanceof BuffStun) {
+                        if (this.stunDebuff == null) {
+                            this.stunDebuff = buff;
+                        }
+                    } else if (buff instanceof BuffKnockback) {
+                        if (this.knockbackDebuff == null) {
+                            this.knockbackDebuff = buff;
+                        }
+                    }
                 }
             } else if (buff instanceof BuffShieldReflect) {
                 this.reflects.put(bEntry.getKey(), buff);
@@ -863,7 +873,9 @@ public class Player implements GameEntity, Callable<Player> {
             }
 
             // Remove expired buffs/remove debuffs when invulnerable/special state
-            if (buff.isExpired() || (!canDebuffAffect() && buff.isDebuff())) {
+            if (buff.isExpired()
+                    || (!canDebuffAffect() && buff.isDebuff())
+                    || (isHyperStance() && (buff instanceof BuffKnockback || buff instanceof BuffStun))) {
                 buffsIter.remove();
                 returnBuffKey(bEntry.getKey());
             }
@@ -908,6 +920,7 @@ public class Player implements GameEntity, Callable<Player> {
         PacketSender.sendParticle(this.logic, Globals.PARTICLE_BLOOD, this.key);
         setInvulnerable(false);
         setRemovingDebuff(false);
+        setHyperStance(false);
         setDead(true);
         setPlayerState(PLAYER_STATE_DEAD);
         this.damageQueue.clear();
@@ -926,6 +939,7 @@ public class Player implements GameEntity, Callable<Player> {
         Point2D.Double spawn = map.getRandomSpawnPoint();
         setPos(spawn.x, spawn.y);
         setInvulnerable(false);
+        setHyperStance(false);
         setRemovingDebuff(false);
         setDead(false);
         queuePlayerState(PLAYER_STATE_STAND);
@@ -1613,6 +1627,14 @@ public class Player implements GameEntity, Callable<Player> {
 
     public boolean isInvulnerable() {
         return this.isInvulnerable;
+    }
+
+    public void setHyperStance(final boolean set) {
+        this.isHyperStance = set;
+    }
+
+    public boolean isHyperStance() {
+        return this.isHyperStance;
     }
 
     public void setRemovingDebuff(final boolean set) {

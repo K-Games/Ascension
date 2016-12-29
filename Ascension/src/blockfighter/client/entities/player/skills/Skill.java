@@ -12,6 +12,7 @@ import java.util.HashMap;
 
 public abstract class Skill {
 
+    protected static final String HYPER_STANCE_DESC = "Grants Hyper Stance - Ignore knockback and stuns.";
     protected static LogicModule logic;
     private FontMetrics fontMetric;
     private int boxWidth, boxHeight;

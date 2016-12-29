@@ -106,6 +106,8 @@ public class SkillUtilityDash extends Skill {
             player.queueBuff(new BuffUtilityDash(this.logic, 5000, getBaseValue() + getMultValue() * player.getSkillLevel(Globals.UTILITY_DASH), player));
             PacketSender.sendParticle(this.logic, Globals.PARTICLE_SHIELD_DASHBUFF, player.getKey());
         }
-        player.updateSkillEnd(duration, getSkillDuration(), true, true);
+        if (player.updateSkillEnd(duration, getSkillDuration(), true, true)) {
+            player.setInvulnerable(false);
+        }
     }
 }

@@ -98,6 +98,9 @@ public class SkillBowPower extends Skill {
     public void updateSkillUse(Player player) {
         final long duration = Globals.nsToMs(this.logic.getTime() - player.getSkillCastTime());
         if (player.getSkillCounter() == 0) {
+            if (player.isSkillMaxed(Globals.BOW_POWER)) {
+                player.setHyperStance(true);
+            }
             PacketSender.sendSFX(this.logic, Globals.SFX_POWER2, player.getX(), player.getY());
         }
         if (duration <= 400 && Globals.hasPastDuration(duration, player.getSkillCounter() * 20) && player.getSkillCounter() < 20) {
@@ -112,7 +115,9 @@ public class SkillBowPower extends Skill {
                     player.getFacing());
             PacketSender.sendSFX(this.logic, Globals.SFX_POWER, player.getX(), player.getY());
         }
-        player.updateSkillEnd(duration >= getSkillDuration() || (!player.isSkillMaxed(Globals.BOW_POWER) && duration < 800 && (player.isStunned() || player.isKnockback())));
+        if (player.updateSkillEnd(duration >= getSkillDuration() || (!player.isSkillMaxed(Globals.BOW_POWER) && duration < 800 && (player.isStunned() || player.isKnockback())))) {
+            player.setHyperStance(false);
+        }
     }
 
 }

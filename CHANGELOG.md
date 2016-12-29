@@ -5,7 +5,19 @@
 ## Version 0.22 Update 2
 
 ### Gameplay Changes
+* New mechanic - Hyper Stance - Certain Skills grants players with Hyper Stance, preventing and removing Knockback and Stun debuffs.
 * Fixed Bombardment particle effect not matching actual duration.
+
+#### Sword
+* Aggression
+	* Max Level Bonus - Grants Hyper Stance.
+* Vorpal Strike
+	* No longer removes debuffs.
+	* Grants Hyper Stance.
+
+#### Bow
+* Cannon Fire
+	* Max Level Bonus - Grants Hyper Stance.
 
 ### Client Changes
 * Exposed CUSTOM_VALUES to allow fetching custom data of Skills.

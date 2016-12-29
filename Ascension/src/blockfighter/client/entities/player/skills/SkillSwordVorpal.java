@@ -90,11 +90,13 @@ public class SkillSwordVorpal extends Skill {
     public void updateDesc() {
         this.skillCurLevelDesc = new String[]{
             "Deals " + Globals.NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * this.level) + "% damage per hit.",
-            "Critical Hits deal additional +" + Globals.NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_BASEBONUSCRITDMG) + CUSTOM_VALUES.get(CUSTOMHEADER_MULTBONUSCRITDMG) * this.level) + "% Critical Damage."
+            "Critical Hits deal additional +" + Globals.NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_BASEBONUSCRITDMG) + CUSTOM_VALUES.get(CUSTOMHEADER_MULTBONUSCRITDMG) * this.level) + "% Critical Damage.",
+            HYPER_STANCE_DESC
         };
         this.skillNextLevelDesc = new String[]{
             "Deals " + Globals.NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "% damage per hit.",
-            "Critical Hits deal additional +" + Globals.NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_BASEBONUSCRITDMG) + CUSTOM_VALUES.get(CUSTOMHEADER_MULTBONUSCRITDMG) * (this.level + 1)) + "% Critical Damage."
+            "Critical Hits deal additional +" + Globals.NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_BASEBONUSCRITDMG) + CUSTOM_VALUES.get(CUSTOMHEADER_MULTBONUSCRITDMG) * (this.level + 1)) + "% Critical Damage.",
+            HYPER_STANCE_DESC
         };
         this.maxBonusDesc = new String[]{
             "This attack has +" + Globals.NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_BONUSCRITCHC)) + "% Critical Hit Chance.",

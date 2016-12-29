@@ -32,7 +32,7 @@ public class SkillSwordVorpal extends Skill {
     private static final int SKILL_DURATION = 400;
 
     private double projX, projY, destX;
-    private boolean dashed = false;
+    private boolean dashFinished = false;
 
     static {
         String[] data = Globals.loadSkillData(SKILL_CODE);
@@ -111,20 +111,20 @@ public class SkillSwordVorpal extends Skill {
         final int dashDistance = 300, dashDuration = 80;
         if (Globals.hasPastDuration(duration, 100) && player.getSkillCounter() == 0) {
             this.destX = player.getX() + ((player.getFacing() == Globals.RIGHT) ? 1 : -1) * dashDistance;
-            this.dashed = false;
+            this.dashFinished = false;
             this.projX = player.getX();
             this.projY = player.getY();
             player.incrementSkillCounter();
         }
 
-        if (!dashed && Globals.hasPastDuration(duration, 100 + dashDuration)) {
-            this.dashed = true;
-            player.setRemovingDebuff(false);
+        if (!dashFinished && Globals.hasPastDuration(duration, 100 + dashDuration)) {
+            this.dashFinished = true;
+            player.setHyperStance(false);
             player.setXSpeed(0);
             player.setPos(this.destX, player.getY());
-        } else if (!dashed && player.getSkillCounter() > 0) {
+        } else if (!dashFinished && player.getSkillCounter() > 0) {
             player.setXSpeed(((player.getFacing() == Globals.RIGHT) ? 1 : -1) * dashDistance / (dashDuration / Globals.nsToMs(Globals.SERVER_LOGIC_UPDATE)));
-            player.setRemovingDebuff(true);
+            player.setHyperStance(true);
         }
 
         if (player.getSkillCounter() > 0 && Globals.hasPastDuration(duration, 100 + skillTime * (player.getSkillCounter() - 1)) && player.getSkillCounter() - 1 < numHits) {

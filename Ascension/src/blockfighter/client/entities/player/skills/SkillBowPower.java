@@ -87,8 +87,8 @@ public class SkillBowPower extends Skill {
             "Deals " + Globals.NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "% damage."
         };
         this.maxBonusDesc = new String[]{
-            "Can no longer be interrupted.",
-            "Critical Hits deal +" + Globals.NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_MAXLEVELBONUSCRITDMG)) + "% Critical Hit damage."
+            "Critical Hits deal +" + Globals.NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_MAXLEVELBONUSCRITDMG)) + "% Critical Hit damage.",
+            HYPER_STANCE_DESC
         };
     }
 }
