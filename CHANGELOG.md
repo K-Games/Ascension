@@ -9,6 +9,8 @@
 * Fixed Bombardment particle effect not matching actual duration.
 
 #### Sword
+* Rend
+	* Damage increased from 100% + 4% per level to 100% + 6% per level.
 * Aggression
 	* Max Level Bonus - Grants Hyper Stance.
 * Vorpal Strike
