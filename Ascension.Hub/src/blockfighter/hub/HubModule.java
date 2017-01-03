@@ -79,7 +79,7 @@ public class HubModule implements Runnable {
         if (!CONN_SERVERINFO_MAP.containsKey(c)) {
             Globals.log(HubModule.class, "Added " + info + " to server list", Globals.LOG_TYPE_DATA, true);
         } else {
-            Globals.log(HubSender.class, "Updated " + c + " " + info, Globals.LOG_TYPE_DATA, true);
+            //Globals.log(HubSender.class, "Updated " + c + " " + info, Globals.LOG_TYPE_DATA, true);
         }
         CONN_SERVERINFO_MAP.put(c, info);
     }
