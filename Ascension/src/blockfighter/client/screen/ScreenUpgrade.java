@@ -22,8 +22,6 @@ public class ScreenUpgrade extends ScreenItemManagement {
 
     private static final int UPGRADE_BOX_X = 980, UPGRADE_BOX_Y = 430;
 
-    private boolean destroy = false, destroyConfirm = false;
-
     private int selectEquip = -1;
     private int selectUpgrade = -1;
     private int dragItem = -1;
@@ -33,8 +31,6 @@ public class ScreenUpgrade extends ScreenItemManagement {
     private static final Rectangle2D.Double[] INVENTORY_SLOTS = new Rectangle2D.Double[100],
             UPGRADE_BOX = new Rectangle2D.Double[2];
     private static final Rectangle2D.Double COMBINE_BOX;
-
-    private Point2D.Double mousePos;
 
     private int drawItem = -1, drawEquip = -1, drawSelect = -1;
 

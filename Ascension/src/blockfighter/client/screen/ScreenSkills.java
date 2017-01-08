@@ -45,8 +45,6 @@ public class ScreenSkills extends ScreenMenu {
     private final Skill[] hotkeyList;
     private final Skill[] skillList;
 
-    private Point2D.Double mousePos;
-
     private int drawInfoSkill = -1, drawInfoHotkey = -1;
     private int dragSkill = -1, dragHotkey = -1;
 

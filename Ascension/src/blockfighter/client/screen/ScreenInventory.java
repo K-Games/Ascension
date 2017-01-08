@@ -18,13 +18,10 @@ public class ScreenInventory extends ScreenItemManagement {
     private static final String DAMAGE_TEXT = "Damage: ";
 
     private static byte selectedTab = Globals.ITEM_WEAPON;
-    private boolean destroy = false, destroyConfirm = false;
     private static final Rectangle2D.Double[] INVENTORY_SLOTS = new Rectangle2D.Double[100],
             ITEM_TABS = new Rectangle2D.Double[Globals.NUM_ITEM_TABS];
 
     private final String[] statString = new String[10];
-
-    private Point2D.Double mousePos;
 
     private int drawInfoItem = -1, drawInfoEquip = -1;
 

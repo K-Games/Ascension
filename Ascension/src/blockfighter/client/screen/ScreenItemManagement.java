@@ -14,6 +14,8 @@ public abstract class ScreenItemManagement extends ScreenMenu {
 
     private static final int EQUIP_BOX_X = 980, EQUIP_BOX_Y = 40;
 
+    protected boolean destroy = false, destroyConfirm = false;
+
     protected static final Rectangle2D.Double[] EQUIP_SLOTS = new Rectangle2D.Double[Globals.NUM_EQUIP_SLOTS],
             DESTROY_BOX = new Rectangle2D.Double[2],
             PROMPT_BOX = new Rectangle2D.Double[2];
@@ -24,6 +26,9 @@ public abstract class ScreenItemManagement extends ScreenMenu {
     protected static final String CONFIRM_TEXT = "Confirm";
     protected static final String ARE_YOU_SURE_TEXT = "Are you sure?";
     protected static final String EQUIP_OFFHAND_TEXT = "Equip For Offhand";
+
+    private static final String OFFHAND = "Offhand";
+    private static final String MAIN_HAND = "Weapon";
 
     private int nextFrameTime = 0;
     private long lastFrameTime = 0;
@@ -66,6 +71,18 @@ public abstract class ScreenItemManagement extends ScreenMenu {
             this.nextFrameTime = 250000000;
             this.lastFrameTime = now;
         }
+    }
+
+    @Override
+    public void draw(final Graphics2D g) {
+        if (this.destroyConfirm) {
+            drawDestroyConfirm(g);
+        }
+        if (this.destroy) {
+            BufferedImage button = Globals.MENU_ITEMDELETE[0];
+            g.drawImage(button, (int) (this.mousePos.x + 10), (int) (this.mousePos.y + 15), null);
+        }
+        super.draw(g);
     }
 
     protected void drawDestroyConfirm(final Graphics2D g) {
@@ -127,6 +144,11 @@ public abstract class ScreenItemManagement extends ScreenMenu {
                 this.character.getEquip()[i].draw(g, (int) EQUIP_SLOTS[i].x, (int) EQUIP_SLOTS[i].y);
             }
             String s = ItemEquip.getItemTypeName((byte) i);
+            if (i == Globals.ITEM_WEAPON) {
+                s = MAIN_HAND;
+            } else if (i == Globals.ITEM_OFFHAND) {
+                s = OFFHAND;
+            }
             g.setFont(Globals.ARIAL_12PT);
             drawStringOutline(g, s, (int) EQUIP_SLOTS[i].x + 2, (int) EQUIP_SLOTS[i].y + 58, 1);
             g.setColor(Color.WHITE);

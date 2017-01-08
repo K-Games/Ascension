@@ -24,10 +24,21 @@ public abstract class ScreenMenu extends Screen {
     private static final String INVENTORY_TEXT = "Inventory";
     private static final String STATS_TEXT = "Stats";
 
+    private static final String[] BUTTON_TEXT = {STATS_TEXT,
+        INVENTORY_TEXT,
+        UPGRADES_TEXT,
+        SKILLS_TEXT,
+        LOGIN_TEXT,
+        KEY_BINDINGS_TEXT,
+        CHARACTERS_TEXT
+    };
+
     protected long lastUpdateTime = 0;
     protected static ConcurrentHashMap<Integer, Particle> particles = new ConcurrentHashMap<>(3);
     private static final Rectangle2D.Double[] MENU_BOX = new Rectangle2D.Double[7];
     protected boolean fadeIn = false;
+
+    protected Point2D.Double mousePos;
 
     private long fadeInStart = System.nanoTime();
     private Color fadeInColor;
@@ -96,22 +107,13 @@ public abstract class ScreenMenu extends Screen {
             g.drawImage(button, (int) menuBox1.x, (int) menuBox1.y, null);
         }
         g.setFont(Globals.ARIAL_24PT);
-        drawStringOutline(g, STATS_TEXT, 40, 62, 2);
-        drawStringOutline(g, INVENTORY_TEXT, 40, 112, 2);
-        drawStringOutline(g, UPGRADES_TEXT, 40, 162, 2);
-        drawStringOutline(g, SKILLS_TEXT, 40, 212, 2);
-        drawStringOutline(g, LOGIN_TEXT, 40, 262, 2);
-        drawStringOutline(g, KEY_BINDINGS_TEXT, 40, 312, 2);
-        drawStringOutline(g, CHARACTERS_TEXT, 40, 362, 2);
 
-        g.setColor(Color.WHITE);
-        g.drawString(STATS_TEXT, 40, 62);
-        g.drawString(INVENTORY_TEXT, 40, 112);
-        g.drawString(UPGRADES_TEXT, 40, 162);
-        g.drawString(SKILLS_TEXT, 40, 212);
-        g.drawString(LOGIN_TEXT, 40, 262);
-        g.drawString(KEY_BINDINGS_TEXT, 40, 312);
-        g.drawString(CHARACTERS_TEXT, 40, 362);
+        for (int i = 0; i < BUTTON_TEXT.length; i++) {
+            drawStringOutline(g, BUTTON_TEXT[i], 40, 62 + i * 50, 2);
+            g.setColor(Color.WHITE);
+            g.drawString(BUTTON_TEXT[i], 40, 62 + i * 50);
+        }
+
     }
 
     @Override

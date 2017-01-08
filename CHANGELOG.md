@@ -23,6 +23,7 @@
 
 ### Client Changes
 * Exposed CUSTOM_VALUES to allow fetching custom data of Skills.
+* Fixed main hand and offhand equip slot string.
 
 ---
 
