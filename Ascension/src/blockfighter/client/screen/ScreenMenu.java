@@ -45,7 +45,7 @@ public abstract class ScreenMenu extends Screen {
             ScreenSelectChar.class
     ));
 
-    protected long lastUpdateTime = 0;
+    protected long lastParticleUpdateTime = 0, lastUpdateTime = 0;
     protected static ConcurrentHashMap<Integer, Particle> particles = new ConcurrentHashMap<>(3);
     private static final Rectangle2D.Double[] MENU_BOX = new Rectangle2D.Double[7];
     protected boolean fadeIn = false;
@@ -87,9 +87,9 @@ public abstract class ScreenMenu extends Screen {
     @Override
     public void update() {
         final long now = logic.getTime(); // Get time now
-        if (now - this.lastUpdateTime >= Globals.CLIENT_LOGIC_UPDATE) {
+        if (now - this.lastParticleUpdateTime >= Globals.CLIENT_LOGIC_UPDATE) {
             updateParticles(particles);
-            this.lastUpdateTime = now;
+            this.lastParticleUpdateTime = now;
             if (fadeIn) {
                 if (!finishedFadeIn && Globals.nsToMs(now - fadeInStart) < 2000) {
                     int transparency = (int) (255 * (1f - Globals.nsToMs(now - fadeInStart) / 2000f));

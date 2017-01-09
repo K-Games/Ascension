@@ -61,6 +61,7 @@ public abstract class ScreenItemManagement extends ScreenMenu {
 
     @Override
     public void update() {
+        super.update();
         final long now = logic.getTime(); // Get time now
         if (now - this.lastFrameTime >= this.nextFrameTime) {
             if (this.charFrame >= Globals.CHAR_SPRITE[Globals.PLAYER_ANIM_STATE_STAND].length - 1) {

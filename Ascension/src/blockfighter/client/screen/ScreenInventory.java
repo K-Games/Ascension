@@ -57,8 +57,6 @@ public class ScreenInventory extends ScreenItemManagement {
                     + Globals.NUMBER_FORMAT.format(bonusStats[Globals.STAT_CRITCHANCE] * 100) + "%";
             statString[9] = Globals.getStatName(Globals.STAT_CRITDMG) + Globals.COLON_SPACE_TEXT + Globals.NUMBER_FORMAT.format((1 + baseStats[Globals.STAT_CRITDMG]) * 100) + " + "
                     + Globals.NUMBER_FORMAT.format(bonusStats[Globals.STAT_CRITDMG] * 100) + "%";
-
-            updateParticles(particles);
             this.lastUpdateTime = now;
         }
     }

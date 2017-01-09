@@ -78,8 +78,6 @@ public class ScreenUpgrade extends ScreenItemManagement {
             if (this.selectUpgrade > -1 && this.character.getUpgrades()[this.selectUpgrade] == null) {
                 selectUpgrade = -1;
             }
-
-            updateParticles(particles);
             this.lastUpdateTime = now;
         }
         if (now - this.lastFrameTime >= this.nextFrameTime) {
