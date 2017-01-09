@@ -10,6 +10,8 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.swing.SwingUtilities;
@@ -32,6 +34,16 @@ public abstract class ScreenMenu extends Screen {
         KEY_BINDINGS_TEXT,
         CHARACTERS_TEXT
     };
+
+    private static final ArrayList<Class<? extends Screen>> SCREEN_CLASS = new ArrayList<>(Arrays.asList(
+            ScreenStats.class,
+            ScreenInventory.class,
+            ScreenUpgrade.class,
+            ScreenSkills.class,
+            ScreenServerList.class,
+            ScreenKeyBind.class,
+            ScreenSelectChar.class
+    ));
 
     protected long lastUpdateTime = 0;
     protected static ConcurrentHashMap<Integer, Particle> particles = new ConcurrentHashMap<>(3);
@@ -129,44 +141,14 @@ public abstract class ScreenMenu extends Screen {
             for (byte i = 0; i < MENU_BOX.length; i++) {
                 if (MENU_BOX[i].contains(scaled)) {
                     SaveData.saveData(logic.getSelectedChar().getSaveNum(), logic.getSelectedChar());
-                    switch (i) {
-                        case 0:
-                            if (!(logic.getScreen() instanceof ScreenStats)) {
-                                logic.setScreen(new ScreenStats());
-                            }
-                            break;
-                        case 1:
-                            if (!(logic.getScreen() instanceof ScreenInventory)) {
-                                logic.setScreen(new ScreenInventory());
-                            }
-                            break;
-                        case 2:
-                            if (!(logic.getScreen() instanceof ScreenUpgrade)) {
-                                logic.setScreen(new ScreenUpgrade());
-                            }
-                            break;
-                        case 3:
-                            if (!(logic.getScreen() instanceof ScreenSkills)) {
-                                logic.setScreen(new ScreenSkills());
-                            }
-                            break;
-                        case 4:
-                            if (!(logic.getScreen() instanceof ScreenServerList)) {
-                                logic.setScreen(new ScreenServerList());
-                            }
-                            break;
-                        case 5:
-                            if (!(logic.getScreen() instanceof ScreenKeyBind)) {
-                                logic.setScreen(new ScreenKeyBind());
-                            }
-                            break;
-                        case 6:
-                            if (!(logic.getScreen() instanceof ScreenSelectChar)) {
-                                logic.setSelectedChar(null);
-                                logic.setScreen(new ScreenSelectChar());
-                            }
-                            break;
+                    if (!(logic.getScreen().getClass() == SCREEN_CLASS.get(i))) {
+                        try {
+                            logic.setScreen(SCREEN_CLASS.get(i).newInstance());
+                        } catch (InstantiationException | IllegalAccessException ex) {
+                            Globals.logError(ex.toString(), ex, true);
+                        }
                     }
+                    break;
                 }
             }
         }
