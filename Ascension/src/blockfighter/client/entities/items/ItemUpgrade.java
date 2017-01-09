@@ -21,7 +21,7 @@ public class ItemUpgrade implements Item {
     }
 
     private static void loadUpgradeItems() {
-        ITEM_NAMES.put(ITEM_TOME, "Tome of Enhancement");
+        ITEM_NAMES.put(ITEM_TOME, "Soul Stone");
     }
 
     public static void loadItemIcon(final int code) {
@@ -38,20 +38,41 @@ public class ItemUpgrade implements Item {
         return this.level;
     }
 
-    public static double upgradeChance(final ItemUpgrade i, final ItemEquip e) {
-        if (i == null || e == null) {
+    public static double upgradeChance(final ItemEquip e, final ItemUpgrade... upgrades) {
+        if (e == null) {
             return 0;
         }
-        int power = (int) (e.getTotalStats()[Globals.STAT_LEVEL] + e.getUpgrades() - i.level);
+        ItemUpgrade highestUpgrade = null;
+        for (ItemUpgrade upgrade : upgrades) {
+            if (upgrade != null) {
+                if (highestUpgrade == null
+                        || upgrade.getLevel() > highestUpgrade.getLevel()) {
+                    highestUpgrade = upgrade;
+                }
+            }
+        }
+
+        if (highestUpgrade == null) {
+            return 0;
+        }
+
+        int power = (int) (e.getTotalStats()[Globals.STAT_LEVEL] + e.getUpgrades() - highestUpgrade.level);
+        for (ItemUpgrade upgrade : upgrades) {
+            if (upgrade != null && upgrade != highestUpgrade) {
+                power--;
+            }
+        }
+
         if (power < 0) {
             power = 0;
         }
+
         return Math.pow(0.8, power);
     }
 
-    public static boolean rollUpgrade(final ItemUpgrade i, final ItemEquip e) {
+    public static boolean rollUpgrade(final ItemEquip e, final ItemUpgrade... upgrades) {
         final int roll = Globals.rng(10000) + 1;
-        return roll < (int) (upgradeChance(i, e) * 10000);
+        return roll < (int) (upgradeChance(e, upgrades) * 10000);
     }
 
     @Override
@@ -85,7 +106,7 @@ public class ItemUpgrade implements Item {
 
     @Override
     public String getItemName() {
-        return ITEM_NAMES.get(this.itemCode);
+        return "Level " + getLevel() + " " + ITEM_NAMES.get(this.itemCode);
     }
 
     @Override
@@ -93,7 +114,9 @@ public class ItemUpgrade implements Item {
         g.setColor(new Color(30, 30, 30, 185));
         int y = (int) box.y;
         int x = (int) box.x;
-        final int boxHeight = 60, boxWidth = 280;
+
+        g.setFont(Globals.ARIAL_15PT);
+        final int boxHeight = 70, boxWidth = g.getFontMetrics().stringWidth("Can be infused into any equipment to enhance it.") + 20;
 
         if (y + boxHeight > 720) {
             y = 700 - boxHeight;
@@ -109,7 +132,8 @@ public class ItemUpgrade implements Item {
 
         g.setFont(Globals.ARIAL_15PT);
         g.setColor(Color.WHITE);
-        g.drawString("Level " + getLevel() + " " + getItemName(), x + 40, y + 20);
-        g.drawString("Use this to enhance any equipment.", x + 40, y + 40);
+        g.drawString(getItemName(), x + 40, y + 20);
+        g.drawString("A physical manifestation of a slain soul.", x + 40, y + 40);
+        g.drawString("Can be infused into any equipment to enhance it.", x + 40, y + 60);
     }
 }

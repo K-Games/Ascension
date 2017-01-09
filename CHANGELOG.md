@@ -8,7 +8,16 @@
 * New mechanic - Hyper Stance - Certain Skills grants players with Hyper Stance, preventing and removing Knockback and Stun debuffs.
 * Fixed Bombardment particle effect not matching actual duration.
 
-#### Sword
+#### Infusion
+* Upgrades renamed to Infusion.
+* Tome of Enhancements renamed to Soul Stones.
+* Equipment can now be enhanced with up to 3 Soul Stones.
+	* Using more than 1 Soul Stone will use the highest level Soul Stone as the base level.
+	* Each additional Soul Stone adds a level to the base.
+
+#### Skill Changes
+
+##### Sword
 * Rend
 	* Damage increased from 100% + 4% per level to 100% + 6% per level.
 * Aggression
@@ -17,7 +26,7 @@
 	* No longer removes debuffs.
 	* Grants Hyper Stance.
 
-#### Bow
+##### Bow
 * Cannon Fire
 	* Max Level Bonus - Grants Hyper Stance.
 
