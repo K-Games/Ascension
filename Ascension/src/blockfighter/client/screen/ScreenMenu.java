@@ -121,9 +121,9 @@ public abstract class ScreenMenu extends Screen {
         g.setFont(Globals.ARIAL_24PT);
 
         for (int i = 0; i < BUTTON_TEXT.length; i++) {
-            drawStringOutline(g, BUTTON_TEXT[i], 40, 62 + i * 50, 2);
+            drawStringOutline(g, BUTTON_TEXT[i], (int) (MENU_BOX[i].x + 20), (int) (MENU_BOX[i].y + 35), 2);
             g.setColor(Color.WHITE);
-            g.drawString(BUTTON_TEXT[i], 40, 62 + i * 50);
+            g.drawString(BUTTON_TEXT[i], (int) (MENU_BOX[i].x + 20), (int) (MENU_BOX[i].y + 35));
         }
 
     }
