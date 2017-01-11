@@ -14,6 +14,23 @@
 * Equipment can now be enhanced with up to 3 Soul Stones.
 	* Using more than 1 Soul Stone will use the highest level Soul Stone as the base level.
 	* Each additional Soul Stone adds a level to the base.
+* Rescaled upgrade bonus Power, Defense, and Spirit stats from 4% + 0.75 per upgrade to a flat 1.25 per upgrade.
+* Reduced upgrade Armor bonus from 24 to 18 per upgrade.
+* Reduced upgrade HP/Sec bonus from 8 to 5 per upgrade.
+* Increased Critical Hit Chance internal multiplier factor - The internal multiplier now provides twice as much.
+* Upgrade Power, Defense, Spirit, Armor and HP/Sec bonuses are now multiplied by the internal multipler.
+	* These changes means that lower level equipment with extremely high amounts of upgrades are no longer significantly better than higher level equipments with upgrades.
+	* Lower level equipment will now achieve the same stats as higher level equipments with equivalent amount of upgrades.
+
+| Level 1 Equip | Level 50 Equivalent | Level 99 Equivalent | Level 100 Equivalent |
+| --- | --- | --- | --- |
+| Lvl 1 +99 Upgrades | Lvl 50 +50 Upgrades | Lvl 99 +1 Upgrade | Lvl 100 No Upgrades |
+| Lvl 1 +100 Upgrades | Lvl 50 +51 Upgrades | Lvl 99 +2 Upgrades | Lvl 100 +1 Upgrade |
+| Lvl 1 +101 Upgrades | Lvl 50 +52 Upgrades | Lvl 99 +3 Upgrades | Lvl 100 +2 Upgrades |
+| Lvl 1 +102 Upgrades | Lvl 50 +53 Upgrades | Lvl 99 +5 Upgrades | Lvl 100 +3 Upgrades |
+| Lvl 1 +103 Upgrades | Lvl 50 +54 Upgrades | Lvl 99 +6 Upgrades | Lvl 100 +4 Upgrades |
+
+* Divine Equipment Tier removed - Is not possible to attain with upgrade changes.
 
 #### Skill Changes
 
