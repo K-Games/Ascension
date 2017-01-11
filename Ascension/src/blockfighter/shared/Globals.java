@@ -563,6 +563,7 @@ public class Globals {
 
     public static void loadServer() {
         loadNumberFormats();
+        loadItemCodes();
     }
 
     public static void loadClient() {
@@ -577,6 +578,7 @@ public class Globals {
         loadSound();
         loadGFX();
         loadNumberFormats();
+        loadItemCodes();
     }
 
     private static void loadNumberFormats() {

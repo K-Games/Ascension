@@ -11,7 +11,6 @@ public class Main {
 
     public static void main(final String[] args) {
         final HashSet<String> arguments = new HashSet<>();
-        Globals.loadItemCodes();
         arguments.addAll(Arrays.asList(args));
         if (arguments.contains("-server")) {
             asc = new AscensionServer();
