@@ -1323,7 +1323,7 @@ public class ScreenIngame extends Screen {
             Entry<Integer, Particle> particle = particleIter.next();
             particle.getValue().setExpire();
             particleIter.remove();
-            returnParticleKey(particle.getKey());
+            Particle.returnParticleKey(particle.getKey());
         }
 
         Particle.unloadParticles();

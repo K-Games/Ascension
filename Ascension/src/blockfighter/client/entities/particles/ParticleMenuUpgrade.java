@@ -9,7 +9,7 @@ public class ParticleMenuUpgrade extends Particle {
     private final int color, deltaX;
     private int deltaY;
 
-    public ParticleMenuUpgrade(final int k, final int x, final int y, final int c, final int dX, final int dY) {
+    public ParticleMenuUpgrade(final int x, final int y, final int c, final int dX, final int dY) {
         super(x, y);
         this.duration = 1000;
         this.color = c;

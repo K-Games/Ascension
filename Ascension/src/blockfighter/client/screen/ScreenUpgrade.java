@@ -3,6 +3,7 @@ package blockfighter.client.screen;
 import blockfighter.client.SaveData;
 import blockfighter.client.entities.items.ItemEquip;
 import blockfighter.client.entities.items.ItemUpgrade;
+import blockfighter.client.entities.particles.Particle;
 import blockfighter.client.entities.particles.ParticleMenuUpgrade;
 import blockfighter.shared.Globals;
 import java.awt.Color;
@@ -37,7 +38,6 @@ public class ScreenUpgrade extends ScreenItemManagement {
     private byte charFrame = 0;
     private long nextFrameTime = 0;
     private boolean upgrading = false;
-    private int upPart = 0;
 
     static {
         UPGRADE_BOX[0] = new Rectangle2D.Double(UPGRADE_BOX_X, UPGRADE_BOX_Y + 30, 60, 60);
@@ -57,15 +57,17 @@ public class ScreenUpgrade extends ScreenItemManagement {
                 if (ItemUpgrade.rollUpgrade(this.character.getUpgrades()[this.selectUpgrade], this.character.getEquip()[this.selectEquip])) {
                     this.character.getEquip()[this.selectEquip].addUpgrade(1);
                     for (int i = 0; i < 20; i++) {
-                        particles.put(i + 2, new ParticleMenuUpgrade(this.upPart + 2, (int) UPGRADE_BOX[1].x + 30,
+                        Particle upPart = new ParticleMenuUpgrade((int) UPGRADE_BOX[1].x + 30,
                                 (int) UPGRADE_BOX[1].y + 30, 3,
-                                Globals.rng(10) - 5, -5 - Globals.rng(3)));
+                                Globals.rng(10) - 5, -5 - Globals.rng(3));
+                        PARTICLES.put(upPart.getKey(), upPart);
                     }
                 } else {
                     for (int i = 0; i < 20; i++) {
-                        particles.put(i + 2, new ParticleMenuUpgrade(this.upPart + 2, (int) UPGRADE_BOX[1].x + 30,
+                        Particle upPart = new ParticleMenuUpgrade((int) UPGRADE_BOX[1].x + 30,
                                 (int) UPGRADE_BOX[1].y + 30, 2,
-                                Globals.rng(10) - 5, -5 - Globals.rng(3)));
+                                Globals.rng(10) - 5, -5 - Globals.rng(3));
+                        PARTICLES.put(upPart.getKey(), upPart);
                     }
                 }
                 this.character.destroyItem(this.selectUpgrade);
@@ -314,7 +316,6 @@ public class ScreenUpgrade extends ScreenItemManagement {
 
             if (!this.upgrading && COMBINE_BOX.contains(scaled)) {
                 if (this.selectUpgrade >= 0 && this.selectEquip >= 0) {
-                    this.upPart = 0;
                     this.upgrading = true;
                 }
             }

@@ -7,6 +7,7 @@ import blockfighter.shared.Globals;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public abstract class Particle implements Callable<Particle> {
 
@@ -24,6 +25,9 @@ public abstract class Particle implements Callable<Particle> {
     private final static String[] PARTICLE_SPRITE_FOLDER = new String[Globals.NUM_PARTICLE_EFFECTS];
     private final static int[] PARTICLE_FRAMES = new int[Globals.NUM_PARTICLE_EFFECTS];
 
+    private static final ConcurrentLinkedQueue<Integer> PARTICLE_KEYS = new ConcurrentLinkedQueue<>();
+    private static int numParticleKeys = 500;
+
     protected final int key;
     private static boolean LOADED = false;
 
@@ -33,6 +37,11 @@ public abstract class Particle implements Callable<Particle> {
 
     public static void init() {
         logic = AscensionClient.getLogicModule();
+
+        for (int key = 0; key < numParticleKeys; key++) {
+            PARTICLE_KEYS.add(key);
+        }
+
         PARTICLE_SPRITE_FOLDER[Globals.PARTICLE_SWORD_SLASH1] = "slash1";
         PARTICLE_SPRITE_FOLDER[Globals.PARTICLE_SWORD_SLASH2] = "slash2";
         PARTICLE_SPRITE_FOLDER[Globals.PARTICLE_SWORD_SLASH3] = "slash3";
@@ -118,6 +127,20 @@ public abstract class Particle implements Callable<Particle> {
         PARTICLE_FRAMES[Globals.PARTICLE_SHIELD_ROARHIT] = 7;
     }
 
+    public static int getNextParticleKey() {
+        Integer nextKey = PARTICLE_KEYS.poll();
+        while (nextKey == null) {
+            PARTICLE_KEYS.add(numParticleKeys);
+            numParticleKeys++;
+            nextKey = PARTICLE_KEYS.poll();
+        }
+        return nextKey;
+    }
+
+    public static void returnParticleKey(final int key) {
+        PARTICLE_KEYS.add(key);
+    }
+
     public static void unloadParticles() {
         Globals.log(Particle.class, "Unloading Particles...", Globals.LOG_TYPE_DATA, true);
         for (int i = 0; PARTICLE_SPRITE != null && i < PARTICLE_SPRITE.length; i++) {
@@ -192,7 +215,7 @@ public abstract class Particle implements Callable<Particle> {
     }
 
     public Particle(final int x, final int y) {
-        this(logic.getScreen().getNextParticleKey(), x, y, null);
+        this(getNextParticleKey(), x, y, null);
     }
 
     public Particle(final int x, final int y, final byte f) {
@@ -206,7 +229,7 @@ public abstract class Particle implements Callable<Particle> {
     }
 
     public Particle(final int x, final int y, final Player owner) {
-        this(logic.getScreen().getNextParticleKey(), x, y, owner);
+        this(getNextParticleKey(), x, y, owner);
     }
 
     public Particle(final Player owner) {

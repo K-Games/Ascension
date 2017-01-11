@@ -15,7 +15,6 @@ import java.awt.event.MouseMotionListener;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Future;
 
 public abstract class Screen implements KeyListener, MouseListener, MouseMotionListener, FocusListener {
@@ -31,14 +30,8 @@ public abstract class Screen implements KeyListener, MouseListener, MouseMotionL
     protected static RenderPanel panel;
     protected static LogicModule logic;
 
-    private static final ConcurrentLinkedQueue<Integer> PARTICLE_KEYS = new ConcurrentLinkedQueue<>();
-    private static int numParticleKeys = 500;
-
     public static void init() {
         logic = AscensionClient.getLogicModule();
-        for (int key = 0; key < numParticleKeys; key++) {
-            PARTICLE_KEYS.add(key);
-        }
     }
 
     public void drawStringOutline(final Graphics2D g, final String s, final int x, final int y, final int width) {
@@ -84,20 +77,6 @@ public abstract class Screen implements KeyListener, MouseListener, MouseMotionL
 
     public byte getBGM() {
         return -1;
-    }
-
-    public int getNextParticleKey() {
-        Integer nextKey = PARTICLE_KEYS.poll();
-        while (nextKey == null) {
-            PARTICLE_KEYS.add(numParticleKeys);
-            numParticleKeys++;
-            nextKey = PARTICLE_KEYS.poll();
-        }
-        return nextKey;
-    }
-
-    public void returnParticleKey(final int key) {
-        PARTICLE_KEYS.add(key);
     }
 
     public void addParticle(final Particle newParticle) {

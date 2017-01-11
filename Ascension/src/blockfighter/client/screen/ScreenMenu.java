@@ -46,7 +46,7 @@ public abstract class ScreenMenu extends Screen {
     ));
 
     protected long lastParticleUpdateTime = 0, lastUpdateTime = 0;
-    protected static ConcurrentHashMap<Integer, Particle> particles = new ConcurrentHashMap<>(3);
+    protected final static ConcurrentHashMap<Integer, Particle> PARTICLES = new ConcurrentHashMap<>(3);
     private static final Rectangle2D.Double[] MENU_BOX = new Rectangle2D.Double[7];
     protected boolean fadeIn = false;
 
@@ -60,6 +60,9 @@ public abstract class ScreenMenu extends Screen {
         for (int i = 0; i < MENU_BOX.length; i++) {
             MENU_BOX[i] = new Rectangle2D.Double(20, 27 + 50 * i, 180, 50);
         }
+        Particle[] smoke = {new ParticleMenuSmoke(0, 0), new ParticleMenuSmoke(1280, 0)};
+        PARTICLES.put(smoke[0].getKey(), smoke[0]);
+        PARTICLES.put(smoke[1].getKey(), smoke[1]);
     }
 
     public ScreenMenu() {
@@ -67,16 +70,12 @@ public abstract class ScreenMenu extends Screen {
     }
 
     public ScreenMenu(final boolean fadeIn) {
-        if (!particles.containsKey(0)) {
-            particles.put(0, new ParticleMenuSmoke(0, 0, 0));
-            particles.put(1, new ParticleMenuSmoke(1, 1280, 0));
-        }
         this.fadeIn = fadeIn;
     }
 
     @Override
     public ConcurrentHashMap<Integer, Particle> getParticles() {
-        return particles;
+        return PARTICLES;
     }
 
     @Override
@@ -88,7 +87,7 @@ public abstract class ScreenMenu extends Screen {
     public void update() {
         final long now = logic.getTime(); // Get time now
         if (now - this.lastParticleUpdateTime >= Globals.CLIENT_LOGIC_UPDATE) {
-            updateParticles(particles);
+            updateParticles(PARTICLES);
             this.lastParticleUpdateTime = now;
             if (fadeIn) {
                 if (!finishedFadeIn && Globals.nsToMs(now - fadeInStart) < 2000) {
@@ -104,7 +103,7 @@ public abstract class ScreenMenu extends Screen {
 
     @Override
     public void draw(final Graphics2D g) {
-        for (final Map.Entry<Integer, Particle> pEntry : particles.entrySet()) {
+        for (final Map.Entry<Integer, Particle> pEntry : PARTICLES.entrySet()) {
             pEntry.getValue().draw(g);
         }
         if (this.fadeIn && !this.finishedFadeIn) {
