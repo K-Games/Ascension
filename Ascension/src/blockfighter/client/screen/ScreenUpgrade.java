@@ -185,11 +185,11 @@ public class ScreenUpgrade extends ScreenItemManagement {
             g.setFont(Globals.ARIAL_15PT);
             drawStringOutline(g, CHANCE_OF_SUCCESS_TEXT
                     + chance + "%",
-                    UPGRADE_BOX_X + 20, UPGRADE_BOX_Y + 115, 1);
+                    UPGRADE_BOX_X + 70, UPGRADE_BOX_Y + 200, 1);
             g.setColor(Color.WHITE);
             g.drawString(CHANCE_OF_SUCCESS_TEXT
                     + chance + "%",
-                    UPGRADE_BOX_X + 20, UPGRADE_BOX_Y + 115);
+                    UPGRADE_BOX_X + 70, UPGRADE_BOX_Y + 200);
         }
 
         g.setFont(Globals.ARIAL_18PT);

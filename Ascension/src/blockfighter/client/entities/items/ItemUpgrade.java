@@ -67,7 +67,7 @@ public class ItemUpgrade implements Item {
             power = 0;
         }
 
-        return Math.pow(0.8, power);
+        return (int) (Math.pow(0.8, power) * 10000) / 10000D;
     }
 
     public static boolean rollUpgrade(final ItemEquip e, final ItemUpgrade... upgrades) {
