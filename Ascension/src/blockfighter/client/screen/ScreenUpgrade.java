@@ -341,6 +341,8 @@ public class ScreenUpgrade extends ScreenItemManagement {
                         }
                         this.selectUpgrade[i] = drItem;
                         return;
+                    } else {
+                        this.selectUpgrade[i] = -1;
                     }
                 }
             }
