@@ -25,6 +25,10 @@
 * Exposed CUSTOM_VALUES to allow fetching custom data of Skills.
 * Fixed main hand and offhand equip slot string.
 
+### Server Changes
+* Packets are now sent in large batches and asynchronously.
+* Improved network performance allows rooms to have up to 128 players.
+
 ---
 
 ## Version 0.22 Update 1

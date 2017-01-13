@@ -4,9 +4,23 @@ import blockfighter.server.LogicModule;
 import blockfighter.server.entities.player.Player;
 import blockfighter.shared.Globals;
 import com.esotericsoftware.kryonet.Connection;
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
-public class PacketSender {
+public class PacketSender implements Runnable {
+
+    private static final ConcurrentHashMap<Connection, ConcurrentLinkedQueue<byte[]>> connPacketBatch = new ConcurrentHashMap<>();
+    private static final ExecutorService PACKETSENDER_THREAD_POOL = Executors.newFixedThreadPool(Globals.SERVER_PACKETSENDER_THREADS,
+            new BasicThreadFactory.Builder()
+                    .namingPattern("Packet-Sender-%d")
+                    .daemon(true)
+                    .priority(Thread.NORM_PRIORITY)
+                    .build());
 
     public static void sendParticle(final LogicModule room, final byte particleID, final double x, final double y, final byte facing) {
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT * 2];
@@ -72,28 +86,30 @@ public class PacketSender {
     }
 
     public static void sendConnection(final byte[] data, final Connection c) {
-        if (!Globals.UDP_MODE) {
-            if (c.getTcpWriteBufferSize() < Globals.PACKET_MAX_SIZE * Globals.PACKET_MAX_PER_CON * 0.75) {
-                c.sendTCP(data);
-            }
-        } else {
-            c.sendUDP(data);
-        }
-    }
-
-    public static void sendPlayer(final byte[] data, final Player player) {
-        if (player.isConnected()) {
+        PACKETSENDER_THREAD_POOL.execute(() -> {
             try {
                 if (!Globals.UDP_MODE) {
-                    if (player.getConnection().getTcpWriteBufferSize() < Globals.PACKET_MAX_SIZE * Globals.PACKET_MAX_PER_CON * 0.75) {
-                        player.getConnection().sendTCP(data);
+                    if (c.getTcpWriteBufferSize() < Globals.PACKET_MAX_SIZE * Globals.PACKET_MAX_PER_CON * 0.75) {
+                        c.sendTCP(data);
                     }
                 } else {
-                    player.getConnection().sendUDP(data);
+                    if (!connPacketBatch.containsKey(c)) {
+                        connPacketBatch.put(c, new ConcurrentLinkedQueue<>());
+                    }
+                    ConcurrentLinkedQueue<byte[]> batch = connPacketBatch.get(c);
+                    if (batch != null) {
+                        batch.add(data);
+                    }
                 }
             } catch (Exception e) {
                 Globals.logError(e.toString(), e, true);
             }
+        });
+    }
+
+    public static void sendPlayer(final byte[] data, final Player player) {
+        if (player.isConnected()) {
+            sendConnection(data, player.getConnection());
         }
     }
 
@@ -108,5 +124,30 @@ public class PacketSender {
             final Player player = pEntry.getValue();
             player.sendData();
         }
+    }
+
+    @Override
+    public void run() {
+        if (Globals.UDP_MODE) {
+            for (final Map.Entry<Connection, ConcurrentLinkedQueue<byte[]>> entry : connPacketBatch.entrySet()) {
+                connPacketBatch.remove(entry.getKey());
+                PACKETSENDER_THREAD_POOL.execute(() -> {
+                    Connection c = entry.getKey();
+                    ConcurrentLinkedQueue<byte[]> batch = entry.getValue();
+                    while (!batch.isEmpty()) {
+                        LinkedList<byte[]> packetBatch = new LinkedList<>();
+                        int packetSize = 0;
+                        while (!batch.isEmpty() && packetSize < Globals.PACKET_MAX_SIZE * 0.85) {
+                            byte[] singlePacket = batch.poll();
+                            packetSize += singlePacket.length;
+                            packetBatch.add(singlePacket);
+                        }
+                        byte[][] data = packetBatch.toArray(new byte[0][0]);
+                        int size = c.sendUDP(data);
+                    }
+                });
+            }
+        }
+
     }
 }

@@ -18,8 +18,10 @@ public class TestPacketReceiver extends Listener {
 
     @Override
     public void received(Connection connection, Object object) {
-        if (object instanceof byte[]) {
-            TestPacketHandler.process((byte[]) object, this.gC);
+        if (object instanceof byte[][]) {
+            for (byte[] data : (byte[][]) object) {
+                TestPacketHandler.process(data, this.gC);
+            }
         }
     }
 

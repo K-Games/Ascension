@@ -1,6 +1,7 @@
 package blockfighter.server;
 
 import blockfighter.server.net.GameServer;
+import blockfighter.server.net.PacketSender;
 import blockfighter.server.net.hub.HubClient;
 import blockfighter.shared.Globals;
 import java.awt.Dimension;
@@ -22,6 +23,13 @@ import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 public class AscensionServer {
 
     private static final ScheduledExecutorService LOGIC_SCHEDULER;
+
+    private static final ScheduledExecutorService PACKETSENDER_SCHEDULER = Executors.newSingleThreadScheduledExecutor(
+            new BasicThreadFactory.Builder()
+                    .namingPattern("PacketSender-Runner-%d")
+                    .daemon(true)
+                    .priority(Thread.NORM_PRIORITY)
+                    .build());
 
     private static final ScheduledExecutorService HUB_SCHEDULER = Executors.newSingleThreadScheduledExecutor(
             new BasicThreadFactory.Builder()
@@ -82,6 +90,8 @@ public class AscensionServer {
             SERVER.start();
             Globals.log(AscensionServer.class, "Server started ", Globals.LOG_TYPE_ERR, false);
             Globals.log(AscensionServer.class, "Server started", Globals.LOG_TYPE_DATA, true);
+
+            PACKETSENDER_SCHEDULER.scheduleAtFixedRate(new PacketSender(), 0, Globals.RENDER_UPDATE, TimeUnit.NANOSECONDS);
             if (Globals.SERVER_HUB_CONNECT) {
                 HUB_SCHEDULER.scheduleAtFixedRate(new HubClient(), 0, 10, TimeUnit.SECONDS);
             }

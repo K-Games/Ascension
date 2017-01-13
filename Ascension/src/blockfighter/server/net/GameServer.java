@@ -2,8 +2,8 @@ package blockfighter.server.net;
 
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.player.Player;
+import blockfighter.shared.AscensionSerialization;
 import blockfighter.shared.Globals;
-import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
@@ -20,9 +20,7 @@ public class GameServer {
 
     public void start() {
         try {
-            this.server = new Server(Globals.PACKET_MAX_SIZE * Globals.PACKET_MAX_PER_CON, Globals.PACKET_MAX_SIZE);
-            Kryo kyro = this.server.getKryo();
-            kyro.register(byte[].class);
+            this.server = new Server(Globals.PACKET_MAX_SIZE * Globals.PACKET_MAX_PER_CON, Globals.PACKET_MAX_SIZE, new AscensionSerialization());
             this.receiver = new PacketReceiver();
             this.server.addListener(new Listener.ThreadedListener(this.receiver));
             if (Globals.UDP_MODE) {

@@ -253,7 +253,7 @@ public class Globals {
             PLAYER_ANIM_STATE_ROLL = 0x08;
 
     // Packet globals
-    public final static int PACKET_MAX_SIZE = 500;
+    public final static int PACKET_MAX_SIZE = 8000;
     public final static int PACKET_BYTE = 1;
     public final static int PACKET_INT = 4;
     public final static int PACKET_LONG = 8;
@@ -456,7 +456,7 @@ public class Globals {
     public final static double GRAVITY = 0.35, MAX_FALLSPEED = 12.5, WALK_SPEED = 3.8;
     public static double EXP_MULTIPLIER = 0.05;
 
-    public static int PACKET_MAX_PER_CON = 1000;
+    public static int PACKET_MAX_PER_CON = 100;
 
     public final static HashSet<Integer> ITEM_CODES = new HashSet<>();
     public static final HashSet<Integer> ITEM_UPGRADE_CODES = new HashSet<>();

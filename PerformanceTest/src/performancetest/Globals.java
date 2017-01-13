@@ -44,7 +44,7 @@ public class Globals {
             STAT_DAMAGEREDUCT = 15;
 
     // Packet globals
-    public final static int PACKET_MAX_SIZE = 1100;
+    public final static int PACKET_MAX_SIZE = 8000;
     public final static int PACKET_BYTE = 1;
     public final static int PACKET_INT = 4;
     public final static int PACKET_LONG = 8;
