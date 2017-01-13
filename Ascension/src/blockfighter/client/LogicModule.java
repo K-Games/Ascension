@@ -31,7 +31,7 @@ public class LogicModule implements Runnable {
             this.currentTime = System.nanoTime();
             this.screen.update();
 
-            if (connecting && this.currentTime - connectStartTime >= Globals.msToNs(3000)) {
+            if (connecting && this.currentTime - connectStartTime >= Globals.msToNs(6000)) {
                 connecting = false;
                 shutdownClient();
             }
@@ -63,9 +63,6 @@ public class LogicModule implements Runnable {
         }
 
         if (skillReady && equipReady) {
-            if (client != null) {
-                shutdownClient();
-            }
             client = new GameClient(this, server);
             AscensionClient.SHARED_THREADPOOL.execute(client);
         } else if (!skillReady && !equipReady) {

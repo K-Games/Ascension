@@ -3,7 +3,6 @@ package blockfighter.client.net;
 import blockfighter.client.LogicModule;
 import blockfighter.client.screen.ScreenServerList;
 import blockfighter.shared.Globals;
-import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Listener;
 import java.io.IOException;
@@ -24,20 +23,20 @@ public class GameClient implements Runnable {
     @Override
     public void run() {
 
-        if (logic.getScreen() instanceof ScreenServerList) {
-            ((ScreenServerList) logic.getScreen()).setStatus(ScreenServerList.STATUS_CONNECTING);
-            logic.startLoginAttemptTimeout();
-        }
         if (client == null) {
             client = new Client(Globals.PACKET_MAX_SIZE * 800, Globals.PACKET_MAX_SIZE);
             client.setTimeout(3000);
             client.setKeepAliveTCP(500);
             PacketHandler.setGameClient(this);
             client.start();
-
-            Kryo kyro = client.getKryo();
-            kyro.register(byte[].class);
             client.addListener(new Listener.ThreadedListener(new PacketReceiver()));
+        } else {
+            shutdownClient(ScreenServerList.STATUS_CONNECTING);
+        }
+
+        if (logic.getScreen() instanceof ScreenServerList) {
+            ((ScreenServerList) logic.getScreen()).setStatus(ScreenServerList.STATUS_CONNECTING);
+            logic.startLoginAttemptTimeout();
         }
 
         try {

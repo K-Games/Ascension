@@ -391,6 +391,7 @@ public class ScreenServerList extends ScreenMenu {
     }
 
     public void enableFields() {
+        logic.stopCharacterLoginAttemptTimeout();
         connecting = false;
         SERVERADDRESS_FIELD.setVisible(true);
         SERVERADDRESS_FIELD.setEnabled(true);
