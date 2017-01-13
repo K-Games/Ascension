@@ -158,12 +158,12 @@ public class LogicModule implements Runnable {
         setMyPlayerKey((byte) -1);
     }
 
-    public void startCharacterCreateTimeout() {
+    public void startLoginAttemptTimeout() {
         this.connectStartTime = this.currentTime;
         this.connecting = true;
     }
 
-    public void stopCharacterCreateTimeout() {
+    public void stopCharacterLoginAttemptTimeout() {
         this.connecting = false;
     }
 

@@ -21,12 +21,7 @@ import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
 public class AscensionServer {
 
-    private static final ScheduledExecutorService LOGIC_SCHEDULER = Executors.newScheduledThreadPool(Math.max(Globals.SERVER_MAX_ROOMS / 3, 1),
-            new BasicThreadFactory.Builder()
-                    .namingPattern("Logic-Runner-%d")
-                    .daemon(false)
-                    .priority(Thread.NORM_PRIORITY)
-                    .build());
+    private static final ScheduledExecutorService LOGIC_SCHEDULER;
 
     private static final ScheduledExecutorService HUB_SCHEDULER = Executors.newSingleThreadScheduledExecutor(
             new BasicThreadFactory.Builder()
@@ -36,11 +31,20 @@ public class AscensionServer {
                     .build());
 
     private static JTextArea DATA_LOG, ERROR_LOG;
-    private static ConcurrentHashMap<Byte, LogicModule> SERVER_ROOMS = new ConcurrentHashMap<>(Globals.SERVER_MAX_ROOMS);
+    private static ConcurrentHashMap<Byte, LogicModule> SERVER_ROOMS;
     private static GameServer SERVER;
 
     static {
         Globals.loadServer();
+        Globals.setServerProp();
+
+        SERVER_ROOMS = new ConcurrentHashMap<>(Globals.SERVER_MAX_ROOMS);
+        LOGIC_SCHEDULER = Executors.newScheduledThreadPool(Math.max(Globals.SERVER_MAX_ROOMS / 10, 1),
+                new BasicThreadFactory.Builder()
+                        .namingPattern("Logic-Runner-%d")
+                        .daemon(false)
+                        .priority(Thread.NORM_PRIORITY)
+                        .build());
     }
 
     public void shutdown() {
@@ -57,17 +61,12 @@ public class AscensionServer {
         Globals.LOGGING = true;
         Globals.createLogDirectory();
 
-        boolean isGUI = false, isDefault = false;
+        boolean isGUI = false;
 
         if (args.length > 0) {
             final HashSet<String> arguments = new HashSet<>();
             arguments.addAll(Arrays.asList(args));
             isGUI = arguments.contains("-gui");
-            isDefault = arguments.contains("-default");
-        }
-
-        if (!isDefault) {
-            Globals.setServerProp();
         }
 
         if (isGUI) {

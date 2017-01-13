@@ -26,6 +26,7 @@ public class GameClient implements Runnable {
 
         if (logic.getScreen() instanceof ScreenServerList) {
             ((ScreenServerList) logic.getScreen()).setStatus(ScreenServerList.STATUS_CONNECTING);
+            logic.startLoginAttemptTimeout();
         }
         if (client == null) {
             client = new Client(Globals.PACKET_MAX_SIZE * 800, Globals.PACKET_MAX_SIZE);

@@ -42,7 +42,7 @@ public class PacketHandler {
                 key = data[2],
                 size = data[3];
 
-        logic.stopCharacterCreateTimeout();
+        logic.stopCharacterLoginAttemptTimeout();
         logic.setMyPlayerKey(key);
         final ScreenLoading loading = new ScreenLoading();
         logic.setScreen(loading);
@@ -98,7 +98,6 @@ public class PacketHandler {
             }
             logic.setSelectedRoom(data[5]);
             PacketSender.sendPlayerCreate(logic.getSelectedRoom(), logic.getSelectedChar());
-            logic.startCharacterCreateTimeout();
         } catch (Exception e) {
             gameClient.shutdownClient(ScreenServerList.STATUS_FAILEDCONNECT);
         }
