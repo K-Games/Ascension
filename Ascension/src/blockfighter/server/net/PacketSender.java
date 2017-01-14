@@ -93,13 +93,12 @@ public class PacketSender implements Runnable {
                         c.sendTCP(data);
                     }
                 } else {
-                    if (!connPacketBatch.containsKey(c)) {
-                        connPacketBatch.put(c, new ConcurrentLinkedQueue<>());
-                    }
                     ConcurrentLinkedQueue<byte[]> batch = connPacketBatch.get(c);
-                    if (batch != null) {
-                        batch.add(data);
+                    if (batch == null) {
+                        batch = new ConcurrentLinkedQueue<>();
+                        connPacketBatch.put(c, batch);
                     }
+                    batch.add(data);
                 }
             } catch (Exception e) {
                 Globals.logError(e.toString(), e, true);
