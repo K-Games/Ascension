@@ -4,7 +4,9 @@ import blockfighter.client.SaveData;
 import blockfighter.client.entities.items.ItemEquip;
 import blockfighter.client.entities.items.ItemUpgrade;
 import blockfighter.client.entities.particles.Particle;
+import blockfighter.client.entities.particles.menu.ParticleMenuUpgradeSelect;
 import blockfighter.client.entities.particles.menu.ParticleMenuUpgrade;
+import static blockfighter.client.screen.ScreenMenu.PARTICLES;
 import blockfighter.shared.Globals;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -37,7 +39,7 @@ public class ScreenUpgrade extends ScreenItemManagement {
     private int drawItem = -1, drawEquip = -1, drawSelect = -1;
 
     private byte charFrame = 0;
-    private long nextFrameTime = 0;
+    private long nextFrameTime = 0, nextNewParticleTime = 0;
     private boolean upgrading = false;
 
     static {
@@ -57,7 +59,20 @@ public class ScreenUpgrade extends ScreenItemManagement {
     public void update() {
         super.update();
         final long now = logic.getTime(); // Get time now
+
+        if (now - this.nextNewParticleTime >= Globals.msToNs(100)) {
+            for (int i = 0; i < this.selectUpgrade.length; i++) {
+                if (this.selectUpgrade[i] > -1) {
+                    Particle selectionPart = new ParticleMenuUpgradeSelect((int) UPGRADE_BOX[i].x + 30, (int) UPGRADE_BOX[i].y + 30,
+                            (int) UPGRADE_BOX[3].x + 30, (int) UPGRADE_BOX[3].y + 30);
+                    PARTICLES.put(selectionPart.getKey(), selectionPart);
+                }
+            }
+            this.nextNewParticleTime = now;
+        }
+
         if (now - this.lastUpdateTime >= Globals.CLIENT_LOGIC_UPDATE) {
+
             if (this.upgrading) {
                 ItemUpgrade[] tempUpgrades = new ItemUpgrade[this.selectUpgrade.length];
                 for (int i = 0; i < this.selectUpgrade.length; i++) {
@@ -68,15 +83,15 @@ public class ScreenUpgrade extends ScreenItemManagement {
                 if (ItemUpgrade.rollUpgrade(this.character.getEquip()[this.selectEquip], tempUpgrades)) {
                     this.character.getEquip()[this.selectEquip].addUpgrade(1);
                     for (int i = 0; i < 20; i++) {
-                        Particle upPart = new ParticleMenuUpgrade((int) UPGRADE_BOX[1].x + 30,
-                                (int) UPGRADE_BOX[1].y + 30, 3,
+                        Particle upPart = new ParticleMenuUpgrade((int) UPGRADE_BOX[3].x + 30,
+                                (int) UPGRADE_BOX[3].y + 30, 3,
                                 Globals.rng(10) - 5, -5 - Globals.rng(3));
                         PARTICLES.put(upPart.getKey(), upPart);
                     }
                 } else {
                     for (int i = 0; i < 20; i++) {
-                        Particle upPart = new ParticleMenuUpgrade((int) UPGRADE_BOX[1].x + 30,
-                                (int) UPGRADE_BOX[1].y + 30, 2,
+                        Particle upPart = new ParticleMenuUpgrade((int) UPGRADE_BOX[3].x + 30,
+                                (int) UPGRADE_BOX[3].y + 30, 2,
                                 Globals.rng(10) - 5, -5 - Globals.rng(3));
                         PARTICLES.put(upPart.getKey(), upPart);
                     }
