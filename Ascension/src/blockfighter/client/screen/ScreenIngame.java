@@ -284,13 +284,21 @@ public class ScreenIngame extends Screen {
             }
         }
         for (final Map.Entry<Integer, Particle> pEntry : this.particles.entrySet()) {
-            pEntry.getValue().draw(g);
+            try {
+                pEntry.getValue().draw(g);
+            } catch (Exception e) {
+                Globals.logError(e.toString(), e, true);
+            }
         }
         for (final IngameNumber number : this.ingameNumber) {
             number.draw(g);
         }
         for (final Emote emote : this.emotes) {
-            emote.draw(g);
+            try {
+                emote.draw(g);
+            } catch (Exception e) {
+                Globals.logError(e.toString(), e, true);
+            }
         }
 
         g.setTransform(resetForm);
