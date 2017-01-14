@@ -2,7 +2,7 @@
 
 ![Game Updates](https://github.com/kenofnz/AscensionInfo/raw/master/images/updates.png)
 
-## Version 0.22 Update 2
+## Version 0.23
 
 ### Gameplay Changes
 * New mechanic - Hyper Stance - Certain Skills grants players with Hyper Stance, preventing and removing Knockback and Stun debuffs.
