@@ -651,12 +651,14 @@ public class ScreenIngame extends Screen {
     private void dataPlayerSetPos(final byte[] data) {
         for (int i = 0; i < (data.length - 1) / 10; i++) {
             final byte key = data[i * 10 + 1];
-            final int x = Globals.bytesToInt(Arrays.copyOfRange(data, i * 10 + 2, i * 10 + 6));
-            final int y = Globals.bytesToInt(Arrays.copyOfRange(data, i * 10 + 6, i * 10 + 10));
-            final byte facing = data[i * 10 + 10];
-            spawnPlayer(key, x, y);
-            this.players.get(key).setPos(x, y);
-            this.players.get(key).setFacing(facing);
+            if (key != -1) {
+                final int x = Globals.bytesToInt(Arrays.copyOfRange(data, i * 10 + 2, i * 10 + 6));
+                final int y = Globals.bytesToInt(Arrays.copyOfRange(data, i * 10 + 6, i * 10 + 10));
+                final byte facing = data[i * 10 + 10];
+                spawnPlayer(key, x, y);
+                this.players.get(key).setPos(x, y);
+                this.players.get(key).setFacing(facing);
+            }
         }
     }
 

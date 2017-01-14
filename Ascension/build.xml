@@ -30,7 +30,7 @@
             <copy file="${dist.dir}/bin.jar" tofile="${dist.dir}/Ascension-ServerDeploy/AscensionServer.jar" />
             <copy file="${dist.dir}/bin.jar" tofile="${dist.dir}/Ascension-Release-Multiplatform/Ascension.jar" />
             <copy todir="${dist.dir}/Ascension-ServerDeploy/lib" >
-                <fileset dir="${dist.dir}/lib" includes="commons*, kryo*"/>
+                <fileset dir="${dist.dir}/lib" includes="commons*, kryo*, asm*, jsonbeans*, minlog*, objenesis*, reflectasm*"/>
             </copy>
 
             <copy todir="${dist.dir}/Ascension-Release-Win/bin/lib" >

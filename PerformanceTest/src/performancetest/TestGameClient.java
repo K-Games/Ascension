@@ -1,6 +1,6 @@
 package performancetest;
 
-import com.esotericsoftware.kryo.Kryo;
+import blockfighter.shared.AscensionSerialization;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Listener;
 import java.io.IOException;
@@ -26,11 +26,9 @@ public class TestGameClient {
         if (this.receiver != null && this.receiver.isConnected()) {
             return;
         }
-        this.client = new Client(Globals.PACKET_MAX_SIZE * 500, Globals.PACKET_MAX_SIZE);
+        this.client = new Client(Globals.PACKET_MAX_SIZE * 100, Globals.PACKET_MAX_SIZE, new AscensionSerialization());
         this.client.start();
 
-        Kryo kyro = this.client.getKryo();
-        kyro.register(byte[].class);
         this.receiver = new TestPacketReceiver(this);
         this.client.addListener(new Listener.ThreadedListener(this.receiver));
 

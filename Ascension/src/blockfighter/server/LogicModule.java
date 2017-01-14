@@ -5,7 +5,7 @@ import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.proj.Projectile;
 import blockfighter.server.net.PacketSender;
 import blockfighter.shared.Globals;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -133,7 +133,7 @@ public class LogicModule implements Runnable {
         final ConcurrentHashMap<Byte, Player> players = this.room.getPlayers();
         LinkedList<Future<Player>> futures = new LinkedList<>();
 
-        final ArrayList<byte[]> posDatas = new ArrayList<>();
+        final LinkedList<byte[]> posDatas = new LinkedList<>();
 
         this.room.clearPlayerBuckets();
         for (final Map.Entry<Byte, Player> player : players.entrySet()) {
@@ -162,16 +162,21 @@ public class LogicModule implements Runnable {
         }
 
         if (posDatas.size() > 0) {
-            byte[] bytes = new byte[Globals.PACKET_BYTE * 1
-                    + (Globals.PACKET_BYTE * 2 + Globals.PACKET_INT * 2) * posDatas.size()];
-            bytes[0] = Globals.DATA_PLAYER_SET_POS;
-            int bytePos = 1;
+            LOGIC_THREAD_POOL.execute(() -> {
+                byte[] bytes = new byte[Globals.PACKET_BYTE * 1
+                        + (Globals.PACKET_BYTE * 2 + Globals.PACKET_INT * 2) * posDatas.size()];
+                Arrays.fill(bytes, (byte) -1);
 
-            for (byte[] posData : posDatas) {
-                System.arraycopy(posData, 0, bytes, bytePos, posData.length);
-                bytePos += posData.length;
-            }
-            PacketSender.sendAll(bytes, this);
+                bytes[0] = Globals.DATA_PLAYER_SET_POS;
+                int bytePos = 1;
+
+                while (!posDatas.isEmpty()) {
+                    byte[] posData = posDatas.poll();
+                    System.arraycopy(posData, 0, bytes, bytePos, posData.length);
+                    bytePos += posData.length;
+                }
+                PacketSender.sendAll(bytes, this);
+            });
         }
     }
 
@@ -227,77 +232,24 @@ public class LogicModule implements Runnable {
     }
 
     private void processQueues() {
-        final Runnable[] queues = new Runnable[5];
         final ConcurrentHashMap<Byte, Player> players = this.room.getPlayers();
         final ConcurrentHashMap<Integer, Mob> mobs = this.room.getMobs();
         final ConcurrentHashMap<Integer, Projectile> projectiles = this.room.getProj();
 
-        while (!this.playAddQueue.isEmpty()) {
-            final Player newPlayer = this.playAddQueue.poll();
-            if (newPlayer != null) {
-                this.room.addPlayer(newPlayer);
-            }
-        }
-
-        queues[0] = () -> {
+        LOGIC_THREAD_POOL.execute(() -> {
             try {
-                while (!this.playDirKeydownQueue.isEmpty()) {
-                    final byte[] data = this.playDirKeydownQueue.poll();
-                    if (data != null) {
-                        final byte key = data[2], dir = data[3], value = data[4];
-                        if (players.containsKey(key)) {
-                            players.get(key).setDirKeydown(dir, value == 1);
-                        }
+                while (!this.playAddQueue.isEmpty()) {
+                    final Player newPlayer = this.playAddQueue.poll();
+                    if (newPlayer != null) {
+                        this.room.addPlayer(newPlayer);
                     }
                 }
             } catch (final Exception ex) {
                 Globals.logError(ex.toString(), ex, true);
             }
-        };
+        });
 
-        queues[1] = () -> {
-            try {
-                while (!this.playUseSkillQueue.isEmpty()) {
-                    final byte[] data = this.playUseSkillQueue.poll();
-                    if (data != null) {
-                        final byte key = data[2];
-                        if (players.containsKey(key)) {
-                            players.get(key).queueSkillUse(data);
-                        }
-                    }
-                }
-            } catch (final Exception ex) {
-                Globals.logError(ex.toString(), ex, true);
-            }
-        };
-
-        queues[2] = () -> {
-            try {
-                while (!this.projEffectQueue.isEmpty()) {
-                    final Projectile proj = this.projEffectQueue.poll();
-                    if (proj != null) {
-                        proj.applyEffect();
-                    }
-                }
-            } catch (final Exception ex) {
-                Globals.logError(ex.toString(), ex, true);
-            }
-        };
-
-        queues[3] = () -> {
-            try {
-                while (!this.projAddQueue.isEmpty()) {
-                    final Projectile p = this.projAddQueue.poll();
-                    if (p != null) {
-                        projectiles.put(p.getKey(), p);
-                    }
-                }
-            } catch (final Exception ex) {
-                Globals.logError(ex.toString(), ex, true);
-            }
-        };
-
-        queues[4] = () -> {
+        LOGIC_THREAD_POOL.execute(() -> {
             try {
                 while (!this.mobAddQueue.isEmpty()) {
                     final Mob p = this.mobAddQueue.poll();
@@ -308,7 +260,7 @@ public class LogicModule implements Runnable {
             } catch (final Exception ex) {
                 Globals.logError(ex.toString(), ex, true);
             }
-        };
+        });
 
         if (players.isEmpty()) {
             if (!this.playDirKeydownQueue.isEmpty()) {
@@ -320,14 +272,64 @@ public class LogicModule implements Runnable {
             if (!this.projEffectQueue.isEmpty()) {
                 this.projEffectQueue.clear();
             }
-            if (!this.mobAddQueue.isEmpty()) {
-                LOGIC_THREAD_POOL.execute(queues[4]);
-            }
-            return;
-        }
+        } else {
+            LOGIC_THREAD_POOL.execute(() -> {
+                try {
+                    while (!this.playDirKeydownQueue.isEmpty()) {
+                        final byte[] data = this.playDirKeydownQueue.poll();
+                        if (data != null) {
+                            final byte key = data[2], dir = data[3], value = data[4];
+                            if (players.containsKey(key)) {
+                                players.get(key).setDirKeydown(dir, value == 1);
+                            }
+                        }
+                    }
+                } catch (final Exception ex) {
+                    Globals.logError(ex.toString(), ex, true);
+                }
+            });
 
-        for (final Runnable t : queues) {
-            LOGIC_THREAD_POOL.execute(t);
+            LOGIC_THREAD_POOL.execute(() -> {
+                try {
+                    while (!this.playUseSkillQueue.isEmpty()) {
+                        final byte[] data = this.playUseSkillQueue.poll();
+                        if (data != null) {
+                            final byte key = data[2];
+                            if (players.containsKey(key)) {
+                                players.get(key).queueSkillUse(data);
+                            }
+                        }
+                    }
+                } catch (final Exception ex) {
+                    Globals.logError(ex.toString(), ex, true);
+                }
+            });
+
+            LOGIC_THREAD_POOL.execute(() -> {
+                try {
+                    while (!this.projEffectQueue.isEmpty()) {
+                        final Projectile proj = this.projEffectQueue.poll();
+                        if (proj != null) {
+                            proj.applyEffect();
+                        }
+                    }
+                } catch (final Exception ex) {
+                    Globals.logError(ex.toString(), ex, true);
+                }
+            });
+
+            LOGIC_THREAD_POOL.execute(() -> {
+                try {
+                    while (!this.projAddQueue.isEmpty()) {
+                        final Projectile p = this.projAddQueue.poll();
+                        if (p != null) {
+                            projectiles.put(p.getKey(), p);
+                        }
+                    }
+                } catch (final Exception ex) {
+                    Globals.logError(ex.toString(), ex, true);
+                }
+            });
         }
 
     }
