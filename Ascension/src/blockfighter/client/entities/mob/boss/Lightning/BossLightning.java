@@ -90,7 +90,7 @@ public class BossLightning extends Mob {
         if (SPRITE == null) {
             return;
         }
-        Globals.log(BossLightning.class, "Unloaded Lightning Assets...", Globals.LOG_TYPE_DATA, true);
+        Globals.log(BossLightning.class, "Unloaded Lightning Assets...", Globals.LOG_TYPE_DATA);
         ParticleAmbient.unload();
         ParticleBolt.unload();
         for (int i = 0; i < SPRITE.length; i++) {

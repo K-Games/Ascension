@@ -3,7 +3,7 @@ package performancetest;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 
-public class TestPacketReceiver extends Listener {
+public class TestPacketReceiver implements Listener {
 
     private boolean isConnected = true;
     private final TestGameClient gC;

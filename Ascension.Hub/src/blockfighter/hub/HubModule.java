@@ -46,7 +46,7 @@ public class HubModule implements Runnable {
                 }
             }
         } catch (IOException ex) {
-            Globals.logError(ex.toString(), ex, true);
+            Globals.logError(ex.toString(), ex);
         }
 
         REGION_NAMES.put("us-east-1", "N. Virginia, US East");
@@ -62,7 +62,7 @@ public class HubModule implements Runnable {
         REGION_NAMES.put("ap-south-1", "Mumbai, India");
         REGION_NAMES.put("sa-east-1", "São Paulo, Brazil");
         REGION_NAMES.put("ca-central-1", "Canada");
-        Globals.log(HubModule.class, (System.currentTimeMillis() - start) + "ms HubModule startup", Globals.LOG_TYPE_DATA, true);
+        Globals.log(HubModule.class, (System.currentTimeMillis() - start) + "ms HubModule startup", Globals.LOG_TYPE_DATA);
     }
 
     public static void addServerInfo(final Connection c, final ServerInfo info) {
@@ -77,7 +77,7 @@ public class HubModule implements Runnable {
             }
         }
         if (!CONN_SERVERINFO_MAP.containsKey(c)) {
-            Globals.log(HubModule.class, "Added " + info + " to server list", Globals.LOG_TYPE_DATA, true);
+            Globals.log(HubModule.class, "Added " + info + " to server list", Globals.LOG_TYPE_DATA);
         } else {
             //Globals.log(HubSender.class, "Updated " + c + " " + info, Globals.LOG_TYPE_DATA, true);
         }
@@ -92,7 +92,7 @@ public class HubModule implements Runnable {
     public static void removeServerInfo(final Connection c) {
         if (CONN_SERVERINFO_MAP.containsKey(c)) {
             ServerInfo info = CONN_SERVERINFO_MAP.remove(c);
-            Globals.log(HubModule.class, "Removed " + info + " from server list", Globals.LOG_TYPE_DATA, true);
+            Globals.log(HubModule.class, "Removed " + info + " from server list", Globals.LOG_TYPE_DATA);
         }
     }
 

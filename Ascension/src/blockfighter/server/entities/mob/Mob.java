@@ -207,7 +207,7 @@ public abstract class Mob implements GameEntity, Callable<Mob> {
         try {
             update();
         } catch (final Exception ex) {
-            Globals.logError(ex.toString(), ex, true);
+            Globals.logError(ex.toString(), ex);
         }
         return this;
     }

@@ -73,7 +73,7 @@ public class LogicModule implements Runnable {
                 if (currentTime - this.roomIdleStartTime >= Globals.msToNs(Globals.SERVER_ROOM_MAX_ILDE)) {
                     this.future.cancel(true);
                     AscensionServer.removeRoom(this.room.getRoomIndex());
-                    Globals.log(AscensionServer.class, "Room instance removed - Room: " + getRoomData().getRoomIndex(), Globals.LOG_TYPE_DATA, true);
+                    Globals.log(AscensionServer.class, "Room instance removed - Room: " + getRoomData().getRoomIndex(), Globals.LOG_TYPE_DATA);
                 }
                 return;
             }
@@ -106,7 +106,7 @@ public class LogicModule implements Runnable {
             }
 
         } catch (final Exception ex) {
-            Globals.logError(ex.toString(), ex, true);
+            Globals.logError(ex.toString(), ex);
         }
     }
 
@@ -124,7 +124,7 @@ public class LogicModule implements Runnable {
                     this.room.returnMobKey(mob.getKey());
                 }
             } catch (final Exception ex) {
-                Globals.logError(ex.toString(), ex, true);
+                Globals.logError(ex.toString(), ex);
             }
         }
     }
@@ -157,7 +157,7 @@ public class LogicModule implements Runnable {
                     this.room.returnPlayerKey(player.getKey());
                 }
             } catch (Exception ex) {
-                Globals.logError(ex.toString(), ex, true);
+                Globals.logError(ex.toString(), ex);
             }
         }
 
@@ -196,7 +196,7 @@ public class LogicModule implements Runnable {
                     this.room.returnProjKey(projectile.getKey());
                 }
             } catch (final Exception ex) {
-                Globals.logError(ex.toString(), ex, true);
+                Globals.logError(ex.toString(), ex);
             }
         }
     }
@@ -245,7 +245,7 @@ public class LogicModule implements Runnable {
                     }
                 }
             } catch (final Exception ex) {
-                Globals.logError(ex.toString(), ex, true);
+                Globals.logError(ex.toString(), ex);
             }
         });
 
@@ -258,7 +258,7 @@ public class LogicModule implements Runnable {
                     }
                 }
             } catch (final Exception ex) {
-                Globals.logError(ex.toString(), ex, true);
+                Globals.logError(ex.toString(), ex);
             }
         });
 
@@ -285,7 +285,7 @@ public class LogicModule implements Runnable {
                         }
                     }
                 } catch (final Exception ex) {
-                    Globals.logError(ex.toString(), ex, true);
+                    Globals.logError(ex.toString(), ex);
                 }
             });
 
@@ -301,7 +301,7 @@ public class LogicModule implements Runnable {
                         }
                     }
                 } catch (final Exception ex) {
-                    Globals.logError(ex.toString(), ex, true);
+                    Globals.logError(ex.toString(), ex);
                 }
             });
 
@@ -314,7 +314,7 @@ public class LogicModule implements Runnable {
                         }
                     }
                 } catch (final Exception ex) {
-                    Globals.logError(ex.toString(), ex, true);
+                    Globals.logError(ex.toString(), ex);
                 }
             });
 
@@ -327,7 +327,7 @@ public class LogicModule implements Runnable {
                         }
                     }
                 } catch (final Exception ex) {
-                    Globals.logError(ex.toString(), ex, true);
+                    Globals.logError(ex.toString(), ex);
                 }
             });
         }

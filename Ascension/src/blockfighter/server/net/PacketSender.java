@@ -101,7 +101,7 @@ public class PacketSender implements Runnable {
                     batch.add(data);
                 }
             } catch (Exception e) {
-                Globals.logError(e.toString(), e, true);
+                Globals.logError(e.toString(), e);
             }
         });
     }

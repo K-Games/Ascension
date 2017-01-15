@@ -22,7 +22,7 @@ public class HubSender {
             ServerInfo info = new ServerInfo(ip, area + ", " + country, AscensionServer.getServerCapacityStatus());
             HubClient.getClient().sendTCP(info);
         } catch (IOException ex) {
-            Globals.logError(ex.toString(), ex, true);
+            Globals.logError(ex.toString(), ex);
         }
     }
 }

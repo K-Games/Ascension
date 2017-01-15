@@ -54,12 +54,12 @@ public class PacketHandler {
                 } catch (final InterruptedException e) {
                 }
             }
-            Globals.log(PacketHandler.class, "Finished loading.", Globals.LOG_TYPE_DATA, true);
+            Globals.log(PacketHandler.class, "Finished loading.", Globals.LOG_TYPE_DATA);
             ScreenIngame ingameScreen = new ScreenIngame(size, loading.getLoadedMap(), gameClient);
             logic.setScreen(ingameScreen);
             PacketSender.sendGetAll(logic.getSelectedRoom(), key);
         } catch (final Exception e) {
-            Globals.logError(e.toString(), e, true);
+            Globals.logError(e.toString(), e);
             Particle.unloadParticles();
             Emote.unloadEmotes();
             logic.disconnect();

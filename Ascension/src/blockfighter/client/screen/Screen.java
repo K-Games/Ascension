@@ -54,7 +54,7 @@ public abstract class Screen implements KeyListener, MouseListener, MouseMotionL
                     updateParticles.remove(particle.getKey());
                 }
             } catch (final Exception ex) {
-                Globals.logError(ex.toString(), ex, true);
+                Globals.logError(ex.toString(), ex);
             }
         }
     }

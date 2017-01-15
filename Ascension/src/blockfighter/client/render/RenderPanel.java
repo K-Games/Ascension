@@ -34,7 +34,7 @@ public class RenderPanel extends JPanel {
                 vBuffer = getGraphicsConfiguration().createCompatibleVolatileImage((int) (Globals.WINDOW_WIDTH * ((Globals.WINDOW_SCALE_ENABLED) ? Globals.WINDOW_SCALE : 1)), (int) (Globals.WINDOW_HEIGHT * ((Globals.WINDOW_SCALE_ENABLED) ? Globals.WINDOW_SCALE : 1)), new ImageCapabilities(true));
             } catch (AWTException ex) {
                 useGPU = false;
-                Globals.logError(ex.toString(), ex, true);
+                Globals.logError(ex.toString(), ex);
             }
             bufferGraphics = vBuffer.createGraphics();
         }

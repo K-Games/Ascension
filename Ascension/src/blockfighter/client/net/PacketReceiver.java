@@ -8,7 +8,7 @@ import blockfighter.client.screen.ScreenServerList;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 
-public class PacketReceiver extends Listener {
+public class PacketReceiver implements Listener {
 
     private static LogicModule logic;
 

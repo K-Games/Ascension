@@ -142,7 +142,7 @@ public abstract class Particle implements Callable<Particle> {
     }
 
     public static void unloadParticles() {
-        Globals.log(Particle.class, "Unloading Particles...", Globals.LOG_TYPE_DATA, true);
+        Globals.log(Particle.class, "Unloading Particles...", Globals.LOG_TYPE_DATA);
         for (int i = 0; PARTICLE_SPRITE != null && i < PARTICLE_SPRITE.length; i++) {
             for (int j = 0; PARTICLE_SPRITE[i] != null && j < PARTICLE_SPRITE[i].length; j++) {
                 PARTICLE_SPRITE[i][j] = null;
@@ -158,7 +158,7 @@ public abstract class Particle implements Callable<Particle> {
         if (LOADED) {
             return;
         }
-        Globals.log(Particle.class, "Loading Particles...", Globals.LOG_TYPE_DATA, true);
+        Globals.log(Particle.class, "Loading Particles...", Globals.LOG_TYPE_DATA);
         LOADED = true;
         PARTICLE_SPRITE = new BufferedImage[Globals.NUM_PARTICLE_EFFECTS][];
         for (int spriteID = 0; spriteID < PARTICLE_SPRITE.length; spriteID++) {

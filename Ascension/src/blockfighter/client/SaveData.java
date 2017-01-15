@@ -209,7 +209,7 @@ public class SaveData {
         try {
             FileUtils.writeByteArrayToFile(new File(saveNum + ".tcdat"), data);
         } catch (final IOException ex) {
-            Globals.logError(ex.toString(), ex, true);
+            Globals.logError(ex.toString(), ex);
         }
     }
 

@@ -54,7 +54,7 @@ public class ScreenLoading extends ScreenMenu {
     public void draw(final Graphics2D g) {
         final BufferedImage bg = Globals.MENU_BG[0];
         if (this.particlesReady && !this.particlesRendered) {
-            Globals.log(ScreenLoading.class, "Prerendering " + particleIndex + " Particles...", Globals.LOG_TYPE_DATA, true);
+            Globals.log(ScreenLoading.class, "Prerendering " + particleIndex + " Particles...", Globals.LOG_TYPE_DATA);
             if (Particle.getParticleSprites()[this.particleIndex] != null) {
                 for (final BufferedImage sprite : Particle.getParticleSprites()[this.particleIndex]) {
                     g.drawImage(sprite, 0, 0, null);
@@ -67,7 +67,7 @@ public class ScreenLoading extends ScreenMenu {
         }
 
         if (this.mapAssetsReady && !this.mapAssetsRendered) {
-            Globals.log(ScreenLoading.class, "Prerendering Map Assets...", Globals.LOG_TYPE_DATA, true);
+            Globals.log(ScreenLoading.class, "Prerendering Map Assets...", Globals.LOG_TYPE_DATA);
             this.map.prerender(g);
             this.mapAssetsRendered = true;
         }

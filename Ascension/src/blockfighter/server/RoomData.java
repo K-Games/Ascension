@@ -220,7 +220,7 @@ public class RoomData {
     public void returnPlayerKey(final byte key) {
         if (!this.playerKeys.contains(key)) {
             this.playerKeys.add(key);
-            Globals.log(RoomData.class, "Room: " + this.roomIndex + " Returned player key: " + key + " Keys Remaining: " + this.playerKeys.size(), Globals.LOG_TYPE_DATA, true);
+            Globals.log(RoomData.class, "Room: " + this.roomIndex + " Returned player key: " + key + " Keys Remaining: " + this.playerKeys.size(), Globals.LOG_TYPE_DATA);
         }
     }
 

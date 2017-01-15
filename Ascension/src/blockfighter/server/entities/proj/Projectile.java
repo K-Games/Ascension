@@ -120,7 +120,7 @@ public abstract class Projectile implements GameEntity, Callable<Projectile> {
         try {
             update();
         } catch (final Exception ex) {
-            Globals.logError(ex.toString(), ex, true);
+            Globals.logError(ex.toString(), ex);
         }
         return this;
     }

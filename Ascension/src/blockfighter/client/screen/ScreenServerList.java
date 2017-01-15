@@ -129,7 +129,7 @@ public class ScreenServerList extends ScreenMenu {
         try {
             FileUtils.writeStringToFile(new File("server.txt"), address, StandardCharsets.UTF_8);
         } catch (final Exception ex) {
-            Globals.logError(ex.toString(), ex, true);
+            Globals.logError(ex.toString(), ex);
         }
     }
 

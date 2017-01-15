@@ -478,7 +478,7 @@ public class Player implements GameEntity, Callable<Player> {
         try {
             update();
         } catch (final Exception ex) {
-            Globals.logError(ex.getMessage(), ex, true);
+            Globals.logError(ex.getMessage(), ex);
         }
         return this;
     }
@@ -538,7 +538,7 @@ public class Player implements GameEntity, Callable<Player> {
         }
 
         if (this.connected && Globals.nsToMs(this.logic.getTime() - this.lastActionTime) >= Globals.SERVER_PLAYER_MAX_IDLE) {
-            Globals.log(Player.class, this.connection + " Disconnecting <" + this.name + "> due to idling.", Globals.LOG_TYPE_DATA, true);
+            Globals.log(Player.class, this.connection + " Disconnecting <" + this.name + "> due to idling.", Globals.LOG_TYPE_DATA);
             disconnect();
         }
     }
@@ -1101,7 +1101,7 @@ public class Player implements GameEntity, Callable<Player> {
         bytes[3] = exp[2];
         bytes[4] = exp[3];
         PacketSender.sendPlayer(bytes, this);
-        Globals.log(Player.class, "Giving " + this.name + " " + (int) amount + " EXP", Globals.LOG_TYPE_DATA, true);
+        Globals.log(Player.class, "Giving " + this.name + " " + (int) amount + " EXP", Globals.LOG_TYPE_DATA);
     }
 
     public boolean intersectHitbox(final Rectangle2D.Double box) {
@@ -1695,7 +1695,7 @@ public class Player implements GameEntity, Callable<Player> {
             bytes[1] = this.key;
             PacketSender.sendAll(bytes, this.logic);
             this.connection.close();
-            Globals.log(Player.class, "Disconnected <" + getPlayerName() + ">", Globals.LOG_TYPE_DATA, true);
+            Globals.log(Player.class, "Disconnected <" + getPlayerName() + ">", Globals.LOG_TYPE_DATA);
         }
     }
 

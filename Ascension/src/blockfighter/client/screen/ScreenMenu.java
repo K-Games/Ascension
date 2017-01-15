@@ -144,7 +144,7 @@ public abstract class ScreenMenu extends Screen {
                         try {
                             logic.setScreen(SCREEN_CLASS.get(i).newInstance());
                         } catch (InstantiationException | IllegalAccessException ex) {
-                            Globals.logError(ex.toString(), ex, true);
+                            Globals.logError(ex.toString(), ex);
                         }
                     }
                     break;

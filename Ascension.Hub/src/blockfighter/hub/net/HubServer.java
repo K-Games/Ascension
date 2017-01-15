@@ -22,10 +22,10 @@ public class HubServer {
 
             this.server.addListener(new Listener.ThreadedListener(new HubReceiver()));
             server.bind(Globals.HUB_SERVER_TCP_PORT);
-            Globals.log(HubServer.class, "Hub Server listening on port TCP: " + Globals.HUB_SERVER_TCP_PORT, Globals.LOG_TYPE_DATA, true);
+            Globals.log(HubServer.class, "Hub Server listening on port TCP: " + Globals.HUB_SERVER_TCP_PORT, Globals.LOG_TYPE_DATA);
             server.start();
         } catch (IOException ex) {
-            Globals.logError(ex.toString(), ex, true);
+            Globals.logError(ex.toString(), ex);
             System.exit(1);
         }
     }

@@ -108,7 +108,7 @@ public class ItemEquip implements Item {
     }
 
     private static void loadItemData() {
-        Globals.log(ItemEquip.class, "Loading Item Data...", Globals.LOG_TYPE_DATA, true);
+        Globals.log(ItemEquip.class, "Loading Item Data...", Globals.LOG_TYPE_DATA);
         for (final int itemCode : Globals.ITEM_CODES) {
             try {
                 InputStream itemFile = Globals.loadResourceAsStream("itemdata/equip/" + itemCode + ".txt");
@@ -222,10 +222,10 @@ public class ItemEquip implements Item {
                     }
                 }
             } catch (IOException | NullPointerException e) {
-                Globals.logError("Could not load item #" + itemCode + " data." + e.toString(), e, true);
+                Globals.logError("Could not load item #" + itemCode + " data." + e.toString(), e);
             }
         }
-        Globals.log(ItemEquip.class, "Loaded Item Data.", Globals.LOG_TYPE_DATA, true);
+        Globals.log(ItemEquip.class, "Loaded Item Data.", Globals.LOG_TYPE_DATA);
     }
 
     public static void unloadSprites() {
@@ -242,7 +242,7 @@ public class ItemEquip implements Item {
             String hand = (!offhand) ? FOLDER_MAINHAND : FOLDER_OFFHAND;
 
             if (!ITEM_SPRITES.containsKey(Integer.toString(code) + hand)) {
-                Globals.log(ItemEquip.class, "Loading item " + code + " sprites...", Globals.LOG_TYPE_DATA, true);
+                Globals.log(ItemEquip.class, "Loading item " + code + " sprites...", Globals.LOG_TYPE_DATA);
                 final BufferedImage[][] load = new BufferedImage[Globals.NUM_PLAYER_ANIM_STATE][];
                 ITEM_SPRITES.put(Integer.toString(code) + hand, load);
                 for (int state = 0; state < load.length; state++) {

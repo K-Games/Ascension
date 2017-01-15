@@ -7,7 +7,7 @@ import com.esotericsoftware.kryonet.Connection;
 public class HubSender {
 
     public static void sendServerInfos(Connection c) {
-        Globals.log(HubServer.class, "Sending server list " + c, Globals.LOG_TYPE_DATA, true);
+        Globals.log(HubServer.class, "Sending server list " + c, Globals.LOG_TYPE_DATA);
         c.sendTCP(HubModule.getServerInfos());
     }
 
