@@ -1,6 +1,7 @@
 package performancetest;
 
 import blockfighter.shared.AscensionSerialization;
+import blockfighter.shared.Globals;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Listener;
 import java.io.IOException;
@@ -26,7 +27,7 @@ public class TestGameClient {
         if (this.receiver != null && this.receiver.isConnected()) {
             return;
         }
-        this.client = new Client(Globals.PACKET_MAX_SIZE * 100, Globals.PACKET_MAX_SIZE, new AscensionSerialization());
+        this.client = new Client(Globals.PACKET_MAX_SIZE * 5, Globals.PACKET_MAX_SIZE, new AscensionSerialization());
         this.client.start();
 
         this.receiver = new TestPacketReceiver(this);

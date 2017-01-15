@@ -1,5 +1,6 @@
 package performancetest;
 
+import blockfighter.shared.Globals;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -16,9 +17,9 @@ public class TestRunner implements Runnable {
                 .priority(Thread.NORM_PRIORITY)
                 .build());
 
-        for (byte player = 0; player < Globals.PLAYERS; player++) {
-            logic[player] = new TestLogicModule(player, (byte) Globals.ROOM);
-            logic[player].connect(server, Globals.SERVER_TCP_PORT, Globals.SERVER_UDP_PORT, (byte) Globals.ROOM);
+        for (byte player = 0; player < Main.PLAYERS; player++) {
+            logic[player] = new TestLogicModule(player, (byte) Main.ROOM);
+            logic[player].connect(server, Globals.SERVER_TCP_PORT, Globals.SERVER_UDP_PORT, (byte) Main.ROOM);
         }
 
         service.scheduleAtFixedRate(this, 0, 300, TimeUnit.MILLISECONDS);

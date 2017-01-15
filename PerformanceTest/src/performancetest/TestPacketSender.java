@@ -1,5 +1,6 @@
 package performancetest;
 
+import blockfighter.shared.Globals;
 import com.esotericsoftware.kryonet.Client;
 import java.nio.charset.StandardCharsets;
 

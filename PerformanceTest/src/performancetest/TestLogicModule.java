@@ -1,5 +1,7 @@
 package performancetest;
 
+import blockfighter.shared.Globals;
+
 public class TestLogicModule {
     // Shared Data
 

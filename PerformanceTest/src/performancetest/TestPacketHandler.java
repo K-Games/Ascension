@@ -1,5 +1,7 @@
 package performancetest;
 
+import blockfighter.shared.Globals;
+
 public class TestPacketHandler {
 
     public static void process(final byte[] data, final TestGameClient gameClient) {

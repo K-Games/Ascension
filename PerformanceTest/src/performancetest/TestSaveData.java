@@ -1,5 +1,6 @@
 package performancetest;
 
+import blockfighter.shared.Globals;
 import java.util.UUID;
 
 public class TestSaveData {
