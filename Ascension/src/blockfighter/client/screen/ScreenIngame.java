@@ -263,7 +263,7 @@ public class ScreenIngame extends Screen {
             this.map.drawBg(g, this.players.get(logic.getMyPlayerKey()).getX(), this.players.get(logic.getMyPlayerKey()).getY());
             double scale = 1;
             g.scale(scale, scale);
-            g.translate(640.0 / scale - this.players.get(logic.getMyPlayerKey()).getX(), 500.0 / scale - this.players.get(logic.getMyPlayerKey()).getY());
+            g.translate(640D / scale - this.players.get(logic.getMyPlayerKey()).getX(), 500D / scale - this.players.get(logic.getMyPlayerKey()).getY());
             if (screenShake) {
                 g.translate(screenShakeX, screenShakeY);
             }
