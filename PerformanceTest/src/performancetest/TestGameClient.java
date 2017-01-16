@@ -5,8 +5,17 @@ import blockfighter.shared.Globals;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Listener;
 import java.io.IOException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
-public class TestGameClient {
+public class TestGameClient implements Runnable {
+
+    final static ExecutorService CLIENT_THREADS = Executors.newFixedThreadPool(20, new BasicThreadFactory.Builder()
+            .namingPattern("ClientScheduler-%d")
+            .daemon(true)
+            .priority(Thread.NORM_PRIORITY)
+            .build());
 
     private Client client;
     private TestPacketReceiver receiver;
@@ -23,12 +32,15 @@ public class TestGameClient {
         this.udpPort = udpport;
     }
 
+    @Override
     public void run() {
         if (this.receiver != null && this.receiver.isConnected()) {
             return;
         }
         this.client = new Client(Globals.PACKET_MAX_SIZE * 5, Globals.PACKET_MAX_SIZE, new AscensionSerialization());
-        this.client.start();
+        //this.client.start();
+        this.client.setTimeout(5000);
+        this.client.setKeepAliveTCP(3000);
 
         this.receiver = new TestPacketReceiver(this);
         this.client.addListener(new Listener.ThreadedListener(this.receiver));
@@ -36,18 +48,24 @@ public class TestGameClient {
         System.out.println("Connecting to " + server + ":" + tcpPort + " with " + logic.getSelectedChar().getPlayerName());
         try {
             if (Globals.UDP_MODE) {
-                client.connect(5000, server, tcpPort, udpPort);
+                client.connect(3000, server, tcpPort, udpPort);
             } else {
-                client.connect(5000, server, tcpPort);
+                client.connect(3000, server, tcpPort);
             }
             TestPacketSender.sendPlayerLogin(logic.getSelectedChar(), this.client);
         } catch (IOException ex) {
-            client.close();
+            shutdownClient();
         }
+    }
 
+    public void update() throws IOException {
+        if (this.client != null) {
+            this.client.update(250);
+        }
     }
 
     public void shutdownClient() {
+        System.out.println("Disconnected with " + logic.getSelectedChar().getPlayerName());
         client.close();
         if (this.receiver != null) {
             this.receiver = null;
@@ -66,28 +84,12 @@ public class TestGameClient {
                 shutdownClient();
                 return;
         }
-
-        System.out.println("Attempting to login with " + this.logic.getSelectedChar().getPlayerName() + ".");
         TestPacketSender.sendPlayerCreate(logic.getSelectedRoom(), logic.getSelectedChar(), this.client);
-        synchronized (this) {
-            try {
-                this.wait(3000);
-            } catch (final InterruptedException e) {
-                return;
-            }
-        }
-
-        if (!this.loggedIn) {
-            System.out.println("Failed to login with " + this.logic.getSelectedChar().getPlayerName());
-            shutdownClient();
-        }
     }
 
     public void receiveCreate(final byte mapID, final byte key, final byte size) {
-        synchronized (this) {
-            this.loggedIn = true;
-            notify();
-        }
+        System.out.println("Logged in with " + this.logic.getSelectedChar().getPlayerName() + ".");
+        this.loggedIn = true;
         logic.setKey(key);
     }
 

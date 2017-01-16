@@ -1,11 +1,14 @@
 package performancetest;
 
+import com.esotericsoftware.minlog.Log;
+
 public class Main {
 
     public static boolean UDP_MODE;
     public static int ROOM, PLAYERS;
 
     public static void main(final String[] args) {
+        Log.set(Log.LEVEL_NONE);
         TestRunner test = new TestRunner();
         if (args.length > 1) {
             UDP_MODE = Boolean.parseBoolean(args[1]);

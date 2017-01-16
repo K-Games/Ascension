@@ -25,11 +25,14 @@ public class TestLogicModule {
         }
     }
 
-    public void connect(final String server, final int tcpPort, final int udpPort, final byte r) {
+    public TestGameClient connect(final String server, final int tcpPort, final int udpPort, final byte r) {
         this.selectedRoom = r;
-
         client = new TestGameClient(this, server, tcpPort, udpPort);
-        client.run();
+        return client;
+    }
+
+    public TestGameClient getGC() {
+        return this.client;
     }
 
     public void setKey(final byte key) {

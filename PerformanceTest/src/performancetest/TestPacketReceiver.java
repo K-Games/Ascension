@@ -28,6 +28,7 @@ public class TestPacketReceiver implements Listener {
     @Override
     public void disconnected(Connection connection) {
         this.isConnected = false;
+        this.gC.shutdownClient();
     }
 
     public boolean isConnected() {
