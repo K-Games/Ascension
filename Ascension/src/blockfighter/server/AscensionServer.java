@@ -31,6 +31,13 @@ public class AscensionServer {
                     .priority(Thread.NORM_PRIORITY)
                     .build());
 
+    private static final ScheduledExecutorService PACKETSENDER_BATCH_CLEAR_SCHEDULER = Executors.newSingleThreadScheduledExecutor(
+            new BasicThreadFactory.Builder()
+                    .namingPattern("PacketSender-Batch-Clearer-%d")
+                    .daemon(true)
+                    .priority(Thread.NORM_PRIORITY)
+                    .build());
+
     private static final ScheduledExecutorService HUB_SCHEDULER = Executors.newSingleThreadScheduledExecutor(
             new BasicThreadFactory.Builder()
                     .namingPattern("Hub-Runner-%d")
@@ -91,7 +98,12 @@ public class AscensionServer {
             Globals.log(AscensionServer.class, "Server started ", Globals.LOG_TYPE_ERR);
             Globals.log(AscensionServer.class, "Server started", Globals.LOG_TYPE_DATA);
 
-            PACKETSENDER_SCHEDULER.scheduleAtFixedRate(new PacketSender(), 0, Globals.RENDER_UPDATE, TimeUnit.NANOSECONDS);
+            PACKETSENDER_SCHEDULER.scheduleAtFixedRate(new PacketSender(), 0, 16000, TimeUnit.MICROSECONDS);
+
+            PACKETSENDER_BATCH_CLEAR_SCHEDULER.scheduleAtFixedRate(() -> {
+                PacketSender.clearDisconnectedConnectionBatch();
+            }, 10, 10, TimeUnit.SECONDS);
+
             if (Globals.SERVER_HUB_CONNECT) {
                 HUB_SCHEDULER.scheduleAtFixedRate(new HubClient(), 0, 10, TimeUnit.SECONDS);
             }

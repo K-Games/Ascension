@@ -6,6 +6,7 @@ import blockfighter.shared.Globals;
 import com.esotericsoftware.kryonet.Connection;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
@@ -14,7 +15,7 @@ import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
 public class PacketSender implements Runnable {
 
-    private static final ConcurrentHashMap<Connection, ConcurrentLinkedQueue<byte[]>> connPacketBatch = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<Connection, ConcurrentLinkedQueue<byte[]>> CONN_PACKET_BATCH = new ConcurrentHashMap<>();
     private static final ExecutorService PACKETSENDER_THREAD_POOL = Executors.newFixedThreadPool(Globals.SERVER_PACKETSENDER_THREADS,
             new BasicThreadFactory.Builder()
                     .namingPattern("Packet-Sender-%d")
@@ -88,17 +89,9 @@ public class PacketSender implements Runnable {
     public static void sendConnection(final byte[] data, final Connection c) {
         PACKETSENDER_THREAD_POOL.execute(() -> {
             try {
-                if (!Globals.UDP_MODE) {
-                    if (c.getTcpWriteBufferSize() < Globals.PACKET_MAX_SIZE * Globals.PACKET_MAX_PER_CON * 0.75) {
-                        c.sendTCP(data);
-                    }
-                } else {
-                    ConcurrentLinkedQueue<byte[]> batch = connPacketBatch.get(c);
-                    if (batch == null) {
-                        batch = new ConcurrentLinkedQueue<>();
-                        connPacketBatch.put(c, batch);
-                    }
-                    batch.add(data);
+                synchronized (c) {
+                    CONN_PACKET_BATCH.putIfAbsent(c, new ConcurrentLinkedQueue<>());
+                    CONN_PACKET_BATCH.get(c).add(data);
                 }
             } catch (Exception e) {
                 Globals.logError(e.toString(), e);
@@ -128,25 +121,54 @@ public class PacketSender implements Runnable {
     @Override
     public void run() {
         if (Globals.UDP_MODE) {
-            for (final Map.Entry<Connection, ConcurrentLinkedQueue<byte[]>> entry : connPacketBatch.entrySet()) {
-                connPacketBatch.remove(entry.getKey());
+            for (final Map.Entry<Connection, ConcurrentLinkedQueue<byte[]>> entry : CONN_PACKET_BATCH.entrySet()) {
+                Connection c = entry.getKey();
+                ConcurrentLinkedQueue<byte[]> batch = entry.getValue();
+                synchronized (c) {
+                    CONN_PACKET_BATCH.remove(c);
+                }
                 PACKETSENDER_THREAD_POOL.execute(() -> {
-                    Connection c = entry.getKey();
-                    ConcurrentLinkedQueue<byte[]> batch = entry.getValue();
                     while (!batch.isEmpty()) {
-                        LinkedList<byte[]> packetBatch = new LinkedList<>();
-                        int packetSize = 0;
-                        while (!batch.isEmpty() && packetSize < Globals.PACKET_MAX_SIZE * 0.85) {
-                            byte[] singlePacket = batch.poll();
-                            packetSize += singlePacket.length;
-                            packetBatch.add(singlePacket);
-                        }
-                        byte[][] data = packetBatch.toArray(new byte[0][0]);
-                        int size = c.sendUDP(data);
+                        sendData(c, splitBatchData(batch));
                     }
                 });
             }
         }
 
     }
+
+    private static byte[][] splitBatchData(final Queue<byte[]> batch) {
+        LinkedList<byte[]> packetBatch = new LinkedList<>();
+        int packetSize = 0;
+        while (!batch.isEmpty() && packetSize < Globals.PACKET_MAX_SIZE * 0.85) {
+            byte[] singlePacket = batch.poll();
+            packetSize += singlePacket.length;
+            packetBatch.add(singlePacket);
+        }
+        return packetBatch.toArray(new byte[0][0]);
+    }
+
+    private static void sendData(final Connection c, final byte[][] data) {
+        try {
+            if (Globals.UDP_MODE) {
+                c.sendUDP(data);
+            } else {
+                if (c.getTcpWriteBufferSize() < Globals.PACKET_MAX_SIZE * Globals.PACKET_MAX_PER_CON * 0.75) {
+                    c.sendTCP(data);
+                }
+            }
+        } catch (Exception e) {
+            Globals.logError(e.toString(), e);
+        }
+    }
+
+    public static void clearDisconnectedConnectionBatch() {
+        for (final Map.Entry<Connection, ConcurrentLinkedQueue<byte[]>> entry : CONN_PACKET_BATCH.entrySet()) {
+            Connection c = entry.getKey();
+            if (!c.isConnected() && CONN_PACKET_BATCH.containsKey(c)) {
+                CONN_PACKET_BATCH.remove(c);
+            }
+        }
+    }
+
 }
