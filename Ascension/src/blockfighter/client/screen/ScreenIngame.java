@@ -170,7 +170,7 @@ public class ScreenIngame extends Screen {
             try {
                 task.get();
             } catch (final Exception ex) {
-                Globals.logError(ex.toString(), ex, true);
+                Globals.logError(ex.toString(), ex);
             }
         }
 
@@ -189,7 +189,7 @@ public class ScreenIngame extends Screen {
             try {
                 task.get();
             } catch (final Exception ex) {
-                Globals.logError(ex.toString(), ex, true);
+                Globals.logError(ex.toString(), ex);
             }
         }
 
@@ -208,7 +208,7 @@ public class ScreenIngame extends Screen {
             try {
                 task.get();
             } catch (final Exception ex) {
-                Globals.logError(ex.toString(), ex, true);
+                Globals.logError(ex.toString(), ex);
             }
         }
 
@@ -232,7 +232,7 @@ public class ScreenIngame extends Screen {
             try {
                 task.get();
             } catch (final Exception ex) {
-                Globals.logError(ex.toString(), ex, true);
+                Globals.logError(ex.toString(), ex);
             }
         }
     }
@@ -250,7 +250,7 @@ public class ScreenIngame extends Screen {
                     this.players.remove(player.getKey());
                 }
             } catch (final Exception ex) {
-                Globals.logError(ex.toString(), ex, true);
+                Globals.logError(ex.toString(), ex);
             }
         }
     }
@@ -294,7 +294,7 @@ public class ScreenIngame extends Screen {
             try {
                 pEntry.getValue().draw(g);
             } catch (Exception e) {
-                Globals.logError(e.toString(), e, true);
+                Globals.logError(e.toString(), e);
             }
         }
         for (final IngameNumber number : this.ingameNumber) {
@@ -304,7 +304,7 @@ public class ScreenIngame extends Screen {
             try {
                 emote.draw(g);
             } catch (Exception e) {
-                Globals.logError(e.toString(), e, true);
+                Globals.logError(e.toString(), e);
             }
         }
 

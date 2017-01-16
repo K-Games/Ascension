@@ -1,6 +1,9 @@
 package blockfighter.shared;
 
 import blockfighter.client.entities.player.skills.Skill;
+import com.esotericsoftware.minlog.Log;
+import static com.esotericsoftware.minlog.Log.*;
+import com.esotericsoftware.minlog.Log.Logger;
 import java.awt.Font;
 import java.awt.image.BufferedImage;
 import java.io.BufferedWriter;
@@ -11,6 +14,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -23,8 +27,6 @@ import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.JTextArea;
 import org.apache.commons.io.FileUtils;
@@ -413,13 +415,15 @@ public class Globals {
             NOTIFICATION_KILL = 2;
 
     public static boolean LOGGING = false;
+    private static Logger logger, ErrorLogger;
+
     private final static String LOG_DIR = "logs/",
             ERRLOG_FILE = "ErrorLog-" + String.format("%1$td%1$tm%1$tY-%1$tH%1$tM%1$tS", System.currentTimeMillis()) + ".log",
             DATALOG_FILE = "DataLog-" + String.format("%1$td%1$tm%1$tY-%1$tH%1$tM%1$tS", System.currentTimeMillis()) + ".log";
     private static JTextArea dataConsole, errConsole;
 
-    public final static byte LOG_TYPE_ERR = 0x00,
-            LOG_TYPE_DATA = 0x01;
+    public final static int LOG_TYPE_ERR = Log.LEVEL_ERROR,
+            LOG_TYPE_DATA = Log.LEVEL_INFO;
 
     public static ExecutorService LOG_THREAD = Executors.newSingleThreadExecutor(
             new BasicThreadFactory.Builder()
@@ -501,7 +505,7 @@ public class Globals {
         try {
             return Boolean.parseBoolean(data[dataHeaders.get(header) + 1]);
         } catch (Exception e) {
-            Globals.logError(e.toString(), e, true);
+            Globals.logError(e.toString(), e);
         }
         return false;
     }
@@ -510,7 +514,7 @@ public class Globals {
         try {
             return Double.parseDouble(data[dataHeaders.get(header) + 1]);
         } catch (Exception e) {
-            Globals.logError(e.toString(), e, true);
+            Globals.logError(e.toString(), e);
         }
         return 0;
     }
@@ -520,19 +524,19 @@ public class Globals {
             byte weaponData = Byte.parseByte(data[dataHeaders.get(SKILL_REQWEAPON_HEADER) + 1]);
             return (weaponData >= Globals.NUM_ITEM_TYPES) ? -1 : weaponData;
         } catch (Exception e) {
-            Globals.logError(e.toString(), e, true);
+            Globals.logError(e.toString(), e);
         }
         return -1;
     }
 
     public static String[] loadSkillData(final byte skillCode) {
-        Globals.log(Skill.class, "Loading Skill " + String.format("0x%02X", skillCode) + " Data...", Globals.LOG_TYPE_DATA, true);
+        Globals.log(Skill.class, "Loading Skill " + String.format("0x%02X", skillCode) + " Data...", Globals.LOG_TYPE_DATA);
         try {
             InputStream skillDataFile = Globals.loadResourceAsStream("skilldata/" + String.format("0x%02X", skillCode) + ".txt");
             List<String> fileLines = IOUtils.readLines(skillDataFile, "UTF-8");
             return fileLines.toArray(new String[fileLines.size()]);
         } catch (IOException | NullPointerException e) {
-            Globals.logError("Could not load Skill " + String.format("0x%02X", skillCode) + " Data." + e.toString(), e, true);
+            Globals.logError("Could not load Skill " + String.format("0x%02X", skillCode) + " Data." + e.toString(), e);
             System.exit(101);
             return null;
         }
@@ -547,7 +551,7 @@ public class Globals {
             }
             return description;
         } catch (Exception e) {
-            Globals.logError(e.toString(), e, true);
+            Globals.logError(e.toString(), e);
         }
         return new String[0];
     }
@@ -556,7 +560,7 @@ public class Globals {
         try {
             return data[dataHeaders.get(SKILL_NAME_HEADER) + 1];
         } catch (Exception e) {
-            Globals.logError(e.toString(), e, true);
+            Globals.logError(e.toString(), e);
         }
         return "NO_NAME";
     }
@@ -885,29 +889,29 @@ public class Globals {
                 HUB_SERVER_TCP_PORT = Integer.parseInt(prop.getProperty("hubport"));
             }
         } catch (final FileNotFoundException e) {
-            log(Globals.class, "Config", "config.properties not found in root directory. Using default server values.", Globals.LOG_TYPE_DATA, true);
+            log(Globals.class, "Config", "config.properties not found in root directory. Using default server values.", Globals.LOG_TYPE_DATA);
         } catch (final IOException ex) {
-            Logger.getLogger(Globals.class.getName()).log(Level.SEVERE, null, ex);
+            logError(ex.toString(), ex);
         } finally {
             if (inputStream != null) {
                 try {
                     inputStream.close();
                 } catch (final IOException ex) {
-                    Logger.getLogger(Globals.class.getName()).log(Level.SEVERE, null, ex);
+                    logError(ex.toString(), ex);
                 }
             }
-            log(Globals.class, "Config", "Server TCP Port: " + SERVER_TCP_PORT, Globals.LOG_TYPE_DATA, true);
-            log(Globals.class, "Config", "Server UDP Port: " + SERVER_UDP_PORT, Globals.LOG_TYPE_DATA, true);
-            log(Globals.class, "Config", "Max Players per Room: " + SERVER_MAX_ROOM_PLAYERS, Globals.LOG_TYPE_DATA, true);
-            log(Globals.class, "Config", "Max Rooms: " + SERVER_MAX_ROOMS, Globals.LOG_TYPE_DATA, true);
-            log(Globals.class, "Config", "EXP Multiplier: " + EXP_MULTIPLIER, Globals.LOG_TYPE_DATA, true);
-            log(Globals.class, "Config", "Logic Module Threads: " + SERVER_LOGIC_THREADS, Globals.LOG_TYPE_DATA, true);
-            log(Globals.class, "Config", "Max Packet Sender Threads: " + SERVER_PACKETSENDER_THREADS, Globals.LOG_TYPE_DATA, true);
-            log(Globals.class, "Config", "Max Packets Per Connection: " + PACKET_MAX_PER_CON, Globals.LOG_TYPE_DATA, true);
-            log(Globals.class, "Config", "UDP Mode: " + UDP_MODE, Globals.LOG_TYPE_DATA, true);
-            log(Globals.class, "Config", "Hub Connect: " + SERVER_HUB_CONNECT, Globals.LOG_TYPE_DATA, true);
-            log(Globals.class, "Config", "Hub Address: " + HUB_SERVER_ADDRESS, Globals.LOG_TYPE_DATA, true);
-            log(Globals.class, "Config", "Hub Port: " + HUB_SERVER_TCP_PORT, Globals.LOG_TYPE_DATA, true);
+            log(Globals.class, "Config", "Server TCP Port: " + SERVER_TCP_PORT, Globals.LOG_TYPE_DATA);
+            log(Globals.class, "Config", "Server UDP Port: " + SERVER_UDP_PORT, Globals.LOG_TYPE_DATA);
+            log(Globals.class, "Config", "Max Players per Room: " + SERVER_MAX_ROOM_PLAYERS, Globals.LOG_TYPE_DATA);
+            log(Globals.class, "Config", "Max Rooms: " + SERVER_MAX_ROOMS, Globals.LOG_TYPE_DATA);
+            log(Globals.class, "Config", "EXP Multiplier: " + EXP_MULTIPLIER, Globals.LOG_TYPE_DATA);
+            log(Globals.class, "Config", "Logic Module Threads: " + SERVER_LOGIC_THREADS, Globals.LOG_TYPE_DATA);
+            log(Globals.class, "Config", "Max Packet Sender Threads: " + SERVER_PACKETSENDER_THREADS, Globals.LOG_TYPE_DATA);
+            log(Globals.class, "Config", "Max Packets Per Connection: " + PACKET_MAX_PER_CON, Globals.LOG_TYPE_DATA);
+            log(Globals.class, "Config", "UDP Mode: " + UDP_MODE, Globals.LOG_TYPE_DATA);
+            log(Globals.class, "Config", "Hub Connect: " + SERVER_HUB_CONNECT, Globals.LOG_TYPE_DATA);
+            log(Globals.class, "Config", "Hub Address: " + HUB_SERVER_ADDRESS, Globals.LOG_TYPE_DATA);
+            log(Globals.class, "Config", "Hub Port: " + HUB_SERVER_TCP_PORT, Globals.LOG_TYPE_DATA);
         }
     }
 
@@ -929,101 +933,111 @@ public class Globals {
                 Files.createFile(Paths.get(LOG_DIR + "/" + DATALOG_FILE));
             }
         } catch (final IOException e) {
-            Logger.getLogger(Globals.class.getName()).log(Level.SEVERE, "Couldn't create log file.", e);
+            logError("Couldn't create log file.", e);
         }
     }
 
-    public final static void log(final Class originClass, final String info, final byte logType, final boolean outputToConsole) {
-        log(originClass.getSimpleName(), info, logType, outputToConsole);
+    public final static void log(final Class originClass, final String info, final int logType) {
+        log(originClass.getSimpleName(), info, logType);
     }
 
-    public final static void log(final Class originClass, final String customClassDesc, final String info, final byte logType, final boolean outputToConsole) {
-        log(originClass.getSimpleName() + " " + customClassDesc, info, logType, outputToConsole);
+    public final static void log(final Class originClass, final String customClassDesc, final String info, final int logType) {
+        log(originClass.getSimpleName() + " " + customClassDesc, info, logType);
     }
 
-    public final static void log(final String className, final String info, final byte logType, final boolean outputToConsole) {
-
+    public final static void log(final String className, final String info, final int logType) {
         final Runnable logging = () -> {
-            String logFile;
-            switch (logType) {
-                case LOG_TYPE_ERR:
-                    logFile = ERRLOG_FILE;
-                    break;
-                case LOG_TYPE_DATA:
-                    logFile = DATALOG_FILE;
-                    break;
-                default:
-                    logFile = "Other.log";
-            }
+            if (logger == null) {
+                logger = new Logger() {
+                    @Override
+                    public void log(int level, String category, String message, Throwable ex) {
+                        StringBuilder builder = new StringBuilder(256);
+                        builder.append('[');
+                        builder.append(String.format("%1$td/%1$tm/%1$tY %1$tT %1$tZ", System.currentTimeMillis()));
+                        builder.append(']');
 
-            String logT = "?";
-            switch (logType) {
-                case LOG_TYPE_ERR:
-                    logT = "ERROR";
-                    break;
-                case LOG_TYPE_DATA:
-                    logT = "DATA";
-                    break;
-            }
+                        builder.append(' ');
+                        switch (level) {
+                            case LEVEL_ERROR:
+                                builder.append(" ERROR: ");
+                                break;
+                            case LEVEL_WARN:
+                                builder.append("  WARN: ");
+                                break;
+                            case LEVEL_INFO:
+                                builder.append("  INFO: ");
+                                break;
+                            case LEVEL_DEBUG:
+                                builder.append(" DEBUG: ");
+                                break;
+                            case LEVEL_TRACE:
+                                builder.append(" TRACE: ");
+                                break;
+                        }
+                        builder.append(' ');
 
-            String message = "[" + String.format("%1$td/%1$tm/%1$tY %1$tT %1$tZ", System.currentTimeMillis()) + "] " + logT + ":" + className + ":" + info;
-            if (outputToConsole) {
-                System.out.println(message);
-            }
+                        builder.append('[');
+                        builder.append(category);
+                        builder.append("] ");
+                        builder.append(message);
+                        if (ex != null) {
+                            StringWriter writer = new StringWriter(256);
+                            ex.printStackTrace(new PrintWriter(writer));
+                            builder.append('\n');
+                            builder.append(writer.toString().trim());
+                        }
+                        System.out.println(builder);
 
-            if (LOGGING) {
-                try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(new File(LOG_DIR, logFile), true)))) {
-                    out.println(message);
-                } catch (final IOException e) {
-                    System.err.println(e);
-                }
-            }
-            switch (logType) {
-                case LOG_TYPE_ERR:
-                    if (errConsole != null) {
-                        errConsole.append("\n" + message);
-                        errConsole.setCaretPosition(errConsole.getDocument().getLength());
-                    }
-                    break;
-                case LOG_TYPE_DATA:
-                    if (dataConsole != null) {
-                        dataConsole.append("\n" + message);
-                        dataConsole.setCaretPosition(dataConsole.getDocument().getLength());
-                    }
-                    break;
-            }
-        };
+                        if (LOGGING) {
+                            String logFile;
+                            switch (level) {
+                                case LEVEL_ERROR:
+                                    logFile = ERRLOG_FILE;
+                                    break;
+                                default:
+                                    logFile = DATALOG_FILE;
+                                    break;
+                            }
+                            try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(new File(LOG_DIR, logFile), true)))) {
+                                out.println(builder);
+                            } catch (final IOException e) {
+                                System.err.println(e);
+                            }
+                        }
 
-        LOG_THREAD.execute(logging);
-    }
-
-    public static final void logError(final String errorMessage, final Exception e, final boolean outputToConsole) {
-        final Runnable logging = () -> {
-            final String logFile = ERRLOG_FILE;
-            String message = "[" + String.format("%1$td/%1$tm/%1$tY %1$tT %1$tZ", System.currentTimeMillis()) + "] ERROR:" + errorMessage + ":" + e.getStackTrace()[1];
-
-            if (outputToConsole) {
-                System.out.println(message);
-            }
-            if (LOGGING) {
-                try (final PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(new File(LOG_DIR, logFile), true)))) {
-                    out.println(message);
-                    for (final StackTraceElement s : e.getStackTrace()) {
-                        out.println(s.toString());
-                        if (outputToConsole) {
-                            System.out.println(s.toString());
+                        switch (level) {
+                            case LEVEL_ERROR:
+                                if (errConsole != null) {
+                                    errConsole.append("\n" + builder);
+                                    errConsole.setCaretPosition(errConsole.getDocument().getLength());
+                                }
+                                break;
+                            default:
+                                if (dataConsole != null) {
+                                    dataConsole.append("\n" + builder);
+                                    dataConsole.setCaretPosition(dataConsole.getDocument().getLength());
+                                }
+                                break;
                         }
                     }
-                } catch (final IOException e1) {
-                    System.err.println(e1);
-                }
+                };
+                Log.setLogger(logger);
             }
-            if (errConsole != null) {
-                errConsole.append("\n" + message);
-                errConsole.setCaretPosition(errConsole.getDocument().getLength());
+
+            switch (logType) {
+                case LOG_TYPE_ERR:
+                    Log.error(className, info);
+                    break;
+                case LOG_TYPE_DATA:
+                    Log.info(className, info);
+                    break;
             }
         };
         LOG_THREAD.execute(logging);
+    }
+
+    public static final void logError(final String errorMessage, final Exception e) {
+        Log.error(errorMessage, e);
     }
 
     public static boolean hasPastDuration(final long currentDuration, final long durationToPast) {
@@ -1052,7 +1066,7 @@ public class Globals {
                 LineIterator.closeQuietly(it);
             }
         } catch (IOException e) {
-            Globals.logError("Could not load item codes from data", e, true);
+            Globals.logError("Could not load item codes from data", e);
             System.exit(102);
         }
     }

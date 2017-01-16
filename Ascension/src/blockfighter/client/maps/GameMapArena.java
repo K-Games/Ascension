@@ -47,7 +47,7 @@ public class GameMapArena extends GameMap {
 
     @Override
     public void loadAssets() throws Exception {
-        Globals.log(GameMapArena.class, "Loading Map Arena Assets...", Globals.LOG_TYPE_DATA, true);
+        Globals.log(GameMapArena.class, "Loading Map Arena Assets...", Globals.LOG_TYPE_DATA);
         this.bg = Globals.loadTextureResource("sprites/maps/" + getMapID() + "/bg.png");
         if (this.bg == null) {
             throw new NullPointerException("Failed to load map " + getMapID() + " bg.");

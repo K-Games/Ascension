@@ -31,6 +31,13 @@ public class AscensionServer {
                     .priority(Thread.NORM_PRIORITY)
                     .build());
 
+    private static final ScheduledExecutorService PACKETSENDER_BATCH_CLEAR_SCHEDULER = Executors.newSingleThreadScheduledExecutor(
+            new BasicThreadFactory.Builder()
+                    .namingPattern("PacketSender-Batch-Clearer-%d")
+                    .daemon(true)
+                    .priority(Thread.NORM_PRIORITY)
+                    .build());
+
     private static final ScheduledExecutorService HUB_SCHEDULER = Executors.newSingleThreadScheduledExecutor(
             new BasicThreadFactory.Builder()
                     .namingPattern("Hub-Runner-%d")
@@ -56,12 +63,12 @@ public class AscensionServer {
     }
 
     public void shutdown() {
-        Globals.log(AscensionServer.class, "Shutting down server...", Globals.LOG_TYPE_DATA, true);
+        Globals.log(AscensionServer.class, "Shutting down server...", Globals.LOG_TYPE_DATA);
         SERVER.shutdown();
         LOGIC_SCHEDULER.shutdown();
         SERVER_ROOMS = null;
         System.gc();
-        Globals.log(AscensionServer.class, "Server shut down", Globals.LOG_TYPE_DATA, true);
+        Globals.log(AscensionServer.class, "Server shut down", Globals.LOG_TYPE_DATA);
     }
 
     public void launch(final String[] args) {
@@ -88,15 +95,20 @@ public class AscensionServer {
         try {
             SERVER = new GameServer();
             SERVER.start();
-            Globals.log(AscensionServer.class, "Server started ", Globals.LOG_TYPE_ERR, false);
-            Globals.log(AscensionServer.class, "Server started", Globals.LOG_TYPE_DATA, true);
+            Globals.log(AscensionServer.class, "Server started ", Globals.LOG_TYPE_ERR);
+            Globals.log(AscensionServer.class, "Server started", Globals.LOG_TYPE_DATA);
 
-            PACKETSENDER_SCHEDULER.scheduleAtFixedRate(new PacketSender(), 0, Globals.RENDER_UPDATE, TimeUnit.NANOSECONDS);
+            PACKETSENDER_SCHEDULER.scheduleAtFixedRate(new PacketSender(), 0, 16000, TimeUnit.MICROSECONDS);
+
+            PACKETSENDER_BATCH_CLEAR_SCHEDULER.scheduleAtFixedRate(() -> {
+                PacketSender.clearDisconnectedConnectionBatch();
+            }, 10, 10, TimeUnit.SECONDS);
+
             if (Globals.SERVER_HUB_CONNECT) {
                 HUB_SCHEDULER.scheduleAtFixedRate(new HubClient(), 0, 10, TimeUnit.SECONDS);
             }
         } catch (final Exception ex) {
-            Globals.logError(ex.toString(), ex, true);
+            Globals.logError(ex.toString(), ex);
         }
     }
 
@@ -145,7 +157,7 @@ public class AscensionServer {
             LogicModule newRoom = new LogicModule(nextRoomIndex, minLevel, maxLevel);
             SERVER_ROOMS.put(nextRoomIndex, newRoom);
             newRoom.setFuture(LOGIC_SCHEDULER.scheduleAtFixedRate(newRoom, 0, 750, TimeUnit.MICROSECONDS));
-            Globals.log(AscensionServer.class, "New room instance - Room: " + newRoom.getRoomData().getRoomIndex() + " Level Range: " + minLevel + "-" + maxLevel, Globals.LOG_TYPE_DATA, true);
+            Globals.log(AscensionServer.class, "New room instance - Room: " + newRoom.getRoomData().getRoomIndex() + " Level Range: " + minLevel + "-" + maxLevel, Globals.LOG_TYPE_DATA);
             return newRoom;
         }
         return null;

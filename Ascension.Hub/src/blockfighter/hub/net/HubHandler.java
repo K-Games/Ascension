@@ -15,7 +15,7 @@ public class HubHandler {
                 HubSender.sendServerInfos(c);
                 break;
             default:
-                Globals.log(HubHandler.class, "DATA_UNKNOWN " + c + " Unknown data type: " + dataType, Globals.LOG_TYPE_DATA, true);
+                Globals.log(HubHandler.class, "DATA_UNKNOWN " + c + " Unknown data type: " + dataType, Globals.LOG_TYPE_DATA);
                 break;
         }
     }

@@ -37,7 +37,7 @@ public class LogicModule implements Runnable {
             }
 
         } catch (final Exception ex) {
-            Globals.logError(ex.toString(), ex, true);
+            Globals.logError(ex.toString(), ex);
         }
     }
 

@@ -42,7 +42,7 @@ public class GameClient implements Runnable {
 
         try {
             if (!client.isConnected()) {
-                Globals.log(GameClient.class, "Connecting to " + Globals.SERVER_ADDRESS, Globals.LOG_TYPE_DATA, true);
+                Globals.log(GameClient.class, "Connecting to " + Globals.SERVER_ADDRESS, Globals.LOG_TYPE_DATA);
                 if (Globals.UDP_MODE) {
                     client.connect(3000, Globals.SERVER_ADDRESS, Globals.SERVER_TCP_PORT, Globals.SERVER_UDP_PORT);
                 } else {

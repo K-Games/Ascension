@@ -102,7 +102,7 @@ public class AscensionClient {
                         try {
                             int port = Integer.parseInt(args[i + 1]);
                             if (port > 0 && port <= 65535) {
-                                Globals.log(AscensionClient.class, "Setting server connection TCP port to " + port, Globals.LOG_TYPE_DATA, true);
+                                Globals.log(AscensionClient.class, "Setting server connection TCP port to " + port, Globals.LOG_TYPE_DATA);
                                 Globals.SERVER_TCP_PORT = port;
                             } else {
                                 System.err.println("-tcpport Specify a valid port between 1 to 65535");
@@ -117,7 +117,7 @@ public class AscensionClient {
                         try {
                             int port = Integer.parseInt(args[i + 1]);
                             if (port > 0 && port <= 65535) {
-                                Globals.log(AscensionClient.class, "Setting server connection UDP port to " + port, Globals.LOG_TYPE_DATA, true);
+                                Globals.log(AscensionClient.class, "Setting server connection UDP port to " + port, Globals.LOG_TYPE_DATA);
                                 Globals.SERVER_UDP_PORT = port;
                             } else {
                                 System.err.println("-udpport Specify a valid port between 1 to 65535");
@@ -147,7 +147,7 @@ public class AscensionClient {
                         break;
                     case "-tcpmode":
                         Globals.UDP_MODE = false;
-                        Globals.log(AscensionClient.class, "Disabling UDP. Using TCP only mode", Globals.LOG_TYPE_DATA, true);
+                        Globals.log(AscensionClient.class, "Disabling UDP. Using TCP only mode", Globals.LOG_TYPE_DATA);
                         break;
                     case "-log":
                         Globals.LOGGING = true;
@@ -155,14 +155,14 @@ public class AscensionClient {
                         break;
                     case "-hubaddress":
                         Globals.HUB_SERVER_ADDRESS = args[i + 1];
-                        Globals.log(AscensionClient.class, "Setting Hub Server address to " + Globals.HUB_SERVER_ADDRESS, Globals.LOG_TYPE_DATA, true);
+                        Globals.log(AscensionClient.class, "Setting Hub Server address to " + Globals.HUB_SERVER_ADDRESS, Globals.LOG_TYPE_DATA);
                         break;
                     case "-hubport":
                         try {
                             int port = Integer.parseInt(args[i + 1]);
                             if (port > 0 && port <= 65535) {
                                 Globals.HUB_SERVER_TCP_PORT = port;
-                                Globals.log(AscensionClient.class, "Setting Hub Server TCP port to " + Globals.HUB_SERVER_TCP_PORT, Globals.LOG_TYPE_DATA, true);
+                                Globals.log(AscensionClient.class, "Setting Hub Server TCP port to " + Globals.HUB_SERVER_TCP_PORT, Globals.LOG_TYPE_DATA);
                             } else {
                                 System.err.println("-hubport Specify a valid port between 1 to 65535");
                                 System.exit(7);

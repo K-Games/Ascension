@@ -26,7 +26,7 @@ public class AscensionHub {
                             int port = Integer.parseInt(args[i + 1]);
                             if (port > 0 && port <= 65535) {
                                 Globals.HUB_SERVER_TCP_PORT = port;
-                                Globals.log(AscensionHub.class, "Setting Hub Server TCP port to " + Globals.HUB_SERVER_TCP_PORT, Globals.LOG_TYPE_DATA, true);
+                                Globals.log(AscensionHub.class, "Setting Hub Server TCP port to " + Globals.HUB_SERVER_TCP_PORT, Globals.LOG_TYPE_DATA);
                             } else {
                                 System.err.println("-port Specify a valid port between 1 to 65535");
                                 System.exit(7);

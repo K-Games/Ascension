@@ -44,7 +44,7 @@ public abstract class Emote implements Callable<Emote> {
     }
 
     public static void unloadEmotes() {
-        Globals.log(Emote.class, "Unloading Emotes...", Globals.LOG_TYPE_DATA, true);
+        Globals.log(Emote.class, "Unloading Emotes...", Globals.LOG_TYPE_DATA);
         for (int i = 0; EMOTE_SPRITE != null && i < EMOTE_SPRITE.length; i++) {
             for (int j = 0; EMOTE_SPRITE[i] != null && j < EMOTE_SPRITE[i].length; j++) {
                 EMOTE_SPRITE[i][j] = null;
@@ -60,7 +60,7 @@ public abstract class Emote implements Callable<Emote> {
         if (LOADED) {
             return;
         }
-        Globals.log(Emote.class, "Loading Emotes...", Globals.LOG_TYPE_DATA, true);
+        Globals.log(Emote.class, "Loading Emotes...", Globals.LOG_TYPE_DATA);
         LOADED = true;
         EMOTE_SPRITE = new BufferedImage[Globals.NUM_EMOTES][];
         for (int emoteID = 0; emoteID < EMOTE_SPRITE.length; emoteID++) {

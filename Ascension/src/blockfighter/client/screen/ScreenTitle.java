@@ -214,7 +214,7 @@ public class ScreenTitle extends Screen {
                     try {
                         desktop.browse(URI.create(GAME_PORTAL_URL));
                     } catch (IOException ex) {
-                        Globals.logError(ex.getMessage(), ex, true);
+                        Globals.logError(ex.getMessage(), ex);
                     } finally {
                         System.exit(0);
                     }

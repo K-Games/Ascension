@@ -61,7 +61,7 @@ public abstract class GameMap {
                     this.particles.remove(particle.getKey());
                 }
             } catch (final Exception ex) {
-                Globals.logError(ex.toString(), ex, true);
+                Globals.logError(ex.toString(), ex);
             }
         }
     }

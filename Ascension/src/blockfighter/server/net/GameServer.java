@@ -25,16 +25,16 @@ public class GameServer {
             this.server.addListener(new Listener.ThreadedListener(this.receiver));
             if (Globals.UDP_MODE) {
                 server.bind(Globals.SERVER_TCP_PORT, Globals.SERVER_UDP_PORT);
-                Globals.log(GameServer.class, "Server listening on port TCP: " + Globals.SERVER_TCP_PORT, Globals.LOG_TYPE_DATA, true);
-                Globals.log(GameServer.class, "Server listening on port UDP: " + Globals.SERVER_UDP_PORT, Globals.LOG_TYPE_DATA, true);
+                Globals.log(GameServer.class, "Server listening on port TCP: " + Globals.SERVER_TCP_PORT, Globals.LOG_TYPE_DATA);
+                Globals.log(GameServer.class, "Server listening on port UDP: " + Globals.SERVER_UDP_PORT, Globals.LOG_TYPE_DATA);
             } else {
                 server.bind(Globals.SERVER_TCP_PORT);
-                Globals.log(GameServer.class, "Server listening on port TCP: " + Globals.SERVER_TCP_PORT, Globals.LOG_TYPE_DATA, true);
+                Globals.log(GameServer.class, "Server listening on port TCP: " + Globals.SERVER_TCP_PORT, Globals.LOG_TYPE_DATA);
             }
             server.start();
 
         } catch (IOException ex) {
-            Globals.logError(ex.toString(), ex, true);
+            Globals.logError(ex.toString(), ex);
             System.exit(1);
         }
     }

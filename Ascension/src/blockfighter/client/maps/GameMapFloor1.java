@@ -50,10 +50,10 @@ public class GameMapFloor1 extends GameMap {
 
     @Override
     public void prerender(final Graphics2D g) {
-        Globals.log(GameMapFloor1.class, "Prerendering Floor 1 Particles", Globals.LOG_TYPE_DATA, true);
+        Globals.log(GameMapFloor1.class, "Prerendering Floor 1 Particles", Globals.LOG_TYPE_DATA);
         ParticleAmbient.prerender(g);
         ParticleBolt.prerender(g);
-        Globals.log(GameMapFloor1.class, "Prerendering Mob Assets", Globals.LOG_TYPE_DATA, true);
+        Globals.log(GameMapFloor1.class, "Prerendering Mob Assets", Globals.LOG_TYPE_DATA);
         BossLightning.prerender(g);
     }
 

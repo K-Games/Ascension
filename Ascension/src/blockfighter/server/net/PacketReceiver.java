@@ -4,7 +4,7 @@ import blockfighter.shared.Globals;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 
-public class PacketReceiver extends Listener {
+public class PacketReceiver implements Listener {
 
     @Override
     public void received(Connection c, Object object) {
@@ -21,9 +21,9 @@ public class PacketReceiver extends Listener {
                 GameServer.removeConnectionPlayer(c);
             }
             GameServer.removeConnectionPlayerKey(c);
-            Globals.log(PacketReceiver.class, "Disconnected " + c, Globals.LOG_TYPE_DATA, true);
+            Globals.log(PacketReceiver.class, "Disconnected " + c, Globals.LOG_TYPE_DATA);
         } catch (Exception e) {
-            Globals.logError(e.toString(), e, true);
+            Globals.logError(e.toString(), e);
         }
     }
 }

@@ -6,7 +6,7 @@ import blockfighter.shared.ServerInfo;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 
-public class HubReceiver extends Listener {
+public class HubReceiver implements Listener {
 
     @Override
     public void received(Connection c, Object object) {
@@ -23,9 +23,9 @@ public class HubReceiver extends Listener {
     public void disconnected(Connection c) {
         try {
             HubModule.removeServerInfo(c);
-            Globals.log(HubReceiver.class, "Disconnected " + c, Globals.LOG_TYPE_DATA, true);
+            Globals.log(HubReceiver.class, "Disconnected " + c, Globals.LOG_TYPE_DATA);
         } catch (Exception e) {
-            Globals.logError(e.toString(), e, true);
+            Globals.logError(e.toString(), e);
         }
     }
 }
