@@ -278,11 +278,18 @@ public class ScreenIngame extends Screen {
                 pEntry.getValue().draw(g);
             }
         }
+
         if (this.players != null) {
             for (final Map.Entry<Byte, Player> pEntry : this.players.entrySet()) {
-                pEntry.getValue().draw(g);
+                if (pEntry.getValue().getKey() != logic.getMyPlayerKey()) {
+                    pEntry.getValue().draw(g);
+                }
+            }
+            if (this.players.containsKey(logic.getMyPlayerKey())) {
+                this.players.get(logic.getMyPlayerKey()).draw(g);
             }
         }
+
         for (final Map.Entry<Integer, Particle> pEntry : this.particles.entrySet()) {
             try {
                 pEntry.getValue().draw(g);
