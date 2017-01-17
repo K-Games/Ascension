@@ -1,6 +1,5 @@
 package blockfighter.shared;
 
-import blockfighter.client.entities.player.skills.Skill;
 import com.esotericsoftware.minlog.Log;
 import static com.esotericsoftware.minlog.Log.*;
 import com.esotericsoftware.minlog.Log.Logger;
@@ -530,11 +529,15 @@ public class Globals {
     }
 
     public static String[] loadSkillData(final byte skillCode) {
-        Globals.log(Skill.class, "Loading Skill " + String.format("0x%02X", skillCode) + " Data...", Globals.LOG_TYPE_DATA);
+        Globals.log(Globals.class, "Loading Skill " + String.format("0x%02X", skillCode) + " Data...", Globals.LOG_TYPE_DATA);
         try {
             InputStream skillDataFile = Globals.loadResourceAsStream("skilldata/" + String.format("0x%02X", skillCode) + ".txt");
             List<String> fileLines = IOUtils.readLines(skillDataFile, "UTF-8");
-            return fileLines.toArray(new String[fileLines.size()]);
+            String[] data = fileLines.toArray(new String[fileLines.size()]);
+            HashMap<String, Integer> dataHeaders = Globals.getDataHeaders(data, null);
+            String name = Globals.loadSkillName(data, dataHeaders);
+            Globals.log(Globals.class, "Finished loading Skill " + String.format("0x%02X", skillCode) + "(" + name + ") Data...", Globals.LOG_TYPE_DATA);
+            return data;
         } catch (IOException | NullPointerException e) {
             Globals.logError("Could not load Skill " + String.format("0x%02X", skillCode) + " Data." + e.toString(), e);
             System.exit(101);

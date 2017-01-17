@@ -25,8 +25,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFrame;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
@@ -69,9 +67,10 @@ public class AscensionClient {
 
         for (Class<?> cls : classes) {
             try {
+                Globals.log(AscensionClient.class, "Initializing " + cls.getSimpleName(), Globals.LOG_TYPE_DATA);
                 cls.getMethod("init").invoke(null);
             } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
-                Logger.getLogger(AscensionClient.class.getName()).log(Level.SEVERE, null, ex);
+                Globals.logError(ex.toString(), ex);
             }
         }
     }
