@@ -1,12 +1,8 @@
 package blockfighter.shared;
 
-import blockfighter.client.entities.emotes.Emote;
-import blockfighter.client.entities.emotes.EmoteAlert;
-import blockfighter.client.entities.emotes.EmoteAngry;
-import blockfighter.client.entities.emotes.EmoteQuestion;
-import blockfighter.client.entities.emotes.EmoteSleep;
-import blockfighter.client.entities.emotes.EmoteSweat;
+import blockfighter.client.entities.emotes.*;
 import blockfighter.client.entities.particles.*;
+import blockfighter.client.entities.particles.skill.*;
 import blockfighter.client.entities.player.Player;
 import com.esotericsoftware.minlog.Log;
 import static com.esotericsoftware.minlog.Log.*;

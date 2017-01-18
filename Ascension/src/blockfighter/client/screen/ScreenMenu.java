@@ -2,7 +2,7 @@ package blockfighter.client.screen;
 
 import blockfighter.client.SaveData;
 import blockfighter.client.entities.particles.Particle;
-import blockfighter.client.entities.particles.ParticleMenuSmoke;
+import blockfighter.client.entities.particles.menu.ParticleMenuSmoke;
 import blockfighter.shared.Globals;
 import java.awt.Color;
 import java.awt.Graphics2D;

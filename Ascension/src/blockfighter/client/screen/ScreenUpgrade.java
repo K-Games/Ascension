@@ -4,7 +4,7 @@ import blockfighter.client.SaveData;
 import blockfighter.client.entities.items.ItemEquip;
 import blockfighter.client.entities.items.ItemUpgrade;
 import blockfighter.client.entities.particles.Particle;
-import blockfighter.client.entities.particles.ParticleMenuUpgrade;
+import blockfighter.client.entities.particles.menu.ParticleMenuUpgrade;
 import blockfighter.shared.Globals;
 import java.awt.Color;
 import java.awt.Graphics2D;
