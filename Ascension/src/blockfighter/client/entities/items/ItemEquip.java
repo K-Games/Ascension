@@ -37,12 +37,16 @@ public class ItemEquip implements Item {
 
     private final static double UPGRADE_CRITCHANCE = 0.001, // 0.1%
             UPGRADE_CRITDMG = 0.02, // 2%
-            UPGRADE_REGEN = 8,
-            UPGRADE_ARMOR = 24,
-            UPGRADE_MULT = 0.04,
-            UPGRADE_STAT_FLATBONUS = 0.75;
+            UPGRADE_REGEN = 5,
+            UPGRADE_ARMOR = 18,
+            UPGRADE_MULT = 0.0,
+            UPGRADE_STAT_FLATBONUS = 1.25;
 
-    private final static double NEWSTAT_BASEMULT_BONUS = 0.25D;
+    private final static double NEWSTAT_BASEMULT_BONUS = 0.25D,
+            NEWSTAT_CRITCHANCE = 0.001,
+            NEWSTAT_CRITDMG = 0.02,
+            NEWSTAT_REGEN = 5,
+            NEWSTAT_ARMOR = 18;
 
     private final static HashMap<Byte, String> ITEM_TYPENAME = new HashMap<>(13);
     private final static HashMap<Integer, String> ITEM_NAMES;
@@ -51,19 +55,27 @@ public class ItemEquip implements Item {
     private final static HashMap<Integer, String> ITEM_DESC;
     private final static HashMap<String, Point> ITEM_DRAWOFFSET = new HashMap<>();
 
-    public final static byte TIER_COMMON = 0, //0-49% stat multiplier
-            TIER_UNCOMMON = 1, //50-69%
-            TIER_RARE = 2, //70-84%
-            TIER_RUNIC = 3, //85-89%
-            TIER_LEGENDARY = 4, //90-94%
-            TIER_MYSTIC = 5, //95-109%
-            TIER_DIVINE = 6;    //110%+
+    public final static byte TIER_COMMON = 0; //0-0.49 internal multiplier
+    public final static byte TIER_UNCOMMON = 1; //0.5-0.69
+    public final static byte TIER_RARE = 2; //0.7-0.84
+    public final static byte TIER_RUNIC = 3; //0.85-0.89
+    public final static byte TIER_LEGENDARY = 4; //0.9-0.94
+    public final static byte TIER_MYSTIC = 5; //0.95-1.09
+    public final static byte TIER_DIVINE = 6;    //1.10+
+
+    private static final String TIER_DIVINE_STRING = "Divine";
+    private static final String TIER_MYSTIC_STRING = "Mystic";
+    private static final String TIER_LEGENDARY_STRING = "Legendary";
+    private static final String TIER_RUNIC_STRING = "Runic";
+    private static final String TIER_RARE_STRING = "Rare";
+    private static final String TIER_UNCOMMON_STRING = "Uncommon";
+    private static final String TIER_COMMON_STRING = "Common";
 
     protected double[] baseStats = new double[Globals.NUM_STATS],
             totalStats = new double[Globals.NUM_STATS];
     protected int upgrades;
     protected double bonusMult;
-    protected byte tier = TIER_COMMON;
+    protected byte tier = -1;
     protected int itemCode;
 
     private float overlayColour = 0, overlayColourDelta = 0.005f;
@@ -329,19 +341,19 @@ public class ItemEquip implements Item {
     }
 
     public static double newItemCritChance(final double level) {
-        return (level + Globals.rng(11)) * 0.001;
+        return (level + Globals.rng(11)) * NEWSTAT_CRITCHANCE;
     }
 
     public static double newItemCritDmg(final double level) {
-        return level * 0.02 + Globals.rng(11) * 0.01;
+        return level * NEWSTAT_CRITDMG + Globals.rng(11) * 0.01;
     }
 
     public static double newItemRegen(final double level) {
-        return (level + Globals.rng(11)) * 5;
+        return (level + Globals.rng(4)) * NEWSTAT_REGEN;
     }
 
     public static double newItemArmor(final double level) {
-        return (level + Globals.rng(4)) * 18;
+        return (level + Globals.rng(4)) * NEWSTAT_ARMOR;
     }
 
     public static double[] newEquipStat(final int ic, final double level) {
@@ -608,16 +620,17 @@ public class ItemEquip implements Item {
     }
 
     private void updateStats() {
+        updateTier();
         System.arraycopy(this.baseStats, 0, this.totalStats, 0, this.baseStats.length);
         this.totalStats[Globals.STAT_POWER] = Math
-                .round(this.baseStats[Globals.STAT_POWER] * (1 + this.bonusMult + this.upgrades * UPGRADE_MULT) + ((this.baseStats[Globals.STAT_POWER] > 0) ? this.upgrades * UPGRADE_STAT_FLATBONUS : 0));
+                .round((this.baseStats[Globals.STAT_POWER] + ((this.baseStats[Globals.STAT_POWER] > 0) ? this.upgrades * UPGRADE_STAT_FLATBONUS : 0)) * (1 + this.bonusMult + this.upgrades * UPGRADE_MULT));
         this.totalStats[Globals.STAT_DEFENSE] = Math
-                .round(this.baseStats[Globals.STAT_DEFENSE] * (1 + this.bonusMult + this.upgrades * UPGRADE_MULT) + ((this.baseStats[Globals.STAT_DEFENSE] > 0) ? this.upgrades * UPGRADE_STAT_FLATBONUS : 0));
+                .round((this.baseStats[Globals.STAT_DEFENSE] + ((this.baseStats[Globals.STAT_DEFENSE] > 0) ? this.upgrades * UPGRADE_STAT_FLATBONUS : 0)) * (1 + this.bonusMult + this.upgrades * UPGRADE_MULT));
         this.totalStats[Globals.STAT_SPIRIT] = Math
-                .round(this.baseStats[Globals.STAT_SPIRIT] * (1 + this.bonusMult + this.upgrades * UPGRADE_MULT) + ((this.baseStats[Globals.STAT_SPIRIT] > 0) ? this.upgrades * UPGRADE_STAT_FLATBONUS : 0));
+                .round((this.baseStats[Globals.STAT_SPIRIT] + ((this.baseStats[Globals.STAT_SPIRIT] > 0) ? this.upgrades * UPGRADE_STAT_FLATBONUS : 0)) * (1 + this.bonusMult + this.upgrades * UPGRADE_MULT));
 
         if (this.baseStats[Globals.STAT_CRITCHANCE] > 0) {
-            this.totalStats[Globals.STAT_CRITCHANCE] = this.baseStats[Globals.STAT_CRITCHANCE] + (0.003 * (this.bonusMult / 0.1)) + this.upgrades * UPGRADE_CRITCHANCE;
+            this.totalStats[Globals.STAT_CRITCHANCE] = this.baseStats[Globals.STAT_CRITCHANCE] + (0.003 * (this.bonusMult / 0.05)) + this.upgrades * UPGRADE_CRITCHANCE;
         }
         if (this.baseStats[Globals.STAT_CRITDMG] > 0) {
             this.totalStats[Globals.STAT_CRITDMG] = this.baseStats[Globals.STAT_CRITDMG] + (0.04 * (this.bonusMult / 0.05))
@@ -625,12 +638,15 @@ public class ItemEquip implements Item {
         }
         if (this.baseStats[Globals.STAT_ARMOR] > 0) {
             this.totalStats[Globals.STAT_ARMOR] = Math
-                    .round(this.baseStats[Globals.STAT_ARMOR] * (1 + this.bonusMult / 2D) + this.upgrades * UPGRADE_ARMOR);
+                    .round((this.baseStats[Globals.STAT_ARMOR] + this.upgrades * UPGRADE_ARMOR) * (1 + this.bonusMult / 2D));
         }
         if (this.baseStats[Globals.STAT_REGEN] > 0) {
             this.totalStats[Globals.STAT_REGEN] = Math
-                    .round(10D * (this.baseStats[Globals.STAT_REGEN] * (1 + this.bonusMult / 2) + this.upgrades * UPGRADE_REGEN)) / 10D;
+                    .round(10D * (this.baseStats[Globals.STAT_REGEN] + this.upgrades * UPGRADE_REGEN) * (1 + this.bonusMult)) / 10D;
         }
+    }
+
+    private void updateTier() {
         if (this.bonusMult + this.upgrades * UPGRADE_MULT >= 1.1) {
             this.tier = TIER_DIVINE;
         } else if (this.bonusMult + this.upgrades * UPGRADE_MULT >= .95) {
@@ -656,19 +672,19 @@ public class ItemEquip implements Item {
     public static String getTierName(final byte tier) {
         switch (tier) {
             case ItemEquip.TIER_COMMON:
-                return "Common";
+                return TIER_COMMON_STRING;
             case ItemEquip.TIER_UNCOMMON:
-                return "Uncommon";
+                return TIER_UNCOMMON_STRING;
             case ItemEquip.TIER_RARE:
-                return "Rare";
+                return TIER_RARE_STRING;
             case ItemEquip.TIER_RUNIC:
-                return "Runic";
+                return TIER_RUNIC_STRING;
             case ItemEquip.TIER_LEGENDARY:
-                return "Legendary";
+                return TIER_LEGENDARY_STRING;
             case ItemEquip.TIER_MYSTIC:
-                return "Mystic";
+                return TIER_MYSTIC_STRING;
             case ItemEquip.TIER_DIVINE:
-                return "Divine";
+                return TIER_DIVINE_STRING;
             default:
                 return "";
         }
@@ -683,6 +699,9 @@ public class ItemEquip implements Item {
     }
 
     public byte getTier() {
+        if (this.tier == -1) {
+            updateTier();
+        }
         return this.tier;
     }
 

@@ -4,7 +4,9 @@ import blockfighter.client.SaveData;
 import blockfighter.client.entities.items.ItemEquip;
 import blockfighter.client.entities.items.ItemUpgrade;
 import blockfighter.client.entities.particles.Particle;
+import blockfighter.client.entities.particles.menu.ParticleMenuUpgradeSelect;
 import blockfighter.client.entities.particles.menu.ParticleMenuUpgrade;
+import static blockfighter.client.screen.ScreenMenu.PARTICLES;
 import blockfighter.shared.Globals;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -13,36 +15,41 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.util.Arrays;
 import javax.swing.SwingUtilities;
 
 public class ScreenUpgrade extends ScreenItemManagement {
 
-    private static final String ENHANCE_TEXT = "Enhance";
+    private static final String ENHANCE_TEXT = "Infuse";
     private static final String CHANCE_OF_SUCCESS_TEXT = "Chance of Success: ";
-    private static final String EQUIPMENT_UPGRADE_TEXT = "Equipment Upgrade";
+    private static final String EQUIPMENT_UPGRADE_TEXT = "Equipment Infusion";
 
-    private static final int UPGRADE_BOX_X = 980, UPGRADE_BOX_Y = 430;
+    private static final int UPGRADE_BOX_X = 920, UPGRADE_BOX_Y = 430;
 
     private int selectEquip = -1;
-    private int selectUpgrade = -1;
+    private final int[] selectUpgrade = {-1, -1, -1};
     private int dragItem = -1;
 
     private long lastFrameTime = 0;
 
     private static final Rectangle2D.Double[] INVENTORY_SLOTS = new Rectangle2D.Double[100],
-            UPGRADE_BOX = new Rectangle2D.Double[2];
+            UPGRADE_BOX = new Rectangle2D.Double[4];
     private static final Rectangle2D.Double COMBINE_BOX;
 
     private int drawItem = -1, drawEquip = -1, drawSelect = -1;
 
     private byte charFrame = 0;
-    private long nextFrameTime = 0;
+    private long nextFrameTime = 0, nextNewParticleTime = 0;
     private boolean upgrading = false;
 
     static {
-        UPGRADE_BOX[0] = new Rectangle2D.Double(UPGRADE_BOX_X, UPGRADE_BOX_Y + 30, 60, 60);
-        UPGRADE_BOX[1] = new Rectangle2D.Double(UPGRADE_BOX_X + 160, UPGRADE_BOX_Y + 30, 60, 60);
-        COMBINE_BOX = new Rectangle2D.Double(UPGRADE_BOX_X + 20, UPGRADE_BOX_Y + 130, 180, 40);
+
+        UPGRADE_BOX[0] = new Rectangle2D.Double(UPGRADE_BOX_X, UPGRADE_BOX_Y + 120, 60, 60);
+        UPGRADE_BOX[1] = new Rectangle2D.Double(UPGRADE_BOX_X + 130, UPGRADE_BOX_Y + 120, 60, 60);
+        UPGRADE_BOX[2] = new Rectangle2D.Double(UPGRADE_BOX_X + 240, UPGRADE_BOX_Y + 120, 60, 60);
+        UPGRADE_BOX[3] = new Rectangle2D.Double(UPGRADE_BOX_X + 130, UPGRADE_BOX_Y + 20, 60, 60);
+
+        COMBINE_BOX = new Rectangle2D.Double(UPGRADE_BOX_X + 70, UPGRADE_BOX_Y + 210, 180, 40);
         for (int i = 0; i < INVENTORY_SLOTS.length; i++) {
             INVENTORY_SLOTS[i] = new Rectangle2D.Double(255 + (i * 62) - (i / 10 * 620), 30 + i / 10 * 62, 60, 60);
         }
@@ -52,36 +59,64 @@ public class ScreenUpgrade extends ScreenItemManagement {
     public void update() {
         super.update();
         final long now = logic.getTime(); // Get time now
+
+        if (now - this.nextNewParticleTime >= Globals.msToNs(100)) {
+            for (int i = 0; i < this.selectUpgrade.length; i++) {
+                if (this.selectUpgrade[i] > -1) {
+                    Particle selectionPart = new ParticleMenuUpgradeSelect((int) UPGRADE_BOX[i].x + 30, (int) UPGRADE_BOX[i].y + 30,
+                            (int) UPGRADE_BOX[3].x + 30, (int) UPGRADE_BOX[3].y + 30);
+                    PARTICLES.put(selectionPart.getKey(), selectionPart);
+                }
+            }
+            this.nextNewParticleTime = now;
+        }
+
         if (now - this.lastUpdateTime >= Globals.CLIENT_LOGIC_UPDATE) {
+
             if (this.upgrading) {
-                if (ItemUpgrade.rollUpgrade(this.character.getUpgrades()[this.selectUpgrade], this.character.getEquip()[this.selectEquip])) {
+                ItemUpgrade[] tempUpgrades = new ItemUpgrade[this.selectUpgrade.length];
+                for (int i = 0; i < this.selectUpgrade.length; i++) {
+                    if (this.selectUpgrade[i] > -1) {
+                        tempUpgrades[i] = this.character.getUpgrades()[this.selectUpgrade[i]];
+                    }
+                }
+                if (ItemUpgrade.rollUpgrade(this.character.getEquip()[this.selectEquip], tempUpgrades)) {
                     this.character.getEquip()[this.selectEquip].addUpgrade(1);
                     for (int i = 0; i < 20; i++) {
-                        Particle upPart = new ParticleMenuUpgrade((int) UPGRADE_BOX[1].x + 30,
-                                (int) UPGRADE_BOX[1].y + 30, 3,
+                        Particle upPart = new ParticleMenuUpgrade((int) UPGRADE_BOX[3].x + 30,
+                                (int) UPGRADE_BOX[3].y + 30, 3,
                                 Globals.rng(10) - 5, -5 - Globals.rng(3));
                         PARTICLES.put(upPart.getKey(), upPart);
                     }
                 } else {
                     for (int i = 0; i < 20; i++) {
-                        Particle upPart = new ParticleMenuUpgrade((int) UPGRADE_BOX[1].x + 30,
-                                (int) UPGRADE_BOX[1].y + 30, 2,
+                        Particle upPart = new ParticleMenuUpgrade((int) UPGRADE_BOX[3].x + 30,
+                                (int) UPGRADE_BOX[3].y + 30, 2,
                                 Globals.rng(10) - 5, -5 - Globals.rng(3));
                         PARTICLES.put(upPart.getKey(), upPart);
                     }
                 }
-                this.character.destroyItem(this.selectUpgrade);
+
+                for (int i = 0; i < this.selectUpgrade.length; i++) {
+                    if (this.selectUpgrade[i] > -1) {
+                        this.character.destroyItem(this.selectUpgrade[i]);
+                        this.selectUpgrade[i] = -1;
+                    }
+                }
+
                 this.character.calcStats();
                 SaveData.saveData(this.character.getSaveNum(), this.character);
-                this.selectUpgrade = -1;
                 this.upgrading = false;
             }
 
-            if (this.selectUpgrade > -1 && this.character.getUpgrades()[this.selectUpgrade] == null) {
-                selectUpgrade = -1;
+            for (int i = 0; i < this.selectUpgrade.length; i++) {
+                if (this.selectUpgrade[i] > -1 && this.character.getUpgrades()[this.selectUpgrade[i]] == null) {
+                    selectUpgrade[i] = -1;
+                }
             }
             this.lastUpdateTime = now;
         }
+
         if (now - this.lastFrameTime >= this.nextFrameTime) {
             if (this.charFrame >= Globals.CHAR_SPRITE[Globals.PLAYER_ANIM_STATE_STAND].length - 1) {
                 this.charFrame = 0;
@@ -119,12 +154,12 @@ public class ScreenUpgrade extends ScreenItemManagement {
 
     private void drawUpgradeBox(final Graphics2D g) {
         g.setColor(SKILL_BOX_BG_COLOR);
-        g.fillRoundRect(UPGRADE_BOX_X - 20, UPGRADE_BOX_Y - 10, 260, 190, 15, 15);
+        g.fillRoundRect(UPGRADE_BOX_X - 20, UPGRADE_BOX_Y - 20, 340, 280, 15, 15);
 
         g.setFont(Globals.ARIAL_15PT);
-        drawStringOutline(g, EQUIPMENT_UPGRADE_TEXT, UPGRADE_BOX_X + 40, UPGRADE_BOX_Y + 15, 1);
+        drawStringOutline(g, EQUIPMENT_UPGRADE_TEXT, UPGRADE_BOX_X + 90, UPGRADE_BOX_Y + 10, 1);
         g.setColor(Color.WHITE);
-        g.drawString(EQUIPMENT_UPGRADE_TEXT, UPGRADE_BOX_X + 40, UPGRADE_BOX_Y + 15);
+        g.drawString(EQUIPMENT_UPGRADE_TEXT, UPGRADE_BOX_X + 90, UPGRADE_BOX_Y + 10);
 
         BufferedImage button = Globals.MENU_BUTTON[Globals.BUTTON_SLOT];
         // upgrades
@@ -132,14 +167,17 @@ public class ScreenUpgrade extends ScreenItemManagement {
             g.drawImage(button, (int) box.x, (int) box.y, null);
         }
 
-        if (this.selectUpgrade > -1) {
-            if (this.character.getUpgrades()[this.selectUpgrade] != null) {
-                this.character.getUpgrades()[this.selectUpgrade].draw(g, (int) UPGRADE_BOX[0].x, (int) UPGRADE_BOX[0].y);
+        for (int i = 0; i < this.selectUpgrade.length; i++) {
+            if (this.selectUpgrade[i] > -1) {
+                if (this.character.getUpgrades()[this.selectUpgrade[i]] != null) {
+                    this.character.getUpgrades()[this.selectUpgrade[i]].draw(g, (int) UPGRADE_BOX[i].x, (int) UPGRADE_BOX[i].y);
+                }
             }
         }
+
         if (this.selectEquip > -1) {
             if (this.character.getEquip()[this.selectEquip] != null) {
-                this.character.getEquip()[this.selectEquip].draw(g, (int) UPGRADE_BOX[1].x, (int) UPGRADE_BOX[1].y);
+                this.character.getEquip()[this.selectEquip].draw(g, (int) UPGRADE_BOX[this.selectUpgrade.length].x, (int) UPGRADE_BOX[this.selectUpgrade.length].y);
             }
         }
         button = Globals.MENU_BUTTON[Globals.BUTTON_SMALLRECT];
@@ -147,22 +185,32 @@ public class ScreenUpgrade extends ScreenItemManagement {
         g.drawImage(button, (int) DESTROY_BOX[1].x, (int) DESTROY_BOX[1].y, null);
         g.drawImage(button, (int) COMBINE_BOX.x, (int) COMBINE_BOX.y, null);
 
-        final int selTemp1 = this.selectUpgrade, selTemp2 = this.selectEquip;
-        if (selTemp1 >= 0 && selTemp2 >= 0) {
+        final int tempSelEquip = this.selectEquip;
+
+        if (tempSelEquip >= 0) {
+            final int[] tempSelUpgrades = Arrays.copyOf(this.selectUpgrade, this.selectUpgrade.length);
+            ItemUpgrade[] tempUpgrades = new ItemUpgrade[tempSelUpgrades.length];
+            for (int i = 0; i < tempSelUpgrades.length; i++) {
+                if (tempSelUpgrades[i] > -1) {
+                    tempUpgrades[i] = this.character.getUpgrades()[tempSelUpgrades[i]];
+                }
+            }
+
+            final String chance = Globals.NUMBER_FORMAT.format(ItemUpgrade.upgradeChance(this.character.getEquip()[tempSelEquip], tempUpgrades) * 100);
             g.setFont(Globals.ARIAL_15PT);
             drawStringOutline(g, CHANCE_OF_SUCCESS_TEXT
-                    + Globals.NUMBER_FORMAT.format(ItemUpgrade.upgradeChance(this.character.getUpgrades()[selTemp1], this.character.getEquip()[selTemp2]) * 100) + "%",
-                    UPGRADE_BOX_X + 20, UPGRADE_BOX_Y + 115, 1);
+                    + chance + "%",
+                    UPGRADE_BOX_X + 70, UPGRADE_BOX_Y + 200, 1);
             g.setColor(Color.WHITE);
             g.drawString(CHANCE_OF_SUCCESS_TEXT
-                    + Globals.NUMBER_FORMAT.format(ItemUpgrade.upgradeChance(this.character.getUpgrades()[selTemp1], this.character.getEquip()[selTemp2]) * 100) + "%",
-                    UPGRADE_BOX_X + 20, UPGRADE_BOX_Y + 115);
+                    + chance + "%",
+                    UPGRADE_BOX_X + 70, UPGRADE_BOX_Y + 200);
         }
 
         g.setFont(Globals.ARIAL_18PT);
-        drawStringOutline(g, ENHANCE_TEXT, (int) COMBINE_BOX.x + 55, (int) COMBINE_BOX.y + 25, 1);
+        drawStringOutline(g, ENHANCE_TEXT, (int) COMBINE_BOX.x + 65, (int) COMBINE_BOX.y + 25, 1);
         g.setColor(Color.WHITE);
-        g.drawString(ENHANCE_TEXT, (int) COMBINE_BOX.x + 55, (int) COMBINE_BOX.y + 25);
+        g.drawString(ENHANCE_TEXT, (int) COMBINE_BOX.x + 65, (int) COMBINE_BOX.y + 25);
     }
 
     private void drawInventory(final Graphics2D g) {
@@ -184,10 +232,10 @@ public class ScreenUpgrade extends ScreenItemManagement {
             drawItemInfo(g, INVENTORY_SLOTS[this.drawItem], this.character.getUpgrades()[this.drawItem]);
         } else if (this.drawEquip > -1) {
             drawItemInfo(g, EQUIP_SLOTS[this.drawEquip], this.character.getEquip()[this.drawEquip]);
-        } else if (this.drawSelect == 0 && this.selectUpgrade > -1) {
-            drawItemInfo(g, UPGRADE_BOX[0], this.character.getUpgrades()[this.selectUpgrade]);
-        } else if (this.drawSelect == 1 && this.selectEquip > -1) {
-            drawItemInfo(g, UPGRADE_BOX[1], this.character.getEquip()[this.selectEquip]);
+        } else if (this.drawSelect >= 0 && this.drawSelect < 3 && this.selectUpgrade[this.drawSelect] != -1) {
+            drawItemInfo(g, UPGRADE_BOX[this.drawSelect], this.character.getUpgrades()[this.selectUpgrade[this.drawSelect]]);
+        } else if (this.drawSelect == 3 && this.selectEquip > -1) {
+            drawItemInfo(g, UPGRADE_BOX[3], this.character.getEquip()[this.selectEquip]);
         }
     }
 
@@ -256,10 +304,12 @@ public class ScreenUpgrade extends ScreenItemManagement {
                 if (INVENTORY_SLOTS[i].contains(scaled)) {
                     if (!this.destroy) {
                         if (drItem != -1) {
-                            if (drItem == selectUpgrade) {
-                                selectUpgrade = i;
-                            } else if (i == selectUpgrade) {
-                                selectUpgrade = drItem;
+                            for (int j = 0; j < this.selectUpgrade.length; j++) {
+                                if (drItem == selectUpgrade[j]) {
+                                    selectUpgrade[j] = i;
+                                } else if (i == selectUpgrade[j]) {
+                                    selectUpgrade[j] = drItem;
+                                }
                             }
                             final ItemUpgrade temp = this.character.getUpgrades()[i];
                             this.character.getUpgrades()[i] = this.character.getUpgrades()[drItem];
@@ -268,25 +318,46 @@ public class ScreenUpgrade extends ScreenItemManagement {
                         }
                         // set upgrade item
                         if (this.character.getUpgrades()[i] != null) {
-                            this.selectUpgrade = i;
-                            return;
+                            // Ensure you cannot put an upgrade in 2 upgrade slots
+                            for (int j = 0; j < this.selectUpgrade.length; j++) {
+                                if (this.selectUpgrade[j] == i) {
+                                    return;
+                                }
+                            }
+
+                            for (int j = 0; j < this.selectUpgrade.length; j++) {
+                                if (this.selectUpgrade[j] == -1) {
+                                    this.selectUpgrade[j] = i;
+                                    return;
+                                }
+                            }
                         }
                     } else {
                         // Destroy upgrade item
-                        if (this.selectUpgrade == i) {
-                            this.selectUpgrade = -1;
-                            // drawSelect = -1;
+                        for (int j = 0; j < this.selectUpgrade.length; j++) {
+                            if (this.selectUpgrade[j] == i) {
+                                this.selectUpgrade[j] = -1;
+                                return;
+                            }
                         }
                         this.character.destroyItem(i);
                         return;
                     }
                 }
             }
-            if (UPGRADE_BOX[0].contains(scaled)) {
-                if (!this.destroy) {
+
+            for (int i = 0; i < this.selectUpgrade.length; i++) {
+                if (!this.destroy && UPGRADE_BOX[i].contains(scaled)) {
                     if (drItem != -1) {
-                        this.selectUpgrade = drItem;
+                        for (int j = 0; j < this.selectUpgrade.length; j++) {
+                            if (this.selectUpgrade[j] != -1 && this.character.getUpgrades()[this.selectUpgrade[j]] == this.character.getUpgrades()[drItem]) {
+                                this.selectUpgrade[j] = -1;
+                            }
+                        }
+                        this.selectUpgrade[i] = drItem;
                         return;
+                    } else {
+                        this.selectUpgrade[i] = -1;
                     }
                 }
             }
@@ -315,7 +386,14 @@ public class ScreenUpgrade extends ScreenItemManagement {
             }
 
             if (!this.upgrading && COMBINE_BOX.contains(scaled)) {
-                if (this.selectUpgrade >= 0 && this.selectEquip >= 0) {
+                boolean haveUpgrades = false;
+                for (int selected : this.selectUpgrade) {
+                    if (selected != -1) {
+                        haveUpgrades = true;
+                        break;
+                    }
+                }
+                if (haveUpgrades && this.selectEquip >= 0) {
                     this.upgrading = true;
                 }
             }
@@ -333,7 +411,9 @@ public class ScreenUpgrade extends ScreenItemManagement {
         for (byte i = 0; i < PROMPT_BOX.length; i++) {
             if (PROMPT_BOX[i].contains(scaled)) {
                 if (i == 0) {
-                    this.selectUpgrade = -1;
+                    for (int j = 0; j < this.selectUpgrade.length; j++) {
+                        this.selectUpgrade[j] = -1;
+                    }
                     this.character.destroyAllUpgrade();
                 }
                 this.destroyConfirm = false;
@@ -388,13 +468,15 @@ public class ScreenUpgrade extends ScreenItemManagement {
         this.drawEquip = -1;
         this.drawSelect = -1;
 
-        if (UPGRADE_BOX[0].contains(scaled) && this.selectUpgrade > -1) {
-            this.drawSelect = 0;
-            return;
+        for (int i = 0; i < this.selectUpgrade.length; i++) {
+            if (UPGRADE_BOX[i].contains(scaled) && this.selectUpgrade[i] > -1) {
+                this.drawSelect = i;
+                return;
+            }
         }
 
-        if (UPGRADE_BOX[1].contains(scaled) && this.selectEquip > -1) {
-            this.drawSelect = 1;
+        if (UPGRADE_BOX[this.selectUpgrade.length].contains(scaled) && this.selectEquip > -1) {
+            this.drawSelect = this.selectUpgrade.length;
             return;
         }
 
