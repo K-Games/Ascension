@@ -18,8 +18,8 @@ public class EmoteSleep extends Emote {
     public void update() {
         super.update();
         if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
-            if (EMOTE_SPRITE != null && this.frame <= EMOTE_SPRITE[Globals.EMOTE_SLEEP].length) {
-                if (this.frame >= EMOTE_SPRITE[Globals.EMOTE_SLEEP].length) {
+            if (Globals.Emotes.SLEEP.getSprite() != null && this.frame <= Globals.Emotes.SLEEP.getSprite().length) {
+                if (this.frame >= Globals.Emotes.SLEEP.getSprite().length) {
                     this.frame = 0;
                 } else {
                     this.frame++;
@@ -31,10 +31,10 @@ public class EmoteSleep extends Emote {
 
     @Override
     public void draw(final Graphics2D g) {
-        if (EMOTE_SPRITE[Globals.EMOTE_SLEEP] == null) {
+        if (Globals.Emotes.SLEEP.getSprite() == null) {
             return;
         }
-        if (this.frame >= EMOTE_SPRITE[Globals.EMOTE_SLEEP].length) {
+        if (this.frame >= Globals.Emotes.SLEEP.getSprite().length) {
             return;
         }
         final Point p = this.owner.getPos();
@@ -42,7 +42,7 @@ public class EmoteSleep extends Emote {
             this.x = p.x + 18;
             this.y = p.y - 130;
         }
-        final BufferedImage sprite = EMOTE_SPRITE[Globals.EMOTE_SLEEP][this.frame];
+        final BufferedImage sprite = Globals.Emotes.SLEEP.getSprite()[this.frame];
         final int drawSrcX = this.x;
         final int drawSrcY = this.y;
         final int drawDscY = drawSrcY + sprite.getHeight();

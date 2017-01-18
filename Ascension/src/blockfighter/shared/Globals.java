@@ -1,5 +1,11 @@
 package blockfighter.shared;
 
+import blockfighter.client.entities.emotes.Emote;
+import blockfighter.client.entities.emotes.EmoteAlert;
+import blockfighter.client.entities.emotes.EmoteAngry;
+import blockfighter.client.entities.emotes.EmoteQuestion;
+import blockfighter.client.entities.emotes.EmoteSleep;
+import blockfighter.client.entities.emotes.EmoteSweat;
 import blockfighter.client.entities.particles.*;
 import blockfighter.client.entities.player.Player;
 import com.esotericsoftware.minlog.Log;
@@ -108,6 +114,75 @@ public class Globals {
     public final static byte RIGHT = 0, LEFT = 1, DOWN = 2, UP = 3;
 
     public final static int NUM_SOUND_EFFECTS = 0;
+
+    public enum Emotes {
+        ALERT((byte) 0x00, "alert", 1, EmoteAlert.class),
+        QUESTION((byte) 0x01, "question", 1, EmoteQuestion.class),
+        SWEAT((byte) 0x02, "sweat", 5, EmoteSweat.class),
+        SLEEP((byte) 0x03, "sleep", 3, EmoteSleep.class),
+        ANGRY((byte) 0x04, "angry", 1, EmoteAngry.class),
+        EMOTE6((byte) 0x05, null, 0, null),
+        EMOTE7((byte) 0x06, null, 0, null),
+        EMOTE8((byte) 0x07, null, 0, null),
+        EMOTE9((byte) 0x08, null, 0, null),
+        EMOTE10((byte) 0x09, null, 0, null);
+
+        private final byte emoteCode;
+        private final Class<? extends Emote> emoteClass;
+        private BufferedImage[] sprite;
+        private final int numFrames;
+        private final String spriteFolder;
+
+        private static final Map<Byte, Emotes> lookup = new HashMap<Byte, Emotes>();
+        private static final Class[] EMOTE_PARAMS = {Player.class};
+
+        static {
+            for (Emotes emote : Emotes.values()) {
+                lookup.put(emote.getEmoteCode(), emote);
+            }
+        }
+
+        public static Emotes get(byte code) {
+            return lookup.get(code);
+        }
+
+        Emotes(byte emoteCode, String spriteFolder, int numFrames, Class<? extends Emote> emoteClass) {
+            this.emoteCode = emoteCode;
+            this.spriteFolder = spriteFolder;
+            this.numFrames = numFrames;
+            this.emoteClass = emoteClass;
+        }
+
+        public byte getEmoteCode() {
+            return this.emoteCode;
+        }
+
+        public void setSprite(BufferedImage[] sprite) {
+            this.sprite = sprite;
+        }
+
+        public BufferedImage[] getSprite() {
+            return this.sprite;
+        }
+
+        public int getNumFrames() {
+            return this.numFrames;
+        }
+
+        public String getSpriteFolder() {
+            return this.spriteFolder;
+        }
+
+        public Emote newEmote(Object... parameters) {
+            try {
+                Constructor<? extends Emote> constructor = this.emoteClass.getDeclaredConstructor(EMOTE_PARAMS);
+                return constructor.newInstance(parameters);
+            } catch (Exception ex) {
+                logError(ex.toString(), ex);
+            }
+            return null;
+        }
+    }
 
     public static final Class[] PARTICLE_PARAM_POS_AND_FACING = {int.class, int.class, byte.class};
     public static final Class[] PARTICLE_PARAM_PLAYER = {Player.class};
@@ -377,18 +452,6 @@ public class Globals {
             LOGIN_FAIL_UID_IN_ROOM = 0x01,
             LOGIN_FAIL_FULL_ROOM = 0x02,
             LOGIN_FAIL_NO_ROOMS = 0x03;
-
-    public static final byte NUM_EMOTES = 10,
-            EMOTE_ALERT = 0x00,
-            EMOTE_QUESTION = 0x01,
-            EMOTE_SWEAT = 0x02,
-            EMOTE_SLEEP = 0x03,
-            EMOTE_ANGRY = 0x04,
-            EMOTE_5 = 0x05,
-            EMOTE_6 = 0x06,
-            EMOTE_7 = 0x07,
-            EMOTE_8 = 0x08,
-            EMOTE_9 = 0x09;
 
     public final static byte NUM_SKILLS = 30,
             SWORD_VORPAL = 0x00,

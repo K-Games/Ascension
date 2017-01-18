@@ -32,10 +32,10 @@ public class EmoteQuestion extends Emote {
 
     @Override
     public void draw(final Graphics2D g) {
-        if (EMOTE_SPRITE[Globals.EMOTE_QUESTION] == null) {
+        if (Globals.Emotes.QUESTION.getSprite() == null) {
             return;
         }
-        if (this.frame >= EMOTE_SPRITE[Globals.EMOTE_QUESTION].length) {
+        if (this.frame >= Globals.Emotes.QUESTION.getSprite().length) {
             return;
         }
         final Point p = this.owner.getPos();
@@ -43,7 +43,7 @@ public class EmoteQuestion extends Emote {
             this.x = p.x + 18;
             this.y = (int) (p.y - 115 + deltaY);
         }
-        final BufferedImage sprite = EMOTE_SPRITE[Globals.EMOTE_QUESTION][this.frame];
+        final BufferedImage sprite = Globals.Emotes.QUESTION.getSprite()[this.frame];
         final int drawSrcX = this.x;
         final int drawSrcY = this.y;
         final int drawDscY = drawSrcY + sprite.getHeight();

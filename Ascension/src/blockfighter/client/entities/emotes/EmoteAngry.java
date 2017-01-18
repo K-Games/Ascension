@@ -28,10 +28,10 @@ public class EmoteAngry extends Emote {
 
     @Override
     public void draw(final Graphics2D g) {
-        if (EMOTE_SPRITE[Globals.EMOTE_ANGRY] == null) {
+        if (Globals.Emotes.ANGRY.getSprite() == null) {
             return;
         }
-        if (this.frame >= EMOTE_SPRITE[Globals.EMOTE_ANGRY].length) {
+        if (this.frame >= Globals.Emotes.ANGRY.getSprite().length) {
             return;
         }
         final Point p = this.owner.getPos();
@@ -39,7 +39,7 @@ public class EmoteAngry extends Emote {
             this.x = p.x + 14;
             this.y = (int) (p.y - 115 + deltaY);
         }
-        final BufferedImage sprite = EMOTE_SPRITE[Globals.EMOTE_ANGRY][this.frame];
+        final BufferedImage sprite = Globals.Emotes.ANGRY.getSprite()[this.frame];
         final int drawSrcX = this.x;
         final int drawSrcY = this.y;
         final int drawDscY = drawSrcY + sprite.getHeight();

@@ -30,11 +30,11 @@ public class ScreenKeyBind extends ScreenMenu {
             KEY_BOX[i] = new Rectangle2D.Double(800, 45 + ((i - 12) * 50), 180, 40);
         }
 
-        for (int i = 16; i < 16 + Globals.NUM_EMOTES / 2; i++) {
+        for (int i = 16; i < 16 + Globals.Emotes.values().length / 2; i++) {
             KEY_BOX[i] = new Rectangle2D.Double(650, 300 + ((i - 16) * 50), 180, 40);
         }
-        for (int i = 16 + Globals.NUM_EMOTES / 2; i < 16 + Globals.NUM_EMOTES; i++) {
-            KEY_BOX[i] = new Rectangle2D.Double(890, 300 + ((i - 16 - Globals.NUM_EMOTES / 2) * 50), 180, 40);
+        for (int i = 16 + Globals.Emotes.values().length / 2; i < 16 + Globals.Emotes.values().length; i++) {
+            KEY_BOX[i] = new Rectangle2D.Double(890, 300 + ((i - 16 - Globals.Emotes.values().length / 2) * 50), 180, 40);
         }
     }
 
@@ -145,8 +145,8 @@ public class ScreenKeyBind extends ScreenMenu {
         final BufferedImage button = Globals.MENU_BUTTON[Globals.BUTTON_SMALLRECT];
         g.setColor(SKILL_BOX_BG_COLOR);
         g.fillRoundRect((int) KEY_BOX[16].x - 10 - 50, (int) KEY_BOX[16].y - 10,
-                (int) ((KEY_BOX[16 + Globals.NUM_EMOTES - 1].x + KEY_BOX[16 + Globals.NUM_EMOTES - 1].width + 10) - (KEY_BOX[16].x - 10 - 50)),
-                (int) ((KEY_BOX[16 + Globals.NUM_EMOTES - 1].y + KEY_BOX[16 + Globals.NUM_EMOTES - 1].height + 10) - (KEY_BOX[16].y - 10)), 15, 15);
+                (int) ((KEY_BOX[16 + Globals.Emotes.values().length - 1].x + KEY_BOX[16 + Globals.Emotes.values().length - 1].width + 10) - (KEY_BOX[16].x - 10 - 50)),
+                (int) ((KEY_BOX[16 + Globals.Emotes.values().length - 1].y + KEY_BOX[16 + Globals.Emotes.values().length - 1].height + 10) - (KEY_BOX[16].y - 10)), 15, 15);
 
         for (int i = 0; i < KEY_BOX.length; i++) {
             g.drawImage(button, (int) KEY_BOX[i].x, (int) KEY_BOX[i].y, null);
@@ -188,13 +188,15 @@ public class ScreenKeyBind extends ScreenMenu {
     }
 
     private void drawEmotes(final Graphics2D g) {
-        for (int i = 16; i < KEY_BOX.length; i++) {
-            if (Emote.getEmoteSprites() != null && Emote.getEmoteSprites()[i - 16] != null) {
-                BufferedImage sprite = Emote.getEmoteSprites()[i - 16][Emote.getEmoteSprites()[i - 16].length - 1];
+        int i = 16;
+        for (Globals.Emotes emote : Globals.Emotes.values()) {
+            if (emote.getSprite() != null) {
+                BufferedImage sprite = emote.getSprite()[emote.getSprite().length - 1];
                 if (sprite != null) {
                     g.drawImage(sprite, (int) KEY_BOX[i].x - 15 - sprite.getWidth(), (int) KEY_BOX[i].y + 5, null);
                 }
             }
+            i++;
         }
     }
 

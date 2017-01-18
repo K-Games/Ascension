@@ -18,7 +18,7 @@ public class EmoteSweat extends Emote {
     public void update() {
         super.update();
         if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
-            if (EMOTE_SPRITE != null && this.frame < EMOTE_SPRITE[Globals.EMOTE_SWEAT].length - 1) {
+            if (Globals.Emotes.SWEAT.getSprite() != null && this.frame < Globals.Emotes.SWEAT.getSprite().length - 1) {
                 this.frame++;
             }
             this.lastFrameTime = logic.getTime();
@@ -27,10 +27,10 @@ public class EmoteSweat extends Emote {
 
     @Override
     public void draw(final Graphics2D g) {
-        if (EMOTE_SPRITE[Globals.EMOTE_SWEAT] == null) {
+        if (Globals.Emotes.SWEAT.getSprite() == null) {
             return;
         }
-        if (this.frame >= EMOTE_SPRITE[Globals.EMOTE_SWEAT].length) {
+        if (this.frame >= Globals.Emotes.SWEAT.getSprite().length) {
             return;
         }
         final Point p = this.owner.getPos();
@@ -38,7 +38,7 @@ public class EmoteSweat extends Emote {
             this.x = p.x - 22;
             this.y = p.y - 118;
         }
-        final BufferedImage sprite = EMOTE_SPRITE[Globals.EMOTE_SWEAT][this.frame];
+        final BufferedImage sprite = Globals.Emotes.SWEAT.getSprite()[this.frame];
         final int drawSrcX = this.x;
         final int drawSrcY = this.y;
         final int drawDscY = drawSrcY + sprite.getHeight();

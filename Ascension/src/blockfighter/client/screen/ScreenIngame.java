@@ -3,11 +3,6 @@ package blockfighter.client.screen;
 import blockfighter.client.AscensionClient;
 import blockfighter.client.SaveData;
 import blockfighter.client.entities.emotes.Emote;
-import blockfighter.client.entities.emotes.EmoteAlert;
-import blockfighter.client.entities.emotes.EmoteAngry;
-import blockfighter.client.entities.emotes.EmoteQuestion;
-import blockfighter.client.entities.emotes.EmoteSleep;
-import blockfighter.client.entities.emotes.EmoteSweat;
 import blockfighter.client.entities.ingamenumber.IngameNumber;
 import blockfighter.client.entities.items.Item;
 import blockfighter.client.entities.items.ItemEquip;
@@ -552,33 +547,7 @@ public class ScreenIngame extends Screen {
             return;
         }
         final byte emoteID = data[2];
-        switch (emoteID) {
-            case Globals.EMOTE_ALERT:
-                this.emotes.add(new EmoteAlert(this.players.get(playerKey)));
-                break;
-            case Globals.EMOTE_QUESTION:
-                this.emotes.add(new EmoteQuestion(this.players.get(playerKey)));
-                break;
-            case Globals.EMOTE_SWEAT:
-                this.emotes.add(new EmoteSweat(this.players.get(playerKey)));
-                break;
-            case Globals.EMOTE_SLEEP:
-                this.emotes.add(new EmoteSleep(this.players.get(playerKey)));
-                break;
-            case Globals.EMOTE_ANGRY:
-                this.emotes.add(new EmoteAngry(this.players.get(playerKey)));
-                break;
-            case Globals.EMOTE_5:
-                break;
-            case Globals.EMOTE_6:
-                break;
-            case Globals.EMOTE_7:
-                break;
-            case Globals.EMOTE_8:
-                break;
-            case Globals.EMOTE_9:
-                break;
-        }
+        this.emotes.add(Globals.Emotes.get(emoteID).newEmote(this.players.get(playerKey)));
     }
 
     private void dataScreenShake(final byte[] data) {
@@ -909,25 +878,25 @@ public class ScreenIngame extends Screen {
                 setSkillKeyDown(11, true);
             }
         } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE1]) {
-            PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.EMOTE_ALERT);
+            PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.Emotes.ALERT.getEmoteCode());
         } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE2]) {
-            PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.EMOTE_QUESTION);
+            PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.Emotes.QUESTION.getEmoteCode());
         } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE3]) {
-            PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.EMOTE_SWEAT);
+            PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.Emotes.SWEAT.getEmoteCode());
         } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE4]) {
-            PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.EMOTE_SLEEP);
+            PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.Emotes.SLEEP.getEmoteCode());
         } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE5]) {
-            PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.EMOTE_ANGRY);
+            PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.Emotes.ANGRY.getEmoteCode());
         } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE6]) {
-            PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.EMOTE_5);
+//            PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.EMOTE_5);
         } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE7]) {
-            PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.EMOTE_6);
+//            PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.EMOTE_6);
         } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE8]) {
-            PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.EMOTE_7);
+//            PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.EMOTE_7);
         } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE9]) {
-            PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.EMOTE_8);
+//            PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.EMOTE_8);
         } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE10]) {
-            PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.EMOTE_9);
+//            PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.EMOTE_9);
         }
     }
 
@@ -1007,25 +976,25 @@ public class ScreenIngame extends Screen {
                 PacketSender.sendUseSkill(logic.getSelectedRoom(), logic.getMyPlayerKey(), this.c.getHotkeys()[11].getSkillCode());
             }
         } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE1]) {
-            PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.EMOTE_ALERT);
+            PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.Emotes.ALERT.getEmoteCode());
         } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE2]) {
-            PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.EMOTE_QUESTION);
+            PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.Emotes.QUESTION.getEmoteCode());
         } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE3]) {
-            PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.EMOTE_SWEAT);
+            PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.Emotes.SWEAT.getEmoteCode());
         } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE4]) {
-            PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.EMOTE_SLEEP);
+            PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.Emotes.SLEEP.getEmoteCode());
         } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE5]) {
-            PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.EMOTE_ANGRY);
+            PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.Emotes.ANGRY.getEmoteCode());
         } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE6]) {
-            PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.EMOTE_5);
+//            PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.EMOTE_5);
         } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE7]) {
-            PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.EMOTE_6);
+//            PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.EMOTE_6);
         } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE8]) {
-            PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.EMOTE_7);
+//            PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.EMOTE_7);
         } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE9]) {
-            PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.EMOTE_8);
+//            PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.EMOTE_8);
         } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE10]) {
-            PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.EMOTE_9);
+//            PacketSender.sendUseEmote(logic.getSelectedRoom(), logic.getMyPlayerKey(), Globals.EMOTE_9);
         }
 
         switch (e.getKeyCode()) {

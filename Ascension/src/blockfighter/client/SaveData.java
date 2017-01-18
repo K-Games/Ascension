@@ -163,7 +163,7 @@ public class SaveData {
                 + Byte.BYTES * c.hotkeys.length
                 + Integer.BYTES * 16 //Base Keybinds
                 + Integer.BYTES //EXP
-                + Integer.BYTES * Globals.NUM_EMOTES];
+                + Integer.BYTES * Globals.Emotes.values().length];
 
         byte[] temp = c.name.getBytes(StandardCharsets.UTF_8);
 
@@ -226,7 +226,7 @@ public class SaveData {
 
     private static int saveEmoteKeyBind(final byte[] data, final int[] keybind, final int pos) {
         int nextPos = pos;
-        for (int i = 16; i < 16 + Globals.NUM_EMOTES; i++) {
+        for (int i = 16; i < 16 + Globals.Emotes.values().length; i++) {
             byte[] temp;
             temp = Globals.intToBytes(keybind[i]);
             System.arraycopy(temp, 0, data, nextPos, temp.length);
@@ -398,7 +398,7 @@ public class SaveData {
 
     private static int readEmoteKeyBind(final byte[] data, final int[] keybind, final int pos) {
         int nextPos = pos;
-        for (int i = 16; i < 16 + Globals.NUM_EMOTES; i++) {
+        for (int i = 16; i < 16 + Globals.Emotes.values().length; i++) {
             final byte[] temp = new byte[4];
             try {
                 System.arraycopy(data, nextPos, temp, 0, temp.length);

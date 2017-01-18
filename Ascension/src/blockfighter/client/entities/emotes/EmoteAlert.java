@@ -32,10 +32,10 @@ public class EmoteAlert extends Emote {
 
     @Override
     public void draw(final Graphics2D g) {
-        if (EMOTE_SPRITE[Globals.EMOTE_ALERT] == null) {
+        if (Globals.Emotes.ALERT.getSprite() == null) {
             return;
         }
-        if (this.frame >= EMOTE_SPRITE[Globals.EMOTE_ALERT].length) {
+        if (this.frame >= Globals.Emotes.ALERT.getSprite().length) {
             return;
         }
         final Point p = this.owner.getPos();
@@ -43,7 +43,7 @@ public class EmoteAlert extends Emote {
             this.x = p.x + 18;
             this.y = (int) (p.y - 115 + deltaY);
         }
-        final BufferedImage sprite = EMOTE_SPRITE[Globals.EMOTE_ALERT][this.frame];
+        final BufferedImage sprite = Globals.Emotes.ALERT.getSprite()[this.frame];
         final int drawSrcX = this.x;
         final int drawSrcY = this.y;
         final int drawDscY = drawSrcY + sprite.getHeight();
