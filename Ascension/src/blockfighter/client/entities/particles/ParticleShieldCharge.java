@@ -34,10 +34,10 @@ public class ParticleShieldCharge extends Particle {
 
     @Override
     public void draw(final Graphics2D g) {
-        if (PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_CHARGE] == null) {
+        if (Globals.Particles.SHIELD_CHARGE.getSprite() == null) {
             return;
         }
-        if (this.frame >= PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_CHARGE].length) {
+        if (this.frame >= Globals.Particles.SHIELD_CHARGE.getSprite().length) {
             return;
         }
         final Point p = this.owner.getPos();
@@ -45,7 +45,7 @@ public class ParticleShieldCharge extends Particle {
             this.x = p.x;
             this.y = p.y;
         }
-        final BufferedImage sprite = PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_CHARGE][this.frame];
+        final BufferedImage sprite = Globals.Particles.SHIELD_CHARGE.getSprite()[this.frame];
         final int drawSrcX = this.x + ((this.facing == Globals.RIGHT) ? -150 : 150);
         final int drawSrcY = this.y - sprite.getHeight() + 30;
         final int drawDscY = drawSrcY + sprite.getHeight();

@@ -27,7 +27,7 @@ public class ParticleShieldReflectBuff extends Particle {
         this.pX += this.speedX;
         this.x = (int) this.pX;
         if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
-            if (PARTICLE_SPRITE != null && this.frame < PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_REFLECTBUFF].length) {
+            if (Globals.Particles.SHIELD_REFLECT_BUFF.getSprite() != null && this.frame < Globals.Particles.SHIELD_REFLECT_BUFF.getSprite().length) {
                 this.frame++;
             }
             this.lastFrameTime = logic.getTime();
@@ -36,13 +36,13 @@ public class ParticleShieldReflectBuff extends Particle {
 
     @Override
     public void draw(final Graphics2D g) {
-        if (PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_REFLECTBUFF] == null) {
+        if (Globals.Particles.SHIELD_REFLECT_BUFF.getSprite() == null) {
             return;
         }
-        if (this.frame >= PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_REFLECTBUFF].length) {
+        if (this.frame >= Globals.Particles.SHIELD_REFLECT_BUFF.getSprite().length) {
             return;
         }
-        final BufferedImage sprite = PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_REFLECTBUFF][this.frame];
+        final BufferedImage sprite = Globals.Particles.SHIELD_REFLECT_BUFF.getSprite()[this.frame];
         g.drawImage(sprite, this.x, this.y, null);
     }
 }

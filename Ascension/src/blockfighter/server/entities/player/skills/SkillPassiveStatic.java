@@ -80,7 +80,7 @@ public class SkillPassiveStatic extends SkillPassive {
                         damage = (int) player.criticalDamage(damage);
                     }
                     target.queueDamage(new Damage(damage, false, player, target, crit, target.getHitbox(), target.getHitbox()));
-                    PacketSender.sendParticle(this.logic, Globals.PARTICLE_PASSIVE_STATIC, player.getKey(), target.getKey());
+                    PacketSender.sendParticle(this.logic, Globals.Particles.PASSIVE_STATIC.getParticleCode(), player.getKey(), target.getKey());
                 }
             } else {
                 ArrayList<Mob> mobsInRange = this.logic.getRoomData().getMobsInRange(player, radius);

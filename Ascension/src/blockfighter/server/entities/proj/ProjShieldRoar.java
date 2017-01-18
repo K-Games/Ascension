@@ -31,7 +31,7 @@ public class ProjShieldRoar extends Projectile {
         final int damage = calculateDamage(isCrit);
         target.queueDamage(new Damage(damage, true, owner, target, isCrit, this.hitbox[0], target.getHitbox()));
         target.queueBuff(new BuffKnockback(this.logic, 200, (1 - Math.abs(target.getX() - owner.getX()) / 600D) * ((owner.getFacing() == Globals.RIGHT) ? 30 : -30), 0, owner, target));
-        PacketSender.sendParticle(this.logic, Globals.PARTICLE_SHIELD_ROARHIT, target.getKey());
+        PacketSender.sendParticle(this.logic, Globals.Particles.SHIELD_ROARHIT.getParticleCode(), target.getKey());
         if (owner.isSkillMaxed(Globals.SHIELD_ROAR)) {
             double stunDuration = owner.getSkill(Globals.SHIELD_ROAR).getCustomValue(SkillShieldRoar.CUSTOMHEADER_STUN);
             target.queueBuff(new BuffStun(this.logic, (int) stunDuration));

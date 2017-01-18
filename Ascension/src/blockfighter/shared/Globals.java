@@ -1,5 +1,7 @@
 package blockfighter.shared;
 
+import blockfighter.client.entities.particles.*;
+import blockfighter.client.entities.player.Player;
 import com.esotericsoftware.minlog.Log;
 import static com.esotericsoftware.minlog.Log.*;
 import com.esotericsoftware.minlog.Log.Logger;
@@ -14,6 +16,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.lang.reflect.Constructor;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -21,6 +24,7 @@ import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
@@ -105,57 +109,132 @@ public class Globals {
 
     public final static int NUM_SOUND_EFFECTS = 0;
 
-    public final static int NUM_PARTICLE_EFFECTS = 50;
-    public final static byte PARTICLE_SWORD_SLASH1 = 0x00,
-            PARTICLE_SWORD_SLASH2 = 0x01,
-            PARTICLE_SWORD_SLASH3 = 0x02,
-            PARTICLE_SWORD_GASH1 = 0x03,
-            PARTICLE_SWORD_VORPAL = 0x04,
-            PARTICLE_SWORD_MULTI = 0x05,
-            PARTICLE_SWORD_CINDER = 0x06,
-            PARTICLE_BURN = 0x07,
-            PARTICLE_SWORD_TAUNT = 0x08,
-            PARTICLE_SWORD_TAUNTAURA1 = 0x0A,
-            PARTICLE_SWORD_TAUNTAURA2 = 0x0B,
-            PARTICLE_BOW_ARC = 0x0C,
-            PARTICLE_BOW_RAPID = 0x0D,
-            PARTICLE_BOW_POWER = 0x0E,
-            PARTICLE_BOW_POWERCHARGE = 0x0F,
-            PARTICLE_BOW_POWERPARTICLE = 0x10,
-            PARTICLE_BOW_VOLLEYBOW = 0x11,
-            PARTICLE_BOW_VOLLEYARROW = 0x12,
-            PARTICLE_BOW_STORM = 0x13,
-            PARTICLE_BOW_FROSTARROW = 0x14,
-            PARTICLE_SHIELD_DASH = 0x15,
-            PARTICLE_SHIELD_FORTIFY = 0x16,
-            PARTICLE_SHIELD_CHARGE = 0x17,
-            PARTICLE_SHIELD_CHARGEPARTICLE = 0x18,
-            PARTICLE_SHIELD_REFLECTCAST = 0x19,
-            PARTICLE_SHIELD_REFLECTHIT = 0x1A,
-            PARTICLE_SHIELD_REFLECTBUFF = 0x1B,
-            PARTICLE_SHIELD_ROAR = 0x1C,
-            PARTICLE_SHIELD_ROARHIT = 0x1D,
-            PARTICLE_SHIELD_FORTIFYBUFF = 0x1E,
-            PARTICLE_SHIELD_MAGNETIZE = 0x1F,
-            PARTICLE_SWORD_TAUNTBUFF = 0x20,
-            PARTICLE_SWORD_SLASHBUFF = 0x21,
-            PARTICLE_SHIELD_DASHBUFF = 0x22,
-            PARTICLE_BOW_VOLLEYBUFF = 0x23,
-            PARTICLE_PASSIVE_RESIST = 0x24,
-            PARTICLE_PASSIVE_BARRIER = 0x25,
-            PARTICLE_PASSIVE_SHADOWATTACK = 0x26,
-            PARTICLE_BLOOD = 0x27,
-            PARTICLE_BOW_RAPID2 = 0x28,
-            PARTICLE_SWORD_PHANTOM = 0x29,
-            PARTICLE_SWORD_PHANTOM2 = 0x2A,
-            PARTICLE_SWORD_GASH2 = 0x2B,
-            //PARTICLE_SWORD_GASH3 = 0x2C,
-            //PARTICLE_SWORD_GASH4 = 0x2D,
-            PARTICLE_BLOOD_HIT = 0x2E,
-            PARTICLE_PASSIVE_STATIC = 0x2F,
-            PARTICLE_SHIELD_MAGNETIZESTART = 0x30,
-            PARTICLE_SHIELD_MAGNETIZEBURST = 0x31;
+    public static final Class[] PARTICLE_PARAM_POS_AND_FACING = {int.class, int.class, byte.class};
+    public static final Class[] PARTICLE_PARAM_PLAYER = {Player.class};
+    public static final Class[] PARTICLE_PARAM_PLAYER_AND_TARGET = {Player.class, Player.class};
+    public static final Class[] PARTICLE_PARAM_FACING_AND_PLAYER = {byte.class, Player.class};
+    public static final Class[] PARTICLE_PARAM_POS = {int.class, int.class};
 
+    public enum Particles {
+        BLOOD((byte) 0x00, null, 0, ParticleBlood.class, PARTICLE_PARAM_POS_AND_FACING),
+        BLOOD_DEATH_EMITTER((byte) 0x01, null, 0, ParticleBloodEmitter.class, PARTICLE_PARAM_PLAYER),
+        BLOOD_EMITTER((byte) 0x02, null, 0, ParticleBloodEmitter.class, PARTICLE_PARAM_PLAYER_AND_TARGET),
+        BOW_ARC((byte) 0x03, "arc", 8, ParticleBowArc.class, PARTICLE_PARAM_POS_AND_FACING),
+        BOW_FROSTARROW((byte) 0x04, "frostarrow", 14, ParticleBowFrostArrow.class, PARTICLE_PARAM_POS_AND_FACING),
+        BOW_FROSTARROW_EMITTER((byte) 0x05, null, 0, ParticleBowFrostArrowEmitter.class, PARTICLE_PARAM_POS_AND_FACING),
+        BOW_POWER((byte) 0x06, "power", 5, ParticleBowPower.class, PARTICLE_PARAM_POS_AND_FACING),
+        BOW_POWER_CHARGE((byte) 0x07, "powercharge", 1, ParticleBowPowerCharge.class, PARTICLE_PARAM_PLAYER),
+        BOW_POWER_PARTICLE((byte) 0x08, "power2", 10, ParticleBowPowerParticle.class, PARTICLE_PARAM_POS_AND_FACING),
+        BOW_RAPID((byte) 0x09, "rapid", 6, ParticleBowRapid.class, PARTICLE_PARAM_POS_AND_FACING),
+        BOW_RAPID2((byte) 0x0A, "rapid2", 3, ParticleBowRapid2.class, PARTICLE_PARAM_POS_AND_FACING),
+        BOW_STORM_ARROW((byte) 0x0B, "stormarrow", 5, ParticleBowStormArrow.class, PARTICLE_PARAM_POS_AND_FACING),
+        BOW_STORM_EMITTER((byte) 0x0C, null, 0, ParticleBowStormEmitter.class, PARTICLE_PARAM_POS_AND_FACING),
+        BOW_VOLLEY_BOW((byte) 0x0D, "volleybow", 9, ParticleBowVolleyBow.class, PARTICLE_PARAM_FACING_AND_PLAYER),
+        BOW_VOLLEY_ARROW((byte) 0x0E, "volley", 7, ParticleBowVolleyArrow.class, PARTICLE_PARAM_POS_AND_FACING),
+        BOW_VOLLEY_BUFF_EMITTER((byte) 0x0F, null, 0, ParticleBowVolleyBuffEmitter.class, PARTICLE_PARAM_PLAYER),
+        BOW_VOLLEY_BUFF_PARTICLE((byte) 0x10, "volleybuff", 6, ParticleBowVolleyBuffParticle.class, PARTICLE_PARAM_POS_AND_FACING),
+        BURN_BUFF_EMITTER((byte) 0x11, null, 0, ParticleBurnBuffEmitter.class, PARTICLE_PARAM_PLAYER),
+        BURN_BUFF_PARTICLE((byte) 0x12, "burn", 20, ParticleBurnBuffParticle.class, PARTICLE_PARAM_POS_AND_FACING),
+        PASSIVE_BARRIER((byte) 0x13, "barrier", 7, ParticlePassiveBarrier.class, PARTICLE_PARAM_POS),
+        PASSIVE_RESIST((byte) 0x14, "resist", 12, ParticlePassiveResist.class, PARTICLE_PARAM_POS),
+        PASSIVE_SHADOWATTACK((byte) 0x15, "shadowattack", 16, ParticlePassiveShadowAttack.class, PARTICLE_PARAM_POS),
+        PASSIVE_STATIC((byte) 0x16, null, 0, ParticlePassiveStatic.class, PARTICLE_PARAM_PLAYER_AND_TARGET),
+        SHIELD_CHARGE((byte) 0x17, "charge", 1, ParticleShieldCharge.class, PARTICLE_PARAM_FACING_AND_PLAYER),
+        SHIELD_CHARGE_PARTICLE((byte) 0x18, "charge2", 5, ParticleShieldChargeParticle.class, PARTICLE_PARAM_POS_AND_FACING),
+        SHIELD_DASH((byte) 0x19, "dash", 8, ParticleShieldDash.class, PARTICLE_PARAM_FACING_AND_PLAYER),
+        SHIELD_DASH_BUFF_EMITTER((byte) 0x1A, null, 0, ParticleShieldDashBuffEmitter.class, PARTICLE_PARAM_PLAYER),
+        SHIELD_DASH_BUFF_PARTICLE((byte) 0x1B, "dashbuff", 1, ParticleShieldDashBuffParticle.class, PARTICLE_PARAM_POS_AND_FACING),
+        SHIELD_DASH_EMITTER((byte) 0x1C, null, 0, ParticleShieldDashEmitter.class, PARTICLE_PARAM_FACING_AND_PLAYER),
+        SHIELD_FORTIFY((byte) 0x1D, "fortify", 20, ParticleShieldFortify.class, PARTICLE_PARAM_PLAYER),
+        SHIELD_FORTIFY_BUFF((byte) 0x1E, "fortifybuff", 8, ParticleShieldFortifyBuff.class, PARTICLE_PARAM_POS_AND_FACING),
+        SHIELD_FORTIFY_BUFF_EMITTER((byte) 0x1F, null, 0, ParticleShieldFortifyEmitter.class, PARTICLE_PARAM_PLAYER),
+        SHIELD_MAGNETIZE((byte) 0x20, null, 0, ParticleShieldMagnetize.class, PARTICLE_PARAM_PLAYER_AND_TARGET),
+        SHIELD_MAGNETIZE_BURST((byte) 0x21, "magnetizeburst", 12, ParticleShieldMagnetizeBurst.class, PARTICLE_PARAM_PLAYER),
+        SHIELD_MAGNETIZE_START((byte) 0x22, "magnetizestart", 13, ParticleShieldMagnetizeStart.class, PARTICLE_PARAM_PLAYER),
+        SHIELD_REFLECT_BUFF((byte) 0x23, "reflectbuff", 16, ParticleShieldReflectBuff.class, PARTICLE_PARAM_POS_AND_FACING),
+        SHIELD_REFLECT_CAST((byte) 0x24, "reflectcast", 16, ParticleShieldReflectCast.class, PARTICLE_PARAM_PLAYER),
+        SHIELD_REFLECT_EMITTER((byte) 0x25, null, 0, ParticleShieldReflectEmitter.class, PARTICLE_PARAM_PLAYER),
+        SHIELD_REFLECT_HIT((byte) 0x26, "reflecthit", 10, ParticleShieldReflectHit.class, PARTICLE_PARAM_POS),
+        SHIELD_ROAR((byte) 0x27, "roar", 10, ParticleShieldRoar.class, PARTICLE_PARAM_FACING_AND_PLAYER),
+        SHIELD_ROARHIT((byte) 0x28, "roarhit", 7, ParticleShieldRoarHit.class, PARTICLE_PARAM_PLAYER),
+        SWORD_CINDER((byte) 0x29, "cinder", 6, ParticleSwordCinder.class, PARTICLE_PARAM_POS_AND_FACING),
+        SWORD_GASH1((byte) 0x2A, "gash1", 4, ParticleSwordGash.class, PARTICLE_PARAM_POS_AND_FACING),
+        SWORD_GASH2((byte) 0x2B, "gash2", 4, ParticleSwordGash2.class, PARTICLE_PARAM_POS_AND_FACING),
+        SWORD_PHANTOM((byte) 0x2C, "phantom", 6, ParticleSwordPhantom.class, PARTICLE_PARAM_POS_AND_FACING),
+        SWORD_PHANTOM2((byte) 0x2D, "phantomslash", 4, ParticleSwordPhantom2.class, PARTICLE_PARAM_PLAYER),
+        SWORD_SLASH1((byte) 0x2E, "slash1", 3, ParticleSwordSlash1.class, PARTICLE_PARAM_POS_AND_FACING),
+        SWORD_SLASH2((byte) 0x2F, "slash2", 3, ParticleSwordSlash2.class, PARTICLE_PARAM_POS_AND_FACING),
+        SWORD_SLASH3((byte) 0x30, "slash3", 5, ParticleSwordSlash3.class, PARTICLE_PARAM_POS_AND_FACING),
+        SWORD_SLASH_BUFF_EMITTER((byte) 0x31, null, 0, ParticleSwordSlashBuffEmitter.class, PARTICLE_PARAM_PLAYER),
+        SWORD_SLASH_BUFF_PARTICLE((byte) 0x32, "slashbuff", 6, ParticleSwordSlashBuffParticle.class, PARTICLE_PARAM_POS_AND_FACING),
+        SWORD_TAUNT((byte) 0x33, "taunt", 5, ParticleSwordTaunt.class, PARTICLE_PARAM_POS_AND_FACING),
+        SWORD_TAUNT_AURA((byte) 0x34, "tauntaura", 5, ParticleSwordTauntAura.class, PARTICLE_PARAM_PLAYER),
+        SWORD_TAUNT_AURA_PARTICLE((byte) 0x35, "tauntaura2", 10, ParticleSwordTauntAuraParticle.class, PARTICLE_PARAM_POS_AND_FACING),
+        SWORD_TAUNT_BUFF_EMITTER((byte) 0x36, null, 0, ParticleSwordTauntBuffEmitter.class, PARTICLE_PARAM_PLAYER),
+        SWORD_VORPAL((byte) 0x37, "vorpal", 4, ParticleSwordVorpal.class, PARTICLE_PARAM_POS_AND_FACING);
+
+        private final byte particleCode;
+
+        private final int numFrames;
+        private final String spriteFolder;
+        private final Class<? extends Particle> particleClass;
+        private final Class[] parameterTypes;
+        private BufferedImage[] sprite;
+
+        private static final Map<Byte, Particles> lookup = new HashMap<Byte, Particles>();
+
+        static {
+            for (Particles particle : Particles.values()) {
+                lookup.put(particle.getParticleCode(), particle);
+            }
+        }
+
+        public static Particles get(byte code) {
+            return lookup.get(code);
+        }
+
+        Particles(byte particleCode, String spriteFolder, int numFrames, Class<? extends Particle> particleClass, Class[] parameterTypes) {
+            this.particleCode = particleCode;
+            this.numFrames = numFrames;
+            this.spriteFolder = spriteFolder;
+            this.particleClass = particleClass;
+            this.parameterTypes = parameterTypes;
+        }
+
+        public void setSprite(BufferedImage[] sprite) {
+            this.sprite = sprite;
+        }
+
+        public BufferedImage[] getSprite() {
+            return this.sprite;
+        }
+
+        public byte getParticleCode() {
+            return this.particleCode;
+        }
+
+        public int getNumFrames() {
+            return this.numFrames;
+        }
+
+        public String getSpriteFolder() {
+            return this.spriteFolder;
+        }
+
+        public Class[] getParameterTypes() {
+            return this.parameterTypes;
+        }
+
+        public Particle newParticle(Object... parameters) {
+            try {
+                Constructor<? extends Particle> constructor = this.particleClass.getDeclaredConstructor(parameterTypes);
+                return constructor.newInstance(parameters);
+            } catch (Exception ex) {
+                logError(ex.toString(), ex);
+            }
+            return null;
+        }
+    }
     public final static int NUM_KEYBINDS = 26,
             KEYBIND_SKILL1 = 0,
             KEYBIND_SKILL2 = 1,
@@ -892,7 +971,8 @@ public class Globals {
                 HUB_SERVER_TCP_PORT = Integer.parseInt(prop.getProperty("hubport"));
             }
         } catch (final FileNotFoundException e) {
-            log(Globals.class, "Config", "config.properties not found in root directory. Using default server values.", Globals.LOG_TYPE_DATA);
+            log(Globals.class,
+                    "Config", "config.properties not found in root directory. Using default server values.", Globals.LOG_TYPE_DATA);
         } catch (final IOException ex) {
             logError(ex.toString(), ex);
         } finally {
@@ -901,20 +981,33 @@ public class Globals {
                     inputStream.close();
                 } catch (final IOException ex) {
                     logError(ex.toString(), ex);
+
                 }
             }
-            log(Globals.class, "Config", "Server TCP Port: " + SERVER_TCP_PORT, Globals.LOG_TYPE_DATA);
-            log(Globals.class, "Config", "Server UDP Port: " + SERVER_UDP_PORT, Globals.LOG_TYPE_DATA);
-            log(Globals.class, "Config", "Max Players per Room: " + SERVER_MAX_ROOM_PLAYERS, Globals.LOG_TYPE_DATA);
-            log(Globals.class, "Config", "Max Rooms: " + SERVER_MAX_ROOMS, Globals.LOG_TYPE_DATA);
-            log(Globals.class, "Config", "EXP Multiplier: " + EXP_MULTIPLIER, Globals.LOG_TYPE_DATA);
-            log(Globals.class, "Config", "Logic Module Threads: " + SERVER_LOGIC_THREADS, Globals.LOG_TYPE_DATA);
-            log(Globals.class, "Config", "Max Packet Sender Threads: " + SERVER_PACKETSENDER_THREADS, Globals.LOG_TYPE_DATA);
-            log(Globals.class, "Config", "Max Packets Per Connection: " + PACKET_MAX_PER_CON, Globals.LOG_TYPE_DATA);
-            log(Globals.class, "Config", "UDP Mode: " + UDP_MODE, Globals.LOG_TYPE_DATA);
-            log(Globals.class, "Config", "Hub Connect: " + SERVER_HUB_CONNECT, Globals.LOG_TYPE_DATA);
-            log(Globals.class, "Config", "Hub Address: " + HUB_SERVER_ADDRESS, Globals.LOG_TYPE_DATA);
-            log(Globals.class, "Config", "Hub Port: " + HUB_SERVER_TCP_PORT, Globals.LOG_TYPE_DATA);
+            log(Globals.class,
+                    "Config", "Server TCP Port: " + SERVER_TCP_PORT, Globals.LOG_TYPE_DATA);
+            log(Globals.class,
+                    "Config", "Server UDP Port: " + SERVER_UDP_PORT, Globals.LOG_TYPE_DATA);
+            log(Globals.class,
+                    "Config", "Max Players per Room: " + SERVER_MAX_ROOM_PLAYERS, Globals.LOG_TYPE_DATA);
+            log(Globals.class,
+                    "Config", "Max Rooms: " + SERVER_MAX_ROOMS, Globals.LOG_TYPE_DATA);
+            log(Globals.class,
+                    "Config", "EXP Multiplier: " + EXP_MULTIPLIER, Globals.LOG_TYPE_DATA);
+            log(Globals.class,
+                    "Config", "Logic Module Threads: " + SERVER_LOGIC_THREADS, Globals.LOG_TYPE_DATA);
+            log(Globals.class,
+                    "Config", "Max Packet Sender Threads: " + SERVER_PACKETSENDER_THREADS, Globals.LOG_TYPE_DATA);
+            log(Globals.class,
+                    "Config", "Max Packets Per Connection: " + PACKET_MAX_PER_CON, Globals.LOG_TYPE_DATA);
+            log(Globals.class,
+                    "Config", "UDP Mode: " + UDP_MODE, Globals.LOG_TYPE_DATA);
+            log(Globals.class,
+                    "Config", "Hub Connect: " + SERVER_HUB_CONNECT, Globals.LOG_TYPE_DATA);
+            log(Globals.class,
+                    "Config", "Hub Address: " + HUB_SERVER_ADDRESS, Globals.LOG_TYPE_DATA);
+            log(Globals.class,
+                    "Config", "Hub Port: " + HUB_SERVER_TCP_PORT, Globals.LOG_TYPE_DATA);
         }
     }
 

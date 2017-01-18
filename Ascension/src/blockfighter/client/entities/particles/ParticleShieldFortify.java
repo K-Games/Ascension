@@ -19,7 +19,7 @@ public class ParticleShieldFortify extends Particle {
     public void update() {
         super.update();
         if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
-            if (PARTICLE_SPRITE != null && this.frame < PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_FORTIFY].length - 1) {
+            if (Globals.Particles.SHIELD_FORTIFY.getSprite() != null && this.frame < Globals.Particles.SHIELD_FORTIFY.getSprite().length - 1) {
                 this.frame++;
             }
 
@@ -29,16 +29,16 @@ public class ParticleShieldFortify extends Particle {
 
     @Override
     public void draw(final Graphics2D g) {
-        if (PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_FORTIFY] == null) {
+        if (Globals.Particles.SHIELD_FORTIFY.getSprite() == null) {
             return;
         }
-        if (this.frame >= PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_FORTIFY].length) {
+        if (this.frame >= Globals.Particles.SHIELD_FORTIFY.getSprite().length) {
             return;
         }
         final Point p = this.owner.getPos();
         this.x = p.x - 238;
         this.y = p.y - 410;
-        final BufferedImage sprite = PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_FORTIFY][this.frame];
+        final BufferedImage sprite = Globals.Particles.SHIELD_FORTIFY.getSprite()[this.frame];
         final int drawSrcX = this.x;
         final int drawSrcY = this.y;
         final int drawDscY = drawSrcY + sprite.getHeight();

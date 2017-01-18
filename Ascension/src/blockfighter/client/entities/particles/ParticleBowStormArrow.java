@@ -19,7 +19,7 @@ public class ParticleBowStormArrow extends Particle {
     public void update() {
         super.update();
         if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
-            if (PARTICLE_SPRITE != null && this.frame < PARTICLE_SPRITE[Globals.PARTICLE_BOW_STORM].length) {
+            if (Globals.Particles.BOW_STORM_ARROW.getSprite() != null && this.frame < Globals.Particles.BOW_STORM_ARROW.getSprite().length) {
                 this.frame++;
             }
             this.lastFrameTime = logic.getTime();
@@ -28,13 +28,13 @@ public class ParticleBowStormArrow extends Particle {
 
     @Override
     public void draw(final Graphics2D g) {
-        if (PARTICLE_SPRITE[Globals.PARTICLE_BOW_STORM] == null) {
+        if (Globals.Particles.BOW_STORM_ARROW.getSprite() == null) {
             return;
         }
-        if (this.frame >= PARTICLE_SPRITE[Globals.PARTICLE_BOW_STORM].length) {
+        if (this.frame >= Globals.Particles.BOW_STORM_ARROW.getSprite().length) {
             return;
         }
-        final BufferedImage sprite = PARTICLE_SPRITE[Globals.PARTICLE_BOW_STORM][this.frame];
+        final BufferedImage sprite = Globals.Particles.BOW_STORM_ARROW.getSprite()[this.frame];
         final int drawSrcX = this.x + ((this.facing == Globals.RIGHT) ? -sprite.getWidth() / 2 : sprite.getWidth() / 2);
         final int drawSrcY = this.y - 130;
         final int drawDscY = drawSrcY + sprite.getHeight();

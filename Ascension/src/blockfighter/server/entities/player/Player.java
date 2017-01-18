@@ -690,17 +690,17 @@ public class Player implements GameEntity, Callable<Player> {
                 // Barrier reduction
                 if (this.barrierBuff != null) {
                     finalDamage = ((BuffPassiveBarrier) this.barrierBuff).reduceDmg(finalDamage);
-                    PacketSender.sendParticle(this.logic, Globals.PARTICLE_PASSIVE_BARRIER, dmg.getDmgPoint().x, dmg.getDmgPoint().y);
+                    PacketSender.sendParticle(this.logic, Globals.Particles.PASSIVE_BARRIER.getParticleCode(), dmg.getDmgPoint().x, dmg.getDmgPoint().y);
                 }
 
                 if (this.resistBuff != null) {
-                    PacketSender.sendParticle(this.logic, Globals.PARTICLE_PASSIVE_RESIST, dmg.getDmgPoint().x, dmg.getDmgPoint().y);
+                    PacketSender.sendParticle(this.logic, Globals.Particles.PASSIVE_RESIST.getParticleCode(), dmg.getDmgPoint().x, dmg.getDmgPoint().y);
                 }
 
                 // Send client damage display
                 if (!dmg.isHidden()) {
                     if (dmg.getOwner() != null && dmg.isCrit()) {
-                        PacketSender.sendParticle(this.logic, Globals.PARTICLE_BLOOD_HIT, dmg.getOwner().getKey(), this.key);
+                        PacketSender.sendParticle(this.logic, Globals.Particles.BLOOD_EMITTER.getParticleCode(), dmg.getOwner().getKey(), this.key);
                     }
                     sendDamage(dmg, (int) finalDamage);
                 }
@@ -729,7 +729,7 @@ public class Player implements GameEntity, Callable<Player> {
                         queueBuff(new BuffPassiveBarrier(this.logic,
                                 this.stats[Globals.STAT_MAXHP] * (baseValue + multValue * getSkillLevel(Globals.PASSIVE_BARRIER)),
                                 this));
-                        PacketSender.sendParticle(this.logic, Globals.PARTICLE_PASSIVE_BARRIER, dmg.getDmgPoint().x, dmg.getDmgPoint().y);
+                        PacketSender.sendParticle(this.logic, Globals.Particles.PASSIVE_BARRIER.getParticleCode(), dmg.getDmgPoint().x, dmg.getDmgPoint().y);
                         this.skills.get(Globals.PASSIVE_BARRIER).setCooldown();
                         sendCooldown(Globals.PASSIVE_BARRIER);
                     }
@@ -917,7 +917,7 @@ public class Player implements GameEntity, Callable<Player> {
         }
         this.playerDamageCount.clear();
 
-        PacketSender.sendParticle(this.logic, Globals.PARTICLE_BLOOD, this.key);
+        PacketSender.sendParticle(this.logic, Globals.Particles.BLOOD_DEATH_EMITTER.getParticleCode(), this.key);
         setInvulnerable(false);
         setRemovingDebuff(false);
         setHyperStance(false);

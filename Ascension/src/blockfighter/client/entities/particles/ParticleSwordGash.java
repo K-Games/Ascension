@@ -1,6 +1,5 @@
 package blockfighter.client.entities.particles;
 
-import static blockfighter.client.entities.particles.Particle.PARTICLE_SPRITE;
 import blockfighter.shared.Globals;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -19,7 +18,7 @@ public class ParticleSwordGash extends Particle {
         super.update();
 
         if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
-            if (PARTICLE_SPRITE != null && this.frame < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_GASH1].length) {
+            if (Globals.Particles.SWORD_GASH1.getSprite() != null && this.frame < Globals.Particles.SWORD_GASH1.getSprite().length) {
                 this.frame++;
             }
             this.lastFrameTime = logic.getTime();
@@ -28,13 +27,13 @@ public class ParticleSwordGash extends Particle {
 
     @Override
     public void draw(final Graphics2D g) {
-        if (PARTICLE_SPRITE[Globals.PARTICLE_SWORD_GASH1] == null) {
+        if (Globals.Particles.SWORD_GASH1.getSprite() == null) {
             return;
         }
-        if (this.frame >= PARTICLE_SPRITE[Globals.PARTICLE_SWORD_GASH1].length) {
+        if (this.frame >= Globals.Particles.SWORD_GASH1.getSprite().length) {
             return;
         }
-        final BufferedImage sprite = PARTICLE_SPRITE[Globals.PARTICLE_SWORD_GASH1][this.frame];
+        final BufferedImage sprite = Globals.Particles.SWORD_GASH1.getSprite()[this.frame];
         final int drawSrcX = this.x + ((this.facing == Globals.RIGHT) ? -30 : 30);
         final int drawSrcY = this.y - sprite.getHeight() - 10;
         final int drawDscY = drawSrcY + sprite.getHeight();

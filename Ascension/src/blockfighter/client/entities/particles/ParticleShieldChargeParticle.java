@@ -21,7 +21,7 @@ public class ParticleShieldChargeParticle extends Particle {
     public void update() {
         super.update();
         if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
-            if (PARTICLE_SPRITE != null && this.frame < PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_CHARGEPARTICLE].length) {
+            if (Globals.Particles.SHIELD_CHARGE_PARTICLE.getSprite() != null && this.frame < Globals.Particles.SHIELD_CHARGE_PARTICLE.getSprite().length) {
                 this.frame++;
             }
             this.lastFrameTime = logic.getTime();
@@ -30,13 +30,13 @@ public class ParticleShieldChargeParticle extends Particle {
 
     @Override
     public void draw(final Graphics2D g) {
-        if (PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_CHARGEPARTICLE] == null) {
+        if (Globals.Particles.SHIELD_CHARGE_PARTICLE.getSprite() == null) {
             return;
         }
-        if (this.frame >= PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_CHARGEPARTICLE].length) {
+        if (this.frame >= Globals.Particles.SHIELD_CHARGE_PARTICLE.getSprite().length) {
             return;
         }
-        final BufferedImage sprite = PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_CHARGEPARTICLE][this.frame];
+        final BufferedImage sprite = Globals.Particles.SHIELD_CHARGE_PARTICLE.getSprite()[this.frame];
         final int drawSrcX = this.x;
         final int drawSrcY = this.y;
         final int drawDscY = drawSrcY + sprite.getHeight();

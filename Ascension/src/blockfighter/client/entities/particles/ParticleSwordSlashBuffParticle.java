@@ -22,7 +22,7 @@ public class ParticleSwordSlashBuffParticle extends Particle {
         this.y -= 6;
         if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
             this.frameDuration = 50;
-            if (PARTICLE_SPRITE != null && this.frame < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_SLASHBUFF].length - 1) {
+            if (Globals.Particles.SWORD_SLASH_BUFF_PARTICLE.getSprite() != null && this.frame < Globals.Particles.SWORD_SLASH_BUFF_PARTICLE.getSprite().length - 1) {
                 this.frame++;
             }
             this.lastFrameTime = logic.getTime();
@@ -31,13 +31,13 @@ public class ParticleSwordSlashBuffParticle extends Particle {
 
     @Override
     public void draw(final Graphics2D g) {
-        if (PARTICLE_SPRITE[Globals.PARTICLE_SWORD_SLASHBUFF] == null) {
+        if (Globals.Particles.SWORD_SLASH_BUFF_PARTICLE.getSprite() == null) {
             return;
         }
-        if (this.frame >= PARTICLE_SPRITE[Globals.PARTICLE_SWORD_SLASHBUFF].length) {
+        if (this.frame >= Globals.Particles.SWORD_SLASH_BUFF_PARTICLE.getSprite().length) {
             return;
         }
-        final BufferedImage sprite = PARTICLE_SPRITE[Globals.PARTICLE_SWORD_SLASHBUFF][this.frame];
+        final BufferedImage sprite = Globals.Particles.SWORD_SLASH_BUFF_PARTICLE.getSprite()[this.frame];
         g.drawImage(sprite, this.x, this.y, null);
     }
 }

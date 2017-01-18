@@ -51,7 +51,7 @@ public class ProjBowVolley extends Projectile {
                     owner.queueBuff(new BuffBowVolley(this.logic, buffDuration, buffDamage, owner));
                     final byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
                     bytes[0] = Globals.DATA_PARTICLE_EFFECT;
-                    bytes[1] = Globals.PARTICLE_BOW_VOLLEYBUFF;
+                    bytes[1] = Globals.Particles.BOW_VOLLEY_BUFF_EMITTER.getParticleCode();
                     bytes[2] = owner.getKey();
                     PacketSender.sendAll(bytes, this.logic);
                 }
@@ -75,7 +75,7 @@ public class ProjBowVolley extends Projectile {
                     owner.queueBuff(new BuffBowVolley(this.logic, buffDuration, buffDamage, owner));
                     final byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
                     bytes[0] = Globals.DATA_PARTICLE_EFFECT;
-                    bytes[1] = Globals.PARTICLE_BOW_VOLLEYBUFF;
+                    bytes[1] = Globals.Particles.BOW_VOLLEY_BUFF_EMITTER.getParticleCode();
                     bytes[2] = owner.getKey();
                     PacketSender.sendAll(bytes, this.logic);
                 }

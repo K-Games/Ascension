@@ -19,7 +19,7 @@ public class ParticlePassiveResist extends Particle {
         super.update();
 
         if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
-            if (PARTICLE_SPRITE != null && this.frame < PARTICLE_SPRITE[Globals.PARTICLE_PASSIVE_RESIST].length - 1) {
+            if (Globals.Particles.PASSIVE_RESIST.getSprite() != null && this.frame < Globals.Particles.PASSIVE_RESIST.getSprite().length - 1) {
                 this.frame++;
             }
             this.lastFrameTime = logic.getTime();
@@ -28,13 +28,13 @@ public class ParticlePassiveResist extends Particle {
 
     @Override
     public void draw(final Graphics2D g) {
-        if (PARTICLE_SPRITE[Globals.PARTICLE_PASSIVE_RESIST] == null) {
+        if (Globals.Particles.PASSIVE_RESIST.getSprite() == null) {
             return;
         }
-        if (this.frame >= PARTICLE_SPRITE[Globals.PARTICLE_PASSIVE_RESIST].length) {
+        if (this.frame >= Globals.Particles.PASSIVE_RESIST.getSprite().length) {
             return;
         }
-        final BufferedImage sprite = PARTICLE_SPRITE[Globals.PARTICLE_PASSIVE_RESIST][this.frame];
+        final BufferedImage sprite = Globals.Particles.PASSIVE_RESIST.getSprite()[this.frame];
         final int drawSrcX = this.x - sprite.getWidth() / 2;
         final int drawSrcY = this.y - sprite.getHeight() + 50;
         final int drawDscY = drawSrcY + sprite.getHeight();

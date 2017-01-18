@@ -20,7 +20,7 @@ public class ParticleShieldReflectCast extends Particle {
         super.update();
         if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
             this.frameDuration = 25;
-            if (PARTICLE_SPRITE != null && this.frame < PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_REFLECTCAST].length - 1) {
+            if (Globals.Particles.SHIELD_REFLECT_CAST.getSprite() != null && this.frame < Globals.Particles.SHIELD_REFLECT_CAST.getSprite().length - 1) {
                 this.frame++;
             }
             this.lastFrameTime = logic.getTime();
@@ -29,14 +29,14 @@ public class ParticleShieldReflectCast extends Particle {
 
     @Override
     public void draw(final Graphics2D g) {
-        if (PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_REFLECTCAST] == null) {
+        if (Globals.Particles.SHIELD_REFLECT_CAST.getSprite() == null) {
             return;
         }
-        if (this.frame >= PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_REFLECTCAST].length) {
+        if (this.frame >= Globals.Particles.SHIELD_REFLECT_CAST.getSprite().length) {
             return;
         }
         final Point p = this.owner.getPos();
-        final BufferedImage sprite = PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_REFLECTCAST][this.frame];
+        final BufferedImage sprite = Globals.Particles.SHIELD_REFLECT_CAST.getSprite()[this.frame];
         this.x = p.x - sprite.getWidth() / 2;
         this.y = p.y - 350;
         final int drawSrcX = this.x;

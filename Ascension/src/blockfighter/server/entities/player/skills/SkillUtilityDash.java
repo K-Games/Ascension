@@ -96,7 +96,7 @@ public class SkillUtilityDash extends Skill {
         }
 
         if (player.getSkillCounter() == 0) {
-            PacketSender.sendParticle(this.logic, Globals.PARTICLE_SHIELD_DASH, player.getKey(), player.getFacing());
+            PacketSender.sendParticle(this.logic, Globals.Particles.SHIELD_DASH_EMITTER.getParticleCode(), player.getKey(), player.getFacing());
             player.setYSpeed(-5.5);
             player.incrementSkillCounter();
         }
@@ -104,7 +104,7 @@ public class SkillUtilityDash extends Skill {
         if (player.getSkillCounter() == 1 && duration >= getSkillDuration()) {
             player.incrementSkillCounter();
             player.queueBuff(new BuffUtilityDash(this.logic, 5000, getBaseValue() + getMultValue() * player.getSkillLevel(Globals.UTILITY_DASH), player));
-            PacketSender.sendParticle(this.logic, Globals.PARTICLE_SHIELD_DASHBUFF, player.getKey());
+            PacketSender.sendParticle(this.logic, Globals.Particles.SHIELD_DASH_BUFF_EMITTER.getParticleCode(), player.getKey());
         }
         if (player.updateSkillEnd(duration, getSkillDuration(), true, true)) {
             player.setInvulnerable(false);

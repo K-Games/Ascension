@@ -21,10 +21,6 @@ public abstract class Particle implements Callable<Particle> {
 
     protected final Player owner;
 
-    protected static BufferedImage[][] PARTICLE_SPRITE;
-    private final static String[] PARTICLE_SPRITE_FOLDER = new String[Globals.NUM_PARTICLE_EFFECTS];
-    private final static int[] PARTICLE_FRAMES = new int[Globals.NUM_PARTICLE_EFFECTS];
-
     private static final ConcurrentLinkedQueue<Integer> PARTICLE_KEYS = new ConcurrentLinkedQueue<>();
     private static int numParticleKeys = 500;
 
@@ -42,89 +38,6 @@ public abstract class Particle implements Callable<Particle> {
             PARTICLE_KEYS.add(key);
         }
 
-        PARTICLE_SPRITE_FOLDER[Globals.PARTICLE_SWORD_SLASH1] = "slash1";
-        PARTICLE_SPRITE_FOLDER[Globals.PARTICLE_SWORD_SLASH2] = "slash2";
-        PARTICLE_SPRITE_FOLDER[Globals.PARTICLE_SWORD_SLASH3] = "slash3";
-        PARTICLE_SPRITE_FOLDER[Globals.PARTICLE_SWORD_GASH1] = "gash1";
-        PARTICLE_SPRITE_FOLDER[Globals.PARTICLE_SWORD_GASH2] = "gash2";
-        PARTICLE_SPRITE_FOLDER[Globals.PARTICLE_SWORD_VORPAL] = "vorpal";
-        PARTICLE_SPRITE_FOLDER[Globals.PARTICLE_SWORD_PHANTOM] = "phantom";
-        PARTICLE_SPRITE_FOLDER[Globals.PARTICLE_SWORD_PHANTOM2] = "phantomslash";
-        PARTICLE_SPRITE_FOLDER[Globals.PARTICLE_SWORD_CINDER] = "cinder";
-        PARTICLE_SPRITE_FOLDER[Globals.PARTICLE_BURN] = "burn";
-        PARTICLE_SPRITE_FOLDER[Globals.PARTICLE_SWORD_TAUNT] = "taunt";
-        PARTICLE_SPRITE_FOLDER[Globals.PARTICLE_SWORD_TAUNTAURA1] = "tauntaura";
-        PARTICLE_SPRITE_FOLDER[Globals.PARTICLE_SWORD_TAUNTAURA2] = "tauntaura2";
-        PARTICLE_SPRITE_FOLDER[Globals.PARTICLE_BOW_ARC] = "arc";
-        PARTICLE_SPRITE_FOLDER[Globals.PARTICLE_BOW_RAPID] = "rapid";
-        PARTICLE_SPRITE_FOLDER[Globals.PARTICLE_BOW_POWER] = "power";
-        PARTICLE_SPRITE_FOLDER[Globals.PARTICLE_BOW_POWERPARTICLE] = "power2";
-        PARTICLE_SPRITE_FOLDER[Globals.PARTICLE_BOW_POWERCHARGE] = "powercharge";
-        PARTICLE_SPRITE_FOLDER[Globals.PARTICLE_BOW_VOLLEYBOW] = "volleybow";
-        PARTICLE_SPRITE_FOLDER[Globals.PARTICLE_BOW_VOLLEYARROW] = "volley";
-        PARTICLE_SPRITE_FOLDER[Globals.PARTICLE_BOW_STORM] = "stormarrow";
-        PARTICLE_SPRITE_FOLDER[Globals.PARTICLE_BOW_FROSTARROW] = "frostarrow";
-        PARTICLE_SPRITE_FOLDER[Globals.PARTICLE_SHIELD_DASH] = "dash";
-        PARTICLE_SPRITE_FOLDER[Globals.PARTICLE_SHIELD_FORTIFY] = "fortify";
-        PARTICLE_SPRITE_FOLDER[Globals.PARTICLE_SHIELD_FORTIFYBUFF] = "fortifybuff";
-        PARTICLE_SPRITE_FOLDER[Globals.PARTICLE_SHIELD_CHARGE] = "charge";
-        PARTICLE_SPRITE_FOLDER[Globals.PARTICLE_SHIELD_CHARGEPARTICLE] = "charge2";
-        PARTICLE_SPRITE_FOLDER[Globals.PARTICLE_SHIELD_REFLECTCAST] = "reflectcast";
-        PARTICLE_SPRITE_FOLDER[Globals.PARTICLE_SHIELD_REFLECTBUFF] = "reflectbuff";
-        PARTICLE_SPRITE_FOLDER[Globals.PARTICLE_SHIELD_REFLECTHIT] = "reflecthit";
-        PARTICLE_SPRITE_FOLDER[Globals.PARTICLE_SWORD_SLASHBUFF] = "slashbuff";
-        PARTICLE_SPRITE_FOLDER[Globals.PARTICLE_SHIELD_DASHBUFF] = "dashbuff";
-        PARTICLE_SPRITE_FOLDER[Globals.PARTICLE_BOW_VOLLEYBUFF] = "volleybuff";
-        PARTICLE_SPRITE_FOLDER[Globals.PARTICLE_PASSIVE_RESIST] = "resist";
-        PARTICLE_SPRITE_FOLDER[Globals.PARTICLE_PASSIVE_BARRIER] = "barrier";
-        PARTICLE_SPRITE_FOLDER[Globals.PARTICLE_PASSIVE_SHADOWATTACK] = "shadowattack";
-        PARTICLE_SPRITE_FOLDER[Globals.PARTICLE_BOW_RAPID2] = "rapid2";
-        PARTICLE_SPRITE_FOLDER[Globals.PARTICLE_SHIELD_MAGNETIZESTART] = "magnetizestart";
-        PARTICLE_SPRITE_FOLDER[Globals.PARTICLE_SHIELD_MAGNETIZEBURST] = "magnetizeburst";
-        PARTICLE_SPRITE_FOLDER[Globals.PARTICLE_SHIELD_ROAR] = "roar";
-        PARTICLE_SPRITE_FOLDER[Globals.PARTICLE_SHIELD_ROARHIT] = "roarhit";
-
-        PARTICLE_FRAMES[Globals.PARTICLE_SWORD_SLASH1] = 3;
-        PARTICLE_FRAMES[Globals.PARTICLE_SWORD_SLASH2] = 3;
-        PARTICLE_FRAMES[Globals.PARTICLE_SWORD_SLASH3] = 5;
-        PARTICLE_FRAMES[Globals.PARTICLE_SWORD_GASH1] = 4;
-        PARTICLE_FRAMES[Globals.PARTICLE_SWORD_GASH2] = 4;
-        PARTICLE_FRAMES[Globals.PARTICLE_SWORD_VORPAL] = 4;
-        PARTICLE_FRAMES[Globals.PARTICLE_SWORD_PHANTOM] = 6;
-        PARTICLE_FRAMES[Globals.PARTICLE_SWORD_PHANTOM2] = 4;
-        PARTICLE_FRAMES[Globals.PARTICLE_SWORD_CINDER] = 6;
-        PARTICLE_FRAMES[Globals.PARTICLE_BURN] = 20;
-        PARTICLE_FRAMES[Globals.PARTICLE_SWORD_TAUNT] = 5;
-        PARTICLE_FRAMES[Globals.PARTICLE_SWORD_TAUNTAURA1] = 5;
-        PARTICLE_FRAMES[Globals.PARTICLE_SWORD_TAUNTAURA2] = 10;
-        PARTICLE_FRAMES[Globals.PARTICLE_BOW_ARC] = 8;
-        PARTICLE_FRAMES[Globals.PARTICLE_BOW_RAPID] = 6;
-        PARTICLE_FRAMES[Globals.PARTICLE_BOW_POWER] = 5;
-        PARTICLE_FRAMES[Globals.PARTICLE_BOW_POWERPARTICLE] = 10;
-        PARTICLE_FRAMES[Globals.PARTICLE_BOW_POWERCHARGE] = 1;
-        PARTICLE_FRAMES[Globals.PARTICLE_BOW_VOLLEYBOW] = 9;
-        PARTICLE_FRAMES[Globals.PARTICLE_BOW_VOLLEYARROW] = 7;
-        PARTICLE_FRAMES[Globals.PARTICLE_BOW_STORM] = 5;
-        PARTICLE_FRAMES[Globals.PARTICLE_BOW_FROSTARROW] = 14;
-        PARTICLE_FRAMES[Globals.PARTICLE_SHIELD_DASH] = 8;
-        PARTICLE_FRAMES[Globals.PARTICLE_SHIELD_FORTIFY] = 20;
-        PARTICLE_FRAMES[Globals.PARTICLE_SHIELD_FORTIFYBUFF] = 8;
-        PARTICLE_FRAMES[Globals.PARTICLE_SHIELD_CHARGE] = 1;
-        PARTICLE_FRAMES[Globals.PARTICLE_SHIELD_CHARGEPARTICLE] = 5;
-        PARTICLE_FRAMES[Globals.PARTICLE_SHIELD_REFLECTCAST] = 16;
-        PARTICLE_FRAMES[Globals.PARTICLE_SHIELD_REFLECTBUFF] = 16;
-        PARTICLE_FRAMES[Globals.PARTICLE_SHIELD_REFLECTHIT] = 10;
-        PARTICLE_FRAMES[Globals.PARTICLE_SWORD_SLASHBUFF] = 6;
-        PARTICLE_FRAMES[Globals.PARTICLE_SHIELD_DASHBUFF] = 1;
-        PARTICLE_FRAMES[Globals.PARTICLE_BOW_VOLLEYBUFF] = 6;
-        PARTICLE_FRAMES[Globals.PARTICLE_PASSIVE_RESIST] = 12;
-        PARTICLE_FRAMES[Globals.PARTICLE_PASSIVE_BARRIER] = 7;
-        PARTICLE_FRAMES[Globals.PARTICLE_PASSIVE_SHADOWATTACK] = 16;
-        PARTICLE_FRAMES[Globals.PARTICLE_BOW_RAPID2] = 3;
-        PARTICLE_FRAMES[Globals.PARTICLE_SHIELD_MAGNETIZESTART] = 13;
-        PARTICLE_FRAMES[Globals.PARTICLE_SHIELD_MAGNETIZEBURST] = 12;
-        PARTICLE_FRAMES[Globals.PARTICLE_SHIELD_ROAR] = 10;
-        PARTICLE_FRAMES[Globals.PARTICLE_SHIELD_ROARHIT] = 7;
     }
 
     public static int getNextParticleKey() {
@@ -143,13 +56,11 @@ public abstract class Particle implements Callable<Particle> {
 
     public static void unloadParticles() {
         Globals.log(Particle.class, "Unloading Particles...", Globals.LOG_TYPE_DATA);
-        for (int i = 0; PARTICLE_SPRITE != null && i < PARTICLE_SPRITE.length; i++) {
-            for (int j = 0; PARTICLE_SPRITE[i] != null && j < PARTICLE_SPRITE[i].length; j++) {
-                PARTICLE_SPRITE[i][j] = null;
+        for (Globals.Particles particle : Globals.Particles.values()) {
+            for (int j = 0; particle.getSprite() != null && j < particle.getSprite().length; j++) {
+                particle.setSprite(null);
             }
-            PARTICLE_SPRITE[i] = null;
         }
-        PARTICLE_SPRITE = null;
         LOADED = false;
         System.gc();
     }
@@ -160,12 +71,12 @@ public abstract class Particle implements Callable<Particle> {
         }
         Globals.log(Particle.class, "Loading Particles...", Globals.LOG_TYPE_DATA);
         LOADED = true;
-        PARTICLE_SPRITE = new BufferedImage[Globals.NUM_PARTICLE_EFFECTS][];
-        for (int spriteID = 0; spriteID < PARTICLE_SPRITE.length; spriteID++) {
-            if (PARTICLE_SPRITE_FOLDER[spriteID] != null && PARTICLE_FRAMES[spriteID] > 0) {
-                PARTICLE_SPRITE[spriteID] = new BufferedImage[PARTICLE_FRAMES[spriteID]];
-                for (int frame = 0; frame < PARTICLE_SPRITE[spriteID].length; frame++) {
-                    PARTICLE_SPRITE[spriteID][frame] = Globals.loadTextureResource("sprites/particle/" + PARTICLE_SPRITE_FOLDER[spriteID] + "/" + frame + ".png");
+        for (Globals.Particles particle : Globals.Particles.values()) {
+            if (particle.getSpriteFolder() != null && particle.getNumFrames() > 0) {
+                BufferedImage[] loadSprites = new BufferedImage[particle.getNumFrames()];
+                particle.setSprite(loadSprites);
+                for (int frame = 0; frame < loadSprites.length; frame++) {
+                    loadSprites[frame] = Globals.loadTextureResource("sprites/particle/" + particle.getSpriteFolder() + "/" + frame + ".png");
                 }
             }
         }
@@ -188,12 +99,18 @@ public abstract class Particle implements Callable<Particle> {
 
     @Override
     public Particle call() {
-        update();
+        if (!isExpired()) {
+            update();
+        }
         return this;
     }
 
     public boolean isExpired() {
         return Globals.nsToMs(logic.getTime() - this.particleStartTime) >= this.duration;
+    }
+
+    public Particle() {
+        this(0, 0);
     }
 
     public Particle(final int k, final int x, final int y, final Player owner) {
@@ -248,7 +165,4 @@ public abstract class Particle implements Callable<Particle> {
         this.duration = 0;
     }
 
-    public static BufferedImage[][] getParticleSprites() {
-        return PARTICLE_SPRITE;
-    }
 }

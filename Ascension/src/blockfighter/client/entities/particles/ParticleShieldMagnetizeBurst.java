@@ -25,9 +25,9 @@ public class ParticleShieldMagnetizeBurst extends Particle {
         super.update();
 
         if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
-            if (PARTICLE_SPRITE != null && this.frame < PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_MAGNETIZEBURST].length) {
+            if (Globals.Particles.SHIELD_MAGNETIZE_BURST.getSprite() != null && this.frame < Globals.Particles.SHIELD_MAGNETIZE_BURST.getSprite().length) {
                 this.frame++;
-                if (this.frame == PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_MAGNETIZEBURST].length) {
+                if (this.frame == Globals.Particles.SHIELD_MAGNETIZE_BURST.getSprite().length) {
                     this.frame = 0;
                 }
             }
@@ -37,10 +37,10 @@ public class ParticleShieldMagnetizeBurst extends Particle {
 
     @Override
     public void draw(final Graphics2D g) {
-        if (PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_MAGNETIZEBURST] == null) {
+        if (Globals.Particles.SHIELD_MAGNETIZE_BURST.getSprite() == null) {
             return;
         }
-        if (this.frame >= PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_MAGNETIZEBURST].length) {
+        if (this.frame >= Globals.Particles.SHIELD_MAGNETIZE_BURST.getSprite().length) {
             return;
         }
         final Point p = this.owner.getPos();
@@ -48,7 +48,7 @@ public class ParticleShieldMagnetizeBurst extends Particle {
             this.x = p.x;
             this.y = p.y;
         }
-        final BufferedImage sprite = PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_MAGNETIZEBURST][this.frame];
+        final BufferedImage sprite = Globals.Particles.SHIELD_MAGNETIZE_BURST.getSprite()[this.frame];
         final int drawSrcX = this.x - (sprite.getWidth()) / 2 + 20;
         final int drawSrcY = this.y - sprite.getHeight() + 60;
         final int drawDscY = drawSrcY + sprite.getHeight();

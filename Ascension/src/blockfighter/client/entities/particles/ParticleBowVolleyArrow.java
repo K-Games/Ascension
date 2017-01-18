@@ -19,7 +19,7 @@ public class ParticleBowVolleyArrow extends Particle {
         super.update();
         if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
             this.frameDuration = 50;
-            if (PARTICLE_SPRITE != null && this.frame < PARTICLE_SPRITE[Globals.PARTICLE_BOW_VOLLEYARROW].length) {
+            if (Globals.Particles.BOW_VOLLEY_ARROW.getSprite() != null && this.frame < Globals.Particles.BOW_VOLLEY_ARROW.getSprite().length) {
                 this.frame++;
             }
             this.lastFrameTime = logic.getTime();
@@ -28,13 +28,13 @@ public class ParticleBowVolleyArrow extends Particle {
 
     @Override
     public void draw(final Graphics2D g) {
-        if (PARTICLE_SPRITE[Globals.PARTICLE_BOW_VOLLEYARROW] == null) {
+        if (Globals.Particles.BOW_VOLLEY_ARROW.getSprite() == null) {
             return;
         }
-        if (this.frame >= PARTICLE_SPRITE[Globals.PARTICLE_BOW_VOLLEYARROW].length) {
+        if (this.frame >= Globals.Particles.BOW_VOLLEY_ARROW.getSprite().length) {
             return;
         }
-        final BufferedImage sprite = PARTICLE_SPRITE[Globals.PARTICLE_BOW_VOLLEYARROW][this.frame];
+        final BufferedImage sprite = Globals.Particles.BOW_VOLLEY_ARROW.getSprite()[this.frame];
         final int drawSrcX = this.x + ((this.facing == Globals.RIGHT) ? 0 : -0);
         final int drawSrcY = this.y - sprite.getHeight() / 2;
         final int drawDscY = drawSrcY + sprite.getHeight();

@@ -97,7 +97,7 @@ public class SkillSwordPhantom extends Skill {
 
         //Send initial phase effect
         if (player.getSkillCounter() == 0) {
-            PacketSender.sendParticle(this.logic, Globals.PARTICLE_SWORD_PHANTOM, player.getX(), player.getY(), player.getFacing());
+            PacketSender.sendParticle(this.logic, Globals.Particles.SWORD_PHANTOM.getParticleCode(), player.getX(), player.getY(), player.getFacing());
             player.incrementSkillCounter();
         }
 
@@ -138,8 +138,8 @@ public class SkillSwordPhantom extends Skill {
             if (!endPhantom) {
                 final ProjSwordPhantom proj = new ProjSwordPhantom(this.logic, player, player.getX(), player.getY());
                 this.logic.queueAddProj(proj);
-                PacketSender.sendParticle(this.logic, Globals.PARTICLE_SWORD_PHANTOM, player.getX(), player.getY(), player.getFacing());
-                PacketSender.sendParticle(this.logic, Globals.PARTICLE_SWORD_PHANTOM2, player.getKey());
+                PacketSender.sendParticle(this.logic, Globals.Particles.SWORD_PHANTOM.getParticleCode(), player.getX(), player.getY(), player.getFacing());
+                PacketSender.sendParticle(this.logic, Globals.Particles.SWORD_PHANTOM2.getParticleCode(), player.getKey());
                 player.incrementSkillCounter();
             }
         }

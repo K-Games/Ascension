@@ -64,13 +64,13 @@ public class ParticlePassiveShadowAttack extends Particle {
 
     @Override
     public void draw(final Graphics2D g) {
-        if (PARTICLE_SPRITE[Globals.PARTICLE_PASSIVE_SHADOWATTACK] == null) {
+        if (Globals.Particles.PASSIVE_SHADOWATTACK.getSprite() == null) {
             return;
         }
-        if (this.frame >= PARTICLE_SPRITE[Globals.PARTICLE_PASSIVE_SHADOWATTACK].length) {
+        if (this.frame >= Globals.Particles.PASSIVE_SHADOWATTACK.getSprite().length) {
             return;
         }
-        final BufferedImage sprite = PARTICLE_SPRITE[Globals.PARTICLE_PASSIVE_SHADOWATTACK][this.frame];
+        final BufferedImage sprite = Globals.Particles.PASSIVE_SHADOWATTACK.getSprite()[this.frame];
         final int drawSrcX = this.x - sprite.getWidth();
         final int drawSrcY = this.y - sprite.getHeight();
         final int drawDscY = drawSrcY + sprite.getHeight();

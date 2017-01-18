@@ -292,7 +292,9 @@ public class ScreenIngame extends Screen {
 
         for (final Map.Entry<Integer, Particle> pEntry : this.particles.entrySet()) {
             try {
-                pEntry.getValue().draw(g);
+                if (!pEntry.getValue().isExpired()) {
+                    pEntry.getValue().draw(g);
+                }
             } catch (Exception e) {
                 Globals.logError(e.toString(), e);
             }
@@ -712,275 +714,33 @@ public class ScreenIngame extends Screen {
         final byte particleID = data[1];
         int x, y;
         byte facing, playerKey, targetKey;
-
-        switch (particleID) {
-            case Globals.PARTICLE_SWORD_SLASH1:
-                x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
-                y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
-                facing = data[10];
-                addParticle(new ParticleSwordSlash1(x, y, facing));
-                break;
-            case Globals.PARTICLE_SWORD_SLASH2:
-                x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
-                y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
-                facing = data[10];
-                addParticle(new ParticleSwordSlash2(x, y, facing));
-                break;
-            case Globals.PARTICLE_SWORD_SLASH3:
-                x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
-                y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
-                facing = data[10];
-                addParticle(new ParticleSwordSlash3(x, y, facing));
-                break;
-            case Globals.PARTICLE_SWORD_GASH1:
-                x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
-                y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
-                facing = data[10];
-                addParticle(new ParticleSwordGash(x, y, facing));
-                break;
-            case Globals.PARTICLE_SWORD_GASH2:
-                x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
-                y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
-                facing = data[10];
-                addParticle(new ParticleSwordGash2(x, y, facing));
-                break;
-            case Globals.PARTICLE_SWORD_VORPAL:
-                x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
-                y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
-                facing = data[10];
-                addParticle(new ParticleSwordVorpal(x, y, facing));
-                break;
-            case Globals.PARTICLE_SWORD_PHANTOM:
-                x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
-                y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
-                facing = data[10];
-                addParticle(new ParticleSwordPhantom(x, y, facing));
-                break;
-            case Globals.PARTICLE_SWORD_PHANTOM2:
-                playerKey = data[2];
-                if (this.players.containsKey(playerKey)) {
-                    addParticle(new ParticleSwordPhantom2(this.players.get(playerKey)));
-                }
-                break;
-            case Globals.PARTICLE_SWORD_MULTI:
-                x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
-                y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
-                facing = data[10];
-                addParticle(new ParticleSwordMulti(x, y, facing));
-                break;
-            case Globals.PARTICLE_SWORD_CINDER:
-                x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
-                y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
-                facing = data[10];
-                addParticle(new ParticleSwordCinder(x, y, facing));
-                break;
-            case Globals.PARTICLE_SWORD_TAUNT:
-                x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
-                y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
-                facing = data[10];
-                addParticle(new ParticleSwordTaunt(x, y, facing));
-                break;
-            case Globals.PARTICLE_SWORD_TAUNTAURA1:
-                playerKey = data[2];
-                if (this.players.containsKey(playerKey)) {
-                    addParticle(new ParticleSwordTauntAura(this.players.get(playerKey)));
-                }
-                break;
-            case Globals.PARTICLE_BOW_ARC:
-                x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
-                y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
-                facing = data[10];
-                addParticle(new ParticleBowArc(x, y, facing));
-                break;
-            case Globals.PARTICLE_BOW_RAPID:
-                x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
-                y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
-                facing = data[10];
-                addParticle(new ParticleBowRapid(x, y, facing));
-                break;
-            case Globals.PARTICLE_BOW_RAPID2:
-                x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
-                y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
-                facing = data[10];
-                addParticle(new ParticleBowRapid2(x, y, facing));
-                break;
-            case Globals.PARTICLE_BOW_POWER:
-                x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
-                y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
-                facing = data[10];
-                addParticle(new ParticleBowPower(x, y, facing));
-                break;
-            case Globals.PARTICLE_BOW_POWERCHARGE:
-                playerKey = data[2];
-                for (byte i = 0; i < 4; i++) {
-                    addParticle(new ParticleBowPowerCharge(this.players.get(playerKey)));
-                }
-                break;
-            case Globals.PARTICLE_BOW_VOLLEYBOW:
-                facing = data[2];
-                playerKey = data[3];
-                addParticle(new ParticleBowVolleyBow(facing, this.players.get(playerKey)));
-                break;
-            case Globals.PARTICLE_BOW_VOLLEYARROW:
-                x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
-                y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
-                facing = data[10];
-                addParticle(new ParticleBowVolleyArrow(x, y, facing));
-                break;
-            case Globals.PARTICLE_BOW_STORM:
-                x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
-                y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
-                facing = data[10];
-                addParticle(new ParticleBowStormEmitter(x, y, facing));
-                break;
-            case Globals.PARTICLE_BOW_FROSTARROW:
-                x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
-                y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
-                facing = data[10];
-                addParticle(new ParticleBowFrostArrowEmitter(x, y, facing));
-                break;
-            case Globals.PARTICLE_SHIELD_DASH:
-                facing = data[2];
-                playerKey = data[3];
-                if (this.players.containsKey(playerKey)) {
-                    addParticle(new ParticleShieldDashEmitter(facing, this.players.get(playerKey)));
-                }
-                break;
-            case Globals.PARTICLE_SHIELD_FORTIFY:
-                playerKey = data[2];
-                if (this.players.containsKey(playerKey)) {
-                    addParticle(new ParticleShieldFortify(this.players.get(playerKey)));
-                }
-                break;
-            case Globals.PARTICLE_SHIELD_CHARGE:
-                facing = data[2];
-                playerKey = data[3];
-                if (this.players.containsKey(playerKey)) {
-                    addParticle(new ParticleShieldCharge(facing, this.players.get(playerKey)));
-                }
-                break;
-            case Globals.PARTICLE_SHIELD_REFLECTCAST:
-                playerKey = data[2];
-                if (this.players.containsKey(playerKey)) {
-                    addParticle(new ParticleShieldReflectCast(this.players.get(playerKey)));
-                }
-                break;
-            case Globals.PARTICLE_SHIELD_REFLECTBUFF:
-                playerKey = data[2];
-                if (this.players.containsKey(playerKey)) {
-                    addParticle(new ParticleShieldReflectEmitter(this.players.get(playerKey)));
-                }
-                break;
-            case Globals.PARTICLE_SHIELD_REFLECTHIT:
-                x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
-                y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
-                for (byte i = 0; i < 20; i++) {
-                    addParticle(new ParticleShieldReflectHit(x, y, i));
-                }
-                break;
-            case Globals.PARTICLE_SHIELD_FORTIFYBUFF:
-                playerKey = data[2];
-                if (this.players.containsKey(playerKey)) {
-                    addParticle(new ParticleShieldFortifyEmitter(this.players.get(playerKey)));
-                }
-                break;
-            case Globals.PARTICLE_SHIELD_ROAR:
-                facing = data[2];
-                playerKey = data[3];
-                if (this.players.containsKey(playerKey)) {
-                    addParticle(new ParticleShieldRoar(facing, this.players.get(playerKey)));
-                }
-                break;
-            case Globals.PARTICLE_SHIELD_ROARHIT:
-                playerKey = data[2];
-                if (this.players.containsKey(playerKey)) {
-                    addParticle(new ParticleShieldRoarHit(this.players.get(playerKey)));
-                }
-                break;
-            case Globals.PARTICLE_SHIELD_MAGNETIZE:
-                playerKey = data[2];
-                targetKey = data[3];
-                if (this.players.containsKey(playerKey)) {
-                    addParticle(new ParticleShieldMagnetize(this.players.get(playerKey), this.players.get(targetKey)));
-                }
-                break;
-            case Globals.PARTICLE_SHIELD_MAGNETIZESTART:
-                playerKey = data[2];
-                if (this.players.containsKey(playerKey)) {
-                    addParticle(new ParticleShieldMagnetizeStart(this.players.get(playerKey)));
-                }
-                break;
-            case Globals.PARTICLE_SHIELD_MAGNETIZEBURST:
-                playerKey = data[2];
-                if (this.players.containsKey(playerKey)) {
-                    addParticle(new ParticleShieldMagnetizeBurst(this.players.get(playerKey)));
-                }
-                break;
-            case Globals.PARTICLE_SWORD_TAUNTBUFF:
-                playerKey = data[2];
-                if (this.players.containsKey(playerKey)) {
-                    addParticle(new ParticleSwordTauntBuffEmitter(this.players.get(playerKey)));
-                }
-                break;
-            case Globals.PARTICLE_SWORD_SLASHBUFF:
-                playerKey = data[2];
-                if (this.players.containsKey(playerKey)) {
-                    addParticle(new ParticleSwordSlashBuffEmitter(this.players.get(playerKey)));
-                }
-                break;
-            case Globals.PARTICLE_SHIELD_DASHBUFF:
-                playerKey = data[2];
-                if (this.players.containsKey(playerKey)) {
-                    addParticle(new ParticleShieldDashBuffEmitter(this.players.get(playerKey)));
-                }
-                break;
-            case Globals.PARTICLE_BOW_VOLLEYBUFF:
-                playerKey = data[2];
-                if (this.players.containsKey(playerKey)) {
-                    addParticle(new ParticleBowVolleyBuffEmitter(this.players.get(playerKey)));
-                }
-                break;
-            case Globals.PARTICLE_BURN:
-                playerKey = data[2];
-                if (this.players.containsKey(playerKey)) {
-                    addParticle(new ParticleBurnBuffEmitter(this.players.get(playerKey)));
-                }
-                break;
-            case Globals.PARTICLE_PASSIVE_RESIST:
-                x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
-                y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
-                addParticle(new ParticlePassiveResist(x, y));
-                break;
-            case Globals.PARTICLE_PASSIVE_BARRIER:
-                x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
-                y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
-                addParticle(new ParticlePassiveBarrier(x, y));
-                break;
-            case Globals.PARTICLE_PASSIVE_SHADOWATTACK:
-                x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
-                y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
-                addParticle(new ParticlePassiveShadowAttack(x, y));
-                break;
-            case Globals.PARTICLE_BLOOD:
-                playerKey = data[2];
-                if (this.players.containsKey(playerKey)) {
-                    addParticle(new ParticleBloodEmitter(this.players.get(playerKey)));
-                }
-                break;
-            case Globals.PARTICLE_BLOOD_HIT:
-                playerKey = data[2];
-                byte sourceKey = data[3];
-                if (this.players.containsKey(playerKey)) {
-                    addParticle(new ParticleBloodEmitter(this.players.get(playerKey), this.players.get(sourceKey), true));
-                }
-                break;
-            case Globals.PARTICLE_PASSIVE_STATIC:
-                playerKey = data[2];
-                targetKey = data[3];
-                if (this.players.containsKey(playerKey)) {
-                    addParticle(new ParticlePassiveStatic(this.players.get(playerKey), this.players.get(targetKey)));
-                }
-                break;
+        Globals.Particles particle = Globals.Particles.get(particleID);
+        if (particle.getParameterTypes() == Globals.PARTICLE_PARAM_POS_AND_FACING) {
+            x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
+            y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
+            facing = data[10];
+            addParticle(particle.newParticle(x, y, facing));
+        } else if (particle.getParameterTypes() == Globals.PARTICLE_PARAM_PLAYER) {
+            playerKey = data[2];
+            if (this.players.containsKey(playerKey)) {
+                addParticle(particle.newParticle(this.players.get(playerKey)));
+            }
+        } else if (particle.getParameterTypes() == Globals.PARTICLE_PARAM_FACING_AND_PLAYER) {
+            facing = data[2];
+            playerKey = data[3];
+            if (this.players.containsKey(playerKey)) {
+                addParticle(particle.newParticle(facing, this.players.get(playerKey)));
+            }
+        } else if (particle.getParameterTypes() == Globals.PARTICLE_PARAM_POS) {
+            x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
+            y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
+            addParticle(particle.newParticle(x, y));
+        } else if (particle.getParameterTypes() == Globals.PARTICLE_PARAM_PLAYER_AND_TARGET) {
+            playerKey = data[2];
+            targetKey = data[3];
+            if (this.players.containsKey(playerKey) && this.players.containsKey(targetKey)) {
+                addParticle(particle.newParticle(this.players.get(playerKey), this.players.get(targetKey)));
+            }
         }
     }
 

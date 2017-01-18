@@ -3,7 +3,6 @@ package blockfighter.client.entities.mob.boss.Lightning;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.shared.Globals;
 import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
 
 public class ParticleBoltParticle extends Particle {
 
@@ -28,22 +27,13 @@ public class ParticleBoltParticle extends Particle {
         this.x = (int) this.dX;
         this.y = (int) this.dY;
         if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
-            if (PARTICLE_SPRITE != null && this.frame < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_SLASHBUFF].length - 1) {
-                this.frame++;
-            }
+
             this.lastFrameTime = logic.getTime();
         }
     }
 
     @Override
     public void draw(final Graphics2D g) {
-        if (PARTICLE_SPRITE[Globals.PARTICLE_SWORD_SLASHBUFF] == null) {
-            return;
-        }
-        if (this.frame >= PARTICLE_SPRITE[Globals.PARTICLE_SWORD_SLASHBUFF].length) {
-            return;
-        }
-        final BufferedImage sprite = PARTICLE_SPRITE[Globals.PARTICLE_SWORD_SLASHBUFF][this.frame];
-        g.drawImage(sprite, this.x, this.y, null);
+
     }
 }

@@ -1,6 +1,5 @@
 package blockfighter.client.entities.particles;
 
-import static blockfighter.client.entities.particles.Particle.PARTICLE_SPRITE;
 import blockfighter.client.entities.player.Player;
 import blockfighter.shared.Globals;
 import java.awt.Color;
@@ -36,7 +35,7 @@ public class ParticleSwordPhantom2 extends Particle {
             double alpha = 250 * (1D - ((fade > 1) ? 1D : fade));
             this.frameDuration = 50;
             trailColor = new Color(0, 0, 0, (int) alpha);
-            if (PARTICLE_SPRITE != null && this.frame < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_PHANTOM2].length) {
+            if (Globals.Particles.SWORD_PHANTOM2.getSprite() != null && this.frame < Globals.Particles.SWORD_PHANTOM2.getSprite().length) {
                 this.frame++;
             }
             this.lastFrameTime = logic.getTime();
@@ -52,13 +51,13 @@ public class ParticleSwordPhantom2 extends Particle {
             g.setColor(trailColor);
             g.fillPolygon(xPoints, yPoints, 4);
         }
-        if (PARTICLE_SPRITE[Globals.PARTICLE_SWORD_PHANTOM2] == null) {
+        if (Globals.Particles.SWORD_PHANTOM2.getSprite() == null) {
             return;
         }
-        if (this.frame >= PARTICLE_SPRITE[Globals.PARTICLE_SWORD_PHANTOM2].length) {
+        if (this.frame >= Globals.Particles.SWORD_PHANTOM2.getSprite().length) {
             return;
         }
-        final BufferedImage sprite = PARTICLE_SPRITE[Globals.PARTICLE_SWORD_PHANTOM2][this.frame];
+        final BufferedImage sprite = Globals.Particles.SWORD_PHANTOM2.getSprite()[this.frame];
         final int drawSrcX = this.x + ((this.facing == Globals.RIGHT) ? -10 : 10);
         final int drawSrcY = this.y - sprite.getHeight() + 10;
         final int drawDscY = drawSrcY + sprite.getHeight();

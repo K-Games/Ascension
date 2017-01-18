@@ -11,6 +11,13 @@ public class ParticleBowPowerCharge extends Particle {
     private double speedX, speedY;
 
     public ParticleBowPowerCharge(final Player owner) {
+        this.duration = 0;
+        for (int i = 0; i < 4; i++) {
+            logic.getScreen().addParticle(new ParticleBowPowerCharge(owner, i));
+        }
+    }
+
+    public ParticleBowPowerCharge(final Player owner, final int i) {
         super(owner);
         this.frame = 0;
         this.frameDuration = 25;
@@ -40,13 +47,13 @@ public class ParticleBowPowerCharge extends Particle {
 
     @Override
     public void draw(final Graphics2D g) {
-        if (PARTICLE_SPRITE[Globals.PARTICLE_BOW_POWERCHARGE] == null) {
+        if (Globals.Particles.BOW_POWER_CHARGE.getSprite() == null) {
             return;
         }
-        if (this.frame >= PARTICLE_SPRITE[Globals.PARTICLE_BOW_POWERCHARGE].length) {
+        if (this.frame >= Globals.Particles.BOW_POWER_CHARGE.getSprite().length) {
             return;
         }
-        final BufferedImage sprite = PARTICLE_SPRITE[Globals.PARTICLE_BOW_POWERCHARGE][this.frame];
+        final BufferedImage sprite = Globals.Particles.BOW_POWER_CHARGE.getSprite()[this.frame];
         final int drawSrcX = this.x - sprite.getWidth() / 2;
         final int drawSrcY = this.y;
         final int drawDscY = drawSrcY + sprite.getHeight();

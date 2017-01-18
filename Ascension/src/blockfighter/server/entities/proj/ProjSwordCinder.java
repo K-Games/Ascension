@@ -48,7 +48,7 @@ public class ProjSwordCinder extends Projectile {
                 owner.isSkillMaxed(Globals.SWORD_CINDER) ? owner.rollDamage() : 0, owner, target));
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
         bytes[0] = Globals.DATA_PARTICLE_EFFECT;
-        bytes[1] = Globals.PARTICLE_BURN;
+        bytes[1] = Globals.Particles.BURN_BUFF_EMITTER.getParticleCode();
         bytes[2] = target.getKey();
         PacketSender.sendAll(bytes, this.logic);
     }

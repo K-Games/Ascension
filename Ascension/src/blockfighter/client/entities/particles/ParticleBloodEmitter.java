@@ -16,7 +16,7 @@ public class ParticleBloodEmitter extends Particle {
 
     }
 
-    public ParticleBloodEmitter(final Player p, final Player source, final boolean damage) {
+    public ParticleBloodEmitter(final Player p, final Player source) {
         super(p);
         this.frame = 0;
         this.duration = 50;

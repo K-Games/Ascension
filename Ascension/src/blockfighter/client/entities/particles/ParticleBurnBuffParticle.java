@@ -21,7 +21,7 @@ public class ParticleBurnBuffParticle extends Particle {
 
         this.y -= 3;
         if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
-            if (PARTICLE_SPRITE != null && this.frame < PARTICLE_SPRITE[Globals.PARTICLE_BURN].length - 1) {
+            if (Globals.Particles.BURN_BUFF_PARTICLE.getSprite() != null && this.frame < Globals.Particles.BURN_BUFF_PARTICLE.getSprite().length - 1) {
                 this.frame++;
             }
             this.lastFrameTime = logic.getTime();
@@ -30,13 +30,13 @@ public class ParticleBurnBuffParticle extends Particle {
 
     @Override
     public void draw(final Graphics2D g) {
-        if (PARTICLE_SPRITE[Globals.PARTICLE_BURN] == null) {
+        if (Globals.Particles.BURN_BUFF_PARTICLE.getSprite() == null) {
             return;
         }
-        if (this.frame >= PARTICLE_SPRITE[Globals.PARTICLE_BURN].length) {
+        if (this.frame >= Globals.Particles.BURN_BUFF_PARTICLE.getSprite().length) {
             return;
         }
-        final BufferedImage sprite = PARTICLE_SPRITE[Globals.PARTICLE_BURN][this.frame];
+        final BufferedImage sprite = Globals.Particles.BURN_BUFF_PARTICLE.getSprite()[this.frame];
         g.drawImage(sprite, this.x, this.y, null);
     }
 }

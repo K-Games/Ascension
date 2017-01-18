@@ -19,7 +19,7 @@ public class ParticleShieldDash extends Particle {
     public void update() {
         super.update();
         if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
-            if (PARTICLE_SPRITE != null && this.frame < PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_DASH].length) {
+            if (Globals.Particles.SHIELD_DASH.getSprite() != null && this.frame < Globals.Particles.SHIELD_DASH.getSprite().length) {
                 this.frame++;
             }
             this.lastFrameTime = logic.getTime();
@@ -28,13 +28,13 @@ public class ParticleShieldDash extends Particle {
 
     @Override
     public void draw(final Graphics2D g) {
-        if (PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_DASH] == null) {
+        if (Globals.Particles.SHIELD_DASH.getSprite() == null) {
             return;
         }
-        if (this.frame >= PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_DASH].length) {
+        if (this.frame >= Globals.Particles.SHIELD_DASH.getSprite().length) {
             return;
         }
-        final BufferedImage sprite = PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_DASH][this.frame];
+        final BufferedImage sprite = Globals.Particles.SHIELD_DASH.getSprite()[this.frame];
         final int drawSrcX = this.x + ((this.facing == Globals.RIGHT) ? 0 : sprite.getWidth());
         final int drawSrcY = this.y;
         final int drawDscY = drawSrcY + sprite.getHeight();

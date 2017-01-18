@@ -106,7 +106,7 @@ public class SkillBowArc extends Skill {
             final ProjBowArc proj = new ProjBowArc(this.logic, player, player.getX(), player.getY());
             this.logic.queueAddProj(proj);
             if (player.getSkillCounter() == 1) {
-                PacketSender.sendParticle(this.logic, Globals.PARTICLE_BOW_ARC, proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
+                PacketSender.sendParticle(this.logic, Globals.Particles.BOW_ARC.getParticleCode(), proj.getHitbox()[0].getX(), proj.getHitbox()[0].getY(),
                         player.getFacing());
                 PacketSender.sendSFX(this.logic, Globals.SFX_ARC, player.getX(), player.getY());
             }

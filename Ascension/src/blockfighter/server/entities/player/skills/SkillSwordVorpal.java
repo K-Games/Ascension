@@ -131,7 +131,7 @@ public class SkillSwordVorpal extends Skill {
             double randomY = this.projY + (Globals.rng(5) * 5 - 10);
             final ProjSwordVorpal proj = new ProjSwordVorpal(this.logic, player, this.projX, randomY);
             this.logic.queueAddProj(proj);
-            PacketSender.sendParticle(this.logic, Globals.PARTICLE_SWORD_VORPAL, this.projX, randomY, player.getFacing());
+            PacketSender.sendParticle(this.logic, Globals.Particles.SWORD_VORPAL.getParticleCode(), this.projX, randomY, player.getFacing());
             player.incrementSkillCounter();
         }
 

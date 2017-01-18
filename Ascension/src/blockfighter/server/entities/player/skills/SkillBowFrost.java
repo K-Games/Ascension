@@ -112,7 +112,7 @@ public class SkillBowFrost extends Skill {
             final ProjBowFrost proj = new ProjBowFrost(this.logic, player, player.getX(), player.getY(), false);
             this.logic.queueAddProj(proj);
             if (player.getSkillCounter() == 1) {
-                PacketSender.sendParticle(this.logic, Globals.PARTICLE_BOW_FROSTARROW, player.getX(), player.getY(),
+                PacketSender.sendParticle(this.logic, Globals.Particles.BOW_FROSTARROW_EMITTER.getParticleCode(), player.getX(), player.getY(),
                         player.getFacing());
             }
         }

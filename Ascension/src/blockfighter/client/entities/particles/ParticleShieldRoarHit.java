@@ -1,6 +1,5 @@
 package blockfighter.client.entities.particles;
 
-import static blockfighter.client.entities.particles.Particle.PARTICLE_SPRITE;
 import blockfighter.client.entities.player.Player;
 import blockfighter.shared.Globals;
 import java.awt.Graphics2D;
@@ -26,7 +25,7 @@ public class ParticleShieldRoarHit extends Particle {
         super.update();
 
         if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
-            if (PARTICLE_SPRITE != null && this.frame < PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_ROARHIT].length) {
+            if (Globals.Particles.SHIELD_ROARHIT.getSprite() != null && this.frame < Globals.Particles.SHIELD_ROARHIT.getSprite().length) {
                 this.frame++;
             }
             this.lastFrameTime = logic.getTime();
@@ -35,14 +34,14 @@ public class ParticleShieldRoarHit extends Particle {
 
     @Override
     public void draw(final Graphics2D g) {
-        if (PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_ROARHIT] == null) {
+        if (Globals.Particles.SHIELD_ROARHIT.getSprite() == null) {
             return;
         }
-        if (this.frame >= PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_ROARHIT].length) {
+        if (this.frame >= Globals.Particles.SHIELD_ROARHIT.getSprite().length) {
             return;
         }
 
-        final BufferedImage sprite = PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_ROARHIT][this.frame];
+        final BufferedImage sprite = Globals.Particles.SHIELD_ROARHIT.getSprite()[this.frame];
         final int drawSrcX = this.x - sprite.getWidth() / 2;
         final int drawSrcY = this.y - sprite.getHeight();
         final int drawDscY = drawSrcY + sprite.getHeight();

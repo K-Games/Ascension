@@ -19,7 +19,7 @@ public class ParticleSwordTaunt extends Particle {
 
         if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
 
-            if (PARTICLE_SPRITE != null && this.frame < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_TAUNT].length) {
+            if (Globals.Particles.SWORD_TAUNT.getSprite() != null && this.frame < Globals.Particles.SWORD_TAUNT.getSprite().length) {
                 this.frame++;
                 this.frameDuration = (this.frame == 2) ? 100 : 50;
             }
@@ -29,13 +29,13 @@ public class ParticleSwordTaunt extends Particle {
 
     @Override
     public void draw(final Graphics2D g) {
-        if (PARTICLE_SPRITE[Globals.PARTICLE_SWORD_TAUNT] == null) {
+        if (Globals.Particles.SWORD_TAUNT.getSprite() == null) {
             return;
         }
-        if (this.frame >= PARTICLE_SPRITE[Globals.PARTICLE_SWORD_TAUNT].length) {
+        if (this.frame >= Globals.Particles.SWORD_TAUNT.getSprite().length) {
             return;
         }
-        final BufferedImage sprite = PARTICLE_SPRITE[Globals.PARTICLE_SWORD_TAUNT][this.frame];
+        final BufferedImage sprite = Globals.Particles.SWORD_TAUNT.getSprite()[this.frame];
         final int drawSrcX = this.x + ((this.facing == Globals.RIGHT) ? -170 : 170);
         final int drawSrcY = this.y - sprite.getHeight() + 80;
         final int drawDscY = drawSrcY + sprite.getHeight();

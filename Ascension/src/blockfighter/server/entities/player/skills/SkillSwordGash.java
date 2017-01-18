@@ -105,12 +105,12 @@ public class SkillSwordGash extends Skill {
             switch (player.getSkillCounter()) {
                 case 1:
                 case 2:
-                    PacketSender.sendParticle(this.logic, Globals.PARTICLE_SWORD_GASH1, player.getX(), player.getY(),
+                    PacketSender.sendParticle(this.logic, Globals.Particles.SWORD_GASH1.getParticleCode(), player.getX(), player.getY(),
                             player.getFacing());
                     break;
                 case 3:
                 case 4:
-                    PacketSender.sendParticle(this.logic, Globals.PARTICLE_SWORD_GASH2, player.getX(), player.getY(),
+                    PacketSender.sendParticle(this.logic, Globals.Particles.SWORD_GASH2.getParticleCode(), player.getX(), player.getY(),
                             player.getFacing());
                     break;
             }

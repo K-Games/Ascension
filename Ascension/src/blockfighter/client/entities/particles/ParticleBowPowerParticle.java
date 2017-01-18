@@ -24,7 +24,7 @@ public class ParticleBowPowerParticle extends Particle {
         super.update();
         this.x += (this.facing == Globals.RIGHT) ? 20 : -20;
         if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
-            if (PARTICLE_SPRITE != null && this.frame < PARTICLE_SPRITE[Globals.PARTICLE_BOW_POWERPARTICLE].length - 1) {
+            if (Globals.Particles.BOW_POWER_PARTICLE.getSprite() != null && this.frame < Globals.Particles.BOW_POWER_PARTICLE.getSprite().length - 1) {
                 this.frame++;
             }
             this.lastFrameTime = logic.getTime();
@@ -33,13 +33,13 @@ public class ParticleBowPowerParticle extends Particle {
 
     @Override
     public void draw(final Graphics2D g) {
-        if (PARTICLE_SPRITE[Globals.PARTICLE_BOW_POWERPARTICLE] == null) {
+        if (Globals.Particles.BOW_POWER_PARTICLE.getSprite() == null) {
             return;
         }
-        if (this.frame >= PARTICLE_SPRITE[Globals.PARTICLE_BOW_POWERPARTICLE].length) {
+        if (this.frame >= Globals.Particles.BOW_POWER_PARTICLE.getSprite().length) {
             return;
         }
-        final BufferedImage sprite = PARTICLE_SPRITE[Globals.PARTICLE_BOW_POWERPARTICLE][this.frame];
+        final BufferedImage sprite = Globals.Particles.BOW_POWER_PARTICLE.getSprite()[this.frame];
         g.drawImage(sprite, this.x, this.y, null);
     }
 }

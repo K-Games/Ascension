@@ -23,13 +23,13 @@ public class ParticleShieldDashBuffParticle extends Particle {
 
     @Override
     public void draw(final Graphics2D g) {
-        if (PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_DASHBUFF] == null) {
+        if (Globals.Particles.SHIELD_DASH_BUFF_PARTICLE.getSprite() == null) {
             return;
         }
-        if (this.frame >= PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_DASHBUFF].length) {
+        if (this.frame >= Globals.Particles.SHIELD_DASH_BUFF_PARTICLE.getSprite().length) {
             return;
         }
-        final BufferedImage sprite = PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_DASHBUFF][this.frame];
+        final BufferedImage sprite = Globals.Particles.SHIELD_DASH_BUFF_PARTICLE.getSprite()[this.frame];
         g.drawImage(sprite, this.x, this.y, null);
     }
 }

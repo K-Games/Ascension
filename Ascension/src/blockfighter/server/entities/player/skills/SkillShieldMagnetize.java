@@ -110,23 +110,23 @@ public class SkillShieldMagnetize extends Skill {
         final long duration = Globals.nsToMs(this.logic.getTime() - player.getSkillCastTime());
         final int radius = 400;
         if (player.getSkillCounter() == 0) {
-            PacketSender.sendParticle(this.logic, Globals.PARTICLE_SHIELD_MAGNETIZESTART, player.getKey());
+            PacketSender.sendParticle(this.logic, Globals.Particles.SHIELD_MAGNETIZE_START.getParticleCode(), player.getKey());
             player.incrementSkillCounter();
         }
         if (Globals.hasPastDuration(duration, 200) && player.getSkillCounter() == 1) {
-            PacketSender.sendParticle(this.logic, Globals.PARTICLE_SHIELD_MAGNETIZEBURST, player.getKey());
+            PacketSender.sendParticle(this.logic, Globals.Particles.SHIELD_MAGNETIZE_BURST.getParticleCode(), player.getKey());
             if (this.logic.getRoomData().getMap().isPvP()) {
                 this.playersCaught = this.logic.getRoomData().getPlayersInRange(player, radius);
                 if (!this.playersCaught.isEmpty()) {
                     for (Player p : this.playersCaught) {
-                        PacketSender.sendParticle(this.logic, Globals.PARTICLE_SHIELD_MAGNETIZE, player.getKey(), p.getKey());
+                        PacketSender.sendParticle(this.logic, Globals.Particles.SHIELD_MAGNETIZE.getParticleCode(), player.getKey(), p.getKey());
                     }
                 }
             } else {
                 this.mobsCaught = this.logic.getRoomData().getMobsInRange(player, radius);
                 if (!this.mobsCaught.isEmpty()) {
                     for (Mob mob : this.mobsCaught) {
-                        PacketSender.sendParticle(this.logic, Globals.PARTICLE_SHIELD_MAGNETIZE, player.getKey(), mob.getKey());
+                        PacketSender.sendParticle(this.logic, Globals.Particles.SHIELD_MAGNETIZE.getParticleCode(), player.getKey(), mob.getKey());
                     }
                 }
             }

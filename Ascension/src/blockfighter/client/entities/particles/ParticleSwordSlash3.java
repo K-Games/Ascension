@@ -18,7 +18,7 @@ public class ParticleSwordSlash3 extends Particle {
         super.update();
 
         if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
-            if (PARTICLE_SPRITE != null && this.frame < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_SLASH3].length) {
+            if (Globals.Particles.SWORD_SLASH3.getSprite() != null && this.frame < Globals.Particles.SWORD_SLASH3.getSprite().length) {
                 this.frame++;
             }
             this.lastFrameTime = logic.getTime();
@@ -27,13 +27,13 @@ public class ParticleSwordSlash3 extends Particle {
 
     @Override
     public void draw(final Graphics2D g) {
-        if (PARTICLE_SPRITE[Globals.PARTICLE_SWORD_SLASH3] == null) {
+        if (Globals.Particles.SWORD_SLASH3.getSprite() == null) {
             return;
         }
-        if (this.frame >= PARTICLE_SPRITE[Globals.PARTICLE_SWORD_SLASH3].length) {
+        if (this.frame >= Globals.Particles.SWORD_SLASH3.getSprite().length) {
             return;
         }
-        final BufferedImage sprite = PARTICLE_SPRITE[Globals.PARTICLE_SWORD_SLASH3][this.frame];
+        final BufferedImage sprite = Globals.Particles.SWORD_SLASH3.getSprite()[this.frame];
         final int drawSrcX = this.x + ((this.facing == Globals.RIGHT) ? -60 : 60);
         final int drawSrcY = this.y - sprite.getHeight() + 30;
         final int drawDscY = drawSrcY + sprite.getHeight();

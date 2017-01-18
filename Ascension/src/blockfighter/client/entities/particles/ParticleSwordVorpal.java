@@ -20,7 +20,7 @@ public class ParticleSwordVorpal extends Particle {
 
         if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
             this.frameDuration = 50;
-            if (PARTICLE_SPRITE != null && this.frame < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_VORPAL].length - 1) {
+            if (Globals.Particles.SWORD_VORPAL.getSprite() != null && this.frame < Globals.Particles.SWORD_VORPAL.getSprite().length - 1) {
                 this.frame++;
             }
             this.lastFrameTime = logic.getTime();
@@ -29,13 +29,13 @@ public class ParticleSwordVorpal extends Particle {
 
     @Override
     public void draw(final Graphics2D g) {
-        if (PARTICLE_SPRITE[Globals.PARTICLE_SWORD_VORPAL] == null) {
+        if (Globals.Particles.SWORD_VORPAL.getSprite() == null) {
             return;
         }
-        if (this.frame >= PARTICLE_SPRITE[Globals.PARTICLE_SWORD_VORPAL].length) {
+        if (this.frame >= Globals.Particles.SWORD_VORPAL.getSprite().length) {
             return;
         }
-        final BufferedImage sprite = PARTICLE_SPRITE[Globals.PARTICLE_SWORD_VORPAL][this.frame];
+        final BufferedImage sprite = Globals.Particles.SWORD_VORPAL.getSprite()[this.frame];
         final int drawSrcX = this.x + ((this.facing == Globals.RIGHT) ? -60 : 60);
         final int drawSrcY = this.y;
         final int drawDscY = drawSrcY + sprite.getHeight();

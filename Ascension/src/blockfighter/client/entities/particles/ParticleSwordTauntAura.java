@@ -24,7 +24,7 @@ public class ParticleSwordTauntAura extends Particle {
     public void update() {
         super.update();
         if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
-            if (PARTICLE_SPRITE != null && this.frame < PARTICLE_SPRITE[Globals.PARTICLE_SWORD_TAUNTAURA1].length) {
+            if (Globals.Particles.SWORD_TAUNT_AURA.getSprite() != null && this.frame < Globals.Particles.SWORD_TAUNT_AURA.getSprite().length) {
                 this.frame++;
             }
             this.lastFrameTime = logic.getTime();
@@ -33,10 +33,10 @@ public class ParticleSwordTauntAura extends Particle {
 
     @Override
     public void draw(final Graphics2D g) {
-        if (PARTICLE_SPRITE[Globals.PARTICLE_SWORD_TAUNTAURA1] == null) {
+        if (Globals.Particles.SWORD_TAUNT_AURA.getSprite() == null) {
             return;
         }
-        if (this.frame >= PARTICLE_SPRITE[Globals.PARTICLE_SWORD_TAUNTAURA1].length) {
+        if (this.frame >= Globals.Particles.SWORD_TAUNT_AURA.getSprite().length) {
             return;
         }
         final Point p = this.owner.getPos();
@@ -44,7 +44,7 @@ public class ParticleSwordTauntAura extends Particle {
             this.x = p.x;
             this.y = p.y;
         }
-        final BufferedImage sprite = PARTICLE_SPRITE[Globals.PARTICLE_SWORD_TAUNTAURA1][this.frame];
+        final BufferedImage sprite = Globals.Particles.SWORD_TAUNT_AURA.getSprite()[this.frame];
         final int drawSrcX = this.x - sprite.getWidth() / 2;
         final int drawSrcY = this.y - sprite.getHeight();
         final int drawDscY = drawSrcY + sprite.getHeight();

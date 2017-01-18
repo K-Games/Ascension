@@ -18,7 +18,7 @@ public class ParticleBowArc extends Particle {
         super.update();
         if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
             this.frameDuration = 25;
-            if (PARTICLE_SPRITE != null && this.frame < PARTICLE_SPRITE[Globals.PARTICLE_BOW_ARC].length) {
+            if (Globals.Particles.BOW_ARC.getSprite() != null && this.frame < Globals.Particles.BOW_ARC.getSprite().length) {
                 this.frame++;
             }
             this.lastFrameTime = logic.getTime();
@@ -27,13 +27,13 @@ public class ParticleBowArc extends Particle {
 
     @Override
     public void draw(final Graphics2D g) {
-        if (PARTICLE_SPRITE[Globals.PARTICLE_BOW_ARC] == null) {
+        if (Globals.Particles.BOW_ARC.getSprite() == null) {
             return;
         }
-        if (this.frame >= PARTICLE_SPRITE[Globals.PARTICLE_BOW_ARC].length) {
+        if (this.frame >= Globals.Particles.BOW_ARC.getSprite().length) {
             return;
         }
-        final BufferedImage sprite = PARTICLE_SPRITE[Globals.PARTICLE_BOW_ARC][this.frame];
+        final BufferedImage sprite = Globals.Particles.BOW_ARC.getSprite()[this.frame];
         final int drawSrcX = this.x + ((this.facing == Globals.RIGHT) ? 0 : sprite.getWidth());
         final int drawSrcY = this.y;
         final int drawDscY = drawSrcY + sprite.getHeight();

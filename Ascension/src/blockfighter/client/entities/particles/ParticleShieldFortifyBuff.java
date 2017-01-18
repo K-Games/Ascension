@@ -22,7 +22,7 @@ public class ParticleShieldFortifyBuff extends Particle {
 
         this.y -= 7;
         if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
-            if (PARTICLE_SPRITE != null && this.frame < PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_FORTIFYBUFF].length) {
+            if (Globals.Particles.SHIELD_FORTIFY_BUFF.getSprite() != null && this.frame < Globals.Particles.SHIELD_FORTIFY_BUFF.getSprite().length) {
                 this.frame++;
             }
             this.lastFrameTime = logic.getTime();
@@ -31,13 +31,13 @@ public class ParticleShieldFortifyBuff extends Particle {
 
     @Override
     public void draw(final Graphics2D g) {
-        if (PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_FORTIFYBUFF] == null) {
+        if (Globals.Particles.SHIELD_FORTIFY_BUFF.getSprite() == null) {
             return;
         }
-        if (this.frame >= PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_FORTIFYBUFF].length) {
+        if (this.frame >= Globals.Particles.SHIELD_FORTIFY_BUFF.getSprite().length) {
             return;
         }
-        final BufferedImage sprite = PARTICLE_SPRITE[Globals.PARTICLE_SHIELD_FORTIFYBUFF][this.frame];
+        final BufferedImage sprite = Globals.Particles.SHIELD_FORTIFY_BUFF.getSprite()[this.frame];
         g.drawImage(sprite, this.x, this.y, null);
     }
 }

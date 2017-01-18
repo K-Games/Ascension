@@ -108,15 +108,15 @@ public class SkillShieldReflect extends Skill {
             player.incrementSkillCounter();
             double buffDuration = getCustomValue(CUSTOMHEADER_BUFFDURATION);
             player.queueBuff(new BuffShieldReflect(this.logic, (int) buffDuration, getBaseValue() + getMultValue() * player.getSkillLevel(Globals.SHIELD_REFLECT), player, player));
-            PacketSender.sendParticle(this.logic, Globals.PARTICLE_SHIELD_REFLECTCAST, player.getKey());
-            PacketSender.sendParticle(this.logic, Globals.PARTICLE_SHIELD_REFLECTBUFF, player.getKey());
+            PacketSender.sendParticle(this.logic, Globals.Particles.SHIELD_REFLECT_CAST.getParticleCode(), player.getKey());
+            PacketSender.sendParticle(this.logic, Globals.Particles.SHIELD_REFLECT_EMITTER.getParticleCode(), player.getKey());
             if (player.isSkillMaxed(Globals.SHIELD_REFLECT)) {
                 for (final Map.Entry<Byte, Player> pEntry : this.logic.getRoomData().getPlayers().entrySet()) {
                     final Player p = pEntry.getValue();
                     if (p != player && !p.isDead()) {
                         p.queueBuff(new BuffShieldReflect(this.logic, (int) buffDuration, getCustomValue(CUSTOMHEADER_MAXLVLREFLECT), player, p));
                         if (!this.logic.getRoomData().getMap().isPvP()) {
-                            PacketSender.sendParticle(this.logic, Globals.PARTICLE_SHIELD_REFLECTCAST, p.getKey());
+                            PacketSender.sendParticle(this.logic, Globals.Particles.SHIELD_REFLECT_CAST.getParticleCode(), p.getKey());
                         }
                     }
                 }
@@ -146,6 +146,6 @@ public class SkillShieldReflect extends Skill {
                 }
             }
         }
-        PacketSender.sendParticle(this.logic, Globals.PARTICLE_SHIELD_REFLECTHIT, player.getX(), player.getY());
+        PacketSender.sendParticle(this.logic, Globals.Particles.SHIELD_REFLECT_HIT.getParticleCode(), player.getX(), player.getY());
     }
 }
