@@ -24,7 +24,7 @@ public abstract class GameMap {
         return this.particles;
     }
 
-    public byte getBGM() {
+    public byte getBgmCode() {
         return -1;
     }
 

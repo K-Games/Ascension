@@ -114,7 +114,7 @@ public class LogicModule implements Runnable {
     }
 
     public void setScreen(final Screen s) {
-        this.soundModule.playBGM(s.getBGM());
+        this.soundModule.playBGM(s.getBgmCode());
         if (this.screen != null) {
             this.screen.unload();
         }

@@ -79,8 +79,8 @@ public abstract class ScreenMenu extends Screen {
     }
 
     @Override
-    public byte getBGM() {
-        return Globals.BGM_MENU;
+    public byte getBgmCode() {
+        return Globals.BGMs.MENU.getBgmCode();
     }
 
     @Override

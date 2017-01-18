@@ -31,19 +31,19 @@ public class SoundModule implements Runnable {
         SOUND_MODULE_SCHEDULER.scheduleAtFixedRate(() -> {
             if (isLoaded()) {
                 while (!this.sfxQueue.isEmpty()) {
-                    this.soundModule.quickPlay(Globals.SOUND_SFX[sfxQueue.poll()], false);
+                    this.soundModule.quickPlay(Globals.SFXs.get(sfxQueue.poll()).getResourcePath(), false);
                 }
 
                 while (!this.bgmQueue.isEmpty()) {
                     byte bgmID = this.bgmQueue.poll();
                     if (bgmID > -1 && currentBGM != bgmID) {
                         if (currentBGM != -1) {
-                            this.soundModule.fadeOut(Globals.SOUND_BGM[currentBGM], null, 1000);
+                            this.soundModule.fadeOut(Globals.BGMs.get(currentBGM).getResourcePath(), null, 1000);
                         }
-                        this.soundModule.backgroundMusic(Globals.SOUND_BGM[bgmID], Globals.SOUND_BGM[bgmID]);
+                        this.soundModule.backgroundMusic(Globals.BGMs.get(bgmID).getResourcePath(), Globals.BGMs.get(bgmID).getResourcePath());
                         currentBGM = bgmID;
-                        this.soundModule.setVolume("bgm", 1f);
-                        Globals.log(SoundModule.class, "Playing " + Globals.SOUND_BGM[bgmID], Globals.LOG_TYPE_DATA);
+                        this.soundModule.setVolume(Globals.BGMs.get(bgmID).getResourcePath(), 1f);
+                        Globals.log(SoundModule.class, "Playing " + Globals.BGMs.get(bgmID), Globals.LOG_TYPE_DATA);
                     }
                 }
             }

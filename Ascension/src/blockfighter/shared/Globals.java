@@ -310,6 +310,82 @@ public class Globals {
             return null;
         }
     }
+
+    public enum BGMs {
+        MENU((byte) 0x00, "hero.ogg"),
+        ARENA1((byte) 0x01, "bgm/0.ogg"),
+        ARENA2((byte) 0x02, "bgm/1.ogg"),
+        ARENA3((byte) 0x03, "bgm/2.ogg"),
+        TITLE((byte) 0x04, "Through the Forest in Midwinter.ogg");
+
+        private static final Map<Byte, BGMs> lookup = new HashMap<Byte, BGMs>();
+
+        static {
+            for (BGMs bgm : BGMs.values()) {
+                lookup.put(bgm.getBgmCode(), bgm);
+            }
+        }
+
+        public static BGMs get(byte code) {
+            return lookup.get(code);
+        }
+
+        private final byte bgmCode;
+        private final String resourcePath;
+
+        BGMs(byte bgmCode, String resourcePath) {
+            this.bgmCode = bgmCode;
+            this.resourcePath = resourcePath;
+        }
+
+        public byte getBgmCode() {
+            return this.bgmCode;
+        }
+
+        public String getResourcePath() {
+            return this.resourcePath;
+        }
+    }
+
+    public enum SFXs {
+        SLASH((byte) 0x00, "sword/slash/0.wav"),
+        VOLLEY((byte) 0x01, "bow/volley/0.wav"),
+        RAPID((byte) 0x02, "bow/rapid/0.wav"),
+        POWER((byte) 0x03, "bow/power/0.wav"),
+        POWER2((byte) 0x04, "bow/power/1.wav"),
+        FORTIFY((byte) 0x05, "shield/fortify/0.wav"),
+        SARC((byte) 0x06, "bow/arc/0.wav"),
+        GASH((byte) 0x07, "sword/gash/0.wav");
+
+        private static final Map<Byte, SFXs> lookup = new HashMap<Byte, SFXs>();
+
+        static {
+            for (SFXs sfx : SFXs.values()) {
+                lookup.put(sfx.getSfxCode(), sfx);
+            }
+        }
+
+        public static SFXs get(byte code) {
+            return lookup.get(code);
+        }
+
+        private final byte sfxCode;
+        private final String resourcePath;
+
+        SFXs(byte sfxCode, String resourcePath) {
+            this.sfxCode = sfxCode;
+            this.resourcePath = "sfx/" + resourcePath;
+        }
+
+        public byte getSfxCode() {
+            return this.sfxCode;
+        }
+
+        public String getResourcePath() {
+            return this.resourcePath;
+        }
+    }
+
     public final static int NUM_KEYBINDS = 26,
             KEYBIND_SKILL1 = 0,
             KEYBIND_SKILL2 = 1,
@@ -502,27 +578,6 @@ public class Globals {
     public final static BufferedImage[] EXP_WORD = new BufferedImage[1];
 
     public final static BufferedImage[] SKILL_ICON = new BufferedImage[NUM_SKILLS];
-
-    public final static byte NUM_BGM = 5,
-            BGM_MENU = 0x00,
-            BGM_ARENA1 = 0x01,
-            BGM_ARENA2 = 0x02,
-            BGM_ARENA3 = 0x03,
-            BGM_TITLE = 0x04;
-
-    public final static byte NUM_SFX = 9,
-            SFX_SLASH = 0x00,
-            SFX_VOLLEY = 0x01,
-            SFX_RAPID = 0x02,
-            SFX_POWER = 0x03,
-            SFX_FORTIFY = 0x04,
-            SFX_IRON = 0x05,
-            SFX_ARC = 0x06,
-            SFX_POWER2 = 0x07,
-            SFX_GASH = 0x08;
-
-    public final static String[] SOUND_BGM = new String[NUM_BGM];
-    public final static String[] SOUND_SFX = new String[NUM_SFX];
 
     public final static int[] PLAYER_NUM_ANIM_FRAMES = new int[NUM_PLAYER_ANIM_STATE];
 
@@ -724,7 +779,6 @@ public class Globals {
         PLAYER_NUM_ANIM_FRAMES[PLAYER_ANIM_STATE_DEAD] = 10;
         PLAYER_NUM_ANIM_FRAMES[PLAYER_ANIM_STATE_ROLL] = 10;
         PLAYER_NUM_ANIM_FRAMES[PLAYER_ANIM_STATE_JUMP] = 3;
-        loadSound();
         loadGFX();
         loadNumberFormats();
         loadItemCodes();
@@ -738,24 +792,6 @@ public class Globals {
 
         TIME_NUMBER_FORMAT.setDecimalSeparatorAlwaysShown(false);
         TIME_NUMBER_FORMAT.setMaximumFractionDigits(1);
-    }
-
-    private static void loadSound() {
-        SOUND_BGM[BGM_MENU] = "hero.ogg";
-        SOUND_BGM[BGM_ARENA1] = "bgm/0.ogg";
-        SOUND_BGM[BGM_ARENA2] = "bgm/1.ogg";
-        SOUND_BGM[BGM_ARENA3] = "bgm/2.ogg";
-        SOUND_BGM[BGM_TITLE] = "Through the Forest in Midwinter.ogg";
-
-        SOUND_SFX[SFX_SLASH] = "sfx/sword/slash/0.wav";
-        SOUND_SFX[SFX_GASH] = "sfx/sword/gash/0.wav";
-        SOUND_SFX[SFX_VOLLEY] = "sfx/bow/volley/0.wav";
-        SOUND_SFX[SFX_RAPID] = "sfx/bow/rapid/0.wav";
-        SOUND_SFX[SFX_ARC] = "sfx/bow/arc/0.wav";
-        SOUND_SFX[SFX_POWER] = "sfx/bow/power/0.wav";
-        SOUND_SFX[SFX_POWER2] = "sfx/bow/power/1.wav";
-        SOUND_SFX[SFX_FORTIFY] = "sfx/shield/fortify/0.wav";
-        SOUND_SFX[SFX_IRON] = "sfx/shield/iron/0.wav";
     }
 
     private static final String STAT_NAME_MAXEXP = "Required EXP";

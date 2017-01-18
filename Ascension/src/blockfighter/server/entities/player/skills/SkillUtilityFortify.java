@@ -102,7 +102,7 @@ public class SkillUtilityFortify extends Skill {
         if (player.getSkillCounter() == 0) {
             player.incrementSkillCounter();
             PacketSender.sendParticle(this.logic, Globals.Particles.SHIELD_FORTIFY.getParticleCode(), player.getKey());
-            PacketSender.sendSFX(this.logic, Globals.SFX_FORTIFY, player.getX(), player.getY());
+            PacketSender.sendSFX(this.logic, Globals.SFXs.FORTIFY.getSfxCode(), player.getX(), player.getY());
         }
 
         if (Globals.hasPastDuration(duration, getSkillDuration()) && player.getSkillCounter() == 1) {

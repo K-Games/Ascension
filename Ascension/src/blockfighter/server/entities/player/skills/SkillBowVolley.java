@@ -109,7 +109,7 @@ public class SkillBowVolley extends Skill {
                     player.getFacing());
             PacketSender.sendParticle(this.logic, Globals.Particles.BOW_VOLLEY_BOW.getParticleCode(), player.getKey(), player.getFacing());
             player.incrementSkillCounter();
-            PacketSender.sendSFX(this.logic, Globals.SFX_VOLLEY, player.getX(), player.getY());
+            PacketSender.sendSFX(this.logic, Globals.SFXs.VOLLEY.getSfxCode(), player.getX(), player.getY());
         }
         player.updateSkillEnd(duration, getSkillDuration(), true, true);
     }

@@ -119,7 +119,7 @@ public class SkillBowRapid extends Skill {
                     player.getFacing());
             PacketSender.sendParticle(this.logic, Globals.Particles.BOW_RAPID2.getParticleCode(), (player.getFacing() == Globals.LEFT) ? player.getX() - 20 : player.getX() - 40, proj.getHitbox()[0].getY() - 40,
                     player.getFacing());
-            PacketSender.sendSFX(this.logic, Globals.SFX_RAPID, player.getX(), player.getY());
+            PacketSender.sendSFX(this.logic, Globals.SFXs.RAPID.getSfxCode(), player.getX(), player.getY());
         }
         player.updateSkillEnd(duration, getSkillDuration(), true, false);
     }

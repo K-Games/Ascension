@@ -7,7 +7,7 @@ import java.awt.image.BufferedImage;
 public class GameMapArena extends GameMap {
 
     BufferedImage[] platforms = new BufferedImage[3];
-    byte bgm;
+    Globals.BGMs bgm;
 
     public GameMapArena() {
         super.setMapID(0);
@@ -61,20 +61,20 @@ public class GameMapArena extends GameMap {
         int random = Globals.rng(3);
         switch (random) {
             case 0:
-                this.bgm = Globals.BGM_ARENA1;
+                this.bgm = Globals.BGMs.ARENA1;
                 break;
             case 1:
-                this.bgm = Globals.BGM_ARENA2;
+                this.bgm = Globals.BGMs.ARENA2;
                 break;
             case 2:
-                this.bgm = Globals.BGM_ARENA3;
+                this.bgm = Globals.BGMs.ARENA3;
                 break;
         }
     }
 
     @Override
-    public byte getBGM() {
-        return bgm;
+    public byte getBgmCode() {
+        return bgm.getBgmCode();
     }
 
     @Override

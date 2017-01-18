@@ -165,8 +165,8 @@ public class ScreenTitle extends Screen {
     }
 
     @Override
-    public byte getBGM() {
-        return Globals.BGM_TITLE;
+    public byte getBgmCode() {
+        return Globals.BGMs.TITLE.getBgmCode();
     }
 
     @Override

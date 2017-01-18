@@ -94,8 +94,8 @@ public class ScreenIngame extends Screen {
     }
 
     @Override
-    public byte getBGM() {
-        return this.map.getBGM();
+    public byte getBgmCode() {
+        return this.map.getBgmCode();
     }
 
     @Override

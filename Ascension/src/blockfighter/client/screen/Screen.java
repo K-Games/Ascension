@@ -75,7 +75,7 @@ public abstract class Screen implements KeyListener, MouseListener, MouseMotionL
         logic.disableSound();
     }
 
-    public byte getBGM() {
+    public byte getBgmCode() {
         return -1;
     }
 
