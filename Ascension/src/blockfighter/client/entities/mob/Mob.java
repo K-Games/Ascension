@@ -56,8 +56,8 @@ public abstract class Mob implements Callable<Mob> {
         return this.y;
     }
 
-    public double getStat(final byte statType) {
-        return this.stats[statType];
+    public double getStat(final byte statID) {
+        return this.stats[statID];
     }
 
     public void setPos(final int x, final int y) {
@@ -77,8 +77,8 @@ public abstract class Mob implements Callable<Mob> {
         this.frame = f;
     }
 
-    public void setStat(final byte statType, final double stat) {
-        this.stats[statType] = stat;
+    public void setStat(final byte statID, final double stat) {
+        this.stats[statID] = stat;
     }
 
     public abstract void addParticle(byte[] data);

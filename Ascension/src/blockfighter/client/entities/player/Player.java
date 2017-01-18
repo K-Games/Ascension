@@ -61,8 +61,8 @@ public class Player implements Callable<Player> {
         return this.y;
     }
 
-    public double getStat(final byte statType) {
-        return this.stats[statType];
+    public double getStat(final byte statID) {
+        return this.stats[statID];
     }
 
     public String getPlayerName() {
@@ -102,8 +102,8 @@ public class Player implements Callable<Player> {
         this.equips[slot] = new ItemEquip(itemCode);
     }
 
-    public void setStat(final byte statType, final double stat) {
-        this.stats[statType] = stat;
+    public void setStat(final byte statID, final double stat) {
+        this.stats[statID] = stat;
         this.lastUpdateTime = logic.getTime();
     }
 
