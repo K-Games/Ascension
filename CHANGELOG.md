@@ -7,6 +7,8 @@
 ### Gameplay Changes
 * New mechanic - Hyper Stance - Certain Skills grants players with Hyper Stance, preventing and removing Knockback and Stun debuffs.
 * Fixed Bombardment particle effect not matching actual duration.
+* Players are not drawn on top on their respective screens.
+* Fixed rare bug where screen would translate incorrectly and become stuck.
 
 #### Sword
 * Rend
