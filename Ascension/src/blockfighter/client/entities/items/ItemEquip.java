@@ -37,7 +37,7 @@ public class ItemEquip implements Item {
 
     private final static double UPGRADE_CRITCHANCE = 0.001, // 0.1%
             UPGRADE_CRITDMG = 0.02, // 2%
-            UPGRADE_REGEN = 5,
+            UPGRADE_REGEN = 10,
             UPGRADE_ARMOR = 18,
             UPGRADE_MULT = 0.0,
             UPGRADE_STAT_FLATBONUS = 1.25;
@@ -45,7 +45,7 @@ public class ItemEquip implements Item {
     private final static double NEWSTAT_BASEMULT_BONUS = 0.25D,
             NEWSTAT_CRITCHANCE = 0.001,
             NEWSTAT_CRITDMG = 0.02,
-            NEWSTAT_REGEN = 5,
+            NEWSTAT_REGEN = 10,
             NEWSTAT_ARMOR = 18;
 
     private final static HashMap<Byte, String> ITEM_TYPENAME = new HashMap<>(13);
@@ -642,7 +642,7 @@ public class ItemEquip implements Item {
         }
         if (this.baseStats[Globals.STAT_REGEN] > 0) {
             this.totalStats[Globals.STAT_REGEN] = Math
-                    .round(10D * (this.baseStats[Globals.STAT_REGEN] + this.upgrades * UPGRADE_REGEN) * (1 + this.bonusMult)) / 10D;
+                    .round(10D * (this.baseStats[Globals.STAT_REGEN] + this.upgrades * UPGRADE_REGEN) * (2 + this.bonusMult)) / 10D;
         }
     }
 

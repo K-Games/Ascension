@@ -451,9 +451,9 @@ public class Globals {
 
     public final static double HP_BASE = 3000, // PvE = 100
             HP_MULT = 170, // PvE = 30
-            REDUCT_CONST = 150,
+            REDUCT_CONST = 175,
             ARMOR_MULT = 6,
-            REGEN_MULT = 1.5,
+            REGEN_MULT = 0.02 * HP_MULT,
             CRITCHC_BASE = 0,
             CRITCHC_FACT = 10,
             CRITCHC_MULT = 0.01,
@@ -465,7 +465,7 @@ public class Globals {
             MAXDMG_MULT = 17,
             MINDMG_BASE = 20,
             MAXDMG_BASE = 40,
-            STAT_PER_LEVEL = 7,
+            STAT_PER_LEVEL = 15,
             SP_PER_LEVEL = 3;
 
     public final static int NUM_PLAYER_ANIM_STATE = 9;
@@ -853,7 +853,7 @@ public class Globals {
     }
 
     public static final double calcRegen(final double spirit) {
-        return spirit * REGEN_MULT;
+        return spirit * REGEN_MULT + HP_BASE * 0.02;
     }
 
     public static final double calcMaxHP(final double defense) {
