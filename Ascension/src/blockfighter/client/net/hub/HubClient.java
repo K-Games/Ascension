@@ -8,6 +8,7 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Listener;
 import java.io.IOException;
+import java.net.InetAddress;
 
 public class HubClient implements Runnable {
 
@@ -34,7 +35,7 @@ public class HubClient implements Runnable {
         try {
             serverInfo = null;
             if (!client.isConnected()) {
-                client.connect(2000, Globals.HUB_SERVER_ADDRESS, Globals.HUB_SERVER_TCP_PORT);
+                client.connect(2000, InetAddress.getByName(Globals.HUB_SERVER_ADDRESS), Globals.HUB_SERVER_TCP_PORT);
             }
             HubSender.sendGetServerInfos();
         } catch (IOException ex) {

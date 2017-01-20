@@ -7,6 +7,7 @@ import blockfighter.shared.Globals;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Listener;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class GameClient implements Runnable {
@@ -42,11 +43,12 @@ public class GameClient implements Runnable {
 
         try {
             if (!client.isConnected()) {
-                Globals.log(GameClient.class, "Connecting to " + Globals.SERVER_ADDRESS, Globals.LOG_TYPE_DATA);
+                InetAddress address = InetAddress.getByName(Globals.SERVER_ADDRESS);
+                Globals.log(GameClient.class, "Connecting to " + address, Globals.LOG_TYPE_DATA);
                 if (Globals.UDP_MODE) {
-                    client.connect(3000, Globals.SERVER_ADDRESS, Globals.SERVER_TCP_PORT, Globals.SERVER_UDP_PORT);
+                    client.connect(3000, address, Globals.SERVER_TCP_PORT, Globals.SERVER_UDP_PORT);
                 } else {
-                    client.connect(3000, Globals.SERVER_ADDRESS, Globals.SERVER_TCP_PORT);
+                    client.connect(3000, address, Globals.SERVER_TCP_PORT);
                 }
                 PacketSender.sendPlayerLogin(logic.getSelectedRoom(), logic.getSelectedChar());
             }

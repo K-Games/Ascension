@@ -6,6 +6,8 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Listener;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 public class HubClient implements Runnable {
 
@@ -28,9 +30,10 @@ public class HubClient implements Runnable {
         }
 
         try {
-            client.connect(2000, Globals.HUB_SERVER_ADDRESS, Globals.HUB_SERVER_TCP_PORT);
+            InetAddress address = InetAddress.getByName(Globals.HUB_SERVER_ADDRESS);
+            client.connect(2000, address, Globals.HUB_SERVER_TCP_PORT);
             HubSender.sendServerInfo();
-            Globals.log(HubClient.class, "Connected to Hub Server " + Globals.HUB_SERVER_ADDRESS, Globals.LOG_TYPE_DATA);
+            Globals.log(HubClient.class, "Connected to Hub Server " + address, Globals.LOG_TYPE_DATA);
         } catch (IOException ex) {
             client.close();
         }
@@ -39,8 +42,12 @@ public class HubClient implements Runnable {
     @Override
     public void run() {
         if (client == null || !client.isConnected()) {
-            Globals.log(HubClient.class, "Connecting to Hub Server " + Globals.HUB_SERVER_ADDRESS, Globals.LOG_TYPE_DATA);
-            connect();
+            try {
+                Globals.log(HubClient.class, "Connecting to Hub Server " + InetAddress.getByName(Globals.HUB_SERVER_ADDRESS), Globals.LOG_TYPE_DATA);
+                connect();
+            } catch (UnknownHostException ex) {
+                Globals.logError(ex.toString(), ex);
+            }
         }
     }
 
