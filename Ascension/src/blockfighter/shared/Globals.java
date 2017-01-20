@@ -58,7 +58,7 @@ public class Globals {
 
     public final static byte GAME_MAJOR_VERSION = 0,
             GAME_MINOR_VERSION = 23,
-            GAME_UPDATE_NUMBER = 0;
+            GAME_UPDATE_NUMBER = 1;
 
     private final static String GAME_DEV_STATE = "ALPHA";
 

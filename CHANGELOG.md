@@ -2,12 +2,16 @@
 
 ![Game Updates](https://github.com/kenofnz/AscensionInfo/raw/master/images/updates.png)
 
+## Version 0.23 Update 1
+
+---
+
 ## Version 0.23
 
 ### Gameplay Changes
 * New mechanic - Hyper Stance - Certain Skills grants players with Hyper Stance, preventing and removing Knockback and Stun debuffs.
 * Fixed Bombardment particle effect not matching actual duration.
-* Players are not drawn on top on their respective screens.
+* Players are now drawn on top on their respective screens.
 * Fixed rare bug where screen would translate incorrectly and become stuck.
 
 #### Stats
