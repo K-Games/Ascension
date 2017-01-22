@@ -571,6 +571,7 @@ public class ItemEquip implements Item {
                     gbi.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, overlayColour));
                     gbi.fillRect(0, 0, colouredIcon.getWidth(), colouredIcon.getHeight());
                     g.drawImage(colouredIcon, x, y, null);
+                    gbi.dispose();
                 } else {
                     g.drawImage(sprite, x, y, null);
                 }

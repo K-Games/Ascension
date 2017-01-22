@@ -73,6 +73,14 @@ public class Player implements Callable<Player> {
         return this.facing;
     }
 
+    public byte getAnimState() {
+        return this.animState;
+    }
+
+    public byte getFrame() {
+        return this.frame;
+    }
+
     public void disconnect() {
         this.disconnect = true;
     }
@@ -113,46 +121,7 @@ public class Player implements Callable<Player> {
     }
 
     public void draw(final Graphics2D g) {
-        final byte s = this.animState, f = this.frame;
-        if (s > Globals.NUM_PLAYER_ANIM_STATE || s < 0 || s == Globals.PLAYER_ANIM_STATE_INVIS || f >= Globals.CHAR_SPRITE[s].length) {
-            return;
-        }
-        final BufferedImage sprite = Globals.CHAR_SPRITE[s][f];
-        final int drawSrcX = this.x - ((this.facing == Globals.RIGHT) ? 1 : -1) * sprite.getWidth() / 2;
-        final int drawSrcY = this.y - sprite.getHeight();
-        final int drawDscY = drawSrcY + sprite.getHeight();
-        /*
-		 * switch (s) { case Globals.PLAYER_ANIM_STATE_ATTACK: drawSrcX += ((facing == Globals.RIGHT) ? 1 : -1) * 10; break; case
-		 * Globals.PLAYER_STATE_ATTACK2: drawSrcX += ((facing == Globals.RIGHT) ? 1 : -1) * 25; break; case Globals.PLAYER_STATE_ATTACKOFF1:
-		 * drawSrcX += ((facing == Globals.RIGHT) ? 1 : -1) * 40; break; case Globals.PLAYER_STATE_ATTACKOFF2: drawSrcX += ((facing ==
-		 * Globals.RIGHT) ? 1 : -1) * 40; break; }
-         */
-        final int drawDscX = drawSrcX + ((this.facing == Globals.RIGHT) ? 1 : -1) * sprite.getWidth();
-        if (this.equips[Globals.ITEM_OFFHAND] != null) {
-            this.equips[Globals.ITEM_OFFHAND].drawIngame(g, this.x, this.y, s, f, this.facing, true);
-        }
-        g.drawImage(sprite, drawSrcX, drawSrcY, drawDscX, drawDscY, 0, 0, sprite.getWidth(), sprite.getHeight(), null);
-
-        if (this.equips[Globals.ITEM_CHEST] != null) {
-            this.equips[Globals.ITEM_CHEST].drawIngame(g, this.x, this.y, s, f, this.facing);
-        }
-        if (this.equips[Globals.ITEM_SHOULDER] != null) {
-            this.equips[Globals.ITEM_SHOULDER].drawIngame(g, this.x, this.y, s, f, this.facing);
-        }
-
-        if (this.equips[Globals.ITEM_PANTS] != null) {
-            this.equips[Globals.ITEM_PANTS].drawIngame(g, this.x, this.y, s, f, this.facing);
-        }
-        if (this.equips[Globals.ITEM_SHOE] != null) {
-            this.equips[Globals.ITEM_SHOE].drawIngame(g, this.x, this.y, s, f, this.facing);
-        }
-        if (this.equips[Globals.ITEM_WEAPON] != null) {
-            this.equips[Globals.ITEM_WEAPON].drawIngame(g, this.x, this.y, s, f, this.facing);
-        }
-        if (this.equips[Globals.ITEM_GLOVE] != null) {
-            this.equips[Globals.ITEM_GLOVE].drawIngame(g, this.x, this.y, s, f, this.facing);
-        }
-
+        drawSprite(g, this.x, this.y, this.facing, this.animState, this.frame);
         g.setFont(Globals.ARIAL_18PT);
         final int width = g.getFontMetrics().stringWidth(this.name);
         g.setColor(Color.BLACK);
@@ -172,7 +141,47 @@ public class Player implements Callable<Player> {
             g.setColor(Color.BLACK);
             g.drawRect(this.x - (hpBarWidth + 2) / 2, y - 130, hpBarWidth, hpBarHeight);
         }
+    }
 
+    public void drawSprite(final Graphics2D g, final int x, final int y, final byte facing, final byte animState, final byte frame) {
+        if (animState > Globals.NUM_PLAYER_ANIM_STATE || animState < 0 || animState == Globals.PLAYER_ANIM_STATE_INVIS || frame >= Globals.CHAR_SPRITE[animState].length) {
+            return;
+        }
+        final BufferedImage sprite = Globals.CHAR_SPRITE[animState][frame];
+        final int drawSrcX = x - ((facing == Globals.RIGHT) ? 1 : -1) * sprite.getWidth() / 2;
+        final int drawSrcY = y - sprite.getHeight();
+        final int drawDscY = drawSrcY + sprite.getHeight();
+        /*
+		 * switch (animState) { case Globals.PLAYER_ANIM_STATE_ATTACK: drawSrcX += ((facing == Globals.RIGHT) ? 1 : -1) * 10; break; case
+		 * Globals.PLAYER_STATE_ATTACK2: drawSrcX += ((facing == Globals.RIGHT) ? 1 : -1) * 25; break; case Globals.PLAYER_STATE_ATTACKOFF1:
+		 * drawSrcX += ((facing == Globals.RIGHT) ? 1 : -1) * 40; break; case Globals.PLAYER_STATE_ATTACKOFF2: drawSrcX += ((facing ==
+		 * Globals.RIGHT) ? 1 : -1) * 40; break; }
+         */
+        final int drawDscX = drawSrcX + ((facing == Globals.RIGHT) ? 1 : -1) * sprite.getWidth();
+        if (this.equips[Globals.ITEM_OFFHAND] != null) {
+            this.equips[Globals.ITEM_OFFHAND].drawIngame(g, x, y, animState, frame, facing, true);
+        }
+        g.drawImage(sprite, drawSrcX, drawSrcY, drawDscX, drawDscY, 0, 0, sprite.getWidth(), sprite.getHeight(), null);
+
+        if (this.equips[Globals.ITEM_CHEST] != null) {
+            this.equips[Globals.ITEM_CHEST].drawIngame(g, x, y, animState, frame, facing);
+        }
+        if (this.equips[Globals.ITEM_SHOULDER] != null) {
+            this.equips[Globals.ITEM_SHOULDER].drawIngame(g, x, y, animState, frame, facing);
+        }
+
+        if (this.equips[Globals.ITEM_PANTS] != null) {
+            this.equips[Globals.ITEM_PANTS].drawIngame(g, x, y, animState, frame, facing);
+        }
+        if (this.equips[Globals.ITEM_SHOE] != null) {
+            this.equips[Globals.ITEM_SHOE].drawIngame(g, x, y, animState, frame, facing);
+        }
+        if (this.equips[Globals.ITEM_WEAPON] != null) {
+            this.equips[Globals.ITEM_WEAPON].drawIngame(g, x, y, animState, frame, facing);
+        }
+        if (this.equips[Globals.ITEM_GLOVE] != null) {
+            this.equips[Globals.ITEM_GLOVE].drawIngame(g, x, y, animState, frame, facing);
+        }
     }
 
     @Override

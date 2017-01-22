@@ -2,7 +2,12 @@ package blockfighter.shared;
 
 import blockfighter.client.entities.emotes.*;
 import blockfighter.client.entities.particles.*;
-import blockfighter.client.entities.particles.skill.*;
+import blockfighter.client.entities.particles.skills.bow.*;
+import blockfighter.client.entities.particles.skills.other.*;
+import blockfighter.client.entities.particles.skills.passive.*;
+import blockfighter.client.entities.particles.skills.shield.*;
+import blockfighter.client.entities.particles.skills.sword.*;
+import blockfighter.client.entities.particles.skills.utility.*;
 import blockfighter.client.entities.player.Player;
 import com.esotericsoftware.minlog.Log;
 import static com.esotericsoftware.minlog.Log.*;
@@ -212,37 +217,39 @@ public class Globals {
         PASSIVE_STATIC((byte) 0x16, null, 0, ParticlePassiveStatic.class, PARTICLE_PARAM_PLAYER_AND_TARGET),
         SHIELD_CHARGE((byte) 0x17, "charge", 1, ParticleShieldCharge.class, PARTICLE_PARAM_FACING_AND_PLAYER),
         SHIELD_CHARGE_PARTICLE((byte) 0x18, "charge2", 5, ParticleShieldChargeParticle.class, PARTICLE_PARAM_POS_AND_FACING),
-        SHIELD_DASH((byte) 0x19, "dash", 8, ParticleShieldDash.class, PARTICLE_PARAM_FACING_AND_PLAYER),
-        SHIELD_DASH_BUFF_EMITTER((byte) 0x1A, null, 0, ParticleShieldDashBuffEmitter.class, PARTICLE_PARAM_PLAYER),
-        SHIELD_DASH_BUFF_PARTICLE((byte) 0x1B, "dashbuff", 1, ParticleShieldDashBuffParticle.class, PARTICLE_PARAM_POS_AND_FACING),
-        SHIELD_DASH_EMITTER((byte) 0x1C, null, 0, ParticleShieldDashEmitter.class, PARTICLE_PARAM_FACING_AND_PLAYER),
-        SHIELD_FORTIFY((byte) 0x1D, "fortify", 20, ParticleShieldFortify.class, PARTICLE_PARAM_PLAYER),
-        SHIELD_FORTIFY_BUFF((byte) 0x1E, "fortifybuff", 8, ParticleShieldFortifyBuff.class, PARTICLE_PARAM_POS_AND_FACING),
-        SHIELD_FORTIFY_BUFF_EMITTER((byte) 0x1F, null, 0, ParticleShieldFortifyEmitter.class, PARTICLE_PARAM_PLAYER),
-        SHIELD_MAGNETIZE((byte) 0x20, null, 0, ParticleShieldMagnetize.class, PARTICLE_PARAM_PLAYER_AND_TARGET),
-        SHIELD_MAGNETIZE_BURST((byte) 0x21, "magnetizeburst", 12, ParticleShieldMagnetizeBurst.class, PARTICLE_PARAM_PLAYER),
-        SHIELD_MAGNETIZE_START((byte) 0x22, "magnetizestart", 13, ParticleShieldMagnetizeStart.class, PARTICLE_PARAM_PLAYER),
-        SHIELD_REFLECT_BUFF((byte) 0x23, "reflectbuff", 16, ParticleShieldReflectBuff.class, PARTICLE_PARAM_POS_AND_FACING),
-        SHIELD_REFLECT_CAST((byte) 0x24, "reflectcast", 16, ParticleShieldReflectCast.class, PARTICLE_PARAM_PLAYER),
-        SHIELD_REFLECT_EMITTER((byte) 0x25, null, 0, ParticleShieldReflectEmitter.class, PARTICLE_PARAM_PLAYER),
-        SHIELD_REFLECT_HIT((byte) 0x26, "reflecthit", 10, ParticleShieldReflectHit.class, PARTICLE_PARAM_POS),
-        SHIELD_ROAR((byte) 0x27, "roar", 10, ParticleShieldRoar.class, PARTICLE_PARAM_FACING_AND_PLAYER),
-        SHIELD_ROARHIT((byte) 0x28, "roarhit", 7, ParticleShieldRoarHit.class, PARTICLE_PARAM_PLAYER),
-        SWORD_CINDER((byte) 0x29, "cinder", 6, ParticleSwordCinder.class, PARTICLE_PARAM_POS_AND_FACING),
-        SWORD_GASH1((byte) 0x2A, "gash1", 4, ParticleSwordGash.class, PARTICLE_PARAM_POS_AND_FACING),
-        SWORD_GASH2((byte) 0x2B, "gash2", 4, ParticleSwordGash2.class, PARTICLE_PARAM_POS_AND_FACING),
-        SWORD_PHANTOM((byte) 0x2C, "phantom", 6, ParticleSwordPhantom.class, PARTICLE_PARAM_POS_AND_FACING),
-        SWORD_PHANTOM2((byte) 0x2D, "phantomslash", 4, ParticleSwordPhantom2.class, PARTICLE_PARAM_PLAYER),
-        SWORD_SLASH1((byte) 0x2E, "slash1", 3, ParticleSwordSlash1.class, PARTICLE_PARAM_POS_AND_FACING),
-        SWORD_SLASH2((byte) 0x2F, "slash2", 3, ParticleSwordSlash2.class, PARTICLE_PARAM_POS_AND_FACING),
-        SWORD_SLASH3((byte) 0x30, "slash3", 5, ParticleSwordSlash3.class, PARTICLE_PARAM_POS_AND_FACING),
-        SWORD_SLASH_BUFF_EMITTER((byte) 0x31, null, 0, ParticleSwordSlashBuffEmitter.class, PARTICLE_PARAM_PLAYER),
-        SWORD_SLASH_BUFF_PARTICLE((byte) 0x32, "slashbuff", 6, ParticleSwordSlashBuffParticle.class, PARTICLE_PARAM_POS_AND_FACING),
-        SWORD_TAUNT((byte) 0x33, "taunt", 5, ParticleSwordTaunt.class, PARTICLE_PARAM_POS_AND_FACING),
-        SWORD_TAUNT_AURA((byte) 0x34, "tauntaura", 5, ParticleSwordTauntAura.class, PARTICLE_PARAM_PLAYER),
-        SWORD_TAUNT_AURA_PARTICLE((byte) 0x35, "tauntaura2", 10, ParticleSwordTauntAuraParticle.class, PARTICLE_PARAM_POS_AND_FACING),
-        SWORD_TAUNT_BUFF_EMITTER((byte) 0x36, null, 0, ParticleSwordTauntBuffEmitter.class, PARTICLE_PARAM_PLAYER),
-        SWORD_VORPAL((byte) 0x37, "vorpal", 4, ParticleSwordVorpal.class, PARTICLE_PARAM_POS_AND_FACING);
+        SHIELD_MAGNETIZE((byte) 0x19, null, 0, ParticleShieldMagnetize.class, PARTICLE_PARAM_PLAYER_AND_TARGET),
+        SHIELD_MAGNETIZE_BURST((byte) 0x1A, "magnetizeburst", 12, ParticleShieldMagnetizeBurst.class, PARTICLE_PARAM_PLAYER),
+        SHIELD_MAGNETIZE_START((byte) 0x1B, "magnetizestart", 13, ParticleShieldMagnetizeStart.class, PARTICLE_PARAM_PLAYER),
+        SHIELD_REFLECT_BUFF((byte) 0x1C, "reflectbuff", 16, ParticleShieldReflectBuff.class, PARTICLE_PARAM_POS_AND_FACING),
+        SHIELD_REFLECT_CAST((byte) 0x1D, "reflectcast", 16, ParticleShieldReflectCast.class, PARTICLE_PARAM_PLAYER),
+        SHIELD_REFLECT_EMITTER((byte) 0x1E, null, 0, ParticleShieldReflectEmitter.class, PARTICLE_PARAM_PLAYER),
+        SHIELD_REFLECT_HIT((byte) 0x1F, "reflecthit", 10, ParticleShieldReflectHit.class, PARTICLE_PARAM_POS),
+        SHIELD_ROAR((byte) 0x20, "roar", 10, ParticleShieldRoar.class, PARTICLE_PARAM_FACING_AND_PLAYER),
+        SHIELD_ROARHIT((byte) 0x21, "roarhit", 7, ParticleShieldRoarHit.class, PARTICLE_PARAM_PLAYER),
+        SWORD_CINDER((byte) 0x22, "cinder", 6, ParticleSwordCinder.class, PARTICLE_PARAM_POS_AND_FACING),
+        SWORD_GASH1((byte) 0x23, "gash1", 4, ParticleSwordGash.class, PARTICLE_PARAM_POS_AND_FACING),
+        SWORD_GASH2((byte) 0x24, "gash2", 4, ParticleSwordGash2.class, PARTICLE_PARAM_POS_AND_FACING),
+        SWORD_PHANTOM((byte) 0x25, "phantom", 6, ParticleSwordPhantom.class, PARTICLE_PARAM_POS_AND_FACING),
+        SWORD_PHANTOM2((byte) 0x26, "phantomslash", 4, ParticleSwordPhantom2.class, PARTICLE_PARAM_PLAYER),
+        SWORD_SLASH1((byte) 0x27, "slash1", 3, ParticleSwordSlash1.class, PARTICLE_PARAM_POS_AND_FACING),
+        SWORD_SLASH2((byte) 0x28, "slash2", 3, ParticleSwordSlash2.class, PARTICLE_PARAM_POS_AND_FACING),
+        SWORD_SLASH3((byte) 0x29, "slash3", 5, ParticleSwordSlash3.class, PARTICLE_PARAM_POS_AND_FACING),
+        SWORD_SLASH_BUFF_EMITTER((byte) 0x2A, null, 0, ParticleSwordSlashBuffEmitter.class, PARTICLE_PARAM_PLAYER),
+        SWORD_SLASH_BUFF_PARTICLE((byte) 0x2B, "slashbuff", 6, ParticleSwordSlashBuffParticle.class, PARTICLE_PARAM_POS_AND_FACING),
+        SWORD_TAUNT((byte) 0x2C, "taunt", 5, ParticleSwordTaunt.class, PARTICLE_PARAM_POS_AND_FACING),
+        SWORD_TAUNT_AURA((byte) 0x2D, "tauntaura", 5, ParticleSwordTauntAura.class, PARTICLE_PARAM_PLAYER),
+        SWORD_TAUNT_AURA_PARTICLE((byte) 0x2E, "tauntaura2", 10, ParticleSwordTauntAuraParticle.class, PARTICLE_PARAM_POS_AND_FACING),
+        SWORD_TAUNT_BUFF_EMITTER((byte) 0x2F, null, 0, ParticleSwordTauntBuffEmitter.class, PARTICLE_PARAM_PLAYER),
+        SWORD_VORPAL((byte) 0x30, "vorpal", 4, ParticleSwordVorpal.class, PARTICLE_PARAM_POS_AND_FACING),
+        UTILITY_DASH((byte) 0x31, "dash", 8, ParticleUtilityDash.class, PARTICLE_PARAM_FACING_AND_PLAYER),
+        UTILITY_DASH_BUFF_EMITTER((byte) 0x32, null, 0, ParticleUtilityDashBuffEmitter.class, PARTICLE_PARAM_PLAYER),
+        UTILITY_DASH_BUFF_PARTICLE((byte) 0x33, "dashbuff", 1, ParticleUtilityDashBuffParticle.class, PARTICLE_PARAM_POS_AND_FACING),
+        UTILITY_DASH_EMITTER((byte) 0x34, null, 0, ParticleUtilityDashEmitter.class, PARTICLE_PARAM_FACING_AND_PLAYER),
+        UTILITY_FORTIFY((byte) 0x35, "fortify", 20, ParticleUtilityFortify.class, PARTICLE_PARAM_PLAYER),
+        UTILITY_FORTIFY_BUFF((byte) 0x36, "fortifybuff", 8, ParticleUtilityFortifyBuff.class, PARTICLE_PARAM_POS_AND_FACING),
+        UTILITY_FORTIFY_BUFF_EMITTER((byte) 0x37, null, 0, ParticleUtilityFortifyEmitter.class, PARTICLE_PARAM_PLAYER),
+        UTILITY_CLONE_EMITTER((byte) 0x38, null, 0, ParticleUtilityCloneEmitter.class, PARTICLE_PARAM_PLAYER),
+        UTILITY_CLONE_PARTICLE((byte) 0x39, null, 0, ParticleUtilityCloneParticle.class, null);
 
         private final byte particleCode;
 
@@ -297,6 +304,9 @@ public class Globals {
         }
 
         public Particle newParticle(Object... parameters) {
+            if (parameterTypes == null) {
+                return null;
+            }
             try {
                 Constructor<? extends Particle> constructor = this.particleClass.getDeclaredConstructor(parameterTypes);
                 return constructor.newInstance(parameters);
