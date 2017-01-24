@@ -2,6 +2,7 @@ package blockfighter.server.entities.damage;
 
 import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
+import blockfighter.server.entities.player.skills.SkillPassiveShadowAttack;
 import blockfighter.shared.Globals;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
@@ -123,7 +124,13 @@ public class Damage {
 
     public void proc() {
         if (this.canProc && this.owner != null) {
-            this.owner.damageProc(this);
+            if (this.owner.hasSkill(Globals.PASSIVE_SHADOWATTACK) && this.owner.getSkill(Globals.PASSIVE_SHADOWATTACK).canCast()) {
+                ((SkillPassiveShadowAttack) this.owner.getSkill(Globals.PASSIVE_SHADOWATTACK)).updateSkillUse(this.owner, this);
+            }
+
+            if (this.owner.hasSkill(Globals.PASSIVE_STATIC)) {
+                this.owner.getSkill(Globals.PASSIVE_STATIC).updateSkillUse(this.owner);
+            }
         }
     }
 

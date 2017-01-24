@@ -1264,16 +1264,6 @@ public class Player implements GameEntity, Callable<Player> {
         return true;
     }
 
-    public void damageProc(final Damage dmg) {
-        if (hasSkill(Globals.PASSIVE_SHADOWATTACK) && getSkill(Globals.PASSIVE_SHADOWATTACK).canCast()) {
-            ((SkillPassiveShadowAttack) getSkill(Globals.PASSIVE_SHADOWATTACK)).updateSkillUse(this, dmg);
-        }
-
-        if (hasSkill(Globals.PASSIVE_STATIC)) {
-            getSkill(Globals.PASSIVE_STATIC).updateSkillUse(this);
-        }
-    }
-
     public void queuePlayerState(final byte newState) {
         this.nextState = newState;
     }
