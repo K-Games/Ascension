@@ -1015,7 +1015,7 @@ public class Globals {
         try {
             InputStream resource = loadResourceAsStream(path);
             if (resource != null) {
-                return ImageIO.read(loadResourceAsStream(path));
+                return ImageIO.read(resource);
             }
         } catch (IOException ex) {
             System.err.println("Failed to load texture: " + path);

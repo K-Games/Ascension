@@ -47,7 +47,7 @@ public class SoundModule implements Runnable {
                     }
                 }
             }
-        }, 0, 10, TimeUnit.MILLISECONDS);
+        }, 0, 5, TimeUnit.MILLISECONDS);
     }
 
     public void setListenerPos(final int x, final int y) {
