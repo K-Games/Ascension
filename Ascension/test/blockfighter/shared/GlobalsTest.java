@@ -308,7 +308,7 @@ public class GlobalsTest {
     @Test
     public void testCalcRegen() {
         double spirit = Globals.rng(1000000);
-        double expResult = spirit * Globals.REGEN_MULT;
+        double expResult = spirit * Globals.REGEN_MULT + Globals.HP_BASE * 0.02;
         double result = Globals.calcRegen(spirit);
 
         assertEquals(expResult, result, 0.0);
