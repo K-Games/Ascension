@@ -116,9 +116,6 @@ public class ItemEquip implements Item {
 
     }
 
-    public static void init() {
-    }
-
     private static void loadItemData() {
         Globals.log(ItemEquip.class, "Loading Item Data...", Globals.LOG_TYPE_DATA);
         for (final int itemCode : Globals.ITEM_CODES) {

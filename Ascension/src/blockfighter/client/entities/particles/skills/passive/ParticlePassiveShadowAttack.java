@@ -1,5 +1,6 @@
 package blockfighter.client.entities.particles.skills.passive;
 
+import blockfighter.client.Core;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.shared.Globals;
 import java.awt.Color;
@@ -55,11 +56,11 @@ public class ParticlePassiveShadowAttack extends Particle {
         this.dY += this.speedY;
         this.x = (int) this.dX;
         this.y = (int) this.dY;
-        if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
+        if (Globals.nsToMs(Core.getLogicModule().getTime() - this.lastFrameTime) >= this.frameDuration) {
             if (this.frame < this.type * 3 + 3) {
                 this.frame++;
             }
-            this.lastFrameTime = logic.getTime();
+            this.lastFrameTime = Core.getLogicModule().getTime();
         }
     }
 

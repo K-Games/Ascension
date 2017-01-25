@@ -1,6 +1,7 @@
 package blockfighter.client.screen;
 
 import blockfighter.client.AscensionClient;
+import blockfighter.client.Core;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.shared.Globals;
 import java.awt.Color;
@@ -62,7 +63,7 @@ public class ScreenTitle extends Screen {
 
     @Override
     public void update() {
-        final long now = logic.getTime(); // Get time now
+        final long now = Core.getLogicModule().getTime(); // Get time now
 
         if (Globals.nsToMs(now - FADE_IN_START_TIME) < 5000) {
             int transparency = (int) (255 * (1f - Globals.nsToMs(now - FADE_IN_START_TIME) / 5000f));
@@ -102,7 +103,7 @@ public class ScreenTitle extends Screen {
         }
 
         if (exitingTitle && Globals.nsToMs(now - fadeOutStart) >= 2000) {
-            logic.setScreen(new ScreenSelectChar(true));
+            Core.getLogicModule().setScreen(new ScreenSelectChar(true));
         }
 
     }

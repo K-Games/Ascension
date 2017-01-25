@@ -1,5 +1,6 @@
 package blockfighter.client.entities.particles.skills.sword;
 
+import blockfighter.client.Core;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.client.entities.player.Player;
 import blockfighter.shared.Globals;
@@ -18,7 +19,7 @@ public class ParticleSwordTauntBuffEmitter extends Particle {
     @Override
     public void update() {
         super.update();
-        if (!isExpired() && Globals.nsToMs(logic.getTime() - lastParticleTime) >= 50) {
+        if (!isExpired() && Globals.nsToMs(Core.getLogicModule().getTime() - lastParticleTime) >= 50) {
             final Point p = this.owner.getPos();
             if (p != null) {
                 this.x = p.x;
@@ -26,9 +27,9 @@ public class ParticleSwordTauntBuffEmitter extends Particle {
             }
             for (int i = 0; i < 2; i++) {
                 final ParticleSwordTauntAuraParticle b = new ParticleSwordTauntAuraParticle(this.x, this.y, this.facing);
-                logic.getScreen().addParticle(b);
+                Core.getLogicModule().getScreen().addParticle(b);
             }
-            lastParticleTime = logic.getTime();
+            lastParticleTime = Core.getLogicModule().getTime();
         }
     }
 

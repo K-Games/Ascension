@@ -1,5 +1,6 @@
 package blockfighter.client.entities.mob.boss.Lightning;
 
+import blockfighter.client.Core;
 import blockfighter.client.entities.mob.Mob;
 import blockfighter.shared.Globals;
 import java.awt.Color;
@@ -104,12 +105,12 @@ public class BossLightning extends Mob {
 
     @Override
     public void update() {
-        if (Globals.nsToMs(logic.getTime() - lastParticleTime) >= 100 && this.animState != ANIM_BALLCHARGE) {
+        if (Globals.nsToMs(Core.getLogicModule().getTime() - lastParticleTime) >= 100 && this.animState != ANIM_BALLCHARGE) {
             for (int i = 0; i < 3; i++) {
                 final ParticleAmbient b = new ParticleAmbient(this.x + (Globals.rng(300) - 200), this.y - (Globals.rng(200) + 150), true);
-                logic.getScreen().addParticle(b);
+                Core.getLogicModule().getScreen().addParticle(b);
             }
-            this.lastParticleTime = logic.getTime();
+            this.lastParticleTime = Core.getLogicModule().getTime();
         }
     }
 

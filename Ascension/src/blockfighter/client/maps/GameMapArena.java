@@ -84,4 +84,8 @@ public class GameMapArena extends GameMap {
             g.drawImage(sprite, 650, 350, null);
         }
     }
+
+    @Override
+    public void unloadAssets() {
+    }
 }

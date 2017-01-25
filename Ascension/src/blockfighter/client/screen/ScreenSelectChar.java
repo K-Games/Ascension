@@ -1,6 +1,7 @@
 package blockfighter.client.screen;
 
 import blockfighter.client.AscensionClient;
+import blockfighter.client.Core;
 import blockfighter.client.SaveData;
 import blockfighter.shared.Globals;
 import java.awt.Color;
@@ -243,8 +244,8 @@ public class ScreenSelectChar extends ScreenMenu {
                         this.selectNum = i;
                         break;
                     } else {
-                        logic.setSelectedChar(CHARACTER_DATA[i]);
-                        logic.setScreen(new ScreenStats());
+                        Core.getLogicModule().setSelectedChar(CHARACTER_DATA[i]);
+                        Core.getLogicModule().setScreen(new ScreenStats());
                     }
                 }
             }

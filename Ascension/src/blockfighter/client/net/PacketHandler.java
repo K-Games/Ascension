@@ -1,7 +1,6 @@
 package blockfighter.client.net;
 
-import blockfighter.client.AscensionClient;
-import blockfighter.client.LogicModule;
+import blockfighter.client.Core;
 import blockfighter.client.entities.emotes.Emote;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.client.screen.ScreenIngame;
@@ -12,11 +11,6 @@ import blockfighter.shared.Globals;
 public class PacketHandler {
 
     private static GameClient gameClient;
-    private static LogicModule logic;
-
-    public static void init() {
-        logic = AscensionClient.getLogicModule();
-    }
 
     public static void setGameClient(final GameClient cl) {
         gameClient = cl;
@@ -42,10 +36,10 @@ public class PacketHandler {
                 key = data[2],
                 size = data[3];
 
-        logic.stopCharacterLoginAttemptTimeout();
-        logic.setMyPlayerKey(key);
+        Core.getLogicModule().stopCharacterLoginAttemptTimeout();
+        Core.getLogicModule().setMyPlayerKey(key);
         final ScreenLoading loading = new ScreenLoading();
-        logic.setScreen(loading);
+        Core.getLogicModule().setScreen(loading);
         try {
             loading.load(mapID);
             synchronized (loading) {
@@ -56,15 +50,15 @@ public class PacketHandler {
             }
             Globals.log(PacketHandler.class, "Finished loading.", Globals.LOG_TYPE_DATA);
             ScreenIngame ingameScreen = new ScreenIngame(size, loading.getLoadedMap(), gameClient);
-            logic.setScreen(ingameScreen);
-            PacketSender.sendGetAll(logic.getSelectedRoom(), key);
+            Core.getLogicModule().setScreen(ingameScreen);
+            PacketSender.sendGetAll(Core.getLogicModule().getSelectedRoom(), key);
         } catch (final Exception e) {
             Globals.logError(e.toString(), e);
             Particle.unloadParticles();
             Emote.unloadEmotes();
-            logic.disconnect();
-            PacketSender.sendDisconnect(logic.getSelectedRoom(), key);
-            logic.returnMenu();
+            Core.getLogicModule().disconnect();
+            PacketSender.sendDisconnect(Core.getLogicModule().getSelectedRoom(), key);
+            Core.getLogicModule().returnMenu();
         }
     }
 
@@ -96,8 +90,8 @@ public class PacketHandler {
                     gameClient.shutdownClient((byte) -1);
                     return;
             }
-            logic.setSelectedRoom(data[5]);
-            PacketSender.sendPlayerCreate(logic.getSelectedRoom(), logic.getSelectedChar());
+            Core.getLogicModule().setSelectedRoom(data[5]);
+            PacketSender.sendPlayerCreate(Core.getLogicModule().getSelectedRoom(), Core.getLogicModule().getSelectedChar());
         } catch (Exception e) {
             gameClient.shutdownClient(ScreenServerList.STATUS_FAILEDCONNECT);
         }

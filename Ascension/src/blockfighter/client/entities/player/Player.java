@@ -1,7 +1,6 @@
 package blockfighter.client.entities.player;
 
-import blockfighter.client.AscensionClient;
-import blockfighter.client.LogicModule;
+import blockfighter.client.Core;
 import blockfighter.client.entities.items.ItemEquip;
 import blockfighter.client.net.PacketSender;
 import blockfighter.shared.Globals;
@@ -22,7 +21,6 @@ public class Player implements Callable<Player> {
     private String name;
     private final ItemEquip[] equips = new ItemEquip[Globals.NUM_EQUIP_SLOTS];
     private long lastUpdateTime;
-    private static LogicModule logic;
     private boolean disconnect = false;
 
     public Player(final int x, final int y, final byte k) {
@@ -33,16 +31,12 @@ public class Player implements Callable<Player> {
         this.animState = Globals.PLAYER_ANIM_STATE_INVIS;
         this.name = "";
         this.frame = 0;
-        this.lastUpdateTime = logic.getTime();
+        this.lastUpdateTime = Core.getLogicModule().getTime();
     }
 
     public Player(final int x, final int y, final byte k, final byte f) {
         this(x, y, k);
         this.facing = f;
-    }
-
-    public static void init() {
-        logic = AscensionClient.getLogicModule();
     }
 
     public byte getKey() {
@@ -88,22 +82,22 @@ public class Player implements Callable<Player> {
     public void setPos(final int x, final int y) {
         this.x = x;
         this.y = y;
-        this.lastUpdateTime = logic.getTime();
+        this.lastUpdateTime = Core.getLogicModule().getTime();
     }
 
     public void setFacing(final byte dir) {
         this.facing = dir;
-        this.lastUpdateTime = logic.getTime();
+        this.lastUpdateTime = Core.getLogicModule().getTime();
     }
 
     public void setState(final byte s) {
         this.animState = s;
-        this.lastUpdateTime = logic.getTime();
+        this.lastUpdateTime = Core.getLogicModule().getTime();
     }
 
     public void setFrame(final byte f) {
         this.frame = f;
-        this.lastUpdateTime = logic.getTime();
+        this.lastUpdateTime = Core.getLogicModule().getTime();
     }
 
     public void setEquip(final byte slot, final int itemCode) {
@@ -112,12 +106,12 @@ public class Player implements Callable<Player> {
 
     public void setStat(final byte statID, final double stat) {
         this.stats[statID] = stat;
-        this.lastUpdateTime = logic.getTime();
+        this.lastUpdateTime = Core.getLogicModule().getTime();
     }
 
     public void setPlayerName(final String n) {
         this.name = n;
-        this.lastUpdateTime = logic.getTime();
+        this.lastUpdateTime = Core.getLogicModule().getTime();
     }
 
     public void draw(final Graphics2D g) {
@@ -187,22 +181,22 @@ public class Player implements Callable<Player> {
     @Override
     public Player call() {
         if (this.name.length() <= 0) {
-            PacketSender.sendGetName(logic.getSelectedRoom(), this.key);
+            PacketSender.sendGetName(Core.getLogicModule().getSelectedRoom(), this.key);
         }
         for (final ItemEquip e : this.equips) {
             if (e == null) {
-                PacketSender.sendGetEquip(logic.getSelectedRoom(), this.key);
+                PacketSender.sendGetEquip(Core.getLogicModule().getSelectedRoom(), this.key);
                 break;
             }
         }
         if (this.stats[Globals.STAT_MAXHP] <= 0) {
-            PacketSender.sendGetStat(logic.getSelectedRoom(), this.key, Globals.STAT_MAXHP);
+            PacketSender.sendGetStat(Core.getLogicModule().getSelectedRoom(), this.key, Globals.STAT_MAXHP);
         }
         return this;
     }
 
     public boolean isDisconnected() {
-        return this.disconnect || Globals.nsToMs(logic.getTime() - this.lastUpdateTime) >= 5000;
+        return this.disconnect || Globals.nsToMs(Core.getLogicModule().getTime() - this.lastUpdateTime) >= 5000;
     }
 
     public boolean isDead() {

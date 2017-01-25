@@ -1,5 +1,6 @@
 package blockfighter.client.entities.particles.skills.other;
 
+import blockfighter.client.Core;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.shared.Globals;
 import java.awt.Graphics2D;
@@ -21,11 +22,11 @@ public class ParticleBurnBuffParticle extends Particle {
         super.update();
 
         this.y -= 3;
-        if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
+        if (Globals.nsToMs(Core.getLogicModule().getTime() - this.lastFrameTime) >= this.frameDuration) {
             if (Globals.Particles.BURN_BUFF_PARTICLE.getSprite() != null && this.frame < Globals.Particles.BURN_BUFF_PARTICLE.getSprite().length - 1) {
                 this.frame++;
             }
-            this.lastFrameTime = logic.getTime();
+            this.lastFrameTime = Core.getLogicModule().getTime();
         }
     }
 

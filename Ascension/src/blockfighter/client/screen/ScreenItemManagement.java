@@ -1,5 +1,6 @@
 package blockfighter.client.screen;
 
+import blockfighter.client.Core;
 import blockfighter.client.SaveData;
 import blockfighter.client.entities.items.ItemEquip;
 import static blockfighter.client.screen.Screen.SKILL_BOX_BG_COLOR;
@@ -56,13 +57,13 @@ public abstract class ScreenItemManagement extends ScreenMenu {
     }
 
     public ScreenItemManagement() {
-        this.character = logic.getSelectedChar();
+        this.character = Core.getLogicModule().getSelectedChar();
     }
 
     @Override
     public void update() {
         super.update();
-        final long now = logic.getTime(); // Get time now
+        final long now = Core.getLogicModule().getTime(); // Get time now
         if (now - this.lastFrameTime >= this.nextFrameTime) {
             if (this.charFrame >= Globals.CHAR_SPRITE[Globals.PLAYER_ANIM_STATE_STAND].length - 1) {
                 this.charFrame = 0;

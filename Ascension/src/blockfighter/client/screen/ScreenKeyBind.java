@@ -1,5 +1,6 @@
 package blockfighter.client.screen;
 
+import blockfighter.client.Core;
 import blockfighter.client.SaveData;
 import blockfighter.client.entities.emotes.Emote;
 import blockfighter.shared.Globals;
@@ -42,7 +43,7 @@ public class ScreenKeyBind extends ScreenMenu {
     private int selectedKeyBox = -1;
 
     public ScreenKeyBind() {
-        this.c = logic.getSelectedChar();
+        this.c = Core.getLogicModule().getSelectedChar();
         Emote.loadEmotes();
     }
 

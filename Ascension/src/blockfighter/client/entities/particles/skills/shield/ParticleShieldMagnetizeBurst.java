@@ -1,5 +1,6 @@
 package blockfighter.client.entities.particles.skills.shield;
 
+import blockfighter.client.Core;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.client.entities.player.Player;
 import blockfighter.shared.Globals;
@@ -25,14 +26,14 @@ public class ParticleShieldMagnetizeBurst extends Particle {
     public void update() {
         super.update();
 
-        if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
+        if (Globals.nsToMs(Core.getLogicModule().getTime() - this.lastFrameTime) >= this.frameDuration) {
             if (Globals.Particles.SHIELD_MAGNETIZE_BURST.getSprite() != null && this.frame < Globals.Particles.SHIELD_MAGNETIZE_BURST.getSprite().length) {
                 this.frame++;
                 if (this.frame == Globals.Particles.SHIELD_MAGNETIZE_BURST.getSprite().length) {
                     this.frame = 0;
                 }
             }
-            this.lastFrameTime = logic.getTime();
+            this.lastFrameTime = Core.getLogicModule().getTime();
         }
     }
 

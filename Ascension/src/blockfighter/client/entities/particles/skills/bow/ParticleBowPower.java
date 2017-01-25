@@ -1,5 +1,6 @@
 package blockfighter.client.entities.particles.skills.bow;
 
+import blockfighter.client.Core;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.shared.Globals;
 import java.awt.Graphics2D;
@@ -17,17 +18,17 @@ public class ParticleBowPower extends Particle {
     @Override
     public void update() {
         super.update();
-        if (Globals.nsToMs(logic.getTime() - this.particleStartTime) >= 50) {
+        if (Globals.nsToMs(Core.getLogicModule().getTime() - this.particleStartTime) >= 50) {
             for (int i = 0; i < 2; i++) {
                 final ParticleBowPowerParticle b = new ParticleBowPowerParticle(this.x, this.y - 150, this.facing);
-                logic.getScreen().addParticle(b);
+                Core.getLogicModule().getScreen().addParticle(b);
             }
         }
-        if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
+        if (Globals.nsToMs(Core.getLogicModule().getTime() - this.lastFrameTime) >= this.frameDuration) {
             if (Globals.Particles.BOW_POWER.getSprite() != null && this.frame < Globals.Particles.BOW_POWER.getSprite().length - 1) {
                 this.frame++;
             }
-            this.lastFrameTime = logic.getTime();
+            this.lastFrameTime = Core.getLogicModule().getTime();
         }
     }
 

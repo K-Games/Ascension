@@ -1,5 +1,6 @@
 package blockfighter.client.screen;
 
+import blockfighter.client.Core;
 import blockfighter.client.entities.items.ItemEquip;
 import blockfighter.shared.Globals;
 import java.awt.Color;
@@ -40,7 +41,7 @@ public class ScreenInventory extends ScreenItemManagement {
     @Override
     public void update() {
         super.update();
-        final long now = logic.getTime(); // Get time now
+        final long now = Core.getLogicModule().getTime(); // Get time now
         if (now - this.lastUpdateTime >= Globals.CLIENT_LOGIC_UPDATE) {
             double[] baseStats = this.character.getBaseStats();
             double[] totalStats = this.character.getTotalStats();

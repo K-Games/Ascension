@@ -1,5 +1,6 @@
 package blockfighter.client.screen;
 
+import blockfighter.client.Core;
 import blockfighter.client.SaveData;
 import blockfighter.shared.Globals;
 import java.awt.Color;
@@ -33,7 +34,7 @@ public class ScreenStats extends ScreenMenu {
     }
 
     public ScreenStats() {
-        this.c = logic.getSelectedChar();
+        this.c = Core.getLogicModule().getSelectedChar();
     }
 
     private void drawAddStatButton(final Graphics2D g) {

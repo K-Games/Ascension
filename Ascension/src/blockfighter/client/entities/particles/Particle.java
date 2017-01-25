@@ -1,7 +1,6 @@
 package blockfighter.client.entities.particles;
 
-import blockfighter.client.AscensionClient;
-import blockfighter.client.LogicModule;
+import blockfighter.client.Core;
 import blockfighter.client.entities.player.Player;
 import blockfighter.shared.Globals;
 import java.awt.Graphics2D;
@@ -27,13 +26,9 @@ public abstract class Particle implements Callable<Particle> {
     protected final int key;
     private static boolean LOADED = false;
 
-    protected static LogicModule logic;
-
     protected int duration;
 
     public static void init() {
-        logic = AscensionClient.getLogicModule();
-
         for (int key = 0; key < numParticleKeys; key++) {
             PARTICLE_KEYS.add(key);
         }
@@ -106,7 +101,7 @@ public abstract class Particle implements Callable<Particle> {
     }
 
     public boolean isExpired() {
-        return Globals.nsToMs(logic.getTime() - this.particleStartTime) >= this.duration;
+        return Globals.nsToMs(Core.getLogicModule().getTime() - this.particleStartTime) >= this.duration;
     }
 
     public Particle() {
@@ -114,9 +109,9 @@ public abstract class Particle implements Callable<Particle> {
     }
 
     public Particle(final int k, final int x, final int y, final Player owner) {
-        if (logic != null) {
-            this.particleStartTime = logic.getTime();
-            this.lastFrameTime = logic.getTime();
+        if (Core.getLogicModule() != null) {
+            this.particleStartTime = Core.getLogicModule().getTime();
+            this.lastFrameTime = Core.getLogicModule().getTime();
         } else {
             this.particleStartTime = System.nanoTime();
             this.lastFrameTime = particleStartTime;

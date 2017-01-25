@@ -5,24 +5,18 @@ import java.awt.event.KeyListener;
 
 public class KeyHandler implements KeyListener {
 
-    private static LogicModule logic = null;
-
-    public static void init() {
-        logic = AscensionClient.getLogicModule();
-    }
-
     @Override
     public void keyTyped(final KeyEvent e) {
-        logic.getScreen().keyTyped(e);
+        Core.getLogicModule().getScreen().keyTyped(e);
     }
 
     @Override
     public void keyPressed(final KeyEvent e) {
-        logic.getScreen().keyPressed(e);
+        Core.getLogicModule().getScreen().keyPressed(e);
     }
 
     @Override
     public void keyReleased(final KeyEvent e) {
-        logic.getScreen().keyReleased(e);
+        Core.getLogicModule().getScreen().keyReleased(e);
     }
 }

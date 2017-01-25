@@ -1,7 +1,6 @@
 package blockfighter.client.entities.ingamenumber;
 
-import blockfighter.client.AscensionClient;
-import blockfighter.client.LogicModule;
+import blockfighter.client.Core;
 import blockfighter.shared.Globals;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -10,7 +9,6 @@ import java.util.concurrent.Callable;
 
 public class IngameNumber implements Callable<IngameNumber> {
 
-    private static LogicModule logic;
     private final byte type;
     private double x, y;
 
@@ -22,17 +20,13 @@ public class IngameNumber implements Callable<IngameNumber> {
     private final int duration = 700;
 
     public IngameNumber(final int num, final byte t, final Point loc) {
-        this.startTime = logic.getTime();
+        this.startTime = Core.getLogicModule().getTime();
         this.number = num;
         this.type = t;
         this.x = loc.x;
         this.y = loc.y - 18;
         this.speedY = -2;
         this.speedX = 0;
-    }
-
-    public static void init() {
-        logic = AscensionClient.getLogicModule();
     }
 
     @Override
@@ -43,7 +37,7 @@ public class IngameNumber implements Callable<IngameNumber> {
     }
 
     public boolean isExpired() {
-        return Globals.nsToMs(logic.getTime() - this.startTime) >= this.duration;
+        return Globals.nsToMs(Core.getLogicModule().getTime() - this.startTime) >= this.duration;
     }
 
     public void draw(final Graphics2D g) {

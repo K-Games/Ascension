@@ -1,5 +1,6 @@
 package blockfighter.client.entities.particles.skills.shield;
 
+import blockfighter.client.Core;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.client.entities.player.Player;
 import blockfighter.shared.Globals;
@@ -25,11 +26,11 @@ public class ParticleShieldCharge extends Particle {
     @Override
     public void update() {
         super.update();
-        if (Globals.nsToMs(logic.getTime() - this.particleStartTime) < 650
-                && Globals.nsToMs(logic.getTime() - this.lastParticleTime) >= 50) {
+        if (Globals.nsToMs(Core.getLogicModule().getTime() - this.particleStartTime) < 650
+                && Globals.nsToMs(Core.getLogicModule().getTime() - this.lastParticleTime) >= 50) {
             final ParticleShieldChargeParticle b = new ParticleShieldChargeParticle(this.x, this.y, this.facing);
-            logic.getScreen().addParticle(b);
-            this.lastParticleTime = logic.getTime();
+            Core.getLogicModule().getScreen().addParticle(b);
+            this.lastParticleTime = Core.getLogicModule().getTime();
         }
     }
 

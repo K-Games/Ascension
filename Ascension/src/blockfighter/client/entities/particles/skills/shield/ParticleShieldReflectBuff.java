@@ -1,5 +1,6 @@
 package blockfighter.client.entities.particles.skills.shield;
 
+import blockfighter.client.Core;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.shared.Globals;
 import java.awt.Graphics2D;
@@ -27,11 +28,11 @@ public class ParticleShieldReflectBuff extends Particle {
         this.y -= 8;
         this.pX += this.speedX;
         this.x = (int) this.pX;
-        if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
+        if (Globals.nsToMs(Core.getLogicModule().getTime() - this.lastFrameTime) >= this.frameDuration) {
             if (Globals.Particles.SHIELD_REFLECT_BUFF.getSprite() != null && this.frame < Globals.Particles.SHIELD_REFLECT_BUFF.getSprite().length) {
                 this.frame++;
             }
-            this.lastFrameTime = logic.getTime();
+            this.lastFrameTime = Core.getLogicModule().getTime();
         }
     }
 

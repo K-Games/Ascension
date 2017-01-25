@@ -1,7 +1,6 @@
 package blockfighter.client.entities.emotes;
 
-import blockfighter.client.AscensionClient;
-import blockfighter.client.LogicModule;
+import blockfighter.client.Core;
 import blockfighter.client.entities.player.Player;
 import blockfighter.shared.Globals;
 import java.awt.Graphics2D;
@@ -21,12 +20,7 @@ public abstract class Emote implements Callable<Emote> {
 
     private static boolean LOADED = false;
 
-    protected static LogicModule logic;
     protected int duration;
-
-    public static void init() {
-        logic = AscensionClient.getLogicModule();
-    }
 
     public static void unloadEmotes() {
         Globals.log(Emote.class, "Unloading Emotes...", Globals.LOG_TYPE_DATA);
@@ -76,12 +70,12 @@ public abstract class Emote implements Callable<Emote> {
     }
 
     public boolean isExpired() {
-        return Globals.nsToMs(logic.getTime() - this.emoteStartTime) >= this.duration;
+        return Globals.nsToMs(Core.getLogicModule().getTime() - this.emoteStartTime) >= this.duration;
     }
 
     public Emote(final Player owner) {
-        if (logic != null) {
-            this.emoteStartTime = logic.getTime();
+        if (Core.getLogicModule() != null) {
+            this.emoteStartTime = Core.getLogicModule().getTime();
             this.lastFrameTime = this.emoteStartTime;
         } else {
             this.emoteStartTime = System.nanoTime();

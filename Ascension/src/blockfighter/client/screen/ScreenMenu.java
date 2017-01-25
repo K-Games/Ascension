@@ -1,5 +1,6 @@
 package blockfighter.client.screen;
 
+import blockfighter.client.Core;
 import blockfighter.client.SaveData;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.client.entities.particles.menu.ParticleMenuSmoke;
@@ -85,7 +86,7 @@ public abstract class ScreenMenu extends Screen {
 
     @Override
     public void update() {
-        final long now = logic.getTime(); // Get time now
+        final long now = Core.getLogicModule().getTime(); // Get time now
         if (now - this.lastParticleUpdateTime >= Globals.CLIENT_LOGIC_UPDATE) {
             updateParticles(PARTICLES);
             this.lastParticleUpdateTime = now;
@@ -139,10 +140,10 @@ public abstract class ScreenMenu extends Screen {
         if (SwingUtilities.isLeftMouseButton(e)) {
             for (byte i = 0; i < MENU_BOX.length; i++) {
                 if (MENU_BOX[i].contains(scaled)) {
-                    SaveData.saveData(logic.getSelectedChar().getSaveNum(), logic.getSelectedChar());
-                    if (!(logic.getScreen().getClass() == SCREEN_CLASS.get(i))) {
+                    SaveData.saveData(Core.getLogicModule().getSelectedChar().getSaveNum(), Core.getLogicModule().getSelectedChar());
+                    if (!(Core.getLogicModule().getScreen().getClass() == SCREEN_CLASS.get(i))) {
                         try {
-                            logic.setScreen(SCREEN_CLASS.get(i).newInstance());
+                            Core.getLogicModule().setScreen(SCREEN_CLASS.get(i).newInstance());
                         } catch (InstantiationException | IllegalAccessException ex) {
                             Globals.logError(ex.toString(), ex);
                         }

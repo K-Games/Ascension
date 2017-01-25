@@ -1,12 +1,10 @@
 package blockfighter.client.render;
 
-import blockfighter.client.AscensionClient;
-import blockfighter.client.LogicModule;
+import blockfighter.client.Core;
 
 public class RenderModule implements Runnable {
 
     private final RenderPanel panel;
-    private static LogicModule logic;
     private int FPSCount = 0;
     double lastUpdateTime; // Last time we rendered
     double lastFPSTime; // Last time FPS count reset
@@ -15,14 +13,10 @@ public class RenderModule implements Runnable {
         this.panel = p;
     }
 
-    public static void init() {
-        logic = AscensionClient.getLogicModule();
-    }
-
     @Override
     public void run() {
-        final long now = logic.getTime(); // Get time now
-        this.panel.setScreen(logic.getScreen());
+        final long now = Core.getLogicModule().getTime(); // Get time now
+        this.panel.setScreen(Core.getLogicModule().getScreen());
         this.panel.repaint();
         this.FPSCount++;
 

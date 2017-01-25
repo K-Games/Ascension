@@ -1,15 +1,6 @@
 package blockfighter.client;
 
-import blockfighter.client.entities.emotes.Emote;
-import blockfighter.client.entities.ingamenumber.IngameNumber;
-import blockfighter.client.entities.items.ItemEquip;
-import blockfighter.client.entities.mob.Mob;
-import blockfighter.client.entities.notification.Notification;
 import blockfighter.client.entities.particles.Particle;
-import blockfighter.client.entities.player.Player;
-import blockfighter.client.entities.player.skills.Skill;
-import blockfighter.client.net.PacketHandler;
-import blockfighter.client.net.PacketReceiver;
 import blockfighter.client.render.RenderModule;
 import blockfighter.client.render.RenderPanel;
 import blockfighter.client.screen.Screen;
@@ -33,9 +24,7 @@ public class AscensionClient {
     public static final KeyHandler KEY_HANDLER = new KeyHandler();
     public static final MouseHandler MOUSE_HANDLER = new MouseHandler();
     public static final FocusHandler FOCUS_HANDLER = new FocusHandler();
-    private static final SoundModule SOUND_MODULE = new SoundModule();
 
-    private static final LogicModule LOGIC_MODULE = new LogicModule(SOUND_MODULE);
     public static final ExecutorService SHARED_THREADPOOL = Executors.newFixedThreadPool(4,
             new BasicThreadFactory.Builder()
                     .namingPattern("Shared-Thread-%d")
@@ -44,25 +33,9 @@ public class AscensionClient {
                     .build());
 
     static {
-        SHARED_THREADPOOL.execute(SOUND_MODULE);
-
         Globals.loadClient();
         Class<?>[] classes = {
-            Particle.class,
-            Screen.class,
-            RenderModule.class,
-            FocusHandler.class,
-            KeyHandler.class,
-            MouseHandler.class,
-            Player.class,
-            Mob.class,
-            PacketReceiver.class,
-            PacketHandler.class,
-            IngameNumber.class,
-            Skill.class,
-            ItemEquip.class,
-            Notification.class,
-            Emote.class
+            Particle.class
         };
 
         for (Class<?> cls : classes) {
@@ -76,6 +49,7 @@ public class AscensionClient {
     }
 
     public static void launch(final String[] args) {
+        Core.setup();
         if (args.length > 0) {
             boolean devEnabled = false;
             for (int i = 0; i < args.length; i++) {
@@ -212,8 +186,8 @@ public class AscensionClient {
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
             public void run() {
-                LOGIC_MODULE.disconnect();
-                SOUND_MODULE.shutdown();
+                Core.getLogicModule().disconnect();
+                Core.getSoundModule().shutdown();
             }
         });
         final ScheduledExecutorService service = Executors.newScheduledThreadPool(2, new BasicThreadFactory.Builder()
@@ -221,13 +195,8 @@ public class AscensionClient {
                 .daemon(false)
                 .priority(Thread.NORM_PRIORITY)
                 .build());
-        LOGIC_MODULE.setScreen((!Globals.SKIP_TITLE) ? new ScreenTitle() : new ScreenSelectChar());
-        service.scheduleAtFixedRate(LOGIC_MODULE, 0, 1, TimeUnit.MILLISECONDS);
+        Core.getLogicModule().setScreen((!Globals.SKIP_TITLE) ? new ScreenTitle() : new ScreenSelectChar());
+        service.scheduleAtFixedRate(Core.getLogicModule(), 0, 1, TimeUnit.MILLISECONDS);
         service.scheduleAtFixedRate(render, 0, Globals.RENDER_UPDATE, TimeUnit.MICROSECONDS);
     }
-
-    public static LogicModule getLogicModule() {
-        return LOGIC_MODULE;
-    }
-
 }

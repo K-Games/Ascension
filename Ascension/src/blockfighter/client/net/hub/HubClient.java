@@ -1,6 +1,6 @@
 package blockfighter.client.net.hub;
 
-import blockfighter.client.AscensionClient;
+import blockfighter.client.Core;
 import blockfighter.client.screen.ScreenServerList;
 import blockfighter.shared.Globals;
 import blockfighter.shared.ServerInfo;
@@ -40,8 +40,8 @@ public class HubClient implements Runnable {
             HubSender.sendGetServerInfos();
         } catch (IOException ex) {
             client.close();
-            if (AscensionClient.getLogicModule().getScreen() instanceof ScreenServerList) {
-                ((ScreenServerList) AscensionClient.getLogicModule().getScreen()).setStatus(ScreenServerList.STATUS_REFRESHING_FAILED);
+            if (Core.getLogicModule().getScreen() instanceof ScreenServerList) {
+                ((ScreenServerList) Core.getLogicModule().getScreen()).setStatus(ScreenServerList.STATUS_REFRESHING_FAILED);
             }
         }
     }

@@ -57,4 +57,8 @@ public class GameMapFloor1 extends GameMap {
         BossLightning.prerender(g);
     }
 
+    @Override
+    public void unloadAssets() {
+    }
+
 }

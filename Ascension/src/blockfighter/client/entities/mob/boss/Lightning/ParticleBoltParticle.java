@@ -1,5 +1,6 @@
 package blockfighter.client.entities.mob.boss.Lightning;
 
+import blockfighter.client.Core;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.shared.Globals;
 import java.awt.Graphics2D;
@@ -26,9 +27,9 @@ public class ParticleBoltParticle extends Particle {
         this.dY -= this.speedY;
         this.x = (int) this.dX;
         this.y = (int) this.dY;
-        if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
+        if (Globals.nsToMs(Core.getLogicModule().getTime() - this.lastFrameTime) >= this.frameDuration) {
 
-            this.lastFrameTime = logic.getTime();
+            this.lastFrameTime = Core.getLogicModule().getTime();
         }
     }
 

@@ -1,5 +1,6 @@
 package blockfighter.client.entities.particles.skills.bow;
 
+import blockfighter.client.Core;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.client.entities.player.Player;
 import blockfighter.client.entities.player.skills.SkillBowVolley;
@@ -19,15 +20,15 @@ public class ParticleBowVolleyBuffEmitter extends Particle {
     @Override
     public void update() {
         super.update();
-        if (!isExpired() && Globals.nsToMs(logic.getTime() - lastParticleTime) >= 100) {
+        if (!isExpired() && Globals.nsToMs(Core.getLogicModule().getTime() - lastParticleTime) >= 100) {
             final Point p = this.owner.getPos();
             if (p != null) {
                 this.x = p.x;
                 this.y = p.y;
             }
             final ParticleBowVolleyBuffParticle b = new ParticleBowVolleyBuffParticle(this.x, this.y, this.facing);
-            logic.getScreen().addParticle(b);
-            lastParticleTime = logic.getTime();
+            Core.getLogicModule().getScreen().addParticle(b);
+            lastParticleTime = Core.getLogicModule().getTime();
         }
     }
 

@@ -1,11 +1,12 @@
 package blockfighter.client.screen;
 
+import blockfighter.client.Core;
 import blockfighter.client.SaveData;
 import blockfighter.client.entities.items.ItemEquip;
 import blockfighter.client.entities.items.ItemUpgrade;
 import blockfighter.client.entities.particles.Particle;
-import blockfighter.client.entities.particles.menu.ParticleMenuUpgradeSelect;
 import blockfighter.client.entities.particles.menu.ParticleMenuUpgrade;
+import blockfighter.client.entities.particles.menu.ParticleMenuUpgradeSelect;
 import static blockfighter.client.screen.ScreenMenu.PARTICLES;
 import blockfighter.shared.Globals;
 import java.awt.Color;
@@ -58,7 +59,7 @@ public class ScreenUpgrade extends ScreenItemManagement {
     @Override
     public void update() {
         super.update();
-        final long now = logic.getTime(); // Get time now
+        final long now = Core.getLogicModule().getTime(); // Get time now
 
         if (now - this.nextNewParticleTime >= Globals.msToNs(100)) {
             for (int i = 0; i < this.selectUpgrade.length; i++) {

@@ -1,5 +1,6 @@
 package blockfighter.client.entities.mob.boss.Lightning;
 
+import blockfighter.client.Core;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.shared.Globals;
 
@@ -16,7 +17,7 @@ public class ParticleAttEmitter extends Particle {
         super.update();
         if (!isExpired()) {
             final ParticleAmbient b = new ParticleAmbient(this.x, this.y + Globals.rng(200));
-            logic.getScreen().addParticle(b);
+            Core.getLogicModule().getScreen().addParticle(b);
         }
     }
 }

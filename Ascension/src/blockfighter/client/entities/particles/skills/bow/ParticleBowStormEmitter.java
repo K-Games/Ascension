@@ -1,5 +1,6 @@
 package blockfighter.client.entities.particles.skills.bow;
 
+import blockfighter.client.Core;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.client.entities.player.skills.SkillBowStorm;
 import blockfighter.shared.Globals;
@@ -17,13 +18,13 @@ public class ParticleBowStormEmitter extends Particle {
     @Override
     public void update() {
         super.update();
-        if (Globals.nsToMs(logic.getTime() - this.particleStartTime) <= 4800) {
-            if (Globals.nsToMs(logic.getTime() - lastParticleTime) >= 50) {
+        if (Globals.nsToMs(Core.getLogicModule().getTime() - this.particleStartTime) <= 4800) {
+            if (Globals.nsToMs(Core.getLogicModule().getTime() - lastParticleTime) >= 50) {
                 for (byte i = 0; i < 2; i++) {
                     final ParticleBowStormArrow b = new ParticleBowStormArrow(this.x, this.y, this.facing);
-                    logic.getScreen().addParticle(b);
+                    Core.getLogicModule().getScreen().addParticle(b);
                 }
-                lastParticleTime = logic.getTime();
+                lastParticleTime = Core.getLogicModule().getTime();
             }
         }
 

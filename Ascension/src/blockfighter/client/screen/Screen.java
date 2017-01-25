@@ -1,7 +1,7 @@
 package blockfighter.client.screen;
 
 import blockfighter.client.AscensionClient;
-import blockfighter.client.LogicModule;
+import blockfighter.client.Core;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.client.render.RenderPanel;
 import blockfighter.shared.Globals;
@@ -28,11 +28,6 @@ public abstract class Screen implements KeyListener, MouseListener, MouseMotionL
     public abstract ConcurrentHashMap<Integer, Particle> getParticles();
 
     protected static RenderPanel panel;
-    protected static LogicModule logic;
-
-    public static void init() {
-        logic = AscensionClient.getLogicModule();
-    }
 
     public void drawStringOutline(final Graphics2D g, final String s, final int x, final int y, final int width) {
         for (int i = 0; i < 2; i++) {
@@ -67,12 +62,12 @@ public abstract class Screen implements KeyListener, MouseListener, MouseMotionL
 
     @Override
     public void focusGained(FocusEvent e) {
-        logic.enableSound();
+        Core.getSoundModule().unmute();
     }
 
     @Override
     public void focusLost(FocusEvent e) {
-        logic.disableSound();
+        Core.getSoundModule().mute();
     }
 
     public byte getBgmCode() {

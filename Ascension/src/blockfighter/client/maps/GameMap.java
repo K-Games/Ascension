@@ -40,6 +40,8 @@ public abstract class GameMap {
 
     public abstract void prerender(final Graphics2D g);
 
+    public abstract void unloadAssets();
+
     public void update() {
         final long now = System.nanoTime(); // Get time now
         if (now - this.lastUpdateTime >= Globals.CLIENT_LOGIC_UPDATE) {

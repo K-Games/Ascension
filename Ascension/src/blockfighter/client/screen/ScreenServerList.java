@@ -1,6 +1,7 @@
 package blockfighter.client.screen;
 
 import blockfighter.client.AscensionClient;
+import blockfighter.client.Core;
 import blockfighter.client.net.hub.HubClient;
 import blockfighter.shared.Globals;
 import blockfighter.shared.ServerInfo;
@@ -278,14 +279,14 @@ public class ScreenServerList extends ScreenMenu {
                     connecting = true;
                     SERVERADDRESS_FIELD.setEnabled(false);
                     saveServerList(SERVERADDRESS_FIELD.getText().trim());
-                    logic.connect(SERVERADDRESS_FIELD.getText().trim());
+                    Core.getLogicModule().connect(SERVERADDRESS_FIELD.getText().trim());
                 }
             }
-            if (REFRESH_BOX.contains(scaled) && logic.getTime() - this.lastRefreshTime >= Globals.msToNs(2000)) {
+            if (REFRESH_BOX.contains(scaled) && Core.getLogicModule().getTime() - this.lastRefreshTime >= Globals.msToNs(2000)) {
                 setStatus(STATUS_REFRESHING);
                 this.serverList.setServerInfo(null);
                 AscensionClient.SHARED_THREADPOOL.execute(new HubClient());
-                this.lastRefreshTime = logic.getTime();
+                this.lastRefreshTime = Core.getLogicModule().getTime();
             }
 
             if (PREV_PAGE_BOX.contains(scaled)) {
@@ -391,7 +392,7 @@ public class ScreenServerList extends ScreenMenu {
     }
 
     public void enableFields() {
-        logic.stopCharacterLoginAttemptTimeout();
+        Core.getLogicModule().stopCharacterLoginAttemptTimeout();
         connecting = false;
         SERVERADDRESS_FIELD.setVisible(true);
         SERVERADDRESS_FIELD.setEnabled(true);

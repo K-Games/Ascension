@@ -1,5 +1,6 @@
 package blockfighter.client.entities.particles.skills.shield;
 
+import blockfighter.client.Core;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.shared.Globals;
 import java.awt.Graphics2D;
@@ -12,7 +13,7 @@ public class ParticleShieldReflectHit extends Particle {
     public ParticleShieldReflectHit(final int x, final int y) {
         this.duration = 0;
         for (int i = 0; i < 20; i++) {
-            logic.getScreen().addParticle(new ParticleShieldReflectHit(x, y, i));
+            Core.getLogicModule().getScreen().addParticle(new ParticleShieldReflectHit(x, y, i));
         }
     }
 
@@ -34,13 +35,13 @@ public class ParticleShieldReflectHit extends Particle {
     @Override
     public void update() {
         super.update();
-        if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
+        if (Globals.nsToMs(Core.getLogicModule().getTime() - this.lastFrameTime) >= this.frameDuration) {
             this.x += this.speedX;
             this.y += this.speedY;
             if (Globals.Particles.SHIELD_REFLECT_HIT.getSprite() != null && this.frame < Globals.Particles.SHIELD_REFLECT_HIT.getSprite().length - 1) {
                 this.frame++;
             }
-            this.lastFrameTime = logic.getTime();
+            this.lastFrameTime = Core.getLogicModule().getTime();
         }
     }
 

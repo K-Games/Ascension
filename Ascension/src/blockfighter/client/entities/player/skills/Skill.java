@@ -1,7 +1,6 @@
 package blockfighter.client.entities.player.skills;
 
-import blockfighter.client.AscensionClient;
-import blockfighter.client.LogicModule;
+import blockfighter.client.Core;
 import blockfighter.client.entities.items.ItemEquip;
 import blockfighter.shared.Globals;
 import java.awt.Color;
@@ -13,7 +12,6 @@ import java.util.HashMap;
 public abstract class Skill {
 
     protected static final String HYPER_STANCE_DESC = "Grants Hyper Stance - Ignore knockback and stuns.";
-    protected static LogicModule logic;
     private FontMetrics fontMetric;
     private int boxWidth, boxHeight;
 
@@ -23,10 +21,6 @@ public abstract class Skill {
     protected String[] skillCurLevelDesc = new String[0];
     protected String[] skillNextLevelDesc = new String[0];
     protected String[] maxBonusDesc = new String[0];
-
-    public static void init() {
-        logic = AscensionClient.getLogicModule();
-    }
 
     public void draw(final Graphics2D g, final int x, final int y) {
         g.drawImage(getIcon(), x, y, null);
@@ -159,11 +153,11 @@ public abstract class Skill {
     }
 
     public void setCooldown() {
-        this.skillCastTime = logic.getTime();
+        this.skillCastTime = Core.getLogicModule().getTime();
     }
 
     public long getCooldown() {
-        long elapsed = Globals.nsToMs(logic.getTime() - this.skillCastTime);
+        long elapsed = Globals.nsToMs(Core.getLogicModule().getTime() - this.skillCastTime);
         long cd = getMaxCooldown() - elapsed;
         return (cd > 0) ? cd : 0;
     }

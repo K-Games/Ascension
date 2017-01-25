@@ -1,5 +1,6 @@
 package blockfighter.client.entities.particles.skills.passive;
 
+import blockfighter.client.Core;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.shared.Globals;
 import java.awt.Color;
@@ -19,11 +20,11 @@ public class ParticlePassiveBarrier extends Particle {
     public void update() {
         super.update();
 
-        if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
+        if (Globals.nsToMs(Core.getLogicModule().getTime() - this.lastFrameTime) >= this.frameDuration) {
             if (Globals.Particles.PASSIVE_BARRIER.getSprite() != null && this.frame < Globals.Particles.PASSIVE_BARRIER.getSprite().length - 1) {
                 this.frame++;
             }
-            this.lastFrameTime = logic.getTime();
+            this.lastFrameTime = Core.getLogicModule().getTime();
         }
     }
 

@@ -1,5 +1,6 @@
 package blockfighter.client.entities.particles.skills.bow;
 
+import blockfighter.client.Core;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.client.entities.player.Player;
 import blockfighter.shared.Globals;
@@ -14,7 +15,7 @@ public class ParticleBowPowerCharge extends Particle {
     public ParticleBowPowerCharge(final Player owner) {
         this.duration = 0;
         for (int i = 0; i < 4; i++) {
-            logic.getScreen().addParticle(new ParticleBowPowerCharge(owner, i));
+            Core.getLogicModule().getScreen().addParticle(new ParticleBowPowerCharge(owner, i));
         }
     }
 
@@ -30,8 +31,8 @@ public class ParticleBowPowerCharge extends Particle {
     @Override
     public void update() {
         super.update();
-        if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
-            long durationLeft = this.duration - Globals.nsToMs(logic.getTime() - this.particleStartTime);
+        if (Globals.nsToMs(Core.getLogicModule().getTime() - this.lastFrameTime) >= this.frameDuration) {
+            long durationLeft = this.duration - Globals.nsToMs(Core.getLogicModule().getTime() - this.particleStartTime);
             double numberOfTicks = durationLeft / Globals.nsToMs((long) Globals.CLIENT_LOGIC_UPDATE);
             if (numberOfTicks <= 1) {
                 this.x = owner.getX();
@@ -42,7 +43,7 @@ public class ParticleBowPowerCharge extends Particle {
                 this.x += this.speedX;
                 this.y += this.speedY;
             }
-            this.lastFrameTime = logic.getTime();
+            this.lastFrameTime = Core.getLogicModule().getTime();
         }
     }
 

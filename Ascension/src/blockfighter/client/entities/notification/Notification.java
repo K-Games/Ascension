@@ -1,7 +1,6 @@
 package blockfighter.client.entities.notification;
 
-import blockfighter.client.AscensionClient;
-import blockfighter.client.LogicModule;
+import blockfighter.client.Core;
 import blockfighter.client.entities.items.Item;
 import blockfighter.client.entities.player.Player;
 import blockfighter.shared.Globals;
@@ -12,7 +11,6 @@ import java.util.concurrent.Callable;
 
 public class Notification implements Callable<Notification> {
 
-    private static LogicModule logic;
     private final byte type;
     private long startTime = 0;
     private final int duration = 5000;
@@ -28,31 +26,27 @@ public class Notification implements Callable<Notification> {
     private static int[] yPoints = {0, 0, BG_HEIGHT, BG_HEIGHT};
 
     public Notification(final int EXP) {
-        this.startTime = logic.getTime();
+        this.startTime = Core.getLogicModule().getTime();
         this.type = Globals.NOTIFICATION_EXP;
         this.output = "Gained " + Globals.NUMBER_FORMAT.format(EXP) + " EXP";
     }
 
     public Notification(final Player killer, final Player victim) {
-        this.startTime = logic.getTime();
+        this.startTime = Core.getLogicModule().getTime();
         this.type = Globals.NOTIFICATION_KILL;
         this.output = killer.getPlayerName() + " " + KILL_TEXT[Globals.rng(KILL_TEXT.length)] + " " + victim.getPlayerName() + "!";
     }
 
     public Notification(final Item i) {
-        this.startTime = logic.getTime();
+        this.startTime = Core.getLogicModule().getTime();
         this.type = Globals.NOTIFICATION_ITEM;
         this.output = "Received " + i.getItemName();
-    }
-
-    public static void init() {
-        logic = AscensionClient.getLogicModule();
     }
 
     @Override
     public Notification call() {
         if (!isExpired()) {
-            float transparency = 1f - Globals.nsToMs(logic.getTime() - this.startTime) * 1f / this.duration;
+            float transparency = 1f - Globals.nsToMs(Core.getLogicModule().getTime() - this.startTime) * 1f / this.duration;
             this.colour = new Color(255, 255, 255, (int) (transparency * 255));
             this.bgColour = new Color(0, 0, 0, (int) (transparency * 255));
         }
@@ -60,7 +54,7 @@ public class Notification implements Callable<Notification> {
     }
 
     public boolean isExpired() {
-        return Globals.nsToMs(logic.getTime() - this.startTime) >= this.duration;
+        return Globals.nsToMs(Core.getLogicModule().getTime() - this.startTime) >= this.duration;
     }
 
     public void draw(final Graphics2D g, final int x, final int y) {

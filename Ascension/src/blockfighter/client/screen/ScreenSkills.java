@@ -1,5 +1,6 @@
 package blockfighter.client.screen;
 
+import blockfighter.client.Core;
 import blockfighter.client.SaveData;
 import blockfighter.client.entities.player.skills.Skill;
 import blockfighter.shared.Globals;
@@ -108,7 +109,7 @@ public class ScreenSkills extends ScreenMenu {
     }
 
     public ScreenSkills() {
-        this.c = logic.getSelectedChar();
+        this.c = Core.getLogicModule().getSelectedChar();
         this.hotkeyList = this.c.getHotkeys();
         this.skillList = this.c.getSkills();
     }

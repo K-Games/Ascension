@@ -1,7 +1,6 @@
 package blockfighter.client.entities.mob;
 
-import blockfighter.client.AscensionClient;
-import blockfighter.client.LogicModule;
+import blockfighter.client.Core;
 import blockfighter.client.entities.mob.boss.Lightning.BossLightning;
 import blockfighter.client.net.GameClient;
 import blockfighter.client.net.PacketSender;
@@ -29,7 +28,6 @@ public abstract class Mob implements Callable<Mob> {
     protected byte facing, animState, frame;
     protected int key;
     protected double[] stats;
-    protected static LogicModule logic;
 
     public Mob(final int x, final int y, final int k) {
         this.x = x;
@@ -38,10 +36,6 @@ public abstract class Mob implements Callable<Mob> {
         this.facing = Globals.RIGHT;
         this.animState = ANIM_STAND;
         this.frame = 0;
-    }
-
-    public static void init() {
-        logic = AscensionClient.getLogicModule();
     }
 
     public Point getPos() {
@@ -98,7 +92,7 @@ public abstract class Mob implements Callable<Mob> {
         update();
         if (this.stats[STAT_MAXHP] <= 0) {
             // Get boss stat
-            PacketSender.sendGetMobStat(logic.getSelectedRoom(), this.key, STAT_MAXHP);
+            PacketSender.sendGetMobStat(Core.getLogicModule().getSelectedRoom(), this.key, STAT_MAXHP);
         }
         return this;
     }

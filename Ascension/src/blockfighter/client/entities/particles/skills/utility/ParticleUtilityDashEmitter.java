@@ -1,5 +1,6 @@
 package blockfighter.client.entities.particles.skills.utility;
 
+import blockfighter.client.Core;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.client.entities.player.Player;
 import java.awt.Point;
@@ -22,7 +23,7 @@ public class ParticleUtilityDashEmitter extends Particle {
                 this.y = p.y;
             }
             final ParticleUtilityDash b = new ParticleUtilityDash(this.x, this.y, this.facing);
-            logic.getScreen().addParticle(b);
+            Core.getLogicModule().getScreen().addParticle(b);
         }
     }
 }

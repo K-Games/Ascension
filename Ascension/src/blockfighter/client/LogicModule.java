@@ -16,14 +16,9 @@ public class LogicModule implements Runnable {
     private byte selectedRoom = 0;
     private byte myPlayerKey = -1;
     private Screen screen;
-    private final SoundModule soundModule;
 
     private long connectStartTime = 0;
     private boolean connecting = false;
-
-    public LogicModule(final SoundModule s) {
-        this.soundModule = s;
-    }
 
     @Override
     public void run() {
@@ -114,7 +109,7 @@ public class LogicModule implements Runnable {
     }
 
     public void setScreen(final Screen s) {
-        this.soundModule.playBGM(s.getBgmCode());
+        Core.getSoundModule().playBGM(s.getBgmCode());
         if (this.screen != null) {
             this.screen.unload();
         }
@@ -124,26 +119,6 @@ public class LogicModule implements Runnable {
     public void returnMenu() {
         shutdownClient();
         setScreen(new ScreenServerList(true));
-    }
-
-    public void playSound(final byte sfxID, final int x, final int y) {
-        this.soundModule.playSound(sfxID, x, y);
-    }
-
-    public void playBGM(final byte bgmID) {
-        this.soundModule.playBGM(bgmID);
-    }
-
-    public void disableSound() {
-        this.soundModule.mute();
-    }
-
-    public void enableSound() {
-        this.soundModule.unmute();
-    }
-
-    public void setSoundLisenterPos(final int x, final int y) {
-        this.soundModule.setListenerPos(x, y);
     }
 
     private void shutdownClient() {

@@ -1,5 +1,6 @@
 package blockfighter.client.entities.particles.skills.utility;
 
+import blockfighter.client.Core;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.client.entities.player.Player;
 import blockfighter.shared.Globals;
@@ -19,12 +20,12 @@ public class ParticleUtilityFortify extends Particle {
     @Override
     public void update() {
         super.update();
-        if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
+        if (Globals.nsToMs(Core.getLogicModule().getTime() - this.lastFrameTime) >= this.frameDuration) {
             if (Globals.Particles.UTILITY_FORTIFY.getSprite() != null && this.frame < Globals.Particles.UTILITY_FORTIFY.getSprite().length - 1) {
                 this.frame++;
             }
 
-            this.lastFrameTime = logic.getTime();
+            this.lastFrameTime = Core.getLogicModule().getTime();
         }
     }
 

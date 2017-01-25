@@ -1,5 +1,6 @@
 package blockfighter.client.entities.particles.skills.sword;
 
+import blockfighter.client.Core;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.client.entities.player.Player;
 import blockfighter.shared.Globals;
@@ -25,21 +26,21 @@ public class ParticleSwordPhantom2 extends Particle {
     @Override
     public void update() {
         super.update();
-        if (Globals.nsToMs(logic.getTime() - this.particleStartTime) >= 50 && trailX[1] == null) {
+        if (Globals.nsToMs(Core.getLogicModule().getTime() - this.particleStartTime) >= 50 && trailX[1] == null) {
             this.trailX[1] = this.owner.getX();
             this.trailY[3] = this.owner.getY() - 100;
             this.trailY[2] = this.owner.getY() - 20;
         }
 
-        if (Globals.nsToMs(logic.getTime() - this.lastFrameTime) >= this.frameDuration) {
-            double fade = 1D * Globals.nsToMs(logic.getTime() - this.particleStartTime) / (this.duration);
+        if (Globals.nsToMs(Core.getLogicModule().getTime() - this.lastFrameTime) >= this.frameDuration) {
+            double fade = 1D * Globals.nsToMs(Core.getLogicModule().getTime() - this.particleStartTime) / (this.duration);
             double alpha = 250 * (1D - ((fade > 1) ? 1D : fade));
             this.frameDuration = 50;
             trailColor = new Color(0, 0, 0, (int) alpha);
             if (Globals.Particles.SWORD_PHANTOM2.getSprite() != null && this.frame < Globals.Particles.SWORD_PHANTOM2.getSprite().length) {
                 this.frame++;
             }
-            this.lastFrameTime = logic.getTime();
+            this.lastFrameTime = Core.getLogicModule().getTime();
         }
     }
 

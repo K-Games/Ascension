@@ -1,5 +1,6 @@
 package blockfighter.client.screen;
 
+import blockfighter.client.Core;
 import blockfighter.client.entities.items.ItemEquip;
 import blockfighter.shared.Globals;
 import java.awt.Graphics2D;
@@ -29,7 +30,7 @@ public class ScreenSpriteTest extends ScreenMenu {
 
     @Override
     public void update() {
-        final long now = logic.getTime(); // Get time now
+        final long now = Core.getLogicModule().getTime(); // Get time now
         if (now - this.lastUpdateTime >= Globals.CLIENT_LOGIC_UPDATE) {
 
             this.nextFrameTime -= Globals.CLIENT_LOGIC_UPDATE;
