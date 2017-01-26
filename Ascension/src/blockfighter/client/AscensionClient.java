@@ -25,7 +25,7 @@ public class AscensionClient {
     public static final MouseHandler MOUSE_HANDLER = new MouseHandler();
     public static final FocusHandler FOCUS_HANDLER = new FocusHandler();
 
-    public static final ExecutorService SHARED_THREADPOOL = Executors.newFixedThreadPool(4,
+    public static final ExecutorService SHARED_THREADPOOL = Executors.newFixedThreadPool(5,
             new BasicThreadFactory.Builder()
                     .namingPattern("Shared-Thread-%d")
                     .daemon(true)
