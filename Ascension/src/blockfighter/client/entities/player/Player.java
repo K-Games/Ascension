@@ -12,7 +12,7 @@ import java.util.concurrent.Callable;
 
 public class Player implements Callable<Player> {
 
-    private int x, y;
+    private int x, y, queueX, queueY;
     private final byte key;
     private byte facing;
     private byte animState;
@@ -80,9 +80,14 @@ public class Player implements Callable<Player> {
     }
 
     public void setPos(final int x, final int y) {
-        this.x = x;
-        this.y = y;
+        this.queueX = x;
+        this.queueY = y;
         this.lastUpdateTime = Core.getLogicModule().getTime();
+    }
+
+    public void updatePos() {
+        this.x = this.queueX;
+        this.y = this.queueY;
     }
 
     public void setFacing(final byte dir) {

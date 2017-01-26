@@ -4,6 +4,9 @@ import blockfighter.client.Core;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.client.entities.player.Player;
 import blockfighter.shared.Globals;
+import java.awt.AlphaComposite;
+import java.awt.Composite;
+import java.awt.Graphics2D;
 import java.awt.Point;
 
 public class ParticleUtilityCloneEmitter extends Particle {
@@ -25,7 +28,7 @@ public class ParticleUtilityCloneEmitter extends Particle {
                 this.x = p.x;
                 this.y = p.y;
                 final ParticleUtilityCloneParticle b = new ParticleUtilityCloneParticle(this.x, this.y, this.owner, this.owner.getFacing(), this.owner.getAnimState(), this.owner.getFrame());
-                Core.getLogicModule().getScreen().addParticle(b);
+                //Core.getLogicModule().getScreen().addParticle(b);
             }
             lastParticleTime = Core.getLogicModule().getTime();
         }
@@ -34,5 +37,14 @@ public class ParticleUtilityCloneEmitter extends Particle {
     @Override
     public boolean isExpired() {
         return super.isExpired() || this.owner.isDead();
+    }
+
+    @Override
+    public void draw(final Graphics2D g) {
+        Composite reset = g.getComposite();
+        g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.7f));
+        int offset = (owner.getFacing() == Globals.RIGHT) ? -35 : 35;
+        owner.drawSprite(g, owner.getX() + offset, owner.getY(), owner.getFacing(), owner.getAnimState(), owner.getFrame());
+        g.setComposite(reset);
     }
 }
