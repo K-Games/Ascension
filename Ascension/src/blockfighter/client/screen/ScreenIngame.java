@@ -45,10 +45,10 @@ public class ScreenIngame extends Screen {
     private final DecimalFormat COOLDOWN_FORMAT = new DecimalFormat("0.0");
     private final ConcurrentHashMap<Byte, Player> players;
     private final ConcurrentHashMap<Integer, Mob> mobs = new ConcurrentHashMap<>();
-    private final ConcurrentHashMap<Integer, Particle> particles = new ConcurrentHashMap<>(500, 0.9f, 1);
-    private final ConcurrentLinkedQueue<IngameNumber> ingameNumber = new ConcurrentLinkedQueue<>();
+    private final ConcurrentHashMap<Integer, Particle> particles = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Integer, IngameNumber> ingameNumber = new ConcurrentHashMap<>();
     private final ConcurrentLinkedQueue<Notification> notifications = new ConcurrentLinkedQueue<>();
-    private final ConcurrentLinkedQueue<Emote> emotes = new ConcurrentLinkedQueue<>();
+    private final ConcurrentHashMap<Integer, Emote> emotes = new ConcurrentHashMap<>();
 
     private double screenShakeX, screenShakeY;
     private double screenShakeXAmount, screenShakeYAmount;
@@ -156,40 +156,41 @@ public class ScreenIngame extends Screen {
 
     private void updateEmotes() {
         LinkedList<Future<Emote>> futures = new LinkedList<>();
-        for (Emote emote : this.emotes) {
-            futures.add(AscensionClient.SHARED_THREADPOOL.submit(emote));
+        for (final Map.Entry<Integer, Emote> emote : this.emotes.entrySet()) {
+            futures.add(AscensionClient.SHARED_THREADPOOL.submit(emote.getValue()));
         }
 
         for (Future<Emote> task : futures) {
             try {
-                task.get();
+                Emote n = task.get();
+                if (n.isExpired()) {
+                    this.emotes.remove(n.getKey());
+                    Emote.returnKey(n.getKey());
+                }
             } catch (final Exception ex) {
                 Globals.logError(ex.toString(), ex);
             }
-        }
-
-        if (this.emotes.peek() != null && this.emotes.peek().isExpired()) {
-            this.emotes.remove();
         }
     }
 
     private void updateIngameNumber() {
         LinkedList<Future<IngameNumber>> futures = new LinkedList<>();
-        for (final IngameNumber n : this.ingameNumber) {
-            futures.add(AscensionClient.SHARED_THREADPOOL.submit(n));
+        for (final Map.Entry<Integer, IngameNumber> n : this.ingameNumber.entrySet()) {
+            futures.add(AscensionClient.SHARED_THREADPOOL.submit(n.getValue()));
         }
 
         for (Future<IngameNumber> task : futures) {
             try {
-                task.get();
+                IngameNumber n = task.get();
+                if (n.isExpired()) {
+                    this.ingameNumber.remove(n.getKey());
+                    IngameNumber.returnKey(n.getKey());
+                }
             } catch (final Exception ex) {
                 Globals.logError(ex.toString(), ex);
             }
         }
 
-        if (this.ingameNumber.peek() != null && this.ingameNumber.peek().isExpired()) {
-            this.ingameNumber.remove();
-        }
     }
 
     private void updateNotifications() {
@@ -293,12 +294,16 @@ public class ScreenIngame extends Screen {
                 Globals.logError(e.toString(), e);
             }
         }
-        for (final IngameNumber number : this.ingameNumber) {
-            number.draw(g);
+        for (final Map.Entry<Integer, IngameNumber> number : this.ingameNumber.entrySet()) {
+            if (!number.getValue().isExpired()) {
+                number.getValue().draw(g);
+            }
         }
-        for (final Emote emote : this.emotes) {
+        for (final Map.Entry<Integer, Emote> emote : this.emotes.entrySet()) {
             try {
-                emote.draw(g);
+                if (!emote.getValue().isExpired()) {
+                    emote.getValue().draw(g);
+                }
             } catch (Exception e) {
                 Globals.logError(e.toString(), e);
             }
@@ -546,7 +551,8 @@ public class ScreenIngame extends Screen {
             return;
         }
         final byte emoteID = data[2];
-        this.emotes.add(Globals.Emotes.get(emoteID).newEmote(this.players.get(playerKey)));
+        Emote newEmote = Globals.Emotes.get(emoteID).newEmote(this.players.get(playerKey));
+        this.emotes.put(newEmote.getKey(), newEmote);
     }
 
     private void dataScreenShake(final byte[] data) {
@@ -675,7 +681,8 @@ public class ScreenIngame extends Screen {
         final int x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
         final int y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
         final int value = Globals.bytesToInt(Arrays.copyOfRange(data, 10, 14));
-        this.ingameNumber.add(new IngameNumber(value, type, new Point(x, y)));
+        IngameNumber newNumber = new IngameNumber(value, type, new Point(x, y));
+        this.ingameNumber.put(newNumber.getKey(), newNumber);
     }
 
     private void dataParticleEffect(final byte[] data) {
@@ -1068,7 +1075,7 @@ public class ScreenIngame extends Screen {
             Entry<Integer, Particle> particle = particleIter.next();
             particle.getValue().setExpire();
             particleIter.remove();
-            Particle.returnParticleKey(particle.getKey());
+            Particle.returnKey(particle.getKey());
         }
 
         Particle.unloadParticles();

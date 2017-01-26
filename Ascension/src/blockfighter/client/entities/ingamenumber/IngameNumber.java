@@ -6,20 +6,39 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class IngameNumber implements Callable<IngameNumber> {
 
+    private final int key;
     private final byte type;
     private double x, y;
 
     private final double speedX;
-
     private final double speedY;
     private final int number;
     private long startTime = 0;
     private final int duration = 700;
 
+    private static final ConcurrentLinkedQueue<Integer> AVAILABLE_KEYS = new ConcurrentLinkedQueue<>();
+    private static int keyCount = 0;
+
+    public static void returnKey(final int key) {
+        AVAILABLE_KEYS.add(key);
+    }
+
+    private static int getNextAvailableKey() {
+        Integer nextKey = AVAILABLE_KEYS.poll();
+        while (nextKey == null) {
+            AVAILABLE_KEYS.add(keyCount);
+            keyCount++;
+            nextKey = AVAILABLE_KEYS.poll();
+        }
+        return nextKey;
+    }
+
     public IngameNumber(final int num, final byte t, final Point loc) {
+        this.key = getNextAvailableKey();
         this.startTime = Core.getLogicModule().getTime();
         this.number = num;
         this.type = t;
@@ -27,6 +46,10 @@ public class IngameNumber implements Callable<IngameNumber> {
         this.y = loc.y - 18;
         this.speedY = -2;
         this.speedX = 0;
+    }
+
+    public int getKey() {
+        return this.key;
     }
 
     @Override

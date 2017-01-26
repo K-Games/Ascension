@@ -6,9 +6,11 @@ import blockfighter.shared.Globals;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public abstract class Emote implements Callable<Emote> {
 
+    private final int key;
     protected int x, y;
     protected double size = 10.0;
     protected int frameDuration;
@@ -17,10 +19,25 @@ public abstract class Emote implements Callable<Emote> {
     protected int frame = 0;
 
     protected final Player owner;
+    protected int duration;
 
     private static boolean LOADED = false;
+    private static final ConcurrentLinkedQueue<Integer> AVAILABLE_KEYS = new ConcurrentLinkedQueue<>();
+    private static int keyCount = 0;
 
-    protected int duration;
+    public static void returnKey(final int key) {
+        AVAILABLE_KEYS.add(key);
+    }
+
+    private static int getNextAvailableKey() {
+        Integer nextKey = AVAILABLE_KEYS.poll();
+        while (nextKey == null) {
+            AVAILABLE_KEYS.add(keyCount);
+            keyCount++;
+            nextKey = AVAILABLE_KEYS.poll();
+        }
+        return nextKey;
+    }
 
     public static void unloadEmotes() {
         Globals.log(Emote.class, "Unloading Emotes...", Globals.LOG_TYPE_DATA);
@@ -74,6 +91,7 @@ public abstract class Emote implements Callable<Emote> {
     }
 
     public Emote(final Player owner) {
+        this.key = getNextAvailableKey();
         if (Core.getLogicModule() != null) {
             this.emoteStartTime = Core.getLogicModule().getTime();
             this.lastFrameTime = this.emoteStartTime;
@@ -83,6 +101,10 @@ public abstract class Emote implements Callable<Emote> {
         }
         this.duration = 1000;
         this.owner = owner;
+    }
+
+    public int getKey() {
+        return this.key;
     }
 
     public void draw(final Graphics2D g) {

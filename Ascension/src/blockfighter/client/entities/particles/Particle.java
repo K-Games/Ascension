@@ -20,33 +20,26 @@ public abstract class Particle implements Callable<Particle> {
 
     protected final Player owner;
 
-    private static final ConcurrentLinkedQueue<Integer> PARTICLE_KEYS = new ConcurrentLinkedQueue<>();
-    private static int numParticleKeys = 500;
+    private static final ConcurrentLinkedQueue<Integer> AVAILABLE_KEYS = new ConcurrentLinkedQueue<>();
+    private static int keyCount = 0;
 
     protected final int key;
     private static boolean LOADED = false;
 
     protected int duration;
 
-    public static void init() {
-        for (int key = 0; key < numParticleKeys; key++) {
-            PARTICLE_KEYS.add(key);
-        }
-
-    }
-
-    public static int getNextParticleKey() {
-        Integer nextKey = PARTICLE_KEYS.poll();
+    public static int getNextAvailableKey() {
+        Integer nextKey = AVAILABLE_KEYS.poll();
         while (nextKey == null) {
-            PARTICLE_KEYS.add(numParticleKeys);
-            numParticleKeys++;
-            nextKey = PARTICLE_KEYS.poll();
+            AVAILABLE_KEYS.add(keyCount);
+            keyCount++;
+            nextKey = AVAILABLE_KEYS.poll();
         }
         return nextKey;
     }
 
-    public static void returnParticleKey(final int key) {
-        PARTICLE_KEYS.add(key);
+    public static void returnKey(final int key) {
+        AVAILABLE_KEYS.add(key);
     }
 
     public static void unloadParticles() {
@@ -127,7 +120,7 @@ public abstract class Particle implements Callable<Particle> {
     }
 
     public Particle(final int x, final int y) {
-        this(getNextParticleKey(), x, y, null);
+        this(getNextAvailableKey(), x, y, null);
     }
 
     public Particle(final int x, final int y, final byte f) {
@@ -141,7 +134,7 @@ public abstract class Particle implements Callable<Particle> {
     }
 
     public Particle(final int x, final int y, final Player owner) {
-        this(getNextParticleKey(), x, y, owner);
+        this(getNextAvailableKey(), x, y, owner);
     }
 
     public Particle(final Player owner) {

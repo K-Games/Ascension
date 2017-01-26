@@ -1,6 +1,5 @@
 package blockfighter.client;
 
-import blockfighter.client.entities.particles.Particle;
 import blockfighter.client.render.RenderModule;
 import blockfighter.client.render.RenderPanel;
 import blockfighter.client.screen.Screen;
@@ -8,7 +7,6 @@ import blockfighter.client.screen.ScreenSelectChar;
 import blockfighter.client.screen.ScreenTitle;
 import blockfighter.shared.Globals;
 import java.awt.Dimension;
-import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.Base64;
@@ -34,18 +32,6 @@ public class AscensionClient {
 
     static {
         Globals.loadClient();
-        Class<?>[] classes = {
-            Particle.class
-        };
-
-        for (Class<?> cls : classes) {
-            try {
-                Globals.log(AscensionClient.class, "Initializing " + cls.getSimpleName(), Globals.LOG_TYPE_DATA);
-                cls.getMethod("init").invoke(null);
-            } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
-                Globals.logError(ex.toString(), ex);
-            }
-        }
     }
 
     public static void launch(final String[] args) {
