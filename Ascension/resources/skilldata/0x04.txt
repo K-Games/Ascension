@@ -10,7 +10,7 @@ Slash 3 times.
 [basevalue]
 1
 [multvalue]
-0.06
+0.05
 [passive]
 false
 [buffduration]
