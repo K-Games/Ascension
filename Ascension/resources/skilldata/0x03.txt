@@ -8,10 +8,10 @@ Swing your blade 4 times.
 [maxcooldown]
 500
 [basevalue]
-0.75
+0.85
 [multvalue]
 0.03
 [passive]
 false
 [lifesteal]
-0.0025
+0.0075
