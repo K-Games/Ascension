@@ -6,6 +6,7 @@ import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.net.PacketSender;
 import blockfighter.shared.Globals;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -79,7 +80,8 @@ public class SkillPassiveStatic extends SkillPassive {
                     if (crit) {
                         damage = (int) player.criticalDamage(damage);
                     }
-                    target.queueDamage(new Damage(damage, false, player, target, crit, target.getHitbox(), target.getHitbox()));
+                    Point2D.Double newPos = new Point2D.Double(target.getHitbox().x + target.getHitbox().width / 2, target.getHitbox().y + target.getHitbox().height / 2);
+                    target.queueDamage(new Damage(damage, false, player, target, crit, newPos));
                     PacketSender.sendParticle(this.logic, Globals.Particles.PASSIVE_STATIC.getParticleCode(), player.getKey(), target.getKey());
                 }
             } else {
@@ -90,7 +92,8 @@ public class SkillPassiveStatic extends SkillPassive {
                     if (crit) {
                         damage = (int) player.criticalDamage(damage);
                     }
-                    target.queueDamage(new Damage(damage, false, player, target, crit, target.getHitbox(), target.getHitbox()));
+                    Point2D.Double newPos = new Point2D.Double(target.getHitbox().x + target.getHitbox().width / 2, target.getHitbox().y + target.getHitbox().height / 2);
+                    target.queueDamage(new Damage(damage, false, player, target, crit, newPos));
                 }
             }
         }

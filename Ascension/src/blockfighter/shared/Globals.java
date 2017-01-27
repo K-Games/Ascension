@@ -84,6 +84,7 @@ public class Globals {
     public final static Font ARIAL_24PT = new Font("Arial", Font.PLAIN, 24);
     public final static Font ARIAL_18PT = new Font("Arial", Font.PLAIN, 18);
     public final static Font ARIAL_18PTBOLD = new Font("Arial", Font.BOLD, 18);
+    public final static Font ARIAL_19PTBOLD = new Font("Arial", Font.BOLD, 19);
     public final static Font ARIAL_21PTBOLD = new Font("Arial", Font.BOLD, 21);
 
     public final static byte MAX_NAME_LENGTH = 15;

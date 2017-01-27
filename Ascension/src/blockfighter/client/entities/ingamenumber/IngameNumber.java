@@ -10,12 +10,16 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class IngameNumber implements Callable<IngameNumber> {
 
+    private static final Color DAMAGE_RED = new Color(255, 15, 0);
+    private static final Color DAMAGE_ORANGE = new Color(255, 200, 0);
+    private static final Color DAMAGE_BLUE = new Color(105, 185, 255);
+
     private final int key;
     private final byte type;
     private double x, y;
 
-    private final double speedX;
-    private final double speedY;
+    private double speedX;
+    private double speedY;
     private final int number;
     private long startTime = 0;
     private final int duration = 700;
@@ -44,8 +48,8 @@ public class IngameNumber implements Callable<IngameNumber> {
         this.type = t;
         this.x = loc.x;
         this.y = loc.y - 18;
-        this.speedY = -2;
-        this.speedX = 0;
+        this.speedY = -12 + Globals.rng(40) / 10D;
+        this.speedX = (Globals.rng(10) - 5) / 2D;
     }
 
     public int getKey() {
@@ -54,6 +58,7 @@ public class IngameNumber implements Callable<IngameNumber> {
 
     @Override
     public IngameNumber call() {
+        this.speedY += 0.6;
         this.y += this.speedY;
         this.x += this.speedX;
         return this;
@@ -64,7 +69,7 @@ public class IngameNumber implements Callable<IngameNumber> {
     }
 
     public void draw(final Graphics2D g) {
-        g.setFont((this.type == Globals.NUMBER_TYPE_PLAYERCRIT) ? Globals.ARIAL_21PTBOLD : Globals.ARIAL_18PTBOLD);
+        g.setFont((this.type == Globals.NUMBER_TYPE_PLAYERCRIT) ? Globals.ARIAL_21PTBOLD : Globals.ARIAL_19PTBOLD);
 
         String output = Integer.toString(this.number);
         output = (this.type == Globals.NUMBER_TYPE_PLAYERCRIT) ? output + "!" : output;
@@ -77,13 +82,13 @@ public class IngameNumber implements Callable<IngameNumber> {
         }
         switch (this.type) {
             case Globals.NUMBER_TYPE_PLAYER:
-                g.setColor(Color.red);
+                g.setColor(DAMAGE_RED);
                 break;
             case Globals.NUMBER_TYPE_PLAYERCRIT:
-                g.setColor(Color.ORANGE);
+                g.setColor(DAMAGE_ORANGE);
                 break;
             case Globals.NUMBER_TYPE_MOB:
-                g.setColor(Color.MAGENTA);
+                g.setColor(DAMAGE_BLUE);
                 break;
         }
         g.drawString(output, (float) this.x - outputWidth / 2, (float) this.y);
