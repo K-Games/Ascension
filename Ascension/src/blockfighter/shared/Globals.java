@@ -611,7 +611,8 @@ public class Globals {
 
     public static final byte NUMBER_TYPE_PLAYER = 0,
             NUMBER_TYPE_PLAYERCRIT = 1,
-            NUMBER_TYPE_MOB = 2;
+            NUMBER_TYPE_MOB = 2,
+            NUMBER_TYPE_MOBCRIT = 3;
 
     public static final byte NOTIFICATION_EXP = 0,
             NOTIFICATION_ITEM = 1,

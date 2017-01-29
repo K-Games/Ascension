@@ -69,10 +69,10 @@ public class IngameNumber implements Callable<IngameNumber> {
     }
 
     public void draw(final Graphics2D g) {
-        g.setFont((this.type == Globals.NUMBER_TYPE_PLAYERCRIT) ? Globals.ARIAL_21PTBOLD : Globals.ARIAL_19PTBOLD);
+        g.setFont((this.type == Globals.NUMBER_TYPE_PLAYERCRIT || this.type == Globals.NUMBER_TYPE_MOBCRIT) ? Globals.ARIAL_21PTBOLD : Globals.ARIAL_19PTBOLD);
 
         String output = Integer.toString(this.number);
-        output = (this.type == Globals.NUMBER_TYPE_PLAYERCRIT) ? output + "!" : output;
+        output = (this.type == Globals.NUMBER_TYPE_PLAYERCRIT || this.type == Globals.NUMBER_TYPE_MOBCRIT) ? output + "!" : output;
 
         int outputWidth = g.getFontMetrics().stringWidth(output);
         for (int i = 0; i < 2; i++) {
@@ -88,6 +88,7 @@ public class IngameNumber implements Callable<IngameNumber> {
                 g.setColor(DAMAGE_ORANGE);
                 break;
             case Globals.NUMBER_TYPE_MOB:
+            case Globals.NUMBER_TYPE_MOBCRIT:
                 g.setColor(DAMAGE_BLUE);
                 break;
         }
