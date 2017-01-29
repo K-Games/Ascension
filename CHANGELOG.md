@@ -4,6 +4,28 @@
 
 ## Version 0.23 Update 1
 
+### Gameplay Changes
+
+#### Skill Changes
+
+##### Sword
+
+* Blade Flurry
+	* Damage increased from 75% + 3% per level to 85% + 3% per level.
+	* Level 30 Bonus - HP restored increased from 0.25% per hit to 0.75% per hit.
+* Rend
+	* Damage reduced from 100% + 6% per level to 100% + 5% per level.
+	
+### Client Changes
+* Ingame Damage numbers now distinguishes Critical Hits received with larger font and "!" - the same format as dealing a Critical Hit.
+* Ingame Damage numbers colours have been changed for visual clarity.
+* Ingame Damage numbers movement path changed from vertical to falling curve.
+* Fixed player jitter when there are a lot of players on screen.
+* Fixed particle keys not being cleaned up correctly.
+* Fixed minor memory leak with Equipment Icons.
+
+### Server Changes
+
 ---
 
 ## Version 0.23
