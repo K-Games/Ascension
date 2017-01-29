@@ -231,7 +231,6 @@ public class PacketHandler {
                 bytes[0] = Globals.DATA_PLAYER_CREATE;
                 bytes[1] = roomData.getMap().getMapID();
                 bytes[2] = roomData.getPlayerKey(id);
-                bytes[3] = Globals.SERVER_MAX_ROOM_PLAYERS;
                 PacketSender.sendConnection(bytes, c);
                 Globals.log(PacketHandler.class, "DATA_PLAYER_CREATE " + c + " Resending player <" + roomData.getPlayers().get(roomData.getPlayerKey(id)).getPlayerName() + "> creation confirmation. uid: " + id, Globals.LOG_TYPE_DATA);
                 return;
@@ -293,7 +292,6 @@ public class PacketHandler {
         bytes[0] = Globals.DATA_PLAYER_CREATE;
         bytes[1] = roomData.getMap().getMapID();
         bytes[2] = freeKey;
-        bytes[3] = Globals.SERVER_MAX_ROOM_PLAYERS;
         PacketSender.sendConnection(bytes, c);
         GameServer.addPlayerConnection(c, newPlayer);
 

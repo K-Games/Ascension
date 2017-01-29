@@ -33,8 +33,7 @@ public class PacketHandler {
 
     private static void receiveCreate(final byte[] data) {
         final byte mapID = data[1],
-                key = data[2],
-                size = data[3];
+                key = data[2];
 
         Core.getLogicModule().stopCharacterLoginAttemptTimeout();
         Core.getLogicModule().setMyPlayerKey(key);
@@ -49,7 +48,7 @@ public class PacketHandler {
                 }
             }
             Globals.log(PacketHandler.class, "Finished loading.", Globals.LOG_TYPE_DATA);
-            ScreenIngame ingameScreen = new ScreenIngame(size, loading.getLoadedMap(), gameClient);
+            ScreenIngame ingameScreen = new ScreenIngame(loading.getLoadedMap(), gameClient);
             Core.getLogicModule().setScreen(ingameScreen);
             PacketSender.sendGetAll(Core.getLogicModule().getSelectedRoom(), key);
         } catch (final Exception e) {

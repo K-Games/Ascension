@@ -75,12 +75,12 @@ public class ScreenIngame extends Screen {
     private int drawInfoHotkey = -1;
     private double expBarWidth, expBarDelta, expBarLevel;
 
-    public ScreenIngame(final byte numPlayer, final GameMap m, final GameClient cl) {
+    public ScreenIngame(final GameMap m, final GameClient cl) {
         this.client = cl;
         this.c = Core.getLogicModule().getSelectedChar();
         this.expBarLevel = this.c.getBaseStats()[Globals.STAT_LEVEL];
 
-        this.players = new ConcurrentHashMap<>(numPlayer);
+        this.players = new ConcurrentHashMap<>();
         for (int j = 0; j < this.hotkeySlots.length; j++) {
             this.hotkeySlots[j] = new Rectangle2D.Double(Globals.WINDOW_WIDTH / 2 - Globals.HUD[0].getWidth() / 2 + 10 + (j * 66), 656, 60,
                     60);

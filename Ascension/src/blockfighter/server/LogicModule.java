@@ -163,19 +163,23 @@ public class LogicModule implements Runnable {
 
         if (posDatas.size() > 0) {
             LOGIC_THREAD_POOL.execute(() -> {
-                byte[] bytes = new byte[Globals.PACKET_BYTE * 1
-                        + (Globals.PACKET_BYTE * 2 + Globals.PACKET_INT * 2) * posDatas.size()];
-                Arrays.fill(bytes, (byte) -1);
-
-                bytes[0] = Globals.DATA_PLAYER_SET_POS;
-                int bytePos = 1;
-
+                final int maxPosCount = 50;
                 while (!posDatas.isEmpty()) {
-                    byte[] posData = posDatas.poll();
-                    System.arraycopy(posData, 0, bytes, bytePos, posData.length);
-                    bytePos += posData.length;
+                    int packetSize = (posDatas.size() >= maxPosCount) ? maxPosCount : posDatas.size();
+                    byte[] bytes = new byte[Globals.PACKET_BYTE * 1
+                            + (Globals.PACKET_BYTE * 2 + Globals.PACKET_INT * 2) * packetSize];
+                    Arrays.fill(bytes, (byte) -1);
+
+                    bytes[0] = Globals.DATA_PLAYER_SET_POS;
+                    int bytePos = 1;
+
+                    for (int i = 0; i < maxPosCount && !posDatas.isEmpty(); i++) {
+                        byte[] posData = posDatas.poll();
+                        System.arraycopy(posData, 0, bytes, bytePos, posData.length);
+                        bytePos += posData.length;
+                    }
+                    PacketSender.sendAll(bytes, this);
                 }
-                PacketSender.sendAll(bytes, this);
             });
         }
     }

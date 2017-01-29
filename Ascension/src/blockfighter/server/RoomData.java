@@ -37,7 +37,6 @@ public class RoomData {
         this.minLevel = minLevel;
         this.maxLevel = maxLevel;
         this.roomIndex = roomIndex;
-        reset();
     }
 
     public boolean isFull() {
@@ -53,6 +52,7 @@ public class RoomData {
     }
 
     private void resetKeys() {
+        Globals.log(RoomData.class, "Resetting room keys", Globals.LOG_TYPE_DATA);
         this.projKeys.clear();
         this.projMaxKeys = 500;
         for (int i = 0; i < this.projMaxKeys; i++) {
@@ -65,8 +65,10 @@ public class RoomData {
         }
 
         this.playerKeys.clear();
-        for (byte i = 0; i < Globals.SERVER_MAX_ROOM_PLAYERS; i++) {
-            this.playerKeys.add(i);
+        byte keyCount = 0;
+        while (this.playerKeys.size() < Globals.SERVER_MAX_ROOM_PLAYERS && keyCount <= Byte.MAX_VALUE) {
+            this.playerKeys.add(keyCount);
+            keyCount++;
         }
     }
 
