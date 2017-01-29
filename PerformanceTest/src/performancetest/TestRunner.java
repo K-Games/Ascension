@@ -38,17 +38,16 @@ public class TestRunner implements Runnable {
     }
 
     public void update() {
-        while (true) {
-            for (TestLogicModule lm : logic) {
-                if (lm != null) {
-                    try {
-                        lm.getGC().update();
-                    } catch (IOException ex) {
-                        lm.getGC().shutdownClient();
-                    } catch (KryoNetException ex) {
-                        lm.getGC().shutdownClient();
-                        throw ex;
-                    }
+        for (TestLogicModule lm : logic) {
+            if (lm != null) {
+                try {
+                    lm.getGC().update();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                    lm.getGC().shutdownClient();
+                } catch (KryoNetException ex) {
+                    lm.getGC().shutdownClient();
+                    ex.printStackTrace();
                 }
             }
         }
