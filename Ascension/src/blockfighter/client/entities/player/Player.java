@@ -120,7 +120,10 @@ public class Player implements Callable<Player> {
     }
 
     public void draw(final Graphics2D g) {
-        if (this.animState > Globals.NUM_PLAYER_ANIM_STATE || this.animState < 0 || this.animState == Globals.PLAYER_ANIM_STATE_INVIS || this.frame >= Globals.CHAR_SPRITE[animState].length) {
+        if (this.animState > Globals.NUM_PLAYER_ANIM_STATE
+                || this.animState < 0
+                || this.animState == Globals.PLAYER_ANIM_STATE_INVIS
+                || this.frame >= Globals.CHAR_SPRITE[animState].length) {
             return;
         }
         drawSprite(g, this.x, this.y, this.facing, this.animState, this.frame);
@@ -146,7 +149,12 @@ public class Player implements Callable<Player> {
     }
 
     public void drawSprite(final Graphics2D g, final int x, final int y, final byte facing, final byte animState, final byte frame) {
-
+        if (animState > Globals.NUM_PLAYER_ANIM_STATE
+                || animState < 0
+                || animState == Globals.PLAYER_ANIM_STATE_INVIS
+                || frame >= Globals.CHAR_SPRITE[animState].length) {
+            return;
+        }
         final BufferedImage sprite = Globals.CHAR_SPRITE[animState][frame];
         final int drawSrcX = x - ((facing == Globals.RIGHT) ? 1 : -1) * sprite.getWidth() / 2;
         final int drawSrcY = y - sprite.getHeight();
