@@ -10,11 +10,15 @@ import java.util.HashMap;
 public class SkillUtilityAdrenaline extends Skill {
 
     public static final String CUSTOMHEADER_BUFFDURATION = "[buffduration]",
-            CUSTOMHEADER_HEAL = "[heal]";
+            CUSTOMHEADER_HEAL = "[heal]",
+            CUSTOMHEADER_MOVESPEED_BASE = "[movespeedbase]",
+            CUSTOMHEADER_MOVESPEED_MULT = "[movespeedmult]";
 
     private static final String[] CUSTOM_DATA_HEADERS = {
         CUSTOMHEADER_BUFFDURATION,
-        CUSTOMHEADER_HEAL
+        CUSTOMHEADER_HEAL,
+        CUSTOMHEADER_MOVESPEED_BASE,
+        CUSTOMHEADER_MOVESPEED_MULT
     };
 
     private static final HashMap<String, Double> CUSTOM_VALUES = new HashMap<>(2);
@@ -40,6 +44,8 @@ public class SkillUtilityAdrenaline extends Skill {
         IS_PASSIVE = Globals.loadBooleanValue(data, dataHeaders, Globals.SKILL_PASSIVE_HEADER);
         CUSTOM_VALUES.put(CUSTOMHEADER_BUFFDURATION, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_BUFFDURATION));
         CUSTOM_VALUES.put(CUSTOMHEADER_HEAL, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_HEAL));
+        CUSTOM_VALUES.put(CUSTOMHEADER_MOVESPEED_BASE, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_MOVESPEED_BASE));
+        CUSTOM_VALUES.put(CUSTOMHEADER_MOVESPEED_MULT, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_MOVESPEED_MULT));
     }
 
     public SkillUtilityAdrenaline(final LogicModule l) {

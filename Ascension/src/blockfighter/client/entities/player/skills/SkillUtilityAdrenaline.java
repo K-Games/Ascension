@@ -7,11 +7,15 @@ import java.util.HashMap;
 public class SkillUtilityAdrenaline extends Skill {
 
     public static final String CUSTOMHEADER_BUFFDURATION = "[buffduration]",
-            CUSTOMHEADER_HEAL = "[heal]";
+            CUSTOMHEADER_HEAL = "[heal]",
+            CUSTOMHEADER_MOVESPEED_BASE = "[movespeedbase]",
+            CUSTOMHEADER_MOVESPEED_MULT = "[movespeedmult]";
 
     private static final String[] CUSTOM_DATA_HEADERS = {
         CUSTOMHEADER_BUFFDURATION,
-        CUSTOMHEADER_HEAL
+        CUSTOMHEADER_HEAL,
+        CUSTOMHEADER_MOVESPEED_BASE,
+        CUSTOMHEADER_MOVESPEED_MULT
     };
 
     private static final HashMap<String, Double> CUSTOM_VALUES = new HashMap<>(2);
@@ -40,7 +44,8 @@ public class SkillUtilityAdrenaline extends Skill {
         IS_PASSIVE = Globals.loadBooleanValue(data, dataHeaders, Globals.SKILL_PASSIVE_HEADER);
         CUSTOM_VALUES.put(CUSTOMHEADER_BUFFDURATION, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_BUFFDURATION) / 1000);
         CUSTOM_VALUES.put(CUSTOMHEADER_HEAL, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_HEAL) * 100);
-
+        CUSTOM_VALUES.put(CUSTOMHEADER_MOVESPEED_BASE, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_MOVESPEED_BASE) * 100);
+        CUSTOM_VALUES.put(CUSTOMHEADER_MOVESPEED_MULT, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_MOVESPEED_MULT) * 100);
     }
 
     @Override
@@ -86,10 +91,12 @@ public class SkillUtilityAdrenaline extends Skill {
     @Override
     public void updateDesc() {
         this.skillCurLevelDesc = new String[]{
-            "Reduce damage taken by " + Globals.NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * this.level) + "%."
+            "Reduce damage taken by " + Globals.NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * this.level) + "%.",
+            "Increase movement speed by " + Globals.NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_MOVESPEED_BASE) + CUSTOM_VALUES.get(CUSTOMHEADER_MOVESPEED_MULT) * this.level) + "%."
         };
         this.skillNextLevelDesc = new String[]{
-            "Reduce damage taken by " + Globals.NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "%."
+            "Reduce damage taken by " + Globals.NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "%.",
+            "Increase movement speed by " + Globals.NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_MOVESPEED_BASE) + CUSTOM_VALUES.get(CUSTOMHEADER_MOVESPEED_MULT) * (this.level + 1)) + "%."
         };
         this.maxBonusDesc = new String[]{
             "Restore " + Globals.NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_HEAL)) + "% HP over " + Globals.TIME_NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_BUFFDURATION)) + " seconds."

@@ -17,7 +17,9 @@ public class BuffUtilityAdrenaline extends Buff implements BuffDmgReduct, BuffXS
         this.maxDuration = d;
         this.dmgReduct = reduct;
         this.dmgTakenMult = 1D - this.dmgReduct;
-        this.xSpeedBonus = Globals.WALK_SPEED / 2;
+        double moveSpeedBase = o.getSkill(Globals.UTILITY_ADRENALINE).getCustomValue(SkillUtilityAdrenaline.CUSTOMHEADER_MOVESPEED_BASE);
+        double moveSpeedMult = o.getSkill(Globals.UTILITY_ADRENALINE).getCustomValue(SkillUtilityAdrenaline.CUSTOMHEADER_MOVESPEED_MULT) * o.getSkillLevel(Globals.UTILITY_ADRENALINE);
+        this.xSpeedBonus = Globals.WALK_SPEED * (moveSpeedBase + moveSpeedMult);
     }
 
     @Override

@@ -2,8 +2,8 @@
 Adrenaline
 [desc]
 2
-Increase your movement speed by 75% and
-reduce damage taken for 5 seconds.
+Increase your movement speed and reduce
+damage taken for 5 seconds.
 [reqweapon]
 -1
 [maxcooldown]
@@ -18,3 +18,7 @@ false
 5000
 [heal]
 0.075
+[movespeedbase]
+0.60
+[movespeedmult]
+0.005

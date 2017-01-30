@@ -17,7 +17,7 @@
 
 ##### Utility
 * Fortify renamed to Adrenaline
-	* Increases movement speed by 75%
+	* Increases movement speed by 60% + 0.5% per level.
 	* Increased damage reduction from 1% + 0.5% per level to 5% to 0.7% per level.
 
 ### Client Changes
