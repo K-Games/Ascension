@@ -37,7 +37,7 @@ public class ParticleHit extends Particle {
         }
 
         final BufferedImage sprite = Globals.Particles.HIT.getSprite()[this.frame];
-        final int drawSrcX = this.x + ((this.facing == Globals.RIGHT) ? -sprite.getWidth() : sprite.getWidth());
+        final int drawSrcX = this.x + ((this.facing == Globals.RIGHT) ? sprite.getWidth() : -sprite.getWidth());
         final int drawSrcY = this.y - sprite.getHeight() / 2;
         final int drawDscY = drawSrcY + sprite.getHeight();
         final int drawDscX = this.x + ((this.facing == Globals.RIGHT) ? 0 : 0);
