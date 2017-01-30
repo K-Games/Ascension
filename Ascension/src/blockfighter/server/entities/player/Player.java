@@ -702,6 +702,8 @@ public class Player implements GameEntity, Callable<Player> {
                     if (dmg.getOwner() != null && dmg.isCrit()) {
                         PacketSender.sendParticle(this.logic, Globals.Particles.BLOOD_EMITTER.getParticleCode(), dmg.getOwner().getKey(), this.key);
                     }
+                    byte hitFacing = (this.x < dmg.getOwner().getX()) ? Globals.RIGHT : Globals.LEFT;
+                    PacketSender.sendParticle(this.logic, Globals.Particles.HIT.getParticleCode(), dmg.getDmgPoint().x, dmg.getDmgPoint().y, hitFacing);
                     sendDamage(dmg, (int) finalDamage);
                 }
                 // Final damage taken

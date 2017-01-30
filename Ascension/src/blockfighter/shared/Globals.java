@@ -1,5 +1,6 @@
 package blockfighter.shared;
 
+import blockfighter.client.entities.particles.skills.other.ParticleHit;
 import blockfighter.client.entities.emotes.*;
 import blockfighter.client.entities.particles.*;
 import blockfighter.client.entities.particles.skills.bow.*;
@@ -250,7 +251,8 @@ public class Globals {
         UTILITY_FORTIFY_BUFF((byte) 0x36, "fortifybuff", 8, ParticleUtilityFortifyBuff.class, PARTICLE_PARAM_POS_AND_FACING),
         UTILITY_FORTIFY_BUFF_EMITTER((byte) 0x37, null, 0, ParticleUtilityFortifyEmitter.class, PARTICLE_PARAM_PLAYER),
         UTILITY_CLONE_EMITTER((byte) 0x38, null, 0, ParticleUtilityCloneEmitter.class, PARTICLE_PARAM_PLAYER),
-        UTILITY_CLONE_PARTICLE((byte) 0x39, null, 0, ParticleUtilityCloneParticle.class, null);
+        UTILITY_CLONE_PARTICLE((byte) 0x39, null, 0, ParticleUtilityCloneParticle.class, null),
+        HIT((byte) 0x3A, "hit", 6, ParticleHit.class, PARTICLE_PARAM_POS_AND_FACING);
 
         private final byte particleCode;
 
