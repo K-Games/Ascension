@@ -13,7 +13,7 @@ public class ProjBowPower extends Projectile {
 
     public ProjBowPower(final LogicModule l, final Player o, final double x, final double y) {
         super(l, o, x, y, 150);
-        this.screenshake = true;
+        this.screenshake = false;
         this.hitbox = new Rectangle2D.Double[1];
         if (o.getFacing() == Globals.RIGHT) {
             this.hitbox[0] = new Rectangle2D.Double(this.x + 30, this.y - 145, 650, 150);

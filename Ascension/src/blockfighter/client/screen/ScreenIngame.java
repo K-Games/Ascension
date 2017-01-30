@@ -134,6 +134,8 @@ public class ScreenIngame extends Screen {
 
         if (now - this.lastScreenShakeTime >= Globals.msToNs(25)) {
             if (now - this.screenShakeStartTime <= Globals.msToNs(this.screenShakeDuration)) {
+                screenShakeXAmount *= 0.92;
+                screenShakeYAmount *= 0.92;
                 screenShakeX = Globals.rng(3) * screenShakeXAmount - screenShakeXAmount;
                 screenShakeY = Globals.rng(3) * screenShakeYAmount - screenShakeYAmount;
                 this.screenShake = true;

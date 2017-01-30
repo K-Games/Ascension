@@ -60,7 +60,7 @@ public class PacketSender implements Runnable {
     }
 
     public static void sendScreenShake(final Player player) {
-        sendScreenShake(player, 2, 2, 50);
+        sendScreenShake(player, 3, 3, 150);
     }
 
     public static void sendScreenShake(final Player player, final int xAmount, final int yAmount, final int duration) {
