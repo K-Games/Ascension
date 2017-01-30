@@ -14,6 +14,7 @@ import blockfighter.server.entities.buff.BuffShieldReflect;
 import blockfighter.server.entities.buff.BuffStun;
 import blockfighter.server.entities.buff.BuffSwordSlash;
 import blockfighter.server.entities.buff.BuffUtilityDash;
+import blockfighter.server.entities.buff.BuffXSpeedIncrease;
 import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.items.Items;
 import blockfighter.server.entities.player.skills.Skill;
@@ -45,8 +46,8 @@ import blockfighter.server.entities.player.skills.SkillSwordPhantom;
 import blockfighter.server.entities.player.skills.SkillSwordSlash;
 import blockfighter.server.entities.player.skills.SkillSwordTaunt;
 import blockfighter.server.entities.player.skills.SkillSwordVorpal;
+import blockfighter.server.entities.player.skills.SkillUtilityAdrenaline;
 import blockfighter.server.entities.player.skills.SkillUtilityDash;
-import blockfighter.server.entities.player.skills.SkillUtilityFortify;
 import blockfighter.server.maps.GameMap;
 import blockfighter.server.net.PacketSender;
 import blockfighter.shared.Globals;
@@ -100,7 +101,7 @@ public class Player implements GameEntity, Callable<Player> {
 
     private UUID uniqueID;
     private String name = "";
-    private double x, y, ySpeed, xSpeed, targetXSpeed;
+    private double x, y, ySpeed, xSpeed, targetXSpeed, xSpeedBonus;
     private final boolean[] dirKeydown = new boolean[4];
     private boolean isFalling = false, isJumping = false, isInvulnerable = false, isDead = false, isRemoveDebuff = false, isHyperStance = false;
     private boolean updatePos = false, updateFacing = false, updateAnimState = false;
@@ -198,7 +199,7 @@ public class Player implements GameEntity, Callable<Player> {
         PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_BOW_VOLLEY, Globals.BOW_VOLLEY);
         PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SHIELD_CHARGE, Globals.SHIELD_CHARGE);
         PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_UTILITY_DASH, Globals.UTILITY_DASH);
-        PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_UTILITY_FORTIFY, Globals.UTILITY_FORTIFY);
+        PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_UTILITY_FORTIFY, Globals.UTILITY_ADRENALINE);
         PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SHIELD_ROAR, Globals.SHIELD_ROAR);
         PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SHIELD_REFLECT, Globals.SHIELD_REFLECT);
         PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SHIELD_MAGNETIZE, Globals.SHIELD_MAGNETIZE);
@@ -412,8 +413,8 @@ public class Player implements GameEntity, Callable<Player> {
             case Globals.BOW_VOLLEY:
                 newSkill = new SkillBowVolley(this.logic);
                 break;
-            case Globals.UTILITY_FORTIFY:
-                newSkill = new SkillUtilityFortify(this.logic);
+            case Globals.UTILITY_ADRENALINE:
+                newSkill = new SkillUtilityAdrenaline(this.logic);
                 break;
             case Globals.SHIELD_ROAR:
                 newSkill = new SkillShieldRoar(this.logic);
@@ -800,6 +801,7 @@ public class Player implements GameEntity, Callable<Player> {
         this.reflects.clear();
         this.dmgReduct = 1;
         this.dmgAmp = 1;
+        this.xSpeedBonus = 0;
 
         // Empty and add buffs from queue
         while (!this.buffQueue.isEmpty()) {
@@ -872,6 +874,10 @@ public class Player implements GameEntity, Callable<Player> {
             // Add all the damage intake amplification(Additive)
             if (buff instanceof BuffDmgTakenAmp) {
                 this.dmgAmp = this.dmgAmp + ((BuffDmgTakenAmp) buff).getDmgTakenAmp();
+            }
+
+            if (buff instanceof BuffXSpeedIncrease) {
+                this.xSpeedBonus += ((BuffXSpeedIncrease) buff).getXSpeedIncrease();
             }
 
             // Remove expired buffs/remove debuffs when invulnerable/special state
@@ -1165,20 +1171,21 @@ public class Player implements GameEntity, Callable<Player> {
     }
 
     private void updateMove(final boolean xChanged) {
+        double totalXSpeed = Globals.WALK_SPEED + this.xSpeedBonus;
         if (this.dirKeydown[Globals.RIGHT] && !this.dirKeydown[Globals.LEFT]) {
             if (this.ySpeed == 0) {
-                setXSpeed(Globals.WALK_SPEED);
+                setXSpeed(totalXSpeed);
             } else {
-                accelerateXSpeed(Globals.WALK_SPEED);
+                accelerateXSpeed(totalXSpeed);
             }
             if (xChanged && this.ySpeed == 0) {
                 queuePlayerState(PLAYER_STATE_WALK);
             }
         } else if (this.dirKeydown[Globals.LEFT] && !this.dirKeydown[Globals.RIGHT]) {
             if (this.ySpeed == 0) {
-                setXSpeed(-Globals.WALK_SPEED);
+                setXSpeed(-totalXSpeed);
             } else {
-                accelerateXSpeed(-Globals.WALK_SPEED);
+                accelerateXSpeed(-totalXSpeed);
             }
             if (xChanged && this.ySpeed == 0) {
                 queuePlayerState(PLAYER_STATE_WALK);

@@ -1,13 +1,13 @@
 package blockfighter.server.entities.player.skills;
 
 import blockfighter.server.LogicModule;
-import blockfighter.server.entities.buff.BuffUtilityFortify;
+import blockfighter.server.entities.buff.BuffUtilityAdrenaline;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.net.PacketSender;
 import blockfighter.shared.Globals;
 import java.util.HashMap;
 
-public class SkillUtilityFortify extends Skill {
+public class SkillUtilityAdrenaline extends Skill {
 
     public static final String CUSTOMHEADER_BUFFDURATION = "[buffduration]",
             CUSTOMHEADER_HEAL = "[heal]";
@@ -19,7 +19,7 @@ public class SkillUtilityFortify extends Skill {
 
     private static final HashMap<String, Double> CUSTOM_VALUES = new HashMap<>(2);
 
-    private static final byte SKILL_CODE = Globals.UTILITY_FORTIFY;
+    private static final byte SKILL_CODE = Globals.UTILITY_ADRENALINE;
     private static final boolean IS_PASSIVE;
     private static final byte REQ_WEAPON;
     private static final long MAX_COOLDOWN;
@@ -42,7 +42,7 @@ public class SkillUtilityFortify extends Skill {
         CUSTOM_VALUES.put(CUSTOMHEADER_HEAL, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_HEAL));
     }
 
-    public SkillUtilityFortify(final LogicModule l) {
+    public SkillUtilityAdrenaline(final LogicModule l) {
         super(l);
     }
 
@@ -101,15 +101,15 @@ public class SkillUtilityFortify extends Skill {
         final long duration = Globals.nsToMs(this.logic.getTime() - player.getSkillCastTime());
         if (player.getSkillCounter() == 0) {
             player.incrementSkillCounter();
-            PacketSender.sendParticle(this.logic, Globals.Particles.UTILITY_FORTIFY.getParticleCode(), player.getKey());
+            PacketSender.sendParticle(this.logic, Globals.Particles.UTILITY_ADRENALINE.getParticleCode(), player.getKey());
             PacketSender.sendSFX(this.logic, Globals.SFXs.FORTIFY.getSfxCode(), player.getX(), player.getY());
         }
 
         if (Globals.hasPastDuration(duration, getSkillDuration()) && player.getSkillCounter() == 1) {
             player.incrementSkillCounter();
             double buffDuration = getCustomValue(CUSTOMHEADER_BUFFDURATION);
-            player.queueBuff(new BuffUtilityFortify(this.logic, (int) buffDuration, BASE_VALUE + MULT_VALUE * player.getSkillLevel(Globals.UTILITY_FORTIFY), player));
-            PacketSender.sendParticle(this.logic, Globals.Particles.UTILITY_FORTIFY_BUFF_EMITTER.getParticleCode(), player.getKey());
+            player.queueBuff(new BuffUtilityAdrenaline(this.logic, (int) buffDuration, BASE_VALUE + MULT_VALUE * player.getSkillLevel(Globals.UTILITY_ADRENALINE), player));
+            PacketSender.sendParticle(this.logic, Globals.Particles.UTILITY_ADRENALINE_CLONE_EMITTER.getParticleCode(), player.getKey());
         }
 
         player.updateSkillEnd(duration, getSkillDuration(), false, false);

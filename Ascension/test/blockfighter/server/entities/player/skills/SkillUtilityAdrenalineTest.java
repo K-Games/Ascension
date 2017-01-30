@@ -6,7 +6,7 @@ import java.util.HashMap;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
-public class SkillUtilityFortifyTest {
+public class SkillUtilityAdrenalineTest {
 
     public static final String CUSTOMHEADER_BUFFDURATION = "[buffduration]",
             CUSTOMHEADER_HEAL = "[heal]";
@@ -16,10 +16,10 @@ public class SkillUtilityFortifyTest {
         CUSTOMHEADER_HEAL
     };
 
-    private static final byte SKILL_CODE = Globals.UTILITY_FORTIFY;
+    private static final byte SKILL_CODE = Globals.UTILITY_ADRENALINE;
     private static final String[] DATA = Globals.loadSkillData(SKILL_CODE);
     private static final HashMap<String, Integer> DATA_HEADERS = Globals.getDataHeaders(DATA, CUSTOM_DATA_HEADERS);
-    private static final Skill INSTANCE = new SkillUtilityFortify(null);
+    private static final Skill INSTANCE = new SkillUtilityAdrenaline(null);
 
     @Test
     public void testCustomValues() {

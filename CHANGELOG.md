@@ -9,13 +9,17 @@
 #### Skill Changes
 
 ##### Sword
-
 * Blade Flurry
 	* Damage increased from 75% + 3% per level to 85% + 3% per level.
 	* Level 30 Bonus - HP restored increased from 0.25% per hit to 0.75% per hit.
 * Rend
 	* Damage reduced from 100% + 6% per level to 100% + 5% per level.
-	
+
+##### Utility
+* Fortify renamed to Adrenaline
+	* Increases movement speed by 75%
+	* Increased damage reduction from 1% + 0.5% per level to 5% to 0.7% per level.
+
 ### Client Changes
 * Ingame Damage numbers now distinguishes Critical Hits received with larger font and "!" - the same format as dealing a Critical Hit.
 * Ingame Damage numbers colours have been changed for visual clarity.

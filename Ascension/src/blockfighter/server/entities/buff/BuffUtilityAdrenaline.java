@@ -2,28 +2,30 @@ package blockfighter.server.entities.buff;
 
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.player.Player;
-import blockfighter.server.entities.player.skills.SkillUtilityFortify;
+import blockfighter.server.entities.player.skills.SkillUtilityAdrenaline;
 import blockfighter.shared.Globals;
 
-public class BuffUtilityFortify extends Buff implements BuffDmgReduct {
+public class BuffUtilityAdrenaline extends Buff implements BuffDmgReduct, BuffXSpeedIncrease {
 
+    private double xSpeedBonus;
     private final double dmgReduct, dmgTakenMult;
     private final int maxDuration;
     private long lastHPHeal = 0;
 
-    public BuffUtilityFortify(final LogicModule l, final int d, final double reduct, final Player o) {
+    public BuffUtilityAdrenaline(final LogicModule l, final int d, final double reduct, final Player o) {
         super(l, d, o);
         this.maxDuration = d;
         this.dmgReduct = reduct;
         this.dmgTakenMult = 1D - this.dmgReduct;
+        this.xSpeedBonus = Globals.WALK_SPEED / 2;
     }
 
     @Override
     public void update() {
         super.update();
-        if (getOwner().isSkillMaxed(Globals.UTILITY_FORTIFY)) {
+        if (getOwner().isSkillMaxed(Globals.UTILITY_ADRENALINE)) {
             if (Globals.nsToMs(room.getTime() - lastHPHeal) >= Globals.nsToMs(Globals.SERVER_LOGIC_UPDATE)) {
-                double healAmount = getOwner().getSkill(Globals.UTILITY_FORTIFY).getCustomValue(SkillUtilityFortify.CUSTOMHEADER_HEAL);
+                double healAmount = getOwner().getSkill(Globals.UTILITY_ADRENALINE).getCustomValue(SkillUtilityAdrenaline.CUSTOMHEADER_HEAL);
                 final int amount = (int) Math.ceil(getOwner().getStats()[Globals.STAT_MAXHP] * healAmount / (this.maxDuration / Globals.nsToMs(Globals.SERVER_LOGIC_UPDATE)));
                 getOwner().queueHeal(amount);
                 lastHPHeal = room.getTime();
@@ -39,6 +41,11 @@ public class BuffUtilityFortify extends Buff implements BuffDmgReduct {
     @Override
     public double getDmgTakenMult() {
         return this.dmgTakenMult;
+    }
+
+    @Override
+    public double getXSpeedIncrease() {
+        return this.xSpeedBonus;
     }
 
 }

@@ -4,7 +4,7 @@ import blockfighter.shared.Globals;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 
-public class SkillUtilityFortify extends Skill {
+public class SkillUtilityAdrenaline extends Skill {
 
     public static final String CUSTOMHEADER_BUFFDURATION = "[buffduration]",
             CUSTOMHEADER_HEAL = "[heal]";
@@ -16,7 +16,7 @@ public class SkillUtilityFortify extends Skill {
 
     private static final HashMap<String, Double> CUSTOM_VALUES = new HashMap<>(2);
 
-    private static final byte SKILL_CODE = Globals.UTILITY_FORTIFY;
+    private static final byte SKILL_CODE = Globals.UTILITY_ADRENALINE;
     private static final BufferedImage ICON = Globals.SKILL_ICON[SKILL_CODE];
 
     private static final String SKILL_NAME;

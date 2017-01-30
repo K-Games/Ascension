@@ -6,13 +6,13 @@ import java.awt.AlphaComposite;
 import java.awt.Composite;
 import java.awt.Graphics2D;
 
-public class ParticleUtilityCloneParticle extends Particle {
+public class ParticleUtilityAdrenalineCloneParticle extends Particle {
 
     byte cloneAnimState, cloneFacing, cloneFrame;
 
-    public ParticleUtilityCloneParticle(final int x, final int y, final Player owner, final byte facing, final byte animState, final byte frame) {
+    public ParticleUtilityAdrenalineCloneParticle(final int x, final int y, final Player owner, final byte facing, final byte animState, final byte frame) {
         super(x, y, owner);
-        this.duration = 400;
+        this.duration = 200;
         this.cloneFacing = facing;
         this.cloneAnimState = animState;
         this.cloneFrame = frame;

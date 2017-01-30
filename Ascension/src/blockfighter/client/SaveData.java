@@ -33,7 +33,7 @@ import blockfighter.client.entities.player.skills.SkillSwordSlash;
 import blockfighter.client.entities.player.skills.SkillSwordTaunt;
 import blockfighter.client.entities.player.skills.SkillSwordVorpal;
 import blockfighter.client.entities.player.skills.SkillUtilityDash;
-import blockfighter.client.entities.player.skills.SkillUtilityFortify;
+import blockfighter.client.entities.player.skills.SkillUtilityAdrenaline;
 import blockfighter.shared.Globals;
 import java.awt.event.KeyEvent;
 import java.io.File;
@@ -79,7 +79,7 @@ public class SaveData {
         this.skills[Globals.BOW_STORM] = new SkillBowStorm();
         this.skills[Globals.BOW_VOLLEY] = new SkillBowVolley();
 
-        this.skills[Globals.UTILITY_FORTIFY] = new SkillUtilityFortify();
+        this.skills[Globals.UTILITY_ADRENALINE] = new SkillUtilityAdrenaline();
         this.skills[Globals.SHIELD_ROAR] = new SkillShieldRoar();
         this.skills[Globals.SHIELD_CHARGE] = new SkillShieldCharge();
         this.skills[Globals.SHIELD_REFLECT] = new SkillShieldReflect();
