@@ -27,7 +27,8 @@
 * Fixed player jitter when there are a lot of players on screen.
 * Fixed particle keys not being cleaned up correctly.
 * Fixed minor memory leak with Equipment Icons.
-
+* Screen shakes adjusted.
+* New particle effect when damage is dealt.
 ### Server Changes
 
 ---
