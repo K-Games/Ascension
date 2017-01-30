@@ -5,9 +5,10 @@ import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.player.skills.SkillPassiveShadowAttack;
 import blockfighter.shared.Globals;
 import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
 
 public class Damage {
+
+    private static final int RANDOM_DELTA = 40, RANDOM_CONST = -20;
 
     private final byte type;
     private final int damage;
@@ -50,36 +51,40 @@ public class Damage {
         this.type = (this.isCrit) ? Globals.NUMBER_TYPE_PLAYERCRIT : Globals.NUMBER_TYPE_PLAYER;
     }
 
-    public Damage(final int dmg, final Mob o, final Player t, final Point2D.Double p) {
-        this(dmg, false, o, t, p);
+    public Damage(final int dmg, final Player o, final Player t) {
+        this(dmg, false, o, t, false, new Point2D.Double(t.getHitbox().getCenterX() + Globals.rng(RANDOM_DELTA) + RANDOM_CONST, t.getHitbox().getCenterY() - 20 + Globals.rng(RANDOM_DELTA) + RANDOM_CONST));
+    }
+
+    public Damage(final int dmg, final boolean canProc, final Player o, final Player t, final boolean isCrit) {
+        this(dmg, canProc, o, t, isCrit, new Point2D.Double(t.getHitbox().getCenterX() + Globals.rng(RANDOM_DELTA) + RANDOM_CONST, t.getHitbox().getCenterY() - 20 + Globals.rng(RANDOM_DELTA) + RANDOM_CONST));
+    }
+
+    public Damage(final int dmg, final Player o, final Mob t) {
+        this(dmg, false, o, t, false, new Point2D.Double(t.getHitbox().getCenterX() + Globals.rng(RANDOM_DELTA) + RANDOM_CONST, t.getHitbox().getCenterY() - 20 + Globals.rng(RANDOM_DELTA) + RANDOM_CONST));
+    }
+
+    public Damage(final int dmg, final Player o, final Mob t, final boolean isCrit) {
+        this(dmg, true, o, t, isCrit, new Point2D.Double(t.getHitbox().getCenterX() + Globals.rng(RANDOM_DELTA) + RANDOM_CONST, t.getHitbox().getCenterY() - 20 + Globals.rng(RANDOM_DELTA) + RANDOM_CONST));
+    }
+
+    public Damage(final int dmg, final boolean canProc, final Player o, final Mob t, final boolean isCrit) {
+        this(dmg, canProc, o, t, isCrit, new Point2D.Double(t.getHitbox().getCenterX() + Globals.rng(RANDOM_DELTA) + RANDOM_CONST, t.getHitbox().getCenterY() - 20 + Globals.rng(RANDOM_DELTA) + RANDOM_CONST));
     }
 
     public Damage(final int dmg, final Player o, final Mob t, final boolean isCrit, final Point2D.Double p) {
         this(dmg, true, o, t, isCrit, p);
     }
 
-    public Damage(final int dmg, final boolean canProc, final Player o, final Player t, final boolean isCrit, final Rectangle2D.Double box1,
-            final Rectangle2D.Double box2) {
-        this(dmg, canProc, o, t, isCrit, new Point2D.Double(box1.createIntersection(box2).getX() + box1.createIntersection(box2).getWidth() / 2, box1.createIntersection(box2).getY() + box1.createIntersection(box2).getHeight() / 2));
+    public Damage(final int dmg, final Mob o, final Player t, final Point2D.Double p) {
+        this(dmg, false, o, t, p);
     }
 
-    public Damage(final int dmg, final boolean isTrueDamage, final Mob o, final Player t, final Rectangle2D.Double box1,
-            final Rectangle2D.Double box2) {
-        this(dmg, isTrueDamage, o, t, new Point2D.Double(box1.createIntersection(box2).getX() + box1.createIntersection(box2).getWidth() / 2, box1.createIntersection(box2).getY() + box1.createIntersection(box2).getHeight() / 2));
+    public Damage(final int dmg, final Mob o, final Player t) {
+        this(dmg, false, o, t, new Point2D.Double(t.getHitbox().getCenterX() + Globals.rng(RANDOM_DELTA) + RANDOM_CONST, t.getHitbox().getCenterY() - 20 + Globals.rng(RANDOM_DELTA) + RANDOM_CONST));
     }
 
-    public Damage(final int dmg, final Mob o, final Player t, final Rectangle2D.Double box1, final Rectangle2D.Double box2) {
-        this(dmg, o, t, new Point2D.Double(box1.createIntersection(box2).getX() + box1.createIntersection(box2).getWidth() / 2, box1.createIntersection(box2).getY() + box1.createIntersection(box2).getHeight() / 2));
-    }
-
-    public Damage(final int dmg, final boolean canProc, final Player o, final Mob t, final boolean isCrit, final Rectangle2D.Double box1,
-            final Rectangle2D.Double box2) {
-        this(dmg, canProc, o, t, isCrit, new Point2D.Double(box1.createIntersection(box2).getX() + box1.createIntersection(box2).getWidth() / 2, box1.createIntersection(box2).getY() + box1.createIntersection(box2).getHeight() / 2));
-    }
-
-    public Damage(final int dmg, final Player o, final Mob t, final boolean isCrit, final Rectangle2D.Double box1,
-            final Rectangle2D.Double box2) {
-        this(dmg, true, o, t, isCrit, new Point2D.Double(box1.createIntersection(box2).getX() + box1.createIntersection(box2).getWidth() / 2, box1.createIntersection(box2).getY() + box1.createIntersection(box2).getHeight() / 2));
+    public Damage(final int dmg, final boolean isTrueDamage, final Mob o, final Player t) {
+        this(dmg, isTrueDamage, o, t, new Point2D.Double(t.getHitbox().getCenterX() + Globals.rng(RANDOM_DELTA) + RANDOM_CONST, t.getHitbox().getCenterY() - 20 + Globals.rng(RANDOM_DELTA) + RANDOM_CONST));
     }
 
     public int getDamage() {

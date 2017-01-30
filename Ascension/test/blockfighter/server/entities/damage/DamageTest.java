@@ -6,7 +6,6 @@ import blockfighter.server.entities.player.Player;
 import blockfighter.server.maps.GameMapArena;
 import blockfighter.shared.Globals;
 import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
@@ -35,9 +34,7 @@ public class DamageTest {
         assertTrue(instance.canReflect());
         assertEquals(Globals.NUMBER_TYPE_MOB, instance.getDamageType());
 
-        instance = new Damage(expDamage, expMob, expPlayer,
-                new Rectangle2D.Double(Globals.rng(50), Globals.rng(50), 100, 100),
-                new Rectangle2D.Double(Globals.rng(50), Globals.rng(50), 100, 100));
+        instance = new Damage(expDamage, expMob, expPlayer);
         assertEquals(expDamage, instance.getDamage());
         assertEquals(expMob, instance.getMobOwner());
         assertEquals(expPlayer, instance.getTarget());
@@ -73,9 +70,7 @@ public class DamageTest {
         assertTrue(instance.canReflect());
         assertEquals(Globals.NUMBER_TYPE_MOB, instance.getDamageType());
 
-        instance = new Damage(expDamage, true, expMob, expPlayer,
-                new Rectangle2D.Double(Globals.rng(50), Globals.rng(50), 100, 100),
-                new Rectangle2D.Double(Globals.rng(50), Globals.rng(50), 100, 100));
+        instance = new Damage(expDamage, true, expMob, expPlayer);
         assertEquals(expDamage, instance.getDamage());
         assertEquals(expMob, instance.getMobOwner());
         assertEquals(expPlayer, instance.getTarget());
@@ -87,9 +82,7 @@ public class DamageTest {
         assertTrue(instance.canReflect());
         assertEquals(Globals.NUMBER_TYPE_MOB, instance.getDamageType());
 
-        instance = new Damage(expDamage, false, expMob, expPlayer,
-                new Rectangle2D.Double(Globals.rng(50), Globals.rng(50), 100, 100),
-                new Rectangle2D.Double(Globals.rng(50), Globals.rng(50), 100, 100));
+        instance = new Damage(expDamage, false, expMob, expPlayer);
         assertEquals(expDamage, instance.getDamage());
         assertEquals(expMob, instance.getMobOwner());
         assertEquals(expPlayer, instance.getTarget());
@@ -136,9 +129,7 @@ public class DamageTest {
         assertTrue(instance.canReflect());
         assertEquals(Globals.NUMBER_TYPE_PLAYER, instance.getDamageType());
 
-        instance = new Damage(expDamage, expOwner, expMob, true,
-                new Rectangle2D.Double(Globals.rng(50), Globals.rng(50), 100, 100),
-                new Rectangle2D.Double(Globals.rng(50), Globals.rng(50), 100, 100));
+        instance = new Damage(expDamage, expOwner, expMob, true);
         assertEquals(expDamage, instance.getDamage());
         assertEquals(expMob, instance.getMobTarget());
         assertEquals(expOwner, instance.getOwner());
@@ -149,9 +140,7 @@ public class DamageTest {
         assertFalse(instance.isTrueDamage());
         assertTrue(instance.canReflect());
         assertEquals(Globals.NUMBER_TYPE_PLAYERCRIT, instance.getDamageType());
-        instance = new Damage(expDamage, expOwner, expMob, false,
-                new Rectangle2D.Double(Globals.rng(50), Globals.rng(50), 100, 100),
-                new Rectangle2D.Double(Globals.rng(50), Globals.rng(50), 100, 100));
+        instance = new Damage(expDamage, expOwner, expMob, false);
         assertEquals(expDamage, instance.getDamage());
         assertEquals(expMob, instance.getMobTarget());
         assertEquals(expOwner, instance.getOwner());
@@ -187,9 +176,7 @@ public class DamageTest {
         assertTrue(instance.canReflect());
         assertEquals(Globals.NUMBER_TYPE_PLAYER, instance.getDamageType());
 
-        instance = new Damage(expDamage, true, expOwner, expMob, true,
-                new Rectangle2D.Double(Globals.rng(50), Globals.rng(50), 100, 100),
-                new Rectangle2D.Double(Globals.rng(50), Globals.rng(50), 100, 100));
+        instance = new Damage(expDamage, true, expOwner, expMob, true);
         assertEquals(expDamage, instance.getDamage());
         assertEquals(expMob, instance.getMobTarget());
         assertEquals(expOwner, instance.getOwner());
@@ -201,9 +188,7 @@ public class DamageTest {
         assertTrue(instance.canReflect());
         assertEquals(Globals.NUMBER_TYPE_PLAYERCRIT, instance.getDamageType());
 
-        instance = new Damage(expDamage, false, expOwner, expMob, false,
-                new Rectangle2D.Double(Globals.rng(50), Globals.rng(50), 100, 100),
-                new Rectangle2D.Double(Globals.rng(50), Globals.rng(50), 100, 100));
+        instance = new Damage(expDamage, false, expOwner, expMob, false);
         assertEquals(expDamage, instance.getDamage());
         assertEquals(expMob, instance.getMobTarget());
         assertEquals(expOwner, instance.getOwner());
@@ -258,9 +243,7 @@ public class DamageTest {
         assertTrue(instance.canReflect());
         assertEquals(Globals.NUMBER_TYPE_PLAYER, instance.getDamageType());
 
-        instance = new Damage(expDamage, true, expOwner, expTarget, true,
-                new Rectangle2D.Double(Globals.rng(50), Globals.rng(50), 100, 100),
-                new Rectangle2D.Double(Globals.rng(50), Globals.rng(50), 100, 100));
+        instance = new Damage(expDamage, true, expOwner, expTarget, true);
         assertEquals(expDamage, instance.getDamage());
         assertEquals(expTarget, instance.getTarget());
         assertEquals(expOwner, instance.getOwner());
@@ -272,9 +255,7 @@ public class DamageTest {
         assertTrue(instance.canReflect());
         assertEquals(Globals.NUMBER_TYPE_PLAYERCRIT, instance.getDamageType());
 
-        instance = new Damage(expDamage, false, expOwner, expTarget, false,
-                new Rectangle2D.Double(Globals.rng(50), Globals.rng(50), 100, 100),
-                new Rectangle2D.Double(Globals.rng(50), Globals.rng(50), 100, 100));
+        instance = new Damage(expDamage, false, expOwner, expTarget, false);
         assertEquals(expDamage, instance.getDamage());
         assertEquals(expTarget, instance.getTarget());
         assertEquals(expOwner, instance.getOwner());

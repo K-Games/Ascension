@@ -25,7 +25,7 @@ public class RoomData {
     private ConcurrentHashMap<Integer, Projectile> projectiles = new ConcurrentHashMap<>(500, 0.75f, 3);
 
     private GameMap map;
-    private int projMaxKeys = 500;
+    private int projMaxKeys = 0;
     private int mobMaxKeys = 255;
     private int minLevel = 0, maxLevel = 0;
 
@@ -53,19 +53,14 @@ public class RoomData {
 
     private void resetKeys() {
         Globals.log(RoomData.class, "Resetting room keys", Globals.LOG_TYPE_DATA);
+        projMaxKeys = 0;
         this.projKeys.clear();
-        this.projMaxKeys = 500;
-        for (int i = 0; i < this.projMaxKeys; i++) {
-            this.projKeys.add(i);
-        }
-        this.mobKeys.clear();
-        this.mobMaxKeys = 255;
-        for (int i = 0; i < this.mobMaxKeys; i++) {
-            this.mobKeys.add(i);
-        }
 
-        this.playerKeys.clear();
+        this.mobMaxKeys = 0;
+        this.mobKeys.clear();
+
         byte keyCount = 0;
+        this.playerKeys.clear();
         while (this.playerKeys.size() < Globals.SERVER_MAX_ROOM_PLAYERS && keyCount <= Byte.MAX_VALUE) {
             this.playerKeys.add(keyCount);
             keyCount++;
