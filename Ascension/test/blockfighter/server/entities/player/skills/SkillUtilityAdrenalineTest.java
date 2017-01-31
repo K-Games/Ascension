@@ -32,7 +32,7 @@ public class SkillUtilityAdrenalineTest {
 
     @Test
     public void testCastPlayerState() {
-        byte expResult = Player.PLAYER_STATE_UTILITY_FORTIFY;
+        byte expResult = Player.PLAYER_STATE_UTILITY_ADRENALINE;
         byte result = INSTANCE.castPlayerState();
         assertEquals(expResult, result);
     }

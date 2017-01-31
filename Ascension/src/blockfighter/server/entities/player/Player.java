@@ -3,51 +3,10 @@ package blockfighter.server.entities.player;
 import blockfighter.server.LogicModule;
 import blockfighter.server.RoomData;
 import blockfighter.server.entities.GameEntity;
-import blockfighter.server.entities.buff.Buff;
-import blockfighter.server.entities.buff.BuffDmgIncrease;
-import blockfighter.server.entities.buff.BuffDmgReduct;
-import blockfighter.server.entities.buff.BuffDmgTakenAmp;
-import blockfighter.server.entities.buff.BuffKnockback;
-import blockfighter.server.entities.buff.BuffPassiveBarrier;
-import blockfighter.server.entities.buff.BuffPassiveResist;
-import blockfighter.server.entities.buff.BuffShieldReflect;
-import blockfighter.server.entities.buff.BuffStun;
-import blockfighter.server.entities.buff.BuffSwordSlash;
-import blockfighter.server.entities.buff.BuffUtilityDash;
-import blockfighter.server.entities.buff.BuffXSpeedIncrease;
+import blockfighter.server.entities.buff.*;
 import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.items.Items;
-import blockfighter.server.entities.player.skills.Skill;
-import blockfighter.server.entities.player.skills.SkillBowArc;
-import blockfighter.server.entities.player.skills.SkillBowFrost;
-import blockfighter.server.entities.player.skills.SkillBowPower;
-import blockfighter.server.entities.player.skills.SkillBowRapid;
-import blockfighter.server.entities.player.skills.SkillBowStorm;
-import blockfighter.server.entities.player.skills.SkillBowVolley;
-import blockfighter.server.entities.player.skills.SkillPassiveBarrier;
-import blockfighter.server.entities.player.skills.SkillPassiveBowMastery;
-import blockfighter.server.entities.player.skills.SkillPassiveDualSword;
-import blockfighter.server.entities.player.skills.SkillPassiveHarmony;
-import blockfighter.server.entities.player.skills.SkillPassiveKeenEye;
-import blockfighter.server.entities.player.skills.SkillPassiveResistance;
-import blockfighter.server.entities.player.skills.SkillPassiveShadowAttack;
-import blockfighter.server.entities.player.skills.SkillPassiveShieldMastery;
-import blockfighter.server.entities.player.skills.SkillPassiveStatic;
-import blockfighter.server.entities.player.skills.SkillPassiveTough;
-import blockfighter.server.entities.player.skills.SkillPassiveVitalHit;
-import blockfighter.server.entities.player.skills.SkillPassiveWillpower;
-import blockfighter.server.entities.player.skills.SkillShieldCharge;
-import blockfighter.server.entities.player.skills.SkillShieldMagnetize;
-import blockfighter.server.entities.player.skills.SkillShieldReflect;
-import blockfighter.server.entities.player.skills.SkillShieldRoar;
-import blockfighter.server.entities.player.skills.SkillSwordCinder;
-import blockfighter.server.entities.player.skills.SkillSwordGash;
-import blockfighter.server.entities.player.skills.SkillSwordPhantom;
-import blockfighter.server.entities.player.skills.SkillSwordSlash;
-import blockfighter.server.entities.player.skills.SkillSwordTaunt;
-import blockfighter.server.entities.player.skills.SkillSwordVorpal;
-import blockfighter.server.entities.player.skills.SkillUtilityAdrenaline;
-import blockfighter.server.entities.player.skills.SkillUtilityDash;
+import blockfighter.server.entities.player.skills.*;
 import blockfighter.server.maps.GameMap;
 import blockfighter.server.net.PacketSender;
 import blockfighter.shared.Globals;
@@ -89,7 +48,7 @@ public class Player implements GameEntity, Callable<Player> {
             PLAYER_STATE_BOW_VOLLEY = 0x0E,
             PLAYER_STATE_SHIELD_CHARGE = 0x0F,
             PLAYER_STATE_UTILITY_DASH = 0x10,
-            PLAYER_STATE_UTILITY_FORTIFY = 0x11,
+            PLAYER_STATE_UTILITY_ADRENALINE = 0x11,
             PLAYER_STATE_SHIELD_ROAR = 0x12,
             PLAYER_STATE_SHIELD_REFLECT = 0x13,
             PLAYER_STATE_SHIELD_MAGNETIZE = 0x14,
@@ -163,7 +122,7 @@ public class Player implements GameEntity, Callable<Player> {
             PLAYER_STATE_BOW_VOLLEY,
             PLAYER_STATE_SHIELD_CHARGE,
             PLAYER_STATE_UTILITY_DASH,
-            PLAYER_STATE_UTILITY_FORTIFY,
+            PLAYER_STATE_UTILITY_ADRENALINE,
             PLAYER_STATE_SHIELD_ROAR,
             PLAYER_STATE_SHIELD_REFLECT,
             PLAYER_STATE_SHIELD_MAGNETIZE
@@ -199,7 +158,7 @@ public class Player implements GameEntity, Callable<Player> {
         PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_BOW_VOLLEY, Globals.BOW_VOLLEY);
         PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SHIELD_CHARGE, Globals.SHIELD_CHARGE);
         PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_UTILITY_DASH, Globals.UTILITY_DASH);
-        PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_UTILITY_FORTIFY, Globals.UTILITY_ADRENALINE);
+        PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_UTILITY_ADRENALINE, Globals.UTILITY_ADRENALINE);
         PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SHIELD_ROAR, Globals.SHIELD_ROAR);
         PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SHIELD_REFLECT, Globals.SHIELD_REFLECT);
         PLAYER_STATE_SKILLCODE.put(PLAYER_STATE_SHIELD_MAGNETIZE, Globals.SHIELD_MAGNETIZE);
@@ -1433,7 +1392,7 @@ public class Player implements GameEntity, Callable<Player> {
                     this.lastFrameTime = this.logic.getTime();
                 }
                 break;
-            case PLAYER_STATE_UTILITY_FORTIFY:
+            case PLAYER_STATE_UTILITY_ADRENALINE:
                 this.animState = Globals.PLAYER_ANIM_STATE_BUFF;
                 if (frameDuration >= 30 && this.frame < 4) {
                     this.frame++;
