@@ -463,7 +463,9 @@ public class Globals {
             HP_MULT = 170, // PvE = 30
             REDUCT_CONST = 175,
             ARMOR_MULT = 6,
-            REGEN_MULT = 0.02 * HP_MULT,
+            REGEN_HP_PERCENT = 0.02,
+            REGEN_MULT = REGEN_HP_PERCENT * HP_MULT,
+            REGEN_CONST = REGEN_HP_PERCENT * HP_BASE,
             CRITCHC_BASE = 0,
             CRITCHC_FACT = 10,
             CRITCHC_MULT = 0.01,
@@ -864,7 +866,7 @@ public class Globals {
     }
 
     public static final double calcRegen(final double spirit) {
-        return spirit * REGEN_MULT + HP_BASE * 0.02;
+        return spirit * REGEN_MULT + REGEN_CONST;
     }
 
     public static final double calcMaxHP(final double defense) {
