@@ -477,6 +477,9 @@ public class Globals {
             MAXDMG_MULT = 17,
             MINDMG_BASE = 20,
             MAXDMG_BASE = 40,
+            DMG_MULT = 16,
+            DMG_BASE = 30,
+            DMG_VARIANCE_PERCENT = 0.015,
             STAT_PER_LEVEL = 15,
             SP_PER_LEVEL = 3;
 
@@ -874,11 +877,11 @@ public class Globals {
     }
 
     public static final double calcMinDmg(final double power) {
-        return power * MINDMG_MULT + MINDMG_BASE;
+        return (1 - DMG_VARIANCE_PERCENT) * (power * DMG_MULT + DMG_BASE);
     }
 
     public static final double calcMaxDmg(final double power) {
-        return power * MAXDMG_MULT + MAXDMG_BASE;
+        return (1 + DMG_VARIANCE_PERCENT) * (power * DMG_MULT + DMG_BASE);
     }
 
     public static final double calcCritChance(final double spirit) {

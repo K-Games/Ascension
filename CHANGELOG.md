@@ -8,6 +8,11 @@
 
 #### Skill Changes
 
+#### Stats
+* Damage
+	* Damage formula changed to have lower variance.
+		* Average damage remains the same.
+
 ##### Sword
 * Blade Flurry
 	* Damage increased from 75% + 3% per level to 85% + 3% per level.
@@ -29,6 +34,8 @@
 * Fixed minor memory leak with Equipment Icons.
 * Screen shakes adjusted.
 * New particle effect when damage is dealt.
+* Separated base and bonus Primary Stats data sent to server.
+
 ### Server Changes
 
 ---
