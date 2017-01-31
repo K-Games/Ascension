@@ -32,7 +32,7 @@ public class PacketSender {
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 2 // Data type + room
                 + Globals.MAX_NAME_LENGTH // Name length
                 + Globals.PACKET_LONG * 2 // uID
-                + Globals.PACKET_INT * 8 // Stats
+                + Globals.PACKET_INT * 11 // Stats
                 + Globals.PACKET_INT * 11 // equipments
                 + 12 * 2 * Globals.PACKET_BYTE // Hotkey'd skills + level
                 ];
@@ -52,7 +52,7 @@ public class PacketSender {
         System.arraycopy(temp, 0, bytes, pos, temp.length);
         pos += temp.length;
 
-        double[] stats = c.getTotalStats();
+        double[] stats = c.getBaseStats();
         temp = Globals.intToBytes((int) stats[Globals.STAT_LEVEL]);
         System.arraycopy(temp, 0, bytes, pos, temp.length);
         pos += temp.length;
@@ -70,6 +70,18 @@ public class PacketSender {
         pos += temp.length;
 
         stats = c.getBonusStats();
+        temp = Globals.intToBytes((int) stats[Globals.STAT_POWER]);
+        System.arraycopy(temp, 0, bytes, pos, temp.length);
+        pos += temp.length;
+
+        temp = Globals.intToBytes((int) stats[Globals.STAT_DEFENSE]);
+        System.arraycopy(temp, 0, bytes, pos, temp.length);
+        pos += temp.length;
+
+        temp = Globals.intToBytes((int) stats[Globals.STAT_SPIRIT]);
+        System.arraycopy(temp, 0, bytes, pos, temp.length);
+        pos += temp.length;
+
         temp = Globals.intToBytes((int) stats[Globals.STAT_ARMOR]);
         System.arraycopy(temp, 0, bytes, pos, temp.length);
         pos += temp.length;

@@ -255,6 +255,13 @@ public class PacketHandler {
         newPlayer.setStat(Globals.STAT_SPIRIT, Globals.bytesToInt(Arrays.copyOfRange(data, pos, pos + Globals.PACKET_INT)));
         pos += Globals.PACKET_INT;
 
+        newPlayer.setBonusStat(Globals.STAT_POWER, Globals.bytesToInt(Arrays.copyOfRange(data, pos, pos + Globals.PACKET_INT)));
+        pos += Globals.PACKET_INT;
+        newPlayer.setBonusStat(Globals.STAT_DEFENSE, Globals.bytesToInt(Arrays.copyOfRange(data, pos, pos + Globals.PACKET_INT)));
+        pos += Globals.PACKET_INT;
+        newPlayer.setBonusStat(Globals.STAT_SPIRIT, Globals.bytesToInt(Arrays.copyOfRange(data, pos, pos + Globals.PACKET_INT)));
+        pos += Globals.PACKET_INT;
+
         newPlayer.setBonusStat(Globals.STAT_ARMOR, Globals.bytesToInt(Arrays.copyOfRange(data, pos, pos + Globals.PACKET_INT)));
         pos += Globals.PACKET_INT;
         newPlayer.setBonusStat(Globals.STAT_REGEN, Globals.bytesToInt(Arrays.copyOfRange(data, pos, pos + Globals.PACKET_INT)) / 10D);
@@ -282,7 +289,10 @@ public class PacketHandler {
         String desc = "\n";
         desc += "Name: " + newPlayer.getPlayerName() + "\n";
         desc += "ID: " + newPlayer.getUniqueID() + "\n";
-        for (byte i = 0; i < newPlayer.getStats().length; i++) {
+        desc += Globals.getStatName(Globals.STAT_POWER) + Globals.COLON_SPACE_TEXT + newPlayer.getStats()[Globals.STAT_POWER] + "+" + newPlayer.getBonusStats()[Globals.STAT_POWER] + "\n";
+        desc += Globals.getStatName(Globals.STAT_DEFENSE) + Globals.COLON_SPACE_TEXT + newPlayer.getStats()[Globals.STAT_DEFENSE] + "+" + newPlayer.getBonusStats()[Globals.STAT_DEFENSE] + "\n";
+        desc += Globals.getStatName(Globals.STAT_SPIRIT) + Globals.COLON_SPACE_TEXT + newPlayer.getStats()[Globals.STAT_SPIRIT] + "+" + newPlayer.getBonusStats()[Globals.STAT_SPIRIT] + "\n";
+        for (byte i = 3; i < newPlayer.getStats().length; i++) {
             desc += Globals.getStatName(i) + Globals.COLON_SPACE_TEXT + newPlayer.getStats()[i] + "\n";
         }
         desc += "Equips=" + Arrays.toString(newPlayer.getEquips()) + "\n";
