@@ -2,6 +2,10 @@
 
 ![Game Updates](https://github.com/kenofnz/AscensionInfo/raw/master/images/updates.png)
 
+## Version 0.23 Update 2
+
+---
+
 ## Version 0.23 Update 1
 
 ### Gameplay Changes
