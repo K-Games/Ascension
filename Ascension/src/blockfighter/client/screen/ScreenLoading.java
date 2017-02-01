@@ -3,8 +3,6 @@ package blockfighter.client.screen;
 import blockfighter.client.entities.emotes.Emote;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.client.maps.GameMap;
-import blockfighter.client.maps.GameMapArena;
-import blockfighter.client.maps.GameMapFloor1;
 import blockfighter.shared.Globals;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -19,19 +17,12 @@ public class ScreenLoading extends ScreenMenu {
     private boolean particlesRendered = false, mapAssetsRendered = false;
     private int particleIndex;
 
-    public void load(final byte mapID) throws Exception {
+    public void load(final byte mapCode) throws Exception {
         Particle.loadParticles();
         this.particlesReady = true;
         Emote.loadEmotes();
 
-        switch (mapID) {
-            case 0:
-                this.map = new GameMapArena();
-                break;
-            case 1:
-                this.map = new GameMapFloor1();
-                break;
-        }
+        this.map = Globals.GameMaps.get(mapCode).newClientGameMap();
         this.map.loadAssets();
         this.mapAssetsReady = true;
     }

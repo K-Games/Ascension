@@ -32,7 +32,7 @@ public class PacketHandler {
     }
 
     private static void receiveCreate(final byte[] data) {
-        final byte mapID = data[1],
+        final byte mapCode = data[1],
                 key = data[2];
 
         Core.getLogicModule().stopCharacterLoginAttemptTimeout();
@@ -40,7 +40,7 @@ public class PacketHandler {
         final ScreenLoading loading = new ScreenLoading();
         Core.getLogicModule().setScreen(loading);
         try {
-            loading.load(mapID);
+            loading.load(mapCode);
             synchronized (loading) {
                 try {
                     loading.wait();

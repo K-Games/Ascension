@@ -4,8 +4,8 @@ import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.proj.Projectile;
 import blockfighter.server.maps.GameMap;
-import blockfighter.server.maps.GameMapArena;
 import blockfighter.shared.Globals;
+import blockfighter.shared.Globals.GameMaps;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -83,7 +83,7 @@ public class RoomData {
         this.mobs.clear();
         this.projectiles.clear();
 
-        this.setMap(new GameMapArena());
+        this.setMap(GameMaps.ARENA.newServerGameMap());
 
         resetKeys();
         resetPlayerBuckets();

@@ -326,7 +326,7 @@ public class GlobalsTest {
     @Test
     public void testCalcMinDmg() {
         double power = Globals.rng(1000000);
-        double expResult = power * Globals.MINDMG_MULT + Globals.MINDMG_BASE;
+        double expResult = (1 - Globals.DMG_VARIANCE_PERCENT) * (power * Globals.DMG_MULT + Globals.DMG_BASE);
         double result = Globals.calcMinDmg(power);
 
         assertEquals(expResult, result, 0.0);
@@ -335,7 +335,7 @@ public class GlobalsTest {
     @Test
     public void testCalcMaxDmg() {
         double power = Globals.rng(1000000);
-        double expResult = power * Globals.MAXDMG_MULT + Globals.MAXDMG_BASE;
+        double expResult = (1 + Globals.DMG_VARIANCE_PERCENT) * (power * Globals.DMG_MULT + Globals.DMG_BASE);
         double result = Globals.calcMaxDmg(power);
 
         assertEquals(expResult, result, 0.0);

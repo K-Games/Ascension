@@ -18,9 +18,8 @@ public class GameMapTest {
 
     @Before
     public void setup() {
-        this.testMap = new GameMap() {
+        this.testMap = new GameMap(Globals.GameMaps.ARENA) {
             public GameMap setup() {
-                this.mapID = 60;
                 this.isPvP = true;
                 this.platforms = new GameMapPlatform[15];
                 this.platforms[0] = new GameMapPlatform(new Rectangle2D.Double(-50, 600, 3450, 30));
@@ -144,8 +143,8 @@ public class GameMapTest {
     }
 
     @Test
-    public void testGetMapID() {
-        assertEquals(60, this.testMap.getMapID());
+    public void testGetMapCode() {
+        assertEquals(Globals.GameMaps.ARENA.getMapCode(), this.testMap.getMapCode());
     }
 
     @Test

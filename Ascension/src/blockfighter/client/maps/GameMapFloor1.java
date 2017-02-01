@@ -10,7 +10,6 @@ import java.awt.Graphics2D;
 public class GameMapFloor1 extends GameMap {
 
     public GameMapFloor1() {
-        super.setMapID(1);
         this.mapHeight = 1600;
         this.mapWidth = 3700;
         this.mapYOrigin = -1000;
@@ -41,9 +40,9 @@ public class GameMapFloor1 extends GameMap {
 
     @Override
     public void loadAssets() throws Exception {
-        this.bg = Globals.loadTextureResource("sprites/maps/" + getMapID() + "/bg.png");
+        this.bg = Globals.loadTextureResource("sprites/maps/" + Globals.GameMaps.ARENA.getMapCode() + "/bg.png");
         if (this.bg == null) {
-            throw new NullPointerException("Failed to load map " + getMapID() + " bg.");
+            throw new NullPointerException("Failed to load map " + Globals.GameMaps.ARENA.getMapCode() + " bg.");
         }
         BossLightning.load();
     }

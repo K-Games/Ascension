@@ -2,6 +2,7 @@ package blockfighter.server.maps;
 
 import blockfighter.server.LogicModule;
 import blockfighter.shared.Globals;
+import blockfighter.shared.Globals.GameMaps;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
@@ -16,11 +17,12 @@ public abstract class GameMap {
     GameMapPlatform[] platforms;
     Point2D.Double[] spawnPoints;
     double[] boundary = new double[4];
-    byte mapID = -1;
+    protected final GameMaps map;
     boolean isPvP = false;
     LogicModule logic;
 
-    public GameMap() {
+    public GameMap(GameMaps map) {
+        this.map = map;
         this.boundary[Globals.MAP_LEFT] = 0.0;
         this.boundary[Globals.MAP_RIGHT] = 1280.0;
         this.boundary[Globals.MAP_TOP] = -500;
@@ -139,8 +141,12 @@ public abstract class GameMap {
         return x;
     }
 
-    public byte getMapID() {
-        return this.mapID;
+    public GameMaps getGameMap() {
+        return this.map;
+    }
+
+    public byte getMapCode() {
+        return this.map.getMapCode();
     }
 
     public double[] getBoundary() {

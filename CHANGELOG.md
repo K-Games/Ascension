@@ -4,6 +4,8 @@
 
 ## Version 0.23 Update 2
 
+### Server Changes
+
 ---
 
 ## Version 0.23 Update 1

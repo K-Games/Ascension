@@ -117,6 +117,56 @@ public class Globals {
 
     public final static int NUM_SOUND_EFFECTS = 0;
 
+    public enum GameMaps {
+        ARENA((byte) 0x00, blockfighter.client.maps.GameMapArena.class, blockfighter.server.maps.GameMapArena.class);
+
+        private final byte mapCode;
+        private final Class<? extends blockfighter.client.maps.GameMap> clientGameMapClass;
+        private final Class<? extends blockfighter.server.maps.GameMap> serverGameMapClass;
+
+        private static final Map<Byte, GameMaps> lookup = new HashMap<>();
+
+        static {
+            for (GameMaps gameMap : GameMaps.values()) {
+                lookup.put(gameMap.getMapCode(), gameMap);
+            }
+        }
+
+        public static GameMaps get(byte code) {
+            return lookup.get(code);
+        }
+
+        GameMaps(byte mapCode,
+                Class<? extends blockfighter.client.maps.GameMap> clientGameMapClass,
+                Class<? extends blockfighter.server.maps.GameMap> serverGameMapClass) {
+            this.mapCode = mapCode;
+            this.clientGameMapClass = clientGameMapClass;
+            this.serverGameMapClass = serverGameMapClass;
+        }
+
+        public byte getMapCode() {
+            return this.mapCode;
+        }
+
+        public blockfighter.server.maps.GameMap newServerGameMap() {
+            try {
+                return this.serverGameMapClass.newInstance();
+            } catch (Exception ex) {
+                logError(ex.toString(), ex);
+            }
+            return null;
+        }
+
+        public blockfighter.client.maps.GameMap newClientGameMap() {
+            try {
+                return this.clientGameMapClass.newInstance();
+            } catch (Exception ex) {
+                logError(ex.toString(), ex);
+            }
+            return null;
+        }
+    }
+
     public enum Emotes {
         ALERT((byte) 0x00, "alert", 1, EmoteAlert.class),
         QUESTION((byte) 0x01, "question", 1, EmoteQuestion.class),
@@ -1128,14 +1178,12 @@ public class Globals {
     }
 
     public final static void createLogDirectory() {
-
         try {
-            Files.createDirectories(Paths.get(LOG_DIR + "/" + ERRLOG_FILE).getParent());
+            Files.createDirectories(Paths.get(LOG_DIR));
             if (!new File(LOG_DIR + "/" + ERRLOG_FILE).exists()) {
                 Files.createFile(Paths.get(LOG_DIR + "/" + ERRLOG_FILE));
             }
 
-            Files.createDirectories(Paths.get(LOG_DIR + "/" + DATALOG_FILE).getParent());
             if (!new File(LOG_DIR + "/" + DATALOG_FILE).exists()) {
                 Files.createFile(Paths.get(LOG_DIR + "/" + DATALOG_FILE));
             }
