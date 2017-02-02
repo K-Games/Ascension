@@ -4,6 +4,9 @@
 
 ## Version 0.23 Update 2
 
+### Client Changes
+* Fixed rare bug where Adrenaline particle would cause everything to render transparently.
+
 ### Server Changes
 
 ---

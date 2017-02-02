@@ -22,7 +22,10 @@ public class ParticleUtilityAdrenalineCloneParticle extends Particle {
     public void draw(final Graphics2D g) {
         Composite reset = g.getComposite();
         g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
-        owner.drawSprite(g, this.x, this.y, this.cloneFacing, this.cloneAnimState, this.cloneFrame);
-        g.setComposite(reset);
+        try {
+            owner.drawSprite(g, this.x, this.y, this.cloneFacing, this.cloneAnimState, this.cloneFrame);
+        } finally {
+            g.setComposite(reset);
+        }
     }
 }
