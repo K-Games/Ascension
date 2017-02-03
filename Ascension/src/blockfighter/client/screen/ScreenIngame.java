@@ -78,6 +78,7 @@ public class ScreenIngame extends Screen {
     private Player[] scoreboardList;
 
     private double screenShakeX, screenShakeY;
+    private double cameraX = Double.MIN_VALUE, cameraY = Double.MIN_VALUE;
     private double screenShakeXAmount, screenShakeYAmount;
     private boolean screenShake = false;
     private long screenShakeDuration, screenShakeStartTime;
@@ -93,7 +94,7 @@ public class ScreenIngame extends Screen {
     private long lastPingTime = 0;
     private long lastSendKeyTime = 0;
     private long matchTimeRemaining = 0;
-
+    private long lastCameraUpdate = 0;
     private final boolean[] moveKeyDown = {false, false, false, false};
     private final boolean[] skillKeyDown = new boolean[12];
 
@@ -138,6 +139,11 @@ public class ScreenIngame extends Screen {
         if (now - this.lastQueueTime >= Globals.QUEUES_UPDATE) {
             processDataQueue();
             this.lastQueueTime = now;
+        }
+
+        if (now - this.lastCameraUpdate >= Globals.msToNs(10)) {
+            //updateCamera();
+            this.lastCameraUpdate = now;
         }
 
         if (now - this.lastSendKeyTime >= Globals.SEND_KEYDOWN_UPDATE) {
@@ -196,6 +202,28 @@ public class ScreenIngame extends Screen {
             this.matchTimeRemaining -= Globals.nsToMs(Core.getLogicModule().getTime() - this.lastUpdateTime);
         } else {
             this.matchTimeRemaining = 0;
+        }
+    }
+
+    private void updateCamera() {
+        if (this.players != null && Core.getLogicModule().getMyPlayerKey() != -1 && this.players.containsKey(Core.getLogicModule().getMyPlayerKey())) {
+            double distanceFromPlayer = Point2D.distance(this.cameraX, this.cameraY, this.players.get(Core.getLogicModule().getMyPlayerKey()).getX(), this.players.get(Core.getLogicModule().getMyPlayerKey()).getY());
+            //this.cameraX += (this.players.get(Core.getLogicModule().getMyPlayerKey()).getX() - this.cameraX) * 1D / 25;
+            //this.cameraY += (this.players.get(Core.getLogicModule().getMyPlayerKey()).getY() - this.cameraY) * 1D / 25;
+
+            if (distanceFromPlayer > 300) {
+                this.cameraX = this.players.get(Core.getLogicModule().getMyPlayerKey()).getX();
+                this.cameraY = this.players.get(Core.getLogicModule().getMyPlayerKey()).getY();
+            } else {
+                double deltaX = this.players.get(Core.getLogicModule().getMyPlayerKey()).getX() - this.cameraX;
+                double deltaY = this.players.get(Core.getLogicModule().getMyPlayerKey()).getY() - this.cameraY;
+                double radians = Math.atan2(deltaY, deltaX);
+                double cameraSpeed = distanceFromPlayer / 200 * 15D;
+                double xSpeed = Math.cos(radians) * cameraSpeed;
+                double ySpeed = Math.sin(radians) * cameraSpeed;
+                this.cameraX += xSpeed;
+                this.cameraY += ySpeed;
+            }
         }
     }
 
@@ -301,10 +329,10 @@ public class ScreenIngame extends Screen {
         });
         if (this.players != null && Core.getLogicModule().getMyPlayerKey() != -1 && this.players.containsKey(Core.getLogicModule().getMyPlayerKey())) {
             try {
-                this.map.drawBg(g, this.players.get(Core.getLogicModule().getMyPlayerKey()).getX(), this.players.get(Core.getLogicModule().getMyPlayerKey()).getY());
+                this.map.drawBg(g, (int) this.cameraX, (int) this.cameraY);
                 double scale = 1;
                 g.scale(scale, scale);
-                g.translate(640D / scale - this.players.get(Core.getLogicModule().getMyPlayerKey()).getX(), 500D / scale - this.players.get(Core.getLogicModule().getMyPlayerKey()).getY());
+                g.translate(640D / scale - this.cameraX, 500D / scale - this.cameraY);
                 if (screenShake) {
                     g.translate(screenShakeX, screenShakeY);
                 }
@@ -332,6 +360,7 @@ public class ScreenIngame extends Screen {
             }
         }
 
+        updateCamera();
         this.particles.entrySet().forEach((pEntry) -> {
             try {
                 if (!pEntry.getValue().isExpired()) {
