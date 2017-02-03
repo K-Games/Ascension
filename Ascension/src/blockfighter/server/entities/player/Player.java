@@ -1122,10 +1122,15 @@ public class Player implements GameEntity, Callable<Player> {
         }
         this.isFalling = this.map.isFalling(this.x, this.y, this.ySpeed);
 
-        if (!this.isFalling && this.ySpeed > 0) {
-            this.y = this.map.getValidY(this.x, this.y);
-            setYSpeed(0);
-            this.updatePos = true;
+        if (!this.isFalling) {
+            if (this.ySpeed > 0) {
+                setYSpeed(0);
+            }
+            if (this.ySpeed == 0) {
+                double prevY = this.y;
+                this.y = this.map.getValidY(this.x, this.y);
+                this.updatePos = prevY != this.y;
+            }
         }
     }
 
