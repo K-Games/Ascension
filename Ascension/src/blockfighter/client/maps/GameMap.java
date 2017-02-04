@@ -1,6 +1,7 @@
 package blockfighter.client.maps;
 
 import blockfighter.client.AscensionClient;
+import blockfighter.client.Core;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.shared.Globals;
 import java.awt.Graphics2D;
@@ -34,7 +35,7 @@ public abstract class GameMap {
     public abstract void unloadAssets();
 
     public void update() {
-        final long now = System.nanoTime(); // Get time now
+        final long now = Core.getLogicModule().getTime(); // Get time now
         if (now - this.lastUpdateTime >= Globals.CLIENT_LOGIC_UPDATE) {
             updateParticles();
             this.lastUpdateTime = now;

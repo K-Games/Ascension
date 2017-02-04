@@ -83,7 +83,7 @@ public class RoomData {
         this.mobs.clear();
         this.projectiles.clear();
 
-        this.setMap(GameMaps.ARENA.newServerGameMap());
+        this.setMap(GameMaps.ASYM_ARENA.newServerGameMap());
 
         resetKeys();
         resetPlayerBuckets();
