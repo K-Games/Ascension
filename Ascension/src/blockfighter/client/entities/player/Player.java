@@ -22,6 +22,8 @@ public class Player implements Callable<Player> {
     private final ItemEquip[] equips = new ItemEquip[Globals.NUM_EQUIP_SLOTS];
     private long lastUpdateTime;
     private boolean disconnect = false;
+    private int score = -1;
+    private int ping = 0;
 
     public Player(final int x, final int y, final byte k) {
         this.x = x;
@@ -37,6 +39,14 @@ public class Player implements Callable<Player> {
     public Player(final int x, final int y, final byte k, final byte f) {
         this(x, y, k);
         this.facing = f;
+    }
+
+    public int getScore() {
+        return this.score;
+    }
+
+    public int getPing() {
+        return this.ping;
     }
 
     public byte getKey() {
@@ -117,6 +127,14 @@ public class Player implements Callable<Player> {
     public void setPlayerName(final String n) {
         this.name = n;
         this.lastUpdateTime = Core.getLogicModule().getTime();
+    }
+
+    public void setPing(final int ping) {
+        this.ping = ping;
+    }
+
+    public void setScore(final int score) {
+        this.score = score;
     }
 
     public void draw(final Graphics2D g) {
@@ -205,6 +223,9 @@ public class Player implements Callable<Player> {
         }
         if (this.stats[Globals.STAT_MAXHP] <= 0) {
             PacketSender.sendGetStat(Core.getLogicModule().getSelectedRoom(), this.key, Globals.STAT_MAXHP);
+        }
+        if (this.stats[Globals.STAT_LEVEL] <= 0) {
+            PacketSender.sendGetStat(Core.getLogicModule().getSelectedRoom(), this.key, Globals.STAT_LEVEL);
         }
         return this;
     }

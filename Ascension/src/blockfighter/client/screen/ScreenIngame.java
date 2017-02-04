@@ -20,6 +20,7 @@ import blockfighter.shared.Globals;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Polygon;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
@@ -28,7 +29,9 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
@@ -38,6 +41,28 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Future;
 
 public class ScreenIngame extends Screen {
+
+    private static final Color SCOREBOARD_BG_COLOR = new Color(0, 0, 0, 150);
+    private static final int SCOREBOARD_SPACING = 5;
+    private static final int SCOREBOARD_Y = 120;
+    private static final int SCOREBOARD_ROW_HEIGHT = 30;
+
+    private static final int SCOREBOARD_PLAYER_NAME_X = 220;
+    private static final int SCOREBOARD_PLAYER_NAME_COL_WIDTH = 400;
+
+    private static final int SCOREBOARD_PLAYER_LEVEL_X = SCOREBOARD_PLAYER_NAME_X + SCOREBOARD_PLAYER_NAME_COL_WIDTH + SCOREBOARD_SPACING;
+    private static final int SCOREBOARD_PLAYER_LEVEL_COL_WIDTH = 150;
+
+    private static final int SCOREBOARD_PLAYER_SCORE_X = SCOREBOARD_PLAYER_LEVEL_X + SCOREBOARD_PLAYER_LEVEL_COL_WIDTH + SCOREBOARD_SPACING;
+    private static final int SCOREBOARD_PLAYER_SCORE_COL_WIDTH = 150;
+
+    private static final int SCOREBOARD_PLAYER_PING_X = SCOREBOARD_PLAYER_SCORE_X + SCOREBOARD_PLAYER_SCORE_COL_WIDTH + SCOREBOARD_SPACING;
+    private static final int SCOREBOARD_PLAYER_PING_COL_WIDTH = 100;
+
+    private static final String SCOREBOARD_PLAYER_NAME_TEXT = "Player Name";
+    private static final String SCOREBOARD_PLAYER_LEVEL_TEXT = "Level";
+    private static final String SCOREBOARD_PLAYER_SCORE_TEXT = "Score";
+    private static final String SCOREBOARD_PLAYER_PING_TEXT = "Ping";
 
     private final GameClient client;
     private final Rectangle2D.Double[] hotkeySlots = new Rectangle2D.Double[12];
@@ -49,6 +74,7 @@ public class ScreenIngame extends Screen {
     private final ConcurrentHashMap<Integer, IngameNumber> ingameNumber = new ConcurrentHashMap<>();
     private final ConcurrentLinkedQueue<Notification> notifications = new ConcurrentLinkedQueue<>();
     private final ConcurrentHashMap<Integer, Emote> emotes = new ConcurrentHashMap<>();
+    private ArrayList<Player> scoreboardList;
 
     private double screenShakeX, screenShakeY;
     private double screenShakeXAmount, screenShakeYAmount;
@@ -60,11 +86,12 @@ public class ScreenIngame extends Screen {
     private int ping = 0;
 
     private long lastScreenShakeTime = 0;
-    private long lastUpdateTime = 0;
+    private long lastUpdateTime = System.nanoTime();
     private long lastRequestTime = 50;
     private long lastQueueTime = 0;
     private long lastPingTime = 0;
     private long lastSendKeyTime = 0;
+    private long matchTimeRemaining = 0;
 
     private final boolean[] moveKeyDown = {false, false, false, false};
     private final boolean[] skillKeyDown = new boolean[12];
@@ -74,6 +101,7 @@ public class ScreenIngame extends Screen {
 
     private int drawInfoHotkey = -1;
     private double expBarWidth, expBarDelta, expBarLevel;
+    private boolean showScoreboard = false;
 
     public ScreenIngame(final GameMap m, final GameClient cl) {
         this.client = cl;
@@ -127,7 +155,7 @@ public class ScreenIngame extends Screen {
             updateMobs();
             updateNotifications();
             updateEmotes();
-
+            updateScoreAndTime();
             this.ping = GameClient.getPing();
             this.lastUpdateTime = now;
         }
@@ -153,6 +181,16 @@ public class ScreenIngame extends Screen {
         if (now - this.lastPingTime >= Globals.PING_UPDATE) {
             PacketSender.sendGetPing();
             this.lastPingTime = now;
+        }
+    }
+
+    private void updateScoreAndTime() {
+        this.scoreboardList = new ArrayList<>(this.players.values());
+        Collections.sort(this.scoreboardList, (Player a, Player b) -> b.getScore() - a.getScore());
+        if (this.matchTimeRemaining > 0) {
+            this.matchTimeRemaining -= Globals.nsToMs(Core.getLogicModule().getTime() - this.lastUpdateTime);
+        } else {
+            this.matchTimeRemaining = 0;
         }
     }
 
@@ -338,6 +376,10 @@ public class ScreenIngame extends Screen {
         g.setColor(Color.WHITE);
         g.drawString("Leave", 13, (int) (9 + this.logoutBox.getHeight()));
         g.drawRect(10, 10, (int) this.logoutBox.getWidth() + 6, (int) this.logoutBox.getHeight() + 6);
+
+        if (this.showScoreboard) {
+            drawScoreboard(g);
+        }
     }
 
     private void drawNotifications(final Graphics2D g) {
@@ -381,9 +423,68 @@ public class ScreenIngame extends Screen {
         }
     }
 
+    private void drawScoreboard(final Graphics2D g) {
+        g.setColor(SCOREBOARD_BG_COLOR);
+        g.fillRoundRect(SCOREBOARD_PLAYER_NAME_X, SCOREBOARD_Y, SCOREBOARD_PLAYER_NAME_COL_WIDTH, SCOREBOARD_ROW_HEIGHT, 10, 10);
+        g.fillRoundRect(SCOREBOARD_PLAYER_LEVEL_X, SCOREBOARD_Y, SCOREBOARD_PLAYER_LEVEL_COL_WIDTH, SCOREBOARD_ROW_HEIGHT, 10, 10);
+        g.fillRoundRect(SCOREBOARD_PLAYER_SCORE_X, SCOREBOARD_Y, SCOREBOARD_PLAYER_SCORE_COL_WIDTH, SCOREBOARD_ROW_HEIGHT, 10, 10);
+        g.fillRoundRect(SCOREBOARD_PLAYER_PING_X, SCOREBOARD_Y, SCOREBOARD_PLAYER_PING_COL_WIDTH, SCOREBOARD_ROW_HEIGHT, 10, 10);
+
+        g.setColor(Color.WHITE);
+        g.drawString(SCOREBOARD_PLAYER_NAME_TEXT, SCOREBOARD_PLAYER_NAME_X + 10, SCOREBOARD_Y + 20);
+        g.drawString(SCOREBOARD_PLAYER_LEVEL_TEXT, SCOREBOARD_PLAYER_LEVEL_X + 10, SCOREBOARD_Y + 20);
+        g.drawString(SCOREBOARD_PLAYER_SCORE_TEXT, SCOREBOARD_PLAYER_SCORE_X + 10, SCOREBOARD_Y + 20);
+        g.drawString(SCOREBOARD_PLAYER_PING_TEXT, SCOREBOARD_PLAYER_PING_X + 10, SCOREBOARD_Y + 20);
+
+        g.setFont(Globals.ARIAL_15PT);
+        int rowY = SCOREBOARD_Y + SCOREBOARD_ROW_HEIGHT + 10;
+        for (final Player player : this.scoreboardList) {
+            if (!player.getPlayerName().isEmpty()) {
+                g.setColor(SCOREBOARD_BG_COLOR);
+                g.fillRoundRect(SCOREBOARD_PLAYER_NAME_X, rowY, SCOREBOARD_PLAYER_NAME_COL_WIDTH, SCOREBOARD_ROW_HEIGHT, 10, 10);
+                g.fillRoundRect(SCOREBOARD_PLAYER_LEVEL_X, rowY, SCOREBOARD_PLAYER_LEVEL_COL_WIDTH, SCOREBOARD_ROW_HEIGHT, 10, 10);
+                g.fillRoundRect(SCOREBOARD_PLAYER_SCORE_X, rowY, SCOREBOARD_PLAYER_SCORE_COL_WIDTH, SCOREBOARD_ROW_HEIGHT, 10, 10);
+                g.fillRoundRect(SCOREBOARD_PLAYER_PING_X, rowY, SCOREBOARD_PLAYER_PING_COL_WIDTH, SCOREBOARD_ROW_HEIGHT, 10, 10);
+
+                g.setColor(Color.WHITE);
+                if (player.getKey() == Core.getLogicModule().getMyPlayerKey()) {
+                    g.drawRoundRect(SCOREBOARD_PLAYER_NAME_X, rowY, SCOREBOARD_PLAYER_NAME_COL_WIDTH, SCOREBOARD_ROW_HEIGHT, 10, 10);
+                    g.drawRoundRect(SCOREBOARD_PLAYER_LEVEL_X, rowY, SCOREBOARD_PLAYER_LEVEL_COL_WIDTH, SCOREBOARD_ROW_HEIGHT, 10, 10);
+                    g.drawRoundRect(SCOREBOARD_PLAYER_SCORE_X, rowY, SCOREBOARD_PLAYER_SCORE_COL_WIDTH, SCOREBOARD_ROW_HEIGHT, 10, 10);
+                    g.drawRoundRect(SCOREBOARD_PLAYER_PING_X, rowY, SCOREBOARD_PLAYER_PING_COL_WIDTH, SCOREBOARD_ROW_HEIGHT, 10, 10);
+                }
+                g.drawString(player.getPlayerName(), SCOREBOARD_PLAYER_NAME_X + 10, rowY + 20);
+                if (player.getStat(Globals.STAT_LEVEL) > 0) {
+                    g.drawString(Integer.toString((int) player.getStat(Globals.STAT_LEVEL)), SCOREBOARD_PLAYER_LEVEL_X + 10, rowY + 20);
+                }
+                if (player.getScore() > -1) {
+                    g.drawString(Integer.toString(player.getScore()), SCOREBOARD_PLAYER_SCORE_X + 10, rowY + 20);
+                }
+                g.drawString(Integer.toString(player.getPing()), SCOREBOARD_PLAYER_PING_X + 10, rowY + 20);
+                rowY += SCOREBOARD_ROW_HEIGHT + SCOREBOARD_SPACING;
+            }
+        }
+    }
+
     private void drawHUD(final Graphics2D g) {
         final BufferedImage hud = Globals.HUD[0];
         final BufferedImage expHud = Globals.HUD[2];
+
+        g.setColor(SCOREBOARD_BG_COLOR);
+        int minutes = (int) (this.matchTimeRemaining / (60 * 1000));
+        int seconds = (int) ((matchTimeRemaining / 1000) % 60);
+        String str = String.format("%d:%02d", minutes, seconds);
+        g.setFont(Globals.ARIAL_24PTBOLD);
+        final int x1 = Globals.WINDOW_WIDTH / 2 - g.getFontMetrics().stringWidth(str) / 2;
+        final int x2 = Globals.WINDOW_WIDTH / 2 + g.getFontMetrics().stringWidth(str) / 2;
+
+        final Polygon timerBg = new Polygon(new int[]{
+            x1 - 30, x2 + 30, x2 + 15, x1 - 15},
+                new int[]{0, 0, 40, 40}, 4);
+        g.fillPolygon(timerBg);
+
+        g.setColor(Color.WHITE);
+        g.drawString(str, x1, timerBg.getBounds().y + 30);
 
         g.drawImage(expHud, Globals.WINDOW_WIDTH / 2 - expHud.getWidth() / 2, Globals.WINDOW_HEIGHT - hud.getHeight() - expHud.getHeight(), null);
         g.drawImage(hud, Globals.WINDOW_WIDTH / 2 - hud.getWidth() / 2, Globals.WINDOW_HEIGHT - hud.getHeight(), null);
@@ -538,8 +639,24 @@ public class ScreenIngame extends Screen {
                 case Globals.DATA_NOTIFICATION_KILL:
                     dataNotificationKill(data);
                     break;
+                case Globals.DATA_PLAYER_SCORE:
+                    dataPlayerScore(data);
+                    break;
             }
         }
+    }
+
+    private void dataPlayerScore(final byte[] data) {
+        final byte playerKey = data[1];
+        if (!this.players.containsKey(playerKey)) {
+            return;
+        }
+        final int score = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
+        final int playerPing = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
+        final int timeLeft = Globals.bytesToInt(Arrays.copyOfRange(data, 10, 14));
+        this.players.get(playerKey).setScore(score);
+        this.players.get(playerKey).setPing(playerPing);
+        this.matchTimeRemaining = timeLeft;
     }
 
     private void dataNotificationKill(final byte[] data) {
@@ -908,7 +1025,10 @@ public class ScreenIngame extends Screen {
 //            PacketSender.sendUseEmote(Core.getLogicModule().getSelectedRoom(), Core.getLogicModule().getMyPlayerKey(), Globals.EMOTE_8);
         } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE10]) {
 //            PacketSender.sendUseEmote(Core.getLogicModule().getSelectedRoom(), Core.getLogicModule().getMyPlayerKey(), Globals.EMOTE_9);
+        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_SCOREBOARD]) {
+            this.showScoreboard = true;
         }
+
     }
 
     @Override
@@ -1006,6 +1126,8 @@ public class ScreenIngame extends Screen {
 //            PacketSender.sendUseEmote(Core.getLogicModule().getSelectedRoom(), Core.getLogicModule().getMyPlayerKey(), Globals.EMOTE_8);
         } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE10]) {
 //            PacketSender.sendUseEmote(Core.getLogicModule().getSelectedRoom(), Core.getLogicModule().getMyPlayerKey(), Globals.EMOTE_9);
+        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_SCOREBOARD]) {
+            this.showScoreboard = false;
         }
 
         switch (e.getKeyCode()) {

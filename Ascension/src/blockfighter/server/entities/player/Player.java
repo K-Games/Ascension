@@ -64,6 +64,7 @@ public class Player implements GameEntity, Callable<Player> {
     private final boolean[] dirKeydown = new boolean[4];
     private boolean isFalling = false, isJumping = false, isInvulnerable = false, isDead = false, isRemoveDebuff = false, isHyperStance = false;
     private boolean updatePos = false, updateFacing = false, updateAnimState = false;
+    private boolean updateScore = false;
     private byte playerState, animState, facing, frame;
 
     private final Rectangle2D.Double hitbox;
@@ -101,6 +102,7 @@ public class Player implements GameEntity, Callable<Player> {
             lastHPSendTime = 0,
             lastFrameTime = 0;
     private int skillCounter = 0;
+    private int score = 0;
 
     static {
         initializeValidPlayerSkillStates();
@@ -181,6 +183,15 @@ public class Player implements GameEntity, Callable<Player> {
         this.playerState = PLAYER_STATE_STAND;
         this.frame = 0;
         initializeBuffKeys();
+    }
+
+    public void addScore(final int amount) {
+        this.score += amount;
+        updateClientScore();
+    }
+
+    public int getKillCount() {
+        return this.score;
     }
 
     private void initializeBuffKeys() {
@@ -496,7 +507,9 @@ public class Player implements GameEntity, Callable<Player> {
         if (this.updateAnimState) {
             sendState();
         }
-
+        if (this.updateScore) {
+            sendScore();
+        }
         if (this.connected && Globals.nsToMs(this.logic.getTime() - this.lastActionTime) >= Globals.SERVER_PLAYER_MAX_IDLE) {
             Globals.log(Player.class, this.connection + " Disconnecting <" + this.name + "> due to idling.", Globals.LOG_TYPE_DATA);
             disconnect();
@@ -851,6 +864,7 @@ public class Player implements GameEntity, Callable<Player> {
 
     protected void die(final Player killer) {
         if (killer != null) {
+            killer.addScore(1);
             killer.giveDrop(this.stats[Globals.STAT_LEVEL]);
 
             final byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
@@ -1577,6 +1591,24 @@ public class Player implements GameEntity, Callable<Player> {
         bytes[2] = statID;
         System.arraycopy(stat, 0, bytes, 3, stat.length);
         PacketSender.sendAll(bytes, this.logic);
+    }
+
+    public void sendScore() {
+        final byte[] scoreBytes = Globals.intToBytes(this.score);
+        final byte[] ping = Globals.intToBytes(this.connection.getReturnTripTime());
+        final byte[] timeLeft = Globals.intToBytes(this.logic.getMatchTimeRemaining());
+        final byte[] bytes = new byte[Globals.PACKET_BYTE * 2 + Globals.PACKET_INT * 3];
+        bytes[0] = Globals.DATA_PLAYER_SCORE;
+        bytes[1] = this.key;
+        System.arraycopy(scoreBytes, 0, bytes, 2, scoreBytes.length);
+        System.arraycopy(ping, 0, bytes, 6, ping.length);
+        System.arraycopy(timeLeft, 0, bytes, 10, ping.length);
+        PacketSender.sendAll(bytes, this.logic);
+        this.updateScore = false;
+    }
+
+    public void updateClientScore() {
+        this.updateScore = true;
     }
 
     public void setInvulnerable(final boolean set) {

@@ -58,7 +58,7 @@ public class TestGameClient implements Runnable {
         }
     }
 
-    public void update() throws IOException {
+    public void update() throws Exception {
         if (this.client != null) {
             this.client.update(250);
         }

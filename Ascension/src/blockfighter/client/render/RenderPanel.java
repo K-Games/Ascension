@@ -23,7 +23,6 @@ public class RenderPanel extends JPanel {
 
     public RenderPanel() {
         super();
-
     }
 
     @Override
@@ -78,5 +77,6 @@ public class RenderPanel extends JPanel {
 
     public void setScreen(final Screen s) {
         this.screen = s;
+        setFocusTraversalKeysEnabled(false);
     }
 }

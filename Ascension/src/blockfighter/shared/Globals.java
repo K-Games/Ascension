@@ -82,6 +82,7 @@ public class Globals {
     public final static Font ARIAL_15PT = new Font("Arial", Font.BOLD, 15);
     public final static Font ARIAL_15PTITALIC = new Font("Arial", Font.ITALIC, 15);
     public final static Font ARIAL_24PT = new Font("Arial", Font.PLAIN, 24);
+    public final static Font ARIAL_24PTBOLD = new Font("Arial", Font.BOLD, 24);
     public final static Font ARIAL_18PT = new Font("Arial", Font.PLAIN, 18);
     public final static Font ARIAL_18PTBOLD = new Font("Arial", Font.BOLD, 18);
     public final static Font ARIAL_19PTBOLD = new Font("Arial", Font.BOLD, 19);
@@ -442,7 +443,7 @@ public class Globals {
         }
     }
 
-    public final static int NUM_KEYBINDS = 26,
+    public final static int NUM_KEYBINDS = 27,
             KEYBIND_SKILL1 = 0,
             KEYBIND_SKILL2 = 1,
             KEYBIND_SKILL3 = 2,
@@ -468,7 +469,8 @@ public class Globals {
             KEYBIND_EMOTE7 = 22,
             KEYBIND_EMOTE8 = 23,
             KEYBIND_EMOTE9 = 24,
-            KEYBIND_EMOTE10 = 25;
+            KEYBIND_EMOTE10 = 25,
+            KEYBIND_SCOREBOARD = 26;
 
     public final static byte NUM_ITEM_TABS = 10,
             ITEM_WEAPON = 0, // ITEM_WEAPON is the equipment slot/tab
@@ -583,7 +585,8 @@ public class Globals {
             DATA_PLAYER_CREATE = 0x18,
             DATA_SCREEN_SHAKE = 0x19,
             DATA_PLAYER_EMOTE = 0x1A,
-            DATA_NOTIFICATION_KILL = 0x1B;
+            DATA_NOTIFICATION_KILL = 0x1B,
+            DATA_PLAYER_SCORE = 0x1C;
 
     public static final byte LOGIN_SUCCESS = 0x00,
             LOGIN_FAIL_UID_IN_ROOM = 0x01,
@@ -692,11 +695,13 @@ public class Globals {
 
     public static byte SERVER_MAX_ROOM_PLAYERS = 10;
     public static int SERVER_PLAYER_MAX_IDLE = 120000;
-    public static int SERVER_ROOM_MAX_ILDE = 300000;
+    public static int SERVER_ROOM_MAX_ILDE = 2000;
     public static byte SERVER_LOGIC_THREADS = 3;
     public static byte SERVER_PACKETSENDER_THREADS = 5;
     public static int SERVER_MAX_ROOMS = 10;
     public static boolean SERVER_HUB_CONNECT = false;
+    public static int SERVER_WIN_KILL_COUNT = 30;
+    public static int SERVER_MATCH_DURATION = 300000;
 
     public static int HUB_SERVER_TCP_PORT = 25566;
     public static String HUB_SERVER_ADDRESS = "asc-hub.servegame.com";
@@ -1088,7 +1093,7 @@ public class Globals {
         return null;
     }
 
-    public final static void setServerProp() {
+    public final static void loadServerConfig() {
         InputStream inputStream = null;
         try {
             final Properties prop = new Properties();
@@ -1131,6 +1136,12 @@ public class Globals {
             if (prop.getProperty("hubport") != null) {
                 HUB_SERVER_TCP_PORT = Integer.parseInt(prop.getProperty("hubport"));
             }
+            if (prop.getProperty("winkillcount") != null) {
+                SERVER_WIN_KILL_COUNT = Integer.parseInt(prop.getProperty("winkillcount"));
+            }
+            if (prop.getProperty("matchduration") != null) {
+                SERVER_MATCH_DURATION = Integer.parseInt(prop.getProperty("matchduration"));
+            }
         } catch (final FileNotFoundException e) {
             log(Globals.class,
                     "Config", "config.properties not found in root directory. Using default server values.", Globals.LOG_TYPE_DATA);
@@ -1169,6 +1180,11 @@ public class Globals {
                     "Config", "Hub Address: " + HUB_SERVER_ADDRESS, Globals.LOG_TYPE_DATA);
             log(Globals.class,
                     "Config", "Hub Port: " + HUB_SERVER_TCP_PORT, Globals.LOG_TYPE_DATA);
+            log(Globals.class,
+                    "Config", "Kills to Win: " + SERVER_WIN_KILL_COUNT, Globals.LOG_TYPE_DATA);
+            log(Globals.class,
+                    "Config", "Match Duration(ms): " + SERVER_MATCH_DURATION, Globals.LOG_TYPE_DATA);
+
         }
     }
 

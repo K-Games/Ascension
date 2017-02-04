@@ -1,8 +1,6 @@
 package performancetest;
 
 import blockfighter.shared.Globals;
-import com.esotericsoftware.kryonet.KryoNetException;
-import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -42,12 +40,9 @@ public class TestRunner implements Runnable {
             if (lm != null) {
                 try {
                     lm.getGC().update();
-                } catch (IOException ex) {
+                } catch (Exception ex) {
                     ex.printStackTrace();
                     lm.getGC().shutdownClient();
-                } catch (KryoNetException ex) {
-                    lm.getGC().shutdownClient();
-                    ex.printStackTrace();
                 }
             }
         }
@@ -64,6 +59,5 @@ public class TestRunner implements Runnable {
                 testers++;
             }
         }
-        //System.out.println("Avg Ping: " + (avgPing / testers));
     }
 }

@@ -52,7 +52,7 @@ public class AscensionServer {
     static {
         Globals.createLogDirectory();
         Globals.loadServer();
-        Globals.setServerProp();
+        Globals.loadServerConfig();
 
         SERVER_ROOMS = new ConcurrentHashMap<>(Globals.SERVER_MAX_ROOMS);
         LOGIC_SCHEDULER = Executors.newScheduledThreadPool(Math.max(Globals.SERVER_MAX_ROOMS / 10, 1),

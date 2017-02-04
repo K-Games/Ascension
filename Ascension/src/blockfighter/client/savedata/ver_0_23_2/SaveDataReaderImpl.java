@@ -57,6 +57,7 @@ public class SaveDataReaderImpl extends SaveDataReader {
         pos = readHotkeys(data, c, pos);
         pos = readKeyBind(data, c.getKeyBind(), pos);
         pos = readEmoteKeyBind(data, c.getKeyBind(), pos);
+        readScoreboardKeyBind(data, c.getKeyBind(), pos);
 
         c.calcStats();
         return c;

@@ -44,7 +44,8 @@ public class SaveDataReaderImpl extends SaveDataReader {
         System.arraycopy(data, pos, temp, 0, temp.length);
         c.getBaseStats()[Globals.STAT_EXP] = Globals.bytesToInt(temp);
         pos += temp.length;
-        pos = readEmoteKeyBind(data, c.getKeyBind(), pos);
+        readEmoteKeyBind(data, c.getKeyBind(), pos);
+
         c.calcStats();
         return c;
     }

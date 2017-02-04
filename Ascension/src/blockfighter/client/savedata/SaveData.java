@@ -161,6 +161,8 @@ public class SaveData {
         this.keybinds[Globals.KEYBIND_EMOTE8] = KeyEvent.VK_8;
         this.keybinds[Globals.KEYBIND_EMOTE9] = KeyEvent.VK_9;
         this.keybinds[Globals.KEYBIND_EMOTE10] = KeyEvent.VK_0;
+
+        this.keybinds[Globals.KEYBIND_SCOREBOARD] = KeyEvent.VK_TAB;
     }
 
     public static void saveData(final byte saveNum, final SaveData c) {
@@ -174,7 +176,9 @@ public class SaveData {
                 + Byte.BYTES * c.skills.length
                 + Byte.BYTES * c.hotkeys.length
                 + Integer.BYTES * 16 //Base Keybinds
-                + Integer.BYTES * Globals.Emotes.values().length];
+                + Integer.BYTES * Globals.Emotes.values().length
+                + Integer.BYTES // Scoreboard keybind
+                ];
 
         byte[] temp;
 
@@ -217,6 +221,7 @@ public class SaveData {
         pos = saveHotkeys(data, c, pos);
         pos = saveKeyBind(data, c.getKeyBind(), pos);
         pos = saveEmoteKeyBind(data, c.getKeyBind(), pos);
+        saveScoreboardKeyBind(data, c.getKeyBind(), pos);
 
         try {
             FileUtils.writeByteArrayToFile(new File(saveNum + ".tcdat"), data);
@@ -244,6 +249,14 @@ public class SaveData {
             System.arraycopy(temp, 0, data, nextPos, temp.length);
             nextPos += temp.length;
         }
+        return nextPos;
+    }
+
+    private static int saveScoreboardKeyBind(final byte[] data, final int[] keybind, final int pos) {
+        int nextPos = pos;
+        byte[] temp = Globals.intToBytes(keybind[Globals.KEYBIND_SCOREBOARD]);
+        System.arraycopy(temp, 0, data, nextPos, temp.length);
+        nextPos += temp.length;
         return nextPos;
     }
 
