@@ -1,7 +1,7 @@
 package blockfighter.client.screen;
 
 import blockfighter.client.Core;
-import blockfighter.client.SaveData;
+import blockfighter.client.savedata.SaveData;
 import blockfighter.client.entities.items.ItemEquip;
 import blockfighter.client.entities.items.ItemUpgrade;
 import blockfighter.client.entities.particles.Particle;

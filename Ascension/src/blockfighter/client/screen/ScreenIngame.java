@@ -2,7 +2,6 @@ package blockfighter.client.screen;
 
 import blockfighter.client.AscensionClient;
 import blockfighter.client.Core;
-import blockfighter.client.SaveData;
 import blockfighter.client.entities.emotes.Emote;
 import blockfighter.client.entities.ingamenumber.IngameNumber;
 import blockfighter.client.entities.items.Item;
@@ -16,6 +15,7 @@ import blockfighter.client.entities.player.skills.Skill;
 import blockfighter.client.maps.GameMap;
 import blockfighter.client.net.GameClient;
 import blockfighter.client.net.PacketSender;
+import blockfighter.client.savedata.SaveData;
 import blockfighter.shared.Globals;
 import java.awt.Color;
 import java.awt.Graphics2D;

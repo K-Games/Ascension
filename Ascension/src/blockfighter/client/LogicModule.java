@@ -1,5 +1,6 @@
 package blockfighter.client;
 
+import blockfighter.client.savedata.SaveData;
 import blockfighter.client.entities.player.skills.Skill;
 import blockfighter.client.net.GameClient;
 import blockfighter.client.screen.Screen;

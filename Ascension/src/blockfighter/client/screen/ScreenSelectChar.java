@@ -2,7 +2,7 @@ package blockfighter.client.screen;
 
 import blockfighter.client.AscensionClient;
 import blockfighter.client.Core;
-import blockfighter.client.SaveData;
+import blockfighter.client.savedata.SaveData;
 import blockfighter.shared.Globals;
 import java.awt.Color;
 import java.awt.Font;

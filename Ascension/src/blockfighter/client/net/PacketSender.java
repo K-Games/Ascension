@@ -1,6 +1,6 @@
 package blockfighter.client.net;
 
-import blockfighter.client.SaveData;
+import blockfighter.client.savedata.SaveData;
 import blockfighter.client.entities.items.ItemEquip;
 import blockfighter.client.entities.player.skills.Skill;
 import blockfighter.shared.Globals;
