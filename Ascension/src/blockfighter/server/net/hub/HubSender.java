@@ -16,9 +16,17 @@ public class HubSender {
             URL ipURL = new URL("http://checkip.amazonaws.com");
             in = new BufferedReader(new InputStreamReader(ipURL.openStream()));
             String ip = in.readLine();
-            URL regionURL = new URL("http://ip-api.com/line/" + ip + "?fields=country,regionName");
-            in = new BufferedReader(new InputStreamReader(regionURL.openStream()));
-            String country = in.readLine(), area = in.readLine();
+
+            String country = "Unknown", area = "Unknown";
+            try {
+                URL regionURL = new URL("http://ip-api.com/line/" + ip + "?fields=country,regionName");
+                in = new BufferedReader(new InputStreamReader(regionURL.openStream()));
+                country = in.readLine();
+                area = in.readLine();
+            } catch (IOException ex) {
+                Globals.logError("Failed to get country name.", ex);
+            }
+
             ServerInfo info = new ServerInfo(ip, area + ", " + country, AscensionServer.getServerCapacityStatus());
             HubClient.getClient().sendTCP(info);
         } catch (IOException ex) {
