@@ -308,11 +308,7 @@ public class Player implements GameEntity, Callable<Player> {
     }
 
     public void setPos(final double x, final double y) {
-        if (this.map.isOutOfBounds(x)) {
-            this.x = this.map.getValidX(x);
-        } else {
-            this.x = x;
-        }
+        this.x = this.map.getValidX(this.x, this.y);
         this.y = y;
         this.updatePos = true;
     }
@@ -1108,6 +1104,7 @@ public class Player implements GameEntity, Callable<Player> {
     }
 
     private void updateFall() {
+        double prevY = this.y;
         if (this.ySpeed != 0) {
             updateY(this.ySpeed);
             queuePlayerState(PLAYER_STATE_JUMP);
@@ -1122,11 +1119,15 @@ public class Player implements GameEntity, Callable<Player> {
         }
         this.isFalling = this.map.isFalling(this.x, this.y, this.ySpeed);
 
-        if (!this.isFalling && this.ySpeed > 0) {
-            this.y = this.map.getValidY(this.x, this.y);
-            setYSpeed(0);
-            this.updatePos = true;
+        if (!this.isFalling) {
+            if (this.ySpeed > 0) {
+                setYSpeed(0);
+            }
+            if (this.ySpeed == 0) {
+                this.y = this.map.getValidY(this.x, this.y);
+            }
         }
+        this.updatePos = prevY != this.y;
     }
 
     private void updateMove(final boolean xChanged) {
@@ -1218,7 +1219,7 @@ public class Player implements GameEntity, Callable<Player> {
         if (this.map.isOutOfBounds(this.x + change)) {
             return false;
         }
-        this.x = this.x + change;
+        this.x = this.map.getValidX(this.x + change, this.y);
         this.updatePos = true;
         return true;
     }

@@ -1,40 +1,59 @@
 package blockfighter.server.maps;
 
-import java.awt.Polygon;
-import java.awt.geom.Line2D;
+import java.awt.geom.Area;
+import java.awt.geom.Path2D;
 import java.awt.geom.Rectangle2D;
 
 public class GameMapPlatform {
 
     private final Rectangle2D.Double rect;
-    private Polygon triangle;
-    private final boolean isRamp;
-    private final double x, y, width, height, peakX;
+
+    private Path2D.Double polygon;
+    private Area polygonArea;
+    private final boolean isRect;
+    private boolean isSolid;
+    private final double x1, y1, x2, y2;
 
     public GameMapPlatform(final Rectangle2D.Double rect) {
-        this.isRamp = false;
+        this.isRect = true;
+        this.isSolid = false;
         this.rect = rect;
-        this.x = 0;
-        this.y = 0;
-        this.width = 0;
-        this.height = 0;
-        this.peakX = 0;
+        this.x1 = 0;
+        this.y1 = 0;
+        this.x2 = 0;
+        this.y2 = 0;
     }
 
-    public GameMapPlatform(final double x, final double y, final double width, final double height, final double peakX) {
-        this.isRamp = true;
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
-        this.peakX = peakX;
-        this.triangle = new Polygon();
-        this.triangle.addPoint((int) x, (int) y);
-        this.triangle.addPoint((int) (x + peakX), (int) (y - height));
-        this.triangle.addPoint((int) (x + width), (int) y);
-        this.triangle.addPoint((int) (x + width), (int) y + 15);
-        this.triangle.addPoint((int) x, (int) y + 15);
-        this.rect = new Rectangle2D.Double(this.triangle.getBounds2D().getX(), this.triangle.getBounds2D().getY(), this.triangle.getBounds2D().getWidth(), this.triangle.getBounds2D().getHeight());
+    public GameMapPlatform(final double x1, final double y1, final double x2, final double y2) {
+        this.isRect = false;
+        this.isSolid = false;
+        this.x1 = x1;
+        this.y1 = y1;
+        this.x2 = x2;
+        this.y2 = y2;
+
+        this.polygon = new Path2D.Double();
+        this.polygon.moveTo(x1, y1);
+        this.polygon.lineTo(x2, y2);
+        this.polygon.lineTo(x2, y2 + 30);
+        this.polygon.lineTo(x1, y1 + 30);
+        this.polygon.closePath();
+        this.polygonArea = new Area(this.polygon);
+
+        this.rect = new Rectangle2D.Double(
+                this.polygon.getBounds2D().getX(),
+                this.polygon.getBounds2D().getY(),
+                this.polygon.getBounds2D().getWidth(),
+                this.polygon.getBounds2D().getHeight()
+        );
+    }
+
+    public boolean isSolid() {
+        return this.isSolid;
+    }
+
+    public void setIsSolid(final boolean solid) {
+        this.isSolid = solid;
     }
 
     public Rectangle2D.Double getRect() {
@@ -42,22 +61,34 @@ public class GameMapPlatform {
     }
 
     public boolean intersects(Rectangle2D.Double rect) {
-        if (!this.isRamp) {
+        if (this.isRect) {
             return this.rect.intersects(rect);
         } else {
-            return this.triangle.intersects(rect);
+            return this.polygonArea.intersects(rect);
         }
     }
 
-    public double getY(final double x) {
-        if (!this.isRamp) {
+    public double getValidX(final double x) {
+        if (Math.abs(x - this.rect.x) <= Math.abs(x - (this.rect.x + this.rect.width))) {
+            return this.rect.x - 25;
+        } else {
+            return this.rect.x + this.rect.width + 25;
+        }
+    }
+
+    public double getY(double x) {
+        if (this.isRect) {
             return this.rect.y;
         } else {
-            Line2D.Double line = (x < this.x + peakX)
-                    ? new Line2D.Double(this.triangle.xpoints[0], this.triangle.ypoints[0], this.triangle.xpoints[1], this.triangle.ypoints[1])
-                    : new Line2D.Double(this.triangle.xpoints[1], this.triangle.ypoints[1], this.triangle.xpoints[2], this.triangle.ypoints[2]);
-            double factor = (line.y2 - line.y1) / (line.x2 - line.x1);
-            return factor * x + (line.y1 - factor * line.x1);
+            double minX = Math.min(x1, x2), maxX = Math.max(x1, x2);
+            if (x < minX) {
+                x = minX;
+            } else if (x > maxX) {
+                x = maxX;
+            }
+            double m = (this.y2 - this.y1) / (this.x2 - this.x1);
+            double c = this.y1 - m * this.x1;
+            return m * x + c;
         }
     }
 }

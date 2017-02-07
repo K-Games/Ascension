@@ -364,7 +364,7 @@ public abstract class Mob implements GameEntity, Callable<Mob> {
         if (this.map.isOutOfBounds(this.x + change)) {
             return false;
         }
-        this.x = this.x + change;
+        this.x = this.map.getValidX(this.x + change, this.y);
         this.updatePos = true;
         return true;
     }
