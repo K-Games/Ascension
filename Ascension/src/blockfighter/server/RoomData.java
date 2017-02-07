@@ -307,8 +307,4 @@ public class RoomData {
     public void setMaxLevel(int maxLevel) {
         this.maxLevel = maxLevel;
     }
-
-    public boolean isComplete() {
-        return false;
-    }
 }
