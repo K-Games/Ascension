@@ -1,8 +1,8 @@
 package blockfighter.client.screen;
 
 import blockfighter.client.Core;
-import blockfighter.client.savedata.SaveData;
 import blockfighter.client.entities.emotes.Emote;
+import blockfighter.client.savedata.SaveData;
 import blockfighter.shared.Globals;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -17,6 +17,7 @@ public class ScreenKeyBind extends ScreenMenu {
     private final static Rectangle2D.Double[] KEY_BOX = new Rectangle2D.Double[Globals.NUM_KEYBINDS];
     private static final String ASSIGN_KEY_TEXT = "Assign a key";
     private static final String DOWN_TEXT = "Down: ";
+    private static final String SCOREBOARD_TEXT = "Scoreboard: ";
     private static final String HOTKEY_BAR_TEXT = "Hotkey Bar ";
     private static final String JUMP_TEXT = "Jump: ";
     private static final String UNASSIGNED_KEY_TEXT = "Not Assigned";
@@ -37,6 +38,7 @@ public class ScreenKeyBind extends ScreenMenu {
         for (int i = 16 + Globals.Emotes.values().length / 2; i < 16 + Globals.Emotes.values().length; i++) {
             KEY_BOX[i] = new Rectangle2D.Double(890, 300 + ((i - 16 - Globals.Emotes.values().length / 2) * 50), 180, 40);
         }
+        KEY_BOX[Globals.KEYBIND_SCOREBOARD] = new Rectangle2D.Double(800, 245, 180, 40);
     }
 
     private final SaveData c;
@@ -71,18 +73,8 @@ public class ScreenKeyBind extends ScreenMenu {
         }
 
         if (this.selectedKeyBox != -1) {
-            if ((e.getKeyCode() >= KeyEvent.VK_0
-                    && e.getKeyCode() <= KeyEvent.VK_9)
-                    || (e.getKeyCode() >= KeyEvent.VK_A
-                    && e.getKeyCode() <= KeyEvent.VK_Z)
-                    || e.getKeyCode() <= KeyEvent.VK_SPACE
-                    || (e.getKeyCode() >= KeyEvent.VK_LEFT
-                    && e.getKeyCode() <= KeyEvent.VK_DOWN)
-                    || (e.getKeyCode() >= KeyEvent.VK_NUMPAD0
-                    && e.getKeyCode() <= KeyEvent.VK_NUMPAD9)) {
-                this.c.setKeyBind(this.selectedKeyBox, e.getKeyCode());
-                this.selectedKeyBox = -1;
-            }
+            this.c.setKeyBind(this.selectedKeyBox, e.getKeyCode());
+            this.selectedKeyBox = -1;
         }
     }
 
@@ -180,12 +172,15 @@ public class ScreenKeyBind extends ScreenMenu {
         drawStringOutline(g, WALK_RIGHT_TEXT, 690, (int) (KEY_BOX[Globals.KEYBIND_RIGHT].y + 25), 1);
         drawStringOutline(g, JUMP_TEXT, 690, (int) (KEY_BOX[Globals.KEYBIND_JUMP].y + 25), 1);
         drawStringOutline(g, DOWN_TEXT, 690, (int) (KEY_BOX[Globals.KEYBIND_DOWN].y + 25), 1);
+        drawStringOutline(g, SCOREBOARD_TEXT, 690, (int) (KEY_BOX[Globals.KEYBIND_SCOREBOARD].y + 25), 1);
 
         g.setColor(Color.WHITE);
         g.drawString(WALK_LEFT_TEXT, 690, (int) (KEY_BOX[Globals.KEYBIND_LEFT].y + 25));
         g.drawString(WALK_RIGHT_TEXT, 690, (int) (KEY_BOX[Globals.KEYBIND_RIGHT].y + 25));
         g.drawString(JUMP_TEXT, 690, (int) (KEY_BOX[Globals.KEYBIND_JUMP].y + 25));
         g.drawString(DOWN_TEXT, 690, (int) (KEY_BOX[Globals.KEYBIND_DOWN].y + 25));
+        g.drawString(SCOREBOARD_TEXT, 690, (int) (KEY_BOX[Globals.KEYBIND_SCOREBOARD].y + 25));
+
     }
 
     private void drawEmotes(final Graphics2D g) {

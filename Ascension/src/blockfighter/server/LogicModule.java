@@ -30,7 +30,10 @@ public class LogicModule implements Runnable {
     private ConcurrentLinkedQueue<Mob> mobAddQueue = new ConcurrentLinkedQueue<>();
 
     private long lastRefreshAll = 0;
-    private long lastUpdateTime = 0, lastProcessQueue = 0, lastResetCheckTime = 0, resetStartTime = 0, roomIdleStartTime = 0;
+    private long lastUpdateTime = 0, lastProcessQueue = 0, lastFinishCheckTime = 0, matchEndStartTime = 0, roomIdleStartTime = 0;
+    private long lastSendPingTime = 0;
+    private final long matchStartTime;
+    private Player winningPlayer = null;
 
     private static final ExecutorService LOGIC_THREAD_POOL = Executors.newFixedThreadPool(Globals.SERVER_LOGIC_THREADS,
             new BasicThreadFactory.Builder()
@@ -41,11 +44,17 @@ public class LogicModule implements Runnable {
 
     public LogicModule(final byte roomIndex, final byte minLevel, final byte maxLevel) {
         this.room = new RoomData(roomIndex, minLevel, maxLevel);
+        this.matchStartTime = System.nanoTime();
         reset();
     }
 
     public long getTime() {
         return this.currentTime;
+    }
+
+    public int getMatchTimeRemaining() {
+        long remainingTime = Globals.SERVER_MATCH_DURATION - Globals.nsToMs((this.currentTime - this.matchStartTime));
+        return (remainingTime > 0) ? (int) remainingTime : 0;
     }
 
     private void reset() {
@@ -55,10 +64,22 @@ public class LogicModule implements Runnable {
         this.projEffectQueue.clear();
         this.projAddQueue.clear();
 
-        this.resetStartTime = 0;
+        this.matchEndStartTime = 0;
         this.currentTime = System.nanoTime();
         this.roomIdleStartTime = System.nanoTime();
         this.room.reset();
+    }
+
+    private void closeRoom() {
+        this.future.cancel(true);
+        AscensionServer.removeRoom(this.room.getRoomIndex());
+        Globals.log(LogicModule.class, "Closing room instance - Room: " + getRoomData().getRoomIndex(), Globals.LOG_TYPE_DATA);
+
+    }
+
+    private boolean gameFinished() {
+        return this.winningPlayer.getKillCount() >= Globals.SERVER_WIN_KILL_COUNT
+                || this.currentTime - this.matchStartTime >= Globals.msToNs(Globals.SERVER_MATCH_DURATION);
     }
 
     @Override
@@ -71,13 +92,10 @@ public class LogicModule implements Runnable {
             }
             if (this.room.getPlayers().isEmpty()) {
                 if (currentTime - this.roomIdleStartTime >= Globals.msToNs(Globals.SERVER_ROOM_MAX_ILDE)) {
-                    this.future.cancel(true);
-                    AscensionServer.removeRoom(this.room.getRoomIndex());
-                    Globals.log(AscensionServer.class, "Room instance removed - Room: " + getRoomData().getRoomIndex(), Globals.LOG_TYPE_DATA);
+                    closeRoom();
                 }
                 return;
             }
-            final long nowMs = System.currentTimeMillis();
 
             if (currentTime - this.lastUpdateTime >= Globals.SERVER_LOGIC_UPDATE) {
                 this.roomIdleStartTime = currentTime;
@@ -87,22 +105,31 @@ public class LogicModule implements Runnable {
                 this.lastUpdateTime = currentTime;
             }
 
-//            if (currentTime - this.lastRefreshAll >= Globals.SENDALL_UPDATE) {
-//                for (final Map.Entry<Byte, Player> pEntry : getPlayers().entrySet()) {
-//                    final Player player = pEntry.getValue();
-//                    player.sendData();
-//                }
-//                this.lastRefreshAll = currentTime;
-//            }
-            if (!this.room.getMap().isPvP() && currentTime - this.lastResetCheckTime >= Globals.msToNs(1000)) {
-                if (this.resetStartTime == 0) {
-                    if (this.room.getMobs().isEmpty()) {
-                        this.resetStartTime = currentTime;
-                    }
-                } else if (currentTime - this.resetStartTime >= Globals.msToNs(5000)) {
-                    reset();
+            if (currentTime - this.lastSendPingTime >= Globals.msToNs(1000)) {
+                final ConcurrentHashMap<Byte, Player> players = this.room.getPlayers();
+                for (final Map.Entry<Byte, Player> player : players.entrySet()) {
+                    player.getValue().getConnection().updateReturnTripTime();
+                    player.getValue().updateClientScore();
                 }
-                this.lastResetCheckTime = currentTime;
+                this.lastSendPingTime = this.currentTime;
+            }
+
+            if (currentTime - this.lastFinishCheckTime >= Globals.msToNs(100)) {
+                if (this.matchEndStartTime == 0) {
+                    if (gameFinished()) {
+                        //Send victory/defeat notice
+                        //Send match rewards
+                        Globals.log(LogicModule.class, "Room: " + this.room.getRoomIndex() + " Match finished. Disconnecting all players in 5 seconds.", Globals.LOG_TYPE_DATA);
+                        this.matchEndStartTime = currentTime;
+                    }
+                } else if (currentTime - this.matchEndStartTime >= Globals.msToNs(5000)) {
+                    final ConcurrentHashMap<Byte, Player> players = this.room.getPlayers();
+                    for (final Map.Entry<Byte, Player> player : players.entrySet()) {
+                        player.getValue().disconnect();
+                    }
+                    closeRoom();
+                }
+                this.lastFinishCheckTime = currentTime;
             }
 
         } catch (final Exception ex) {
@@ -152,9 +179,13 @@ public class LogicModule implements Runnable {
                     posDatas.add(posData);
                 }
 
-                if (!(player.isConnected())) {
+                if (!player.isConnected()) {
                     this.room.getPlayers().remove(player.getKey());
                     this.room.returnPlayerKey(player.getKey());
+                } else {
+                    if (this.winningPlayer == null || this.winningPlayer.getKillCount() < player.getKillCount()) {
+                        this.winningPlayer = player;
+                    }
                 }
             } catch (Exception ex) {
                 Globals.logError(ex.toString(), ex);

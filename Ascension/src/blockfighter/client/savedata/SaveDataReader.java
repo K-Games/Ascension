@@ -9,6 +9,23 @@ public abstract class SaveDataReader {
 
     public abstract SaveData readData(final SaveData c, final byte[] data);
 
+    protected static int readScoreboardKeyBind(final byte[] data, final int[] keybind, final int pos) {
+        int nextPos = pos;
+        final byte[] temp = new byte[4];
+        try {
+            System.arraycopy(data, nextPos, temp, 0, temp.length);
+            if (Globals.bytesToInt(temp) == 0) {
+                keybind[Globals.KEYBIND_SCOREBOARD] = -1;
+            } else {
+                keybind[Globals.KEYBIND_SCOREBOARD] = Globals.bytesToInt(temp);
+            }
+        } catch (Exception e) {
+            keybind[Globals.KEYBIND_SCOREBOARD] = -1;
+        }
+        nextPos += temp.length;
+        return nextPos;
+    }
+
     protected static int readEmoteKeyBind(final byte[] data, final int[] keybind, final int pos) {
         int nextPos = pos;
         for (int i = 16; i < 16 + Globals.Emotes.values().length; i++) {
