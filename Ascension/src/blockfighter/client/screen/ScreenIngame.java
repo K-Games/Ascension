@@ -336,11 +336,6 @@ public class ScreenIngame extends Screen {
                 Globals.logError(e.toString(), e);
             }
         }
-        for (final Map.Entry<Integer, IngameNumber> number : this.ingameNumber.entrySet()) {
-            if (!number.getValue().isExpired()) {
-                number.getValue().draw(g);
-            }
-        }
         for (final Map.Entry<Integer, Emote> emote : this.emotes.entrySet()) {
             try {
                 if (!emote.getValue().isExpired()) {
@@ -352,6 +347,11 @@ public class ScreenIngame extends Screen {
         }
 
         g.setTransform(resetForm);
+        for (final Map.Entry<Integer, IngameNumber> number : this.ingameNumber.entrySet()) {
+            if (!number.getValue().isExpired()) {
+                number.getValue().draw(g);
+            }
+        }
         drawHUD(g);
         drawHotkeys(g);
 
@@ -801,12 +801,14 @@ public class ScreenIngame extends Screen {
     }
 
     private void dataIngameNumber(final byte[] data) {
-        final byte type = data[1];
-        final int x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
-        final int y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
-        final int value = Globals.bytesToInt(Arrays.copyOfRange(data, 10, 14));
-        IngameNumber newNumber = new IngameNumber(value, type, new Point(x, y));
-        this.ingameNumber.put(newNumber.getKey(), newNumber);
+        if (this.players.containsKey(Core.getLogicModule().getMyPlayerKey())) {
+            final byte type = data[1];
+            final int x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
+            final int y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
+            final int value = Globals.bytesToInt(Arrays.copyOfRange(data, 10, 14));
+            IngameNumber newNumber = new IngameNumber(value, type, new Point(x, y), this.players.get(Core.getLogicModule().getMyPlayerKey()));
+            this.ingameNumber.put(newNumber.getKey(), newNumber);
+        }
     }
 
     private void dataParticleEffect(final byte[] data) {

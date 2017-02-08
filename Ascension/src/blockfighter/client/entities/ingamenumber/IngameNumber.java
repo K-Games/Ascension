@@ -1,6 +1,7 @@
 package blockfighter.client.entities.ingamenumber;
 
 import blockfighter.client.Core;
+import blockfighter.client.entities.player.Player;
 import blockfighter.shared.Globals;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -41,13 +42,13 @@ public class IngameNumber implements Callable<IngameNumber> {
         return nextKey;
     }
 
-    public IngameNumber(final int num, final byte t, final Point loc) {
+    public IngameNumber(final int num, final byte t, final Point loc, final Player myPlayer) {
         this.key = getNextAvailableKey();
         this.startTime = Core.getLogicModule().getTime();
         this.number = num;
         this.type = t;
-        this.x = loc.x;
-        this.y = loc.y - 18;
+        this.x = loc.x - myPlayer.getX() + 640;
+        this.y = loc.y - 18 - myPlayer.getY() + 500;
         this.speedY = -12 + Globals.rng(40) / 10D;
         this.speedX = (Globals.rng(10) - 5) / 2D;
     }
@@ -71,7 +72,7 @@ public class IngameNumber implements Callable<IngameNumber> {
     public void draw(final Graphics2D g) {
         g.setFont((this.type == Globals.NUMBER_TYPE_PLAYERCRIT || this.type == Globals.NUMBER_TYPE_MOBCRIT) ? Globals.ARIAL_21PTBOLD : Globals.ARIAL_19PTBOLD);
 
-        String output = Integer.toString(this.number);
+        String output = Globals.NUMBER_FORMAT.format(this.number);
         output = (this.type == Globals.NUMBER_TYPE_PLAYERCRIT || this.type == Globals.NUMBER_TYPE_MOBCRIT) ? output + "!" : output;
 
         int outputWidth = g.getFontMetrics().stringWidth(output);
