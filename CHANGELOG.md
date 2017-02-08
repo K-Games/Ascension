@@ -6,6 +6,7 @@
 
 ### Client Changes
 * Fixed rare bug where Adrenaline particle would cause everything to render transparently.
+* New key bind settings default to "Not Assigned".
 
 ### Server Changes
 * Fixed server not sending info to Hub when unable to retrieve country/area name.

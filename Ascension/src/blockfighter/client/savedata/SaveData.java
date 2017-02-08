@@ -39,6 +39,7 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.UUID;
 import org.apache.commons.io.FileUtils;
@@ -109,6 +110,7 @@ public class SaveData {
         this.skills[Globals.PASSIVE_TOUGH] = new SkillPassiveTough();
         this.skills[Globals.PASSIVE_SHADOWATTACK] = new SkillPassiveShadowAttack();
         this.skills[Globals.PASSIVE_STATIC] = new SkillPassiveStatic();
+        Arrays.fill(this.keybinds, -1);
     }
 
     public void newCharacter(final boolean testMax) {
