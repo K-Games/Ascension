@@ -2,6 +2,7 @@ package blockfighter.client.screen;
 
 import blockfighter.client.Core;
 import blockfighter.client.entities.items.ItemEquip;
+import blockfighter.client.entities.player.Player;
 import blockfighter.shared.Globals;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
@@ -78,6 +79,10 @@ public class ScreenSpriteTest extends ScreenMenu {
     @Override
     public void draw(final Graphics2D g) {
         drawSlots(g);
+        for (int i = 0; i < Player.PLAYER_COLOURS.length; i++) {
+            g.setColor(Player.PLAYER_COLOURS[i]);
+            g.fillRect(i % 25 * 20, i / 25 * 20, 20, 20);
+        }
     }
 
     private void drawSlots(final Graphics2D g) {

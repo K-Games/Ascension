@@ -29,9 +29,7 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
@@ -42,7 +40,8 @@ import java.util.concurrent.Future;
 
 public class ScreenIngame extends Screen {
 
-    private static final Color SCOREBOARD_BG_COLOR = new Color(0, 0, 0, 150);
+    private static final Color SCOREBOARD_BG_COLOR = new Color(0, 0, 0, 190);
+
     private static final int SCOREBOARD_SPACING = 5;
     private static final int SCOREBOARD_Y = 120;
     private static final int SCOREBOARD_ROW_HEIGHT = 30;
@@ -74,7 +73,7 @@ public class ScreenIngame extends Screen {
     private final ConcurrentHashMap<Integer, IngameNumber> ingameNumber = new ConcurrentHashMap<>();
     private final ConcurrentLinkedQueue<Notification> notifications = new ConcurrentLinkedQueue<>();
     private final ConcurrentHashMap<Integer, Emote> emotes = new ConcurrentHashMap<>();
-    private ArrayList<Player> scoreboardList;
+    private Player[] scoreboardList;
 
     private double screenShakeX, screenShakeY;
     private double screenShakeXAmount, screenShakeYAmount;
@@ -185,8 +184,8 @@ public class ScreenIngame extends Screen {
     }
 
     private void updateScoreAndTime() {
-        this.scoreboardList = new ArrayList<>(this.players.values());
-        Collections.sort(this.scoreboardList, (Player a, Player b) -> b.getScore() - a.getScore());
+        this.scoreboardList = this.players.values().toArray(new Player[0]);
+        Arrays.sort(this.scoreboardList, (Player a, Player b) -> b.getScore() - a.getScore());
         if (this.matchTimeRemaining > 0) {
             this.matchTimeRemaining -= Globals.nsToMs(Core.getLogicModule().getTime() - this.lastUpdateTime);
         } else {
@@ -445,6 +444,9 @@ public class ScreenIngame extends Screen {
                 g.fillRoundRect(SCOREBOARD_PLAYER_LEVEL_X, rowY, SCOREBOARD_PLAYER_LEVEL_COL_WIDTH, SCOREBOARD_ROW_HEIGHT, 10, 10);
                 g.fillRoundRect(SCOREBOARD_PLAYER_SCORE_X, rowY, SCOREBOARD_PLAYER_SCORE_COL_WIDTH, SCOREBOARD_ROW_HEIGHT, 10, 10);
                 g.fillRoundRect(SCOREBOARD_PLAYER_PING_X, rowY, SCOREBOARD_PLAYER_PING_COL_WIDTH, SCOREBOARD_ROW_HEIGHT, 10, 10);
+
+                g.setColor(player.getPlayerColor());
+                g.fillRoundRect(SCOREBOARD_PLAYER_NAME_X + 1, rowY, 5, SCOREBOARD_ROW_HEIGHT, 10, 10);
 
                 g.setColor(Color.WHITE);
                 if (player.getKey() == Core.getLogicModule().getMyPlayerKey()) {

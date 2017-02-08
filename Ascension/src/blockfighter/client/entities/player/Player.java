@@ -12,6 +12,17 @@ import java.util.concurrent.Callable;
 
 public class Player implements Callable<Player> {
 
+    public static Color[] PLAYER_COLOURS = new Color[25];
+
+    static {
+        int index = 0;
+        for (float h = 0; h < 1; h += 0.04f) {
+            PLAYER_COLOURS[index] = new Color(Color.HSBtoRGB(h, 1f, 1f));
+            index++;
+        }
+
+    }
+
     private int x, y, queueX, queueY;
     private final byte key;
     private byte facing;
@@ -236,5 +247,9 @@ public class Player implements Callable<Player> {
 
     public boolean isDead() {
         return this.animState == Globals.PLAYER_ANIM_STATE_DEAD;
+    }
+
+    public Color getPlayerColor() {
+        return PLAYER_COLOURS[Math.abs(this.name.hashCode()) % PLAYER_COLOURS.length];
     }
 }

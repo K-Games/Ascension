@@ -7,6 +7,8 @@
 ### Client Changes
 * Fixed rare bug where Adrenaline particle would cause everything to render transparently.
 * New key bind settings default to "Not Assigned".
+* Added Scoreboard - Existing key binds will not have open Scoreboard binded.
+* Players now have colour associated with them. Scoreboard and Kill notifications will have matching colours for quick readability.
 
 ### Server Changes
 * Fixed server not sending info to Hub when unable to retrieve country/area name.
