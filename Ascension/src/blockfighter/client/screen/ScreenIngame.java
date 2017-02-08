@@ -41,6 +41,7 @@ import java.util.concurrent.Future;
 public class ScreenIngame extends Screen {
 
     private static final Color SCOREBOARD_BG_COLOR = new Color(0, 0, 0, 190);
+    private static final Color SCOREBOARD_BG2_COLOR = new Color(190, 190, 190, 190);
 
     private static final int SCOREBOARD_SPACING = 5;
     private static final int SCOREBOARD_Y = 120;
@@ -484,6 +485,16 @@ public class ScreenIngame extends Screen {
             x1 - 30, x2 + 30, x2 + 15, x1 - 15},
                 new int[]{0, 0, 40, 40}, 4);
         g.fillPolygon(timerBg);
+
+        final Polygon timerBg2 = new Polygon(new int[]{
+            x1 - 40, x1 - 30, x1 - 15, x1 - 25},
+                new int[]{0, 0, 40, 40}, 4);
+        final Polygon timerBg3 = new Polygon(new int[]{
+            x2 + 40, x2 + 30, x2 + 15, x2 + 25},
+                new int[]{0, 0, 40, 40}, 4);
+        g.setColor(SCOREBOARD_BG2_COLOR);
+        g.fillPolygon(timerBg2);
+        g.fillPolygon(timerBg3);
 
         g.setColor(Color.WHITE);
         g.drawString(str, x1, timerBg.getBounds().y + 30);
