@@ -319,7 +319,7 @@ public class Player implements GameEntity, Callable<Player> {
     }
 
     public void setPos(final double x, final double y) {
-        this.x = this.map.getValidX(this.x, this.y);
+        this.x = this.map.getValidX(x, y);
         this.y = y;
         this.updatePos = true;
     }
