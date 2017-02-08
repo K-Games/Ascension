@@ -190,7 +190,7 @@ public class Player implements GameEntity, Callable<Player> {
         updateClientScore();
     }
 
-    public int getKillCount() {
+    public int getScore() {
         return this.score;
     }
 
@@ -1036,37 +1036,44 @@ public class Player implements GameEntity, Callable<Player> {
         this.stats[Globals.STAT_MAXEXP] = Globals.calcEXPtoNxtLvl(this.stats[Globals.STAT_LEVEL]);
     }
 
+    public void giveEquipDrop(final double lvl, final boolean guaranteed) {
+        if (Globals.rng(100) < 12 || guaranteed) {
+            final byte[] bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_INT * 2];
+            bytes[0] = Globals.DATA_PLAYER_GIVEDROP;
+
+            final byte[] level = Globals.intToBytes((int) lvl);
+            System.arraycopy(level, 0, bytes, 1, level.length);
+
+            Integer[] equipCodes = Globals.ITEM_CODES.toArray(new Integer[0]);
+            final byte[] itemCode = Globals.intToBytes(equipCodes[Globals.rng(equipCodes.length)]);
+            System.arraycopy(itemCode, 0, bytes, 5, itemCode.length);
+
+            PacketSender.sendPlayer(bytes, this);
+        }
+    }
+
+    public void giveUpgradeDrop(final double lvl, final boolean guaranteed) {
+        if (Globals.rng(100) < 15 || guaranteed) {
+            final byte[] bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_INT * 2];
+            bytes[0] = Globals.DATA_PLAYER_GIVEDROP;
+
+            final byte[] level = Globals.intToBytes((int) lvl);
+            System.arraycopy(level, 0, bytes, 1, level.length);
+
+            Integer[] upgradeCodes = Globals.ITEM_UPGRADE_CODES.toArray(new Integer[0]);
+            final byte[] itemCode = Globals.intToBytes(upgradeCodes[Globals.rng(upgradeCodes.length)]);
+            System.arraycopy(itemCode, 0, bytes, 5, itemCode.length);
+            PacketSender.sendPlayer(bytes, this);
+        }
+    }
+
     public void giveDrop(final double lvl) {
-        for (int equipCode : Globals.ITEM_CODES) {
-            if (Globals.rng(100) < 2) {
-                final byte[] bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_INT * 2];
-                bytes[0] = Globals.DATA_PLAYER_GIVEDROP;
+        giveDrop(lvl, false);
+    }
 
-                final byte[] level = Globals.intToBytes((int) lvl);
-                System.arraycopy(level, 0, bytes, 1, level.length);
-
-                final byte[] itemCode = Globals.intToBytes(equipCode);
-                System.arraycopy(itemCode, 0, bytes, 5, itemCode.length);
-
-                PacketSender.sendPlayer(bytes, this);
-            }
-        }
-
-        for (int upgradeCode : Globals.ITEM_UPGRADE_CODES) {
-            if (Globals.rng(100) < 2) {
-                final byte[] bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_INT * 2];
-                bytes[0] = Globals.DATA_PLAYER_GIVEDROP;
-
-                final byte[] level = Globals.intToBytes((int) lvl);
-                System.arraycopy(level, 0, bytes, 1, level.length);
-
-                final byte[] itemCode = Globals.intToBytes(upgradeCode);
-                System.arraycopy(itemCode, 0, bytes, 5, itemCode.length);
-
-                PacketSender.sendPlayer(bytes, this);
-            }
-            break;
-        }
+    public void giveDrop(final double lvl, final boolean guaranteed) {
+        giveEquipDrop(lvl, guaranteed);
+        giveUpgradeDrop(lvl, guaranteed);
     }
 
     public void giveEXP(final double amount) {

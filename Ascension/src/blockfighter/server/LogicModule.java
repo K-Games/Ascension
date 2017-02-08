@@ -5,7 +5,9 @@ import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.proj.Projectile;
 import blockfighter.server.net.PacketSender;
 import blockfighter.shared.Globals;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -78,7 +80,7 @@ public class LogicModule implements Runnable {
     }
 
     private boolean gameFinished() {
-        return this.winningPlayer.getKillCount() >= Globals.SERVER_WIN_KILL_COUNT
+        return this.winningPlayer.getScore() >= Globals.SERVER_WIN_KILL_COUNT
                 || this.currentTime - this.matchStartTime >= Globals.msToNs(Globals.SERVER_MATCH_DURATION);
     }
 
@@ -106,34 +108,112 @@ public class LogicModule implements Runnable {
             }
 
             if (currentTime - this.lastSendPingTime >= Globals.msToNs(1000)) {
-                final ConcurrentHashMap<Byte, Player> players = this.room.getPlayers();
-                for (final Map.Entry<Byte, Player> player : players.entrySet()) {
-                    player.getValue().getConnection().updateReturnTripTime();
-                    player.getValue().updateClientScore();
-                }
+                sendScoreAndPing();
                 this.lastSendPingTime = this.currentTime;
             }
 
             if (currentTime - this.lastFinishCheckTime >= Globals.msToNs(100)) {
-                if (this.matchEndStartTime == 0) {
-                    if (gameFinished()) {
-                        //Send victory/defeat notice
-                        //Send match rewards
-                        Globals.log(LogicModule.class, "Room: " + this.room.getRoomIndex() + " Match finished. Disconnecting all players in 5 seconds.", Globals.LOG_TYPE_DATA);
-                        this.matchEndStartTime = currentTime;
-                    }
-                } else if (currentTime - this.matchEndStartTime >= Globals.msToNs(5000)) {
-                    final ConcurrentHashMap<Byte, Player> players = this.room.getPlayers();
-                    for (final Map.Entry<Byte, Player> player : players.entrySet()) {
-                        player.getValue().disconnect();
-                    }
-                    closeRoom();
-                }
+                updateFinishingMatch();
                 this.lastFinishCheckTime = currentTime;
             }
 
         } catch (final Exception ex) {
             Globals.logError(ex.toString(), ex);
+        }
+    }
+
+    private void disconnectAllPlayers() {
+        final ConcurrentHashMap<Byte, Player> players = this.room.getPlayers();
+        for (final Map.Entry<Byte, Player> player : players.entrySet()) {
+            player.getValue().disconnect();
+        }
+    }
+
+    private void sendPlayersMatchResult() {
+        final ConcurrentHashMap<Byte, Player> players = this.room.getPlayers();
+        for (final Map.Entry<Byte, Player> player : players.entrySet()) {
+            //Send result
+        }
+    }
+
+    private void sendScoreAndPing() {
+        final ConcurrentHashMap<Byte, Player> players = this.room.getPlayers();
+        for (final Map.Entry<Byte, Player> player : players.entrySet()) {
+            player.getValue().getConnection().updateReturnTripTime();
+            player.getValue().updateClientScore();
+        }
+    }
+
+    private void sendMatchEndRewards() {
+        ArrayList<Player> sortedPlayers = new ArrayList<>(this.room.getPlayers().values());
+        Collections.sort(sortedPlayers, (Player a, Player b) -> b.getScore() - a.getScore());
+        LinkedList<Player> firsts = new LinkedList<>();
+        LinkedList<Player> seconds = new LinkedList<>();
+        LinkedList<Player> thirds = new LinkedList<>();
+        LinkedList<Player> rest = new LinkedList<>();
+        for (Player player : sortedPlayers) {
+            if (player.getScore() > 0) {
+                if (firsts.isEmpty() || firsts.getFirst().getScore() == player.getScore()) {
+                    firsts.add(player);
+                    Globals.log(LogicModule.class, player.getPlayerName() + " finished 1st", Globals.LOG_TYPE_DATA);
+                } else if (seconds.isEmpty() || seconds.getFirst().getScore() == player.getScore()) {
+                    seconds.add(player);
+                    Globals.log(LogicModule.class, player.getPlayerName() + " finished 2nd", Globals.LOG_TYPE_DATA);
+                } else if (thirds.isEmpty() || thirds.getFirst().getScore() == player.getScore()) {
+                    thirds.add(player);
+                    Globals.log(LogicModule.class, player.getPlayerName() + " finished 3rd", Globals.LOG_TYPE_DATA);
+                } else {
+                    rest.add(player);
+                    Globals.log(LogicModule.class, player.getPlayerName() + " did not place", Globals.LOG_TYPE_DATA);
+                }
+            }
+        }
+
+        // 1st - 3 Items + 20% exp
+        for (Player player : firsts) {
+            for (int i = 0; i < 3; i++) {
+                player.giveEquipDrop(player.getStats()[Globals.STAT_LEVEL], true);
+            }
+            player.giveEXP(player.getStats()[Globals.STAT_MAXEXP] * 0.2);
+        }
+
+        // 2nd - 2 Items + 15% exp
+        for (Player player : seconds) {
+            for (int i = 0; i < 2; i++) {
+                player.giveEquipDrop(player.getStats()[Globals.STAT_LEVEL], true);
+            }
+            player.giveEXP(player.getStats()[Globals.STAT_MAXEXP] * 0.15);
+        }
+
+        //3rd - 1 Item + 10% exp
+        for (Player player : thirds) {
+            for (int i = 0; i < 1; i++) {
+                player.giveEquipDrop(player.getStats()[Globals.STAT_LEVEL], true);
+            }
+            player.giveEXP(player.getStats()[Globals.STAT_MAXEXP] * 0.1);
+        }
+
+        // Rest - 10% exp
+        for (Player player : rest) {
+            player.giveEXP(player.getStats()[Globals.STAT_MAXEXP] * 0.1);
+        }
+    }
+
+    private void updateFinishingMatch() {
+        if (this.matchEndStartTime == 0) {
+            if (gameFinished()) {
+
+                //Send victory/defeat notice
+                sendPlayersMatchResult();
+                //Send match rewards
+                sendMatchEndRewards();
+
+                Globals.log(LogicModule.class, "Room: " + this.room.getRoomIndex() + " Match finished. Disconnecting all players in 5 seconds.", Globals.LOG_TYPE_DATA);
+                this.matchEndStartTime = currentTime;
+            }
+        } else if (currentTime - this.matchEndStartTime >= Globals.msToNs(5000)) {
+            disconnectAllPlayers();
+            closeRoom();
         }
     }
 
@@ -183,7 +263,7 @@ public class LogicModule implements Runnable {
                     this.room.getPlayers().remove(player.getKey());
                     this.room.returnPlayerKey(player.getKey());
                 } else {
-                    if (this.winningPlayer == null || this.winningPlayer.getKillCount() < player.getKillCount()) {
+                    if (this.winningPlayer == null || this.winningPlayer.getScore() < player.getScore()) {
                         this.winningPlayer = player;
                     }
                 }
