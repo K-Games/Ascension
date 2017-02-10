@@ -119,16 +119,16 @@ public abstract class GameMap {
     }
 
     public double getValidY(final double x, final double y) {
-        Rectangle2D.Double fallingArea = new Rectangle2D.Double(x - 25, y, 50, 1);
+        Rectangle2D.Double fallingArea = new Rectangle2D.Double(x - 25, y - 1, 50, 0.1);
         Integer[] bucketIDs = getBucketIDsForRect(fallingArea);
         for (int bucketID : bucketIDs) {
             for (GameMapPlatform platform : this.platformBuckets.get(bucketID)) {
                 if (platform.intersects(fallingArea)) {
-                    return platform.getY(x);
+                    return Math.min(platform.getY(fallingArea.getMinX() + 7), platform.getY(fallingArea.getMaxX() - 7));
                 }
             }
         }
-        return 0;
+        return y;
     }
 
     public double getValidX(final double x, final double y) {

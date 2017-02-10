@@ -1,14 +1,14 @@
 package blockfighter.server.maps;
 
+import java.awt.Point;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
-import java.awt.geom.Path2D;
 import java.awt.geom.Rectangle2D;
 
 public class GameMapPlatform {
 
     private final Rectangle2D.Double rect;
 
-    private Path2D.Double polygon;
     private Area polygonArea;
     private final boolean isRect;
     private boolean isSolid;
@@ -32,19 +32,21 @@ public class GameMapPlatform {
         this.x2 = x2;
         this.y2 = y2;
 
-        this.polygon = new Path2D.Double();
-        this.polygon.moveTo(x1, y1);
-        this.polygon.lineTo(x2, y2);
-        this.polygon.lineTo(x2, y2 + 30);
-        this.polygon.lineTo(x1, y1 + 30);
-        this.polygon.closePath();
-        this.polygonArea = new Area(this.polygon);
+        double angleRadians = Math.atan2(y2 - y1, x2 - x1);
+        double width = Point.distance(x1, y1, x2, y2);
+        double height = 30;
+        Rectangle2D.Double platformRect = new Rectangle2D.Double(x1, y1, width, height);
+        this.polygonArea = new Area(platformRect);
+        AffineTransform rotation = new AffineTransform();
+
+        rotation.rotate(angleRadians, x1, y1);
+        this.polygonArea.transform(rotation);
 
         this.rect = new Rectangle2D.Double(
-                this.polygon.getBounds2D().getX(),
-                this.polygon.getBounds2D().getY(),
-                this.polygon.getBounds2D().getWidth(),
-                this.polygon.getBounds2D().getHeight()
+                this.polygonArea.getBounds2D().getX(),
+                this.polygonArea.getBounds2D().getY(),
+                this.polygonArea.getBounds2D().getWidth(),
+                this.polygonArea.getBounds2D().getHeight()
         );
     }
 

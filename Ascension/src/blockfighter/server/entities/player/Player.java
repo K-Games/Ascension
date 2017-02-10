@@ -1125,9 +1125,8 @@ public class Player implements GameEntity, Callable<Player> {
     }
 
     private void updateFall() {
-        double prevY = this.y;
+        updateY(this.ySpeed);
         if (this.ySpeed != 0) {
-            updateY(this.ySpeed);
             queuePlayerState(PLAYER_STATE_JUMP);
         }
 
@@ -1144,11 +1143,8 @@ public class Player implements GameEntity, Callable<Player> {
             if (this.ySpeed > 0) {
                 setYSpeed(0);
             }
-            if (this.ySpeed == 0) {
-                this.y = this.map.getValidY(this.x, this.y);
-            }
         }
-        this.updatePos = prevY != this.y;
+
     }
 
     private void updateMove(final boolean xChanged) {
@@ -1246,12 +1242,10 @@ public class Player implements GameEntity, Callable<Player> {
     }
 
     private boolean updateY(final double change) {
-        if (change == 0) {
-            return false;
-        }
-        this.y = this.y + change;
-        this.updatePos = true;
-        return true;
+        double prevY = this.y;
+        this.y = this.map.getValidY(this.x, this.y + change);
+        this.updatePos = prevY != this.y;
+        return this.updatePos;
     }
 
     public void queuePlayerState(final byte newState) {

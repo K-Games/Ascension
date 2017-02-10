@@ -325,22 +325,7 @@ public abstract class Mob implements GameEntity, Callable<Mob> {
     }
 
     public void updateFall() {
-        if (this.ySpeed != 0) {
-            updateY(this.ySpeed);
-            // queueBossState(STATE_JUMP);
-        }
 
-        setYSpeed(this.ySpeed + Globals.GRAVITY);
-        if (this.ySpeed >= Globals.MAX_FALLSPEED) {
-            setYSpeed(Globals.MAX_FALLSPEED);
-        }
-
-        this.isFalling = this.map.isFalling(this.x, this.y, this.ySpeed);
-        if (!this.isFalling && this.ySpeed > 0) {
-            this.y = this.map.getValidY(this.x, this.y);
-            setYSpeed(0);
-            // queueBossState(STATE_STAND);
-        }
     }
 
     public void queueDamage(final Damage damage) {
