@@ -56,7 +56,8 @@ public class Player implements GameEntity, Callable<Player> {
             PLAYER_STATE_SHIELD_ROAR = 0x12,
             PLAYER_STATE_SHIELD_REFLECT = 0x13,
             PLAYER_STATE_SHIELD_MAGNETIZE = 0x14,
-            PLAYER_STATE_DEAD = 0x15;
+            PLAYER_STATE_DEAD = 0x15,
+            PLAYER_STATE_DOUBLE_JUMP = 0x16;
 
     private final byte key;
     private final LogicModule logic;
@@ -70,6 +71,9 @@ public class Player implements GameEntity, Callable<Player> {
     private boolean updatePos = false, updateFacing = false, updateAnimState = false;
     private boolean updateScore = false;
     private byte playerState, animState, facing, frame;
+
+    private boolean isFirstJump = false, canDoubleJump = false, isDoubleJump = false, useDoubleJumpAnim = false;
+    private long doubleJumpGraceStart = 0;
 
     private final Rectangle2D.Double hitbox;
 
@@ -410,7 +414,7 @@ public class Player implements GameEntity, Callable<Player> {
                 updateFacing();
                 if (!isKnockback()) {
                     updateMove(xChanged);
-                    if (!this.isJumping && !this.isFalling) {
+                    if ((!this.isJumping && !this.isFalling) || this.canDoubleJump) {
                         updateJump();
                     }
                 }
@@ -517,6 +521,7 @@ public class Player implements GameEntity, Callable<Player> {
             setInvulnerable(false);
             setHyperStance(false);
             setPlayerState(PLAYER_STATE_STAND);
+            this.useDoubleJumpAnim = false;
             return true;
         }
         return false;
@@ -1078,14 +1083,26 @@ public class Player implements GameEntity, Callable<Player> {
 
     private void updateJump() {
         if (this.dirKeydown[Globals.UP]) {
-            setYSpeed(-15 * this.ySpeedMultiplier);
+            if (!this.isFirstJump) {
+                this.isFirstJump = true;
+                this.doubleJumpGraceStart = this.logic.getTime();
+                setYSpeed(-15 * this.ySpeedMultiplier);
+            } else {
+                if (this.canDoubleJump) {
+                    this.useDoubleJumpAnim = true;
+                    this.isDoubleJump = true;
+                    setYSpeed(-10 * this.ySpeedMultiplier);
+                }
+            }
         }
     }
 
     private void updateFall() {
         updateY(this.ySpeed);
         if (this.ySpeed != 0) {
-            queuePlayerState(PLAYER_STATE_JUMP);
+            this.isFirstJump = true;
+            this.canDoubleJump = !this.isDoubleJump && Globals.nsToMs(this.logic.getTime() - this.doubleJumpGraceStart) >= 200;
+            queuePlayerState((this.isDoubleJump && this.useDoubleJumpAnim) ? PLAYER_STATE_DOUBLE_JUMP : PLAYER_STATE_JUMP);
         }
 
         this.isJumping = this.ySpeed < 0;
@@ -1099,6 +1116,9 @@ public class Player implements GameEntity, Callable<Player> {
 
         if (!this.isFalling) {
             if (this.ySpeed > 0) {
+                this.useDoubleJumpAnim = false;
+                this.isFirstJump = false;
+                this.isDoubleJump = false;
                 setYSpeed(0);
             }
         }
@@ -1253,6 +1273,16 @@ public class Player implements GameEntity, Callable<Player> {
                         this.frame++;
                     }
                     this.lastFrameTime = this.logic.getTime();
+                }
+                break;
+            case PLAYER_STATE_DOUBLE_JUMP:
+                if (this.useDoubleJumpAnim) {
+                    this.animState = Globals.PLAYER_ANIM_STATE_ROLL;
+                    if (frameDuration >= 50 && this.frame < 8) {
+                        this.frame++;
+                        this.lastFrameTime = this.logic.getTime();
+                        this.useDoubleJumpAnim = !(this.frame == 8);
+                    }
                 }
                 break;
             case PLAYER_STATE_JUMP:
