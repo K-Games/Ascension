@@ -1,4 +1,4 @@
 [name]
-Arrow Sharpener
+Silver Gems
 [desc]
-Keep your arrow heads sharp!
+Magical gems of an unusual silver colour.
