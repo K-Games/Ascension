@@ -24,8 +24,8 @@ public class TestRunner implements Runnable {
                 .build());
         logic = new TestLogicModule[Main.PLAYERS];
         for (int player = 0; player < Main.PLAYERS; player++) {
-            logic[player] = new TestLogicModule(player, (byte) Main.ROOM);
-            tasks.submit(logic[player].connect(server, Globals.SERVER_TCP_PORT, Globals.SERVER_UDP_PORT, (byte) Main.ROOM));
+            logic[player] = new TestLogicModule(player, Main.MIN_LEVEL, Main.MAX_LEVEL);
+            tasks.submit(logic[player].connect(server, Globals.SERVER_TCP_PORT, Globals.SERVER_UDP_PORT, (byte) Main.MIN_LEVEL));
         }
 
         service.scheduleAtFixedRate(this, 0, 300, TimeUnit.MILLISECONDS);

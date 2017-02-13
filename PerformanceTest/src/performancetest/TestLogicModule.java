@@ -11,9 +11,9 @@ public class TestLogicModule {
     private byte myKey = -1;
     private int ping = 0;
 
-    public TestLogicModule(final int num, final byte room) {
+    public TestLogicModule(final int num, final byte minLevel, final byte maxLevel) {
         this.selectedChar = new TestSaveData("TestNum" + num);
-        this.selectedChar.newCharacter(room * 10 + 1);
+        this.selectedChar.newCharacter(Globals.rng(maxLevel - minLevel) + minLevel);
     }
 
     public void run() {
