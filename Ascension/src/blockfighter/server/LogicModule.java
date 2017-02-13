@@ -129,13 +129,6 @@ public class LogicModule implements Runnable {
         }
     }
 
-    private void sendPlayersMatchResult() {
-        final ConcurrentHashMap<Byte, Player> players = this.room.getPlayers();
-        for (final Map.Entry<Byte, Player> player : players.entrySet()) {
-            //Send result
-        }
-    }
-
     private void sendScoreAndPing() {
         final ConcurrentHashMap<Byte, Player> players = this.room.getPlayers();
         for (final Map.Entry<Byte, Player> player : players.entrySet()) {
@@ -162,10 +155,10 @@ public class LogicModule implements Runnable {
                 } else if (thirds.isEmpty() || thirds.getFirst().getScore() == player.getScore()) {
                     thirds.add(player);
                     Globals.log(LogicModule.class, player.getPlayerName() + " finished 3rd", Globals.LOG_TYPE_DATA);
-                } else {
-                    rest.add(player);
-                    Globals.log(LogicModule.class, player.getPlayerName() + " did not place", Globals.LOG_TYPE_DATA);
                 }
+            } else {
+                rest.add(player);
+                Globals.log(LogicModule.class, player.getPlayerName() + " did not place", Globals.LOG_TYPE_DATA);
             }
         }
 
@@ -204,7 +197,6 @@ public class LogicModule implements Runnable {
             if (gameFinished()) {
 
                 //Send victory/defeat notice
-                sendPlayersMatchResult();
                 //Send match rewards
                 sendMatchEndRewards();
 
