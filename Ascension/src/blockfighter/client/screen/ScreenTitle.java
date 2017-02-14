@@ -22,6 +22,7 @@ import org.json.JSONObject;
 
 public class ScreenTitle extends Screen {
 
+    private static final Color TITLE_COLOUR = new Color(160, 0, 0);
     private static final String GAME_PORTAL_URL = "https://kenofnz.itch.io/ascension";
     private static final String VERSION_API_URL = "https://itch.io/api/1/x/wharf/latest?target=kenofnz/ascension&channel_name=windows";
     private final static String CLICK_TEXT = "Click to start";
@@ -113,11 +114,18 @@ public class ScreenTitle extends Screen {
         final BufferedImage bg = Globals.MENU_BG[2];
         g.drawImage(bg, 0, bg1y, 1280, 720, null);
         g.drawImage(bg, 0, bg2y + 720, 1280, bg2y, 0, 0, bg.getWidth(), bg.getHeight(), null);
-        g.drawImage(Globals.TITLE, Globals.WINDOW_WIDTH / 2 - Globals.TITLE.getWidth() / 2, 100, null);
+
+        g.setFont(Globals.TITLE_FONT);
+        int width = g.getFontMetrics().stringWidth(Globals.GAME_NAME);
+        g.setColor(Color.BLACK);
+        g.drawString(Globals.GAME_NAME, Globals.WINDOW_WIDTH / 2 - width / 2 - 40 + 1, 200 + 1);
+        g.setColor(TITLE_COLOUR);
+        g.drawString(Globals.GAME_NAME, Globals.WINDOW_WIDTH / 2 - width / 2 - 40, 200);
 
         g.setFont(Globals.ARIAL_24PT);
         g.setColor(fontColor);
-        g.drawString(CLICK_TEXT, Globals.WINDOW_WIDTH / 2 - g.getFontMetrics().stringWidth(CLICK_TEXT) / 2, 500);
+        width = g.getFontMetrics().stringWidth(CLICK_TEXT);
+        g.drawString(CLICK_TEXT, Globals.WINDOW_WIDTH / 2 - width / 2, 500);
 
         if (!finishedFadeIn) {
             g.setColor(fadeInColor);

@@ -73,7 +73,7 @@ public class AscensionServer {
     }
 
     public void launch(final String[] args) {
-        System.out.println("Ascension Server " + Globals.GAME_RELEASE_VERSION);
+        System.out.println(Globals.WINDOW_TITLE + " Server");
         Globals.LOGGING = true;
 
         boolean isGUI = false;

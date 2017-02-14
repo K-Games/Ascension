@@ -13,6 +13,7 @@ import com.esotericsoftware.minlog.Log;
 import static com.esotericsoftware.minlog.Log.*;
 import com.esotericsoftware.minlog.Log.Logger;
 import java.awt.Font;
+import java.awt.FontFormatException;
 import java.awt.image.BufferedImage;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -70,7 +71,8 @@ public class Globals {
     public final static String GAME_RELEASE_VERSION = GAME_DEV_STATE + " " + GAME_MAJOR_VERSION + "." + GAME_MINOR_VERSION + "."
             + GAME_UPDATE_NUMBER;
 
-    public final static String WINDOW_TITLE = "Ascenion " + GAME_RELEASE_VERSION;
+    public final static String GAME_NAME = "{Soul}Ascension";
+    public final static String WINDOW_TITLE = GAME_NAME + " " + GAME_RELEASE_VERSION;
     public final static boolean WINDOW_SCALE_ENABLED = false;
     public final static double WINDOW_SCALE = 1.5D;
     public final static int WINDOW_WIDTH = 1280;
@@ -87,6 +89,9 @@ public class Globals {
     public final static Font ARIAL_18PTBOLD = new Font("Arial", Font.BOLD, 18);
     public final static Font ARIAL_19PTBOLD = new Font("Arial", Font.BOLD, 19);
     public final static Font ARIAL_21PTBOLD = new Font("Arial", Font.BOLD, 21);
+
+    public static Font MULAN_24PT;
+    public static Font TITLE_FONT;
 
     public final static byte MAX_NAME_LENGTH = 15;
 
@@ -880,6 +885,13 @@ public class Globals {
     }
 
     public static void loadClient() {
+        try {
+            MULAN_24PT = Font.createFont(Font.TRUETYPE_FONT, loadResourceAsStream("sprites/mulan.ttf")).deriveFont(Font.PLAIN, 24);
+            TITLE_FONT = MULAN_24PT.deriveFont(Font.PLAIN, 100);
+        } catch (FontFormatException | IOException ex) {
+            logError(ex.toString(), ex);
+        }
+
         PLAYER_NUM_ANIM_FRAMES[PLAYER_ANIM_STATE_ATTACK] = 6;
         PLAYER_NUM_ANIM_FRAMES[PLAYER_ANIM_STATE_ATTACKBOW] = 8;
         PLAYER_NUM_ANIM_FRAMES[PLAYER_ANIM_STATE_STAND] = 4;

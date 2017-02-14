@@ -1,6 +1,6 @@
-![Ascension](https://github.com/kenofnz/Ascension/raw/master/Ascension/resources/sprites/ui/menu/title.png)
+![{Soul}Ascension](https://github.com/kenofnz/Ascension/raw/master/Ascension/resources/sprites/ui/menu/title.png)
 
-![Game Updates](https://github.com/kenofnz/AscensionInfo/raw/master/images/updates.png)
+![Game Updates](https://github.com/K-Games/AscensionInfo/raw/master/images/updates.png)
 
 ## Version 0.23.2
 
