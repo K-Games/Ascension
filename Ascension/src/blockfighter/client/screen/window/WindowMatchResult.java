@@ -27,13 +27,16 @@ public class WindowMatchResult extends Window {
     private static final Color REWARDS_COLOUR = new Color(0, 170, 255);
     private static final Color BG_COLOUR = new Color(0, 0, 0, 130);
     private static final Color LEAVE_BUTTON_COLOUR = new Color(70, 70, 70, 255);
+    private static final Color FIRST_PLACE = new Color(212, 175, 55);
+    private static final Color SECOND_PLACE = new Color(188, 198, 204);
+    private static final Color THIRD_PLACE = new Color(193, 115, 73);
 
     private final ConcurrentLinkedQueue<Item> ITEMS_GAINED = new ConcurrentLinkedQueue<>();
     private double expGained = 0;
     private long countdownStartTime = 0;
     private int secondsLeftBeforeMenu = 0;
     private float transparency = 0;
-    private Globals.VictoryStatus victoryStatus = Globals.VictoryStatus.FIRST;
+    private Globals.VictoryStatus victoryStatus = Globals.VictoryStatus.LAST;
 
     private static final Rectangle2D.Double RESULT_BOARD = new Rectangle2D.Double(350, 200, 580, 250);
     private static final Rectangle2D.Double RETURN_BUTTON = new Rectangle2D.Double(RESULT_BOARD.getCenterX() - 100, RESULT_BOARD.getMaxY() - 65, 200, 50);
@@ -82,9 +85,24 @@ public class WindowMatchResult extends Window {
             g.setColor(EXP_COLOUR);
             g.drawString(TOTAL_EXP_GAINED_TEXT + Globals.NUMBER_FORMAT.format(this.expGained), (int) (RESULT_BOARD.getMinX() + 15), (int) (RESULT_BOARD.getMinY() + 130));
 
-            g.setColor(Color.WHITE);
+            switch (victoryStatus) {
+                case FIRST:
+                    g.setColor(FIRST_PLACE);
+                    break;
+                case SECOND:
+                    g.setColor(SECOND_PLACE);
+                    break;
+                case THIRD:
+                    g.setColor(THIRD_PLACE);
+                    break;
+                default:
+                    g.setColor(Color.WHITE);
+                    break;
+            }
             g.setFont(Globals.ARIAL_24PTBOLD);
             g.drawString(victoryStatus.toString(), (int) (RESULT_BOARD.getCenterX() - g.getFontMetrics().stringWidth(victoryStatus.toString()) / 2), (int) (RESULT_BOARD.getMinY() + 35));
+
+            g.setColor(Color.WHITE);
             String returnText = RETURNING_TO_MENU_IN_TEXT + this.secondsLeftBeforeMenu + SECONDS_TEXT;
             g.drawString(returnText, (int) (RESULT_BOARD.getCenterX() - g.getFontMetrics().stringWidth(returnText) / 2), (int) (RETURN_BUTTON.getMinY() - 15));
 
@@ -146,7 +164,7 @@ public class WindowMatchResult extends Window {
     @Override
     public void update() {
         this.secondsLeftBeforeMenu = 10 - (int) (Globals.nsToMs(Core.getLogicModule().getTime() - this.countdownStartTime) / 1000D);
-        this.transparency = Globals.nsToMs(Core.getLogicModule().getTime() - this.countdownStartTime) / 2000f;
+        this.transparency = Globals.nsToMs(Core.getLogicModule().getTime() - this.countdownStartTime) / 1000f;
         transparency = (transparency > 1) ? 1 : transparency;
     }
 

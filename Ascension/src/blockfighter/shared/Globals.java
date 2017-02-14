@@ -444,9 +444,9 @@ public class Globals {
     }
 
     public enum VictoryStatus {
-        FIRST((byte) 0x00, "First Place!", "3 Equipment Drops and 20% EXP towards next level"),
-        SECOND((byte) 0x01, "Second Place!", "2 Equipment Drops and 15% EXP towards next level"),
-        THIRD((byte) 0x02, "Third Place!", "1 Equipment Drop and 10% EXP towards next level"),
+        FIRST((byte) 0x00, "Victory! First Place!", "3 Equipment Drops, 20% EXP towards next level"),
+        SECOND((byte) 0x01, "Second Place!", "2 Equipment Drops, 15% EXP towards next level"),
+        THIRD((byte) 0x02, "Third Place!", "1 Equipment Drop, 10% EXP towards next level"),
         LAST((byte) 0x03, "Match Completed!", "10% EXP towards next level");
 
         private final String STATUS_TEXT;
