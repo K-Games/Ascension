@@ -8,10 +8,13 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
+import java.security.MessageDigest;
+import java.util.Base64;
 import java.util.concurrent.Callable;
 
 public class Player implements Callable<Player> {
 
+    private static final Color NAME_BG = new Color(0, 0, 0, 150);
     public static Color[] PLAYER_COLOURS = new Color[25];
 
     static {
@@ -35,6 +38,7 @@ public class Player implements Callable<Player> {
     private boolean disconnect = false;
     private int score = -1;
     private int ping = 0;
+    private Color playerColour;
 
     public Player(final int x, final int y, final byte k) {
         this.x = x;
@@ -156,9 +160,18 @@ public class Player implements Callable<Player> {
             return;
         }
         drawSprite(g, this.x, this.y, this.facing, this.animState, this.frame);
+
         g.setFont(Globals.ARIAL_18PT);
         final int width = g.getFontMetrics().stringWidth(this.name);
+
+        g.setColor(getPlayerColor());
+        g.fillRect(this.x - width / 2 - 15, this.y + 4, 5, 18);
         g.setColor(Color.BLACK);
+        g.drawRect(this.x - width / 2 - 15, this.y + 4, 5, 18);
+
+        g.setColor(NAME_BG);
+        g.fillRect(this.x - width / 2 - 5, this.y + 4, width + 10, 18);
+
         g.drawString(this.name, this.x - width / 2 - 1, this.y + 20);
         g.drawString(this.name, this.x - width / 2 + 1, this.y + 20);
         g.drawString(this.name, this.x - width / 2, this.y + 19);
@@ -250,6 +263,20 @@ public class Player implements Callable<Player> {
     }
 
     public Color getPlayerColor() {
-        return PLAYER_COLOURS[Math.abs(this.name.hashCode()) % PLAYER_COLOURS.length];
+        if (this.name.length() <= 0 || this.stats[Globals.STAT_MAXHP] <= 0) {
+            return Color.WHITE;
+        }
+        if (this.playerColour == null) {
+            try {
+                MessageDigest md = MessageDigest.getInstance("SHA-256");
+                String colorString = this.name + this.stats[Globals.STAT_MAXHP];
+                md.update(colorString.getBytes("UTF-8"));
+                byte[] digest = md.digest();
+                this.playerColour = PLAYER_COLOURS[Math.abs(Base64.getEncoder().encodeToString(digest).hashCode() % PLAYER_COLOURS.length)];
+            } catch (Exception ex) {
+                return Color.WHITE;
+            }
+        }
+        return this.playerColour;
     }
 }
