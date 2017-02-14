@@ -165,17 +165,13 @@ public class Player implements Callable<Player> {
         final int width = g.getFontMetrics().stringWidth(this.name);
 
         g.setColor(getPlayerColor());
-        g.fillRect(this.x - width / 2 - 15, this.y + 4, 5, 18);
+        g.fillRoundRect(this.x - width / 2 - 15, this.y + 4, 5, 20, 4, 4);
         g.setColor(Color.BLACK);
-        g.drawRect(this.x - width / 2 - 15, this.y + 4, 5, 18);
+        g.drawRoundRect(this.x - width / 2 - 15, this.y + 4, 5, 20, 4, 4);
 
         g.setColor(NAME_BG);
-        g.fillRect(this.x - width / 2 - 5, this.y + 4, width + 10, 18);
+        g.fillRect(this.x - width / 2 - 5, this.y + 4, width + 10, 20);
 
-        g.drawString(this.name, this.x - width / 2 - 1, this.y + 20);
-        g.drawString(this.name, this.x - width / 2 + 1, this.y + 20);
-        g.drawString(this.name, this.x - width / 2, this.y + 19);
-        g.drawString(this.name, this.x - width / 2, this.y + 21);
         g.setColor(Color.WHITE);
         g.drawString(this.name, this.x - width / 2, this.y + 20);
 
