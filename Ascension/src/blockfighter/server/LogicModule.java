@@ -168,6 +168,7 @@ public class LogicModule implements Runnable {
                 player.giveEquipDrop(player.getStats()[Globals.STAT_LEVEL], true);
             }
             player.giveEXP(player.getStats()[Globals.STAT_MAXEXP] * 0.2);
+            player.sendMatchResult(Globals.VictoryStatus.FIRST);
         }
 
         // 2nd - 2 Items + 15% exp
@@ -176,6 +177,7 @@ public class LogicModule implements Runnable {
                 player.giveEquipDrop(player.getStats()[Globals.STAT_LEVEL], true);
             }
             player.giveEXP(player.getStats()[Globals.STAT_MAXEXP] * 0.15);
+            player.sendMatchResult(Globals.VictoryStatus.SECOND);
         }
 
         //3rd - 1 Item + 10% exp
@@ -184,11 +186,13 @@ public class LogicModule implements Runnable {
                 player.giveEquipDrop(player.getStats()[Globals.STAT_LEVEL], true);
             }
             player.giveEXP(player.getStats()[Globals.STAT_MAXEXP] * 0.1);
+            player.sendMatchResult(Globals.VictoryStatus.THIRD);
         }
 
         // Rest - 10% exp
         for (Player player : rest) {
             player.giveEXP(player.getStats()[Globals.STAT_MAXEXP] * 0.1);
+            player.sendMatchResult(Globals.VictoryStatus.LAST);
         }
     }
 
@@ -203,7 +207,7 @@ public class LogicModule implements Runnable {
                 Globals.log(LogicModule.class, "Room: " + this.room.getRoomIndex() + " Match finished. Disconnecting all players in 5 seconds.", Globals.LOG_TYPE_DATA);
                 this.matchEndStartTime = currentTime;
             }
-        } else if (currentTime - this.matchEndStartTime >= Globals.msToNs(5000)) {
+        } else if (currentTime - this.matchEndStartTime >= Globals.msToNs(10000)) {
             disconnectAllPlayers();
             closeRoom();
         }

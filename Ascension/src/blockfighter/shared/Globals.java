@@ -443,6 +443,47 @@ public class Globals {
         }
     }
 
+    public enum VictoryStatus {
+        FIRST((byte) 0x00, "First Place!", "3 Equipment Drops and 20% EXP towards next level"),
+        SECOND((byte) 0x01, "Second Place!", "2 Equipment Drops and 15% EXP towards next level"),
+        THIRD((byte) 0x02, "Third Place!", "1 Equipment Drop and 10% EXP towards next level"),
+        LAST((byte) 0x03, "Match Completed!", "10% EXP towards next level");
+
+        private final String STATUS_TEXT;
+        private final String BONUSES_TEXT;
+        private final byte BYTE_CODE;
+
+        VictoryStatus(final byte bytecode, final String victoryText, final String bonuses) {
+            this.BYTE_CODE = bytecode;
+            this.STATUS_TEXT = victoryText;
+            this.BONUSES_TEXT = bonuses;
+        }
+
+        private static final Map<Byte, VictoryStatus> lookup = new HashMap<Byte, VictoryStatus>();
+
+        public static VictoryStatus get(byte code) {
+            return lookup.get(code);
+        }
+
+        static {
+            for (VictoryStatus status : VictoryStatus.values()) {
+                lookup.put(status.BYTE_CODE, status);
+            }
+        }
+
+        public byte getByteCode() {
+            return this.BYTE_CODE;
+        }
+
+        public String getBonusesText() {
+            return this.BONUSES_TEXT;
+        }
+
+        @Override
+        public String toString() {
+            return this.STATUS_TEXT;
+        }
+    }
     public final static int NUM_KEYBINDS = 27,
             KEYBIND_SKILL1 = 0,
             KEYBIND_SKILL2 = 1,
@@ -586,7 +627,8 @@ public class Globals {
             DATA_SCREEN_SHAKE = 0x19,
             DATA_PLAYER_EMOTE = 0x1A,
             DATA_NOTIFICATION_KILL = 0x1B,
-            DATA_PLAYER_SCORE = 0x1C;
+            DATA_PLAYER_SCORE = 0x1C,
+            DATA_PLAYER_MATCH_RESULT = 0x1D;
 
     public static final byte LOGIN_SUCCESS = 0x00,
             LOGIN_FAIL_UID_IN_ROOM = 0x01,
