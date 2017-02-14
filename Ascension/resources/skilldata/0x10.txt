@@ -1,8 +1,9 @@
 [name]
 Magnetize
 [desc]
-1
-Pull enemies within 400 range towards you.
+2
+Pull enemies within 400 range towards you and
+deal damage based on your Defense.
 [reqweapon]
 10
 [maxcooldown]

@@ -2,7 +2,7 @@
 Resistance
 [desc]
 2
-When taking damage over 25% of your HP within
+When taking damage over 25% of your Max HP within
 2 seconds, block all damage for the next 2 seconds.
 [reqweapon]
 -1

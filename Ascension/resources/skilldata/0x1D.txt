@@ -1,8 +1,9 @@
 [name]
 Static Charge
 [desc]
-1
-Shock a nearby enemy when you deal damage.
+2
+Shock a nearby enemy for damage based on your 
+Armor when you deal damage.
 [reqweapon]
 -1
 [maxcooldown]

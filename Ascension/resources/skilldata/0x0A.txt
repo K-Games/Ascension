@@ -2,7 +2,7 @@
 Bombardment
 [desc]
 1
-Launch a hail of arrows, bombarding the area in front.
+Launch a hail of arrows, bombarding the area.
 [reqweapon]
 11
 [maxcooldown]

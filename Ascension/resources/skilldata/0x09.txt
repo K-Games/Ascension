@@ -2,7 +2,7 @@
 Frost Bind
 [desc]
 2
-An enchancted shot that causes ice pillars to erupt
+Enchant your bow to cause ice pillars to erupt
 violently out of the ground, freezing targets hit.
 [reqweapon]
 11
