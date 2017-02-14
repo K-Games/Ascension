@@ -299,16 +299,21 @@ public class ScreenIngame extends Screen {
     public void draw(final Graphics2D g) {
         g.setClip(0, 0, 1280, 720);
         final AffineTransform resetForm = g.getTransform();
+
         for (final Map.Entry<Byte, Player> pEntry : this.players.entrySet()) {
             pEntry.getValue().updatePos();
         }
         if (this.players != null && Core.getLogicModule().getMyPlayerKey() != -1 && this.players.containsKey(Core.getLogicModule().getMyPlayerKey())) {
-            this.map.drawBg(g, this.players.get(Core.getLogicModule().getMyPlayerKey()).getX(), this.players.get(Core.getLogicModule().getMyPlayerKey()).getY());
-            double scale = 1;
-            g.scale(scale, scale);
-            g.translate(640D / scale - this.players.get(Core.getLogicModule().getMyPlayerKey()).getX(), 500D / scale - this.players.get(Core.getLogicModule().getMyPlayerKey()).getY());
-            if (screenShake) {
-                g.translate(screenShakeX, screenShakeY);
+            try {
+                this.map.drawBg(g, this.players.get(Core.getLogicModule().getMyPlayerKey()).getX(), this.players.get(Core.getLogicModule().getMyPlayerKey()).getY());
+                double scale = 1;
+                g.scale(scale, scale);
+                g.translate(640D / scale - this.players.get(Core.getLogicModule().getMyPlayerKey()).getX(), 500D / scale - this.players.get(Core.getLogicModule().getMyPlayerKey()).getY());
+                if (screenShake) {
+                    g.translate(screenShakeX, screenShakeY);
+                }
+            } catch (NullPointerException e) {
+                //Expected null if disconnecting while rendering a frame.
             }
         } else {
             this.map.drawBg(g, 0, 0);
