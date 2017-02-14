@@ -16,6 +16,7 @@ import blockfighter.client.maps.GameMap;
 import blockfighter.client.net.GameClient;
 import blockfighter.client.net.PacketSender;
 import blockfighter.client.savedata.SaveData;
+import blockfighter.client.screen.window.WindowMatchResult;
 import blockfighter.shared.Globals;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -103,6 +104,9 @@ public class ScreenIngame extends Screen {
     private double expBarWidth, expBarDelta, expBarLevel;
     private boolean showScoreboard = false;
 
+    private final WindowMatchResult results = new WindowMatchResult(this);
+    private boolean showMatchResult = false;
+
     public ScreenIngame(final GameMap m, final GameClient cl) {
         this.client = cl;
         this.c = Core.getLogicModule().getSelectedChar();
@@ -156,6 +160,7 @@ public class ScreenIngame extends Screen {
             updateNotifications();
             updateEmotes();
             updateScoreAndTime();
+            this.results.update();
             this.ping = GameClient.getPing();
             this.lastUpdateTime = now;
         }
@@ -559,6 +564,9 @@ public class ScreenIngame extends Screen {
                     + (int) this.players.get(Core.getLogicModule().getMyPlayerKey()).getStat(Globals.STAT_MAXHP),
                     Globals.WINDOW_WIDTH / 2 - width / 2, Globals.WINDOW_HEIGHT - hud.getHeight() + 28);
         }
+        if (this.showMatchResult) {
+            this.results.draw(g);
+        }
     }
 
     private void drawSkillInfo(final Graphics2D g, final Rectangle2D.Double box, final Skill skill) {
@@ -655,8 +663,19 @@ public class ScreenIngame extends Screen {
                 case Globals.DATA_PLAYER_SCORE:
                     dataPlayerScore(data);
                     break;
+                case Globals.DATA_PLAYER_MATCH_RESULT:
+                    dataPlayerMatchResult(data);
+                    break;
             }
         }
+    }
+
+    private void dataPlayerMatchResult(final byte[] data) {
+        final Globals.VictoryStatus status = Globals.VictoryStatus.get(data[1]);
+        this.results.startCountdown();
+        this.results.setVictoryStatus(status);
+        this.results.update();
+        this.showMatchResult = true;
     }
 
     private void dataPlayerScore(final byte[] data) {
@@ -729,6 +748,7 @@ public class ScreenIngame extends Screen {
         if (dropItem != null) {
             this.notifications.add(new Notification(dropItem));
             this.c.addDrops(lvl, dropItem);
+            this.results.addItemGained(dropItem);
         }
     }
 
@@ -737,6 +757,7 @@ public class ScreenIngame extends Screen {
         this.notifications.add(new Notification(amount));
         this.c.addExp(amount);
         this.expBarDelta = 0;
+        this.results.addExpGained(amount);
     }
 
     private void dataPlayerSetCooldown(final byte[] data) {
@@ -1170,6 +1191,11 @@ public class ScreenIngame extends Screen {
         } else {
             scaled = new Point2D.Double(e.getX(), e.getY());
         }
+
+        if (this.showMatchResult) {
+            this.results.mouseReleased(e);
+        }
+
         if (this.logoutBox != null) {
             Rectangle2D.Double box = new Rectangle2D.Double(10, 10, this.logoutBox.getWidth() + 6, this.logoutBox.getHeight() + 6);
             if (box.contains(scaled)) {

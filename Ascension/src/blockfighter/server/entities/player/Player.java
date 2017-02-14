@@ -1609,6 +1609,14 @@ public class Player implements GameEntity, Callable<Player> {
         this.updateScore = false;
     }
 
+    public void sendMatchResult(final Globals.VictoryStatus placing) {
+        final byte[] bytes = new byte[Globals.PACKET_BYTE * 2];
+        bytes[0] = Globals.DATA_PLAYER_MATCH_RESULT;
+        bytes[1] = placing.getByteCode();
+        PacketSender.sendPlayer(bytes, this);
+        this.updateScore = false;
+    }
+
     public void updateClientScore() {
         this.updateScore = true;
     }
