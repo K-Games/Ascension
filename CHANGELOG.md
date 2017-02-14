@@ -8,9 +8,13 @@
 * Fixed rare bug where Adrenaline particle would cause everything to render transparently.
 * New key bind settings default to "Not Assigned".
 * Added Scoreboard - Existing key binds will not have open Scoreboard binded.
-* Players now have colour associated with them. Scoreboard and Kill notifications will have matching colours for quick readability.
+* Players now have colour associated with them. 
+	* Scoreboard and Kill notifications will have matching colours for quick readability.
+	* Player colour is shown next to player's name.
+* Improved player name visibilty with a dark background.
 * Ingame Damage numbers are now formatted for easier readability.
-* Ingame Damage number position is now static to screen space instead of relative to damage location.
+* Ingame Damage number position is now relative to screen space instead of relative to damage location.
+* Update some skill descriptions.
 
 ### Server Changes
 * Fixed server not sending info to Hub when unable to retrieve country/area name.
