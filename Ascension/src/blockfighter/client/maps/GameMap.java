@@ -17,7 +17,7 @@ public abstract class GameMap {
     protected long lastUpdateTime = 0;
     protected int mapHeight, mapWidth, mapXOrigin = 0, mapYOrigin = 0;
     private final static double PARALLAX_FACTOR = 0.35;
-    BufferedImage bg;
+    BufferedImage[] bg;
 
     public ConcurrentHashMap<Integer, Particle> getParticles() {
         return this.particles;
@@ -68,12 +68,14 @@ public abstract class GameMap {
     public void drawBg(final Graphics2D g, final int x, final int y) {
         double relativeX = 1D * (x - this.mapXOrigin) / this.mapWidth,
                 relativeY = 1D * (y - this.mapYOrigin) / this.mapHeight;
-        final AffineTransform resetForm = g.getTransform();
-        double scale = 1 + PARALLAX_FACTOR;
+        for (int i = 0; i < this.bg.length; i++) {
+            final AffineTransform resetForm = g.getTransform();
+            double scale = 1 + PARALLAX_FACTOR * Math.pow(1.35, i);
 
-        g.translate(-relativeX * (PARALLAX_FACTOR * 1280), -relativeY * (PARALLAX_FACTOR * 720));
-        g.scale(scale, scale);
-        g.drawImage(this.bg, 0, 0, 1280, 720, null);
-        g.setTransform(resetForm);
+            g.translate(-relativeX * (PARALLAX_FACTOR * Math.pow(1.35, i) * 1280), -relativeY * (PARALLAX_FACTOR * Math.pow(1.35, i) * 720));
+            g.scale(scale, scale);
+            g.drawImage(this.bg[i], 0, 0, 1280, 720, null);
+            g.setTransform(resetForm);
+        }
     }
 }
