@@ -132,6 +132,16 @@ public abstract class GameMap {
     }
 
     public double getValidX(final double x, final double y) {
+
+        Rectangle2D.Double fallingArea = new Rectangle2D.Double(x - 25, y - 90, 50, 80);
+        Integer[] bucketIDs = getBucketIDsForRect(fallingArea);
+        for (int bucketID : bucketIDs) {
+            for (GameMapPlatform platform : this.platformBuckets.get(bucketID)) {
+                if (platform.isSolid() && platform.intersects(fallingArea)) {
+                    return platform.getValidX(x, this);
+                }
+            }
+        }
         if (x < boundary[Globals.MAP_LEFT]) {
             return boundary[Globals.MAP_LEFT];
         }
@@ -139,17 +149,6 @@ public abstract class GameMap {
             return boundary[Globals.MAP_RIGHT];
         }
 
-        Rectangle2D.Double fallingArea = new Rectangle2D.Double(x - 25, y - 90, 50, 80);
-        Integer[] bucketIDs = getBucketIDsForRect(fallingArea);
-        for (int bucketID : bucketIDs) {
-            for (GameMapPlatform platform : this.platformBuckets.get(bucketID)) {
-                if (platform.isSolid() && platform.intersects(fallingArea)) {
-                    if (!(x >= platform.getRect().getMinX() && x <= platform.getRect().getMaxX())) {
-                        return platform.getValidX(x);
-                    }
-                }
-            }
-        }
         return x;
     }
 

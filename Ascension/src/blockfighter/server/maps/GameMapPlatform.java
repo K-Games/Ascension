@@ -1,5 +1,6 @@
 package blockfighter.server.maps;
 
+import blockfighter.shared.Globals;
 import java.awt.Point;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
@@ -70,12 +71,20 @@ public class GameMapPlatform {
         }
     }
 
-    public double getValidX(final double x) {
+    public double getValidX(final double x, final GameMap map) {
+        double result;
         if (Math.abs(x - this.rect.x) <= Math.abs(x - (this.rect.x + this.rect.width))) {
-            return this.rect.x - 25;
+            result = this.rect.getMinX() - 25;
         } else {
-            return this.rect.x + this.rect.width + 25;
+            result = this.rect.getMaxX() + 25;
         }
+        if (result < map.getBoundary()[Globals.MAP_LEFT]) {
+            result = this.rect.getMaxX() + 25;
+        }
+        if (result > map.getBoundary()[Globals.MAP_RIGHT]) {
+            result = this.rect.getMinX() - 25;
+        }
+        return result;
     }
 
     public double getY(double x) {
