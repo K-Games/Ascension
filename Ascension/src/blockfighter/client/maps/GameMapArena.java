@@ -61,13 +61,13 @@ public class GameMapArena extends GameMap {
         int random = Globals.rng(3);
         switch (random) {
             case 0:
-                this.bgm = Globals.BGMs.ARENA1;
+                this.bgm = Globals.BGMs.GRACE_RESIS;
                 break;
             case 1:
-                this.bgm = Globals.BGMs.ARENA2;
+                this.bgm = Globals.BGMs.INEV_BLOOD_ROCK;
                 break;
             case 2:
-                this.bgm = Globals.BGMs.ARENA3;
+                this.bgm = Globals.BGMs.REDEMP_ORCH;
                 break;
         }
     }

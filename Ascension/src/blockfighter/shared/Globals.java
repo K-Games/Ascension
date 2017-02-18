@@ -124,7 +124,8 @@ public class Globals {
     public final static int NUM_SOUND_EFFECTS = 0;
 
     public enum GameMaps {
-        ARENA((byte) 0x00, blockfighter.client.maps.GameMapArena.class, blockfighter.server.maps.GameMapArena.class);
+        ARENA((byte) 0x00, blockfighter.client.maps.GameMapArena.class, blockfighter.server.maps.GameMapArena.class),
+        ASYM_ARENA((byte) 0x01, blockfighter.client.maps.GameMapAsymArena.class, blockfighter.server.maps.GameMapAsymArena.class);
 
         private final byte mapCode;
         private final Class<? extends blockfighter.client.maps.GameMap> clientGameMapClass;
@@ -375,10 +376,12 @@ public class Globals {
 
     public enum BGMs {
         MENU((byte) 0x00, "hero.ogg"),
-        ARENA1((byte) 0x01, "bgm/0.ogg"),
-        ARENA2((byte) 0x02, "bgm/1.ogg"),
-        ARENA3((byte) 0x03, "bgm/2.ogg"),
-        TITLE((byte) 0x04, "Through the Forest in Midwinter.ogg");
+        TITLE((byte) 0x01, "Through the Forest in Midwinter.ogg"),
+        GRACE_RESIS((byte) 0x02, "bgm/Dibur - Graceful Resistance.ogg"),
+        INEV_BLOOD_ROCK((byte) 0x03, "bgm/Dibur - Inevitable Bloodshed (Rock Style).ogg"),
+        REDEMP_ORCH((byte) 0x04, "bgm/Dibur - Redemption (Orchestral Style).ogg"),
+        BLOOD_STEEL((byte) 0x05, "bgm/Dibur - Blood and Steel.ogg"),
+        INEV_BLOOD_DYN((byte) 0x06, "bgm/Dibur - Inevitable Bloodshed (Dynamic Style).ogg");
 
         private static final Map<Byte, BGMs> lookup = new HashMap<Byte, BGMs>();
 
