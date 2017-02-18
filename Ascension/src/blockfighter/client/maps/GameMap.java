@@ -28,6 +28,8 @@ public abstract class GameMap {
         return -1;
     }
 
+    public abstract String getMapName();
+
     public abstract void loadAssets() throws Exception;
 
     public abstract void prerender(final Graphics2D g);

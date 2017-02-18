@@ -8,6 +8,8 @@ import java.awt.image.BufferedImage;
 
 public class GameMapAsymArena extends GameMap {
 
+    private static final String MAP_NAME = "Grand Library";
+
     private static final int[] RANDOM_THREE_SEQUENCE = new int[15];
     private static int sequenceCounter = 0;
 
@@ -52,6 +54,11 @@ public class GameMapAsymArena extends GameMap {
         for (int i = 0; i < this.candleFrame.length; i++) {
             this.candleFrame[i] = Globals.rng(candles.length);
         }
+    }
+
+    @Override
+    public String getMapName() {
+        return MAP_NAME;
     }
 
     private void drawRandomTile(final Graphics2D g, final BufferedImage[] spriteCollection, final int x, final int y, final int[] numberSequence) {
@@ -414,7 +421,7 @@ public class GameMapAsymArena extends GameMap {
 
     @Override
     public void loadAssets() throws Exception {
-        Globals.log(GameMapAsymArena.class, "Loading Map Asymmetric Arena Assets...", Globals.LOG_TYPE_DATA);
+        Globals.log(GameMapAsymArena.class, "Loading Map " + getMapName() + " Assets...", Globals.LOG_TYPE_DATA);
         this.bg = new BufferedImage[3];
         for (int i = 0; i < this.bg.length; i++) {
             String path = "sprites/maps/" + Globals.GameMaps.ASYM_ARENA.getMapCode() + "/bg_layer_" + i + ".png";

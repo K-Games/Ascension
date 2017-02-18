@@ -6,6 +6,8 @@ import java.awt.image.BufferedImage;
 
 public class GameMapArena extends GameMap {
 
+    private static final String MAP_NAME = "Forest00";
+
     BufferedImage[] platforms = new BufferedImage[3];
     Globals.BGMs bgm;
 
@@ -42,6 +44,11 @@ public class GameMapArena extends GameMap {
         g.drawImage(this.platforms[0], 2000, -400, null);
         super.draw(g);
 
+    }
+
+    @Override
+    public String getMapName() {
+        return MAP_NAME;
     }
 
     @Override

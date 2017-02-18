@@ -18,11 +18,12 @@ public class ScreenLoading extends ScreenMenu {
     private int particleIndex;
 
     public void load(final byte mapCode) throws Exception {
+        this.map = Globals.GameMaps.get(mapCode).newClientGameMap();
+
         Particle.loadParticles();
         this.particlesReady = true;
         Emote.loadEmotes();
 
-        this.map = Globals.GameMaps.get(mapCode).newClientGameMap();
         this.map.loadAssets();
         this.mapAssetsReady = true;
     }
@@ -60,18 +61,22 @@ public class ScreenLoading extends ScreenMenu {
         }
 
         if (this.mapAssetsReady && !this.mapAssetsRendered) {
-            Globals.log(ScreenLoading.class, "Prerendering Map Assets...", Globals.LOG_TYPE_DATA);
+            Globals.log(ScreenLoading.class, "Prerendering Map " + this.map.getMapName() + " Assets...", Globals.LOG_TYPE_DATA);
             this.map.prerender(g);
             this.mapAssetsRendered = true;
         }
 
         g.drawImage(bg, 0, 0, null);
+        String loadingString = "Loading...";
 
+        if (this.map != null) {
+            loadingString = "Loading " + this.map.getMapName() + "...";
+        }
         g.setFont(Globals.ARIAL_18PT);
-        drawStringOutline(g, "Loading...", 520, 640, 2);
+        int stringWidth = g.getFontMetrics().stringWidth(loadingString);
+        drawStringOutline(g, loadingString, Globals.WINDOW_WIDTH / 2 - stringWidth / 2, 640, 2);
         g.setColor(Color.WHITE);
-        g.drawString("Loading...", 520, 640);
-
+        g.drawString(loadingString, Globals.WINDOW_WIDTH / 2 - stringWidth / 2, 640);
         super.draw(g);
     }
 
