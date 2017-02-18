@@ -1158,9 +1158,9 @@ public class ScreenIngame extends Screen {
         } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE5]) {
             PacketSender.sendUseEmote(Core.getLogicModule().getSelectedRoom(), Core.getLogicModule().getMyPlayerKey(), Globals.Emotes.ANGRY.getEmoteCode());
         } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE6]) {
-//            PacketSender.sendUseEmote(Core.getLogicModule().getSelectedRoom(), Core.getLogicModule().getMyPlayerKey(), Globals.EMOTE_5);
+            PacketSender.sendUseEmote(Core.getLogicModule().getSelectedRoom(), Core.getLogicModule().getMyPlayerKey(), Globals.Emotes.WELL_PLAYED.getEmoteCode());
         } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE7]) {
-//            PacketSender.sendUseEmote(Core.getLogicModule().getSelectedRoom(), Core.getLogicModule().getMyPlayerKey(), Globals.EMOTE_6);
+            PacketSender.sendUseEmote(Core.getLogicModule().getSelectedRoom(), Core.getLogicModule().getMyPlayerKey(), Globals.Emotes.GOOD_GAME.getEmoteCode());
         } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE8]) {
 //            PacketSender.sendUseEmote(Core.getLogicModule().getSelectedRoom(), Core.getLogicModule().getMyPlayerKey(), Globals.EMOTE_7);
         } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE9]) {

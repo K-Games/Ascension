@@ -179,8 +179,8 @@ public class Globals {
         SWEAT((byte) 0x02, "sweat", 5, EmoteSweat.class),
         SLEEP((byte) 0x03, "sleep", 3, EmoteSleep.class),
         ANGRY((byte) 0x04, "angry", 1, EmoteAngry.class),
-        EMOTE6((byte) 0x05, null, 0, null),
-        EMOTE7((byte) 0x06, null, 0, null),
+        WELL_PLAYED((byte) 0x05, "wp", 1, EmoteWellPlayed.class),
+        GOOD_GAME((byte) 0x06, "gg", 1, EmoteGoodGame.class),
         EMOTE8((byte) 0x07, null, 0, null),
         EMOTE9((byte) 0x08, null, 0, null),
         EMOTE10((byte) 0x09, null, 0, null);
