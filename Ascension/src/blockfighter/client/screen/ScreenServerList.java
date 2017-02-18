@@ -1,6 +1,5 @@
 package blockfighter.client.screen;
 
-import blockfighter.client.AscensionClient;
 import blockfighter.client.Core;
 import blockfighter.client.net.hub.HubClient;
 import blockfighter.shared.Globals;
@@ -76,7 +75,7 @@ public class ScreenServerList extends ScreenMenu {
     private long lastRefreshTime = 0;
 
     static {
-        SERVERADDRESS_FIELD.addFocusListener(AscensionClient.FOCUS_HANDLER);
+        SERVERADDRESS_FIELD.addFocusListener(Core.FOCUS_HANDLER);
 
         if (Globals.WINDOW_SCALE_ENABLED) {
             SERVERADDRESS_FIELD.setBounds((int) (330 * Globals.WINDOW_SCALE), (int) (640 * Globals.WINDOW_SCALE), (int) (670 * Globals.WINDOW_SCALE), (int) (40 * Globals.WINDOW_SCALE));
@@ -94,7 +93,7 @@ public class ScreenServerList extends ScreenMenu {
 
     public ScreenServerList() {
         this(false);
-        AscensionClient.SHARED_THREADPOOL.execute(new HubClient());
+        Core.SHARED_THREADPOOL.execute(new HubClient());
     }
 
     public ScreenServerList(final boolean fadeIn) {
@@ -285,7 +284,7 @@ public class ScreenServerList extends ScreenMenu {
             if (REFRESH_BOX.contains(scaled) && Core.getLogicModule().getTime() - this.lastRefreshTime >= Globals.msToNs(2000)) {
                 setStatus(STATUS_REFRESHING);
                 this.serverList.setServerInfo(null);
-                AscensionClient.SHARED_THREADPOOL.execute(new HubClient());
+                Core.SHARED_THREADPOOL.execute(new HubClient());
                 this.lastRefreshTime = Core.getLogicModule().getTime();
             }
 

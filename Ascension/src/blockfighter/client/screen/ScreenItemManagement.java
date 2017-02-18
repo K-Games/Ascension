@@ -1,8 +1,8 @@
 package blockfighter.client.screen;
 
 import blockfighter.client.Core;
-import blockfighter.client.savedata.SaveData;
 import blockfighter.client.entities.items.ItemEquip;
+import blockfighter.client.savedata.SaveData;
 import static blockfighter.client.screen.Screen.SKILL_BOX_BG_COLOR;
 import blockfighter.shared.Globals;
 import java.awt.Color;

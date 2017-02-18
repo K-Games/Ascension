@@ -1,8 +1,8 @@
 package blockfighter.client;
 
-import blockfighter.client.savedata.SaveData;
 import blockfighter.client.entities.player.skills.Skill;
 import blockfighter.client.net.GameClient;
+import blockfighter.client.savedata.SaveData;
 import blockfighter.client.screen.Screen;
 import blockfighter.client.screen.ScreenIngame;
 import blockfighter.client.screen.ScreenServerList;
@@ -60,7 +60,7 @@ public class LogicModule implements Runnable {
 
         if (skillReady && equipReady) {
             client = new GameClient(this, server);
-            AscensionClient.SHARED_THREADPOOL.execute(client);
+            Core.SHARED_THREADPOOL.execute(client);
         } else if (!skillReady && !equipReady) {
             if (getScreen() instanceof ScreenServerList) {
                 ((ScreenServerList) getScreen()).setStatus(ScreenServerList.STATUS_NOSKILL_NOEQUIP);

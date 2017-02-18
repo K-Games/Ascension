@@ -10,7 +10,6 @@ import java.awt.Dimension;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.Base64;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -18,17 +17,6 @@ import javax.swing.JFrame;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
 public class AscensionClient {
-
-    public static final KeyHandler KEY_HANDLER = new KeyHandler();
-    public static final MouseHandler MOUSE_HANDLER = new MouseHandler();
-    public static final FocusHandler FOCUS_HANDLER = new FocusHandler();
-
-    public static final ExecutorService SHARED_THREADPOOL = Executors.newFixedThreadPool(5,
-            new BasicThreadFactory.Builder()
-                    .namingPattern("Shared-Thread-%d")
-                    .daemon(true)
-                    .priority(Thread.NORM_PRIORITY)
-                    .build());
 
     static {
         Globals.loadClient();
@@ -163,10 +151,10 @@ public class AscensionClient {
 
         panel.setLayout(null);
         panel.setFocusable(true);
-        panel.addKeyListener(KEY_HANDLER);
-        panel.addMouseMotionListener(MOUSE_HANDLER);
-        panel.addMouseListener(MOUSE_HANDLER);
-        panel.addFocusListener(FOCUS_HANDLER);
+        panel.addKeyListener(Core.KEY_HANDLER);
+        panel.addMouseMotionListener(Core.MOUSE_HANDLER);
+        panel.addMouseListener(Core.MOUSE_HANDLER);
+        panel.addFocusListener(Core.FOCUS_HANDLER);
         panel.requestFocus();
 
         Runtime.getRuntime().addShutdownHook(new Thread() {

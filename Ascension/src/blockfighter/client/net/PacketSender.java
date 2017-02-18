@@ -1,8 +1,8 @@
 package blockfighter.client.net;
 
-import blockfighter.client.savedata.SaveData;
 import blockfighter.client.entities.items.ItemEquip;
 import blockfighter.client.entities.player.skills.Skill;
+import blockfighter.client.savedata.SaveData;
 import blockfighter.shared.Globals;
 import java.nio.charset.StandardCharsets;
 

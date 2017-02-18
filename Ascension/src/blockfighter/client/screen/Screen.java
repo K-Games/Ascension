@@ -1,6 +1,5 @@
 package blockfighter.client.screen;
 
-import blockfighter.client.AscensionClient;
 import blockfighter.client.Core;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.client.render.RenderPanel;
@@ -40,7 +39,7 @@ public abstract class Screen implements KeyListener, MouseListener, MouseMotionL
     public void updateParticles(final ConcurrentHashMap<Integer, Particle> updateParticles) {
         LinkedList<Future<Particle>> futures = new LinkedList<>();
         for (final Map.Entry<Integer, Particle> pEntry : updateParticles.entrySet()) {
-            futures.add(AscensionClient.SHARED_THREADPOOL.submit(pEntry.getValue()));
+            futures.add(Core.SHARED_THREADPOOL.submit(pEntry.getValue()));
         }
         for (Future<Particle> task : futures) {
             try {

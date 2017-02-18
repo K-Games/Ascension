@@ -1,6 +1,5 @@
 package blockfighter.client.maps;
 
-import blockfighter.client.AscensionClient;
 import blockfighter.client.Core;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.shared.Globals;
@@ -47,7 +46,7 @@ public abstract class GameMap {
     public void updateParticles() {
         LinkedList<Future<Particle>> futures = new LinkedList<>();
         for (final Map.Entry<Integer, Particle> pEntry : this.particles.entrySet()) {
-            futures.add(AscensionClient.SHARED_THREADPOOL.submit(pEntry.getValue()));
+            futures.add(Core.SHARED_THREADPOOL.submit(pEntry.getValue()));
         }
         for (Future<Particle> task : futures) {
 

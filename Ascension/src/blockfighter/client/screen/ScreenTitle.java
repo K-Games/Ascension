@@ -1,6 +1,5 @@
 package blockfighter.client.screen;
 
-import blockfighter.client.AscensionClient;
 import blockfighter.client.Core;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.shared.Globals;
@@ -193,7 +192,7 @@ public class ScreenTitle extends Screen {
         }
         if (!checkingVersion) {
             this.checkingVersion = true;
-            AscensionClient.SHARED_THREADPOOL.execute(() -> {
+            Core.SHARED_THREADPOOL.execute(() -> {
                 BufferedReader in;
                 try {
                     URL ipURL = new URL(VERSION_API_URL);

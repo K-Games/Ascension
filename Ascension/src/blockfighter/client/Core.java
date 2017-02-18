@@ -1,8 +1,21 @@
 package blockfighter.client;
 
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
 public class Core {
+
+    public static final FocusHandler FOCUS_HANDLER = new FocusHandler();
+    public static final KeyHandler KEY_HANDLER = new KeyHandler();
+    public static final MouseHandler MOUSE_HANDLER = new MouseHandler();
+
+    public static final ExecutorService SHARED_THREADPOOL = Executors.newFixedThreadPool(5,
+            new BasicThreadFactory.Builder()
+                    .namingPattern("Shared-Thread-%d")
+                    .daemon(true)
+                    .priority(Thread.NORM_PRIORITY)
+                    .build());
 
     private static LogicModule LOGIC_MODULE;
     private static SoundModule SOUND_MODULE;

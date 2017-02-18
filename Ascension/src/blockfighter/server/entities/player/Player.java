@@ -1044,7 +1044,7 @@ public class Player implements GameEntity, Callable<Player> {
             final byte[] level = Globals.intToBytes((int) lvl);
             System.arraycopy(level, 0, bytes, 1, level.length);
 
-            Integer[] equipCodes = Globals.ITEM_CODES.toArray(new Integer[0]);
+            Integer[] equipCodes = Globals.ITEM_CODES.toArray(new Integer[Globals.ITEM_CODES.size()]);
             final byte[] itemCode = Globals.intToBytes(equipCodes[Globals.rng(equipCodes.length)]);
             System.arraycopy(itemCode, 0, bytes, 5, itemCode.length);
 
@@ -1060,7 +1060,7 @@ public class Player implements GameEntity, Callable<Player> {
             final byte[] level = Globals.intToBytes((int) lvl);
             System.arraycopy(level, 0, bytes, 1, level.length);
 
-            Integer[] upgradeCodes = Globals.ITEM_UPGRADE_CODES.toArray(new Integer[0]);
+            Integer[] upgradeCodes = Globals.ITEM_UPGRADE_CODES.toArray(new Integer[Globals.ITEM_UPGRADE_CODES.size()]);
             final byte[] itemCode = Globals.intToBytes(upgradeCodes[Globals.rng(upgradeCodes.length)]);
             System.arraycopy(itemCode, 0, bytes, 5, itemCode.length);
             PacketSender.sendPlayer(bytes, this);

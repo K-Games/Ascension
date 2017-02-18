@@ -1,6 +1,5 @@
 package blockfighter.client.screen;
 
-import blockfighter.client.AscensionClient;
 import blockfighter.client.Core;
 import blockfighter.client.entities.emotes.Emote;
 import blockfighter.client.entities.ingamenumber.IngameNumber;
@@ -202,7 +201,7 @@ public class ScreenIngame extends Screen {
     private void updateEmotes() {
         LinkedList<Future<Emote>> futures = new LinkedList<>();
         for (final Map.Entry<Integer, Emote> emote : this.emotes.entrySet()) {
-            futures.add(AscensionClient.SHARED_THREADPOOL.submit(emote.getValue()));
+            futures.add(Core.SHARED_THREADPOOL.submit(emote.getValue()));
         }
 
         for (Future<Emote> task : futures) {
@@ -221,7 +220,7 @@ public class ScreenIngame extends Screen {
     private void updateIngameNumber() {
         LinkedList<Future<IngameNumber>> futures = new LinkedList<>();
         for (final Map.Entry<Integer, IngameNumber> n : this.ingameNumber.entrySet()) {
-            futures.add(AscensionClient.SHARED_THREADPOOL.submit(n.getValue()));
+            futures.add(Core.SHARED_THREADPOOL.submit(n.getValue()));
         }
 
         for (Future<IngameNumber> task : futures) {
@@ -241,7 +240,7 @@ public class ScreenIngame extends Screen {
     private void updateNotifications() {
         LinkedList<Future<Notification>> futures = new LinkedList<>();
         for (Notification n : this.notifications) {
-            futures.add(AscensionClient.SHARED_THREADPOOL.submit(n));
+            futures.add(Core.SHARED_THREADPOOL.submit(n));
         }
 
         for (Future<Notification> task : futures) {
@@ -256,7 +255,7 @@ public class ScreenIngame extends Screen {
             this.notifications.remove();
         }
 
-        AscensionClient.SHARED_THREADPOOL.execute(() -> {
+        Core.SHARED_THREADPOOL.execute(() -> {
             while (this.notifications.size() > Notification.MAX_NUM_NOTIFICATIONS) {
                 this.notifications.remove();
             }
@@ -266,7 +265,7 @@ public class ScreenIngame extends Screen {
     private void updateMobs() {
         LinkedList<Future<Mob>> futures = new LinkedList<>();
         for (final Map.Entry<Integer, Mob> pEntry : this.mobs.entrySet()) {
-            futures.add(AscensionClient.SHARED_THREADPOOL.submit(pEntry.getValue()));
+            futures.add(Core.SHARED_THREADPOOL.submit(pEntry.getValue()));
         }
         for (Future<Mob> task : futures) {
             try {
@@ -280,7 +279,7 @@ public class ScreenIngame extends Screen {
     private void updatePlayers() {
         LinkedList<Future<Player>> futures = new LinkedList<>();
         for (final Map.Entry<Byte, Player> pEntry : this.players.entrySet()) {
-            futures.add(AscensionClient.SHARED_THREADPOOL.submit(pEntry.getValue()));
+            futures.add(Core.SHARED_THREADPOOL.submit(pEntry.getValue()));
         }
 
         for (Future<Player> task : futures) {
