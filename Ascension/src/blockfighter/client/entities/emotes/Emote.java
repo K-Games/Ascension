@@ -114,4 +114,8 @@ public abstract class Emote implements Callable<Emote> {
         this.duration = 0;
     }
 
+    public void drawIcon(final Graphics2D g, final int x, final int y) {
+
+    }
+
 }
