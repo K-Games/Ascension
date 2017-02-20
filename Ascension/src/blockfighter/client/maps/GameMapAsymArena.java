@@ -559,8 +559,10 @@ public class GameMapAsymArena extends GameMap {
         if (now - this.lastCandleUpdateTime >= Globals.msToNs(100)) {
 
             for (int i = 0; i < this.candleFrame.length; i++) {
-                if (++this.candleFrame[i] >= candles.length) {
+                if (this.candleFrame[i] + 1 >= candles.length) {
                     this.candleFrame[i] = 0;
+                } else {
+                    this.candleFrame[i]++;
                 }
             }
             this.lastCandleUpdateTime = now;
