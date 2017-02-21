@@ -116,10 +116,10 @@ public class ScreenStats extends ScreenMenu {
         double[] bonusStats = this.c.getBonusStats();
         String[] statString = {
             SECONDARY_STATS_TEXT,
-            Globals.getStatName(Globals.STAT_MAXHP) + Globals.COLON_SPACE_TEXT + (int) totalStats[Globals.STAT_MAXHP],
+            Globals.getStatName(Globals.STAT_MAXHP) + Globals.COLON_SPACE_TEXT + Globals.NUMBER_FORMAT.format(totalStats[Globals.STAT_MAXHP]),
             EFFECTIVE_HP_TEXT + Globals.NUMBER_FORMAT.format((int) Globals.calcEHP(totalStats[Globals.STAT_DAMAGEREDUCT], totalStats[Globals.STAT_MAXHP])),
-            DAMAGE_TEXT + (int) totalStats[Globals.STAT_MINDMG] + " - " + (int) totalStats[Globals.STAT_MAXDMG],
-            Globals.getStatName(Globals.STAT_ARMOR) + Globals.COLON_SPACE_TEXT + (int) baseStats[Globals.STAT_ARMOR] + " + " + (int) bonusStats[Globals.STAT_ARMOR] + " (" + (int) totalStats[Globals.STAT_ARMOR] + ")",
+            DAMAGE_TEXT + Globals.NUMBER_FORMAT.format((int) totalStats[Globals.STAT_MINDMG]) + " - " + Globals.NUMBER_FORMAT.format((int) totalStats[Globals.STAT_MAXDMG]),
+            Globals.getStatName(Globals.STAT_ARMOR) + Globals.COLON_SPACE_TEXT + Globals.NUMBER_FORMAT.format((int) baseStats[Globals.STAT_ARMOR]) + " + " + Globals.NUMBER_FORMAT.format((int) bonusStats[Globals.STAT_ARMOR]) + " (" + Globals.NUMBER_FORMAT.format((int) totalStats[Globals.STAT_ARMOR]) + ")",
             Globals.getStatName(Globals.STAT_REGEN) + Globals.COLON_SPACE_TEXT + Globals.NUMBER_FORMAT.format(baseStats[Globals.STAT_REGEN]) + " + " + Globals.NUMBER_FORMAT.format(bonusStats[Globals.STAT_REGEN]) + " (" + Globals.NUMBER_FORMAT.format(totalStats[Globals.STAT_REGEN]) + ") HP/Sec",
             Globals.getStatName(Globals.STAT_CRITCHANCE) + Globals.COLON_SPACE_TEXT + Globals.NUMBER_FORMAT.format(baseStats[Globals.STAT_CRITCHANCE] * 100)
             + " + " + Globals.NUMBER_FORMAT.format(bonusStats[Globals.STAT_CRITCHANCE] * 100) + "% ("
