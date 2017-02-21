@@ -124,13 +124,13 @@ public class Globals {
     public final static int NUM_SOUND_EFFECTS = 0;
 
     public enum GameMaps {
-        ARENA((byte) 0x00, blockfighter.client.maps.GameMapArena.class, blockfighter.server.maps.GameMapArena.class),
-        ASYM_ARENA((byte) 0x01, blockfighter.client.maps.GameMapAsymArena.class, blockfighter.server.maps.GameMapAsymArena.class);
+        FIELD((byte) 0x00, "Field", blockfighter.client.maps.GameMapArena.class, blockfighter.server.maps.GameMapArena.class),
+        GRAND_LIBRARY((byte) 0x01, "Grand Library", blockfighter.client.maps.GameMapAsymArena.class, blockfighter.server.maps.GameMapAsymArena.class);
 
         private final byte mapCode;
         private final Class<? extends blockfighter.client.maps.GameMap> clientGameMapClass;
         private final Class<? extends blockfighter.server.maps.GameMap> serverGameMapClass;
-
+        private final String mapName;
         private static final Map<Byte, GameMaps> lookup = new HashMap<>();
 
         static {
@@ -143,16 +143,21 @@ public class Globals {
             return lookup.get(code);
         }
 
-        GameMaps(byte mapCode,
+        GameMaps(byte mapCode, String mapName,
                 Class<? extends blockfighter.client.maps.GameMap> clientGameMapClass,
                 Class<? extends blockfighter.server.maps.GameMap> serverGameMapClass) {
             this.mapCode = mapCode;
+            this.mapName = mapName;
             this.clientGameMapClass = clientGameMapClass;
             this.serverGameMapClass = serverGameMapClass;
         }
 
         public byte getMapCode() {
             return this.mapCode;
+        }
+
+        public String getMapName() {
+            return this.mapName;
         }
 
         public blockfighter.server.maps.GameMap newServerGameMap() {

@@ -9,7 +9,7 @@ import java.awt.geom.Rectangle2D;
 public class GameMapAsymArena extends GameMap {
 
     public GameMapAsymArena() {
-        super(GameMaps.ASYM_ARENA);
+        super(GameMaps.GRAND_LIBRARY);
         this.isPvP = true;
 
         this.platforms = new GameMapPlatform[16];

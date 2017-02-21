@@ -61,7 +61,7 @@ public class ScreenLoading extends ScreenMenu {
         }
 
         if (this.mapAssetsReady && !this.mapAssetsRendered) {
-            Globals.log(ScreenLoading.class, "Prerendering Map " + this.map.getMapName() + " Assets...", Globals.LOG_TYPE_DATA);
+            Globals.log(ScreenLoading.class, "Prerendering Map " + this.map.getGameMap().getMapName() + " Assets...", Globals.LOG_TYPE_DATA);
             this.map.prerender(g);
             this.mapAssetsRendered = true;
         }
@@ -70,7 +70,7 @@ public class ScreenLoading extends ScreenMenu {
         String loadingString = "Loading...";
 
         if (this.map != null) {
-            loadingString = "Loading " + this.map.getMapName() + "...";
+            loadingString = "Loading " + this.map.getGameMap().getMapName() + "...";
         }
         g.setFont(Globals.ARIAL_18PT);
         int stringWidth = g.getFontMetrics().stringWidth(loadingString);

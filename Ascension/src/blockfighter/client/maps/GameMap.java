@@ -13,11 +13,16 @@ import java.util.concurrent.Future;
 
 public abstract class GameMap {
 
+    protected Globals.GameMaps gameMap;
     protected ConcurrentHashMap<Integer, Particle> particles = new ConcurrentHashMap<>(20);
     protected long lastUpdateTime = 0;
     protected int mapHeight, mapWidth, mapXOrigin = 0, mapYOrigin = 0;
     private final static double PARALLAX_FACTOR = 0.35;
     BufferedImage[] bg;
+
+    public GameMap(final Globals.GameMaps gameMap) {
+        this.gameMap = gameMap;
+    }
 
     public ConcurrentHashMap<Integer, Particle> getParticles() {
         return this.particles;
@@ -27,13 +32,15 @@ public abstract class GameMap {
         return -1;
     }
 
-    public abstract String getMapName();
-
     public abstract void loadAssets() throws Exception;
 
     public abstract void prerender(final Graphics2D g);
 
     public abstract void unloadAssets();
+
+    public Globals.GameMaps getGameMap() {
+        return this.gameMap;
+    }
 
     public void update() {
         final long now = Core.getLogicModule().getTime(); // Get time now

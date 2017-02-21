@@ -18,7 +18,7 @@ public class GameMapTest {
 
     @Before
     public void setup() {
-        this.testMap = new GameMap(Globals.GameMaps.ARENA) {
+        this.testMap = new GameMap(Globals.GameMaps.FIELD) {
             public GameMap setup() {
                 this.isPvP = true;
                 this.platforms = new GameMapPlatform[15];
@@ -144,7 +144,7 @@ public class GameMapTest {
 
     @Test
     public void testGetMapCode() {
-        assertEquals(Globals.GameMaps.ARENA.getMapCode(), this.testMap.getMapCode());
+        assertEquals(Globals.GameMaps.FIELD.getMapCode(), this.testMap.getMapCode());
     }
 
     @Test

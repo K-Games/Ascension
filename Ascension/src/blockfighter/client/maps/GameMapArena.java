@@ -6,12 +6,11 @@ import java.awt.image.BufferedImage;
 
 public class GameMapArena extends GameMap {
 
-    private static final String MAP_NAME = "Forest00";
-
     BufferedImage[] platforms = new BufferedImage[3];
     Globals.BGMs bgm;
 
     public GameMapArena() {
+        super(Globals.GameMaps.FIELD);
         this.mapHeight = 1600;
         this.mapWidth = 3400;
         this.mapYOrigin = -1000;
@@ -47,22 +46,17 @@ public class GameMapArena extends GameMap {
     }
 
     @Override
-    public String getMapName() {
-        return MAP_NAME;
-    }
-
-    @Override
     public void loadAssets() throws Exception {
-        Globals.log(GameMapArena.class, "Loading Map Arena Assets...", Globals.LOG_TYPE_DATA);
+        Globals.log(GameMapAsymArena.class, "Loading Map " + this.gameMap.getMapName() + " Assets...", Globals.LOG_TYPE_DATA);
         this.bg = new BufferedImage[1];
-        this.bg[0] = Globals.loadTextureResource("sprites/maps/" + Globals.GameMaps.ARENA.getMapCode() + "/bg.png");
+        this.bg[0] = Globals.loadTextureResource("sprites/maps/" + this.gameMap.getMapName() + "/bg.png");
         if (this.bg[0] == null) {
-            throw new NullPointerException("Failed to load map " + Globals.GameMaps.ARENA.getMapCode() + " bg.");
+            throw new NullPointerException("Failed to load map " + this.gameMap.getMapName() + " bg.");
         }
         for (int i = 0; i < this.platforms.length; i++) {
-            this.platforms[i] = Globals.loadTextureResource("sprites/maps/" + Globals.GameMaps.ARENA.getMapCode() + "/plat" + i + ".png");
+            this.platforms[i] = Globals.loadTextureResource("sprites/maps/" + this.gameMap.getMapName() + "/plat" + i + ".png");
             if (this.platforms[i] == null) {
-                throw new NullPointerException("Failed to load platform texture. Map " + Globals.GameMaps.ARENA.getMapCode() + " Plat " + i + ".");
+                throw new NullPointerException("Failed to load platform texture. Map " + this.gameMap.getMapName() + " Plat " + i + ".");
             }
         }
         int random = Globals.rng(3);

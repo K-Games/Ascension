@@ -8,8 +8,6 @@ import java.awt.image.BufferedImage;
 
 public class GameMapAsymArena extends GameMap {
 
-    private static final String MAP_NAME = "Grand Library";
-
     private static final int[] RANDOM_THREE_SEQUENCE = new int[15];
     private static int sequenceCounter = 0;
 
@@ -47,6 +45,7 @@ public class GameMapAsymArena extends GameMap {
     }
 
     public GameMapAsymArena() {
+        super(Globals.GameMaps.GRAND_LIBRARY);
         this.mapHeight = 3000;
         this.mapWidth = 3800;
         this.mapYOrigin = -500;
@@ -54,11 +53,6 @@ public class GameMapAsymArena extends GameMap {
         for (int i = 0; i < this.candleFrame.length; i++) {
             this.candleFrame[i] = Globals.rng(candles.length);
         }
-    }
-
-    @Override
-    public String getMapName() {
-        return MAP_NAME;
     }
 
     private void drawRandomTile(final Graphics2D g, final BufferedImage[] spriteCollection, final int x, final int y, final int[] numberSequence) {
@@ -421,101 +415,101 @@ public class GameMapAsymArena extends GameMap {
 
     @Override
     public void loadAssets() throws Exception {
-        Globals.log(GameMapAsymArena.class, "Loading Map " + getMapName() + " Assets...", Globals.LOG_TYPE_DATA);
+        Globals.log(GameMapAsymArena.class, "Loading Map " + this.gameMap.getMapName() + " Assets...", Globals.LOG_TYPE_DATA);
         this.bg = new BufferedImage[3];
         for (int i = 0; i < this.bg.length; i++) {
-            String path = "sprites/maps/" + Globals.GameMaps.ASYM_ARENA.getMapCode() + "/bg_layer_" + i + ".png";
+            String path = "sprites/maps/" + Globals.GameMaps.GRAND_LIBRARY.getMapCode() + "/bg_layer_" + i + ".png";
             this.bg[i] = Globals.loadTextureResource(path);
             if (this.bg[i] == null) {
-                throw new NullPointerException("Failed to load map " + Globals.GameMaps.ARENA.getMapCode() + " resource:" + path);
+                throw new NullPointerException("Failed to load map " + this.gameMap.getMapName() + " resource:" + path);
             }
         }
 
         for (int i = 0; i < this.platform_fills.length; i++) {
-            String path = "sprites/maps/" + Globals.GameMaps.ASYM_ARENA.getMapCode() + "/platform_fill_" + i + ".png";
+            String path = "sprites/maps/" + Globals.GameMaps.GRAND_LIBRARY.getMapCode() + "/platform_fill_" + i + ".png";
             this.platform_fills[i] = Globals.loadTextureResource(path);
             if (this.platform_fills[i] == null) {
-                throw new NullPointerException("Failed to load map " + Globals.GameMaps.ARENA.getMapCode() + " resource:" + path);
+                throw new NullPointerException("Failed to load map " + this.gameMap.getMapName() + " resource:" + path);
             }
         }
         for (int i = 0; i < this.platform_bottom.length; i++) {
-            String path = "sprites/maps/" + Globals.GameMaps.ASYM_ARENA.getMapCode() + "/platform_bottom_" + i + ".png";
+            String path = "sprites/maps/" + Globals.GameMaps.GRAND_LIBRARY.getMapCode() + "/platform_bottom_" + i + ".png";
             this.platform_bottom[i] = Globals.loadTextureResource(path);
             if (this.platform_bottom[i] == null) {
-                throw new NullPointerException("Failed to load map " + Globals.GameMaps.ARENA.getMapCode() + " resource:" + path);
+                throw new NullPointerException("Failed to load map " + this.gameMap.getMapName() + " resource:" + path);
             }
         }
 
         for (int i = 0; i < this.platform_top.length; i++) {
-            String path = "sprites/maps/" + Globals.GameMaps.ASYM_ARENA.getMapCode() + "/platform_top_" + i + ".png";
+            String path = "sprites/maps/" + Globals.GameMaps.GRAND_LIBRARY.getMapCode() + "/platform_top_" + i + ".png";
             this.platform_top[i] = Globals.loadTextureResource(path);
             if (this.platform_top[i] == null) {
-                throw new NullPointerException("Failed to load map " + Globals.GameMaps.ARENA.getMapCode() + " resource:" + path);
+                throw new NullPointerException("Failed to load map " + this.gameMap.getMapName() + " resource:" + path);
             }
         }
 
         for (int i = 0; i < this.platform_left.length; i++) {
-            String path = "sprites/maps/" + Globals.GameMaps.ASYM_ARENA.getMapCode() + "/platform_left_" + i + ".png";
+            String path = "sprites/maps/" + Globals.GameMaps.GRAND_LIBRARY.getMapCode() + "/platform_left_" + i + ".png";
             this.platform_left[i] = Globals.loadTextureResource(path);
             if (this.platform_left[i] == null) {
-                throw new NullPointerException("Failed to load map " + Globals.GameMaps.ARENA.getMapCode() + " resource:" + path);
+                throw new NullPointerException("Failed to load map " + this.gameMap.getMapName() + " resource:" + path);
             }
         }
 
         for (int i = 0; i < this.platform_right.length; i++) {
-            String path = "sprites/maps/" + Globals.GameMaps.ASYM_ARENA.getMapCode() + "/platform_right_" + i + ".png";
+            String path = "sprites/maps/" + Globals.GameMaps.GRAND_LIBRARY.getMapCode() + "/platform_right_" + i + ".png";
             this.platform_right[i] = Globals.loadTextureResource(path);
             if (this.platform_right[i] == null) {
-                throw new NullPointerException("Failed to load map " + Globals.GameMaps.ARENA.getMapCode() + " resource:" + path);
+                throw new NullPointerException("Failed to load map " + this.gameMap.getMapName() + " resource:" + path);
             }
         }
         for (int i = 0; i < this.platform_corners.length; i++) {
-            String path = "sprites/maps/" + Globals.GameMaps.ASYM_ARENA.getMapCode() + "/platform_corner_" + i + ".png";
+            String path = "sprites/maps/" + Globals.GameMaps.GRAND_LIBRARY.getMapCode() + "/platform_corner_" + i + ".png";
             this.platform_corners[i] = Globals.loadTextureResource(path);
             if (this.platform_corners[i] == null) {
-                throw new NullPointerException("Failed to load map " + Globals.GameMaps.ARENA.getMapCode() + " resource:" + path);
+                throw new NullPointerException("Failed to load map " + this.gameMap.getMapName() + " resource:" + path);
             }
         }
         for (int i = 0; i < this.platform_corners_inner.length; i++) {
-            String path = "sprites/maps/" + Globals.GameMaps.ASYM_ARENA.getMapCode() + "/platform_corner_inner_" + i + ".png";
+            String path = "sprites/maps/" + Globals.GameMaps.GRAND_LIBRARY.getMapCode() + "/platform_corner_inner_" + i + ".png";
             this.platform_corners_inner[i] = Globals.loadTextureResource(path);
             if (this.platform_corners_inner[i] == null) {
-                throw new NullPointerException("Failed to load map " + Globals.GameMaps.ARENA.getMapCode() + " resource:" + path);
+                throw new NullPointerException("Failed to load map " + this.gameMap.getMapName() + " resource:" + path);
             }
         }
 
-        String fireplacePath = "sprites/maps/" + Globals.GameMaps.ASYM_ARENA.getMapCode() + "/fireplace.png";
+        String fireplacePath = "sprites/maps/" + Globals.GameMaps.GRAND_LIBRARY.getMapCode() + "/fireplace.png";
         this.fireplace = Globals.loadTextureResource(fireplacePath);
         if (this.fireplace == null) {
-            throw new NullPointerException("Failed to load map " + Globals.GameMaps.ARENA.getMapCode() + " resource:" + fireplacePath);
+            throw new NullPointerException("Failed to load map " + this.gameMap.getMapName() + " resource:" + fireplacePath);
         }
 
         for (int i = 0; i < this.candles.length; i++) {
-            String path = "sprites/maps/" + Globals.GameMaps.ASYM_ARENA.getMapCode() + "/candle_" + i + ".png";
+            String path = "sprites/maps/" + Globals.GameMaps.GRAND_LIBRARY.getMapCode() + "/candle_" + i + ".png";
             this.candles[i] = Globals.loadTextureResource(path);
             if (this.candles[i] == null) {
-                throw new NullPointerException("Failed to load map " + Globals.GameMaps.ARENA.getMapCode() + " resource:" + path);
+                throw new NullPointerException("Failed to load map " + this.gameMap.getMapName() + " resource:" + path);
             }
         }
 
-        String pillarPath = "sprites/maps/" + Globals.GameMaps.ASYM_ARENA.getMapCode() + "/pillar.png";
+        String pillarPath = "sprites/maps/" + Globals.GameMaps.GRAND_LIBRARY.getMapCode() + "/pillar.png";
         this.pillar = Globals.loadTextureResource(pillarPath);
         if (this.pillar == null) {
-            throw new NullPointerException("Failed to load map " + Globals.GameMaps.ARENA.getMapCode() + " resource:" + pillarPath);
+            throw new NullPointerException("Failed to load map " + this.gameMap.getMapName() + " resource:" + pillarPath);
         }
 
         for (int i = 0; i < this.shelves.length; i++) {
-            String path = "sprites/maps/" + Globals.GameMaps.ASYM_ARENA.getMapCode() + "/bookshelf_" + i + ".png";
+            String path = "sprites/maps/" + Globals.GameMaps.GRAND_LIBRARY.getMapCode() + "/bookshelf_" + i + ".png";
             this.shelves[i] = Globals.loadTextureResource(path);
             if (this.shelves[i] == null) {
-                throw new NullPointerException("Failed to load map " + Globals.GameMaps.ARENA.getMapCode() + " resource:" + path);
+                throw new NullPointerException("Failed to load map " + this.gameMap.getMapName() + " resource:" + path);
             }
         }
 
-        String chestPath = "sprites/maps/" + Globals.GameMaps.ASYM_ARENA.getMapCode() + "/chest_1.png";
+        String chestPath = "sprites/maps/" + Globals.GameMaps.GRAND_LIBRARY.getMapCode() + "/chest_1.png";
         this.chest = Globals.loadTextureResource(chestPath);
         if (this.chest == null) {
-            throw new NullPointerException("Failed to load map " + Globals.GameMaps.ARENA.getMapCode() + " resource:" + pillarPath);
+            throw new NullPointerException("Failed to load map " + this.gameMap.getMapName() + " resource:" + pillarPath);
         }
         this.bgm = BGMS[(byte) Globals.rng(BGMS.length)];
     }

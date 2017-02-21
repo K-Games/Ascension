@@ -9,7 +9,7 @@ import java.awt.geom.Rectangle2D;
 public class GameMapArena extends GameMap {
 
     public GameMapArena() {
-        super(GameMaps.ARENA);
+        super(GameMaps.FIELD);
         this.isPvP = true;
         this.platforms = new GameMapPlatform[13];
         this.platforms[0] = new GameMapPlatform(new Rectangle2D.Double(-50, 600, 3450, 30));
