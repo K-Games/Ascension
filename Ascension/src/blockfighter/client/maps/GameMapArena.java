@@ -49,12 +49,12 @@ public class GameMapArena extends GameMap {
     public void loadAssets() throws Exception {
         Globals.log(GameMapAsymArena.class, "Loading Map " + this.gameMap.getMapName() + " Assets...", Globals.LOG_TYPE_DATA);
         this.bg = new BufferedImage[1];
-        this.bg[0] = Globals.loadTextureResource("sprites/maps/" + this.gameMap.getMapName() + "/bg.png");
+        this.bg[0] = Globals.loadTextureResource("sprites/maps/" + this.gameMap.getMapCode() + "/bg.png");
         if (this.bg[0] == null) {
             throw new NullPointerException("Failed to load map " + this.gameMap.getMapName() + " bg.");
         }
         for (int i = 0; i < this.platforms.length; i++) {
-            this.platforms[i] = Globals.loadTextureResource("sprites/maps/" + this.gameMap.getMapName() + "/plat" + i + ".png");
+            this.platforms[i] = Globals.loadTextureResource("sprites/maps/" + this.gameMap.getMapCode() + "/plat" + i + ".png");
             if (this.platforms[i] == null) {
                 throw new NullPointerException("Failed to load platform texture. Map " + this.gameMap.getMapName() + " Plat " + i + ".");
             }

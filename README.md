@@ -6,6 +6,7 @@ Inspired by Action RPGs and Metroidvanias. A game dedicated about its gameplay.
 ![Play](https://github.com/K-Games/AscensionInfo/raw/master/images/play.png)
 
 - [Home Page itch.io](https://kenofnz.itch.io/ascension)
+- [Developer Blog](https://soulascensiondevblog.wordpress.com/)
 
 ![Game Updates](https://github.com/K-Games/AscensionInfo/raw/master/images/updates.png)
 
