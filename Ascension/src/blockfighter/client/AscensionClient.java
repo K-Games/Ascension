@@ -101,8 +101,8 @@ public class AscensionClient {
                         Globals.createLogDirectory();
                         break;
                     case "-hubaddress":
-                        Globals.HUB_SERVER_ADDRESS = args[i + 1];
-                        Globals.log(AscensionClient.class, "Setting Hub Server address to " + Globals.HUB_SERVER_ADDRESS, Globals.LOG_TYPE_DATA);
+                        Globals.CLIENT_HUB_SERVER_ADDRESS = args[i + 1];
+                        Globals.log(AscensionClient.class, "Setting Hub Server address to " + Globals.CLIENT_HUB_SERVER_ADDRESS, Globals.LOG_TYPE_DATA);
                         break;
                     case "-hubport":
                         try {

@@ -759,7 +759,8 @@ public class Globals {
     public static int SERVER_MATCH_DURATION = 300000;
 
     public static int HUB_SERVER_TCP_PORT = 25566;
-    public static String HUB_SERVER_ADDRESS = "asc-hub.servegame.com";
+    public static String CLIENT_HUB_SERVER_ADDRESS = "asc-hub.servegame.com";
+    public static String SERVER_HUB_SERVER_ADDRESS = CLIENT_HUB_SERVER_ADDRESS;
 
     public final static long PROCESS_QUEUE_TICKS_PER_SEC = 100;
     public final static long PROCESS_QUEUE = 1000000000 / PROCESS_QUEUE_TICKS_PER_SEC;
@@ -1193,7 +1194,7 @@ public class Globals {
                 SERVER_HUB_CONNECT = Boolean.parseBoolean(prop.getProperty("hubconnect"));
             }
             if (prop.getProperty("hubaddress") != null) {
-                HUB_SERVER_ADDRESS = prop.getProperty("hubaddress");
+                SERVER_HUB_SERVER_ADDRESS = prop.getProperty("hubaddress");
             }
             if (prop.getProperty("hubport") != null) {
                 HUB_SERVER_TCP_PORT = Integer.parseInt(prop.getProperty("hubport"));
@@ -1239,7 +1240,7 @@ public class Globals {
             log(Globals.class,
                     "Config", "Hub Connect: " + SERVER_HUB_CONNECT, Globals.LOG_TYPE_DATA);
             log(Globals.class,
-                    "Config", "Hub Address: " + HUB_SERVER_ADDRESS, Globals.LOG_TYPE_DATA);
+                    "Config", "Hub Address: " + SERVER_HUB_SERVER_ADDRESS, Globals.LOG_TYPE_DATA);
             log(Globals.class,
                     "Config", "Hub Port: " + HUB_SERVER_TCP_PORT, Globals.LOG_TYPE_DATA);
             log(Globals.class,

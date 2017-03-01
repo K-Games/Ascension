@@ -30,7 +30,7 @@ public class HubClient implements Runnable {
         }
 
         try {
-            InetAddress address = InetAddress.getByName(Globals.HUB_SERVER_ADDRESS);
+            InetAddress address = InetAddress.getByName(Globals.SERVER_HUB_SERVER_ADDRESS);
             client.connect(2000, address, Globals.HUB_SERVER_TCP_PORT);
             HubSender.sendServerInfo();
             Globals.log(HubClient.class, "Connected to Hub Server " + address, Globals.LOG_TYPE_DATA);
@@ -43,7 +43,7 @@ public class HubClient implements Runnable {
     public void run() {
         if (client == null || !client.isConnected()) {
             try {
-                Globals.log(HubClient.class, "Connecting to Hub Server " + InetAddress.getByName(Globals.HUB_SERVER_ADDRESS), Globals.LOG_TYPE_DATA);
+                Globals.log(HubClient.class, "Connecting to Hub Server " + InetAddress.getByName(Globals.SERVER_HUB_SERVER_ADDRESS), Globals.LOG_TYPE_DATA);
                 connect();
             } catch (UnknownHostException ex) {
                 Globals.logError(ex.toString(), ex);
