@@ -1479,7 +1479,7 @@ public class Player implements GameEntity, Callable<Player> {
         this.updateAnimState = false;
     }
 
-    public void sendData(final Player requestingPlayer) {
+    public byte[] getData() {
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 5 + Globals.PACKET_INT * 2];
         bytes[0] = Globals.DATA_PLAYER_GET_ALL;
         bytes[1] = this.key;
@@ -1497,7 +1497,7 @@ public class Player implements GameEntity, Callable<Player> {
             bytes[12] = this.frame;
         }
 
-        PacketSender.sendPlayer(bytes, requestingPlayer);
+        return bytes;
     }
 
     public byte[] getPosData() {

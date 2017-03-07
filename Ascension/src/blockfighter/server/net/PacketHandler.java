@@ -38,6 +38,17 @@ public class PacketHandler {
 
         final LogicModule room = rooms.get(roomIndex);
 
+        if (dataType == Globals.DATA_PLAYER_SET_MOVE
+                || dataType == Globals.DATA_PLAYER_USESKILL
+                || dataType == Globals.DATA_PLAYER_DISCONNECT
+                || dataType == Globals.DATA_PLAYER_EMOTE) {
+            final ConcurrentHashMap<Byte, Player> players = room.getRoomData().getPlayers();
+            final Player p = players.get(data[2]);
+            if (!validPlayerConnection(p, c)) {
+                return;
+            }
+        }
+
         switch (dataType) {
             case Globals.DATA_PLAYER_CREATE:
                 try {
@@ -179,10 +190,8 @@ public class PacketHandler {
     private static void receivePlayerDisconnect(final byte[] data, final LogicModule room, final Connection c) {
         final ConcurrentHashMap<Byte, Player> players = room.getRoomData().getPlayers();
         final Player p = players.get(data[2]);
-        if (p != null && p.getConnection() == c) {
-            Globals.log(PacketHandler.class, "DATA_PLAYER_DISCONNECT", "Disconnecting <" + p.getPlayerName() + "> Key: " + data[2], Globals.LOG_TYPE_DATA);
-            p.disconnect();
-        }
+        Globals.log(PacketHandler.class, "DATA_PLAYER_DISCONNECT", "Disconnecting <" + p.getPlayerName() + "> Key: " + data[2], Globals.LOG_TYPE_DATA);
+        p.disconnect();
     }
 
     private static void receivePing(final byte[] data, final LogicModule room, final Connection c) {
@@ -200,17 +209,11 @@ public class PacketHandler {
     private static void receivePlayerUseEmote(final byte[] data, final LogicModule room, final Connection c) {
         final ConcurrentHashMap<Byte, Player> players = room.getRoomData().getPlayers();
         Player p = players.get(data[2]);
-        if (p != null && p.getConnection() == c) {
-            p.sendEmote(data[3]);
-        }
+        p.sendEmote(data[3]);
     }
 
     private static void receivePlayerUseSkill(final byte[] data, final LogicModule room, final Connection c) {
-        final ConcurrentHashMap<Byte, Player> players = room.getRoomData().getPlayers();
-        Player p = players.get(data[2]);
-        if (p != null && p.getConnection() == c) {
-            room.queuePlayerUseSkill(data);
-        }
+        room.queuePlayerUseSkill(data);
     }
 
     private static void receivePlayerCreate(final byte[] data, final LogicModule room, final Connection c) {
@@ -382,20 +385,18 @@ public class PacketHandler {
 
     private static void receivePlayerGetAll(final byte[] data, final LogicModule room, final Connection c) {
         final ConcurrentHashMap<Byte, Player> players = room.getRoomData().getPlayers();
-        Player p = players.get(data[2]);
-        if (p != null && p.getConnection() == c) {
-            for (final Map.Entry<Byte, Player> pEntry : players.entrySet()) {
-                final Player player = pEntry.getValue();
-                player.sendData(p);
-            }
+        for (final Map.Entry<Byte, Player> pEntry : players.entrySet()) {
+            final Player player = pEntry.getValue();
+            PacketSender.sendConnection(player.getData(), c);
         }
     }
 
     private static void receivePlayerSetMove(final byte[] data, final LogicModule room, final Connection c) {
-        final ConcurrentHashMap<Byte, Player> players = room.getRoomData().getPlayers();
-        Player p = players.get(data[2]);
-        if (p != null && p.getConnection() == c) {
-            room.queuePlayerDirKeydown(data);
-        }
+        room.queuePlayerDirKeydown(data);
+    }
+
+    private static boolean validPlayerConnection(final Player p, final Connection c) {
+        // This prevents player control hijacking.
+        return p != null && p.getConnection() == c;
     }
 }
