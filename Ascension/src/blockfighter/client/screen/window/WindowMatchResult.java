@@ -12,6 +12,7 @@ import java.awt.Graphics2D;
 import java.awt.Polygon;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -37,6 +38,7 @@ public class WindowMatchResult extends Window {
     private long countdownStartTime = 0;
     private int secondsLeftBeforeMenu = 0;
     private float transparency = 0f;
+    private double translateY, deltaY;
 
     private Globals.VictoryStatus victoryStatus = Globals.VictoryStatus.LAST;
     private static final Rectangle2D.Double RESULT_BOARD = new Rectangle2D.Double(350, 250, 580, 200);
@@ -52,6 +54,8 @@ public class WindowMatchResult extends Window {
 
     public void startCountdown() {
         this.countdownStartTime = Core.getLogicModule().getTime();
+        this.translateY = -200;
+        this.deltaY = 5;
     }
 
     public void setVictoryStatus(Globals.VictoryStatus status) {
@@ -68,6 +72,8 @@ public class WindowMatchResult extends Window {
 
     @Override
     public void draw(Graphics2D g) {
+        final AffineTransform resetForm = g.getTransform();
+        g.translate(0, this.translateY);
         Composite reset = g.getComposite();
         g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, this.transparency));
         try {
@@ -118,6 +124,7 @@ public class WindowMatchResult extends Window {
             g.drawString(LEAVE_GAME_TEXT, (int) (RETURN_BUTTON.getCenterX() - g.getFontMetrics().stringWidth(LEAVE_GAME_TEXT) / 2), (int) (RETURN_BUTTON.getMaxY() - 15));
         } finally {
             g.setComposite(reset);
+            g.setTransform(resetForm);
         }
     }
 
@@ -175,5 +182,17 @@ public class WindowMatchResult extends Window {
         this.transparency = Globals.nsToMs(Core.getLogicModule().getTime() - this.countdownStartTime) / 1000f;
         this.transparency = (this.transparency > 1f) ? 1f : this.transparency;
         this.transparency = (this.transparency < 0f) ? 0f : this.transparency;
+
+        this.translateY += this.deltaY;
+        this.deltaY += 3;
+
+        if (this.translateY >= 0 && this.deltaY > 0) {
+            if (this.deltaY > 9) {
+                this.deltaY *= -0.5;
+            } else {
+                this.deltaY = 0;
+                this.translateY = 0;
+            }
+        }
     }
 }
