@@ -1011,8 +1011,8 @@ public class Player implements GameEntity, Callable<Player> {
     }
 
     private void updateStats() {
-        this.stats[Globals.STAT_ARMOR] = Globals
-                .calcArmor((int) (this.stats[Globals.STAT_DEFENSE] + this.bonusStats[Globals.STAT_DEFENSE]));
+        this.stats[Globals.STAT_ARMOUR] = Globals
+                .calcArmour((int) (this.stats[Globals.STAT_DEFENSE] + this.bonusStats[Globals.STAT_DEFENSE]));
         this.stats[Globals.STAT_REGEN] = Globals.calcRegen((int) (this.stats[Globals.STAT_SPIRIT] + this.bonusStats[Globals.STAT_SPIRIT]));
         double hpPercent = 1;
         if (this.stats[Globals.STAT_MAXHP] > 0) {
@@ -1031,8 +1031,8 @@ public class Player implements GameEntity, Callable<Player> {
         this.stats[Globals.STAT_CRITCHANCE] = this.stats[Globals.STAT_CRITCHANCE] + this.bonusStats[Globals.STAT_CRITCHANCE];
         this.stats[Globals.STAT_CRITDMG] = this.stats[Globals.STAT_CRITDMG] + this.bonusStats[Globals.STAT_CRITDMG];
         this.stats[Globals.STAT_REGEN] = this.stats[Globals.STAT_REGEN] + this.bonusStats[Globals.STAT_REGEN];
-        this.stats[Globals.STAT_ARMOR] = this.stats[Globals.STAT_ARMOR] + this.bonusStats[Globals.STAT_ARMOR];
-        this.stats[Globals.STAT_DAMAGEREDUCT] = Globals.calcReduction(this.stats[Globals.STAT_ARMOR]);
+        this.stats[Globals.STAT_ARMOUR] = this.stats[Globals.STAT_ARMOUR] + this.bonusStats[Globals.STAT_ARMOUR];
+        this.stats[Globals.STAT_DAMAGEREDUCT] = Globals.calcReduction(this.stats[Globals.STAT_ARMOUR]);
         this.stats[Globals.STAT_MAXEXP] = Globals.calcEXPtoNxtLvl(this.stats[Globals.STAT_LEVEL]);
     }
 

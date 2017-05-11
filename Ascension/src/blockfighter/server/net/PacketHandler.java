@@ -265,7 +265,7 @@ public class PacketHandler {
         newPlayer.setBonusStat(Globals.STAT_SPIRIT, Globals.bytesToInt(Arrays.copyOfRange(data, pos, pos + Globals.PACKET_INT)));
         pos += Globals.PACKET_INT;
 
-        newPlayer.setBonusStat(Globals.STAT_ARMOR, Globals.bytesToInt(Arrays.copyOfRange(data, pos, pos + Globals.PACKET_INT)));
+        newPlayer.setBonusStat(Globals.STAT_ARMOUR, Globals.bytesToInt(Arrays.copyOfRange(data, pos, pos + Globals.PACKET_INT)));
         pos += Globals.PACKET_INT;
         newPlayer.setBonusStat(Globals.STAT_REGEN, Globals.bytesToInt(Arrays.copyOfRange(data, pos, pos + Globals.PACKET_INT)) / 10D);
         pos += Globals.PACKET_INT;

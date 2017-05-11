@@ -29,7 +29,7 @@ public class ItemEquip implements Item {
     private final static double UPGRADE_CRITCHANCE = 0.001, // 0.1%
             UPGRADE_CRITDMG = 0.02, // 2%
             UPGRADE_REGEN = 10,
-            UPGRADE_ARMOR = 18,
+            UPGRADE_ARMOUR = 18,
             UPGRADE_MULT = 0.0,
             UPGRADE_STAT_FLATBONUS = 1.25;
 
@@ -37,7 +37,7 @@ public class ItemEquip implements Item {
             NEWSTAT_CRITCHANCE = 0.001,
             NEWSTAT_CRITDMG = 0.02,
             NEWSTAT_REGEN = 10,
-            NEWSTAT_ARMOR = 18;
+            NEWSTAT_ARMOUR = 18;
 
     private final static HashMap<Byte, String> ITEM_TYPENAME = new HashMap<>(13);
     private final static HashMap<Integer, String> ITEM_NAMES;
@@ -340,8 +340,8 @@ public class ItemEquip implements Item {
         return (level + Globals.rng(4)) * NEWSTAT_REGEN;
     }
 
-    public static double newItemArmor(final double level) {
-        return (level + Globals.rng(4)) * NEWSTAT_ARMOR;
+    public static double newItemArmour(final double level) {
+        return (level + Globals.rng(4)) * NEWSTAT_ARMOUR;
     }
 
     public static double[] newEquipStat(final int ic, final double level) {
@@ -392,7 +392,7 @@ public class ItemEquip implements Item {
                 break;
             case Globals.ITEM_RING:
                 newStats[Globals.STAT_CRITCHANCE] = newItemCritChance(level);
-                newStats[Globals.STAT_ARMOR] = newItemArmor(level);
+                newStats[Globals.STAT_ARMOUR] = newItemArmour(level);
                 break;
         }
         newStats[Globals.STAT_POWER] = Math.round(newStats[Globals.STAT_POWER]);
@@ -432,7 +432,7 @@ public class ItemEquip implements Item {
         if (getTotalStats()[Globals.STAT_REGEN] > 0) {
             boxHeight += 20;
         }
-        if (getTotalStats()[Globals.STAT_ARMOR] > 0) {
+        if (getTotalStats()[Globals.STAT_ARMOUR] > 0) {
             boxHeight += 20;
         }
         if (getTotalStats()[Globals.STAT_CRITDMG] > 0) {
@@ -625,9 +625,9 @@ public class ItemEquip implements Item {
             this.totalStats[Globals.STAT_CRITDMG] = this.baseStats[Globals.STAT_CRITDMG] + (0.04 * (this.bonusMult / 0.05))
                     + this.upgrades * UPGRADE_CRITDMG;
         }
-        if (this.baseStats[Globals.STAT_ARMOR] > 0) {
-            this.totalStats[Globals.STAT_ARMOR] = Math
-                    .round((this.baseStats[Globals.STAT_ARMOR] + this.upgrades * UPGRADE_ARMOR) * (1 + this.bonusMult / 2D));
+        if (this.baseStats[Globals.STAT_ARMOUR] > 0) {
+            this.totalStats[Globals.STAT_ARMOUR] = Math
+                    .round((this.baseStats[Globals.STAT_ARMOUR] + this.upgrades * UPGRADE_ARMOUR) * (1 + this.bonusMult / 2D));
         }
         if (this.baseStats[Globals.STAT_REGEN] > 0) {
             this.totalStats[Globals.STAT_REGEN] = Math

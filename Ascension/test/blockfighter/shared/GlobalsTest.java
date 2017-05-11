@@ -28,8 +28,8 @@ public class GlobalsTest {
             assertNotEquals(expResult, result);
         }
 
-        byte statID = Globals.STAT_ARMOR;
-        expResult = "Armor";
+        byte statID = Globals.STAT_ARMOUR;
+        expResult = "Armour";
         result = Globals.getStatName(statID);
         assertEquals(expResult, result);
 
@@ -297,10 +297,10 @@ public class GlobalsTest {
     }
 
     @Test
-    public void testCalcArmor() {
+    public void testCalcArmour() {
         double defense = Globals.rng(1000000);
-        double expResult = defense * Globals.ARMOR_MULT;
-        double result = Globals.calcArmor(defense);
+        double expResult = defense * Globals.ARMOUR_MULT;
+        double result = Globals.calcArmour(defense);
 
         assertEquals(expResult, result, 0.0);
     }
@@ -361,9 +361,9 @@ public class GlobalsTest {
 
     @Test
     public void testCalcReduction() {
-        double armor = Globals.rng(1000000) / Globals.rng(200) * 1D;
-        double expResult = 1 - (armor / (armor + Globals.REDUCT_CONST));
-        double result = Globals.calcReduction(armor);
+        double armour = Globals.rng(1000000) / Globals.rng(200) * 1D;
+        double expResult = 1 - (armour / (armour + Globals.REDUCT_CONST));
+        double result = Globals.calcReduction(armour);
 
         assertEquals(expResult, result, 0.0);
     }

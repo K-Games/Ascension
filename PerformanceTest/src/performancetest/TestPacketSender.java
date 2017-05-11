@@ -78,7 +78,7 @@ public class TestPacketSender {
         System.arraycopy(temp, 0, bytes, pos, temp.length);
         pos += temp.length;
 
-        temp = Globals.intToBytes((int) stats[Globals.STAT_ARMOR]);
+        temp = Globals.intToBytes((int) stats[Globals.STAT_ARMOUR]);
         System.arraycopy(temp, 0, bytes, pos, temp.length);
         pos += temp.length;
 

@@ -183,7 +183,7 @@ public class SaveDataWriterImpl extends SaveDataWriter {
                 Globals.STAT_POWER,
                 Globals.STAT_DEFENSE,
                 Globals.STAT_SPIRIT,
-                Globals.STAT_ARMOR,
+                Globals.STAT_ARMOUR,
                 Globals.STAT_REGEN,
                 Globals.STAT_CRITDMG,
                 Globals.STAT_CRITCHANCE};

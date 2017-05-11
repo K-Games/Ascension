@@ -70,7 +70,7 @@ public class SkillPassiveStatic extends SkillPassive {
         if (Globals.rng(100) + 1 <= 20) {
             double baseValue = getBaseValue();
             double multValue = getMultValue();
-            int damage = (int) (player.getStats()[Globals.STAT_ARMOR] * (baseValue + multValue * player.getSkillLevel(Globals.PASSIVE_STATIC)));
+            int damage = (int) (player.getStats()[Globals.STAT_ARMOUR] * (baseValue + multValue * player.getSkillLevel(Globals.PASSIVE_STATIC)));
 
             if (this.logic.getRoomData().getMap().isPvP()) {
                 ArrayList<Player> playersInRange = this.logic.getRoomData().getPlayersInRange(player, radius);
