@@ -46,6 +46,7 @@ import org.apache.commons.io.FileUtils;
 
 public class SaveData {
 
+    private static final int LEGACY_SAVE_DATA_LENGTH = 45485;
     private static final int SAVE_VERSION_0232 = 232;
     private static final int SAVE_VERSION_0231 = 231;
     private static final int CURRENT_SAVE_VERSION = SAVE_VERSION_0232;
@@ -356,17 +357,7 @@ public class SaveData {
 
     public static SaveData readData(final byte saveNum) {
         final SaveData c = new SaveData("", saveNum);
-        final int legacyLength = Globals.MAX_NAME_LENGTH //Name in UTF-8 Character
-                + Long.BYTES * 2 //UUID
-                + Integer.BYTES * 5 //Main stats
-                + Integer.BYTES * c.equipment.length * 11
-                + Integer.BYTES * c.inventory.length * c.inventory[0].length * 11
-                + Integer.BYTES * c.upgrades.length * 2
-                + Byte.BYTES * c.skills.length
-                + Byte.BYTES * c.hotkeys.length
-                + Integer.BYTES * 16 //Base Keybinds
-                + Integer.BYTES //EXP
-                + Integer.BYTES * Globals.Emotes.values().length;
+        final int legacyLength = LEGACY_SAVE_DATA_LENGTH;
         byte[] data;
         try {
             data = FileUtils.readFileToByteArray(new File(saveNum + ".tcdat"));
