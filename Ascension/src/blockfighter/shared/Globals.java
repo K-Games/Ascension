@@ -567,7 +567,7 @@ public class Globals {
 
     public final static double HP_BASE = 3000, // PvE = 100
             HP_MULT = 170, // PvE = 30
-            REDUCT_CONST = 175,
+            REDUCT_CONST = 300,
             ARMOR_MULT = 6,
             REGEN_HP_PERCENT = 0.02,
             REGEN_MULT = REGEN_HP_PERCENT * HP_MULT,

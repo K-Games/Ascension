@@ -7,6 +7,8 @@
 ### Gameplay Changes
 
 #### Stats
+* Armor
+	* Damage Reduction from Armor lowered from Armor/(Armor + 175) to Armor/(Armor + 300)
 
 #### Equipment Stats
 
