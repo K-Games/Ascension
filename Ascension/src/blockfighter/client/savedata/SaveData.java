@@ -38,7 +38,6 @@ import blockfighter.shared.Globals;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.UUID;
@@ -47,14 +46,18 @@ import org.apache.commons.io.FileUtils;
 public class SaveData {
 
     private static final int LEGACY_SAVE_DATA_LENGTH = 45485;
-    private static final int SAVE_VERSION_0232 = 232;
-    private static final int SAVE_VERSION_0231 = 231;
+    public static final int SAVE_VERSION_0232 = 232;
+    public static final int SAVE_VERSION_0231 = 231;
     private static final int CURRENT_SAVE_VERSION = SAVE_VERSION_0232;
     private static final HashMap<Integer, Class<? extends SaveDataReader>> SAVE_READERS = new HashMap<>();
+    private static final HashMap<Integer, Class<? extends SaveDataWriter>> SAVE_WRITERS = new HashMap<>();
 
     static {
         SAVE_READERS.put(SAVE_VERSION_0232, blockfighter.client.savedata.ver_0_23_2.SaveDataReaderImpl.class);
         SAVE_READERS.put(SAVE_VERSION_0231, blockfighter.client.savedata.ver_0_23_1.SaveDataReaderImpl.class);
+
+        SAVE_WRITERS.put(SAVE_VERSION_0232, blockfighter.client.savedata.ver_0_23_2.SaveDataWriterImpl.class);
+        SAVE_WRITERS.put(SAVE_VERSION_0231, blockfighter.client.savedata.ver_0_23_1.SaveDataWriterImpl.class);
     }
 
     private final double[] baseStats = new double[Globals.NUM_STATS],
@@ -169,190 +172,15 @@ public class SaveData {
     }
 
     public static void saveData(final byte saveNum, final SaveData c) {
-        final byte[] data = new byte[Integer.BYTES //Save Version Number
-                + Globals.MAX_NAME_LENGTH //Name in UTF-8 Character
-                + Long.BYTES * 2 //UUID
-                + Integer.BYTES * 6 //Main stats
-                + Integer.BYTES * c.equipment.length * 11
-                + Integer.BYTES * c.inventory.length * c.inventory[0].length * 11
-                + Integer.BYTES * c.upgrades.length * 2
-                + Byte.BYTES * c.skills.length
-                + Byte.BYTES * c.hotkeys.length
-                + Integer.BYTES * 16 //Base Keybinds
-                + Integer.BYTES * Globals.Emotes.values().length
-                + Integer.BYTES // Scoreboard keybind
-                ];
-
-        byte[] temp;
-
-        int pos = 0;
-        temp = Globals.intToBytes(CURRENT_SAVE_VERSION);
-        System.arraycopy(temp, 0, data, pos, temp.length);
-        pos += temp.length;
-
-        temp = c.name.getBytes(StandardCharsets.UTF_8);
-        System.arraycopy(temp, 0, data, pos, temp.length);
-        pos += Globals.MAX_NAME_LENGTH;
-
-        temp = Globals.longToBytes(c.getUniqueID().getLeastSignificantBits());
-        System.arraycopy(temp, 0, data, pos, temp.length);
-        pos += temp.length;
-
-        temp = Globals.longToBytes(c.getUniqueID().getMostSignificantBits());
-        System.arraycopy(temp, 0, data, pos, temp.length);
-        pos += temp.length;
-
-        final int[] statIDs = {Globals.STAT_LEVEL,
-            Globals.STAT_POWER,
-            Globals.STAT_DEFENSE,
-            Globals.STAT_SPIRIT,
-            Globals.STAT_SKILLPOINTS,
-            Globals.STAT_EXP};
-
-        for (final int i : statIDs) {
-            temp = Globals.intToBytes((int) c.baseStats[i]);
-            System.arraycopy(temp, 0, data, pos, temp.length);
-            pos += temp.length;
-        }
-
-        pos = saveItems(data, c.equipment, pos);
-        for (final ItemEquip[] e : c.inventory) {
-            pos = saveItems(data, e, pos);
-        }
-        pos = saveItems(data, c.upgrades, pos);
-        pos = saveSkills(data, c, pos);
-        pos = saveHotkeys(data, c, pos);
-        pos = saveKeyBind(data, c.getKeyBind(), pos);
-        pos = saveEmoteKeyBind(data, c.getKeyBind(), pos);
-        saveScoreboardKeyBind(data, c.getKeyBind(), pos);
-
+        SaveDataWriter writer;
         try {
-            FileUtils.writeByteArrayToFile(new File(saveNum + ".tcdat"), data);
-        } catch (final IOException ex) {
-            Globals.logError(ex.toString(), ex);
+            Globals.log(SaveData.class, "Grabbing Save Data Writer " + SAVE_READERS.get(CURRENT_SAVE_VERSION).getName(), Globals.LOG_TYPE_DATA);
+            writer = SAVE_WRITERS.get(CURRENT_SAVE_VERSION).newInstance();
+        } catch (InstantiationException | IllegalAccessException ex) {
+            Globals.logError("Failed to grab Save Data Writer " + SAVE_READERS.get(CURRENT_SAVE_VERSION).getName(), ex);
+            return;
         }
-    }
-
-    private static int saveKeyBind(final byte[] data, final int[] keybind, final int pos) {
-        int nextPos = pos;
-        for (int i = 0; i < 16; i++) {
-            byte[] temp;
-            temp = Globals.intToBytes(keybind[i]);
-            System.arraycopy(temp, 0, data, nextPos, temp.length);
-            nextPos += temp.length;
-        }
-        return nextPos;
-    }
-
-    private static int saveEmoteKeyBind(final byte[] data, final int[] keybind, final int pos) {
-        int nextPos = pos;
-        for (int i = 16; i < 16 + Globals.Emotes.values().length; i++) {
-            byte[] temp;
-            temp = Globals.intToBytes(keybind[i]);
-            System.arraycopy(temp, 0, data, nextPos, temp.length);
-            nextPos += temp.length;
-        }
-        return nextPos;
-    }
-
-    private static int saveScoreboardKeyBind(final byte[] data, final int[] keybind, final int pos) {
-        int nextPos = pos;
-        byte[] temp = Globals.intToBytes(keybind[Globals.KEYBIND_SCOREBOARD]);
-        System.arraycopy(temp, 0, data, nextPos, temp.length);
-        nextPos += temp.length;
-        return nextPos;
-    }
-
-    private static int saveItems(final byte[] data, final ItemUpgrade[] e, final int pos) {
-        int nextPos = pos;
-        for (final ItemUpgrade item : e) {
-            if (item == null) {
-                nextPos += 2 * 4;
-                continue;
-            }
-            byte[] temp;
-
-            temp = Globals.intToBytes(item.getItemCode());
-            System.arraycopy(temp, 0, data, nextPos, temp.length);
-            nextPos += temp.length;
-
-            temp = Globals.intToBytes(item.getLevel());
-            System.arraycopy(temp, 0, data, nextPos, temp.length);
-            nextPos += temp.length;
-        }
-        return nextPos;
-    }
-
-    private static int saveSkills(final byte[] data, final SaveData c, final int pos) {
-        int nextPos = pos;
-        for (int i = 0; i < Globals.NUM_SKILLS; i++) {
-            data[nextPos] = c.getSkills()[i].getLevel();
-            nextPos += 1;
-        }
-        return nextPos;
-    }
-
-    private static int saveHotkeys(final byte[] data, final SaveData c, final int pos) {
-        int nextPos = pos;
-        for (final Skill hotkey : c.getHotkeys()) {
-            if (hotkey == null) {
-                data[nextPos] = -1;
-            } else {
-                data[nextPos] = hotkey.getSkillCode();
-            }
-            nextPos += 1;
-        }
-        return nextPos;
-    }
-
-    private static int saveItems(final byte[] data, final ItemEquip[] e, final int pos) {
-        int nextPos = pos;
-        for (final ItemEquip item : e) {
-            if (item == null) {
-                nextPos += 11 * 4;
-                continue;
-            }
-            byte[] temp;
-            temp = Globals.intToBytes(item.getItemCode());
-            System.arraycopy(temp, 0, data, nextPos, temp.length);
-            nextPos += temp.length;
-
-            final int[] statIDs = {Globals.STAT_LEVEL,
-                Globals.STAT_POWER,
-                Globals.STAT_DEFENSE,
-                Globals.STAT_SPIRIT,
-                Globals.STAT_ARMOR,
-                Globals.STAT_REGEN,
-                Globals.STAT_CRITDMG,
-                Globals.STAT_CRITCHANCE};
-
-            for (final int i : statIDs) {
-                switch (i) {
-                    case Globals.STAT_REGEN:
-                        temp = Globals.intToBytes((int) (item.getBaseStats()[i] * 10));
-                        break;
-                    case Globals.STAT_CRITDMG:
-                        temp = Globals.intToBytes((int) (item.getBaseStats()[i] * 10000));
-                        break;
-                    case Globals.STAT_CRITCHANCE:
-                        temp = Globals.intToBytes((int) (item.getBaseStats()[i] * 10000));
-                        break;
-                    default:
-                        temp = Globals.intToBytes((int) item.getBaseStats()[i]);
-                }
-                System.arraycopy(temp, 0, data, nextPos, temp.length);
-                nextPos += temp.length;
-            }
-
-            temp = Globals.intToBytes(item.getUpgrades());
-            System.arraycopy(temp, 0, data, nextPos, temp.length);
-            nextPos += temp.length;
-
-            temp = Globals.intToBytes((int) (item.getBonusMult() * 100));
-            System.arraycopy(temp, 0, data, nextPos, temp.length);
-            nextPos += temp.length;
-        }
-        return nextPos;
+        writer.writeSaveData(saveNum, c);
     }
 
     public static SaveData readData(final byte saveNum) {
@@ -374,13 +202,15 @@ public class SaveData {
 
         SaveDataReader reader;
         try {
+            Globals.log(SaveData.class, "Grabbing Save Data Reader " + SAVE_READERS.get(saveVersion).getName(), Globals.LOG_TYPE_DATA);
             reader = SAVE_READERS.get(saveVersion).newInstance();
-            Globals.log(SaveData.class, "Reading Save Data with " + SAVE_READERS.get(saveVersion).getName(), Globals.LOG_TYPE_DATA);
         } catch (InstantiationException | IllegalAccessException ex) {
+            Globals.logError("Failed to grab Save Data Reader " + SAVE_READERS.get(CURRENT_SAVE_VERSION).getName(), ex);
             return null;
         }
 
-        return reader.readData(c, data);
+        Globals.log(SaveData.class, "Reading Save Data with " + reader.getClass().getName(), Globals.LOG_TYPE_DATA);
+        return reader.readSaveData(c, data);
     }
 
     public Skill[] getHotkeys() {

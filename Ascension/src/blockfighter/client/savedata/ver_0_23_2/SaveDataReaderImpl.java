@@ -2,15 +2,14 @@ package blockfighter.client.savedata.ver_0_23_2;
 
 import blockfighter.client.entities.items.ItemEquip;
 import blockfighter.client.savedata.SaveData;
-import blockfighter.client.savedata.SaveDataReader;
 import blockfighter.shared.Globals;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
-public class SaveDataReaderImpl extends SaveDataReader {
+public class SaveDataReaderImpl extends blockfighter.client.savedata.ver_0_23_1.SaveDataReaderImpl {
 
     @Override
-    public SaveData readData(final SaveData c, final byte[] data) {
+    public SaveData readSaveData(final SaveData c, final byte[] data) {
         byte[] temp;
 
         int pos = 0;
