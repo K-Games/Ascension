@@ -10,21 +10,28 @@ import org.apache.commons.io.FileUtils;
 
 public class SaveDataWriterImpl extends blockfighter.client.savedata.ver_0_23_1.SaveDataWriterImpl {
 
+    private static final int NUM_EQUIP_SLOTS = 11;
+    private static final int NUM_INVENTORY_TABS = 10;
+    private static final int NUM_INVENTORY_SLOTS = 100;
+    private static final int NUM_UPGRADE_INV_SLOTS = 100;
+    private static final int NUM_SKILLS = 30;
+    private static final int NUM_HOTKEYS = 12;
+    private static final int NUM_KEYBINDS = 16;
+    private static final int NUM_EMOTES = 10;
+    private static final int NUM_STATS = 6;
+
     @Override
     public void writeSaveData(final byte saveNum, final SaveData c) {
         final byte[] data = new byte[Integer.BYTES //Save Version Number
                 + Globals.MAX_NAME_LENGTH //Name in UTF-8 Character
                 + Long.BYTES * 2 //UUID
-                + Integer.BYTES * 6 //Main stats
-                + Integer.BYTES * c.getEquip().length * 11
-                + Integer.BYTES * c.getInventory().length * c.getInventory()[0].length * 11
-                + Integer.BYTES * c.getUpgrades().length * 2
-                + Byte.BYTES * c.getSkills().length
-                + Byte.BYTES * c.getHotkeys().length
-                + Integer.BYTES * 16 //Base Keybinds
-                + Integer.BYTES * Globals.Emotes.values().length
-                + Integer.BYTES // Scoreboard keybind
-                ];
+                + Integer.BYTES * NUM_STATS //Main stats
+                + Integer.BYTES * NUM_EQUIP_SLOTS * 11
+                + Integer.BYTES * NUM_INVENTORY_TABS * NUM_INVENTORY_SLOTS * 11
+                + Integer.BYTES * NUM_UPGRADE_INV_SLOTS * 2
+                + Byte.BYTES * NUM_SKILLS
+                + Byte.BYTES * NUM_HOTKEYS
+                + Integer.BYTES * (NUM_KEYBINDS + NUM_EMOTES + 1)];
 
         byte[] temp;
 
@@ -58,14 +65,14 @@ public class SaveDataWriterImpl extends blockfighter.client.savedata.ver_0_23_1.
             pos += temp.length;
         }
 
-        pos = saveItems(data, c.getEquip(), pos);
+        pos = saveItems(data, c.getEquip(), pos, NUM_EQUIP_SLOTS);
         for (final ItemEquip[] e : c.getInventory()) {
-            pos = saveItems(data, e, pos);
+            pos = saveItems(data, e, pos, NUM_INVENTORY_SLOTS);
         }
-        pos = saveItems(data, c.getUpgrades(), pos);
-        pos = saveSkills(data, c, pos);
-        pos = saveHotkeys(data, c, pos);
-        pos = saveKeyBind(data, c.getKeyBind(), pos);
+        pos = saveItems(data, c.getUpgrades(), pos, NUM_UPGRADE_INV_SLOTS);
+        pos = saveSkills(data, c, pos, NUM_SKILLS);
+        pos = saveHotkeys(data, c, pos, NUM_HOTKEYS);
+        pos = saveKeyBind(data, c.getKeyBind(), pos, NUM_KEYBINDS);
         pos = saveEmoteKeyBind(data, c.getKeyBind(), pos);
         saveScoreboardKeyBind(data, c.getKeyBind(), pos);
 
