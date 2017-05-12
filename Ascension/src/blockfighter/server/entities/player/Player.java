@@ -973,8 +973,8 @@ public class Player implements GameEntity, Callable<Player> {
         double totalCritChance = this.stats[Globals.STAT_CRITCHANCE] + bonusCritChance;
         // Dual Sword Passive
         if (hasSkill(Globals.PASSIVE_DUALSWORD)
-                && Items.getItemType(this.equips[Globals.ITEM_WEAPON]) == Globals.ITEM_SWORD
-                && Items.getItemType(this.equips[Globals.ITEM_OFFHAND]) == Globals.ITEM_SWORD) {
+                && Items.getItemType(this.equips[Globals.EQUIP_WEAPON]) == Globals.ITEM_SWORD
+                && Items.getItemType(this.equips[Globals.EQUIP_WEAPON]) == Globals.ITEM_SWORD) {
             // Check if has Dual Sword passive AND Mainhand/Offhand are both Swords.
             double baseValue = getSkill(Globals.PASSIVE_DUALSWORD).getBaseValue();
             double multValue = getSkill(Globals.PASSIVE_DUALSWORD).getMultValue();

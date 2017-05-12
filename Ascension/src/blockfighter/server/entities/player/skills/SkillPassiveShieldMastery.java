@@ -80,7 +80,7 @@ public class SkillPassiveShieldMastery extends SkillPassive {
 
     @Override
     public boolean canCast(final Player player) {
-        return Items.getItemType(player.getEquips()[Globals.ITEM_WEAPON]) == Globals.ITEM_SWORD
-                && Items.getItemType(player.getEquips()[Globals.ITEM_OFFHAND]) == Globals.ITEM_SHIELD;
+        return Items.getItemType(player.getEquips()[Globals.EQUIP_WEAPON]) == Globals.ITEM_SWORD
+                && Items.getItemType(player.getEquips()[Globals.EQUIP_OFFHAND]) == Globals.ITEM_SHIELD;
     }
 }

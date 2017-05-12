@@ -29,7 +29,7 @@ public class SkillUtilityAdrenaline extends Skill {
     private static final long MAX_COOLDOWN;
 
     private static final double BASE_VALUE, MULT_VALUE;
-    private static final byte REQ_EQUIP_SLOT = Globals.ITEM_OFFHAND;
+    private static final byte REQ_EQUIP_SLOT = Globals.EQUIP_OFFHAND;
     private static final byte PLAYER_STATE = Player.PLAYER_STATE_UTILITY_ADRENALINE;
     private static final int SKILL_DURATION = 350;
 

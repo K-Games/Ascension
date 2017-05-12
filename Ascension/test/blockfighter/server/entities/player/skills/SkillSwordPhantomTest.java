@@ -48,7 +48,7 @@ public class SkillSwordPhantomTest {
 
     @Test
     public void testGetReqEquipSlot() {
-        byte expResult = Globals.ITEM_WEAPON;
+        byte expResult = Globals.EQUIP_WEAPON;
         byte result = INSTANCE.getReqEquipSlot();
         assertEquals(expResult, result);
     }

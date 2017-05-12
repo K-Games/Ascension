@@ -27,7 +27,7 @@ public class SkillSwordVorpal extends Skill {
     private static final long MAX_COOLDOWN;
 
     private static final double BASE_VALUE, MULT_VALUE;
-    private static final byte REQ_EQUIP_SLOT = Globals.ITEM_WEAPON;
+    private static final byte REQ_EQUIP_SLOT = Globals.EQUIP_WEAPON;
     private static final byte PLAYER_STATE = Player.PLAYER_STATE_SWORD_VORPAL;
     private static final int SKILL_DURATION = 400;
 
