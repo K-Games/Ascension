@@ -5,17 +5,8 @@ import blockfighter.shared.Globals;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Listener;
 import java.io.IOException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
 public class TestGameClient implements Runnable {
-
-    final static ExecutorService CLIENT_THREADS = Executors.newFixedThreadPool(20, new BasicThreadFactory.Builder()
-            .namingPattern("ClientScheduler-%d")
-            .daemon(true)
-            .priority(Thread.NORM_PRIORITY)
-            .build());
 
     private Client client;
     private TestPacketReceiver receiver;

@@ -1,5 +1,6 @@
 package blockfighter.server.net;
 
+import blockfighter.server.Core;
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.player.Player;
 import blockfighter.shared.Globals;
@@ -9,19 +10,10 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
 public class PacketSender implements Runnable {
 
     private static final ConcurrentHashMap<Connection, ConcurrentLinkedQueue<byte[]>> CONN_PACKET_BATCH = new ConcurrentHashMap<>();
-    private static final ExecutorService PACKETSENDER_THREAD_POOL = Executors.newFixedThreadPool(Globals.SERVER_PACKETSENDER_THREADS,
-            new BasicThreadFactory.Builder()
-                    .namingPattern("Packet-Sender-%d")
-                    .daemon(true)
-                    .priority(Thread.NORM_PRIORITY)
-                    .build());
 
     public static void sendParticle(final LogicModule room, final byte particleID, final double x, final double y, final byte facing) {
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT * 2];
@@ -87,7 +79,7 @@ public class PacketSender implements Runnable {
     }
 
     public static void sendConnection(final byte[] data, final Connection c) {
-        PACKETSENDER_THREAD_POOL.execute(() -> {
+        Core.SHARED_THREADPOOL.execute(() -> {
             try {
                 synchronized (c) {
                     CONN_PACKET_BATCH.putIfAbsent(c, new ConcurrentLinkedQueue<>());
@@ -127,7 +119,7 @@ public class PacketSender implements Runnable {
                 synchronized (c) {
                     CONN_PACKET_BATCH.remove(c);
                 }
-                PACKETSENDER_THREAD_POOL.execute(() -> {
+                Core.SHARED_THREADPOOL.execute(() -> {
                     while (!batch.isEmpty()) {
                         sendData(c, splitBatchData(batch));
                     }

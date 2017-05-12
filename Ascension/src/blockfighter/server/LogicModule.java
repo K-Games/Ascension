@@ -12,11 +12,8 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledFuture;
-import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
 public class LogicModule implements Runnable {
 
@@ -36,13 +33,6 @@ public class LogicModule implements Runnable {
     private long lastSendPingTime = 0;
     private final long matchStartTime;
     private Player winningPlayer = null;
-
-    private static final ExecutorService LOGIC_THREAD_POOL = Executors.newFixedThreadPool(Globals.SERVER_LOGIC_THREADS,
-            new BasicThreadFactory.Builder()
-                    .namingPattern("Logic-Processor-%d")
-                    .daemon(true)
-                    .priority(Thread.NORM_PRIORITY)
-                    .build());
 
     public LogicModule(final byte roomIndex, final byte minLevel, final byte maxLevel) {
         this.room = new RoomData(roomIndex, minLevel, maxLevel);
@@ -216,7 +206,7 @@ public class LogicModule implements Runnable {
     private void updateMobs() {
         LinkedList<Future<Mob>> futures = new LinkedList<>();
         for (final Map.Entry<Integer, Mob> mob : this.room.getMobs().entrySet()) {
-            futures.add(LOGIC_THREAD_POOL.submit(mob.getValue()));
+            futures.add(Core.SHARED_THREADPOOL.submit(mob.getValue()));
         }
 
         for (Future<Mob> task : futures) {
@@ -244,7 +234,7 @@ public class LogicModule implements Runnable {
         }
 
         for (final Map.Entry<Byte, Player> player : players.entrySet()) {
-            futures.add(LOGIC_THREAD_POOL.submit(player.getValue()));
+            futures.add(Core.SHARED_THREADPOOL.submit(player.getValue()));
         }
 
         for (Future<Player> task : futures) {
@@ -269,7 +259,7 @@ public class LogicModule implements Runnable {
         }
 
         if (posDatas.size() > 0) {
-            LOGIC_THREAD_POOL.execute(() -> {
+            Core.SHARED_THREADPOOL.execute(() -> {
                 final int maxPosCount = 50;
                 while (!posDatas.isEmpty()) {
                     int packetSize = (posDatas.size() >= maxPosCount) ? maxPosCount : posDatas.size();
@@ -296,7 +286,7 @@ public class LogicModule implements Runnable {
 
         LinkedList<Future<Projectile>> futures = new LinkedList<>();
         for (final Map.Entry<Integer, Projectile> p : projectiles.entrySet()) {
-            futures.add(LOGIC_THREAD_POOL.submit(p.getValue()));
+            futures.add(Core.SHARED_THREADPOOL.submit(p.getValue()));
         }
 
         for (Future<Projectile> task : futures) {
@@ -347,7 +337,7 @@ public class LogicModule implements Runnable {
         final ConcurrentHashMap<Integer, Mob> mobs = this.room.getMobs();
         final ConcurrentHashMap<Integer, Projectile> projectiles = this.room.getProj();
 
-        LOGIC_THREAD_POOL.execute(() -> {
+        Core.SHARED_THREADPOOL.execute(() -> {
             try {
                 while (!this.playAddQueue.isEmpty()) {
                     final Player newPlayer = this.playAddQueue.poll();
@@ -360,7 +350,7 @@ public class LogicModule implements Runnable {
             }
         });
 
-        LOGIC_THREAD_POOL.execute(() -> {
+        Core.SHARED_THREADPOOL.execute(() -> {
             try {
                 while (!this.mobAddQueue.isEmpty()) {
                     final Mob p = this.mobAddQueue.poll();
@@ -384,7 +374,7 @@ public class LogicModule implements Runnable {
                 this.projEffectQueue.clear();
             }
         } else {
-            LOGIC_THREAD_POOL.execute(() -> {
+            Core.SHARED_THREADPOOL.execute(() -> {
                 try {
                     while (!this.playDirKeydownQueue.isEmpty()) {
                         final byte[] data = this.playDirKeydownQueue.poll();
@@ -400,7 +390,7 @@ public class LogicModule implements Runnable {
                 }
             });
 
-            LOGIC_THREAD_POOL.execute(() -> {
+            Core.SHARED_THREADPOOL.execute(() -> {
                 try {
                     while (!this.playUseSkillQueue.isEmpty()) {
                         final byte[] data = this.playUseSkillQueue.poll();
@@ -416,7 +406,7 @@ public class LogicModule implements Runnable {
                 }
             });
 
-            LOGIC_THREAD_POOL.execute(() -> {
+            Core.SHARED_THREADPOOL.execute(() -> {
                 try {
                     while (!this.projEffectQueue.isEmpty()) {
                         final Projectile proj = this.projEffectQueue.poll();
@@ -429,7 +419,7 @@ public class LogicModule implements Runnable {
                 }
             });
 
-            LOGIC_THREAD_POOL.execute(() -> {
+            Core.SHARED_THREADPOOL.execute(() -> {
                 try {
                     while (!this.projAddQueue.isEmpty()) {
                         final Projectile p = this.projAddQueue.poll();

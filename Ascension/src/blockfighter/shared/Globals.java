@@ -751,8 +751,7 @@ public class Globals {
     public static byte SERVER_MAX_ROOM_PLAYERS = 10;
     public static int SERVER_PLAYER_MAX_IDLE = 120000;
     public static int SERVER_ROOM_MAX_ILDE = 2000;
-    public static byte SERVER_LOGIC_THREADS = 3;
-    public static byte SERVER_PACKETSENDER_THREADS = 5;
+    public static int SERVER_SHARED_THREADS = 3;
     public static int SERVER_MAX_ROOMS = 10;
     public static boolean SERVER_HUB_CONNECT = false;
     public static int SERVER_WIN_KILL_COUNT = 30;
@@ -1181,11 +1180,8 @@ public class Globals {
             if (prop.getProperty("maxpackets") != null) {
                 PACKET_MAX_PER_CON = Integer.parseInt(prop.getProperty("maxpackets"));
             }
-            if (prop.getProperty("logicthreads") != null) {
-                SERVER_LOGIC_THREADS = Byte.parseByte(prop.getProperty("logicthreads"));
-            }
-            if (prop.getProperty("packetsenderthreads") != null) {
-                SERVER_PACKETSENDER_THREADS = Byte.parseByte(prop.getProperty("packetsenderthreads"));
+            if (prop.getProperty("sharedthreads") != null) {
+                SERVER_SHARED_THREADS = Byte.parseByte(prop.getProperty("sharedthreads"));
             }
             if (prop.getProperty("udpmode") != null) {
                 UDP_MODE = Boolean.parseBoolean(prop.getProperty("udpmode"));
@@ -1230,9 +1226,7 @@ public class Globals {
             log(Globals.class,
                     "Config", "EXP Multiplier: " + EXP_MULTIPLIER, Globals.LOG_TYPE_DATA);
             log(Globals.class,
-                    "Config", "Logic Module Threads: " + SERVER_LOGIC_THREADS, Globals.LOG_TYPE_DATA);
-            log(Globals.class,
-                    "Config", "Max Packet Sender Threads: " + SERVER_PACKETSENDER_THREADS, Globals.LOG_TYPE_DATA);
+                    "Config", "Shared Threads: " + SERVER_SHARED_THREADS, Globals.LOG_TYPE_DATA);
             log(Globals.class,
                     "Config", "Max Packets Per Connection: " + PACKET_MAX_PER_CON, Globals.LOG_TYPE_DATA);
             log(Globals.class,
