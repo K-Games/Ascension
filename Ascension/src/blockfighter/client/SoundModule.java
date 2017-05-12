@@ -2,20 +2,11 @@ package blockfighter.client;
 
 import blockfighter.shared.Globals;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import paulscode.sound.SoundSystemConfig;
 import paulscode.sound.SoundSystemJPCT;
 
 public class SoundModule implements Runnable {
-
-    private static final ScheduledExecutorService SOUND_MODULE_SCHEDULER = Executors.newSingleThreadScheduledExecutor(new BasicThreadFactory.Builder()
-            .namingPattern("Sound-Module-%d")
-            .daemon(true)
-            .priority(Thread.NORM_PRIORITY)
-            .build());
 
     private SoundSystemJPCT soundModule;
     private float originVol = 0.2f;
@@ -28,7 +19,7 @@ public class SoundModule implements Runnable {
         this.soundModule = new SoundSystemJPCT();
         this.soundModule.setMasterVolume(0.5f);
         SoundSystemConfig.setSoundFilesPackage("resources/sounds/");
-        SOUND_MODULE_SCHEDULER.scheduleAtFixedRate(() -> {
+        Core.SHARED_SCHEDULED_THREADPOOL.scheduleAtFixedRate(() -> {
             if (isLoaded()) {
                 while (!this.sfxQueue.isEmpty()) {
                     this.soundModule.quickPlay(Globals.SFXs.get(sfxQueue.poll()).getResourcePath(), false);
