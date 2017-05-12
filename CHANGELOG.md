@@ -26,6 +26,8 @@
 
 ### Client Changes
 * Centralised all threads into Core class.
+* Improved code for legacy and future SaveData data structure.
+* New SaveData data structure.
 
 ### Server Changes
 * Added Core class for centralised threads.

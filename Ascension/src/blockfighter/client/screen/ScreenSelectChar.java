@@ -70,7 +70,7 @@ public class ScreenSelectChar extends ScreenMenu {
         for (byte i = 0; i < CHARACTER_DATA.length; i++) {
             try {
                 Globals.log(ScreenSelectChar.class, "Loading Save Data " + i + "...", Globals.LOG_TYPE_DATA);
-                CHARACTER_DATA[i] = SaveData.readData(i);
+                CHARACTER_DATA[i] = SaveData.readSaveData(i);
             } catch (final Exception e) {
                 System.err.println("Corrupted savefile: " + i);
                 CHARACTER_DATA[i] = null;
@@ -182,7 +182,7 @@ public class ScreenSelectChar extends ScreenMenu {
                     if (CREATE_NAMEFIELD.getText().length() <= 15 && CREATE_NAMEFIELD.getText().length() > 0) {
                         final SaveData newChar = new SaveData(CREATE_NAMEFIELD.getText().trim(), this.selectNum);
                         newChar.newCharacter(Globals.TEST_MAX_LEVEL);
-                        SaveData.saveData(this.selectNum, newChar);
+                        SaveData.writeSaveData(this.selectNum, newChar);
                         loadSaveData();
                     } else {
                         if (CREATE_NAMEFIELD.getText().length() <= 0) {

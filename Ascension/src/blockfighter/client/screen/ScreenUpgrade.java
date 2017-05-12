@@ -106,7 +106,7 @@ public class ScreenUpgrade extends ScreenItemManagement {
                 }
 
                 this.character.calcStats();
-                SaveData.saveData(this.character.getSaveNum(), this.character);
+                SaveData.writeSaveData(this.character.getSaveNum(), this.character);
                 this.upgrading = false;
             }
 
