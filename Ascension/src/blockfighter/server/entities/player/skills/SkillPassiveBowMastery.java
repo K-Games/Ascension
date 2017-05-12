@@ -62,7 +62,7 @@ public class SkillPassiveBowMastery extends SkillPassive {
 
     @Override
     public boolean canCast(final Player player) {
-        return Items.getItemType(player.getEquips()[Globals.ITEM_WEAPON]) == Globals.ITEM_BOW
-                && Items.getItemType(player.getEquips()[Globals.ITEM_OFFHAND]) == Globals.ITEM_ARROW;
+        return Items.getItemType(player.getEquips()[Globals.EQUIP_WEAPON]) == Globals.ITEM_BOW
+                && Items.getItemType(player.getEquips()[Globals.EQUIP_OFFHAND]) == Globals.ITEM_ARROW;
     }
 }

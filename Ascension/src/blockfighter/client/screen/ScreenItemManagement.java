@@ -37,17 +37,17 @@ public abstract class ScreenItemManagement extends ScreenMenu {
     protected final SaveData character;
 
     static {
-        EQUIP_SLOTS[Globals.ITEM_AMULET] = new Rectangle2D.Double(EQUIP_BOX_X + 160, EQUIP_BOX_Y, 60, 60);
-        EQUIP_SLOTS[Globals.ITEM_BELT] = new Rectangle2D.Double(EQUIP_BOX_X + 160, EQUIP_BOX_Y + 210, 60, 60);
-        EQUIP_SLOTS[Globals.ITEM_OFFHAND] = new Rectangle2D.Double(EQUIP_BOX_X + 160, EQUIP_BOX_Y + 140, 60, 60);
-        EQUIP_SLOTS[Globals.ITEM_CHEST] = new Rectangle2D.Double(EQUIP_BOX_X + 160, EQUIP_BOX_Y + 70, 60, 60);
-        EQUIP_SLOTS[Globals.ITEM_HEAD] = new Rectangle2D.Double(EQUIP_BOX_X + 80, EQUIP_BOX_Y, 60, 60);
-        EQUIP_SLOTS[Globals.ITEM_RING] = new Rectangle2D.Double(EQUIP_BOX_X, 40, EQUIP_BOX_Y + 20, 60);
-        EQUIP_SLOTS[Globals.ITEM_SHOULDER] = new Rectangle2D.Double(EQUIP_BOX_X, EQUIP_BOX_Y + 70, 60, 60);
-        EQUIP_SLOTS[Globals.ITEM_GLOVE] = new Rectangle2D.Double(EQUIP_BOX_X, EQUIP_BOX_Y + 210, 60, 60);
-        EQUIP_SLOTS[Globals.ITEM_WEAPON] = new Rectangle2D.Double(EQUIP_BOX_X, EQUIP_BOX_Y + 140, 60, 60);
-        EQUIP_SLOTS[Globals.ITEM_PANTS] = new Rectangle2D.Double(EQUIP_BOX_X + 45, EQUIP_BOX_Y + 280, 60, 60);
-        EQUIP_SLOTS[Globals.ITEM_SHOE] = new Rectangle2D.Double(EQUIP_BOX_X + 115, EQUIP_BOX_Y + 280, 60, 60);
+        EQUIP_SLOTS[Globals.EQUIP_AMULET] = new Rectangle2D.Double(EQUIP_BOX_X + 160, EQUIP_BOX_Y, 60, 60);
+        EQUIP_SLOTS[Globals.EQUIP_BELT] = new Rectangle2D.Double(EQUIP_BOX_X + 160, EQUIP_BOX_Y + 210, 60, 60);
+        EQUIP_SLOTS[Globals.EQUIP_OFFHAND] = new Rectangle2D.Double(EQUIP_BOX_X + 160, EQUIP_BOX_Y + 140, 60, 60);
+        EQUIP_SLOTS[Globals.EQUIP_CHEST] = new Rectangle2D.Double(EQUIP_BOX_X + 160, EQUIP_BOX_Y + 70, 60, 60);
+        EQUIP_SLOTS[Globals.EQUIP_HEAD] = new Rectangle2D.Double(EQUIP_BOX_X + 80, EQUIP_BOX_Y, 60, 60);
+        EQUIP_SLOTS[Globals.EQUIP_RING] = new Rectangle2D.Double(EQUIP_BOX_X, 40, EQUIP_BOX_Y + 20, 60);
+        EQUIP_SLOTS[Globals.EQUIP_SHOULDER] = new Rectangle2D.Double(EQUIP_BOX_X, EQUIP_BOX_Y + 70, 60, 60);
+        EQUIP_SLOTS[Globals.EQUIP_GLOVE] = new Rectangle2D.Double(EQUIP_BOX_X, EQUIP_BOX_Y + 210, 60, 60);
+        EQUIP_SLOTS[Globals.EQUIP_WEAPON] = new Rectangle2D.Double(EQUIP_BOX_X, EQUIP_BOX_Y + 140, 60, 60);
+        EQUIP_SLOTS[Globals.EQUIP_PANTS] = new Rectangle2D.Double(EQUIP_BOX_X + 45, EQUIP_BOX_Y + 280, 60, 60);
+        EQUIP_SLOTS[Globals.EQUIP_SHOE] = new Rectangle2D.Double(EQUIP_BOX_X + 115, EQUIP_BOX_Y + 280, 60, 60);
 
         for (int i = 0; i < DESTROY_BOX.length; i++) {
             DESTROY_BOX[i] = new Rectangle2D.Double(520 + i * 185, 655, 180, 40);
@@ -113,29 +113,29 @@ public abstract class ScreenItemManagement extends ScreenMenu {
         g.fillRoundRect(EQUIP_BOX_X - 10, EQUIP_BOX_Y - 10, 240, 360, 15, 15);
         final BufferedImage characterSprite = Globals.CHAR_SPRITE[Globals.PLAYER_ANIM_STATE_STAND][this.charFrame];
         final int x = EQUIP_BOX_X + 90 + characterSprite.getWidth() / 2, y = EQUIP_BOX_Y + 160 + characterSprite.getHeight();
-        if (this.character.getEquip()[Globals.ITEM_OFFHAND] != null) {
-            this.character.getEquip()[Globals.ITEM_OFFHAND].drawIngame(g, x, y, Globals.PLAYER_ANIM_STATE_STAND, charFrame, Globals.RIGHT, true);
+        if (this.character.getEquip()[Globals.EQUIP_OFFHAND] != null) {
+            this.character.getEquip()[Globals.EQUIP_OFFHAND].drawIngame(g, x, y, Globals.PLAYER_ANIM_STATE_STAND, charFrame, Globals.RIGHT, true);
         }
         g.drawImage(characterSprite, 1070, 170, null);
 
-        if (this.character.getEquip()[Globals.ITEM_CHEST] != null) {
-            this.character.getEquip()[Globals.ITEM_CHEST].drawIngame(g, x, y, Globals.PLAYER_ANIM_STATE_STAND, charFrame, Globals.RIGHT);
+        if (this.character.getEquip()[Globals.EQUIP_CHEST] != null) {
+            this.character.getEquip()[Globals.EQUIP_CHEST].drawIngame(g, x, y, Globals.PLAYER_ANIM_STATE_STAND, charFrame, Globals.RIGHT);
         }
-        if (this.character.getEquip()[Globals.ITEM_SHOULDER] != null) {
-            this.character.getEquip()[Globals.ITEM_SHOULDER].drawIngame(g, x, y, Globals.PLAYER_ANIM_STATE_STAND, charFrame, Globals.RIGHT);
+        if (this.character.getEquip()[Globals.EQUIP_SHOULDER] != null) {
+            this.character.getEquip()[Globals.EQUIP_SHOULDER].drawIngame(g, x, y, Globals.PLAYER_ANIM_STATE_STAND, charFrame, Globals.RIGHT);
         }
 
-        if (this.character.getEquip()[Globals.ITEM_PANTS] != null) {
-            this.character.getEquip()[Globals.ITEM_PANTS].drawIngame(g, x, y, Globals.PLAYER_ANIM_STATE_STAND, charFrame, Globals.RIGHT);
+        if (this.character.getEquip()[Globals.EQUIP_PANTS] != null) {
+            this.character.getEquip()[Globals.EQUIP_PANTS].drawIngame(g, x, y, Globals.PLAYER_ANIM_STATE_STAND, charFrame, Globals.RIGHT);
         }
-        if (this.character.getEquip()[Globals.ITEM_SHOE] != null) {
-            this.character.getEquip()[Globals.ITEM_SHOE].drawIngame(g, x, y, Globals.PLAYER_ANIM_STATE_STAND, charFrame, Globals.RIGHT);
+        if (this.character.getEquip()[Globals.EQUIP_SHOE] != null) {
+            this.character.getEquip()[Globals.EQUIP_SHOE].drawIngame(g, x, y, Globals.PLAYER_ANIM_STATE_STAND, charFrame, Globals.RIGHT);
         }
-        if (this.character.getEquip()[Globals.ITEM_WEAPON] != null) {
-            this.character.getEquip()[Globals.ITEM_WEAPON].drawIngame(g, x, y, Globals.PLAYER_ANIM_STATE_STAND, charFrame, Globals.RIGHT);
+        if (this.character.getEquip()[Globals.EQUIP_WEAPON] != null) {
+            this.character.getEquip()[Globals.EQUIP_WEAPON].drawIngame(g, x, y, Globals.PLAYER_ANIM_STATE_STAND, charFrame, Globals.RIGHT);
         }
-        if (this.character.getEquip()[Globals.ITEM_GLOVE] != null) {
-            this.character.getEquip()[Globals.ITEM_GLOVE].drawIngame(g, x, y, Globals.PLAYER_ANIM_STATE_STAND, charFrame, Globals.RIGHT);
+        if (this.character.getEquip()[Globals.EQUIP_GLOVE] != null) {
+            this.character.getEquip()[Globals.EQUIP_GLOVE].drawIngame(g, x, y, Globals.PLAYER_ANIM_STATE_STAND, charFrame, Globals.RIGHT);
         }
 
         final BufferedImage button = Globals.MENU_BUTTON[Globals.BUTTON_SLOT];
@@ -146,9 +146,9 @@ public abstract class ScreenItemManagement extends ScreenMenu {
                 this.character.getEquip()[i].draw(g, (int) EQUIP_SLOTS[i].x, (int) EQUIP_SLOTS[i].y);
             }
             String s = ItemEquip.getItemTypeName((byte) i);
-            if (i == Globals.ITEM_WEAPON) {
+            if (i == Globals.EQUIP_WEAPON) {
                 s = MAIN_HAND;
-            } else if (i == Globals.ITEM_OFFHAND) {
+            } else if (i == Globals.EQUIP_OFFHAND) {
                 s = OFFHAND;
             }
             g.setFont(Globals.ARIAL_12PT);

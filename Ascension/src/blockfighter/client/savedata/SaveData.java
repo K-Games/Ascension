@@ -410,16 +410,11 @@ public class SaveData {
         writeSaveData(this.saveNum, this);
     }
 
-    public void unequipItem(final byte slot) {
-        byte itemType = slot;
-        if (slot == Globals.ITEM_OFFHAND) {
-            itemType = Globals.ITEM_WEAPON;
-        }
-
-        for (int i = 0; i < this.inventory[itemType].length; i++) {
-            if (this.inventory[itemType][i] == null) {
-                this.inventory[itemType][i] = this.equipment[slot];
-                this.equipment[slot] = null;
+    public void unequipItem(final byte equipTab, final byte equipSlot) {
+        for (int i = 0; i < this.inventory[equipTab].length; i++) {
+            if (this.inventory[equipTab][i] == null) {
+                this.inventory[equipTab][i] = this.equipment[equipSlot];
+                this.equipment[equipSlot] = null;
                 break;
             }
         }
@@ -427,31 +422,15 @@ public class SaveData {
         writeSaveData(this.saveNum, this);
     }
 
-    public void equipItem(final int slot, final int inventorySlot) {
-        int itemType = slot, equipSlot = slot;
-        if (equipSlot == Globals.ITEM_OFFHAND) {
-            itemType = Globals.ITEM_WEAPON;
-        }
-
-        final ItemEquip temp = this.inventory[itemType][inventorySlot];
-        if (temp != null) {
-            if (temp.getBaseStats()[Globals.STAT_LEVEL] > this.baseStats[Globals.STAT_LEVEL]) {
+    public void equipItem(final int equipTab, int equipSlot, final int inventorySlot) {
+        final ItemEquip itemToEquip = this.inventory[equipTab][inventorySlot];
+        if (itemToEquip != null) {
+            if (itemToEquip.getBaseStats()[Globals.STAT_LEVEL] > this.baseStats[Globals.STAT_LEVEL]) {
                 return;
             }
-            switch (ItemEquip.getItemType(temp.getItemCode())) {
-                case Globals.ITEM_SHIELD:
-                    equipSlot = Globals.ITEM_OFFHAND;
-                    break;
-                case Globals.ITEM_BOW:
-                    equipSlot = Globals.ITEM_WEAPON;
-                    break;
-                case Globals.ITEM_ARROW:
-                    equipSlot = Globals.ITEM_OFFHAND;
-                    break;
-            }
         }
-        this.inventory[itemType][inventorySlot] = this.equipment[equipSlot];
-        this.equipment[equipSlot] = temp;
+        this.inventory[equipTab][inventorySlot] = this.equipment[equipSlot];
+        this.equipment[equipSlot] = itemToEquip;
         calcStats();
         writeSaveData(this.saveNum, this);
     }
@@ -481,13 +460,13 @@ public class SaveData {
     }
 
     public void addItem(final ItemEquip e) {
-        int tab = ItemEquip.getItemType(e.getItemCode());
-        if (tab == Globals.ITEM_SHIELD || tab == Globals.ITEM_ARROW || tab == Globals.ITEM_BOW) {
-            tab = Globals.ITEM_WEAPON;
+        int equipTab = e.getItemType();
+        if (equipTab == Globals.ITEM_SHIELD || equipTab == Globals.ITEM_ARROW || equipTab == Globals.ITEM_BOW) {
+            equipTab = Globals.EQUIP_WEAPON;
         }
-        for (int i = 0; i < this.inventory[tab].length; i++) {
-            if (this.inventory[tab][i] == null) {
-                this.inventory[tab][i] = e;
+        for (int i = 0; i < this.inventory[equipTab].length; i++) {
+            if (this.inventory[equipTab][i] == null) {
+                this.inventory[equipTab][i] = e;
                 break;
             }
         }

@@ -57,7 +57,7 @@ public class SkillShieldChargeTest {
 
     @Test
     public void testGetReqEquipSlot() {
-        byte expResult = Globals.ITEM_OFFHAND;
+        byte expResult = Globals.EQUIP_OFFHAND;
         byte result = INSTANCE.getReqEquipSlot();
         assertEquals(expResult, result);
     }

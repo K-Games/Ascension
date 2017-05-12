@@ -526,8 +526,7 @@ public class Globals {
             KEYBIND_EMOTE10 = 25,
             KEYBIND_SCOREBOARD = 26;
 
-    public final static byte NUM_ITEM_TABS = 10,
-            ITEM_WEAPON = 0, // ITEM_WEAPON is the equipment slot/tab
+    public final static byte NUM_ITEM_TABS = 10, // EQUIP_WEAPON is the equipment slot/tab
             ITEM_SWORD = 0, // ITEM_SWORD is the item type.
             ITEM_HEAD = 1,
             ITEM_CHEST = 2,
@@ -538,13 +537,23 @@ public class Globals {
             ITEM_BELT = 7,
             ITEM_RING = 8,
             ITEM_AMULET = 9,
-            ITEM_OFFHAND = 10,
             ITEM_SHIELD = 10, // 10,11,12 only used for item type identification.
             ITEM_BOW = 11, // They all will be placed in weapons tab
             ITEM_ARROW = 12;
 
     public final static byte NUM_ITEM_TYPES = 13;
-    public final static byte NUM_EQUIP_SLOTS = 11;
+    public final static byte NUM_EQUIP_SLOTS = 11,
+            EQUIP_WEAPON = 0,
+            EQUIP_HEAD = 1,
+            EQUIP_CHEST = 2,
+            EQUIP_PANTS = 3,
+            EQUIP_SHOULDER = 4,
+            EQUIP_GLOVE = 5,
+            EQUIP_SHOE = 6,
+            EQUIP_BELT = 7,
+            EQUIP_RING = 8,
+            EQUIP_AMULET = 9,
+            EQUIP_OFFHAND = 10;
 
     public final static byte NUM_STATS = 17,
             STAT_POWER = 0,

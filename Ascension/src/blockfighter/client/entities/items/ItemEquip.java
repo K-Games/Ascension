@@ -68,6 +68,7 @@ public class ItemEquip implements Item {
     protected double bonusMult;
     protected byte tier = -1;
     protected int itemCode;
+    protected byte itemType = -1, equipSlot = -1, equipTab = -1;
 
     private float overlayColour = 0, overlayColourDelta = 0.005f;
 
@@ -298,6 +299,55 @@ public class ItemEquip implements Item {
 
     public ItemEquip(final int ic) {
         this.itemCode = ic;
+        this.itemType = getItemType(ic);
+        switch (this.itemType) {
+            case Globals.ITEM_AMULET:
+                this.equipSlot = Globals.EQUIP_AMULET;
+                this.equipTab = Globals.EQUIP_AMULET;
+                break;
+            case Globals.ITEM_BELT:
+                this.equipSlot = Globals.EQUIP_BELT;
+                this.equipTab = Globals.EQUIP_BELT;
+                break;
+            case Globals.ITEM_CHEST:
+                this.equipSlot = Globals.EQUIP_CHEST;
+                this.equipTab = Globals.EQUIP_CHEST;
+                break;
+            case Globals.ITEM_GLOVE:
+                this.equipSlot = Globals.EQUIP_GLOVE;
+                this.equipTab = Globals.EQUIP_GLOVE;
+                break;
+            case Globals.ITEM_HEAD:
+                this.equipSlot = Globals.EQUIP_HEAD;
+                this.equipTab = Globals.EQUIP_HEAD;
+                break;
+            case Globals.ITEM_PANTS:
+                this.equipSlot = Globals.EQUIP_PANTS;
+                this.equipTab = Globals.EQUIP_PANTS;
+                break;
+            case Globals.ITEM_RING:
+                this.equipSlot = Globals.EQUIP_RING;
+                this.equipTab = Globals.EQUIP_RING;
+                break;
+            case Globals.ITEM_SHOE:
+                this.equipSlot = Globals.EQUIP_SHOE;
+                this.equipTab = Globals.EQUIP_SHOE;
+                break;
+            case Globals.ITEM_SHOULDER:
+                this.equipSlot = Globals.EQUIP_SHOULDER;
+                this.equipTab = Globals.EQUIP_SHOULDER;
+                break;
+            case Globals.ITEM_SWORD:
+            case Globals.ITEM_BOW:
+                this.equipSlot = Globals.EQUIP_WEAPON;
+                this.equipTab = Globals.EQUIP_WEAPON;
+                break;
+            case Globals.ITEM_SHIELD:
+            case Globals.ITEM_ARROW:
+                this.equipSlot = Globals.EQUIP_OFFHAND;
+                this.equipTab = Globals.EQUIP_WEAPON;
+                break;
+        }
     }
 
     public ItemEquip(final int ic, final double level) {
@@ -305,7 +355,7 @@ public class ItemEquip implements Item {
     }
 
     public ItemEquip(final int ic, final double level, final boolean legendary) {
-        this.itemCode = ic;
+        this(ic);
         this.baseStats = newEquipStat(ic, level);
         if (legendary) {
             this.bonusMult = (Globals.rng(7) + 90) / 100D;
@@ -349,7 +399,7 @@ public class ItemEquip implements Item {
         newStats[Globals.STAT_LEVEL] = level;
 
         switch (getItemType(ic)) {
-            case Globals.ITEM_WEAPON:
+            case Globals.ITEM_SWORD:
                 newStats[Globals.STAT_POWER] = newItemPowerStat(level);
                 break;
             case Globals.ITEM_BOW:
@@ -402,7 +452,7 @@ public class ItemEquip implements Item {
     }
 
     public ItemEquip(final double[] bs, final int u, final double mult, final int ic) {
-        this.itemCode = ic;
+        this(ic);
         this.baseStats = bs;
         this.upgrades = u;
         this.bonusMult = mult;
@@ -714,7 +764,19 @@ public class ItemEquip implements Item {
         updateStats();
     }
 
-    public static byte getItemType(final int i) {
+    public byte getItemType() {
+        return this.itemType;
+    }
+
+    public byte getEquipSlot() {
+        return this.equipSlot;
+    }
+
+    public byte getEquipTab() {
+        return this.equipTab;
+    }
+
+    private static byte getItemType(final int i) {
         if (i >= 100000 && i <= 109999) { // Swords
             return Globals.ITEM_SWORD;
         } else if (i >= 110000 && i <= 119999) { // Shields

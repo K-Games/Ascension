@@ -18,7 +18,7 @@ public class ScreenInventory extends ScreenItemManagement {
 
     private static final String DAMAGE_TEXT = "Damage: ";
 
-    private static byte selectedTab = Globals.ITEM_WEAPON;
+    private static byte selectedTab = Globals.EQUIP_WEAPON;
     private static final Rectangle2D.Double[] INVENTORY_SLOTS = new Rectangle2D.Double[100],
             ITEM_TABS = new Rectangle2D.Double[Globals.NUM_ITEM_TABS];
 
@@ -133,7 +133,7 @@ public class ScreenInventory extends ScreenItemManagement {
                 this.character.getInventory(selectedTab)[i].draw(g, (int) INVENTORY_SLOTS[i].x, (int) INVENTORY_SLOTS[i].y);
             }
         }
-        if (selectedTab == Globals.ITEM_WEAPON) {
+        if (selectedTab == Globals.EQUIP_WEAPON) {
             button = Globals.MENU_BUTTON[Globals.BUTTON_RIGHTCLICK];
             g.drawImage(button, 280, 657, null);
             g.setFont(Globals.ARIAL_15PT);
@@ -214,11 +214,13 @@ public class ScreenInventory extends ScreenItemManagement {
                             return;
                         }
                         if (drEq != -1) {
-                            this.character.equipItem(drEq, i);
+                            final ItemEquip equipped = this.character.getEquip()[drEq];
+                            this.character.equipItem(equipped.getEquipTab(), drEq, i);
                             return;
                         }
                         if (this.character.getInventory(selectedTab)[i] != null) {
-                            this.character.equipItem(selectedTab, i);
+                            final ItemEquip toEquip = this.character.getInventory(selectedTab)[i];
+                            this.character.equipItem(toEquip.getEquipTab(), toEquip.getEquipSlot(), i);
                             return;
                         }
                     } else {
@@ -231,13 +233,18 @@ public class ScreenInventory extends ScreenItemManagement {
             for (byte i = 0; !this.destroy && i < EQUIP_SLOTS.length; i++) {
                 if (EQUIP_SLOTS[i].contains(scaled)) {
                     if (drItem != -1) {
-                        if (selectedTab == i || (selectedTab == Globals.ITEM_WEAPON && i == Globals.ITEM_OFFHAND)) {
-                            this.character.equipItem(i, drItem);
-                            return;
+                        if (selectedTab == i || (selectedTab == Globals.EQUIP_WEAPON && i == Globals.EQUIP_OFFHAND)) {
+                            final ItemEquip toEquip = this.character.getInventory(selectedTab)[drItem];
+                            if (!(toEquip.getEquipSlot() == Globals.EQUIP_OFFHAND && i == Globals.EQUIP_WEAPON)
+                                    && !(toEquip.getItemType() == Globals.ITEM_BOW && i == Globals.EQUIP_OFFHAND)) {
+                                this.character.equipItem(toEquip.getEquipTab(), i, drItem);
+                                return;
+                            }
                         }
                     }
                     if (drItem == -1 && drEq == -1 && this.character.getEquip()[i] != null) {
-                        this.character.unequipItem(i);
+                        final ItemEquip equip = this.character.getEquip()[i];
+                        this.character.unequipItem(equip.getEquipTab(), i);
                         return;
                     }
                 }
@@ -260,11 +267,14 @@ public class ScreenInventory extends ScreenItemManagement {
         }
 
         if (SwingUtilities.isRightMouseButton(e)) {
-            if (selectedTab == Globals.ITEM_WEAPON) {
+            if (selectedTab == Globals.EQUIP_WEAPON) {
                 for (int i = 0; i < INVENTORY_SLOTS.length; i++) {
                     if (INVENTORY_SLOTS[i].contains(scaled) && this.character.getInventory(selectedTab)[i] != null) {
                         if (!this.destroy) {
-                            this.character.equipItem(Globals.ITEM_OFFHAND, i);
+                            final ItemEquip equip = this.character.getInventory(selectedTab)[i];
+                            if (equip.getItemType() != Globals.ITEM_BOW) {
+                                this.character.equipItem(equip.getEquipTab(), Globals.EQUIP_OFFHAND, i);
+                            }
                         }
                         return;
                     }
@@ -325,8 +335,8 @@ public class ScreenInventory extends ScreenItemManagement {
                 for (byte i = 0; i < EQUIP_SLOTS.length; i++) {
                     if (EQUIP_SLOTS[i].contains(scaled) && this.character.getEquip()[i] != null) {
                         this.dragEquip = i;
-                        if (i == Globals.ITEM_OFFHAND) {
-                            selectedTab = Globals.ITEM_WEAPON;
+                        if (i == Globals.EQUIP_OFFHAND) {
+                            selectedTab = Globals.EQUIP_WEAPON;
                         } else {
                             selectedTab = i;
                         }

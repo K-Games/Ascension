@@ -204,29 +204,29 @@ public class Player implements Callable<Player> {
 		 * Globals.RIGHT) ? 1 : -1) * 40; break; }
          */
         final int drawDscX = drawSrcX + ((facing == Globals.RIGHT) ? 1 : -1) * sprite.getWidth();
-        if (this.equips[Globals.ITEM_OFFHAND] != null) {
-            this.equips[Globals.ITEM_OFFHAND].drawIngame(g, x, y, animState, frame, facing, true);
+        if (this.equips[Globals.EQUIP_OFFHAND] != null) {
+            this.equips[Globals.EQUIP_OFFHAND].drawIngame(g, x, y, animState, frame, facing, true);
         }
         g.drawImage(sprite, drawSrcX, drawSrcY, drawDscX, drawDscY, 0, 0, sprite.getWidth(), sprite.getHeight(), null);
 
-        if (this.equips[Globals.ITEM_CHEST] != null) {
-            this.equips[Globals.ITEM_CHEST].drawIngame(g, x, y, animState, frame, facing);
+        if (this.equips[Globals.EQUIP_CHEST] != null) {
+            this.equips[Globals.EQUIP_CHEST].drawIngame(g, x, y, animState, frame, facing);
         }
-        if (this.equips[Globals.ITEM_SHOULDER] != null) {
-            this.equips[Globals.ITEM_SHOULDER].drawIngame(g, x, y, animState, frame, facing);
+        if (this.equips[Globals.EQUIP_SHOULDER] != null) {
+            this.equips[Globals.EQUIP_SHOULDER].drawIngame(g, x, y, animState, frame, facing);
         }
 
-        if (this.equips[Globals.ITEM_PANTS] != null) {
-            this.equips[Globals.ITEM_PANTS].drawIngame(g, x, y, animState, frame, facing);
+        if (this.equips[Globals.EQUIP_PANTS] != null) {
+            this.equips[Globals.EQUIP_PANTS].drawIngame(g, x, y, animState, frame, facing);
         }
-        if (this.equips[Globals.ITEM_SHOE] != null) {
-            this.equips[Globals.ITEM_SHOE].drawIngame(g, x, y, animState, frame, facing);
+        if (this.equips[Globals.EQUIP_SHOE] != null) {
+            this.equips[Globals.EQUIP_SHOE].drawIngame(g, x, y, animState, frame, facing);
         }
-        if (this.equips[Globals.ITEM_WEAPON] != null) {
-            this.equips[Globals.ITEM_WEAPON].drawIngame(g, x, y, animState, frame, facing);
+        if (this.equips[Globals.EQUIP_WEAPON] != null) {
+            this.equips[Globals.EQUIP_WEAPON].drawIngame(g, x, y, animState, frame, facing);
         }
-        if (this.equips[Globals.ITEM_GLOVE] != null) {
-            this.equips[Globals.ITEM_GLOVE].drawIngame(g, x, y, animState, frame, facing);
+        if (this.equips[Globals.EQUIP_GLOVE] != null) {
+            this.equips[Globals.EQUIP_GLOVE].drawIngame(g, x, y, animState, frame, facing);
         }
     }
 

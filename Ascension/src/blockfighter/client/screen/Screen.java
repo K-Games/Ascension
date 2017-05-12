@@ -29,10 +29,12 @@ public abstract class Screen implements KeyListener, MouseListener, MouseMotionL
     protected static RenderPanel panel;
 
     public void drawStringOutline(final Graphics2D g, final String s, final int x, final int y, final int width) {
-        for (int i = 0; i < 2; i++) {
-            g.setColor(Color.BLACK);
-            g.drawString(s, x - width + i * 2 * width, y);
-            g.drawString(s, x, y - width + i * 2 * width);
+        if (s != null) {
+            for (int i = 0; i < 2; i++) {
+                g.setColor(Color.BLACK);
+                g.drawString(s, x - width + i * 2 * width, y);
+                g.drawString(s, x, y - width + i * 2 * width);
+            }
         }
     }
 

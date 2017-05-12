@@ -54,7 +54,7 @@ public class LogicModule implements Runnable {
             }
         }
 
-        if (this.selectedChar.getEquip()[Globals.ITEM_WEAPON] != null) {
+        if (this.selectedChar.getEquip()[Globals.EQUIP_WEAPON] != null) {
             equipReady = true;
         }
 
