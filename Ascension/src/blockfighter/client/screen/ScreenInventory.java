@@ -52,7 +52,7 @@ public class ScreenInventory extends ScreenItemManagement {
             statString[3] = Globals.getStatName(Globals.STAT_SPIRIT) + Globals.COLON_SPACE_TEXT + (int) baseStats[Globals.STAT_SPIRIT] + " + " + (int) bonusStats[Globals.STAT_SPIRIT];
             statString[4] = Globals.getStatName(Globals.STAT_MAXHP) + Globals.COLON_SPACE_TEXT + Globals.NUMBER_FORMAT.format((int) totalStats[Globals.STAT_MAXHP]);
             statString[5] = DAMAGE_TEXT + Globals.NUMBER_FORMAT.format((int) totalStats[Globals.STAT_MINDMG]) + " - " + Globals.NUMBER_FORMAT.format((int) totalStats[Globals.STAT_MAXDMG]);
-            statString[6] = Globals.getStatName(Globals.STAT_ARMOR) + Globals.COLON_SPACE_TEXT + Globals.NUMBER_FORMAT.format((int) baseStats[Globals.STAT_ARMOR]) + " + " + Globals.NUMBER_FORMAT.format((int) bonusStats[Globals.STAT_ARMOR]);
+            statString[6] = Globals.getStatName(Globals.STAT_ARMOUR) + Globals.COLON_SPACE_TEXT + Globals.NUMBER_FORMAT.format((int) baseStats[Globals.STAT_ARMOUR]) + " + " + Globals.NUMBER_FORMAT.format((int) bonusStats[Globals.STAT_ARMOUR]);
             statString[7] = Globals.getStatName(Globals.STAT_REGEN) + Globals.COLON_SPACE_TEXT + Globals.NUMBER_FORMAT.format(baseStats[Globals.STAT_REGEN]) + " + " + Globals.NUMBER_FORMAT.format(bonusStats[Globals.STAT_REGEN]) + " HP/Sec";
             statString[8] = Globals.getStatName(Globals.STAT_CRITCHANCE) + Globals.COLON_SPACE_TEXT + Globals.NUMBER_FORMAT.format(baseStats[Globals.STAT_CRITCHANCE] * 100) + " + "
                     + Globals.NUMBER_FORMAT.format(bonusStats[Globals.STAT_CRITCHANCE] * 100) + "%";

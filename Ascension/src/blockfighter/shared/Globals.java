@@ -557,7 +557,7 @@ public class Globals {
             STAT_CRITCHANCE = 7,
             STAT_CRITDMG = 8,
             STAT_REGEN = 9,
-            STAT_ARMOR = 10,
+            STAT_ARMOUR = 10,
             STAT_LEVEL = 11,
             STAT_POINTS = 12,
             STAT_EXP = 13,
@@ -567,8 +567,8 @@ public class Globals {
 
     public final static double HP_BASE = 3000, // PvE = 100
             HP_MULT = 170, // PvE = 30
-            REDUCT_CONST = 175,
-            ARMOR_MULT = 6,
+            REDUCT_CONST = 300,
+            ARMOUR_MULT = 6,
             REGEN_HP_PERCENT = 0.02,
             REGEN_MULT = REGEN_HP_PERCENT * HP_MULT,
             REGEN_CONST = REGEN_HP_PERCENT * HP_BASE,
@@ -930,7 +930,7 @@ public class Globals {
     private static final String STAT_NAME_EXP = "Experience";
     private static final String STAT_NAME_POINTS = "Stat Points";
     private static final String STAT_NAME_LEVEL = "Level";
-    private static final String STAT_NAME_ARMOR = "Armor";
+    private static final String STAT_NAME_ARMOUR = "Armour";
     private static final String STAT_NAME_REGEN = "Regen(HP/Sec)";
     private static final String STAT_NAME_CRITDMG = "Critical Hit Damage";
     private static final String STAT_NAME_CRITCHC = "Critical Hit Chance";
@@ -964,8 +964,8 @@ public class Globals {
                 return STAT_NAME_CRITDMG;
             case STAT_REGEN:
                 return STAT_NAME_REGEN;
-            case STAT_ARMOR:
-                return STAT_NAME_ARMOR;
+            case STAT_ARMOUR:
+                return STAT_NAME_ARMOUR;
             case STAT_LEVEL:
                 return STAT_NAME_LEVEL;
             case STAT_POINTS:
@@ -982,8 +982,8 @@ public class Globals {
         return "INVALID STAT";
     }
 
-    public static final double calcArmor(final double defense) {
-        return defense * ARMOR_MULT;
+    public static final double calcArmour(final double defense) {
+        return defense * ARMOUR_MULT;
     }
 
     public static final double calcRegen(final double spirit) {
@@ -1010,8 +1010,8 @@ public class Globals {
         return spirit / CRITDMG_FACT * CRITDMG_MULT + CRITDMG_BASE;
     }
 
-    public static final double calcReduction(final double armor) {
-        return 1 - (armor / (armor + REDUCT_CONST));
+    public static final double calcReduction(final double armour) {
+        return 1 - (armour / (armour + REDUCT_CONST));
     }
 
     public static final double calcEHP(final double reduct, final double maxHP) {

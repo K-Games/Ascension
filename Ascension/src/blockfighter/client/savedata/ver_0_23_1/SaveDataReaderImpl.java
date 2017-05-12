@@ -138,7 +138,7 @@ public class SaveDataReaderImpl extends SaveDataReader {
             System.arraycopy(data, nextPos, temp, 0, temp.length);
             itemCode = Globals.bytesToInt(temp);
             nextPos += temp.length;
-            final int[] statIDs = {Globals.STAT_LEVEL, Globals.STAT_POWER, Globals.STAT_DEFENSE, Globals.STAT_SPIRIT, Globals.STAT_ARMOR, Globals.STAT_REGEN, Globals.STAT_CRITDMG, Globals.STAT_CRITCHANCE};
+            final int[] statIDs = {Globals.STAT_LEVEL, Globals.STAT_POWER, Globals.STAT_DEFENSE, Globals.STAT_SPIRIT, Globals.STAT_ARMOUR, Globals.STAT_REGEN, Globals.STAT_CRITDMG, Globals.STAT_CRITCHANCE};
             for (final int s : statIDs) {
                 System.arraycopy(data, nextPos, temp, 0, temp.length);
                 switch (s) {

@@ -323,16 +323,16 @@ public class SaveData {
         this.totalStats[Globals.STAT_MINDMG] = Globals.calcMinDmg(this.totalStats[Globals.STAT_POWER]);
         this.totalStats[Globals.STAT_MAXDMG] = Globals.calcMaxDmg(this.totalStats[Globals.STAT_POWER]);
 
-        this.baseStats[Globals.STAT_ARMOR] = Globals.calcArmor(this.totalStats[Globals.STAT_DEFENSE]);
+        this.baseStats[Globals.STAT_ARMOUR] = Globals.calcArmour(this.totalStats[Globals.STAT_DEFENSE]);
         this.baseStats[Globals.STAT_REGEN] = Globals.calcRegen(this.totalStats[Globals.STAT_SPIRIT]);
         this.baseStats[Globals.STAT_CRITCHANCE] = Globals.calcCritChance(this.totalStats[Globals.STAT_SPIRIT]);
         this.baseStats[Globals.STAT_CRITDMG] = Globals.calcCritDmg(this.totalStats[Globals.STAT_SPIRIT]);
 
-        this.totalStats[Globals.STAT_ARMOR] = this.baseStats[Globals.STAT_ARMOR] + this.bonusStats[Globals.STAT_ARMOR];
+        this.totalStats[Globals.STAT_ARMOUR] = this.baseStats[Globals.STAT_ARMOUR] + this.bonusStats[Globals.STAT_ARMOUR];
         this.totalStats[Globals.STAT_REGEN] = this.baseStats[Globals.STAT_REGEN] + this.bonusStats[Globals.STAT_REGEN];
         this.totalStats[Globals.STAT_CRITCHANCE] = this.baseStats[Globals.STAT_CRITCHANCE] + this.bonusStats[Globals.STAT_CRITCHANCE];
         this.totalStats[Globals.STAT_CRITDMG] = this.baseStats[Globals.STAT_CRITDMG] + this.bonusStats[Globals.STAT_CRITDMG];
-        this.totalStats[Globals.STAT_DAMAGEREDUCT] = Globals.calcReduction(this.totalStats[Globals.STAT_ARMOR]);
+        this.totalStats[Globals.STAT_DAMAGEREDUCT] = Globals.calcReduction(this.totalStats[Globals.STAT_ARMOUR]);
         this.baseStats[Globals.STAT_MAXEXP] = Globals.calcEXPtoNxtLvl(this.baseStats[Globals.STAT_LEVEL]);
     }
 

@@ -7,6 +7,8 @@
 ### Gameplay Changes
 
 #### Stats
+* Armour
+	* Damage Reduction from Armour lowered from Armour/(Armour + 175) to Armour/(Armour + 300)
 
 #### Equipment Stats
 
@@ -124,8 +126,8 @@
 
 #### Stats
 * Stat Points per Level increased from 7 to 15.
-* Armor
-	* Damage Reduction from Armor has been changed from Armor/(Armor + 150) to Armor/(Armor + 175)
+* Armour
+	* Damage Reduction from Armour has been changed from Armour/(Armour + 150) to Armour/(Armour + 175)
 		* This means players take more damage overall.
 * Regen(HP/Sec)
 	* Regen increased from 1.5 per Spirit to 60 + 3.4 per Spirit.
@@ -142,11 +144,11 @@
 	* Using more than 1 Soul Stone will use the highest level Soul Stone as the base level.
 	* Each additional Soul Stone adds a level to the base.
 * Rescaled upgrade bonus Power, Defense, and Spirit stats from 4% + 0.75 per upgrade to a flat 1.25 per upgrade.
-* Reduced upgrade Armor bonus from 24 to 18 per upgrade.
+* Reduced upgrade Armour bonus from 24 to 18 per upgrade.
 * Increased upgrade HP/Sec bonus from 8 to 10 per upgrade.
 * Increased upgrade HP/Sec internal multiplier from 1 + Rarity Multiplier to 2 + Rarity Multiplier
 * Increased Critical Hit Chance internal multiplier factor - The internal multiplier now provides twice as much.
-* Upgrade Power, Defense, Spirit, Armor and HP/Sec bonuses are now multiplied by the internal multipler.
+* Upgrade Power, Defense, Spirit, Armour and HP/Sec bonuses are now multiplied by the internal multipler.
 	* These changes means that lower level equipment with extremely high amounts of upgrades are no longer significantly better than higher level equipments with upgrades.
 	* Lower level equipment will now achieve the same stats as higher level equipments with equivalent amount of upgrades.
 
@@ -359,7 +361,7 @@
 ## Version 0.20.2
 
 ### Gameplay Changes
-* Lowered Maximum Armor roll for new Rings.
+* Lowered Maximum Armour roll for new Rings.
 * Knockback no longer disables Skill casting.
 * Firebrand - Range increased from 170 to 280
 * Aggression - Buff duration decreased from 10 seconds to 5 seconds.
