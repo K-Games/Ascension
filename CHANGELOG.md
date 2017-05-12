@@ -30,12 +30,12 @@
 * Centralised all threads into Core class.
 * Improved code for legacy and future SaveData data structure.
 * New SaveData data structure.
+* Disassociated an item's Equipment Slot and Equipment Tab from its Equipment Type.
 
 ### Server Changes
 * Added Core class for centralised threads.
 * Removed unused config properties for old thread configs.
 * Added new config properties for Shared Threadpools.
-
 
 ---
 
