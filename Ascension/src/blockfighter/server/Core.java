@@ -15,7 +15,7 @@ public class Core {
                     .priority(Thread.NORM_PRIORITY)
                     .build());
 
-    public static final ScheduledExecutorService SHARED_SCHEDULED_THREADPOOL = Executors.newScheduledThreadPool(2,
+    public static final ScheduledExecutorService SHARED_SCHEDULED_THREADPOOL = Executors.newScheduledThreadPool(Globals.SERVER_SHARED_SCHEDULED_THREADS,
             new BasicThreadFactory.Builder()
                     .namingPattern("Server-Shared-Scheduled-Thread-%d")
                     .daemon(false)

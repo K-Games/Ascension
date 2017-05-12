@@ -752,6 +752,7 @@ public class Globals {
     public static int SERVER_PLAYER_MAX_IDLE = 120000;
     public static int SERVER_ROOM_MAX_ILDE = 2000;
     public static int SERVER_SHARED_THREADS = 3;
+    public static int SERVER_SHARED_SCHEDULED_THREADS = 2;
     public static int SERVER_MAX_ROOMS = 10;
     public static boolean SERVER_HUB_CONNECT = false;
     public static int SERVER_WIN_KILL_COUNT = 30;
@@ -1183,6 +1184,9 @@ public class Globals {
             if (prop.getProperty("sharedthreads") != null) {
                 SERVER_SHARED_THREADS = Byte.parseByte(prop.getProperty("sharedthreads"));
             }
+            if (prop.getProperty("sharedscheduledthreads") != null) {
+                SERVER_SHARED_SCHEDULED_THREADS = Byte.parseByte(prop.getProperty("sharedscheduledthreads"));
+            }
             if (prop.getProperty("udpmode") != null) {
                 UDP_MODE = Boolean.parseBoolean(prop.getProperty("udpmode"));
             }
@@ -1227,6 +1231,8 @@ public class Globals {
                     "Config", "EXP Multiplier: " + EXP_MULTIPLIER, Globals.LOG_TYPE_DATA);
             log(Globals.class,
                     "Config", "Shared Threads: " + SERVER_SHARED_THREADS, Globals.LOG_TYPE_DATA);
+            log(Globals.class,
+                    "Config", "Shared Scheduled Threads: " + SERVER_SHARED_SCHEDULED_THREADS, Globals.LOG_TYPE_DATA);
             log(Globals.class,
                     "Config", "Max Packets Per Connection: " + PACKET_MAX_PER_CON, Globals.LOG_TYPE_DATA);
             log(Globals.class,
