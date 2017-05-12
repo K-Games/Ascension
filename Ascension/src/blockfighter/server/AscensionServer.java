@@ -10,40 +10,14 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
-import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
 public class AscensionServer {
-
-    private static final ScheduledExecutorService LOGIC_SCHEDULER;
-
-    private static final ScheduledExecutorService PACKETSENDER_SCHEDULER = Executors.newSingleThreadScheduledExecutor(
-            new BasicThreadFactory.Builder()
-                    .namingPattern("PacketSender-Runner-%d")
-                    .daemon(true)
-                    .priority(Thread.NORM_PRIORITY)
-                    .build());
-
-    private static final ScheduledExecutorService PACKETSENDER_BATCH_CLEAR_SCHEDULER = Executors.newSingleThreadScheduledExecutor(
-            new BasicThreadFactory.Builder()
-                    .namingPattern("PacketSender-Batch-Clearer-%d")
-                    .daemon(true)
-                    .priority(Thread.NORM_PRIORITY)
-                    .build());
-
-    private static final ScheduledExecutorService HUB_SCHEDULER = Executors.newSingleThreadScheduledExecutor(
-            new BasicThreadFactory.Builder()
-                    .namingPattern("Hub-Runner-%d")
-                    .daemon(true)
-                    .priority(Thread.NORM_PRIORITY)
-                    .build());
 
     private static JTextArea DATA_LOG, ERROR_LOG;
     private static ConcurrentHashMap<Byte, LogicModule> SERVER_ROOMS;
@@ -55,18 +29,11 @@ public class AscensionServer {
         Globals.loadServerConfig();
 
         SERVER_ROOMS = new ConcurrentHashMap<>(Globals.SERVER_MAX_ROOMS);
-        LOGIC_SCHEDULER = Executors.newScheduledThreadPool(Math.max(Globals.SERVER_MAX_ROOMS / 10, 1),
-                new BasicThreadFactory.Builder()
-                        .namingPattern("Logic-Runner-%d")
-                        .daemon(false)
-                        .priority(Thread.NORM_PRIORITY)
-                        .build());
     }
 
     public void shutdown() {
         Globals.log(AscensionServer.class, "Shutting down server...", Globals.LOG_TYPE_DATA);
         SERVER.shutdown();
-        LOGIC_SCHEDULER.shutdown();
         SERVER_ROOMS = null;
         System.gc();
         Globals.log(AscensionServer.class, "Server shut down", Globals.LOG_TYPE_DATA);
@@ -98,14 +65,14 @@ public class AscensionServer {
             Globals.log(AscensionServer.class, "Server started ", Globals.LOG_TYPE_ERR);
             Globals.log(AscensionServer.class, "Server started", Globals.LOG_TYPE_DATA);
 
-            PACKETSENDER_SCHEDULER.scheduleAtFixedRate(new PacketSender(), 0, 16000, TimeUnit.MICROSECONDS);
+            Core.SHARED_SCHEDULED_THREADPOOL.scheduleAtFixedRate(new PacketSender(), 0, 16000, TimeUnit.MICROSECONDS);
 
-            PACKETSENDER_BATCH_CLEAR_SCHEDULER.scheduleAtFixedRate(() -> {
+            Core.SHARED_SCHEDULED_THREADPOOL.scheduleAtFixedRate(() -> {
                 PacketSender.clearDisconnectedConnectionBatch();
             }, 10, 10, TimeUnit.SECONDS);
 
             if (Globals.SERVER_HUB_CONNECT) {
-                HUB_SCHEDULER.scheduleAtFixedRate(new HubClient(), 0, 10, TimeUnit.SECONDS);
+                Core.SHARED_SCHEDULED_THREADPOOL.scheduleAtFixedRate(new HubClient(), 0, 10, TimeUnit.SECONDS);
             }
         } catch (final Exception ex) {
             Globals.logError(ex.toString(), ex);
@@ -156,7 +123,7 @@ public class AscensionServer {
             byte maxLevel = (byte) (Math.ceil((level / 10D)) * 10);
             LogicModule newRoom = new LogicModule(nextRoomIndex, minLevel, maxLevel);
             SERVER_ROOMS.put(nextRoomIndex, newRoom);
-            newRoom.setFuture(LOGIC_SCHEDULER.scheduleAtFixedRate(newRoom, 0, 750, TimeUnit.MICROSECONDS));
+            newRoom.setFuture(Core.SHARED_SCHEDULED_THREADPOOL.scheduleAtFixedRate(newRoom, 0, 750, TimeUnit.MICROSECONDS));
             Globals.log(AscensionServer.class, "New room instance - Room: " + newRoom.getRoomData().getRoomIndex() + " Level Range: " + minLevel + "-" + maxLevel, Globals.LOG_TYPE_DATA);
             return newRoom;
         }

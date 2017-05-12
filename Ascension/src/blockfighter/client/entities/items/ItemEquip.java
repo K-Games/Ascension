@@ -1,5 +1,6 @@
 package blockfighter.client.entities.items;
 
+import blockfighter.client.Core;
 import blockfighter.shared.Globals;
 import java.awt.AlphaComposite;
 import java.awt.Color;
@@ -11,20 +12,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
 public class ItemEquip implements Item {
-
-    private static final ExecutorService SPRITE_THREADPOOL = Executors.newFixedThreadPool(2,
-            new BasicThreadFactory.Builder()
-                    .namingPattern("Sprite-Loader-%d")
-                    .daemon(true)
-                    .priority(Thread.NORM_PRIORITY)
-                    .build());
 
     private static final String OFFSET_DELIMITER = ",";
 
@@ -247,7 +238,7 @@ public class ItemEquip implements Item {
     }
 
     public static void loadItemSprite(final int code, final boolean offhand) {
-        SPRITE_THREADPOOL.submit(() -> {
+        Core.SHARED_THREADPOOL.submit(() -> {
             String hand = (!offhand) ? FOLDER_MAINHAND : FOLDER_OFFHAND;
 
             if (!ITEM_SPRITES.containsKey(Integer.toString(code) + hand)) {

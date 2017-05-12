@@ -1,8 +1,23 @@
 package performancetest;
 
 import com.esotericsoftware.minlog.Log;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
 public class Main {
+
+    public final static ExecutorService SHARED_THREADS = Executors.newFixedThreadPool(2, new BasicThreadFactory.Builder()
+            .namingPattern("SHARED_THREADS-%d")
+            .daemon(true)
+            .priority(Thread.NORM_PRIORITY)
+            .build());
+    public final static ScheduledExecutorService SCHEDULE_SHARED_THREADS = Executors.newScheduledThreadPool(2, new BasicThreadFactory.Builder()
+            .namingPattern("SCHEDULE_SHARED_THREADS-%d")
+            .daemon(false)
+            .priority(Thread.NORM_PRIORITY)
+            .build());
 
     public static boolean UDP_MODE;
     public static byte MIN_LEVEL, MAX_LEVEL, PLAYERS;

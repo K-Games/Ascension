@@ -25,8 +25,13 @@
 ##### Passive
 
 ### Client Changes
+* Centralised all threads into Core class.
 
 ### Server Changes
+* Added Core class for centralised threads.
+* Removed unused config properties for old thread configs.
+* Added new config properties for Shared Threadpools.
+
 
 ---
 

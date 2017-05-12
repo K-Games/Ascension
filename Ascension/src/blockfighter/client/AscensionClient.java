@@ -10,11 +10,8 @@ import java.awt.Dimension;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.Base64;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import javax.swing.JFrame;
-import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
 public class AscensionClient {
 
@@ -164,13 +161,9 @@ public class AscensionClient {
                 Core.getSoundModule().shutdown();
             }
         });
-        final ScheduledExecutorService service = Executors.newScheduledThreadPool(2, new BasicThreadFactory.Builder()
-                .namingPattern("Client-Runner-%d")
-                .daemon(false)
-                .priority(Thread.NORM_PRIORITY)
-                .build());
+
         Core.getLogicModule().setScreen((!Globals.SKIP_TITLE) ? new ScreenTitle() : new ScreenSelectChar());
-        service.scheduleAtFixedRate(Core.getLogicModule(), 0, 1, TimeUnit.MILLISECONDS);
-        service.scheduleAtFixedRate(render, 0, Globals.RENDER_UPDATE, TimeUnit.MICROSECONDS);
+        Core.SHARED_SCHEDULED_THREADPOOL.scheduleAtFixedRate(Core.getLogicModule(), 0, 1, TimeUnit.MILLISECONDS);
+        Core.SHARED_SCHEDULED_THREADPOOL.scheduleAtFixedRate(render, 0, Globals.RENDER_UPDATE, TimeUnit.MICROSECONDS);
     }
 }
