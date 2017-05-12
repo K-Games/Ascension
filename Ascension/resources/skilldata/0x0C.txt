@@ -7,7 +7,7 @@ damage taken for 5 seconds.
 [reqweapon]
 -1
 [maxcooldown]
-12000
+24000
 [basevalue]
 0.05
 [multvalue]
@@ -19,6 +19,6 @@ false
 [heal]
 0.075
 [movespeedbase]
-0.60
+0.20
 [movespeedmult]
 0.005

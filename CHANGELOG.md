@@ -23,7 +23,10 @@
 ##### Shield
 
 ##### Utility
-
+* Adrenaline
+	* Movement Speed bonus decreased from 60% + 0.5% per level to 20% + 0.5% per level.
+	* Cooldown increased from 12 to 24 seconds
+	
 ##### Passive
 
 ### Client Changes
