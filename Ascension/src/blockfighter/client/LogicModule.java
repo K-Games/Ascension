@@ -78,7 +78,7 @@ public class LogicModule implements Runnable {
 
     public void disconnect() {
         if (this.selectedChar != null) {
-            SaveData.saveData(this.selectedChar.getSaveNum(), this.selectedChar);
+            SaveData.writeSaveData(this.selectedChar.getSaveNum(), this.selectedChar);
         }
         if (getScreen() instanceof ScreenIngame) {
             ((ScreenIngame) getScreen()).disconnect();

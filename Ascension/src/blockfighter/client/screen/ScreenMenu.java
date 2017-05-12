@@ -140,7 +140,7 @@ public abstract class ScreenMenu extends Screen {
         if (SwingUtilities.isLeftMouseButton(e)) {
             for (byte i = 0; i < MENU_BOX.length; i++) {
                 if (MENU_BOX[i].contains(scaled)) {
-                    SaveData.saveData(Core.getLogicModule().getSelectedChar().getSaveNum(), Core.getLogicModule().getSelectedChar());
+                    SaveData.writeSaveData(Core.getLogicModule().getSelectedChar().getSaveNum(), Core.getLogicModule().getSelectedChar());
                     if (!(Core.getLogicModule().getScreen().getClass() == SCREEN_CLASS.get(i))) {
                         try {
                             Core.getLogicModule().setScreen(SCREEN_CLASS.get(i).newInstance());

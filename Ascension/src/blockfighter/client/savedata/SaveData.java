@@ -46,16 +46,19 @@ import org.apache.commons.io.FileUtils;
 public class SaveData {
 
     private static final int LEGACY_SAVE_DATA_LENGTH = 45485;
+    public static final int SAVE_VERSION_0240 = 240;
     public static final int SAVE_VERSION_0232 = 232;
     public static final int SAVE_VERSION_0231 = 231;
-    private static final int CURRENT_SAVE_VERSION = SAVE_VERSION_0232;
+    private static final int CURRENT_SAVE_VERSION = SAVE_VERSION_0240;
     private static final HashMap<Integer, Class<? extends SaveDataReader>> SAVE_READERS = new HashMap<>();
     private static final HashMap<Integer, Class<? extends SaveDataWriter>> SAVE_WRITERS = new HashMap<>();
 
     static {
+        SAVE_READERS.put(SAVE_VERSION_0240, blockfighter.client.savedata.ver_0_24_0.SaveDataReaderImpl.class);
         SAVE_READERS.put(SAVE_VERSION_0232, blockfighter.client.savedata.ver_0_23_2.SaveDataReaderImpl.class);
         SAVE_READERS.put(SAVE_VERSION_0231, blockfighter.client.savedata.ver_0_23_1.SaveDataReaderImpl.class);
 
+        SAVE_WRITERS.put(SAVE_VERSION_0240, blockfighter.client.savedata.ver_0_24_0.SaveDataWriterImpl.class);
         SAVE_WRITERS.put(SAVE_VERSION_0232, blockfighter.client.savedata.ver_0_23_2.SaveDataWriterImpl.class);
         SAVE_WRITERS.put(SAVE_VERSION_0231, blockfighter.client.savedata.ver_0_23_1.SaveDataWriterImpl.class);
     }
@@ -171,7 +174,7 @@ public class SaveData {
         this.keybinds[Globals.KEYBIND_SCOREBOARD] = KeyEvent.VK_TAB;
     }
 
-    public static void saveData(final byte saveNum, final SaveData c) {
+    public static void writeSaveData(final byte saveNum, final SaveData c) {
         SaveDataWriter writer;
         try {
             Globals.log(SaveData.class, "Grabbing Save Data Writer " + SAVE_READERS.get(CURRENT_SAVE_VERSION).getName(), Globals.LOG_TYPE_DATA);
@@ -183,7 +186,7 @@ public class SaveData {
         writer.writeSaveData(saveNum, c);
     }
 
-    public static SaveData readData(final byte saveNum) {
+    public static SaveData readSaveData(final byte saveNum) {
         final SaveData c = new SaveData("", saveNum);
         final int legacyLength = LEGACY_SAVE_DATA_LENGTH;
         byte[] data;
@@ -263,7 +266,7 @@ public class SaveData {
         this.baseStats[Globals.STAT_EXP] -= this.baseStats[Globals.STAT_MAXEXP];
         this.baseStats[Globals.STAT_LEVEL] += 1;
         calcStats();
-        saveData(this.saveNum, this);
+        writeSaveData(this.saveNum, this);
     }
 
     public void calcStats() {
@@ -366,7 +369,7 @@ public class SaveData {
         this.baseStats[Globals.STAT_DEFENSE] = 0;
         this.baseStats[Globals.STAT_SPIRIT] = 0;
         calcStats();
-        saveData(this.saveNum, this);
+        writeSaveData(this.saveNum, this);
     }
 
     public void resetSkill() {
@@ -374,7 +377,7 @@ public class SaveData {
             skill.setLevel((byte) 0);
         }
         calcStats();
-        saveData(this.saveNum, this);
+        writeSaveData(this.saveNum, this);
     }
 
     public void addSkill(final byte skillCode, final boolean isMax) {
@@ -393,7 +396,7 @@ public class SaveData {
             this.baseStats[Globals.STAT_SKILLPOINTS] -= amount;
             this.skills[skillCode].addLevel((byte) amount);
         }
-        saveData(this.saveNum, this);
+        writeSaveData(this.saveNum, this);
     }
 
     public void addStat(final byte stat, final int amount) {
@@ -404,7 +407,7 @@ public class SaveData {
         this.baseStats[stat] += amount;
 
         calcStats();
-        saveData(this.saveNum, this);
+        writeSaveData(this.saveNum, this);
     }
 
     public void unequipItem(final byte slot) {
@@ -421,7 +424,7 @@ public class SaveData {
             }
         }
         calcStats();
-        saveData(this.saveNum, this);
+        writeSaveData(this.saveNum, this);
     }
 
     public void equipItem(final int slot, final int inventorySlot) {
@@ -450,31 +453,31 @@ public class SaveData {
         this.inventory[itemType][inventorySlot] = this.equipment[equipSlot];
         this.equipment[equipSlot] = temp;
         calcStats();
-        saveData(this.saveNum, this);
+        writeSaveData(this.saveNum, this);
     }
 
     public void destroyItem(final int type, final int slot) {
         this.inventory[type][slot] = null;
-        saveData(this.saveNum, this);
+        writeSaveData(this.saveNum, this);
     }
 
     public void destroyItem(final int slot) {
         this.upgrades[slot] = null;
-        saveData(this.saveNum, this);
+        writeSaveData(this.saveNum, this);
     }
 
     public void destroyAll(final int type) {
         for (int i = 0; i < this.inventory[type].length; i++) {
             this.inventory[type][i] = null;
         }
-        saveData(this.saveNum, this);
+        writeSaveData(this.saveNum, this);
     }
 
     public void destroyAllUpgrade() {
         for (int i = 0; i < this.upgrades.length; i++) {
             this.upgrades[i] = null;
         }
-        saveData(this.saveNum, this);
+        writeSaveData(this.saveNum, this);
     }
 
     public void addItem(final ItemEquip e) {
@@ -488,7 +491,7 @@ public class SaveData {
                 break;
             }
         }
-        saveData(this.saveNum, this);
+        writeSaveData(this.saveNum, this);
     }
 
     public void addItem(final ItemUpgrade e) {
@@ -498,7 +501,7 @@ public class SaveData {
                 break;
             }
         }
-        saveData(this.saveNum, this);
+        writeSaveData(this.saveNum, this);
     }
 
     public void setKeyBind(final int k, final int keycode) {

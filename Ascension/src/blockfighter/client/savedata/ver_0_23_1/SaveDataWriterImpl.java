@@ -98,7 +98,6 @@ public class SaveDataWriterImpl extends SaveDataWriter {
     }
 
     @Override
-    @Deprecated
     protected int saveEmoteKeyBind(final byte[] data, final int[] keybind, final int pos) {
         int nextPos = pos;
         for (int i = 16; i < 16 + 10; i++) {
@@ -111,7 +110,6 @@ public class SaveDataWriterImpl extends SaveDataWriter {
     }
 
     @Override
-    @Deprecated
     protected int saveScoreboardKeyBind(final byte[] data, final int[] keybind, final int pos) {
         int nextPos = pos;
         byte[] temp = Globals.intToBytes(keybind[Globals.KEYBIND_SCOREBOARD]);
