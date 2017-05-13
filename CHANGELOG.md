@@ -5,7 +5,9 @@
 ## Version 0.24.0
 
 ### Gameplay Changes
-
+* Notifications
+	* Kill notifications now only show colour of the killing player.
+	
 #### Stats
 * Armour
 	* Damage Reduction from Armour lowered from Armour/(Armour + 175) to Armour/(Armour + 300)

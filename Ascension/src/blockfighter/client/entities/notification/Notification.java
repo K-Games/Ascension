@@ -103,34 +103,33 @@ public class Notification implements Callable<Notification> {
     public void drawKillNotification(final Graphics2D g, final int x, final int y) {
         g.setFont(Globals.ARIAL_15PT);
 
-        this.ownerColourBg.xpoints[0] = 0;
-        this.ownerColourBg.xpoints[1] = 5 + this.ownerColourBg.xpoints[0] + 10;
-        this.ownerColourBg.xpoints[2] = this.ownerColourBg.xpoints[1] - 10;
-        this.ownerColourBg.xpoints[3] = 0;
-        this.ownerColourBg.translate(x, y);
-        g.setColor(this.ownerColour);
-        g.fillPolygon(this.ownerColourBg);
-        this.ownerColourBg.translate(-x, -y);
-
-        this.bg.xpoints[0] = this.ownerColourBg.xpoints[1];
-        this.bg.xpoints[1] = 15 + 10 + g.getFontMetrics().stringWidth(output) + this.ownerColourBg.xpoints[1];
-        this.bg.xpoints[2] = this.bg.xpoints[1] - 10;
-        this.bg.xpoints[3] = this.ownerColourBg.xpoints[2];
+        this.bg.xpoints[0] = 0;
+        this.bg.xpoints[1] = 15 + 10 + g.getFontMetrics().stringWidth(output);
+        this.bg.xpoints[2] = 10 + g.getFontMetrics().stringWidth(output);
+        this.bg.xpoints[3] = 0;
         this.bg.translate(x, y);
         g.setColor(this.bgColour);
         g.fillPolygon(this.bg);
         this.bg.translate(-x, -y);
 
-        this.victimColourBg.xpoints[0] = this.bg.xpoints[1];
-        this.victimColourBg.xpoints[1] = this.victimColourBg.xpoints[0] + 10;
-        this.victimColourBg.xpoints[2] = this.victimColourBg.xpoints[1] - 10;
-        this.victimColourBg.xpoints[3] = this.bg.xpoints[2];
-        this.victimColourBg.translate(x, y);
-        g.setColor(this.victimColour);
-        g.fillPolygon(this.victimColourBg);
-        this.victimColourBg.translate(-x, -y);
+        this.ownerColourBg.xpoints[0] = bg.xpoints[1];
+        this.ownerColourBg.xpoints[1] = this.ownerColourBg.xpoints[0] + 10;
+        this.ownerColourBg.xpoints[2] = this.ownerColourBg.xpoints[1] - 15;
+        this.ownerColourBg.xpoints[3] = this.bg.xpoints[2];
+        this.ownerColourBg.translate(x, y);
+        g.setColor(this.ownerColour);
+        g.fillPolygon(this.ownerColourBg);
+        this.ownerColourBg.translate(-x, -y);
 
+//        this.victimColourBg.xpoints[0] = this.bg.xpoints[1];
+//        this.victimColourBg.xpoints[1] = this.victimColourBg.xpoints[0] + 10;
+//        this.victimColourBg.xpoints[2] = this.victimColourBg.xpoints[1] - 10;
+//        this.victimColourBg.xpoints[3] = this.bg.xpoints[2];
+//        this.victimColourBg.translate(x, y);
+//        g.setColor(this.victimColour);
+//        g.fillPolygon(this.victimColourBg);
+//        this.victimColourBg.translate(-x, -y);
         g.setColor(this.colour);
-        g.drawString(this.output, (float) x + 15, (float) y + g.getFontMetrics(Globals.ARIAL_15PT).getHeight());
+        g.drawString(this.output, (float) x + 5, (float) y + g.getFontMetrics(Globals.ARIAL_15PT).getHeight());
     }
 }
