@@ -13,7 +13,7 @@ public class Notification implements Callable<Notification> {
 
     private final byte type;
     private long startTime = 0;
-    private final int duration = 5000;
+    private final int duration = 7000;
     private Color colour = new Color(255, 255, 255, 255),
             bgColour = new Color(0, 0, 0, 255),
             ownerColour, victimColour;

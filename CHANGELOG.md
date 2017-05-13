@@ -6,6 +6,7 @@
 
 ### Gameplay Changes
 * Notifications
+	* Stay on screen for longer.
 	* Kill notifications now only show colour of the killing player.
 	
 #### Stats
