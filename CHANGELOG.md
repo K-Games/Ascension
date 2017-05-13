@@ -42,6 +42,7 @@
 * Added Core class for centralised threads.
 * Removed unused config properties for old thread configs.
 * Added new config properties for Shared Threadpools.
+* Sending AnimState data now includes position data to fix minor client visual bug.
 
 ---
 

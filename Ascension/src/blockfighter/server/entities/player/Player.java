@@ -263,6 +263,10 @@ public class Player implements GameEntity, Callable<Player> {
         return this.updatePos;
     }
 
+    public boolean isUpdateAnimState() {
+        return this.updateAnimState;
+    }
+
     public void incrementSkillCounter() {
         this.skillCounter++;
     }
@@ -499,9 +503,6 @@ public class Player implements GameEntity, Callable<Player> {
         updateAnimState();
         if (this.updateFacing) {
             sendFacing();
-        }
-        if (this.updateAnimState) {
-            sendState();
         }
         if (this.updateScore) {
             sendScore();
@@ -1524,7 +1525,7 @@ public class Player implements GameEntity, Callable<Player> {
     }
 
     public void sendState() {
-        final byte[] bytes = new byte[Globals.PACKET_BYTE * 4];
+        final byte[] bytes = new byte[Globals.PACKET_BYTE * 4 + Globals.PACKET_INT * 2];
         bytes[0] = Globals.DATA_PLAYER_SET_STATE;
         bytes[1] = this.key;
         bytes[2] = this.animState;
@@ -1533,6 +1534,12 @@ public class Player implements GameEntity, Callable<Player> {
         } else {
             bytes[3] = this.frame;
         }
+        final byte[] posXInt = Globals.intToBytes((int) this.x);
+        System.arraycopy(posXInt, 0, bytes, 4, posXInt.length);
+
+        final byte[] posYInt = Globals.intToBytes((int) this.y);
+        System.arraycopy(posYInt, 0, bytes, 8, posYInt.length);
+
         PacketSender.sendAll(bytes, this.logic);
         this.updateAnimState = false;
     }

@@ -240,11 +240,13 @@ public class LogicModule implements Runnable {
         for (Future<Player> task : futures) {
             try {
                 Player player = task.get();
-                if (player.isUpdatePos()) {
+                if (player.isUpdatePos() && !player.isUpdateAnimState()) {
                     byte[] posData = player.getPosData();
                     posDatas.add(posData);
                 }
-
+                if (player.isUpdateAnimState()) {
+                    player.sendState();
+                }
                 if (!player.isConnected()) {
                     this.room.getPlayers().remove(player.getKey());
                     this.room.returnPlayerKey(player.getKey());

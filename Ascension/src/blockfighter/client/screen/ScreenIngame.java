@@ -825,6 +825,9 @@ public class ScreenIngame extends Screen {
         spawnPlayer(key);
         final byte state = data[2];
         final byte frame = data[3];
+        final int x = Globals.bytesToInt(Arrays.copyOfRange(data, 4, 8));
+        final int y = Globals.bytesToInt(Arrays.copyOfRange(data, 8, 12));
+        this.players.get(key).setPos(x, y);
         this.players.get(key).setState(state);
         this.players.get(key).setFrame(frame);
     }
