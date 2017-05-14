@@ -131,7 +131,7 @@ public class GameMapTest {
     @Test
     public void testGetValidY() {
         assertEquals(-400, this.testMap.getValidY(2900, -400), 0.0);
-        assertEquals(0, this.testMap.getValidY(2900, -450), 0.0);
+        assertEquals(-450, this.testMap.getValidY(2900, -450), 0.0);
         assertEquals(-400, this.testMap.getValidY(2900, -380), 0.0);
     }
 
