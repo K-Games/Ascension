@@ -64,6 +64,8 @@ public class ScreenIngame extends Screen {
     private static final String SCOREBOARD_PLAYER_SCORE_TEXT = "Score";
     private static final String SCOREBOARD_PLAYER_PING_TEXT = "Ping";
 
+    private static final String MATCH_OBJECTIVE_TEXT = "Kill 30 players to win";
+
     private final GameClient client;
     private final Rectangle2D.Double[] hotkeySlots = new Rectangle2D.Double[12];
 
@@ -507,6 +509,13 @@ public class ScreenIngame extends Screen {
 
         g.setColor(Color.WHITE);
         g.drawString(str, x1, timerBg.getBounds().y + 30);
+
+        String matchObj = MATCH_OBJECTIVE_TEXT;
+        g.setFont(Globals.ARIAL_15PT);
+        final int matchObjX = Globals.WINDOW_WIDTH / 2 - g.getFontMetrics().stringWidth(matchObj) / 2;
+        drawStringOutline(g, matchObj, matchObjX, (int) (timerBg.getBounds().getMaxY() + 18), 2);
+        g.setColor(Color.WHITE);
+        g.drawString(matchObj, matchObjX, (int) (timerBg.getBounds().getMaxY() + 18));
 
         g.drawImage(expHud, Globals.WINDOW_WIDTH / 2 - expHud.getWidth() / 2, Globals.WINDOW_HEIGHT - hud.getHeight() - expHud.getHeight(), null);
         g.drawImage(hud, Globals.WINDOW_WIDTH / 2 - hud.getWidth() / 2, Globals.WINDOW_HEIGHT - hud.getHeight(), null);

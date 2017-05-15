@@ -41,6 +41,7 @@
 * Improved code for legacy and future SaveData data structure.
 * New SaveData data structure.
 * Disassociated an item's Equipment Slot and Equipment Tab from its Equipment Type.
+* Added match objective reminder under match timer.
 
 ### Server Changes
 * Added Core class for centralised threads.
