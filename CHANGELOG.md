@@ -10,6 +10,8 @@
 	* Kill notifications now only show colour of the killing player.
 * Players' level difference in a match is now at most 5 levels apart.
 	* A match's level group was previously divided by levels in 10s.
+* Matches are now joinable only if the match has at least 90 seconds remaining.
+	* Previously was 5 seconds remaining.
 
 #### Stats
 * Armour
@@ -47,6 +49,7 @@
 	* Removed unused properties for old thread configs.
 	* Added new properties for Shared Threadpools.
 	* Added new property for Room Level Difference value.
+	* Added new property for Minimum Time Remaining for a room to be joinable.
 * Sending AnimState data now includes position data to fix minor client visual bug.
 
 ---
