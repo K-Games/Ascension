@@ -766,6 +766,7 @@ public class Globals {
     public static boolean SERVER_HUB_CONNECT = false;
     public static int SERVER_WIN_KILL_COUNT = 30;
     public static int SERVER_MATCH_DURATION = 300000;
+    public static int SERVER_ROOM_LEVEL_DIFF = 2;
 
     public static int HUB_SERVER_TCP_PORT = 25566;
     public static String CLIENT_HUB_SERVER_ADDRESS = "asc-hub.servegame.com";
@@ -1214,6 +1215,9 @@ public class Globals {
             if (prop.getProperty("matchduration") != null) {
                 SERVER_MATCH_DURATION = Integer.parseInt(prop.getProperty("matchduration"));
             }
+            if (prop.getProperty("leveldiff") != null) {
+                SERVER_ROOM_LEVEL_DIFF = Integer.parseInt(prop.getProperty("leveldiff"));
+            }
         } catch (final FileNotFoundException e) {
             log(Globals.class,
                     "Config", "config.properties not found in root directory. Using default server values.", Globals.LOG_TYPE_DATA);
@@ -1256,6 +1260,8 @@ public class Globals {
                     "Config", "Kills to Win: " + SERVER_WIN_KILL_COUNT, Globals.LOG_TYPE_DATA);
             log(Globals.class,
                     "Config", "Match Duration(ms): " + SERVER_MATCH_DURATION, Globals.LOG_TYPE_DATA);
+            log(Globals.class,
+                    "Config", "Room Level Difference(±): " + SERVER_ROOM_LEVEL_DIFF, Globals.LOG_TYPE_DATA);
 
         }
     }

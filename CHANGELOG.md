@@ -8,7 +8,9 @@
 * Notifications
 	* Stay on screen for longer.
 	* Kill notifications now only show colour of the killing player.
-	
+* Players' level difference in a match is now at most 5 levels apart.
+	* A match's level group was previously divided by levels in 10s.
+
 #### Stats
 * Armour
 	* Damage Reduction from Armour lowered from Armour/(Armour + 175) to Armour/(Armour + 300)
@@ -40,8 +42,11 @@
 
 ### Server Changes
 * Added Core class for centralised threads.
-* Removed unused config properties for old thread configs.
-* Added new config properties for Shared Threadpools.
+* Room's level range is now determined by the creating player's level.
+* Server Configuration
+	* Removed unused properties for old thread configs.
+	* Added new properties for Shared Threadpools.
+	* Added new property for Room Level Difference value.
 * Sending AnimState data now includes position data to fix minor client visual bug.
 
 ---

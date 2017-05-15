@@ -119,8 +119,8 @@ public class AscensionServer {
         Byte nextRoomIndex = getNextRoomIndex();
         if (nextRoomIndex != null) {
 
-            byte minLevel = (byte) ((Math.ceil(level / 10D) - 1) * 10 + 1);
-            byte maxLevel = (byte) (Math.ceil((level / 10D)) * 10);
+            byte minLevel = (byte) (level - Globals.SERVER_ROOM_LEVEL_DIFF);
+            byte maxLevel = (byte) (level + Globals.SERVER_ROOM_LEVEL_DIFF);
             LogicModule newRoom = new LogicModule(nextRoomIndex, minLevel, maxLevel);
             SERVER_ROOMS.put(nextRoomIndex, newRoom);
             newRoom.setFuture(Core.SHARED_SCHEDULED_THREADPOOL.scheduleAtFixedRate(newRoom, 0, 750, TimeUnit.MICROSECONDS));
