@@ -23,7 +23,7 @@ public class IngameNumber implements Callable<IngameNumber> {
     private double speedY;
     private final int number;
     private long startTime = 0;
-    private final int duration = 700;
+    private final int duration = 1000;
 
     private static final ConcurrentLinkedQueue<Integer> AVAILABLE_KEYS = new ConcurrentLinkedQueue<>();
     private static int keyCount = 0;
@@ -49,7 +49,7 @@ public class IngameNumber implements Callable<IngameNumber> {
         this.type = t;
         this.x = loc.x - myPlayer.getX() + 640;
         this.y = loc.y - 18 - myPlayer.getY() + 500;
-        this.speedY = -12 + Globals.rng(40) / 10D;
+        this.speedY = -14 + Globals.rng(40) / 10D;
         this.speedX = (Globals.rng(10) - 5) / 2D;
     }
 

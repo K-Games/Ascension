@@ -12,7 +12,9 @@
 	* A match's level group was previously divided by levels in 10s.
 * Matches are now joinable only if the match has at least 90 seconds remaining.
 	* Previously was 5 seconds remaining.
-
+* Damage Numbers
+	* Stay on screen for longer.
+	
 #### Stats
 * Armour
 	* Damage Reduction from Armour lowered from Armour/(Armour + 175) to Armour/(Armour + 300)
