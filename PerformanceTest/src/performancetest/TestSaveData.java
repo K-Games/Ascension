@@ -22,7 +22,7 @@ public class TestSaveData {
     }
 
     public void newCharacter(final int lvl) {
-        double remainingSP = lvl * Globals.STAT_PER_LEVEL;
+        double remainingSP = lvl * Globals.STAT_PER_LEVEL * 3;
         this.baseStats[Globals.STAT_LEVEL] = lvl;
         this.baseStats[Globals.STAT_POWER] = Globals.rng((int) remainingSP);
         remainingSP -= this.baseStats[Globals.STAT_POWER];

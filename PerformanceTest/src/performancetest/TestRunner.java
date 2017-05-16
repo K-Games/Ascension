@@ -27,8 +27,8 @@ public class TestRunner implements Runnable {
                 try {
                     lm.getGC().update();
                 } catch (Exception ex) {
-                    ex.printStackTrace();
-                    lm.getGC().shutdownClient();
+//                    ex.printStackTrace();
+//                    lm.getGC().shutdownClient();
                 }
             }
         }
