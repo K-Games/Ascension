@@ -1121,7 +1121,7 @@ public class Player implements GameEntity, Callable<Player> {
 
     private void updateJump() {
         if (this.dirKeydown[Globals.UP]) {
-            setYSpeed(-14);
+            setYSpeed(-15);
         }
     }
 

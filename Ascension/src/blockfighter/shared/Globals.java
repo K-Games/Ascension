@@ -787,7 +787,7 @@ public class Globals {
 
     public final static byte MAP_LEFT = 0, MAP_RIGHT = 1, MAP_TOP = 2, MAP_BOTTOM = 3;
 
-    public final static double GRAVITY = 0.35, MAX_FALLSPEED = 12.5, WALK_SPEED = 3.8;
+    public final static double GRAVITY = 0.4, MAX_FALLSPEED = 15, WALK_SPEED = 3.8;
     public static double EXP_MULTIPLIER = 0.05;
 
     public static int PACKET_MAX_PER_CON = 100;
