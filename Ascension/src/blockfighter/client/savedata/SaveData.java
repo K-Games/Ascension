@@ -71,7 +71,7 @@ public class SaveData {
     private String name;
     private final byte saveNum;
 
-    private final ItemEquip[][] inventory = new ItemEquip[Globals.NUM_ITEM_TABS][100];
+    private final ItemEquip[][] inventory = new ItemEquip[Globals.NUM_EQUIP_TABS][100];
     private final ItemUpgrade[] upgrades = new ItemUpgrade[100];
     private final ItemEquip[] equipment = new ItemEquip[Globals.NUM_EQUIP_SLOTS];
 

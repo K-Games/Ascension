@@ -20,7 +20,7 @@ public class ScreenInventory extends ScreenItemManagement {
 
     private static byte selectedTab = Globals.EQUIP_WEAPON;
     private static final Rectangle2D.Double[] INVENTORY_SLOTS = new Rectangle2D.Double[100],
-            ITEM_TABS = new Rectangle2D.Double[Globals.NUM_ITEM_TABS];
+            ITEM_TABS = new Rectangle2D.Double[Globals.NUM_EQUIP_TABS];
 
     private final String[] statString = new String[10];
 

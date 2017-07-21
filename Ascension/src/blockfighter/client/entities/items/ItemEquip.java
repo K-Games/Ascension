@@ -303,49 +303,49 @@ public class ItemEquip implements Item {
         switch (this.itemType) {
             case Globals.ITEM_AMULET:
                 this.equipSlot = Globals.EQUIP_AMULET;
-                this.equipTab = Globals.EQUIP_AMULET;
+                this.equipTab = Globals.EQUIP_TAB_AMULET;
                 break;
             case Globals.ITEM_BELT:
                 this.equipSlot = Globals.EQUIP_BELT;
-                this.equipTab = Globals.EQUIP_BELT;
+                this.equipTab = Globals.EQUIP_TAB_BELT;
                 break;
             case Globals.ITEM_CHEST:
                 this.equipSlot = Globals.EQUIP_CHEST;
-                this.equipTab = Globals.EQUIP_CHEST;
+                this.equipTab = Globals.EQUIP_TAB_CHEST;
                 break;
             case Globals.ITEM_GLOVE:
                 this.equipSlot = Globals.EQUIP_GLOVE;
-                this.equipTab = Globals.EQUIP_GLOVE;
+                this.equipTab = Globals.EQUIP_TAB_GLOVE;
                 break;
             case Globals.ITEM_HEAD:
                 this.equipSlot = Globals.EQUIP_HEAD;
-                this.equipTab = Globals.EQUIP_HEAD;
+                this.equipTab = Globals.EQUIP_TAB_HEAD;
                 break;
             case Globals.ITEM_PANTS:
                 this.equipSlot = Globals.EQUIP_PANTS;
-                this.equipTab = Globals.EQUIP_PANTS;
+                this.equipTab = Globals.EQUIP_TAB_PANTS;
                 break;
             case Globals.ITEM_RING:
                 this.equipSlot = Globals.EQUIP_RING;
-                this.equipTab = Globals.EQUIP_RING;
+                this.equipTab = Globals.EQUIP_TAB_RING;
                 break;
             case Globals.ITEM_SHOE:
                 this.equipSlot = Globals.EQUIP_SHOE;
-                this.equipTab = Globals.EQUIP_SHOE;
+                this.equipTab = Globals.EQUIP_TAB_SHOE;
                 break;
             case Globals.ITEM_SHOULDER:
                 this.equipSlot = Globals.EQUIP_SHOULDER;
-                this.equipTab = Globals.EQUIP_SHOULDER;
+                this.equipTab = Globals.EQUIP_TAB_SHOULDER;
                 break;
             case Globals.ITEM_SWORD:
             case Globals.ITEM_BOW:
                 this.equipSlot = Globals.EQUIP_WEAPON;
-                this.equipTab = Globals.EQUIP_WEAPON;
+                this.equipTab = Globals.EQUIP_TAB_WEAPON;
                 break;
             case Globals.ITEM_SHIELD:
             case Globals.ITEM_ARROW:
                 this.equipSlot = Globals.EQUIP_OFFHAND;
-                this.equipTab = Globals.EQUIP_WEAPON;
+                this.equipTab = Globals.EQUIP_TAB_WEAPON;
                 break;
         }
     }

@@ -247,12 +247,12 @@ public class GlobalsTest {
 
     @Test
     public void testLoadReqWeapon() {
-        String[] data = {Globals.SKILL_REQWEAPON_HEADER, String.valueOf(Globals.NUM_ITEM_TYPES + 1)};
+        String[] data = {Globals.SKILL_REQWEAPON_HEADER, String.valueOf(Globals.NUM_EQUIP_TYPES + 1)};
 
         HashMap<String, Integer> dataHeaders = Globals.getDataHeaders(data, null);
 
         assertEquals(-1, Globals.loadReqWeapon(data, dataHeaders));
-        for (int i = 0; i < Globals.NUM_ITEM_TYPES; i++) {
+        for (int i = 0; i < Globals.NUM_EQUIP_TYPES; i++) {
             data = new String[]{Globals.SKILL_REQWEAPON_HEADER, String.valueOf(i)};
 
             byte result = Globals.loadReqWeapon(data, dataHeaders);

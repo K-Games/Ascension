@@ -526,8 +526,20 @@ public class Globals {
             KEYBIND_EMOTE10 = 25,
             KEYBIND_SCOREBOARD = 26;
 
-    public final static byte NUM_ITEM_TABS = 10, // EQUIP_WEAPON is the equipment slot/tab
-            ITEM_SWORD = 0, // ITEM_SWORD is the item type.
+    public final static byte NUM_EQUIP_TABS = 10,
+            EQUIP_TAB_WEAPON = 0,
+            EQUIP_TAB_HEAD = 1,
+            EQUIP_TAB_CHEST = 2,
+            EQUIP_TAB_PANTS = 3,
+            EQUIP_TAB_SHOULDER = 4,
+            EQUIP_TAB_GLOVE = 5,
+            EQUIP_TAB_SHOE = 6,
+            EQUIP_TAB_BELT = 7,
+            EQUIP_TAB_RING = 8,
+            EQUIP_TAB_AMULET = 9;
+
+    public final static byte NUM_EQUIP_TYPES = 13,
+            ITEM_SWORD = 0,
             ITEM_HEAD = 1,
             ITEM_CHEST = 2,
             ITEM_PANTS = 3,
@@ -537,11 +549,10 @@ public class Globals {
             ITEM_BELT = 7,
             ITEM_RING = 8,
             ITEM_AMULET = 9,
-            ITEM_SHIELD = 10, // 10,11,12 only used for item type identification.
-            ITEM_BOW = 11, // They all will be placed in weapons tab
+            ITEM_SHIELD = 10,
+            ITEM_BOW = 11,
             ITEM_ARROW = 12;
 
-    public final static byte NUM_ITEM_TYPES = 13;
     public final static byte NUM_EQUIP_SLOTS = 11,
             EQUIP_WEAPON = 0,
             EQUIP_HEAD = 1,
@@ -852,7 +863,7 @@ public class Globals {
     public static byte loadReqWeapon(final String[] data, final HashMap<String, Integer> dataHeaders) {
         try {
             byte weaponData = Byte.parseByte(data[dataHeaders.get(SKILL_REQWEAPON_HEADER) + 1]);
-            return (weaponData >= Globals.NUM_ITEM_TYPES) ? -1 : weaponData;
+            return (weaponData >= Globals.NUM_EQUIP_TYPES) ? -1 : weaponData;
         } catch (Exception e) {
             Globals.logError(e.toString(), e);
         }
