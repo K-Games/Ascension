@@ -54,7 +54,7 @@ public class ItemEquip implements Item {
     public final static byte TIER_MYSTIC = 5; //0.95-1.09
     public final static byte TIER_DIVINE = 6;    //1.10+
 
-    private static final String TIER_DIVINE_STRING = "Divine";
+    private static final String TIER_DIVINE_STRING = "Ascended";
     private static final String TIER_MYSTIC_STRING = "Mystic";
     private static final String TIER_LEGENDARY_STRING = "Legendary";
     private static final String TIER_RUNIC_STRING = "Runic";
