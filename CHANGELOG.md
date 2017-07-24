@@ -9,11 +9,14 @@
 	* Stay on screen for longer.
 	* Kill notifications now only show colour of the killing player.
 * Players' level difference in a match is now at most 5 levels apart.
-	* A match's level group was previously divided by levels in 10s.
+	* A match's level group was previously divided by levels in 10s(1-10, 11-20, etc).
 * Matches are now joinable only if the match has at least 90 seconds remaining.
 	* Previously was 5 seconds remaining.
 * Damage Numbers
 	* Stay on screen for longer.
+	* Improved movement to be smoother.
+* Particles
+	* Improved some particles to animate smoother.
 	
 #### Stats
 * Armour
@@ -26,7 +29,12 @@
 #### Skill Changes
 
 ##### Sword
-
+* Phantom Reaper
+	* Decreased number of hits from 5 + 1 per 2 levels to 5.
+	* Damager increased from 75% + 2% per level  to 75% + 20% per level.
+	* Player will now alternate sides when teleporting.
+	* These changes make Phantom Sword more consistent in damage and positioning.
+	
 ##### Bow
 
 ##### Shield
@@ -44,6 +52,7 @@
 * New SaveData data structure.
 * Disassociated an item's Equipment Slot and Equipment Tab from its Equipment Type.
 * Added match objective reminder under match timer.
+* Client logic is updated more frequently to match framerate.
 
 ### Server Changes
 * Added Core class for centralised threads.
