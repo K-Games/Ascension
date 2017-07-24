@@ -138,10 +138,9 @@ public class SaveData {
             addItem(new ItemUpgrade(ItemUpgrade.ITEM_TOME, (int) this.baseStats[Globals.STAT_LEVEL]));
         }
 
-        for (final int itemCode : Globals.ITEM_CODES) {
-            final ItemEquip startEq = new ItemEquip(itemCode, this.baseStats[Globals.STAT_LEVEL], Globals.TEST_MAX_LEVEL);
+        Globals.ITEM_CODES.stream().map((itemCode) -> new ItemEquip(itemCode, this.baseStats[Globals.STAT_LEVEL], Globals.TEST_MAX_LEVEL)).forEachOrdered((startEq) -> {
             addItem(startEq);
-        }
+        });
 
         this.keybinds[Globals.KEYBIND_SKILL1] = KeyEvent.VK_Q;
         this.keybinds[Globals.KEYBIND_SKILL2] = KeyEvent.VK_W;

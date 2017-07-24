@@ -12,7 +12,6 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.LinkedList;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
 
@@ -40,10 +39,10 @@ public abstract class Screen implements KeyListener, MouseListener, MouseMotionL
 
     public void updateParticles(final ConcurrentHashMap<Integer, Particle> updateParticles) {
         LinkedList<Future<Particle>> futures = new LinkedList<>();
-        for (final Map.Entry<Integer, Particle> pEntry : updateParticles.entrySet()) {
+        updateParticles.entrySet().forEach((pEntry) -> {
             futures.add(Core.SHARED_THREADPOOL.submit(pEntry.getValue()));
-        }
-        for (Future<Particle> task : futures) {
+        });
+        futures.forEach((Future<Particle> task) -> {
             try {
                 Particle particle = task.get();
                 if (particle.isExpired()) {
@@ -53,7 +52,7 @@ public abstract class Screen implements KeyListener, MouseListener, MouseMotionL
             } catch (final Exception ex) {
                 Globals.logError(ex.toString(), ex);
             }
-        }
+        });
     }
 
     public static void setRenderPanel(final RenderPanel r) {

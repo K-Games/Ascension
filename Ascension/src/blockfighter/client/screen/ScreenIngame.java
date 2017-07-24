@@ -32,7 +32,6 @@ import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -202,11 +201,10 @@ public class ScreenIngame extends Screen {
 
     private void updateEmotes() {
         LinkedList<Future<Emote>> futures = new LinkedList<>();
-        for (final Map.Entry<Integer, Emote> emote : this.emotes.entrySet()) {
+        this.emotes.entrySet().forEach((emote) -> {
             futures.add(Core.SHARED_THREADPOOL.submit(emote.getValue()));
-        }
-
-        for (Future<Emote> task : futures) {
+        });
+        futures.forEach((task) -> {
             try {
                 Emote n = task.get();
                 if (n.isExpired()) {
@@ -216,16 +214,15 @@ public class ScreenIngame extends Screen {
             } catch (final Exception ex) {
                 Globals.logError(ex.toString(), ex);
             }
-        }
+        });
     }
 
     private void updateIngameNumber() {
         LinkedList<Future<IngameNumber>> futures = new LinkedList<>();
-        for (final Map.Entry<Integer, IngameNumber> n : this.ingameNumber.entrySet()) {
+        this.ingameNumber.entrySet().forEach((n) -> {
             futures.add(Core.SHARED_THREADPOOL.submit(n.getValue()));
-        }
-
-        for (Future<IngameNumber> task : futures) {
+        });
+        futures.forEach((task) -> {
             try {
                 IngameNumber n = task.get();
                 if (n.isExpired()) {
@@ -235,23 +232,22 @@ public class ScreenIngame extends Screen {
             } catch (final Exception ex) {
                 Globals.logError(ex.toString(), ex);
             }
-        }
+        });
 
     }
 
     private void updateNotifications() {
         LinkedList<Future<Notification>> futures = new LinkedList<>();
-        for (Notification n : this.notifications) {
+        this.notifications.forEach((n) -> {
             futures.add(Core.SHARED_THREADPOOL.submit(n));
-        }
-
-        for (Future<Notification> task : futures) {
+        });
+        futures.forEach((task) -> {
             try {
                 task.get();
             } catch (final Exception ex) {
                 Globals.logError(ex.toString(), ex);
             }
-        }
+        });
 
         if (this.notifications.peek() != null && this.notifications.peek().isExpired()) {
             this.notifications.remove();
@@ -266,25 +262,24 @@ public class ScreenIngame extends Screen {
 
     private void updateMobs() {
         LinkedList<Future<Mob>> futures = new LinkedList<>();
-        for (final Map.Entry<Integer, Mob> pEntry : this.mobs.entrySet()) {
+        this.mobs.entrySet().forEach((pEntry) -> {
             futures.add(Core.SHARED_THREADPOOL.submit(pEntry.getValue()));
-        }
-        for (Future<Mob> task : futures) {
+        });
+        futures.forEach((task) -> {
             try {
                 task.get();
             } catch (final Exception ex) {
                 Globals.logError(ex.toString(), ex);
             }
-        }
+        });
     }
 
     private void updatePlayers() {
         LinkedList<Future<Player>> futures = new LinkedList<>();
-        for (final Map.Entry<Byte, Player> pEntry : this.players.entrySet()) {
+        this.players.entrySet().forEach((pEntry) -> {
             futures.add(Core.SHARED_THREADPOOL.submit(pEntry.getValue()));
-        }
-
-        for (Future<Player> task : futures) {
+        });
+        futures.forEach((task) -> {
             try {
                 Player player = task.get();
                 if (player.isDisconnected()) {
@@ -293,7 +288,7 @@ public class ScreenIngame extends Screen {
             } catch (final Exception ex) {
                 Globals.logError(ex.toString(), ex);
             }
-        }
+        });
     }
 
     @Override
@@ -301,9 +296,9 @@ public class ScreenIngame extends Screen {
         g.setClip(0, 0, 1280, 720);
         final AffineTransform resetForm = g.getTransform();
 
-        for (final Map.Entry<Byte, Player> pEntry : this.players.entrySet()) {
+        this.players.entrySet().forEach((pEntry) -> {
             pEntry.getValue().updatePos();
-        }
+        });
         if (this.players != null && Core.getLogicModule().getMyPlayerKey() != -1 && this.players.containsKey(Core.getLogicModule().getMyPlayerKey())) {
             try {
                 this.map.drawBg(g, this.players.get(Core.getLogicModule().getMyPlayerKey()).getX(), this.players.get(Core.getLogicModule().getMyPlayerKey()).getY());
@@ -323,23 +318,21 @@ public class ScreenIngame extends Screen {
         this.map.draw(g);
 
         if (this.mobs != null) {
-            for (final Map.Entry<Integer, Mob> pEntry : this.mobs.entrySet()) {
+            this.mobs.entrySet().forEach((pEntry) -> {
                 pEntry.getValue().draw(g);
-            }
+            });
         }
 
         if (this.players != null) {
-            for (final Map.Entry<Byte, Player> pEntry : this.players.entrySet()) {
-                if (pEntry.getValue().getKey() != Core.getLogicModule().getMyPlayerKey()) {
-                    pEntry.getValue().draw(g);
-                }
-            }
+            this.players.entrySet().stream().filter((pEntry) -> (pEntry.getValue().getKey() != Core.getLogicModule().getMyPlayerKey())).forEachOrdered((pEntry) -> {
+                pEntry.getValue().draw(g);
+            });
             if (this.players.containsKey(Core.getLogicModule().getMyPlayerKey())) {
                 this.players.get(Core.getLogicModule().getMyPlayerKey()).draw(g);
             }
         }
 
-        for (final Map.Entry<Integer, Particle> pEntry : this.particles.entrySet()) {
+        this.particles.entrySet().forEach((pEntry) -> {
             try {
                 if (!pEntry.getValue().isExpired()) {
                     pEntry.getValue().draw(g);
@@ -347,8 +340,8 @@ public class ScreenIngame extends Screen {
             } catch (Exception e) {
                 Globals.logError(e.toString(), e);
             }
-        }
-        for (final Map.Entry<Integer, Emote> emote : this.emotes.entrySet()) {
+        });
+        this.emotes.entrySet().forEach((emote) -> {
             try {
                 if (!emote.getValue().isExpired()) {
                     emote.getValue().draw(g);
@@ -356,14 +349,12 @@ public class ScreenIngame extends Screen {
             } catch (Exception e) {
                 Globals.logError(e.toString(), e);
             }
-        }
+        });
 
         g.setTransform(resetForm);
-        for (final Map.Entry<Integer, IngameNumber> number : this.ingameNumber.entrySet()) {
-            if (!number.getValue().isExpired()) {
-                number.getValue().draw(g);
-            }
-        }
+        this.ingameNumber.entrySet().stream().filter((number) -> (!number.getValue().isExpired())).forEachOrdered((number) -> {
+            number.getValue().draw(g);
+        });
         drawHUD(g);
         drawHotkeys(g);
 
@@ -1265,9 +1256,9 @@ public class ScreenIngame extends Screen {
         Particle.unloadParticles();
         Emote.unloadEmotes();
         ItemEquip.unloadSprites();
-        for (final Map.Entry<Integer, Mob> mobEntry : this.mobs.entrySet()) {
+        this.mobs.entrySet().forEach((mobEntry) -> {
             mobEntry.getValue().unload();
-        }
+        });
     }
 
 }

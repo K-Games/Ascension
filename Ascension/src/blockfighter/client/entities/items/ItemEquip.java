@@ -110,7 +110,7 @@ public class ItemEquip implements Item {
 
     private static void loadItemData() {
         Globals.log(ItemEquip.class, "Loading Item Data...", Globals.LOG_TYPE_DATA);
-        for (final int itemCode : Globals.ITEM_CODES) {
+        Globals.ITEM_CODES.forEach((itemCode) -> {
             try {
                 InputStream itemFile = Globals.loadResourceAsStream("itemdata/equip/" + itemCode + ".txt");
                 List<String> fileLines = IOUtils.readLines(itemFile, "UTF-8");
@@ -225,7 +225,7 @@ public class ItemEquip implements Item {
             } catch (IOException | NullPointerException e) {
                 Globals.logError("Could not load item #" + itemCode + " data." + e.toString(), e);
             }
-        }
+        });
         Globals.log(ItemEquip.class, "Loaded Item Data.", Globals.LOG_TYPE_DATA);
     }
 

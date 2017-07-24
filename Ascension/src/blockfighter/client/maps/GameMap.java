@@ -7,7 +7,6 @@ import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
 
@@ -52,26 +51,25 @@ public abstract class GameMap {
 
     public void updateParticles() {
         LinkedList<Future<Particle>> futures = new LinkedList<>();
-        for (final Map.Entry<Integer, Particle> pEntry : this.particles.entrySet()) {
+        this.particles.entrySet().forEach((pEntry) -> {
             futures.add(Core.SHARED_THREADPOOL.submit(pEntry.getValue()));
-        }
-        for (Future<Particle> task : futures) {
-
+        });
+        futures.forEach((Future<Particle> task) -> {
             try {
                 Particle particle = task.get();
                 if (particle.isExpired()) {
-                    this.particles.remove(particle.getKey());
+                    GameMap.this.particles.remove(particle.getKey());
                 }
             } catch (final Exception ex) {
                 Globals.logError(ex.toString(), ex);
             }
-        }
+        });
     }
 
     public void draw(final Graphics2D g) {
-        for (final Map.Entry<Integer, Particle> pEntry : particles.entrySet()) {
+        particles.entrySet().forEach((pEntry) -> {
             pEntry.getValue().draw(g);
-        }
+        });
     }
 
     public void drawBg(final Graphics2D g, final int x, final int y) {

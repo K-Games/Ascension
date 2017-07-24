@@ -8,9 +8,9 @@ import java.awt.Point;
 
 public class EmoteGoodGame extends Emote {
 
-    private float[] charX = new float[2];
-    private float[] charY = new float[2];
-    private float[] ySpeed = new float[2];
+    private final float[] charX = new float[2];
+    private final float[] charY = new float[2];
+    private final float[] ySpeed = new float[2];
 
     public EmoteGoodGame(Player owner) {
         super(owner);

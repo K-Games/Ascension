@@ -45,7 +45,7 @@ public abstract class Emote implements Callable<Emote> {
             for (int j = 0; emote.getSprite() != null && j < emote.getSprite().length; j++) {
                 emote.getSprite()[j] = null;
             }
-            emote.setSprite(null);;
+            emote.setSprite(null);
         }
         LOADED = false;
         System.gc();
