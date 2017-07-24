@@ -89,7 +89,7 @@ public class SkillSwordPhantom extends Skill {
     @Override
     public void updateSkillUse(Player player) {
         final long duration = Globals.nsToMs(this.logic.getTime() - player.getSkillCastTime());
-        final int numHits = getLevel() / 2 + 5;
+        final int numHits = 5;
         final int radius = 350;
         boolean endPhantom = false;
         player.setInvulnerable(true);
@@ -108,7 +108,8 @@ public class SkillSwordPhantom extends Skill {
 
                 if (!playersInRange.isEmpty()) {
                     target = playersInRange.get(Globals.rng(playersInRange.size()));
-                    double teleX = (Globals.rng(2) == 0) ? target.getHitbox().x + target.getHitbox().width + 100 + Globals.rng(50) : target.getHitbox().x - 100 - Globals.rng(50);
+
+                    double teleX = ((player.getFacing() == Globals.RIGHT)) ? target.getHitbox().x + target.getHitbox().width + 70 + Globals.rng(50) : target.getHitbox().x - 70 - Globals.rng(50);
                     player.setPos(teleX, target.getY() - 10 * Globals.rng(5));
                     if (target.getX() < player.getX()) {
                         player.setFacing(Globals.LEFT);

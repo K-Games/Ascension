@@ -12,6 +12,6 @@ Invulnerable during the skill duration.
 [basevalue]
 0.75
 [multvalue]
-0.02
+0.2
 [passive]
 false
