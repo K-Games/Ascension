@@ -31,20 +31,19 @@ public class ParticleBowPowerCharge extends Particle {
     @Override
     public void update() {
         super.update();
-        if (Globals.nsToMs(Core.getLogicModule().getTime() - this.lastFrameTime) >= this.frameDuration) {
-            long durationLeft = this.duration - Globals.nsToMs(Core.getLogicModule().getTime() - this.particleStartTime);
-            double numberOfTicks = durationLeft / Globals.nsToMs((long) Globals.CLIENT_LOGIC_UPDATE);
-            if (numberOfTicks <= 1) {
-                this.x = owner.getX();
-                this.y = owner.getY() - 75;
-            } else {
-                this.speedX = (owner.getX() - this.x) / numberOfTicks;
-                this.speedY = ((owner.getY() - 75) - this.y) / numberOfTicks;
-                this.x += this.speedX;
-                this.y += this.speedY;
-            }
-            this.lastFrameTime = Core.getLogicModule().getTime();
+        long durationLeft = this.duration - Globals.nsToMs(Core.getLogicModule().getTime() - this.particleStartTime);
+        double numberOfTicks = 1f * durationLeft / Globals.nsToMs((long) Globals.CLIENT_LOGIC_UPDATE);
+        if (numberOfTicks <= 1) {
+            this.x = owner.getX();
+            this.y = owner.getY() - 75;
+        } else {
+            this.speedX = (owner.getX() - this.x) / numberOfTicks;
+            this.speedY = ((owner.getY() - 75) - this.y) / numberOfTicks;
+            this.x += this.speedX;
+            this.y += this.speedY;
         }
+        this.lastFrameTime = Core.getLogicModule().getTime();
+
     }
 
     @Override

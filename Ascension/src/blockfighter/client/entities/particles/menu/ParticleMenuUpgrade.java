@@ -7,13 +7,16 @@ import java.awt.image.BufferedImage;
 
 public class ParticleMenuUpgrade extends Particle {
 
-    private final int color, deltaX;
-    private int deltaY;
+    private final int color;
+    private final double deltaX;
+    private double deltaY, realX, realY;
 
-    public ParticleMenuUpgrade(final int x, final int y, final int c, final int dX, final int dY) {
+    public ParticleMenuUpgrade(final int x, final int y, final int c, final double dX, final double dY) {
         super(x, y);
         this.duration = 1000;
         this.color = c;
+        this.realX = x;
+        this.realY = y;
         this.deltaX = dX;
         this.deltaY = dY;
     }
@@ -21,17 +24,16 @@ public class ParticleMenuUpgrade extends Particle {
     @Override
     public void update() {
         super.update();
-        this.x += this.deltaX;
-        this.y += this.deltaY;
+        this.realX += this.deltaX;
+        this.realY += this.deltaY;
         if (Globals.rng(2) == 0) {
-            this.deltaY++;
+            this.deltaY += 0.75;
         }
-
     }
 
     @Override
     public void draw(final Graphics2D g) {
         final BufferedImage sprite = Globals.MENU_UPGRADEPARTICLE[this.color];
-        g.drawImage(sprite, this.x, this.y, null);
+        g.drawImage(sprite, (int) this.realX, (int) this.realY, null);
     }
 }

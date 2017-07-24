@@ -64,8 +64,9 @@ public class ScreenUpgrade extends ScreenItemManagement {
         if (now - this.nextNewParticleTime >= Globals.msToNs(100)) {
             for (int i = 0; i < this.selectUpgrade.length; i++) {
                 if (this.selectUpgrade[i] > -1) {
-                    Particle selectionPart = new ParticleMenuUpgradeSelect((int) UPGRADE_BOX[i].x + 30, (int) UPGRADE_BOX[i].y + 30,
-                            (int) UPGRADE_BOX[3].x + 30, (int) UPGRADE_BOX[3].y + 30);
+                    Particle selectionPart = new ParticleMenuUpgradeSelect(
+                            (int) (UPGRADE_BOX[i].x + UPGRADE_BOX[i].width / 2 - 3), (int) (UPGRADE_BOX[i].y + UPGRADE_BOX[i].height / 2 - 3),
+                            (int) (UPGRADE_BOX[3].x + UPGRADE_BOX[3].width / 2 - 3), (int) (UPGRADE_BOX[3].y + UPGRADE_BOX[3].height / 2 - 3));
                     PARTICLES.put(selectionPart.getKey(), selectionPart);
                 }
             }
@@ -84,16 +85,16 @@ public class ScreenUpgrade extends ScreenItemManagement {
                 if (ItemUpgrade.rollUpgrade(this.character.getEquip()[this.selectEquip], tempUpgrades)) {
                     this.character.getEquip()[this.selectEquip].addUpgrade(1);
                     for (int i = 0; i < 20; i++) {
-                        Particle upPart = new ParticleMenuUpgrade((int) UPGRADE_BOX[3].x + 30,
-                                (int) UPGRADE_BOX[3].y + 30, 3,
-                                Globals.rng(10) - 5, -5 - Globals.rng(3));
+                        Particle upPart = new ParticleMenuUpgrade(
+                                (int) (UPGRADE_BOX[3].x + UPGRADE_BOX[3].width / 2 - 3), (int) (UPGRADE_BOX[3].y + UPGRADE_BOX[3].height / 2 - 3),
+                                3, Globals.rng(60) / 10f - 3f, -4 - Globals.rng(10) / 10f);
                         PARTICLES.put(upPart.getKey(), upPart);
                     }
                 } else {
                     for (int i = 0; i < 20; i++) {
-                        Particle upPart = new ParticleMenuUpgrade((int) UPGRADE_BOX[3].x + 30,
-                                (int) UPGRADE_BOX[3].y + 30, 2,
-                                Globals.rng(10) - 5, -5 - Globals.rng(3));
+                        Particle upPart = new ParticleMenuUpgrade(
+                                (int) (UPGRADE_BOX[3].x + UPGRADE_BOX[3].width / 2 - 3), (int) (UPGRADE_BOX[3].y + UPGRADE_BOX[3].height / 2 - 3),
+                                2, Globals.rng(60) / 10f - 3f, -5 - Globals.rng(10) / 10f);
                         PARTICLES.put(upPart.getKey(), upPart);
                     }
                 }

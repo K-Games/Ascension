@@ -19,7 +19,7 @@ public class IngameNumber implements Callable<IngameNumber> {
     private final byte type;
     private double x, y;
 
-    private double speedX;
+    private final double speedX;
     private double speedY;
     private final int number;
     private long startTime = 0;
@@ -50,7 +50,7 @@ public class IngameNumber implements Callable<IngameNumber> {
         this.x = loc.x - myPlayer.getX() + 640;
         this.y = loc.y - 18 - myPlayer.getY() + 500;
         this.speedY = -14 + Globals.rng(40) / 10D;
-        this.speedX = (Globals.rng(10) - 5) / 2D;
+        this.speedX = (Globals.rng(8) - 4) / 2D;
     }
 
     public int getKey() {
@@ -59,7 +59,7 @@ public class IngameNumber implements Callable<IngameNumber> {
 
     @Override
     public IngameNumber call() {
-        this.speedY += 0.6;
+        this.speedY += 0.5;
         this.y += this.speedY;
         this.x += this.speedX;
         return this;

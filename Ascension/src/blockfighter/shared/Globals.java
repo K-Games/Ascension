@@ -101,7 +101,7 @@ public class Globals {
     public final static int RENDER_FPS = 60;
     public final static long RENDER_UPDATE = 1000000 / RENDER_FPS;
 
-    public final static double CLIENT_LOGIC_TICKS_PER_SEC = 40D;
+    public final static double CLIENT_LOGIC_TICKS_PER_SEC = 60D;
     public final static double CLIENT_LOGIC_UPDATE = 1000000000D / CLIENT_LOGIC_TICKS_PER_SEC;
 
     // public final static double DMG_TICKS_PER_SEC = 60D;

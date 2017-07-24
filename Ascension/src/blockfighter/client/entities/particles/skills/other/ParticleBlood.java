@@ -15,8 +15,8 @@ public class ParticleBlood extends Particle {
         this.y = y - 75 + Globals.rng(30);
         this.xDouble = this.x;
         this.yDouble = this.y;
-        this.xSpeed = ((f != Globals.RIGHT) ? 1 : -1) * (.075 * Globals.rng(80) + 5.5);
-        this.ySpeed = (.1 * Globals.rng(100) - 11);
+        this.xSpeed = ((f != Globals.RIGHT) ? 1 : -1) * (.075 * Globals.rng(70) + 4.5);
+        this.ySpeed = (.1 * Globals.rng(100) - 14);
         this.frame = 0;
         this.duration = 300 + Globals.rng(30) * 10;
     }

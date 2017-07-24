@@ -34,7 +34,8 @@ public class ParticleShieldMagnetize extends Particle {
             int distanceX = (this.target.getX() - this.owner.getX()) / this.lightningPointsX[0].length;
             int distanceY = ((this.target.getY() - 75) - (this.owner.getY() - 75)) / this.lightningPointsY[0].length;
 
-            this.drawWidth -= 6f / (this.duration / Globals.nsToMs((long) Globals.CLIENT_LOGIC_UPDATE));
+            this.drawWidth = 0.2f + 5.8f * (1f - Globals.nsToMs(Core.getLogicModule().getTime() - this.particleStartTime) / (float) this.duration);
+            System.out.println(this.drawWidth);
             for (byte j = 0; j < this.lightningPointsX.length; j++) {
                 for (byte i = 0; i < this.lightningPointsX[j].length; i++) {
                     this.lightningPointsX[j][i] = (int) (this.owner.getX() + i * distanceX + Globals.rng(40) - 20);
