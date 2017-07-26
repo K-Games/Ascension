@@ -21,6 +21,8 @@ import javax.swing.SwingUtilities;
 
 public class ScreenUpgrade extends ScreenItemManagement {
 
+    private static final Rectangle2D.Double SORT_BOX;
+    private static final String SORT_TEXT = "Sort by Level";
     private static final String ENHANCE_TEXT = "Infuse";
     private static final String CHANCE_OF_SUCCESS_TEXT = "Chance of Success: ";
     private static final String EQUIPMENT_UPGRADE_TEXT = "Equipment Infusion";
@@ -45,6 +47,7 @@ public class ScreenUpgrade extends ScreenItemManagement {
 
     static {
 
+        SORT_BOX = new Rectangle2D.Double(520 - 185, 655, 180, 40);
         UPGRADE_BOX[0] = new Rectangle2D.Double(UPGRADE_BOX_X, UPGRADE_BOX_Y + 120, 60, 60);
         UPGRADE_BOX[1] = new Rectangle2D.Double(UPGRADE_BOX_X + 130, UPGRADE_BOX_Y + 120, 60, 60);
         UPGRADE_BOX[2] = new Rectangle2D.Double(UPGRADE_BOX_X + 240, UPGRADE_BOX_Y + 120, 60, 60);
@@ -139,6 +142,7 @@ public class ScreenUpgrade extends ScreenItemManagement {
         drawUpgradeBox(g);
         drawInventory(g);
         drawDestroyButtons(g);
+        drawSortButton(g);
         if (this.destroyConfirm) {
             drawDestroyConfirm(g);
         }
@@ -150,8 +154,18 @@ public class ScreenUpgrade extends ScreenItemManagement {
         if (this.dragItem != -1) {
             this.character.getUpgrades()[this.dragItem].draw(g, (int) (this.mousePos.x + 5), (int) (this.mousePos.y + 5));
         }
+
         super.draw(g);
         drawItemInfo(g);
+    }
+
+    private void drawSortButton(final Graphics2D g) {
+        BufferedImage button = Globals.MENU_BUTTON[Globals.BUTTON_SMALLRECT];
+        g.drawImage(button, (int) SORT_BOX.x, (int) SORT_BOX.y, null);
+        g.setFont(Globals.ARIAL_18PT);
+        drawStringOutline(g, SORT_TEXT, (int) (SORT_BOX.x + button.getWidth() / 2 - g.getFontMetrics().stringWidth(SORT_TEXT) / 2), (int) (SORT_BOX.y + 27), 1);
+        g.setColor(Color.WHITE);
+        g.drawString(SORT_TEXT, (int) (SORT_BOX.x + button.getWidth() / 2 - g.getFontMetrics().stringWidth(SORT_TEXT) / 2), (int) (SORT_BOX.y + 27));
     }
 
     private void drawUpgradeBox(final Graphics2D g) {
@@ -385,6 +399,10 @@ public class ScreenUpgrade extends ScreenItemManagement {
                     }
                     return;
                 }
+            }
+
+            if (SORT_BOX.contains(scaled)) {
+                this.character.sortUpgradeItems();
             }
 
             if (!this.upgrading && COMBINE_BOX.contains(scaled)) {

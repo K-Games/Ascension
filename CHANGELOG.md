@@ -17,7 +17,7 @@
 	* Improved movement to be smoother.
 * Particles
 	* Improved some particles to animate smoother.
-	
+
 #### Stats
 * Armour
 	* Damage Reduction from Armour lowered from Armour/(Armour + 175) to Armour/(Armour + 300)
@@ -28,6 +28,7 @@
 * Divine Tier renamed to Ascended Tier.
 * Ascended Tier is now attainable only through infusions.
 	* Ascended Tier is granted to equipment at least Mystic Tier with +10 infusions.
+* Soul Stones can now be sorted by their level in descending order (highest to lowest).
 
 #### Skill Changes
 

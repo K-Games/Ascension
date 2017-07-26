@@ -7,7 +7,7 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 
-public class ItemUpgrade implements Item {
+public class ItemUpgrade implements Item, Comparable<ItemUpgrade> {
 
     public final static int ITEM_TOME = 100;
     private final static HashMap<Integer, String> ITEM_NAMES = new HashMap<>();
@@ -135,5 +135,10 @@ public class ItemUpgrade implements Item {
         g.drawString(getItemName(), x + 40, y + 20);
         g.drawString("A physical manifestation of a slain soul.", x + 40, y + 40);
         g.drawString("Can be infused into any equipment to enhance it.", x + 40, y + 60);
+    }
+
+    @Override
+    public int compareTo(ItemUpgrade o) {
+        return this.level - o.level;
     }
 }

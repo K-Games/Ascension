@@ -39,6 +39,7 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.UUID;
 import org.apache.commons.io.FileUtils;
@@ -497,5 +498,9 @@ public class SaveData {
 
     public void setUniqueID(final UUID id) {
         this.uniqueID = id;
+    }
+
+    public void sortUpgradeItems() {
+        Arrays.sort(this.upgrades, Comparator.nullsLast(Comparator.reverseOrder()));
     }
 }
