@@ -618,6 +618,9 @@ public class ItemEquip implements Item {
                 g.setColor(TIER_COLOURS.get(getTier()));
                 g.drawString("PH", x + 20, y + 30);
             }
+            g.setFont(Globals.ARIAL_12PT);
+            g.setColor(Color.WHITE);
+            g.drawString(Integer.toString((int) getTotalStats()[Globals.STAT_LEVEL]), x + 2, y + 12);
         } else {
             loadItemIcon(this.itemCode);
         }
