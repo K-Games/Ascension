@@ -440,7 +440,11 @@ public class ScreenIngame extends Screen {
 
         g.setFont(Globals.ARIAL_15PT);
         int rowY = SCOREBOARD_Y + SCOREBOARD_ROW_HEIGHT + 10;
-        for (final Player player : this.scoreboardList) {
+        for (int i = 0; i < 10 && i < this.scoreboardList.length; i++) {
+            Player player = this.scoreboardList[i];
+            if (player == null) {
+                continue;
+            }
             if (!player.getPlayerName().isEmpty()) {
                 g.setColor(SCOREBOARD_BG_COLOR);
                 g.fillRoundRect(SCOREBOARD_PLAYER_NAME_X, rowY, SCOREBOARD_PLAYER_NAME_COL_WIDTH, SCOREBOARD_ROW_HEIGHT, 10, 10);

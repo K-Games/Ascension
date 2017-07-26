@@ -403,6 +403,9 @@ public class ScreenUpgrade extends ScreenItemManagement {
 
             if (SORT_BOX.contains(scaled)) {
                 this.character.sortUpgradeItems();
+                for (int i = 0; i < this.selectUpgrade.length; i++) {
+                    this.selectUpgrade[i] = -1;
+                }
             }
 
             if (!this.upgrading && COMBINE_BOX.contains(scaled)) {
