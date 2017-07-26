@@ -70,8 +70,6 @@ public class ItemEquip implements Item {
     protected int itemCode;
     protected byte itemType = -1, equipSlot = -1, equipTab = -1;
 
-    private float overlayColour = 0, overlayColourDelta = 0.005f;
-
     static {
         loadItemTypeNames();
         loadTierColours();
@@ -461,7 +459,11 @@ public class ItemEquip implements Item {
 
     @Override
     public void draw(final Graphics2D g, final int x, final int y) {
-        drawIcon(g, x, y);
+        drawIcon(g, x, y, 0);
+    }
+
+    public void draw(final Graphics2D g, final int x, final int y, final float overlayColour) {
+        drawIcon(g, x, y, overlayColour);
     }
 
     @Override
@@ -589,19 +591,11 @@ public class ItemEquip implements Item {
         }
     }
 
-    private void drawIcon(final Graphics2D g, final int x, final int y) {
+    private void drawIcon(final Graphics2D g, final int x, final int y, final float overlayColour) {
         if (ITEM_ICONS.containsKey(this.itemCode)) {
             final BufferedImage sprite = ITEM_ICONS.get(this.itemCode);
             if (sprite != null) {
                 if (getTier() != TIER_COMMON) {
-                    overlayColour += overlayColourDelta;
-                    if (overlayColour <= 0) {
-                        overlayColour = 0;
-                        overlayColourDelta = 0.005f;
-                    } else if (overlayColour >= 0.7f) {
-                        overlayColour = 0.7f;
-                        overlayColourDelta = -0.005f;
-                    }
                     BufferedImage colouredIcon = new BufferedImage(sprite.getWidth(), sprite.getHeight(), BufferedImage.TYPE_INT_ARGB);
                     Graphics2D gbi = colouredIcon.createGraphics();
                     gbi.drawImage(sprite, 0, 0, null);

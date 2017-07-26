@@ -33,8 +33,11 @@ public abstract class ScreenItemManagement extends ScreenMenu {
 
     private int nextFrameTime = 0;
     private long lastFrameTime = 0;
+    private long lastOverlayTime = 0;
     private byte charFrame = 0;
     protected final SaveData character;
+
+    protected float overlayColour = 0, overlayColourDelta = 0.005f;
 
     static {
         EQUIP_SLOTS[Globals.EQUIP_AMULET] = new Rectangle2D.Double(EQUIP_BOX_X + 160, EQUIP_BOX_Y, 60, 60);
@@ -64,6 +67,19 @@ public abstract class ScreenItemManagement extends ScreenMenu {
     public void update() {
         super.update();
         final long now = Core.getLogicModule().getTime(); // Get time now
+
+        if (now - this.lastOverlayTime >= Globals.CLIENT_LOGIC_UPDATE) {
+            overlayColour += overlayColourDelta;
+            if (overlayColour <= 0) {
+                overlayColour = 0;
+                overlayColourDelta = 0.005f;
+            } else if (overlayColour >= 0.7f) {
+                overlayColour = 0.7f;
+                overlayColourDelta = -0.005f;
+            }
+            this.lastOverlayTime = now;
+        }
+
         if (now - this.lastFrameTime >= this.nextFrameTime) {
             if (this.charFrame >= Globals.CHAR_SPRITE[Globals.PLAYER_ANIM_STATE_STAND].length - 1) {
                 this.charFrame = 0;
@@ -143,7 +159,7 @@ public abstract class ScreenItemManagement extends ScreenMenu {
         for (int i = 0; i < EQUIP_SLOTS.length; i++) {
             g.drawImage(button, (int) EQUIP_SLOTS[i].x, (int) EQUIP_SLOTS[i].y, null);
             if (this.character.getEquip()[i] != null) {
-                this.character.getEquip()[i].draw(g, (int) EQUIP_SLOTS[i].x, (int) EQUIP_SLOTS[i].y);
+                this.character.getEquip()[i].draw(g, (int) EQUIP_SLOTS[i].x, (int) EQUIP_SLOTS[i].y, this.overlayColour);
             }
             String s = ItemEquip.getItemTypeName((byte) i);
             if (i == Globals.EQUIP_WEAPON) {

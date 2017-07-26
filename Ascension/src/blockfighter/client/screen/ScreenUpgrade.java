@@ -90,7 +90,7 @@ public class ScreenUpgrade extends ScreenItemManagement {
                     for (int i = 0; i < 20; i++) {
                         Particle upPart = new ParticleMenuUpgrade(
                                 (int) (UPGRADE_BOX[3].x + UPGRADE_BOX[3].width / 2 - 3), (int) (UPGRADE_BOX[3].y + UPGRADE_BOX[3].height / 2 - 3),
-                                3, Globals.rng(60) / 10f - 3f, -4 - Globals.rng(10) / 10f);
+                                3, Globals.rng(60) / 10f - 3f, -5 - Globals.rng(10) / 10f);
                         PARTICLES.put(upPart.getKey(), upPart);
                     }
                 } else {
@@ -193,7 +193,7 @@ public class ScreenUpgrade extends ScreenItemManagement {
 
         if (this.selectEquip > -1) {
             if (this.character.getEquip()[this.selectEquip] != null) {
-                this.character.getEquip()[this.selectEquip].draw(g, (int) UPGRADE_BOX[this.selectUpgrade.length].x, (int) UPGRADE_BOX[this.selectUpgrade.length].y);
+                this.character.getEquip()[this.selectEquip].draw(g, (int) UPGRADE_BOX[this.selectUpgrade.length].x, (int) UPGRADE_BOX[this.selectUpgrade.length].y, this.overlayColour);
             }
         }
         button = Globals.MENU_BUTTON[Globals.BUTTON_SMALLRECT];
