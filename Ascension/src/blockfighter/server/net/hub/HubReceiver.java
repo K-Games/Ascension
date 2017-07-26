@@ -16,5 +16,6 @@ public class HubReceiver implements Listener {
     @Override
     public void disconnected(Connection c) {
         Globals.log(HubReceiver.class, "Lost connection to Hub Server.", Globals.LOG_TYPE_DATA);
+        HubClient.closeClient();
     }
 }

@@ -14,20 +14,18 @@ public class HubClient implements Runnable {
     private static Client client;
 
     public static void connect() {
-        if (client == null) {
-            client = new Client();
-            client.setTimeout(5000);
-            client.setKeepAliveTCP(1000);
-            client.start();
+        client = new Client();
+        client.setTimeout(5000);
+        client.setKeepAliveTCP(1000);
+        client.start();
 
-            Kryo kyro = client.getKryo();
+        Kryo kyro = client.getKryo();
 
-            kyro.register(byte[].class);
-            kyro.register(ServerInfo.class);
-            kyro.register(ServerInfo[].class);
+        kyro.register(byte[].class);
+        kyro.register(ServerInfo.class);
+        kyro.register(ServerInfo[].class);
 
-            client.addListener(new Listener.ThreadedListener(new HubReceiver()));
-        }
+        client.addListener(new Listener.ThreadedListener(new HubReceiver()));
 
         try {
             InetAddress address = InetAddress.getByName(Globals.SERVER_HUB_SERVER_ADDRESS);
@@ -35,7 +33,7 @@ public class HubClient implements Runnable {
             HubSender.sendServerInfo();
             Globals.log(HubClient.class, "Connected to Hub Server " + address, Globals.LOG_TYPE_DATA);
         } catch (IOException ex) {
-            client.close();
+            closeClient();
         }
     }
 
@@ -55,4 +53,10 @@ public class HubClient implements Runnable {
         return client;
     }
 
+    public static void closeClient() {
+        if (client != null) {
+            client.close();
+            client = null;
+        }
+    }
 }
