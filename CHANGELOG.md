@@ -17,7 +17,9 @@
 	* Improved movement to be smoother.
 * Particles
 	* Improved some particles to animate smoother.
-
+* Barrier & Resistance Passive bugfix
+	* Fixed passives not working after one instance.
+	
 #### Stats
 * Armour
 	* Damage Reduction from Armour lowered from Armour/(Armour + 175) to Armour/(Armour + 300)

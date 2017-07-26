@@ -799,7 +799,7 @@ public class Player implements GameEntity, Callable<Player> {
                 final Integer bKey = getNextBuffKey();
                 if (bKey != null) {
                     this.buffs.put(bKey, b);
-                    //Globals.log(Player.class, "Applied " + b.getClass().getSimpleName() + " " + (b.isDebuff() ? "Debuff" : "Buff") + " to " + this.getPlayerName(), Globals.LOG_TYPE_DATA, true);
+                    //Globals.log(Player.class, "Applied " + b.getClass().getSimpleName() + " " + (b.isDebuff() ? "Debuff" : "Buff") + " to " + this.getPlayerName(), Globals.LOG_TYPE_DATA);
                 }
             }
         }
@@ -823,13 +823,19 @@ public class Player implements GameEntity, Callable<Player> {
                         }
                     }
                 }
-            } else if (buff instanceof BuffShieldReflect) {
+            }
+
+            if (buff instanceof BuffShieldReflect) {
                 this.reflects.put(bEntry.getKey(), buff);
-            } else if (buff instanceof BuffPassiveBarrier) {
+            }
+
+            if (buff instanceof BuffPassiveBarrier) {
                 if (this.barrierBuff == null) {
                     this.barrierBuff = buff;
                 }
-            } else if (buff instanceof BuffPassiveResist) {
+            }
+
+            if (buff instanceof BuffPassiveResist) {
                 if (this.resistBuff == null) {
                     this.resistBuff = buff;
                 }
