@@ -98,12 +98,11 @@ public class HubModule implements Runnable {
 
     @Override
     public void run() {
-        for (final Map.Entry<Connection, ServerInfo> infoEntry : CONN_SERVERINFO_MAP.entrySet()) {
-            Connection c = infoEntry.getKey();
+        CONN_SERVERINFO_MAP.entrySet().stream().map((infoEntry) -> infoEntry.getKey()).forEach((c) -> {
             GET_SERVERSTAT_SCHEDULER.submit(() -> {
                 HubSender.sendGetServerInfo(c);
             });
-        }
+        });
     }
 
 }

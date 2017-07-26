@@ -9,6 +9,8 @@ import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
 public class AscensionHub {
 
+    private final static String RELEASE_VERSION = "0.1.0";
+
     private final static ScheduledExecutorService HUB_SCHEDULER = Executors.newSingleThreadScheduledExecutor(new BasicThreadFactory.Builder()
             .namingPattern("HUB-%d")
             .daemon(false)
@@ -39,6 +41,7 @@ public class AscensionHub {
                 }
             }
         }
+        Globals.log(AscensionHub.class, "Ascension Server Hub Version " + RELEASE_VERSION, Globals.LOG_TYPE_DATA);
         new HubServer().start();
         HUB_SCHEDULER.scheduleAtFixedRate(new HubModule(), 0, 8, TimeUnit.SECONDS);
     }
