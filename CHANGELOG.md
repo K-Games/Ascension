@@ -25,6 +25,9 @@
 #### Equipment Stats
 
 #### Infusion
+* Divine Tier renamed to Ascended Tier.
+* Ascended Tier is now attainable only through infusions.
+	* Ascended Tier is granted to equipment at least Mystic Tier with +10 infusions.
 
 #### Skill Changes
 
