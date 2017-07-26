@@ -73,8 +73,8 @@ public class Globals {
 
     public final static String GAME_NAME = "{Soul}Ascension";
     public final static String WINDOW_TITLE = GAME_NAME + " " + GAME_RELEASE_VERSION;
-    public final static boolean WINDOW_SCALE_ENABLED = false;
-    public final static double WINDOW_SCALE = 1.5D;
+    public static boolean WINDOW_SCALE_ENABLED = false;
+    public static double WINDOW_SCALE = 1D;
     public final static int WINDOW_WIDTH = 1280;
     public final static int WINDOW_HEIGHT = 720;
 

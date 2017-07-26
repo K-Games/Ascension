@@ -57,7 +57,9 @@
 * Disassociated an item's Equipment Slot and Equipment Tab from its Equipment Type.
 * Added match objective reminder under match timer.
 * Client logic is updated more frequently to match framerate.
-
+* Enabled window scaling - Not officially supported.
+	* Use -scale launch option to scale window size.
+	
 ### Server Changes
 * Added Core class for centralised threads.
 * Room's level range is now determined by the creating player's level.
