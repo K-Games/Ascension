@@ -1,2 +1,4 @@
 [name]
-Blood Cuirass
+Strength Tarot
+[desc]
+The eighth card of the tarot deck imbues the bearer with fortitude.

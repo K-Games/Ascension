@@ -1,4 +1,4 @@
 [name]
-Belt of Giants
+Falcon Crest
 [Desc]
-Immeasurable strength held within!
+The Falcon family crest
