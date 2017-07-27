@@ -1044,7 +1044,7 @@ public class Player implements GameEntity, Callable<Player> {
     }
 
     public void giveEquipDrop(final double lvl, final boolean guaranteed) {
-        if (Globals.rng(100) < 12 || guaranteed) {
+        if (Globals.rng(Globals.SERVER_EQUIP_DROP_RATE_ROLL) < Globals.SERVER_EQUIP_DROP_SUCCESS_RATE || guaranteed) {
             final byte[] bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_INT * 2];
             bytes[0] = Globals.DATA_PLAYER_GIVEDROP;
 
@@ -1060,7 +1060,7 @@ public class Player implements GameEntity, Callable<Player> {
     }
 
     public void giveUpgradeDrop(final double lvl, final boolean guaranteed) {
-        if (Globals.rng(100) < 15 || guaranteed) {
+        if (Globals.rng(Globals.SERVER_UPGRADE_DROP_RATE_ROLL) < Globals.SERVER_UPGRADE_DROP_SUCCESS_RATE || guaranteed) {
             final byte[] bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_INT * 2];
             bytes[0] = Globals.DATA_PLAYER_GIVEDROP;
 

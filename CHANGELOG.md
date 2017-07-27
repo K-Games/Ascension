@@ -74,6 +74,7 @@
 	* Added new properties for Shared Threadpools.
 	* Added new property for Room Level Difference value.
 	* Added new property for Minimum Time Remaining for a room to be joinable.
+	* Added new property for Equip and Infusion Drop Rates.
 * Sending AnimState data now includes position data to fix minor client visual bug.
 * Fixed unable to connect to Hub when Hub is restarted after server previously connected to it.
 
