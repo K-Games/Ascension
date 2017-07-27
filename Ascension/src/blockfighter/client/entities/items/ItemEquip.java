@@ -679,7 +679,7 @@ public class ItemEquip implements Item {
     }
 
     private void updateTier() {
-        if (this.bonusMult >= .95 && this.upgrades >= 10) {
+        if ((this.bonusMult >= .95 && this.upgrades >= 10) || this.upgrades >= 20) {
             this.tier = TIER_DIVINE;
         } else if (this.bonusMult + this.upgrades * UPGRADE_MULT >= .95) {
             this.tier = TIER_MYSTIC;
