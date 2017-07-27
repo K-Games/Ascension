@@ -5,7 +5,7 @@ import java.awt.geom.Rectangle2D;
 
 public interface Item {
 
-    public void draw(Graphics2D g, int x, int y);
+    public void drawIcon(Graphics2D g, int x, int y);
 
     public int getItemCode();
 

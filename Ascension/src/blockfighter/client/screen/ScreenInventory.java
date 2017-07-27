@@ -81,9 +81,9 @@ public class ScreenInventory extends ScreenItemManagement {
             g.drawImage(button, (int) (this.mousePos.x + 10), (int) (this.mousePos.y + 15), null);
         }
         if (this.dragItem != -1) {
-            this.character.getInventory(selectedTab)[this.dragItem].draw(g, (int) (this.mousePos.x + 5), (int) (this.mousePos.y + 5), this.overlayColour);
+            this.character.getInventory(selectedTab)[this.dragItem].drawIcon(g, (int) (this.mousePos.x + 5), (int) (this.mousePos.y + 5), this.overlayColour);
         } else if (this.dragEquip != -1) {
-            this.character.getEquip()[this.dragEquip].draw(g, (int) (this.mousePos.x + 5), (int) (this.mousePos.y + 5), this.overlayColour);
+            this.character.getEquip()[this.dragEquip].drawIcon(g, (int) (this.mousePos.x + 5), (int) (this.mousePos.y + 5), this.overlayColour);
         }
         super.draw(g);
         drawItemInfo(g);
@@ -130,7 +130,7 @@ public class ScreenInventory extends ScreenItemManagement {
         for (int i = 0; i < this.character.getInventory(selectedTab).length; i++) {
             g.drawImage(button, (int) INVENTORY_SLOTS[i].x, (int) INVENTORY_SLOTS[i].y, null);
             if (this.character.getInventory(selectedTab)[i] != null) {
-                this.character.getInventory(selectedTab)[i].draw(g, (int) INVENTORY_SLOTS[i].x, (int) INVENTORY_SLOTS[i].y, this.overlayColour);
+                this.character.getInventory(selectedTab)[i].drawIcon(g, (int) INVENTORY_SLOTS[i].x, (int) INVENTORY_SLOTS[i].y, this.overlayColour);
             }
         }
         if (selectedTab == Globals.EQUIP_WEAPON) {

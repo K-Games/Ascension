@@ -85,7 +85,7 @@ public class ItemUpgrade implements Item, Comparable<ItemUpgrade> {
     }
 
     @Override
-    public void draw(final Graphics2D g, final int x, final int y) {
+    public void drawIcon(final Graphics2D g, final int x, final int y) {
         if (ITEM_ICONS.containsKey(this.itemCode)) {
             final BufferedImage sprite = ITEM_ICONS.get(this.itemCode);
             if (sprite != null) {

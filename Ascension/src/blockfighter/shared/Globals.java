@@ -311,7 +311,8 @@ public class Globals {
         UTILITY_ADRENALINE((byte) 0x35, null, 0, ParticleUtilityAdrenaline.class, PARTICLE_PARAM_PLAYER),
         UTILITY_ADRENALINE_CLONE_EMITTER((byte) 0x36, null, 0, ParticleUtilityAdrenalineCloneEmitter.class, PARTICLE_PARAM_PLAYER),
         UTILITY_ADRENALINE_CLONE_PARTICLE((byte) 0x37, null, 0, ParticleUtilityAdrenalineCloneParticle.class, null),
-        HIT((byte) 0x38, "hit", 6, ParticleHit.class, PARTICLE_PARAM_POS_AND_FACING);
+        HIT((byte) 0x38, "hit", 6, ParticleHit.class, PARTICLE_PARAM_POS_AND_FACING),
+        ITEM_DROP((byte) 0x39, null, 0, ParticleItemDrop.class, PARTICLE_PARAM_PLAYER_AND_TARGET);
 
         private final byte particleCode;
 

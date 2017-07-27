@@ -159,7 +159,7 @@ public abstract class ScreenItemManagement extends ScreenMenu {
         for (int i = 0; i < EQUIP_SLOTS.length; i++) {
             g.drawImage(button, (int) EQUIP_SLOTS[i].x, (int) EQUIP_SLOTS[i].y, null);
             if (this.character.getEquip()[i] != null) {
-                this.character.getEquip()[i].draw(g, (int) EQUIP_SLOTS[i].x, (int) EQUIP_SLOTS[i].y, this.overlayColour);
+                this.character.getEquip()[i].drawIcon(g, (int) EQUIP_SLOTS[i].x, (int) EQUIP_SLOTS[i].y, this.overlayColour);
             }
             String s = ItemEquip.getItemTypeName((byte) i);
             if (i == Globals.EQUIP_WEAPON) {

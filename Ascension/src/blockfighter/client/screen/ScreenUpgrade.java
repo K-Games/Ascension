@@ -152,7 +152,7 @@ public class ScreenUpgrade extends ScreenItemManagement {
         }
         drawMenuButton(g);
         if (this.dragItem != -1) {
-            this.character.getUpgrades()[this.dragItem].draw(g, (int) (this.mousePos.x + 5), (int) (this.mousePos.y + 5));
+            this.character.getUpgrades()[this.dragItem].drawIcon(g, (int) (this.mousePos.x + 5), (int) (this.mousePos.y + 5));
         }
 
         super.draw(g);
@@ -186,14 +186,14 @@ public class ScreenUpgrade extends ScreenItemManagement {
         for (int i = 0; i < this.selectUpgrade.length; i++) {
             if (this.selectUpgrade[i] > -1) {
                 if (this.character.getUpgrades()[this.selectUpgrade[i]] != null) {
-                    this.character.getUpgrades()[this.selectUpgrade[i]].draw(g, (int) UPGRADE_BOX[i].x, (int) UPGRADE_BOX[i].y);
+                    this.character.getUpgrades()[this.selectUpgrade[i]].drawIcon(g, (int) UPGRADE_BOX[i].x, (int) UPGRADE_BOX[i].y);
                 }
             }
         }
 
         if (this.selectEquip > -1) {
             if (this.character.getEquip()[this.selectEquip] != null) {
-                this.character.getEquip()[this.selectEquip].draw(g, (int) UPGRADE_BOX[this.selectUpgrade.length].x, (int) UPGRADE_BOX[this.selectUpgrade.length].y, this.overlayColour);
+                this.character.getEquip()[this.selectEquip].drawIcon(g, (int) UPGRADE_BOX[this.selectUpgrade.length].x, (int) UPGRADE_BOX[this.selectUpgrade.length].y, this.overlayColour);
             }
         }
         button = Globals.MENU_BUTTON[Globals.BUTTON_SMALLRECT];
@@ -235,7 +235,7 @@ public class ScreenUpgrade extends ScreenItemManagement {
         for (int i = 0; i < this.character.getUpgrades().length; i++) {
             g.drawImage(button, (int) INVENTORY_SLOTS[i].x, (int) INVENTORY_SLOTS[i].y, null);
             if (this.character.getUpgrades()[i] != null) {
-                this.character.getUpgrades()[i].draw(g, (int) INVENTORY_SLOTS[i].x, (int) INVENTORY_SLOTS[i].y);
+                this.character.getUpgrades()[i].drawIcon(g, (int) INVENTORY_SLOTS[i].x, (int) INVENTORY_SLOTS[i].y);
             }
         }
     }

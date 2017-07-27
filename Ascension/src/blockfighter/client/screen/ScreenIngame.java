@@ -9,6 +9,7 @@ import blockfighter.client.entities.items.ItemUpgrade;
 import blockfighter.client.entities.mob.Mob;
 import blockfighter.client.entities.notification.Notification;
 import blockfighter.client.entities.particles.*;
+import blockfighter.client.entities.particles.skills.other.ParticleItemDrop;
 import blockfighter.client.entities.player.Player;
 import blockfighter.client.entities.player.skills.Skill;
 import blockfighter.client.maps.GameMap;
@@ -744,7 +745,6 @@ public class ScreenIngame extends Screen {
         final int lvl = Globals.bytesToInt(Arrays.copyOfRange(data, 1, 5));
         final int dropCode = Globals.bytesToInt(Arrays.copyOfRange(data, 5, 9));
         Item dropItem = null;
-
         if (ItemUpgrade.isValidItem(dropCode)) {
             dropItem = new ItemUpgrade(dropCode, lvl + Globals.rng(6));
         }
@@ -757,6 +757,10 @@ public class ScreenIngame extends Screen {
             this.notifications.add(new Notification(dropItem));
             this.c.addDrops(lvl, dropItem);
             this.results.addItemGained(dropItem);
+
+            ParticleItemDrop effect = new ParticleItemDrop(this.players.get(Core.getLogicModule().getMyPlayerKey()), this.players.get(Core.getLogicModule().getMyPlayerKey()));
+            effect.setItem(dropItem);
+            addParticle(effect);
         }
     }
 

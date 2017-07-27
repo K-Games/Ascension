@@ -458,12 +458,8 @@ public class ItemEquip implements Item {
     }
 
     @Override
-    public void draw(final Graphics2D g, final int x, final int y) {
+    public void drawIcon(final Graphics2D g, final int x, final int y) {
         drawIcon(g, x, y, 0);
-    }
-
-    public void draw(final Graphics2D g, final int x, final int y, final float overlayColour) {
-        drawIcon(g, x, y, overlayColour);
     }
 
     @Override
@@ -591,7 +587,7 @@ public class ItemEquip implements Item {
         }
     }
 
-    private void drawIcon(final Graphics2D g, final int x, final int y, final float overlayColour) {
+    public void drawIcon(final Graphics2D g, final int x, final int y, final float overlayColour) {
         if (ITEM_ICONS.containsKey(this.itemCode)) {
             final BufferedImage sprite = ITEM_ICONS.get(this.itemCode);
             if (sprite != null) {
