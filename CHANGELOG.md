@@ -26,8 +26,6 @@
 * Armour
 	* Damage Reduction from Armour lowered from Armour/(Armour + 175) to Armour/(Armour + 300)
 
-#### Equipment Stats
-
 #### Infusion
 * Divine Tier renamed to Ascended Tier.
 * Ascended Tier is now attainable only through infusions.
@@ -44,17 +42,11 @@
 	* Damager increased from 75% + 2% per level  to 75% + 20% per level.
 	* Player will now alternate sides when teleporting.
 	* These changes make Phantom Sword more consistent in damage and positioning.
-	
-##### Bow
-
-##### Shield
 
 ##### Utility
 * Adrenaline
 	* Movement Speed bonus decreased from 60% + 0.5% per level to 20% + 0.5% per level.
 	* Cooldown increased from 12 to 24 seconds
-	
-##### Passive
 
 ### Client Changes
 * Centralised all threads into Core class.
