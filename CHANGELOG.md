@@ -19,7 +19,9 @@
 	* Improved some particles to animate smoother.
 * Barrier & Resistance Passive bugfix
 	* Fixed passives not working after one instance.
-	
+* Drops
+	* Item icon is shown briefly on the player when getting an item drop.
+
 #### Stats
 * Armour
 	* Damage Reduction from Armour lowered from Armour/(Armour + 175) to Armour/(Armour + 300)
@@ -29,7 +31,9 @@
 #### Infusion
 * Divine Tier renamed to Ascended Tier.
 * Ascended Tier is now attainable only through infusions.
-	* Ascended Tier is granted to equipment at least Mystic Tier with +10 infusions.
+	* Ascended Tier is granted when an equipment meet one of the following conditions.
+		* Equipment with at least Mystic Tier with +10 infusions.
+		* Any equipment with +20 infusions.
 * Soul Stones can now be sorted by their level in descending order (highest to lowest).
 
 #### Skill Changes
