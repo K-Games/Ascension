@@ -125,7 +125,8 @@ public class Globals {
 
     public enum GameMaps {
         FIELD((byte) 0x00, "Field", blockfighter.client.maps.GameMapArena.class, blockfighter.server.maps.GameMapArena.class),
-        GRAND_LIBRARY((byte) 0x01, "Grand Library", blockfighter.client.maps.GameMapAsymArena.class, blockfighter.server.maps.GameMapAsymArena.class);
+        GRAND_LIBRARY((byte) 0x01, "Grand Library", blockfighter.client.maps.GameMapAsymArena.class, blockfighter.server.maps.GameMapAsymArena.class),
+        DEBUG((byte) 0x02, "Debug Room", blockfighter.client.maps.GameMapDebug.class, blockfighter.server.maps.GameMapDebug.class);
 
         private final byte mapCode;
         private final Class<? extends blockfighter.client.maps.GameMap> clientGameMapClass;
