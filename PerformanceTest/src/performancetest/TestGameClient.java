@@ -58,6 +58,7 @@ public class TestGameClient implements Runnable {
     public void shutdownClient() {
         System.out.println("Disconnected with " + logic.getSelectedChar().getPlayerName());
         client.close();
+        this.client = null;
         if (this.receiver != null) {
             this.receiver = null;
         }
