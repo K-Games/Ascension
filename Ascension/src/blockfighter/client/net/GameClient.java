@@ -45,10 +45,10 @@ public class GameClient implements Runnable {
             if (!client.isConnected()) {
                 InetAddress address = InetAddress.getByName(Globals.SERVER_ADDRESS);
                 Globals.log(GameClient.class, "Connecting to " + address, Globals.LOG_TYPE_DATA);
-                if (Globals.UDP_MODE) {
-                    client.connect(3000, address, Globals.SERVER_TCP_PORT, Globals.SERVER_UDP_PORT);
+                if ((Boolean) Globals.ServerConfig.UDP_MODE.getValue()) {
+                    client.connect(3000, address, (Integer) Globals.ServerConfig.TCP_PORT.getValue(), (Integer) Globals.ServerConfig.UDP_PORT.getValue());
                 } else {
-                    client.connect(3000, address, Globals.SERVER_TCP_PORT);
+                    client.connect(3000, address, (Integer) Globals.ServerConfig.TCP_PORT.getValue());
                 }
                 PacketSender.sendPlayerLogin(logic.getSelectedRoom(), logic.getSelectedChar());
             }

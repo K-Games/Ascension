@@ -28,7 +28,7 @@ public class AscensionServer {
         Globals.loadServer();
         Globals.loadServerConfig();
 
-        SERVER_ROOMS = new ConcurrentHashMap<>(Globals.SERVER_MAX_ROOMS);
+        SERVER_ROOMS = new ConcurrentHashMap<>((Integer) Globals.ServerConfig.MAX_ROOMS.getValue());
     }
 
     public void shutdown() {
@@ -71,7 +71,7 @@ public class AscensionServer {
                 PacketSender.clearDisconnectedConnectionBatch();
             }, 10, 10, TimeUnit.SECONDS);
 
-            if (Globals.SERVER_HUB_CONNECT) {
+            if ((Boolean) Globals.ServerConfig.HUB_CONNECT.getValue()) {
                 Core.SHARED_SCHEDULED_THREADPOOL.scheduleAtFixedRate(new HubClient(), 0, 10, TimeUnit.SECONDS);
             }
         } catch (final Exception ex) {
@@ -119,8 +119,8 @@ public class AscensionServer {
         Byte nextRoomIndex = getNextRoomIndex();
         if (nextRoomIndex != null) {
 
-            byte minLevel = (byte) (level - Globals.SERVER_ROOM_LEVEL_DIFF);
-            byte maxLevel = (byte) (level + Globals.SERVER_ROOM_LEVEL_DIFF);
+            byte minLevel = (byte) (level - (Integer) Globals.ServerConfig.ROOM_LEVEL_DIFF.getValue());
+            byte maxLevel = (byte) (level + (Integer) Globals.ServerConfig.ROOM_LEVEL_DIFF.getValue());
             LogicModule newRoom = new LogicModule(nextRoomIndex, minLevel, maxLevel);
             SERVER_ROOMS.put(nextRoomIndex, newRoom);
             newRoom.setFuture(Core.SHARED_SCHEDULED_THREADPOOL.scheduleAtFixedRate(newRoom, 0, 750, TimeUnit.MICROSECONDS));
@@ -135,11 +135,11 @@ public class AscensionServer {
     }
 
     public static boolean canCreateRoom() {
-        return SERVER_ROOMS.size() < Globals.SERVER_MAX_ROOMS;
+        return SERVER_ROOMS.size() < (Integer) Globals.ServerConfig.MAX_ROOMS.getValue();
     }
 
     private static Byte getNextRoomIndex() {
-        if (SERVER_ROOMS.size() >= Globals.SERVER_MAX_ROOMS) {
+        if (SERVER_ROOMS.size() >= (Integer) Globals.ServerConfig.MAX_ROOMS.getValue()) {
             return null;
         }
         byte index = 0;
@@ -153,7 +153,7 @@ public class AscensionServer {
         Iterator<Map.Entry<Byte, LogicModule>> iter = SERVER_ROOMS.entrySet().iterator();
         while (iter.hasNext()) {
             Map.Entry<Byte, LogicModule> room = iter.next();
-            if (room.getValue().getMatchTimeRemaining() > Globals.SERVER_MATCH_TIME_REMAINING_THRESHOLD && !room.getValue().getRoomData().isFull() && room.getValue().getRoomData().isInLevelRange(level)) {
+            if (room.getValue().getMatchTimeRemaining() > (Integer) Globals.ServerConfig.MATCH_TIME_REMAINING_THRESHOLD.getValue() && !room.getValue().getRoomData().isFull() && room.getValue().getRoomData().isInLevelRange(level)) {
                 return room.getValue();
             }
         }
@@ -167,6 +167,6 @@ public class AscensionServer {
             Map.Entry<Byte, LogicModule> room = iter.next();
             totalPlayers += room.getValue().getRoomData().getPlayers().size();
         }
-        return Math.round(100f * totalPlayers / (Globals.SERVER_MAX_ROOMS * Globals.SERVER_MAX_ROOM_PLAYERS));
+        return Math.round(100f * totalPlayers / ((Integer) Globals.ServerConfig.MAX_ROOMS.getValue() * (Byte) Globals.ServerConfig.MAX_PLAYERS.getValue()));
     }
 }

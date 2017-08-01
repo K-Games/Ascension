@@ -507,7 +507,7 @@ public class Player implements GameEntity, Callable<Player> {
         if (this.updateScore) {
             sendScore();
         }
-        if (this.connected && Globals.nsToMs(this.logic.getTime() - this.lastActionTime) >= Globals.SERVER_PLAYER_MAX_IDLE) {
+        if (this.connected && Globals.nsToMs(this.logic.getTime() - this.lastActionTime) >= (Integer) Globals.ServerConfig.MAX_PLAYER_IDLE.getValue()) {
             Globals.log(Player.class, this.connection + " Disconnecting <" + this.name + "> due to idling.", Globals.LOG_TYPE_DATA);
             disconnect();
         }
@@ -890,7 +890,7 @@ public class Player implements GameEntity, Callable<Player> {
             }
         }
 
-        double totalExpGiven = this.stats[Globals.STAT_MAXEXP] * Globals.EXP_MULTIPLIER;
+        double totalExpGiven = this.stats[Globals.STAT_MAXEXP] * (Double) Globals.ServerConfig.EXP_MULTIPLIER.getValue();
         for (final Entry<Player, Double> damageCount : this.playerDamageCount.entrySet()) {
             Player source = damageCount.getKey();
             double damage = damageCount.getValue();
@@ -1044,7 +1044,7 @@ public class Player implements GameEntity, Callable<Player> {
     }
 
     public void giveEquipDrop(final double lvl, final boolean guaranteed) {
-        if (Globals.rng(Globals.SERVER_EQUIP_DROP_RATE_ROLL) < Globals.SERVER_EQUIP_DROP_SUCCESS_RATE || guaranteed) {
+        if (Globals.rng((Integer) Globals.ServerConfig.EQUIP_DROP_RATE_ROLL.getValue()) < (Integer) Globals.ServerConfig.EQUIP_DROP_SUCCESS_RATE.getValue() || guaranteed) {
             final byte[] bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_INT * 2];
             bytes[0] = Globals.DATA_PLAYER_GIVEDROP;
 
@@ -1060,7 +1060,7 @@ public class Player implements GameEntity, Callable<Player> {
     }
 
     public void giveUpgradeDrop(final double lvl, final boolean guaranteed) {
-        if (Globals.rng(Globals.SERVER_UPGRADE_DROP_RATE_ROLL) < Globals.SERVER_UPGRADE_DROP_SUCCESS_RATE || guaranteed) {
+        if (Globals.rng((Integer) Globals.ServerConfig.UPGRADE_DROP_RATE_ROLL.getValue()) < (Integer) Globals.ServerConfig.UPGRADE_DROP_SUCCESS_RATE.getValue() || guaranteed) {
             final byte[] bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_INT * 2];
             bytes[0] = Globals.DATA_PLAYER_GIVEDROP;
 

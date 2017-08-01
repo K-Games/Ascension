@@ -112,7 +112,7 @@ public class PacketSender implements Runnable {
 
     @Override
     public void run() {
-        if (Globals.UDP_MODE) {
+        if ((Boolean) Globals.ServerConfig.UDP_MODE.getValue()) {
             for (final Map.Entry<Connection, ConcurrentLinkedQueue<byte[]>> entry : CONN_PACKET_BATCH.entrySet()) {
                 Connection c = entry.getKey();
                 ConcurrentLinkedQueue<byte[]> batch = entry.getValue();
@@ -142,10 +142,10 @@ public class PacketSender implements Runnable {
 
     private static void sendData(final Connection c, final byte[][] data) {
         try {
-            if (Globals.UDP_MODE) {
+            if ((Boolean) Globals.ServerConfig.UDP_MODE.getValue()) {
                 c.sendUDP(data);
             } else {
-                if (c.getTcpWriteBufferSize() < Globals.PACKET_MAX_SIZE * Globals.PACKET_MAX_PER_CON * 0.75) {
+                if (c.getTcpWriteBufferSize() < Globals.PACKET_MAX_SIZE * (Byte) Globals.ServerConfig.MAX_PACKETS_PER_CON.getValue() * 0.75) {
                     c.sendTCP(data);
                 }
             }

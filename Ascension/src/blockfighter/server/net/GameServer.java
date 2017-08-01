@@ -20,16 +20,16 @@ public class GameServer {
 
     public void start() {
         try {
-            this.server = new Server(Globals.PACKET_MAX_SIZE * Globals.PACKET_MAX_PER_CON, Globals.PACKET_MAX_SIZE, new AscensionSerialization());
+            this.server = new Server(Globals.PACKET_MAX_SIZE * (Byte) Globals.ServerConfig.MAX_PACKETS_PER_CON.getValue(), Globals.PACKET_MAX_SIZE, new AscensionSerialization());
             this.receiver = new PacketReceiver();
             this.server.addListener(new Listener.ThreadedListener(this.receiver));
-            if (Globals.UDP_MODE) {
-                server.bind(Globals.SERVER_TCP_PORT, Globals.SERVER_UDP_PORT);
-                Globals.log(GameServer.class, "Server listening on port TCP: " + Globals.SERVER_TCP_PORT, Globals.LOG_TYPE_DATA);
-                Globals.log(GameServer.class, "Server listening on port UDP: " + Globals.SERVER_UDP_PORT, Globals.LOG_TYPE_DATA);
+            if ((Boolean) Globals.ServerConfig.UDP_MODE.getValue()) {
+                server.bind((Integer) Globals.ServerConfig.TCP_PORT.getValue(), (Integer) Globals.ServerConfig.UDP_PORT.getValue());
+                Globals.log(GameServer.class, "Server listening on port TCP: " + (Integer) Globals.ServerConfig.TCP_PORT.getValue(), Globals.LOG_TYPE_DATA);
+                Globals.log(GameServer.class, "Server listening on port UDP: " + (Integer) Globals.ServerConfig.UDP_PORT.getValue(), Globals.LOG_TYPE_DATA);
             } else {
-                server.bind(Globals.SERVER_TCP_PORT);
-                Globals.log(GameServer.class, "Server listening on port TCP: " + Globals.SERVER_TCP_PORT, Globals.LOG_TYPE_DATA);
+                server.bind((Integer) Globals.ServerConfig.TCP_PORT.getValue());
+                Globals.log(GameServer.class, "Server listening on port TCP: " + (Integer) Globals.ServerConfig.TCP_PORT.getValue(), Globals.LOG_TYPE_DATA);
             }
             server.start();
 

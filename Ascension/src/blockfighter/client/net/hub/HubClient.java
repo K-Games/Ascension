@@ -35,7 +35,7 @@ public class HubClient implements Runnable {
         try {
             serverInfo = null;
             if (!client.isConnected()) {
-                client.connect(2000, InetAddress.getByName(Globals.CLIENT_HUB_SERVER_ADDRESS), Globals.HUB_SERVER_TCP_PORT);
+                client.connect(2000, InetAddress.getByName((String) Globals.ServerConfig.HUB_SERVER_ADDRESS.getValue()), (Integer) Globals.ServerConfig.HUB_SERVER_TCP_PORT.getValue());
             }
             HubSender.sendGetServerInfos();
         } catch (IOException ex) {

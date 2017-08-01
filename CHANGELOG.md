@@ -27,7 +27,11 @@
 ### Client Changes
 
 ### Server Changes
-
+* Enumerated server configs - New properties are simpler to add.
+* Server Configuration
+	* Rename Thread properties to `numthreads` and `numscheduledthreads`
+	* Added new properties for Max Room Idle
+	* Added new properties for Max Player Idle
 ---
 
 ## Version 0.24.0
