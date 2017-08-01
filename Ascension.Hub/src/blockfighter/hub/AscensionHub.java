@@ -9,7 +9,7 @@ import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
 public class AscensionHub {
 
-    private final static String RELEASE_VERSION = "0.1.0";
+    private final static String RELEASE_VERSION = "0.1.1";
 
     private final static ScheduledExecutorService HUB_SCHEDULER = Executors.newSingleThreadScheduledExecutor(new BasicThreadFactory.Builder()
             .namingPattern("HUB-%d")
@@ -27,8 +27,8 @@ public class AscensionHub {
                         try {
                             int port = Integer.parseInt(args[i + 1]);
                             if (port > 0 && port <= 65535) {
-                                Globals.HUB_SERVER_TCP_PORT = port;
-                                Globals.log(AscensionHub.class, "Setting Hub Server TCP port to " + Globals.HUB_SERVER_TCP_PORT, Globals.LOG_TYPE_DATA);
+                                Globals.ServerConfig.HUB_SERVER_TCP_PORT.setValue(args[i + 1]);
+                                Globals.log(AscensionHub.class, "Setting Hub Server TCP port to " + (Integer) Globals.ServerConfig.HUB_SERVER_TCP_PORT.getValue(), Globals.LOG_TYPE_DATA);
                             } else {
                                 System.err.println("-port Specify a valid port between 1 to 65535");
                                 System.exit(7);

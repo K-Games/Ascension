@@ -19,8 +19,8 @@ public class RoomData {
     private byte roomIndex = -1;
     private HashMap<Integer, ConcurrentHashMap<Byte, Player>> playerBuckets;
 
-    private ConcurrentHashMap<Byte, Player> players = new ConcurrentHashMap<>(Globals.SERVER_MAX_ROOM_PLAYERS, 0.9f,
-            Math.max(Globals.SERVER_MAX_ROOM_PLAYERS / 5, 3));
+    private ConcurrentHashMap<Byte, Player> players = new ConcurrentHashMap<>((Byte) Globals.ServerConfig.MAX_PLAYERS.getValue(), 0.9f,
+            Math.max((Byte) Globals.ServerConfig.MAX_PLAYERS.getValue() / 5, 3));
     private ConcurrentHashMap<Integer, Mob> mobs = new ConcurrentHashMap<>(1, 0.9f, 1);
     private ConcurrentHashMap<Integer, Projectile> projectiles = new ConcurrentHashMap<>(500, 0.75f, 3);
 
@@ -61,7 +61,7 @@ public class RoomData {
 
         byte keyCount = 0;
         this.playerKeys.clear();
-        while (this.playerKeys.size() < Globals.SERVER_MAX_ROOM_PLAYERS && keyCount <= Byte.MAX_VALUE) {
+        while (this.playerKeys.size() < (Byte) Globals.ServerConfig.MAX_PLAYERS.getValue() && keyCount <= Byte.MAX_VALUE) {
             this.playerKeys.add(keyCount);
             keyCount++;
         }
@@ -83,7 +83,8 @@ public class RoomData {
         this.mobs.clear();
         this.projectiles.clear();
 
-        this.setMap(GameMaps.GRAND_LIBRARY.newServerGameMap());
+        GameMaps[] maps = (GameMaps[]) Globals.ServerConfig.GAME_MAPS_LIST.getValue();
+        this.setMap(maps[Globals.rng(maps.length)].newServerGameMap());
 
         resetKeys();
         resetPlayerBuckets();
@@ -246,7 +247,7 @@ public class RoomData {
 
     public ArrayList<Player> getPlayersInRange(final Player player, final double radius) {
         Rectangle2D.Double rect = new Rectangle2D.Double(player.getX() - radius, player.getY() - radius, radius * 2, radius * 2);
-        ArrayList<Player> playersInRange = new ArrayList<>(Globals.SERVER_MAX_ROOM_PLAYERS);
+        ArrayList<Player> playersInRange = new ArrayList<>((Byte) Globals.ServerConfig.MAX_PLAYERS.getValue());
         for (final Map.Entry<Byte, Player> pEntry : getPlayersNearRect(rect).entrySet()) {
             final Player p = pEntry.getValue();
             if (p != player && !p.isDead() && !p.isInvulnerable()) {

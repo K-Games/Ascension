@@ -38,7 +38,7 @@ public class TestGameClient implements Runnable {
 
         System.out.println("Connecting to " + server + ":" + tcpPort + " with " + logic.getSelectedChar().getPlayerName());
         try {
-            if (Globals.UDP_MODE) {
+            if ((Boolean) Globals.ServerConfig.UDP_MODE.getValue()) {
                 client.connect(3000, server, tcpPort, udpPort);
             } else {
                 client.connect(3000, server, tcpPort);

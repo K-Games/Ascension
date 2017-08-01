@@ -21,8 +21,8 @@ public class HubServer {
             kyro.register(ServerInfo[].class);
 
             this.server.addListener(new Listener.ThreadedListener(new HubReceiver()));
-            server.bind(Globals.HUB_SERVER_TCP_PORT);
-            Globals.log(HubServer.class, "Hub Server listening on port TCP: " + Globals.HUB_SERVER_TCP_PORT, Globals.LOG_TYPE_DATA);
+            server.bind((Integer) Globals.ServerConfig.HUB_SERVER_TCP_PORT.getValue());
+            Globals.log(HubServer.class, "Hub Server listening on port TCP: " + (Integer) Globals.ServerConfig.HUB_SERVER_TCP_PORT.getValue(), Globals.LOG_TYPE_DATA);
             server.start();
         } catch (IOException ex) {
             Globals.logError(ex.toString(), ex);

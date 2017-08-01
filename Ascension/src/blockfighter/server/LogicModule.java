@@ -45,7 +45,7 @@ public class LogicModule implements Runnable {
     }
 
     public int getMatchTimeRemaining() {
-        long remainingTime = Globals.SERVER_MATCH_DURATION - Globals.nsToMs((this.currentTime - this.matchStartTime));
+        long remainingTime = (Integer) Globals.ServerConfig.MATCH_DURATION.getValue() - Globals.nsToMs((this.currentTime - this.matchStartTime));
         return (remainingTime > 0) ? (int) remainingTime : 0;
     }
 
@@ -70,8 +70,8 @@ public class LogicModule implements Runnable {
     }
 
     private boolean gameFinished() {
-        return this.winningPlayer.getScore() >= Globals.SERVER_WIN_KILL_COUNT
-                || this.currentTime - this.matchStartTime >= Globals.msToNs(Globals.SERVER_MATCH_DURATION);
+        return this.winningPlayer.getScore() >= (Integer) Globals.ServerConfig.WIN_SCORE_COUNT.getValue()
+                || this.currentTime - this.matchStartTime >= Globals.msToNs((Integer) Globals.ServerConfig.MATCH_DURATION.getValue());
     }
 
     @Override
@@ -83,7 +83,7 @@ public class LogicModule implements Runnable {
                 this.lastProcessQueue = currentTime;
             }
             if (this.room.getPlayers().isEmpty()) {
-                if (currentTime - this.roomIdleStartTime >= Globals.msToNs(Globals.SERVER_ROOM_MAX_ILDE)) {
+                if (currentTime - this.roomIdleStartTime >= Globals.msToNs((Integer) Globals.ServerConfig.MAX_ROOM_IDLE.getValue())) {
                     closeRoom();
                 }
                 return;

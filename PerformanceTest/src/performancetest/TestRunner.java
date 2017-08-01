@@ -11,7 +11,7 @@ public class TestRunner implements Runnable {
         logic = new TestLogicModule[Main.PLAYERS];
         for (int player = 0; player < Main.PLAYERS; player++) {
             logic[player] = new TestLogicModule(player, Main.MIN_LEVEL, Main.MAX_LEVEL);
-            Main.SHARED_THREADS.submit(logic[player].connect(server, Globals.SERVER_TCP_PORT, Globals.SERVER_UDP_PORT, (byte) Main.MIN_LEVEL));
+            Main.SHARED_THREADS.submit(logic[player].connect(server, (Integer) Globals.ServerConfig.TCP_PORT.getValue(), (Integer) Globals.ServerConfig.UDP_PORT.getValue(), (byte) Main.MIN_LEVEL));
         }
 
         Main.SCHEDULE_SHARED_THREADS.scheduleAtFixedRate(this, 0, 300, TimeUnit.MILLISECONDS);

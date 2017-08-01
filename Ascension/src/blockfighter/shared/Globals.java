@@ -29,6 +29,7 @@ import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -51,10 +52,7 @@ public class Globals {
     public static DecimalFormat TIME_NUMBER_FORMAT = new DecimalFormat();
 
     public static boolean SKIP_TITLE = false;
-    public static int SERVER_TCP_PORT = 25565;
-    public static int SERVER_UDP_PORT = 35565;
     public static String SERVER_ADDRESS;
-    public static boolean UDP_MODE = true;
 
     public static final String DEV_PASSPHRASE = "amFwAkjuy0K/lSvUUyZvdiIFdn/Dzu/OAxStgUEdLKk=";
     public static final String COLON_SPACE_TEXT = ": ";
@@ -103,9 +101,6 @@ public class Globals {
 
     public final static double CLIENT_LOGIC_TICKS_PER_SEC = 60D;
     public final static double CLIENT_LOGIC_UPDATE = 1000000000D / CLIENT_LOGIC_TICKS_PER_SEC;
-
-    // public final static double DMG_TICKS_PER_SEC = 60D;
-    public final static int INGAME_NUMBER_UPDATE = 20;
 
     // public final static double SEND_KEYDOWN_PER_SEC = 10D;
     public final static double SEND_KEYDOWN_UPDATE = 100000000D;
@@ -770,25 +765,101 @@ public class Globals {
                     .priority(Thread.MIN_PRIORITY)
                     .build());
 
-    public static byte SERVER_MAX_ROOM_PLAYERS = 10;
-    public static int SERVER_PLAYER_MAX_IDLE = 120000;
-    public static int SERVER_ROOM_MAX_ILDE = 2000;
-    public static int SERVER_SHARED_THREADS = 3;
-    public static int SERVER_SHARED_SCHEDULED_THREADS = 2;
-    public static int SERVER_MAX_ROOMS = 10;
-    public static boolean SERVER_HUB_CONNECT = false;
-    public static int SERVER_WIN_KILL_COUNT = 30;
-    public static int SERVER_MATCH_DURATION = 300000;
-    public static int SERVER_ROOM_LEVEL_DIFF = 2;
-    public static int SERVER_MATCH_TIME_REMAINING_THRESHOLD = 90000;
-    public static int SERVER_EQUIP_DROP_SUCCESS_RATE = 120;
-    public static int SERVER_EQUIP_DROP_RATE_ROLL = 1000;
-    public static int SERVER_UPGRADE_DROP_SUCCESS_RATE = 150;
-    public static int SERVER_UPGRADE_DROP_RATE_ROLL = 1000;
+    public enum ServerConfig {
+        TCP_PORT("tcpport", Integer.class, Integer.valueOf(25565), "Server TCP Port"),
+        UDP_PORT("udpport", Integer.class, Integer.valueOf(35565), "Server UDP Port"),
+        EXP_MULTIPLIER("expmult", Double.class, Double.valueOf(0.1), "EXP Multiplier"),
+        MAX_ROOM_IDLE("maxroomidle", Integer.class, Integer.valueOf(2000), "Max Room Idle(ms)"),
+        MAX_PLAYER_IDLE("maxplayeridle", Integer.class, Integer.valueOf(120000), "Max Player Idle(ms)"),
+        MAX_ROOMS("maxrooms", Integer.class, Integer.valueOf(10), "Max Rooms"),
+        MAX_PLAYERS("maxplayers", Byte.class, Byte.valueOf((byte) 10), "Max Players per Room"),
+        MAX_PACKETS_PER_CON("maxpackets", Byte.class, Byte.valueOf((byte) 100), "Max Packets Per Connection"),
+        NUM_THREADS("numthreads", Byte.class, Byte.valueOf((byte) 3), "Number of threads"),
+        NUM_SCHEDULED_THREADS("numscheduledthreads", Byte.class, Byte.valueOf((byte) 2), "Number of Scheduler Threads"),
+        UDP_MODE("udpmode", Boolean.class, Boolean.valueOf(true), "UDP Mode"),
+        HUB_CONNECT("hubconnect", Boolean.class, Boolean.valueOf(false), "Connect to Hub"),
+        HUB_SERVER_ADDRESS("hubaddress", String.class, "asc-hub.servegame.com", "Hub Address"),
+        HUB_SERVER_TCP_PORT("hubport", Integer.class, Integer.valueOf(25566), "Hub Port"),
+        WIN_SCORE_COUNT("winscorecount", Integer.class, Integer.valueOf(30), "Score to Win"),
+        MATCH_DURATION("matchduration", Integer.class, Integer.valueOf(300000), "Match Duration(ms)"),
+        ROOM_LEVEL_DIFF("leveldiff", Integer.class, Integer.valueOf(2), "Room Level Difference(±)"),
+        MATCH_TIME_REMAINING_THRESHOLD("matchtimeremainingthreshold", Integer.class, Integer.valueOf(90000), "Minimum Remaining Time for joinable Room"),
+        EQUIP_DROP_SUCCESS_RATE("equipdropsuccessrate", Integer.class, Integer.valueOf(120), "Equip Drop Success Rate"),
+        EQUIP_DROP_RATE_ROLL("equipdroprateroll", Integer.class, Integer.valueOf(1000), "Equip Drop Rate Roll"),
+        UPGRADE_DROP_SUCCESS_RATE("upgradedropsuccessrate", Integer.class, Integer.valueOf(150), "Infusion Drop Success Rate"),
+        UPGRADE_DROP_RATE_ROLL("upgradedroprateroll", Integer.class, Integer.valueOf(1000), "Infusion Drop Rate Roll"),
+        GAME_MAPS_LIST("gamemaps", GameMaps[].class, new GameMaps[]{GameMaps.GRAND_LIBRARY}, "Playable Game Maps List");
 
-    public static int HUB_SERVER_TCP_PORT = 25566;
-    public static String CLIENT_HUB_SERVER_ADDRESS = "asc-hub.servegame.com";
-    public static String SERVER_HUB_SERVER_ADDRESS = CLIENT_HUB_SERVER_ADDRESS;
+        private final String key;
+        private final Class type;
+        private final Object defaultValue;
+        private final String desc;
+        private Object value = null;
+
+        private static final Map<String, ServerConfig> lookup = new HashMap<String, ServerConfig>();
+
+        ServerConfig(String key, Class type, Object defaultValue, String desc) {
+            this.key = key;
+            this.type = type;
+            this.defaultValue = defaultValue;
+            this.desc = desc;
+        }
+
+        static {
+            for (ServerConfig config : ServerConfig.values()) {
+                lookup.put(config.getKey(), config);
+            }
+        }
+
+        public static ServerConfig get(String key) {
+            return lookup.get(key);
+        }
+
+        public Class getType() {
+            return this.type;
+        }
+
+        public String getKey() {
+            return this.key;
+        }
+
+        public void setValue(String value) {
+            if (this.type == Byte.class) {
+                this.value = Byte.valueOf(value);
+            } else if (this.type == Integer.class) {
+                this.value = Integer.valueOf(value);
+            } else if (this.type == Double.class) {
+                this.value = Double.valueOf(value);
+            } else if (this.type == Float.class) {
+                this.value = Float.valueOf(value);
+            } else if (this.type == Long.class) {
+                this.value = Long.valueOf(value);
+            } else if (this.type == Boolean.class) {
+                this.value = Boolean.valueOf(value);
+            } else if (this.type == String.class) {
+                this.value = value;
+            } else if (this.type == GameMaps[].class) {
+                String[] mapString = value.split(",");
+                GameMaps[] maps = new GameMaps[mapString.length];
+                for (int i = 0; i < maps.length; i++) {
+                    maps[i] = GameMaps.get(Byte.decode(mapString[i]));
+                }
+                this.value = maps;
+            }
+        }
+
+        public Object getValue() {
+            return (this.value == null) ? this.defaultValue : this.value;
+        }
+
+        public String getDesc() {
+            if (this.type == GameMaps[].class) {
+                return this.desc + COLON_SPACE_TEXT + Arrays.toString((GameMaps[]) this.getValue());
+            } else {
+                return this.desc + COLON_SPACE_TEXT + this.getValue();
+            }
+        }
+    }
 
     public final static long PROCESS_QUEUE_TICKS_PER_SEC = 100;
     public final static long PROCESS_QUEUE = 1000000000 / PROCESS_QUEUE_TICKS_PER_SEC;
@@ -805,9 +876,6 @@ public class Globals {
     public final static byte MAP_LEFT = 0, MAP_RIGHT = 1, MAP_TOP = 2, MAP_BOTTOM = 3;
 
     public final static double GRAVITY = 0.4, MAX_FALLSPEED = 15, WALK_SPEED = 3.8;
-    public static double EXP_MULTIPLIER = 0.05;
-
-    public static int PACKET_MAX_PER_CON = 100;
 
     public final static HashSet<Integer> ITEM_CODES = new HashSet<>();
     public static final HashSet<Integer> ITEM_UPGRADE_CODES = new HashSet<>();
@@ -1191,65 +1259,10 @@ public class Globals {
 
             inputStream = new FileInputStream("config.properties");
             prop.load(inputStream);
-            if (prop.getProperty("tcpport") != null) {
-                SERVER_TCP_PORT = Integer.parseInt(prop.getProperty("tcpport"));
-            }
-            if (prop.getProperty("udpport") != null) {
-                SERVER_UDP_PORT = Integer.parseInt(prop.getProperty("udpport"));
-            }
-            if (prop.getProperty("maxplayers") != null) {
-                SERVER_MAX_ROOM_PLAYERS = Byte.parseByte(prop.getProperty("maxplayers"));
-            }
-            if (prop.getProperty("expmult") != null) {
-                EXP_MULTIPLIER = Double.parseDouble(prop.getProperty("expmult"));
-            }
-            if (prop.getProperty("maxrooms") != null) {
-                SERVER_MAX_ROOMS = Integer.parseInt(prop.getProperty("maxrooms"));
-            }
-            if (prop.getProperty("maxpackets") != null) {
-                PACKET_MAX_PER_CON = Integer.parseInt(prop.getProperty("maxpackets"));
-            }
-            if (prop.getProperty("sharedthreads") != null) {
-                SERVER_SHARED_THREADS = Byte.parseByte(prop.getProperty("sharedthreads"));
-            }
-            if (prop.getProperty("sharedscheduledthreads") != null) {
-                SERVER_SHARED_SCHEDULED_THREADS = Byte.parseByte(prop.getProperty("sharedscheduledthreads"));
-            }
-            if (prop.getProperty("udpmode") != null) {
-                UDP_MODE = Boolean.parseBoolean(prop.getProperty("udpmode"));
-            }
-            if (prop.getProperty("hubconnect") != null) {
-                SERVER_HUB_CONNECT = Boolean.parseBoolean(prop.getProperty("hubconnect"));
-            }
-            if (prop.getProperty("hubaddress") != null) {
-                SERVER_HUB_SERVER_ADDRESS = prop.getProperty("hubaddress");
-            }
-            if (prop.getProperty("hubport") != null) {
-                HUB_SERVER_TCP_PORT = Integer.parseInt(prop.getProperty("hubport"));
-            }
-            if (prop.getProperty("winkillcount") != null) {
-                SERVER_WIN_KILL_COUNT = Integer.parseInt(prop.getProperty("winkillcount"));
-            }
-            if (prop.getProperty("matchduration") != null) {
-                SERVER_MATCH_DURATION = Integer.parseInt(prop.getProperty("matchduration"));
-            }
-            if (prop.getProperty("leveldiff") != null) {
-                SERVER_ROOM_LEVEL_DIFF = Integer.parseInt(prop.getProperty("leveldiff"));
-            }
-            if (prop.getProperty("matchtimeremainingthreshold") != null) {
-                SERVER_MATCH_TIME_REMAINING_THRESHOLD = Integer.parseInt(prop.getProperty("matchtimeremainingthreshold"));
-            }
-            if (prop.getProperty("equipdropsuccessrate") != null) {
-                SERVER_EQUIP_DROP_SUCCESS_RATE = Integer.parseInt(prop.getProperty("equipdropsuccessrate"));
-            }
-            if (prop.getProperty("equipdroprateroll") != null) {
-                SERVER_EQUIP_DROP_RATE_ROLL = Integer.parseInt(prop.getProperty("equipdroprateroll"));
-            }
-            if (prop.getProperty("upgradedropsuccessrate") != null) {
-                SERVER_UPGRADE_DROP_SUCCESS_RATE = Integer.parseInt(prop.getProperty("upgradedropsuccessrate"));
-            }
-            if (prop.getProperty("upgradedroprateroll") != null) {
-                SERVER_UPGRADE_DROP_RATE_ROLL = Integer.parseInt(prop.getProperty("upgradedroprateroll"));
+            for (ServerConfig config : ServerConfig.values()) {
+                if (prop.getProperty(config.getKey()) != null) {
+                    config.setValue(prop.getProperty(config.getKey()));
+                }
             }
         } catch (final FileNotFoundException e) {
             log(Globals.class,
@@ -1265,48 +1278,9 @@ public class Globals {
 
                 }
             }
-            log(Globals.class,
-                    "Config", "Server TCP Port: " + SERVER_TCP_PORT, Globals.LOG_TYPE_DATA);
-            log(Globals.class,
-                    "Config", "Server UDP Port: " + SERVER_UDP_PORT, Globals.LOG_TYPE_DATA);
-            log(Globals.class,
-                    "Config", "Max Players per Room: " + SERVER_MAX_ROOM_PLAYERS, Globals.LOG_TYPE_DATA);
-            log(Globals.class,
-                    "Config", "Max Rooms: " + SERVER_MAX_ROOMS, Globals.LOG_TYPE_DATA);
-            log(Globals.class,
-                    "Config", "EXP Multiplier: " + EXP_MULTIPLIER, Globals.LOG_TYPE_DATA);
-            log(Globals.class,
-                    "Config", "Shared Threads: " + SERVER_SHARED_THREADS, Globals.LOG_TYPE_DATA);
-            log(Globals.class,
-                    "Config", "Shared Scheduled Threads: " + SERVER_SHARED_SCHEDULED_THREADS, Globals.LOG_TYPE_DATA);
-            log(Globals.class,
-                    "Config", "Max Packets Per Connection: " + PACKET_MAX_PER_CON, Globals.LOG_TYPE_DATA);
-            log(Globals.class,
-                    "Config", "UDP Mode: " + UDP_MODE, Globals.LOG_TYPE_DATA);
-            log(Globals.class,
-                    "Config", "Hub Connect: " + SERVER_HUB_CONNECT, Globals.LOG_TYPE_DATA);
-            log(Globals.class,
-                    "Config", "Hub Address: " + SERVER_HUB_SERVER_ADDRESS, Globals.LOG_TYPE_DATA);
-            log(Globals.class,
-                    "Config", "Hub Port: " + HUB_SERVER_TCP_PORT, Globals.LOG_TYPE_DATA);
-            log(Globals.class,
-                    "Config", "Kills to Win: " + SERVER_WIN_KILL_COUNT, Globals.LOG_TYPE_DATA);
-            log(Globals.class,
-                    "Config", "Match Duration(ms): " + SERVER_MATCH_DURATION, Globals.LOG_TYPE_DATA);
-            log(Globals.class,
-                    "Config", "Room Level Difference(±): " + SERVER_ROOM_LEVEL_DIFF, Globals.LOG_TYPE_DATA);
-            log(Globals.class,
-                    "Config", "Minimum Remaining Time for joinable Room: " + SERVER_MATCH_TIME_REMAINING_THRESHOLD, Globals.LOG_TYPE_DATA);
-            log(Globals.class,
-                    "Config", "Equip Drop Rate Roll: " + SERVER_EQUIP_DROP_RATE_ROLL, Globals.LOG_TYPE_DATA);
-            log(Globals.class,
-                    "Config", "Equip Drop Success Rate: " + SERVER_EQUIP_DROP_SUCCESS_RATE
-                    + " in " + SERVER_EQUIP_DROP_RATE_ROLL + "(" + 100D * SERVER_EQUIP_DROP_SUCCESS_RATE / SERVER_EQUIP_DROP_RATE_ROLL + "%)", Globals.LOG_TYPE_DATA);
-            log(Globals.class,
-                    "Config", "Infusion Drop Rate Roll: " + SERVER_UPGRADE_DROP_RATE_ROLL, Globals.LOG_TYPE_DATA);
-            log(Globals.class,
-                    "Config", "Infusion Drop Success Rate: " + SERVER_UPGRADE_DROP_SUCCESS_RATE
-                    + " in " + SERVER_UPGRADE_DROP_RATE_ROLL + "(" + 100D * SERVER_UPGRADE_DROP_SUCCESS_RATE / SERVER_UPGRADE_DROP_RATE_ROLL + "%)", Globals.LOG_TYPE_DATA);
+            for (ServerConfig config : ServerConfig.values()) {
+                log(Globals.class, "Config", config.getDesc(), Globals.LOG_TYPE_DATA);
+            }
         }
     }
 

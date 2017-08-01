@@ -222,7 +222,7 @@ public class PacketSender {
     }
 
     private static void sendPacket(final byte[] packet) {
-        if (!Globals.UDP_MODE) {
+        if (!(Boolean) Globals.ServerConfig.UDP_MODE.getValue()) {
             GameClient.getClient().sendTCP(packet);
         } else {
             GameClient.getClient().sendUDP(packet);
