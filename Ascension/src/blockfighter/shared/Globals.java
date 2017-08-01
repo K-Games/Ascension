@@ -116,7 +116,7 @@ public class Globals {
     public final static double PINGS_PER_SEC = 2D;
     public final static double PING_UPDATE = 1000000000D / PINGS_PER_SEC;
 
-    public final static double PROCESS_QUEUES_PER_SEC = 100D;
+    public final static double PROCESS_QUEUES_PER_SEC = 130D;
     public final static double QUEUES_UPDATE = 1000000000D / PROCESS_QUEUES_PER_SEC;
 
     public final static byte RIGHT = 0, LEFT = 1, DOWN = 2, UP = 3;
