@@ -133,7 +133,7 @@ public class TestPacketSender {
     }
 
     private static void sendPacket(final byte[] packet, final Client client) {
-        if (Globals.UDP_MODE) {
+        if ((Boolean) Globals.ServerConfig.UDP_MODE.getValue()) {
             client.sendUDP(packet);
         } else {
             client.sendTCP(packet);
