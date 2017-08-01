@@ -83,7 +83,8 @@ public class RoomData {
         this.mobs.clear();
         this.projectiles.clear();
 
-        this.setMap(GameMaps.GRAND_LIBRARY.newServerGameMap());
+        GameMaps[] maps = (GameMaps[]) Globals.ServerConfig.GAME_MAPS_LIST.getValue();
+        this.setMap(maps[Globals.rng(maps.length)].newServerGameMap());
 
         resetKeys();
         resetPlayerBuckets();

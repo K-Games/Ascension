@@ -29,6 +29,7 @@ import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -786,7 +787,8 @@ public class Globals {
         EQUIP_DROP_SUCCESS_RATE("equipdropsuccessrate", Integer.class, Integer.valueOf(120), "Equip Drop Success Rate"),
         EQUIP_DROP_RATE_ROLL("equipdroprateroll", Integer.class, Integer.valueOf(1000), "Equip Drop Rate Roll"),
         UPGRADE_DROP_SUCCESS_RATE("upgradedropsuccessrate", Integer.class, Integer.valueOf(150), "Infusion Drop Success Rate"),
-        UPGRADE_DROP_RATE_ROLL("upgradedroprateroll", Integer.class, Integer.valueOf(1000), "Infusion Drop Rate Roll");
+        UPGRADE_DROP_RATE_ROLL("upgradedroprateroll", Integer.class, Integer.valueOf(1000), "Infusion Drop Rate Roll"),
+        GAME_MAPS_LIST("gamemaps", GameMaps[].class, new GameMaps[]{GameMaps.GRAND_LIBRARY}, "Playable Game Maps List");
 
         private final String key;
         private final Class type;
@@ -836,6 +838,13 @@ public class Globals {
                 this.value = Boolean.valueOf(value);
             } else if (this.type == String.class) {
                 this.value = value;
+            } else if (this.type == GameMaps[].class) {
+                String[] mapString = value.split(",");
+                GameMaps[] maps = new GameMaps[mapString.length];
+                for (int i = 0; i < maps.length; i++) {
+                    maps[i] = GameMaps.get(Byte.decode(mapString[i]));
+                }
+                this.value = maps;
             }
         }
 
@@ -844,7 +853,11 @@ public class Globals {
         }
 
         public String getDesc() {
-            return this.desc + COLON_SPACE_TEXT + this.getValue().toString();
+            if (this.type == GameMaps[].class) {
+                return this.desc + COLON_SPACE_TEXT + Arrays.toString((GameMaps[]) this.getValue());
+            } else {
+                return this.desc + COLON_SPACE_TEXT + this.getValue();
+            }
         }
     }
 
