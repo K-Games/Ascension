@@ -61,8 +61,8 @@ public class Globals {
             DEBUG_MODE = false;
 
     public final static byte GAME_MAJOR_VERSION = 0,
-            GAME_MINOR_VERSION = 25,
-            GAME_UPDATE_NUMBER = 0;
+            GAME_MINOR_VERSION = 24,
+            GAME_UPDATE_NUMBER = 2;
 
     private final static String GAME_DEV_STATE = "ALPHA";
 

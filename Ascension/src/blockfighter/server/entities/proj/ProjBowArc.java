@@ -47,7 +47,7 @@ public class ProjBowArc extends Projectile {
             }
             owner.queueHeal((int) heal);
         }
-        target.queueBuff(new BuffKnockback(this.logic, 100, (owner.getFacing() == Globals.RIGHT) ? 4 : -4, -1, owner, target));
+        target.queueBuff(new BuffKnockback(this.logic, 20, (owner.getFacing() == Globals.RIGHT) ? 3 : -3, 0, owner, target));
     }
 
     @Override

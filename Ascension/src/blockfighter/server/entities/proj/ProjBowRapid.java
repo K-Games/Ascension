@@ -41,7 +41,7 @@ public class ProjBowRapid extends Projectile {
         final boolean isCrit = owner.rollCrit();
         final int damage = calculateDamage(isCrit);
         target.queueDamage(new Damage(damage, true, owner, target, isCrit));
-        target.queueBuff(new BuffKnockback(this.logic, 50, (owner.getFacing() == Globals.RIGHT) ? 6 : -6, -2, owner, target));
+        target.queueBuff(new BuffKnockback(this.logic, 20, (owner.getFacing() == Globals.RIGHT) ? 4 : -4, 0, owner, target));
     }
 
     @Override

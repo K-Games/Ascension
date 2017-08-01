@@ -27,7 +27,7 @@ public class SkillBowRapid extends Skill {
 
     private static final byte REQ_EQUIP_SLOT = Globals.EQUIP_WEAPON;
     private static final byte PLAYER_STATE = Player.PLAYER_STATE_BOW_RAPID;
-    private static final int SKILL_DURATION = 550;
+    private static final int SKILL_DURATION = 650;
 
     static {
         String[] data = Globals.loadSkillData(SKILL_CODE);

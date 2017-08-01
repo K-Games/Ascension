@@ -27,7 +27,7 @@ public class SkillBowArc extends Skill {
 
     private static final byte REQ_EQUIP_SLOT = Globals.EQUIP_WEAPON;
     private static final byte PLAYER_STATE = Player.PLAYER_STATE_BOW_ARC;
-    private static final int SKILL_DURATION = 300;
+    private static final int SKILL_DURATION = 400;
 
     static {
         String[] data = Globals.loadSkillData(SKILL_CODE);
