@@ -153,7 +153,7 @@ public class AscensionServer {
         Iterator<Map.Entry<Byte, LogicModule>> iter = SERVER_ROOMS.entrySet().iterator();
         while (iter.hasNext()) {
             Map.Entry<Byte, LogicModule> room = iter.next();
-            if (room.getValue().getMatchTimeRemaining() > (Integer) Globals.ServerConfig.MATCH_TIME_REMAINING_THRESHOLD.getValue() && !room.getValue().getRoomData().isFull() && room.getValue().getRoomData().isInLevelRange(level)) {
+            if (!room.getValue().gameFinished() && room.getValue().getMatchTimeRemaining() > (Integer) Globals.ServerConfig.MATCH_TIME_REMAINING_THRESHOLD.getValue() && !room.getValue().getRoomData().isFull() && room.getValue().getRoomData().isInLevelRange(level)) {
                 return room.getValue();
             }
         }
