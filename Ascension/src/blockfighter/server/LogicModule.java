@@ -69,8 +69,8 @@ public class LogicModule implements Runnable {
 
     }
 
-    private boolean gameFinished() {
-        return this.winningPlayer.getScore() >= (Integer) Globals.ServerConfig.WIN_SCORE_COUNT.getValue()
+    public boolean gameFinished() {
+        return (this.winningPlayer != null && this.winningPlayer.getScore() >= (Integer) Globals.ServerConfig.WIN_SCORE_COUNT.getValue())
                 || this.currentTime - this.matchStartTime >= Globals.msToNs((Integer) Globals.ServerConfig.MATCH_DURATION.getValue());
     }
 
