@@ -2,29 +2,10 @@
 
 ![Game Updates](https://github.com/K-Games/AscensionInfo/raw/master/images/updates.png)
 
-## Version 0.25.0
-
-### Gameplay Changes
-
-#### Stats
-
-#### Equipment Stats
-
-#### Infusion
-
-#### Skill Changes
-
-##### Sword
-
-##### Bow
-
-##### Shield
-
-##### Utility
-
-##### Passive
+## Version 0.24.1
 
 ### Client Changes
+* Process queues more frequently for smoother gameplay.
 
 ### Server Changes
 * Enumerated server configs - New properties are simpler to add.
@@ -32,6 +13,9 @@
 	* Rename Thread properties to `numthreads` and `numscheduledthreads`
 	* Added new properties for Max Room Idle
 	* Added new properties for Max Player Idle
+	* Added new properties for Playable Game Maps
+* Fixed bug where players can join a completed match if the match timer was above the joinable threshold.
+
 ---
 
 ## Version 0.24.0
