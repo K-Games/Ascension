@@ -2,6 +2,34 @@
 
 ![Game Updates](https://github.com/K-Games/AscensionInfo/raw/master/images/updates.png)
 
+## Version 0.25.0
+
+### Gameplay Changes
+
+#### Stats
+
+#### Equipment Stats
+
+#### Infusion
+
+#### Skill Changes
+
+##### Sword
+
+##### Bow
+
+##### Shield
+
+##### Utility
+
+##### Passive
+
+### Client Changes
+
+### Server Changes
+
+---
+
 ## Version 0.24.2
 
 ### Gameplay Changes
