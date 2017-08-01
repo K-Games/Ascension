@@ -46,6 +46,7 @@ import org.apache.commons.io.FileUtils;
 
 public class SaveData {
 
+    private static final String SAVE_FILE_DIRECTORY = System.getProperty("user.home") + File.separator + "K-Games" + File.separator + "Ascension";
     private static final int LEGACY_SAVE_DATA_LENGTH = 45485;
     public static final int SAVE_VERSION_0240 = 240;
     public static final int SAVE_VERSION_0232 = 232;
@@ -183,7 +184,13 @@ public class SaveData {
             Globals.logError("Failed to grab Save Data Writer " + SAVE_READERS.get(CURRENT_SAVE_VERSION).getName(), ex);
             return;
         }
-        writer.writeSaveData(saveNum, c);
+
+        try {
+            Globals.log(SaveData.class, "Writing Save Data with " + writer.getClass().getName(), Globals.LOG_TYPE_DATA);
+            FileUtils.writeByteArrayToFile(new File(SAVE_FILE_DIRECTORY, saveNum + ".tcdat"), writer.writeSaveData(c));
+        } catch (final IOException ex) {
+            Globals.logError(ex.toString(), ex);
+        }
     }
 
     public static SaveData readSaveData(final byte saveNum) {
@@ -191,7 +198,8 @@ public class SaveData {
         final int legacyLength = LEGACY_SAVE_DATA_LENGTH;
         byte[] data;
         try {
-            data = FileUtils.readFileToByteArray(new File(saveNum + ".tcdat"));
+            data = FileUtils.readFileToByteArray(new File(SAVE_FILE_DIRECTORY, saveNum + ".tcdat"));
+            Globals.log(SaveData.class, "Loading Save Data " + saveNum + "...", Globals.LOG_TYPE_DATA);
         } catch (final IOException ex) {
             return null;
         }

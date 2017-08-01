@@ -8,6 +8,8 @@ import java.util.UUID;
 
 public class SaveDataReaderImpl extends blockfighter.client.savedata.ver_0_23_2.SaveDataReaderImpl {
 
+    private static final int NUM_KEYBINDS = 27;
+
     @Override
     public SaveData readSaveData(final SaveData c, final byte[] data) {
         byte[] temp;
@@ -54,11 +56,21 @@ public class SaveDataReaderImpl extends blockfighter.client.savedata.ver_0_23_2.
         pos = readItems(data, c.getUpgrades(), pos);
         pos = readSkills(data, c, pos);
         pos = readHotkeys(data, c, pos);
-        pos = readKeyBind(data, c.getKeyBind(), pos);
-        pos = readEmoteKeyBind(data, c.getKeyBind(), pos);
-        readScoreboardKeyBind(data, c.getKeyBind(), pos);
+        readKeyBind(data, c.getKeyBind(), pos);
 
         c.calcStats();
         return c;
+    }
+
+    @Override
+    protected int readKeyBind(final byte[] data, final int[] keybind, final int pos) {
+        int nextPos = pos;
+        for (int i = 0; i < NUM_KEYBINDS; i++) {
+            final byte[] temp = new byte[4];
+            System.arraycopy(data, nextPos, temp, 0, temp.length);
+            keybind[i] = Globals.bytesToInt(temp);
+            nextPos += temp.length;
+        }
+        return nextPos;
     }
 }

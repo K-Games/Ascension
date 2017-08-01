@@ -5,7 +5,7 @@ import blockfighter.client.entities.items.ItemUpgrade;
 
 public abstract class SaveDataWriter {
 
-    public abstract void writeSaveData(final byte saveNum, final SaveData c);
+    public abstract byte[] writeSaveData(final SaveData c);
 
     protected abstract int saveKeyBind(final byte[] data, final int[] keybind, final int pos, final int numKeybinds);
 

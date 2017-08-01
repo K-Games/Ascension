@@ -3,10 +3,7 @@ package blockfighter.client.savedata.ver_0_24_0;
 import blockfighter.client.entities.items.ItemEquip;
 import blockfighter.client.savedata.SaveData;
 import blockfighter.shared.Globals;
-import java.io.File;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import org.apache.commons.io.FileUtils;
 
 public class SaveDataWriterImpl extends blockfighter.client.savedata.ver_0_23_2.SaveDataWriterImpl {
 
@@ -20,7 +17,7 @@ public class SaveDataWriterImpl extends blockfighter.client.savedata.ver_0_23_2.
     private static final int NUM_STATS = 6;
 
     @Override
-    public void writeSaveData(final byte saveNum, final SaveData c) {
+    public byte[] writeSaveData(final SaveData c) {
         final byte[] data = new byte[Integer.BYTES //Save Version Number
                 + Globals.MAX_NAME_LENGTH //Name in UTF-8 Character
                 + Long.BYTES * 2 //UUID
@@ -73,11 +70,6 @@ public class SaveDataWriterImpl extends blockfighter.client.savedata.ver_0_23_2.
         pos = saveHotkeys(data, c, pos, NUM_HOTKEYS);
         saveKeyBind(data, c.getKeyBind(), pos, NUM_KEYBINDS);
 
-        try {
-            Globals.log(SaveData.class, "Writing Save Data with " + getClass().getName(), Globals.LOG_TYPE_DATA);
-            FileUtils.writeByteArrayToFile(new File(saveNum + ".tcdat"), data);
-        } catch (final IOException ex) {
-            Globals.logError(ex.toString(), ex);
-        }
+        return data;
     }
 }
