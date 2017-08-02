@@ -69,15 +69,19 @@ public class ProjShieldCharge extends Projectile {
             this.x = getOwner().getX() - 150;
             this.hitbox[0].x = getOwner().getX() - 150;
             this.pHit.values().forEach((player) -> {
-                player.setPos(getOwner().getX() + 60, getOwner().getY());
-                player.setXSpeed(0);
+                if (!player.isDead()) {
+                    player.setPos(getOwner().getX() + 60, getOwner().getY());
+                    player.setXSpeed(0);
+                }
             });
         } else {
             this.x = getOwner().getX() - 250 + 150;
             this.hitbox[0].x = getOwner().getX() - 250 + 150;
             this.pHit.values().forEach((player) -> {
-                player.setPos(getOwner().getX() - 60, getOwner().getY());
-                player.setXSpeed(0);
+                if (!player.isDead()) {
+                    player.setPos(getOwner().getX() - 60, getOwner().getY());
+                    player.setXSpeed(0);
+                }
             });
         }
         super.update();
