@@ -119,7 +119,7 @@ public class ScreenServerList extends ScreenMenu {
 
     public static String loadServerList() {
         try {
-            return FileUtils.readLines(new File("server.txt"), StandardCharsets.UTF_8).get(0);
+            return FileUtils.readLines(new File(Globals.SAVE_FILE_DIRECTORY, "server"), StandardCharsets.UTF_8).get(0);
         } catch (final Exception ex) {
             return "";
         }
@@ -127,7 +127,7 @@ public class ScreenServerList extends ScreenMenu {
 
     public static void saveServerList(final String address) {
         try {
-            FileUtils.writeStringToFile(new File("server.txt"), address, StandardCharsets.UTF_8);
+            FileUtils.writeStringToFile(new File(Globals.SAVE_FILE_DIRECTORY, "server"), address, StandardCharsets.UTF_8);
         } catch (final Exception ex) {
             Globals.logError(ex.toString(), ex);
         }

@@ -54,6 +54,7 @@ public class Globals {
     public static boolean SKIP_TITLE = false;
     public static String SERVER_ADDRESS;
 
+    public static final String SAVE_FILE_DIRECTORY = System.getProperty("user.home") + File.separator + "K-Games" + File.separator + "Ascension";
     public static final String DEV_PASSPHRASE = "amFwAkjuy0K/lSvUUyZvdiIFdn/Dzu/OAxStgUEdLKk=";
     public static final String COLON_SPACE_TEXT = ": ";
 
