@@ -2,8 +2,8 @@
 Overwhelm
 [desc]
 2
-Charge forward with your shield
-and send enemies hit flying.
+Charge and push forward
+enemies you hit.
 [reqweapon]
 10
 [maxcooldown]

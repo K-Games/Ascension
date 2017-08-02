@@ -15,7 +15,7 @@ public class ParticleShieldCharge extends Particle {
     public ParticleShieldCharge(final byte f, final Player p) {
         super(f, p);
         this.frame = 0;
-        this.duration = 750;
+        this.duration = 200;
         final Point point = this.owner.getPos();
         if (point != null) {
             this.x = point.x;
