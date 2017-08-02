@@ -1249,10 +1249,13 @@ public class Player implements GameEntity, Callable<Player> {
     }
 
     private boolean updateY(final double change) {
-        double prevY = this.y;
+        if (change == 0) {
+            return false;
+        }
+
         this.y = this.map.getValidY(this.x, this.y + change);
-        this.updatePos = prevY != this.y;
-        return this.updatePos;
+        this.updatePos = true;
+        return true;
     }
 
     public void queuePlayerState(final byte newState) {
