@@ -6,11 +6,11 @@ import java.util.HashMap;
 
 public class SkillShieldReflect extends Skill {
 
-    public static final String CUSTOMHEADER_MAXLVLREFLECT = "[maxlevelreflect]",
+    public static final String CUSTOMHEADER_MAXLVLDMGREDUCT = "[maxleveldmgreduct]",
             CUSTOMHEADER_BUFFDURATION = "[buffduration]";
 
     private static final String[] CUSTOM_DATA_HEADERS = {
-        CUSTOMHEADER_MAXLVLREFLECT,
+        CUSTOMHEADER_MAXLVLDMGREDUCT,
         CUSTOMHEADER_BUFFDURATION
     };
 
@@ -38,7 +38,7 @@ public class SkillShieldReflect extends Skill {
         BASE_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_BASEVALUE_HEADER) * 100;
         MULT_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MULTVALUE_HEADER) * 100;
         IS_PASSIVE = Globals.loadBooleanValue(data, dataHeaders, Globals.SKILL_PASSIVE_HEADER);
-        CUSTOM_VALUES.put(CUSTOMHEADER_MAXLVLREFLECT, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_MAXLVLREFLECT) * 100);
+        CUSTOM_VALUES.put(CUSTOMHEADER_MAXLVLDMGREDUCT, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_MAXLVLDMGREDUCT) * 100);
         CUSTOM_VALUES.put(CUSTOMHEADER_BUFFDURATION, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_BUFFDURATION) / 1000);
 
     }
@@ -92,7 +92,7 @@ public class SkillShieldReflect extends Skill {
             "Deals " + Globals.NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "% of damage taken."
         };
         this.maxBonusDesc = new String[]{
-            "You reflect " + Globals.NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_MAXLVLREFLECT)) + "% of damage taken by other players."
+            "Reduce damage taken by " + Globals.NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_MAXLVLDMGREDUCT)) + "%."
         };
     }
 }

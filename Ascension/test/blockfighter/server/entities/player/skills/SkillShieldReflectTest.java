@@ -8,7 +8,7 @@ import org.junit.Test;
 
 public class SkillShieldReflectTest {
 
-    public static final String CUSTOMHEADER_MAXLVLREFLECT = "[maxlevelreflect]",
+    public static final String CUSTOMHEADER_MAXLVLREFLECT = "[maxleveldmgreduct]",
             CUSTOMHEADER_BUFFDURATION = "[buffduration]";
 
     private static final String[] CUSTOM_DATA_HEADERS = {
