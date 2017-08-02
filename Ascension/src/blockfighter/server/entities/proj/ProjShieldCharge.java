@@ -13,7 +13,7 @@ import java.awt.geom.Rectangle2D;
 public class ProjShieldCharge extends Projectile {
 
     public ProjShieldCharge(final LogicModule l, final Player o, final double x, final double y) {
-        super(l, o, x, y, 750);
+        super(l, o, x, y, 200);
         this.screenshake = true;
         this.hitbox = new Rectangle2D.Double[1];
         if (o.getFacing() == Globals.RIGHT) {
@@ -39,10 +39,11 @@ public class ProjShieldCharge extends Projectile {
         final boolean isCrit = owner.rollCrit();
         final int damage = calculateDamage(isCrit);
         target.queueDamage(new Damage(damage, true, owner, target, isCrit));
-        target.queueBuff(new BuffKnockback(this.logic, 300, (owner.getFacing() == Globals.RIGHT) ? 20 : -20, -10, owner, target));
         if (owner.isSkillMaxed(Globals.SHIELD_CHARGE)) {
             double stunDuration = owner.getSkill(Globals.SHIELD_CHARGE).getCustomValue(SkillShieldCharge.CUSTOMHEADER_STUN);
-            target.queueBuff(new BuffStun(this.logic, (int) stunDuration));
+            target.queueBuff(new BuffStun(this.logic, (int) stunDuration + 200));
+        } else {
+            target.queueBuff(new BuffStun(this.logic, 200));
         }
     }
 
@@ -54,7 +55,9 @@ public class ProjShieldCharge extends Projectile {
         target.queueDamage(new Damage(damage, true, owner, target, isCrit));
         if (owner.isSkillMaxed(Globals.SHIELD_CHARGE)) {
             double stunDuration = owner.getSkill(Globals.SHIELD_CHARGE).getCustomValue(SkillShieldCharge.CUSTOMHEADER_STUN);
-            target.queueBuff(new BuffStun(this.logic, (int) stunDuration));
+            target.queueBuff(new BuffStun(this.logic, (int) stunDuration + 200));
+        } else {
+            target.queueBuff(new BuffStun(this.logic, 200));
         }
     }
 
@@ -65,9 +68,17 @@ public class ProjShieldCharge extends Projectile {
         if (getOwner().getFacing() == Globals.RIGHT) {
             this.x = getOwner().getX() - 150;
             this.hitbox[0].x = getOwner().getX() - 150;
+            this.pHit.values().forEach((player) -> {
+                player.setPos(getOwner().getX() + 60, getOwner().getY());
+                player.setXSpeed(0);
+            });
         } else {
             this.x = getOwner().getX() - 250 + 150;
             this.hitbox[0].x = getOwner().getX() - 250 + 150;
+            this.pHit.values().forEach((player) -> {
+                player.setPos(getOwner().getX() - 60, getOwner().getY());
+                player.setXSpeed(0);
+            });
         }
         super.update();
     }

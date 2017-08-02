@@ -26,7 +26,7 @@ public class SkillShieldCharge extends Skill {
 
     private static final byte REQ_EQUIP_SLOT = Globals.EQUIP_OFFHAND;
     private static final byte PLAYER_STATE = Player.PLAYER_STATE_SHIELD_CHARGE;
-    private static final int SKILL_DURATION = 750;
+    private static final int SKILL_DURATION = 200;
 
     static {
         String[] data = Globals.loadSkillData(SKILL_CODE);
@@ -97,13 +97,16 @@ public class SkillShieldCharge extends Skill {
     @Override
     public void updateSkillUse(Player player) {
         final long duration = Globals.nsToMs(this.logic.getTime() - player.getSkillCastTime());
-        player.setXSpeed((player.getFacing() == Globals.RIGHT) ? 18 : -18);
+        player.setXSpeed((player.getFacing() == Globals.RIGHT) ? 35 : -35);
         if (player.getSkillCounter() == 0) {
             final ProjShieldCharge proj = new ProjShieldCharge(this.logic, player, player.getX(), player.getY());
             this.logic.queueAddProj(proj);
+            PacketSender.sendScreenShake(player, 3, 3, 200);
             PacketSender.sendParticle(this.logic, Globals.Particles.SHIELD_CHARGE.getParticleCode(), player.getKey(), player.getFacing());
             player.incrementSkillCounter();
         }
-        player.updateSkillEnd(duration, getSkillDuration(), false, false);
+        if (player.updateSkillEnd(duration, getSkillDuration(), false, false)) {
+            player.setXSpeed(0);
+        }
     }
 }
