@@ -26,10 +26,9 @@ public class RoomDataTest {
         room.setPlayerKeys(playerKeys);
         when(playerKeys.isEmpty()).thenReturn(true);
 
-        byte expResult = -1;
-        byte result = room.getNextPlayerKey();
+        Byte result = room.getNextPlayerKey();
 
-        assertEquals(expResult, result);
+        assertNull(result);
     }
 
     @Test
