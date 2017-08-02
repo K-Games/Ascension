@@ -20,7 +20,8 @@ public class Main {
             .build());
 
     public static boolean UDP_MODE;
-    public static byte MIN_LEVEL, MAX_LEVEL, PLAYERS;
+    public static byte MIN_LEVEL, MAX_LEVEL;
+    public static int PLAYERS;
 
     public static void main(final String[] args) {
         Log.set(Log.LEVEL_NONE);
@@ -29,7 +30,7 @@ public class Main {
             UDP_MODE = Boolean.parseBoolean(args[1]);
             MIN_LEVEL = Byte.parseByte(args[2]);
             MAX_LEVEL = Byte.parseByte(args[3]);
-            PLAYERS = Byte.parseByte(args[4]);
+            PLAYERS = Integer.parseInt(args[4]);
         }
         test.runTest(args[0]);
     }

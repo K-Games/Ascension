@@ -15,7 +15,7 @@ public class LogicModule implements Runnable {
     private long currentTime = 0;
     private SaveData selectedChar;
     private byte selectedRoom = 0;
-    private byte myPlayerKey = -1;
+    private Byte myPlayerKey = null;
     private Screen screen;
 
     private long connectStartTime = 0;
@@ -90,6 +90,9 @@ public class LogicModule implements Runnable {
     }
 
     public byte getMyPlayerKey() {
+        if (this.myPlayerKey == null) {
+            throw new NullPointerException("myPlayerKey is null");
+        }
         return this.myPlayerKey;
     }
 

@@ -299,7 +299,7 @@ public class PacketHandler {
             desc += Globals.getStatName(i) + Globals.COLON_SPACE_TEXT + newPlayer.getStats()[i] + "\n";
         }
         desc += "Equips=" + Arrays.toString(newPlayer.getEquips()) + "\n";
-        Globals.log(PacketHandler.class, "DATA_PLAYER_CREATE " + c + " Queueing new player <" + newPlayer.getPlayerName() + "> into room " + roomData.getRoomIndex() + ". Key: " + freeKey + desc, Globals.LOG_TYPE_DATA);
+        Globals.log(PacketHandler.class, "DATA_PLAYER_CREATE " + c + " Queueing new player <" + newPlayer.getPlayerName() + "> into room " + roomData.getRoomIndex() + ". Key: " + String.format("0x%02X", freeKey) + desc, Globals.LOG_TYPE_DATA);
 
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 4];
         bytes[0] = Globals.DATA_PLAYER_CREATE;
@@ -308,7 +308,7 @@ public class PacketHandler {
         PacketSender.sendConnection(bytes, c);
         GameServer.addPlayerConnection(c, newPlayer);
 
-        Globals.log(PacketHandler.class, "DATA_PLAYER_CREATE " + c + " Sent <" + newPlayer.getPlayerName() + "> creation confirmation.  Room: " + roomData.getRoomIndex() + " Key: " + freeKey, Globals.LOG_TYPE_DATA);
+        Globals.log(PacketHandler.class, "DATA_PLAYER_CREATE " + c + " Sent <" + newPlayer.getPlayerName() + "> creation confirmation.  Room: " + roomData.getRoomIndex() + " Key: " + String.format("0x%02X", freeKey), Globals.LOG_TYPE_DATA);
         newPlayer.sendName();
         newPlayer.sendStat(Globals.STAT_MAXHP);
     }
@@ -361,13 +361,13 @@ public class PacketHandler {
             return;
         }
 
-        final byte freeKey = roomData.getNextPlayerKey();
-        if (freeKey == -1) {
+        final Byte freeKey = roomData.getNextPlayerKey();
+        if (freeKey == null) {
             final byte[] bytes = new byte[Globals.PACKET_BYTE * 2];
             bytes[0] = Globals.DATA_PLAYER_LOGIN;
             bytes[1] = Globals.LOGIN_FAIL_NO_ROOMS;
             PacketSender.sendConnection(bytes, c);
-            Globals.log(PacketHandler.class, "DATA_PLAYER_LOGIN " + c + " Failed to login - No rooms available", Globals.LOG_TYPE_DATA);
+            Globals.log(PacketHandler.class, "DATA_PLAYER_LOGIN " + c + " Failed to login - No player key available", Globals.LOG_TYPE_DATA);
             return;
         }
 

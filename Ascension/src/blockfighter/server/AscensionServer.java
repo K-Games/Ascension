@@ -142,7 +142,7 @@ public class AscensionServer {
         if (SERVER_ROOMS.size() >= (Integer) Globals.ServerConfig.MAX_ROOMS.getValue()) {
             return null;
         }
-        byte index = 0;
+        byte index = Byte.MIN_VALUE;
         while (SERVER_ROOMS.containsKey(index)) {
             index++;
         }
@@ -167,6 +167,6 @@ public class AscensionServer {
             Map.Entry<Byte, LogicModule> room = iter.next();
             totalPlayers += room.getValue().getRoomData().getPlayers().size();
         }
-        return Math.round(100f * totalPlayers / ((Integer) Globals.ServerConfig.MAX_ROOMS.getValue() * (Byte) Globals.ServerConfig.MAX_PLAYERS.getValue()));
+        return Math.round(100f * totalPlayers / ((Integer) Globals.ServerConfig.MAX_ROOMS.getValue() * (Integer) Globals.ServerConfig.MAX_PLAYERS.getValue()));
     }
 }

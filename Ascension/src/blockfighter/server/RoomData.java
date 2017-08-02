@@ -19,8 +19,8 @@ public class RoomData {
     private byte roomIndex = -1;
     private HashMap<Integer, ConcurrentHashMap<Byte, Player>> playerBuckets;
 
-    private ConcurrentHashMap<Byte, Player> players = new ConcurrentHashMap<>((Byte) Globals.ServerConfig.MAX_PLAYERS.getValue(), 0.9f,
-            Math.max((Byte) Globals.ServerConfig.MAX_PLAYERS.getValue() / 5, 3));
+    private ConcurrentHashMap<Byte, Player> players = new ConcurrentHashMap<>((Integer) Globals.ServerConfig.MAX_PLAYERS.getValue(), 0.9f,
+            Math.max((Integer) Globals.ServerConfig.MAX_PLAYERS.getValue() / 5, 3));
     private ConcurrentHashMap<Integer, Mob> mobs = new ConcurrentHashMap<>(1, 0.9f, 1);
     private ConcurrentHashMap<Integer, Projectile> projectiles = new ConcurrentHashMap<>(500, 0.75f, 3);
 
@@ -59,9 +59,9 @@ public class RoomData {
         this.mobMaxKeys = 0;
         this.mobKeys.clear();
 
-        byte keyCount = 0;
+        byte keyCount = Byte.MIN_VALUE;
         this.playerKeys.clear();
-        while (this.playerKeys.size() < (Byte) Globals.ServerConfig.MAX_PLAYERS.getValue() && keyCount <= Byte.MAX_VALUE) {
+        while (this.playerKeys.size() < (Integer) Globals.ServerConfig.MAX_PLAYERS.getValue() && keyCount <= Byte.MAX_VALUE) {
             this.playerKeys.add(keyCount);
             keyCount++;
         }
@@ -183,9 +183,9 @@ public class RoomData {
         return this.map;
     }
 
-    public byte getNextPlayerKey() {
+    public Byte getNextPlayerKey() {
         if (this.playerKeys.isEmpty()) {
-            return -1;
+            return null;
         }
         return this.playerKeys.poll();
     }
@@ -218,7 +218,7 @@ public class RoomData {
     public void returnPlayerKey(final byte key) {
         if (!this.playerKeys.contains(key)) {
             this.playerKeys.add(key);
-            Globals.log(RoomData.class, "Room: " + this.roomIndex + " Returned player key: " + key + " Keys Remaining: " + this.playerKeys.size(), Globals.LOG_TYPE_DATA);
+            Globals.log(RoomData.class, "Room: " + this.roomIndex + " Returned player key: " + String.format("0x%02X", key) + " Keys Remaining: " + this.playerKeys.size(), Globals.LOG_TYPE_DATA);
         }
     }
 
@@ -247,7 +247,7 @@ public class RoomData {
 
     public ArrayList<Player> getPlayersInRange(final Player player, final double radius) {
         Rectangle2D.Double rect = new Rectangle2D.Double(player.getX() - radius, player.getY() - radius, radius * 2, radius * 2);
-        ArrayList<Player> playersInRange = new ArrayList<>((Byte) Globals.ServerConfig.MAX_PLAYERS.getValue());
+        ArrayList<Player> playersInRange = new ArrayList<>((Integer) Globals.ServerConfig.MAX_PLAYERS.getValue());
         for (final Map.Entry<Byte, Player> pEntry : getPlayersNearRect(rect).entrySet()) {
             final Player p = pEntry.getValue();
             if (p != player && !p.isDead() && !p.isInvulnerable()) {

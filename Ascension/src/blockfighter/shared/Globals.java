@@ -772,7 +772,7 @@ public class Globals {
         MAX_ROOM_IDLE("maxroomidle", Integer.class, Integer.valueOf(2000), "Max Room Idle(ms)"),
         MAX_PLAYER_IDLE("maxplayeridle", Integer.class, Integer.valueOf(120000), "Max Player Idle(ms)"),
         MAX_ROOMS("maxrooms", Integer.class, Integer.valueOf(10), "Max Rooms"),
-        MAX_PLAYERS("maxplayers", Byte.class, Byte.valueOf((byte) 10), "Max Players per Room"),
+        MAX_PLAYERS("maxplayers", Integer.class, Integer.valueOf(10), "Max Players per Room"),
         MAX_PACKETS_PER_CON("maxpackets", Byte.class, Byte.valueOf((byte) 100), "Max Packets Per Connection"),
         NUM_THREADS("numthreads", Byte.class, Byte.valueOf((byte) 3), "Number of threads"),
         NUM_SCHEDULED_THREADS("numscheduledthreads", Byte.class, Byte.valueOf((byte) 2), "Number of Scheduler Threads"),
