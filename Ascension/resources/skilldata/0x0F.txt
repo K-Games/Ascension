@@ -14,7 +14,7 @@ dealing a portion of damage taken.
 0.02
 [passive]
 false
-[maxlevelreflect]
-0.4
+[maxleveldmgreduct]
+0.33
 [buffduration]
 3000

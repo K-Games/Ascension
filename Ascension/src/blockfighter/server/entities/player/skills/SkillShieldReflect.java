@@ -10,15 +10,14 @@ import blockfighter.shared.Globals;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 public class SkillShieldReflect extends Skill {
 
-    public static final String CUSTOMHEADER_MAXLVLREFLECT = "[maxlevelreflect]",
+    public static final String CUSTOMHEADER_MAXLVLDMGREDUCT = "[maxleveldmgreduct]",
             CUSTOMHEADER_BUFFDURATION = "[buffduration]";
 
     private static final String[] CUSTOM_DATA_HEADERS = {
-        CUSTOMHEADER_MAXLVLREFLECT,
+        CUSTOMHEADER_MAXLVLDMGREDUCT,
         CUSTOMHEADER_BUFFDURATION
     };
 
@@ -44,7 +43,7 @@ public class SkillShieldReflect extends Skill {
         MULT_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MULTVALUE_HEADER);
         IS_PASSIVE = Globals.loadBooleanValue(data, dataHeaders, Globals.SKILL_PASSIVE_HEADER);
 
-        CUSTOM_VALUES.put(CUSTOMHEADER_MAXLVLREFLECT, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_MAXLVLREFLECT));
+        CUSTOM_VALUES.put(CUSTOMHEADER_MAXLVLDMGREDUCT, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_MAXLVLDMGREDUCT));
         CUSTOM_VALUES.put(CUSTOMHEADER_BUFFDURATION, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_BUFFDURATION));
     }
 
@@ -108,20 +107,13 @@ public class SkillShieldReflect extends Skill {
         if (player.getSkillCounter() == 0) {
             player.incrementSkillCounter();
             double buffDuration = getCustomValue(CUSTOMHEADER_BUFFDURATION);
-            player.queueBuff(new BuffShieldReflect(this.logic, (int) buffDuration, getBaseValue() + getMultValue() * player.getSkillLevel(Globals.SHIELD_REFLECT), player, player));
+            if (!player.isSkillMaxed(Globals.SHIELD_REFLECT)) {
+                player.queueBuff(new BuffShieldReflect(this.logic, (int) buffDuration, getBaseValue() + getMultValue() * player.getSkillLevel(Globals.SHIELD_REFLECT), player, player, 0));
+            } else {
+                player.queueBuff(new BuffShieldReflect(this.logic, (int) buffDuration, getBaseValue() + getMultValue() * player.getSkillLevel(Globals.SHIELD_REFLECT), player, player, getCustomValue(CUSTOMHEADER_MAXLVLDMGREDUCT)));
+            }
             PacketSender.sendParticle(this.logic, Globals.Particles.SHIELD_REFLECT_CAST.getParticleCode(), player.getKey());
             PacketSender.sendParticle(this.logic, Globals.Particles.SHIELD_REFLECT_EMITTER.getParticleCode(), player.getKey());
-            if (player.isSkillMaxed(Globals.SHIELD_REFLECT)) {
-                for (final Map.Entry<Byte, Player> pEntry : this.logic.getRoomData().getPlayers().entrySet()) {
-                    final Player p = pEntry.getValue();
-                    if (p != player && !p.isDead()) {
-                        p.queueBuff(new BuffShieldReflect(this.logic, (int) buffDuration, getCustomValue(CUSTOMHEADER_MAXLVLREFLECT), player, p));
-                        if (!this.logic.getRoomData().getMap().isPvP()) {
-                            PacketSender.sendParticle(this.logic, Globals.Particles.SHIELD_REFLECT_CAST.getParticleCode(), p.getKey());
-                        }
-                    }
-                }
-            }
         }
         player.updateSkillEnd(duration, getSkillDuration(), false, false);
     }
