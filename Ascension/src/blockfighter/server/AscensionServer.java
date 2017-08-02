@@ -139,7 +139,7 @@ public class AscensionServer {
     }
 
     private static Byte getNextRoomIndex() {
-        if (SERVER_ROOMS.size() >= (Integer) Globals.ServerConfig.MAX_ROOMS.getValue()) {
+        if (SERVER_ROOMS.size() >= (Integer) Globals.ServerConfig.MAX_ROOMS.getValue() || SERVER_ROOMS.size() >= Byte.MAX_VALUE) {
             return null;
         }
         byte index = Byte.MIN_VALUE;
