@@ -13,7 +13,7 @@ public class SkillSwordVorpal extends Skill {
             CUSTOMHEADER_MULTBONUSCRITDMG = "[multbonuscritdamage]",
             CUSTOMHEADER_BONUSCRITCHC = "[bonuscritchc]";
 
-    private static final String[] CUSTOM_DATA_HEADERS = {
+    public static final String[] CUSTOM_DATA_HEADERS = {
         CUSTOMHEADER_BASEBONUSCRITDMG,
         CUSTOMHEADER_MULTBONUSCRITDMG,
         CUSTOMHEADER_BONUSCRITCHC
@@ -27,6 +27,7 @@ public class SkillSwordVorpal extends Skill {
     private static final long MAX_COOLDOWN;
 
     private static final double BASE_VALUE, MULT_VALUE;
+    private static final int REQ_LEVEL;
     private static final byte REQ_EQUIP_SLOT = Globals.EQUIP_WEAPON;
     private static final byte PLAYER_STATE = Player.PLAYER_STATE_SWORD_VORPAL;
     private static final int SKILL_DURATION = 400;
@@ -39,6 +40,7 @@ public class SkillSwordVorpal extends Skill {
         HashMap<String, Integer> dataHeaders = Globals.getDataHeaders(data, CUSTOM_DATA_HEADERS);
 
         REQ_WEAPON = Globals.loadReqWeapon(data, dataHeaders);
+        REQ_LEVEL = Globals.loadSkillReqLevel(data, dataHeaders);
         MAX_COOLDOWN = (long) Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MAXCOOLDOWN_HEADER);
         BASE_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_BASEVALUE_HEADER);
         MULT_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MULTVALUE_HEADER);
@@ -136,5 +138,10 @@ public class SkillSwordVorpal extends Skill {
         }
 
         player.updateSkillEnd(duration, getSkillDuration(), false, false);
+    }
+
+    @Override
+    public int getReqLevel() {
+        return REQ_LEVEL;
     }
 }

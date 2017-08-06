@@ -24,6 +24,7 @@ public class SkillBowArc extends Skill {
     private static final byte REQ_WEAPON;
     private static final long MAX_COOLDOWN;
     private static final double BASE_VALUE, MULT_VALUE;
+    private static final int REQ_LEVEL;
 
     static {
         String[] data = Globals.loadSkillData(SKILL_CODE);
@@ -36,7 +37,7 @@ public class SkillBowArc extends Skill {
         BASE_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_BASEVALUE_HEADER) * 100;
         MULT_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MULTVALUE_HEADER) * 100;
         IS_PASSIVE = Globals.loadBooleanValue(data, dataHeaders, Globals.SKILL_PASSIVE_HEADER);
-
+        REQ_LEVEL = Globals.loadSkillReqLevel(data, dataHeaders);
         CUSTOM_VALUES.put(CUSTOMHEADER_LIFESTEAL, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_LIFESTEAL) * 100);
         CUSTOM_VALUES.put(CUSTOMHEADER_MAXLIFESTEAL, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_MAXLIFESTEAL) * 100);
     }
@@ -82,6 +83,11 @@ public class SkillBowArc extends Skill {
     }
 
     @Override
+    public int getReqLevel() {
+        return REQ_LEVEL;
+    }
+
+    @Override
     public void updateDesc() {
         this.skillCurLevelDesc = new String[]{
             "Deal " + Globals.NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * this.level) + "% damage per hit."
@@ -93,4 +99,5 @@ public class SkillBowArc extends Skill {
             "Restore " + Globals.NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_LIFESTEAL)) + "% damage to HP. Maximum of " + Globals.NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_MAXLIFESTEAL)) + "% HP."
         };
     }
+
 }

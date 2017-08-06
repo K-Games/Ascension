@@ -5,6 +5,8 @@ Rend
 Slash 3 times.
 [reqweapon]
 0
+[reqlevel]
+0
 [maxcooldown]
 400
 [basevalue]

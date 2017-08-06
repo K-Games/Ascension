@@ -92,7 +92,7 @@ public abstract class Mob implements Callable<Mob> {
         update();
         if (this.stats[STAT_MAXHP] <= 0) {
             // Get boss stat
-            PacketSender.sendGetMobStat(Core.getLogicModule().getSelectedRoom(), this.key, STAT_MAXHP);
+            PacketSender.sendGetMobStat(Core.getLogicModule().getConnectedRoom(), this.key, STAT_MAXHP);
         }
         return this;
     }

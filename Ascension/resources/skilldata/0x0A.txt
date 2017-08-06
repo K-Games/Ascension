@@ -5,6 +5,8 @@ Bombardment
 Launch a hail of arrows, bombarding the area.
 [reqweapon]
 11
+[reqlevel]
+0
 [maxcooldown]
 12000
 [basevalue]

@@ -7,6 +7,8 @@ within a 350 radius and strike in their direction.
 Invulnerable during the skill duration.
 [reqweapon]
 0
+[reqlevel]
+0
 [maxcooldown]
 16000
 [basevalue]

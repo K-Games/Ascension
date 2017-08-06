@@ -887,7 +887,8 @@ public class Globals {
             SKILL_MULTVALUE_HEADER = "[multvalue]",
             SKILL_NAME_HEADER = "[name]",
             SKILL_PASSIVE_HEADER = "[passive]",
-            SKILL_REQWEAPON_HEADER = "[reqweapon]";
+            SKILL_REQWEAPON_HEADER = "[reqweapon]",
+            SKILL_REQLEVEL_HEADER = "[reqlevel]";
 
     public static final String[] DATA_HEADERS = {
         SKILL_NAME_HEADER,
@@ -896,7 +897,8 @@ public class Globals {
         SKILL_MAXCOOLDOWN_HEADER,
         SKILL_BASEVALUE_HEADER,
         SKILL_MULTVALUE_HEADER,
-        SKILL_PASSIVE_HEADER};
+        SKILL_PASSIVE_HEADER,
+        SKILL_REQLEVEL_HEADER};
 
     public static HashMap<String, Integer> getDataHeaders(final String[] data, final String[] customDataHeaders) {
         HashMap<String, Integer> dataHeader = new HashMap<>();
@@ -946,14 +948,14 @@ public class Globals {
     }
 
     public static String[] loadSkillData(final byte skillCode) {
-        Globals.log(Globals.class, "Loading Skill " + String.format("0x%02X", skillCode) + " Data...", Globals.LOG_TYPE_DATA);
+        //Globals.log(Globals.class, "Loading Skill " + String.format("0x%02X", skillCode) + " Data...", Globals.LOG_TYPE_DATA);
         try {
             InputStream skillDataFile = Globals.loadResourceAsStream("skilldata/" + String.format("0x%02X", skillCode) + ".txt");
             List<String> fileLines = IOUtils.readLines(skillDataFile, "UTF-8");
             String[] data = fileLines.toArray(new String[fileLines.size()]);
             HashMap<String, Integer> dataHeaders = Globals.getDataHeaders(data, null);
             String name = Globals.loadSkillName(data, dataHeaders);
-            Globals.log(Globals.class, "Finished loading Skill " + String.format("0x%02X", skillCode) + "(" + name + ") Data...", Globals.LOG_TYPE_DATA);
+            //Globals.log(Globals.class, "Finished loading Skill " + String.format("0x%02X", skillCode) + "(" + name + ") Data...", Globals.LOG_TYPE_DATA);
             return data;
         } catch (IOException | NullPointerException e) {
             Globals.logError("Could not load Skill " + String.format("0x%02X", skillCode) + " Data." + e.toString(), e);
@@ -983,6 +985,15 @@ public class Globals {
             Globals.logError(e.toString(), e);
         }
         return "NO_NAME";
+    }
+
+    public static int loadSkillReqLevel(final String[] data, final HashMap<String, Integer> dataHeaders) {
+        try {
+            return Integer.parseInt(data[dataHeaders.get(SKILL_REQLEVEL_HEADER) + 1]);
+        } catch (Exception e) {
+            Globals.logError(e.toString(), e);
+        }
+        return 0;
     }
 
     public static void loadServer() {

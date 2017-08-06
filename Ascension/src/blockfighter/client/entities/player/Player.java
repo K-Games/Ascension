@@ -233,19 +233,19 @@ public class Player implements Callable<Player> {
     @Override
     public Player call() {
         if (this.name.length() <= 0) {
-            PacketSender.sendGetName(Core.getLogicModule().getSelectedRoom(), this.key);
+            PacketSender.sendGetName(Core.getLogicModule().getConnectedRoom(), this.key);
         }
         for (final ItemEquip e : this.equips) {
             if (e == null) {
-                PacketSender.sendGetEquip(Core.getLogicModule().getSelectedRoom(), this.key);
+                PacketSender.sendGetEquip(Core.getLogicModule().getConnectedRoom(), this.key);
                 break;
             }
         }
         if (this.stats[Globals.STAT_MAXHP] <= 0) {
-            PacketSender.sendGetStat(Core.getLogicModule().getSelectedRoom(), this.key, Globals.STAT_MAXHP);
+            PacketSender.sendGetStat(Core.getLogicModule().getConnectedRoom(), this.key, Globals.STAT_MAXHP);
         }
         if (this.stats[Globals.STAT_LEVEL] <= 0) {
-            PacketSender.sendGetStat(Core.getLogicModule().getSelectedRoom(), this.key, Globals.STAT_LEVEL);
+            PacketSender.sendGetStat(Core.getLogicModule().getConnectedRoom(), this.key, Globals.STAT_LEVEL);
         }
         return this;
     }

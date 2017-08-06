@@ -172,7 +172,7 @@ public class WindowMatchResult extends Window {
             scaled = new Point2D.Double(e.getX(), e.getY());
         }
         if (RETURN_BUTTON.contains(scaled)) {
-            PacketSender.sendDisconnect(Core.getLogicModule().getSelectedRoom(), Core.getLogicModule().getMyPlayerKey());
+            PacketSender.sendDisconnect(Core.getLogicModule().getConnectedRoom(), Core.getLogicModule().getMyPlayerKey());
         }
     }
 

@@ -6,6 +6,8 @@ When you deal damage there is a chance a shadow blade
 pierces that same target for 50% of the damage dealt
 [reqweapon]
 -1
+[reqlevel]
+0
 [maxcooldown]
 200
 [basevalue]

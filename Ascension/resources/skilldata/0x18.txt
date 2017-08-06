@@ -6,6 +6,8 @@ When equipped with an Bow and Arrow Enchantment
 you gain additional Critical Hit Damage.
 [reqweapon]
 -1
+[reqlevel]
+0
 [maxcooldown]
 0
 [basevalue]

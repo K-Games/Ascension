@@ -5,6 +5,8 @@ Rapid Fire
 Fire 3 shots over 0.5 seconds.
 [reqweapon]
 11
+[reqlevel]
+0
 [maxcooldown]
 700
 [basevalue]

@@ -5,6 +5,8 @@ Vital Hit
 Increases Critical Hit Damage.
 [reqweapon]
 -1
+[reqlevel]
+0
 [maxcooldown]
 0
 [basevalue]

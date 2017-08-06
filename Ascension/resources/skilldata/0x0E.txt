@@ -6,6 +6,8 @@ Charge and push forward
 enemies you hit.
 [reqweapon]
 10
+[reqlevel]
+0
 [maxcooldown]
 9000
 [basevalue]

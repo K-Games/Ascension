@@ -5,6 +5,8 @@ Aggression
 Deal an immense deadly blow.
 [reqweapon]
 0
+[reqlevel]
+0
 [maxcooldown]
 18000
 [basevalue]

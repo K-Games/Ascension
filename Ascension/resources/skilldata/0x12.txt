@@ -6,6 +6,8 @@ When equipped with 2 Swords you gain additional
 Critical Hit Chance and take reduced damage.
 [reqweapon]
 -1
+[reqlevel]
+0
 [maxcooldown]
 0
 [basevalue]

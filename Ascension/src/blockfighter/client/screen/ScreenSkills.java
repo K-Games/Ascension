@@ -15,6 +15,8 @@ import javax.swing.SwingUtilities;
 
 public class ScreenSkills extends ScreenMenu {
 
+    private static final String UNLOCK_SKILL_TEXT1 = "Skill is unlocked";
+    private static final String UNLOCK_SKILL_TEXT2 = "at level ";
     private static final String RESET_SKILLS_TEXT = "Reset Skills";
     private static final String SKILL_POINTS_TEXT = "Skill Points: ";
     private static final String MAX_BUTTON_TEXT = "Max";
@@ -26,7 +28,7 @@ public class ScreenSkills extends ScreenMenu {
     private static final String SKILL_BOW_TEXT = "Bow";
     private static final String SKILL_SWORD_TEXT = "Sword";
 
-    private final SaveData c;
+    private final SaveData saveData;
     // Slots(x,y) in the GUI
     private static final Rectangle2D.Double[] HOTKEY_SLOTS = new Rectangle2D.Double[12];
     private static final Rectangle2D.Double[] SKILL_SLOTS = new Rectangle2D.Double[Globals.NUM_SKILLS];
@@ -109,9 +111,9 @@ public class ScreenSkills extends ScreenMenu {
     }
 
     public ScreenSkills() {
-        this.c = Core.getLogicModule().getSelectedChar();
-        this.hotkeyList = this.c.getHotkeys();
-        this.skillList = this.c.getSkills();
+        this.saveData = Core.getLogicModule().getSelectedChar();
+        this.hotkeyList = this.saveData.getHotkeys();
+        this.skillList = this.saveData.getSkills();
     }
 
     @Override
@@ -120,9 +122,9 @@ public class ScreenSkills extends ScreenMenu {
         g.drawImage(bg, 0, 0, null);
 
         g.setFont(Globals.ARIAL_18PT);
-        drawStringOutline(g, SKILL_POINTS_TEXT + (int) this.c.getBaseStats()[Globals.STAT_SKILLPOINTS], 1080, 620, 1);
+        drawStringOutline(g, SKILL_POINTS_TEXT + (int) this.saveData.getBaseStats()[Globals.STAT_SKILLPOINTS], 1080, 620, 1);
         g.setColor(Color.WHITE);
-        g.drawString(SKILL_POINTS_TEXT + (int) this.c.getBaseStats()[Globals.STAT_SKILLPOINTS], 1080, 620);
+        g.drawString(SKILL_POINTS_TEXT + (int) this.saveData.getBaseStats()[Globals.STAT_SKILLPOINTS], 1080, 620);
 
         final BufferedImage button = Globals.MENU_BUTTON[Globals.BUTTON_SMALLRECT];
         g.drawImage(button, (int) RESET_BOX.x, (int) RESET_BOX.y, null);
@@ -145,9 +147,13 @@ public class ScreenSkills extends ScreenMenu {
 
     private void drawSkillInfo(final Graphics2D g) {
         if (this.drawInfoSkill != -1) {
-            drawSkillInfo(g, SKILL_SLOTS[this.drawInfoSkill], this.skillList[this.drawInfoSkill]);
+            if (this.saveData.getTotalStats()[Globals.STAT_LEVEL] >= this.skillList[this.drawInfoSkill].getReqLevel()) {
+                drawSkillInfo(g, SKILL_SLOTS[this.drawInfoSkill], this.skillList[this.drawInfoSkill]);
+            }
         } else if (this.drawInfoHotkey != -1) {
-            drawSkillInfo(g, HOTKEY_SLOTS[this.drawInfoHotkey], this.hotkeyList[this.drawInfoHotkey]);
+            if (this.saveData.getTotalStats()[Globals.STAT_LEVEL] >= this.skillList[this.drawInfoHotkey].getReqLevel()) {
+                drawSkillInfo(g, HOTKEY_SLOTS[this.drawInfoHotkey], this.hotkeyList[this.drawInfoHotkey]);
+            }
         }
     }
 
@@ -188,8 +194,8 @@ public class ScreenSkills extends ScreenMenu {
                 this.hotkeyList[i].draw(g, (int) HOTKEY_SLOTS[i].x, (int) HOTKEY_SLOTS[i].y);
             }
             String key = UNKNOWN_KEY_TEXT;
-            if (this.c.getKeyBind()[i] != -1) {
-                key = KeyEvent.getKeyText(this.c.getKeyBind()[i]);
+            if (this.saveData.getKeyBind()[i] != -1) {
+                key = KeyEvent.getKeyText(this.saveData.getKeyBind()[i]);
             }
             final int width = g.getFontMetrics().stringWidth(key);
             g.setFont(Globals.ARIAL_15PT);
@@ -200,30 +206,41 @@ public class ScreenSkills extends ScreenMenu {
 
         for (int i = 0; i < 18; i++) {
             g.drawImage(button, (int) SKILL_SLOTS[i].x, (int) SKILL_SLOTS[i].y, null);
-            this.skillList[i].draw(g, (int) SKILL_SLOTS[i].x, (int) SKILL_SLOTS[i].y);
-            g.setFont(Globals.ARIAL_15PT);
-            drawStringOutline(g, this.skillList[i].getSkillName(), (int) SKILL_SLOTS[i].x + 70, (int) SKILL_SLOTS[i].y + 20, 1);
-            drawStringOutline(g, Globals.getStatName(Globals.STAT_LEVEL) + Globals.COLON_SPACE_TEXT + this.skillList[i].getLevel(), (int) SKILL_SLOTS[i].x + 70, (int) SKILL_SLOTS[i].y + 50,
-                    1);
-            g.setColor(Color.WHITE);
-            g.drawString(this.skillList[i].getSkillName(), (int) SKILL_SLOTS[i].x + 70, (int) SKILL_SLOTS[i].y + 20);
-            g.drawString(Globals.getStatName(Globals.STAT_LEVEL) + Globals.COLON_SPACE_TEXT + this.skillList[i].getLevel(), (int) SKILL_SLOTS[i].x + 70, (int) SKILL_SLOTS[i].y + 50);
-            drawSkillAddButton(g, i);
+            if (this.saveData.getTotalStats()[Globals.STAT_LEVEL] >= this.skillList[i].getReqLevel()) {
+                this.skillList[i].draw(g, (int) SKILL_SLOTS[i].x, (int) SKILL_SLOTS[i].y);
+                g.setFont(Globals.ARIAL_15PT);
+                drawStringOutline(g, this.skillList[i].getSkillName(), (int) SKILL_SLOTS[i].x + 70, (int) SKILL_SLOTS[i].y + 20, 1);
+                drawStringOutline(g, Globals.getStatName(Globals.STAT_LEVEL) + Globals.COLON_SPACE_TEXT + this.skillList[i].getLevel(), (int) SKILL_SLOTS[i].x + 70, (int) SKILL_SLOTS[i].y + 50,
+                        1);
+                g.setColor(Color.WHITE);
+                g.drawString(this.skillList[i].getSkillName(), (int) SKILL_SLOTS[i].x + 70, (int) SKILL_SLOTS[i].y + 20);
+                g.drawString(Globals.getStatName(Globals.STAT_LEVEL) + Globals.COLON_SPACE_TEXT + this.skillList[i].getLevel(), (int) SKILL_SLOTS[i].x + 70, (int) SKILL_SLOTS[i].y + 50);
+                drawSkillAddButton(g, i);
+            } else {
+                g.setFont(Globals.ARIAL_15PT);
+                drawStringOutline(g, UNLOCK_SKILL_TEXT1, (int) SKILL_SLOTS[i].x + 64, (int) SKILL_SLOTS[i].y + 25, 1);
+                drawStringOutline(g, UNLOCK_SKILL_TEXT2 + this.skillList[i].getReqLevel(), (int) SKILL_SLOTS[i].x + 64, (int) SKILL_SLOTS[i].y + 45, 1);
+                g.setColor(Color.WHITE);
+                g.drawString(UNLOCK_SKILL_TEXT1, (int) SKILL_SLOTS[i].x + 64, (int) SKILL_SLOTS[i].y + 25);
+                g.drawString(UNLOCK_SKILL_TEXT2 + this.skillList[i].getReqLevel(), (int) SKILL_SLOTS[i].x + 64, (int) SKILL_SLOTS[i].y + 45);
+            }
         }
 
         for (int i = 18; i < SKILL_SLOTS.length; i++) {
             g.drawImage(button, (int) SKILL_SLOTS[i].x, (int) SKILL_SLOTS[i].y, null);
-            this.skillList[i].draw(g, (int) SKILL_SLOTS[i].x, (int) SKILL_SLOTS[i].y);
-            g.setFont(Globals.ARIAL_15PT);
-            drawStringOutline(g, Globals.getStatName(Globals.STAT_LEVEL) + Globals.COLON_SPACE_TEXT + this.skillList[i].getLevel(), (int) SKILL_SLOTS[i].x, (int) SKILL_SLOTS[i].y + 80, 1);
-            g.setColor(Color.WHITE);
-            g.drawString(Globals.getStatName(Globals.STAT_LEVEL) + Globals.COLON_SPACE_TEXT + this.skillList[i].getLevel(), (int) SKILL_SLOTS[i].x, (int) SKILL_SLOTS[i].y + 80);
-            drawSkillAddButton(g, i);
+            if (this.saveData.getTotalStats()[Globals.STAT_LEVEL] >= this.skillList[i].getReqLevel()) {
+                this.skillList[i].draw(g, (int) SKILL_SLOTS[i].x, (int) SKILL_SLOTS[i].y);
+                g.setFont(Globals.ARIAL_15PT);
+                drawStringOutline(g, Globals.getStatName(Globals.STAT_LEVEL) + Globals.COLON_SPACE_TEXT + this.skillList[i].getLevel(), (int) SKILL_SLOTS[i].x, (int) SKILL_SLOTS[i].y + 80, 1);
+                g.setColor(Color.WHITE);
+                g.drawString(Globals.getStatName(Globals.STAT_LEVEL) + Globals.COLON_SPACE_TEXT + this.skillList[i].getLevel(), (int) SKILL_SLOTS[i].x, (int) SKILL_SLOTS[i].y + 80);
+                drawSkillAddButton(g, i);
+            }
         }
     }
 
     private void drawSkillAddButton(final Graphics2D g, final int skillIndex) {
-        if (this.c.getBaseStats()[Globals.STAT_SKILLPOINTS] > 0 && !this.skillList[skillIndex].isMaxed()) {
+        if (this.saveData.getBaseStats()[Globals.STAT_SKILLPOINTS] > 0 && !this.skillList[skillIndex].isMaxed()) {
             BufferedImage button = Globals.MENU_BUTTON[Globals.BUTTON_ADDSTAT];
             g.drawImage(button, (int) ADD_SKILL_BOX[skillIndex].x, (int) ADD_SKILL_BOX[skillIndex].y, null);
             g.setFont(Globals.ARIAL_15PT);
@@ -285,7 +302,9 @@ public class ScreenSkills extends ScreenMenu {
             for (int i = 0; i < HOTKEY_SLOTS.length; i++) {
                 if (HOTKEY_SLOTS[i].contains(scaled)) {
                     if (drSkill != -1) {
-                        this.hotkeyList[i] = this.skillList[drSkill];
+                        if (this.saveData.getTotalStats()[Globals.STAT_LEVEL] >= this.skillList[drSkill].getReqLevel()) {
+                            this.hotkeyList[i] = this.skillList[drSkill];
+                        }
                         return;
                     }
                     if (drHK != -1) {
@@ -298,12 +317,14 @@ public class ScreenSkills extends ScreenMenu {
                 }
             }
             if (RESET_BOX.contains(scaled)) {
-                this.c.resetSkill();
+                this.saveData.resetSkill();
                 return;
             }
             for (byte i = 0; i < ADD_SKILL_BOX.length; i++) {
                 if (ADD_SKILL_BOX[i].contains(scaled)) {
-                    this.c.addSkill(i, false);
+                    if (this.saveData.getTotalStats()[Globals.STAT_LEVEL] >= this.skillList[i].getReqLevel()) {
+                        this.saveData.addSkill(i, false);
+                    }
                     return;
 
                 }
@@ -311,7 +332,9 @@ public class ScreenSkills extends ScreenMenu {
 
             for (byte i = 0; i < ADD_MAX_SKILL_BOX.length; i++) {
                 if (ADD_MAX_SKILL_BOX[i].contains(scaled)) {
-                    this.c.addSkill(i, true);
+                    if (this.saveData.getTotalStats()[Globals.STAT_LEVEL] >= this.skillList[i].getReqLevel()) {
+                        this.saveData.addSkill(i, true);
+                    }
                     return;
                 }
             }
@@ -348,7 +371,9 @@ public class ScreenSkills extends ScreenMenu {
 
                 for (byte i = 0; i < SKILL_SLOTS.length; i++) {
                     if (SKILL_SLOTS[i].contains(scaled) && SKILL_SLOTS[i] != null) {
-                        this.dragSkill = i;
+                        if (this.saveData.getTotalStats()[Globals.STAT_LEVEL] >= this.skillList[i].getReqLevel()) {
+                            this.dragSkill = i;
+                        }
                         return;
                     }
                 }

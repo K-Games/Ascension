@@ -6,6 +6,8 @@ Pull enemies within 400 range towards you and
 deal damage based on your Defense.
 [reqweapon]
 10
+[reqlevel]
+0
 [maxcooldown]
 11000
 [basevalue]

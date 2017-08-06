@@ -118,6 +118,8 @@ public abstract class Skill {
 
     public abstract byte getReqWeapon();
 
+    public abstract int getReqLevel();
+
     public abstract HashMap<String, Double> getCustomValues();
 
     public void updateInfoBoxSize() {

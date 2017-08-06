@@ -6,6 +6,8 @@ Increase your movement speed and reduce
 damage taken for 5 seconds.
 [reqweapon]
 -1
+[reqlevel]
+0
 [maxcooldown]
 24000
 [basevalue]

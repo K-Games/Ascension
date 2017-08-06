@@ -6,6 +6,8 @@ Dash a short distance over 0.4 seconds.
 Increases damage dealt for 5 seconds.
 [reqweapon]
 -1
+[reqlevel]
+0
 [maxcooldown]
 6500
 [basevalue]

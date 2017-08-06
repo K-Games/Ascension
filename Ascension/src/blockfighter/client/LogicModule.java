@@ -13,8 +13,8 @@ public class LogicModule implements Runnable {
     // Shared Data
     private GameClient client;
     private long currentTime = 0;
-    private SaveData selectedChar;
-    private byte selectedRoom = 0;
+    private SaveData selectedSaveData;
+    private byte connectedRoom = 0;
     private Byte myPlayerKey = null;
     private Screen screen;
 
@@ -48,13 +48,13 @@ public class LogicModule implements Runnable {
     public void connect(final String server) {
         boolean skillReady = false;
         boolean equipReady = false;
-        for (Skill s : this.selectedChar.getHotkeys()) {
+        for (Skill s : this.selectedSaveData.getHotkeys()) {
             if (s != null) {
                 skillReady = true;
             }
         }
 
-        if (this.selectedChar.getEquip()[Globals.EQUIP_WEAPON] != null) {
+        if (this.selectedSaveData.getEquip()[Globals.EQUIP_WEAPON] != null) {
             equipReady = true;
         }
 
@@ -77,8 +77,8 @@ public class LogicModule implements Runnable {
     }
 
     public void disconnect() {
-        if (this.selectedChar != null) {
-            SaveData.writeSaveData(this.selectedChar.getSaveNum(), this.selectedChar);
+        if (this.selectedSaveData != null) {
+            SaveData.writeSaveData(this.selectedSaveData.getSaveNum(), this.selectedSaveData);
         }
         if (getScreen() instanceof ScreenIngame) {
             ((ScreenIngame) getScreen()).disconnect();
@@ -96,20 +96,20 @@ public class LogicModule implements Runnable {
         return this.myPlayerKey;
     }
 
-    public void setSelectedChar(final SaveData s) {
-        this.selectedChar = s;
+    public void setSelectedSaveData(final SaveData s) {
+        this.selectedSaveData = s;
     }
 
     public SaveData getSelectedChar() {
-        return this.selectedChar;
+        return this.selectedSaveData;
     }
 
-    public void setSelectedRoom(final byte r) {
-        this.selectedRoom = r;
+    public void setConnectedRoom(final byte r) {
+        this.connectedRoom = r;
     }
 
-    public byte getSelectedRoom() {
-        return this.selectedRoom;
+    public byte getConnectedRoom() {
+        return this.connectedRoom;
     }
 
     public void setScreen(final Screen s) {

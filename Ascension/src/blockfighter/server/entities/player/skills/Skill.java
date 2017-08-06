@@ -21,6 +21,8 @@ public abstract class Skill {
 
     public abstract byte getReqEquipSlot();
 
+    public abstract int getReqLevel();
+
     public abstract byte castPlayerState();
 
     public abstract int getSkillDuration();
@@ -61,7 +63,7 @@ public abstract class Skill {
 
     public boolean canCast(final Player player) {
         return !isPassive() && (getReqWeapon() == -1 || getReqEquipSlot() == -1 || Items.getItemType(player.getEquips()[getReqEquipSlot()]) == getReqWeapon())
-                && canCast();
+                && canCast() && player.getStats()[Globals.STAT_LEVEL] >= getReqLevel();
     }
 
     public boolean canCast() {

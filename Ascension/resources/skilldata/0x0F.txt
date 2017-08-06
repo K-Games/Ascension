@@ -6,6 +6,8 @@ For 3 seconds, when you take damage, you explode
 dealing a portion of damage taken.
 [reqweapon]
 10
+[reqlevel]
+0
 [maxcooldown]
 9000
 [basevalue]

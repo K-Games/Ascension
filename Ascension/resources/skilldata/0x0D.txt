@@ -5,6 +5,8 @@ Hellion Roar
 Send enemies flying with a ferocious roar.
 [reqweapon]
 10
+[reqlevel]
+0
 [maxcooldown]
 13000
 [basevalue]
