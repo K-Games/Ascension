@@ -23,6 +23,7 @@ public class SkillShieldCharge extends Skill {
     private static final long MAX_COOLDOWN;
 
     private static final double BASE_VALUE, MULT_VALUE;
+    private static final int REQ_LEVEL;
 
     private static final byte REQ_EQUIP_SLOT = Globals.EQUIP_OFFHAND;
     private static final byte PLAYER_STATE = Player.PLAYER_STATE_SHIELD_CHARGE;
@@ -33,6 +34,7 @@ public class SkillShieldCharge extends Skill {
         HashMap<String, Integer> dataHeaders = Globals.getDataHeaders(data, CUSTOM_DATA_HEADERS);
 
         REQ_WEAPON = Globals.loadReqWeapon(data, dataHeaders);
+        REQ_LEVEL = Globals.loadSkillReqLevel(data, dataHeaders);
         MAX_COOLDOWN = (long) Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MAXCOOLDOWN_HEADER);
         BASE_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_BASEVALUE_HEADER);
         MULT_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MULTVALUE_HEADER);
@@ -108,5 +110,10 @@ public class SkillShieldCharge extends Skill {
         if (player.updateSkillEnd(duration, getSkillDuration(), false, false)) {
             player.setXSpeed(0);
         }
+    }
+
+    @Override
+    public int getReqLevel() {
+        return REQ_LEVEL;
     }
 }

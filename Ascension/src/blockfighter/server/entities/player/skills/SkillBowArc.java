@@ -24,6 +24,7 @@ public class SkillBowArc extends Skill {
     private static final byte REQ_WEAPON;
     private static final long MAX_COOLDOWN;
     private static final double BASE_VALUE, MULT_VALUE;
+    private static final int REQ_LEVEL;
 
     private static final byte REQ_EQUIP_SLOT = Globals.EQUIP_WEAPON;
     private static final byte PLAYER_STATE = Player.PLAYER_STATE_BOW_ARC;
@@ -34,6 +35,7 @@ public class SkillBowArc extends Skill {
         HashMap<String, Integer> dataHeaders = Globals.getDataHeaders(data, CUSTOM_DATA_HEADERS);
 
         REQ_WEAPON = Globals.loadReqWeapon(data, dataHeaders);
+        REQ_LEVEL = Globals.loadSkillReqLevel(data, dataHeaders);
         MAX_COOLDOWN = (long) Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MAXCOOLDOWN_HEADER);
         BASE_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_BASEVALUE_HEADER);
         MULT_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MULTVALUE_HEADER);
@@ -112,5 +114,10 @@ public class SkillBowArc extends Skill {
             }
         }
         player.updateSkillEnd(duration, getSkillDuration(), false, false);
+    }
+
+    @Override
+    public int getReqLevel() {
+        return REQ_LEVEL;
     }
 }

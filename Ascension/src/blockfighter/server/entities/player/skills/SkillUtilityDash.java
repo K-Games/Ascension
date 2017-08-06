@@ -16,6 +16,7 @@ public class SkillUtilityDash extends Skill {
     private static final long MAX_COOLDOWN;
 
     private static final double BASE_VALUE, MULT_VALUE;
+    private static final int REQ_LEVEL;
     private static final byte REQ_EQUIP_SLOT = Globals.EQUIP_OFFHAND;
     private static final byte PLAYER_STATE = Player.PLAYER_STATE_UTILITY_DASH;
     private static final int SKILL_DURATION = 400;
@@ -25,6 +26,7 @@ public class SkillUtilityDash extends Skill {
         HashMap<String, Integer> dataHeaders = Globals.getDataHeaders(data, null);
 
         REQ_WEAPON = Globals.loadReqWeapon(data, dataHeaders);
+        REQ_LEVEL = Globals.loadSkillReqLevel(data, dataHeaders);
         MAX_COOLDOWN = (long) Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MAXCOOLDOWN_HEADER);
         BASE_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_BASEVALUE_HEADER);
         MULT_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MULTVALUE_HEADER);
@@ -109,5 +111,10 @@ public class SkillUtilityDash extends Skill {
         if (player.updateSkillEnd(duration, getSkillDuration(), true, true)) {
             player.setInvulnerable(false);
         }
+    }
+
+    @Override
+    public int getReqLevel() {
+        return REQ_LEVEL;
     }
 }

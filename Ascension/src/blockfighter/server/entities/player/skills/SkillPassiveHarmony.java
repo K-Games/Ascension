@@ -13,12 +13,14 @@ public class SkillPassiveHarmony extends SkillPassive {
     private static final long MAX_COOLDOWN;
 
     private static final double BASE_VALUE, MULT_VALUE;
+    private static final int REQ_LEVEL;
 
     static {
         String[] data = Globals.loadSkillData(SKILL_CODE);
         HashMap<String, Integer> dataHeaders = Globals.getDataHeaders(data, null);
 
         REQ_WEAPON = Globals.loadReqWeapon(data, dataHeaders);
+        REQ_LEVEL = Globals.loadSkillReqLevel(data, dataHeaders);
         MAX_COOLDOWN = (long) Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MAXCOOLDOWN_HEADER);
         BASE_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_BASEVALUE_HEADER);
         MULT_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MULTVALUE_HEADER);
@@ -57,6 +59,11 @@ public class SkillPassiveHarmony extends SkillPassive {
     @Override
     public boolean isPassive() {
         return IS_PASSIVE;
+    }
+
+    @Override
+    public int getReqLevel() {
+        return REQ_LEVEL;
     }
 
 }
