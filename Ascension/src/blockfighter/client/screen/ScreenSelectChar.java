@@ -244,7 +244,7 @@ public class ScreenSelectChar extends ScreenMenu {
                         this.selectNum = i;
                         break;
                     } else {
-                        Core.getLogicModule().setSelectedChar(CHARACTER_DATA[i]);
+                        Core.getLogicModule().setSelectedSaveData(CHARACTER_DATA[i]);
                         Core.getLogicModule().setScreen(new ScreenStats());
                     }
                 }

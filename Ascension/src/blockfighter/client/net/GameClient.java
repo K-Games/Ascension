@@ -50,7 +50,7 @@ public class GameClient implements Runnable {
                 } else {
                     client.connect(3000, address, (Integer) Globals.ServerConfig.TCP_PORT.getValue());
                 }
-                PacketSender.sendPlayerLogin(logic.getSelectedRoom(), logic.getSelectedChar());
+                PacketSender.sendPlayerLogin(logic.getConnectedRoom(), logic.getSelectedChar());
             }
         } catch (IOException ex) {
             client.close();

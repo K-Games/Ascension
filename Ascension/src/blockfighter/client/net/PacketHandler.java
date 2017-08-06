@@ -50,13 +50,13 @@ public class PacketHandler {
             Globals.log(PacketHandler.class, "Finished loading.", Globals.LOG_TYPE_DATA);
             ScreenIngame ingameScreen = new ScreenIngame(loading.getLoadedMap(), gameClient);
             Core.getLogicModule().setScreen(ingameScreen);
-            PacketSender.sendGetAll(Core.getLogicModule().getSelectedRoom(), key);
+            PacketSender.sendGetAll(Core.getLogicModule().getConnectedRoom(), key);
         } catch (final Exception e) {
             Globals.logError(e.toString(), e);
             Particle.unloadParticles();
             Emote.unloadEmotes();
             Core.getLogicModule().disconnect();
-            PacketSender.sendDisconnect(Core.getLogicModule().getSelectedRoom(), key);
+            PacketSender.sendDisconnect(Core.getLogicModule().getConnectedRoom(), key);
             Core.getLogicModule().returnMenu();
         }
     }
@@ -89,8 +89,8 @@ public class PacketHandler {
                     gameClient.shutdownClient((byte) -1);
                     return;
             }
-            Core.getLogicModule().setSelectedRoom(data[5]);
-            PacketSender.sendPlayerCreate(Core.getLogicModule().getSelectedRoom(), Core.getLogicModule().getSelectedChar());
+            Core.getLogicModule().setConnectedRoom(data[5]);
+            PacketSender.sendPlayerCreate(Core.getLogicModule().getConnectedRoom(), Core.getLogicModule().getSelectedChar());
         } catch (Exception e) {
             gameClient.shutdownClient(ScreenServerList.STATUS_FAILEDCONNECT);
         }
