@@ -6,6 +6,8 @@ When taking damage over 25% of your Max HP within
 2 seconds, block all damage for the next 2 seconds.
 [reqweapon]
 -1
+[reqlevel]
+0
 [maxcooldown]
 40000
 [basevalue]

@@ -5,6 +5,8 @@ Vorpal Strike
 Dash a short distance and strike 3 times.
 [reqweapon]
 0
+[reqlevel]
+0
 [maxcooldown]
 8000
 [basevalue]

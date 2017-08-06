@@ -5,6 +5,8 @@ Blade Flurry
 Swing your blade 4 times.
 [reqweapon]
 0
+[reqlevel]
+0
 [maxcooldown]
 500
 [basevalue]

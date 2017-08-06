@@ -6,6 +6,8 @@ Fire 20 bolts over 2 seconds.
 Can be interrupted by stuns and knockback.
 [reqweapon]
 11
+[reqlevel]
+0
 [maxcooldown]
 11000
 [basevalue]

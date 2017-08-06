@@ -30,6 +30,7 @@ public class SkillShieldRoar extends Skill {
     private static final long MAX_COOLDOWN;
 
     private static final double BASE_VALUE, MULT_VALUE;
+    private static final int REQ_LEVEL;
 
     static {
         String[] data = Globals.loadSkillData(SKILL_CODE);
@@ -42,6 +43,7 @@ public class SkillShieldRoar extends Skill {
         BASE_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_BASEVALUE_HEADER) * 100;
         MULT_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MULTVALUE_HEADER) * 100;
         IS_PASSIVE = Globals.loadBooleanValue(data, dataHeaders, Globals.SKILL_PASSIVE_HEADER);
+        REQ_LEVEL = Globals.loadSkillReqLevel(data, dataHeaders);
 
         CUSTOM_VALUES.put(CUSTOMHEADER_BASEDEF, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_BASEDEF));
         CUSTOM_VALUES.put(CUSTOMHEADER_MULTDEF, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_MULTDEF));
@@ -87,6 +89,11 @@ public class SkillShieldRoar extends Skill {
     @Override
     public boolean isPassive() {
         return IS_PASSIVE;
+    }
+
+    @Override
+    public int getReqLevel() {
+        return REQ_LEVEL;
     }
 
     @Override

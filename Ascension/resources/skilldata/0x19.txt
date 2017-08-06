@@ -6,6 +6,8 @@ Increase damage dealt based on your remaining HP.
 More remaining HP grants more damage increase.
 [reqweapon]
 -1
+[reqlevel]
+0
 [maxcooldown]
 0
 [basevalue]

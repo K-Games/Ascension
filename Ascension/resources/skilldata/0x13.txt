@@ -5,6 +5,8 @@ Keen Eye
 Increases Critical Hit Chance.
 [reqweapon]
 -1
+[reqlevel]
+0
 [maxcooldown]
 0
 [basevalue]

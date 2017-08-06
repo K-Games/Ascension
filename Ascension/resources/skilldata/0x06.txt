@@ -5,6 +5,8 @@ Arc Shot
 Fire 3 shots in an arc.
 [reqweapon]
 11
+[reqlevel]
+0
 [maxcooldown]
 500
 [basevalue]

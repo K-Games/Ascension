@@ -6,6 +6,8 @@ Enchant your bow to cause ice pillars to erupt
 violently out of the ground, freezing targets hit.
 [reqweapon]
 11
+[reqlevel]
+0
 [maxcooldown]
 12000
 [basevalue]

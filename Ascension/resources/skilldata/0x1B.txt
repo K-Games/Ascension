@@ -5,6 +5,8 @@ Tough Skin
 Boost your natural resilience to damage.
 [reqweapon]
 -1
+[reqlevel]
+0
 [maxcooldown]
 0
 [basevalue]

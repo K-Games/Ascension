@@ -6,6 +6,8 @@ When equipped with a Sword and Shield you deal
 additional damage and take reduced damage.
 [reqweapon]
 -1
+[reqlevel]
+0
 [maxcooldown]
 0
 [basevalue]

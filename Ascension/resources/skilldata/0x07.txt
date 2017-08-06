@@ -6,6 +6,8 @@ Charge a powerful shot for 0.8 seconds.
 Can be interrupted by stuns and knockback.
 [reqweapon]
 11
+[reqlevel]
+0
 [maxcooldown]
 8000
 [basevalue]
