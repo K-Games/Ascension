@@ -12,7 +12,7 @@ public class SkillBowRapid extends Skill {
     public static final String CUSTOMHEADER_MAXLVLDMGMULT = "[maxleveldamagemult]",
             CUSTOMHEADER_MAXLVLBONUSCHC = "[maxlevelbonuschance]";
 
-    private static final String[] CUSTOM_DATA_HEADERS = {
+    public static final String[] CUSTOM_DATA_HEADERS = {
         CUSTOMHEADER_MAXLVLDMGMULT,
         CUSTOMHEADER_MAXLVLBONUSCHC};
 

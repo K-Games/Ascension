@@ -14,7 +14,7 @@ public class SkillUtilityAdrenaline extends Skill {
             CUSTOMHEADER_MOVESPEED_BASE = "[movespeedbase]",
             CUSTOMHEADER_MOVESPEED_MULT = "[movespeedmult]";
 
-    private static final String[] CUSTOM_DATA_HEADERS = {
+    public static final String[] CUSTOM_DATA_HEADERS = {
         CUSTOMHEADER_BUFFDURATION,
         CUSTOMHEADER_HEAL,
         CUSTOMHEADER_MOVESPEED_BASE,

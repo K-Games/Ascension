@@ -11,7 +11,7 @@ public class SkillSwordGash extends Skill {
 
     public static final String CUSTOMHEADER_LIFESTEAL = "[lifesteal]";
 
-    private static final String[] CUSTOM_DATA_HEADERS = {
+    public static final String[] CUSTOM_DATA_HEADERS = {
         CUSTOMHEADER_LIFESTEAL
     };
 

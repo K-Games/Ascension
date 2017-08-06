@@ -11,7 +11,7 @@ public class SkillPassiveShieldMastery extends SkillPassive {
     public static final String CUSTOMHEADER_BASEDMGREDUCT = "[basedmgreduct]",
             CUSTOMHEADER_MULTDMGREDUCT = "[multdmgreduct]";
 
-    private static final String[] CUSTOM_DATA_HEADERS = {
+    public static final String[] CUSTOM_DATA_HEADERS = {
         CUSTOMHEADER_BASEDMGREDUCT,
         CUSTOMHEADER_MULTDMGREDUCT
     };

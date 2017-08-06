@@ -12,7 +12,7 @@ public class SkillBowVolley extends Skill {
     public static final String CUSTOMHEADER_MAXLVLBUFFDMG = "[maxlevelbuffdamage]",
             CUSTOMHEADER_MAXLVLBUFFDURATION = "[maxlevelbuffduration]";
 
-    private static final String[] CUSTOM_DATA_HEADERS = {
+    public static final String[] CUSTOM_DATA_HEADERS = {
         CUSTOMHEADER_MAXLVLBUFFDMG,
         CUSTOMHEADER_MAXLVLBUFFDURATION};
 

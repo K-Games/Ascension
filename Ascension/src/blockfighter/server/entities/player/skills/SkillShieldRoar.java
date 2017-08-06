@@ -14,7 +14,7 @@ public class SkillShieldRoar extends Skill {
             CUSTOMHEADER_MULTBASEDEF = "[multbasedefense]",
             CUSTOMHEADER_STUN = "[stunduration]";
 
-    private static final String[] CUSTOM_DATA_HEADERS = {
+    public static final String[] CUSTOM_DATA_HEADERS = {
         CUSTOMHEADER_BASEDEF,
         CUSTOMHEADER_MULTDEF,
         CUSTOMHEADER_STUN,

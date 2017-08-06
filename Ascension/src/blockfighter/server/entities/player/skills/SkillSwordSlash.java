@@ -13,7 +13,7 @@ public class SkillSwordSlash extends Skill {
     public static final String CUSTOMHEADER_BUFFDURATION = "[buffduration]",
             CUSTOMHEADER_DMGREDUCT = "[damagereduct]";
 
-    private static final String[] CUSTOM_DATA_HEADERS = {
+    public static final String[] CUSTOM_DATA_HEADERS = {
         CUSTOMHEADER_BUFFDURATION,
         CUSTOMHEADER_DMGREDUCT
     };

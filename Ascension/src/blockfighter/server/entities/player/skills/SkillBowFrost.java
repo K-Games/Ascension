@@ -14,7 +14,7 @@ public class SkillBowFrost extends Skill {
             CUSTOMHEADER_MAXLEVELBONUSPROJ = "[maxlevelbonusproj]",
             CUSTOMHEADER_MAXLEVELBONUSDAMAGE = "[maxlevelbonusdamage]";
 
-    private static final String[] CUSTOM_DATA_HEADERS = {
+    public static final String[] CUSTOM_DATA_HEADERS = {
         CUSTOMHEADER_BASESTUN,
         CUSTOMHEADER_MAXLEVELSTUN,
         CUSTOMHEADER_MAXLEVELBONUSPROJ,

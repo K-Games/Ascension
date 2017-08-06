@@ -16,7 +16,7 @@ public class SkillSwordCinder extends Skill {
             CUSTOMHEADER_BURNDMG = "[burndamage]",
             CUSTOMHEADER_BONUSCRITCHC = "[bonuscritchc]";
 
-    private static final String[] CUSTOM_DATA_HEADERS = {
+    public static final String[] CUSTOM_DATA_HEADERS = {
         CUSTOMHEADER_BUFFDURATION,
         CUSTOMHEADER_DMGAMP,
         CUSTOMHEADER_BURNDMG,

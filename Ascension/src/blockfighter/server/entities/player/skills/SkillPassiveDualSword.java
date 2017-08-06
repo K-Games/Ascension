@@ -10,7 +10,7 @@ public class SkillPassiveDualSword extends SkillPassive {
 
     public static final String CUSTOMHEADER_DMGREDUCTMULT = "[dmgreductmult]";
 
-    private static final String[] CUSTOM_DATA_HEADERS = {
+    public static final String[] CUSTOM_DATA_HEADERS = {
         CUSTOMHEADER_DMGREDUCTMULT
     };
 

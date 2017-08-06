@@ -16,7 +16,7 @@ public class SkillSwordTaunt extends Skill {
             CUSTOMHEADER_DMGREDUCT = "[damagereduct]",
             CUSTOMHEADER_DMGINC = "[damageinc]";
 
-    private static final String[] CUSTOM_DATA_HEADERS = {
+    public static final String[] CUSTOM_DATA_HEADERS = {
         CUSTOMHEADER_BUFFDURATION,
         CUSTOMHEADER_DMGREDUCT,
         CUSTOMHEADER_DMGINC

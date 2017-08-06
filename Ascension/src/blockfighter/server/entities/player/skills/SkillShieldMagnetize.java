@@ -18,7 +18,7 @@ public class SkillShieldMagnetize extends Skill {
             CUSTOMHEADER_MULTDEF = "[multdefense]",
             CUSTOMHEADER_MAXLEVELMULT = "[maxlevelmult]";
 
-    private static final String[] CUSTOM_DATA_HEADERS = {
+    public static final String[] CUSTOM_DATA_HEADERS = {
         CUSTOMHEADER_BASEDEF,
         CUSTOMHEADER_MULTDEF,
         CUSTOMHEADER_MAXLEVELMULT

@@ -16,7 +16,7 @@ public class SkillShieldReflect extends Skill {
     public static final String CUSTOMHEADER_MAXLVLDMGREDUCT = "[maxleveldmgreduct]",
             CUSTOMHEADER_BUFFDURATION = "[buffduration]";
 
-    private static final String[] CUSTOM_DATA_HEADERS = {
+    public static final String[] CUSTOM_DATA_HEADERS = {
         CUSTOMHEADER_MAXLVLDMGREDUCT,
         CUSTOMHEADER_BUFFDURATION
     };

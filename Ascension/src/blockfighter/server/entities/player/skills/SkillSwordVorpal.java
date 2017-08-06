@@ -13,7 +13,7 @@ public class SkillSwordVorpal extends Skill {
             CUSTOMHEADER_MULTBONUSCRITDMG = "[multbonuscritdamage]",
             CUSTOMHEADER_BONUSCRITCHC = "[bonuscritchc]";
 
-    private static final String[] CUSTOM_DATA_HEADERS = {
+    public static final String[] CUSTOM_DATA_HEADERS = {
         CUSTOMHEADER_BASEBONUSCRITDMG,
         CUSTOMHEADER_MULTBONUSCRITDMG,
         CUSTOMHEADER_BONUSCRITCHC

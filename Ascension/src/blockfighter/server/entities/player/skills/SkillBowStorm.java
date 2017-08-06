@@ -12,7 +12,7 @@ public class SkillBowStorm extends Skill {
     public static final String CUSTOMHEADER_DURATION = "[duration]",
             CUSTOMHEADER_MAXLVLBONUSCRITDMG = "[maxlevelbonuscritdamage]";
 
-    private static final String[] CUSTOM_DATA_HEADERS = {
+    public static final String[] CUSTOM_DATA_HEADERS = {
         CUSTOMHEADER_DURATION,
         CUSTOMHEADER_MAXLVLBONUSCRITDMG
     };
