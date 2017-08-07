@@ -15,6 +15,8 @@ Deal an immense deadly blow.
 0.2
 [passive]
 false
+[customvalues]
+buffduration,damageinc,damagereduct
 [buffduration]
 5000
 [damageinc]

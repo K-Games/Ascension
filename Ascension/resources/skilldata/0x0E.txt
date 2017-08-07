@@ -16,5 +16,7 @@ enemies you hit.
 0.2
 [passive]
 false
+[customvalues]
+stunduration
 [stunduration]
 1000

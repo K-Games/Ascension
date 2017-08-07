@@ -17,8 +17,8 @@ public class BuffUtilityAdrenaline extends Buff implements BuffDmgReduct, BuffXS
         this.maxDuration = d;
         this.dmgReduct = reduct;
         this.dmgTakenMult = 1D - this.dmgReduct;
-        double moveSpeedBase = o.getSkill(Globals.UTILITY_ADRENALINE).getCustomValue(SkillUtilityAdrenaline.CUSTOMHEADER_MOVESPEED_BASE);
-        double moveSpeedMult = o.getSkill(Globals.UTILITY_ADRENALINE).getCustomValue(SkillUtilityAdrenaline.CUSTOMHEADER_MOVESPEED_MULT) * o.getSkillLevel(Globals.UTILITY_ADRENALINE);
+        double moveSpeedBase = o.getSkill(Globals.UTILITY_ADRENALINE).getCustomValue(SkillUtilityAdrenaline.CUSTOM_DATA_HEADERS[2]);
+        double moveSpeedMult = o.getSkill(Globals.UTILITY_ADRENALINE).getCustomValue(SkillUtilityAdrenaline.CUSTOM_DATA_HEADERS[3]) * o.getSkillLevel(Globals.UTILITY_ADRENALINE);
         this.xSpeedBonus = Globals.WALK_SPEED * (moveSpeedBase + moveSpeedMult);
     }
 
@@ -27,7 +27,7 @@ public class BuffUtilityAdrenaline extends Buff implements BuffDmgReduct, BuffXS
         super.update();
         if (getOwner().isSkillMaxed(Globals.UTILITY_ADRENALINE)) {
             if (Globals.nsToMs(room.getTime() - lastHPHeal) >= Globals.nsToMs(Globals.SERVER_LOGIC_UPDATE)) {
-                double healAmount = getOwner().getSkill(Globals.UTILITY_ADRENALINE).getCustomValue(SkillUtilityAdrenaline.CUSTOMHEADER_HEAL);
+                double healAmount = getOwner().getSkill(Globals.UTILITY_ADRENALINE).getCustomValue(SkillUtilityAdrenaline.CUSTOM_DATA_HEADERS[1]);
                 final int amount = (int) Math.ceil(getOwner().getStats()[Globals.STAT_MAXHP] * healAmount / (this.maxDuration / Globals.nsToMs(Globals.SERVER_LOGIC_UPDATE)));
                 getOwner().queueHeal(amount);
                 lastHPHeal = room.getTime();

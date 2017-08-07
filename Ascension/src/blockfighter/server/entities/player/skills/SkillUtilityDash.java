@@ -23,7 +23,7 @@ public class SkillUtilityDash extends Skill {
 
     static {
         String[] data = Globals.loadSkillData(SKILL_CODE);
-        HashMap<String, Integer> dataHeaders = Globals.getDataHeaders(data, null);
+        HashMap<String, Integer> dataHeaders = Globals.getDataHeaders(data);
 
         REQ_WEAPON = Globals.loadReqWeapon(data, dataHeaders);
         REQ_LEVEL = Globals.loadSkillReqLevel(data, dataHeaders);

@@ -16,6 +16,8 @@ Can be interrupted by stuns and knockback.
 0.03
 [passive]
 false
+[customvalues]
+maxlevelbuffdamage,maxlevelbuffduration
 [maxlevelbuffdamage]
 0.01
 [maxlevelbuffduration]

@@ -15,6 +15,8 @@ Fire 3 shots in an arc.
 0.02
 [passive]
 false
+[customvalues]
+lifesteal, maxlifesteal
 [lifesteal]
 0.05
 [maxlifesteal]

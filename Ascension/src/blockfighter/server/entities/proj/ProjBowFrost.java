@@ -38,7 +38,7 @@ public class ProjBowFrost extends Projectile {
         double multValue = owner.getSkill(Globals.BOW_FROST).getMultValue();
         double damage = (!this.isSecondary)
                 ? (owner.rollDamage() * (baseValue + multValue * owner.getSkillLevel(Globals.BOW_FROST)))
-                : owner.rollDamage() * owner.getSkill(Globals.BOW_FROST).getCustomValue(SkillBowFrost.CUSTOMHEADER_MAXLEVELBONUSDAMAGE);
+                : owner.rollDamage() * owner.getSkill(Globals.BOW_FROST).getCustomValue(SkillBowFrost.CUSTOM_DATA_HEADERS[3]);
         damage = (isCrit) ? owner.criticalDamage(damage) : damage;
         return (int) damage;
     }
@@ -52,7 +52,7 @@ public class ProjBowFrost extends Projectile {
         target.queueBuff(new BuffKnockback(this.logic, 200, (owner.getFacing() == Globals.RIGHT) ? 1 : -1, -4, owner, target));
         if (!this.isSecondary) {
             Skill skill = owner.getSkill(Globals.BOW_FROST);
-            double stunDuration = (skill.isMaxed()) ? skill.getCustomValue(SkillBowFrost.CUSTOMHEADER_MAXLEVELSTUN) : skill.getCustomValue(SkillBowFrost.CUSTOMHEADER_BASESTUN);
+            double stunDuration = (skill.isMaxed()) ? skill.getCustomValue(SkillBowFrost.CUSTOM_DATA_HEADERS[1]) : skill.getCustomValue(SkillBowFrost.CUSTOM_DATA_HEADERS[0]);
             target.queueBuff(new BuffStun(this.logic, (int) stunDuration));
         }
     }
@@ -65,7 +65,7 @@ public class ProjBowFrost extends Projectile {
         target.queueDamage(new Damage(damage, true, owner, target, isCrit));
         if (!this.isSecondary) {
             Skill skill = owner.getSkill(Globals.BOW_FROST);
-            double stunDuration = (skill.isMaxed()) ? skill.getCustomValue(SkillBowFrost.CUSTOMHEADER_MAXLEVELSTUN) : skill.getCustomValue(SkillBowFrost.CUSTOMHEADER_BASESTUN);
+            double stunDuration = (skill.isMaxed()) ? skill.getCustomValue(SkillBowFrost.CUSTOM_DATA_HEADERS[1]) : skill.getCustomValue(SkillBowFrost.CUSTOM_DATA_HEADERS[0]);
             target.queueBuff(new BuffStun(this.logic, (int) stunDuration));
         }
     }

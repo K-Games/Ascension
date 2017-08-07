@@ -15,6 +15,8 @@ Fire 3 shots over 0.5 seconds.
 0.02
 [passive]
 false
+[customvalues]
+maxleveldamagemult,maxlevelbonuschance
 [maxleveldamagemult]
 2
 [maxlevelbonuschance]

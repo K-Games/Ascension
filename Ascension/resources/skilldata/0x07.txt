@@ -16,5 +16,7 @@ Can be interrupted by stuns and knockback.
 1
 [passive]
 false
+[customvalues]
+maxlevelbonuscritdamage
 [maxlevelbonuscritdamage]
 3

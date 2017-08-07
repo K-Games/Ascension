@@ -16,5 +16,7 @@ Critical Hit Chance and take reduced damage.
 0.002
 [passive]
 true
+[customvalues]
+dmgreductmult
 [dmgreductmult]
 0.01

@@ -16,6 +16,8 @@ deal damage based on your Defense.
 0.15
 [passive]
 false
+[customvalues]
+basedefense,multdefense,maxlevelmult
 [basedefense]
 15
 [multdefense]

@@ -6,13 +6,8 @@ import java.util.HashMap;
 
 public class SkillBowPower extends Skill {
 
-    public static final String CUSTOMHEADER_MAXLEVELBONUSCRITDMG = "[maxlevelbonuscritdamage]";
-
-    private static final String[] CUSTOM_DATA_HEADERS = {
-        CUSTOMHEADER_MAXLEVELBONUSCRITDMG
-    };
-
-    private static final HashMap<String, Double> CUSTOM_VALUES = new HashMap<>(1);
+    public static final String[] CUSTOM_DATA_HEADERS;
+    private static final HashMap<String, Double> CUSTOM_VALUES;
 
     private static final byte SKILL_CODE = Globals.BOW_POWER;
     private static final BufferedImage ICON = Globals.SKILL_ICON[SKILL_CODE];
@@ -28,7 +23,10 @@ public class SkillBowPower extends Skill {
     static {
         DISABLED_ICON = Globals.getDisabledIcon(ICON);
         String[] data = Globals.loadSkillData(SKILL_CODE);
-        HashMap<String, Integer> dataHeaders = Globals.getDataHeaders(data, CUSTOM_DATA_HEADERS);
+        HashMap<String, Integer> dataHeaders = Globals.getDataHeaders(data);
+
+        CUSTOM_DATA_HEADERS = Globals.loadSkillCustomHeaders(data, dataHeaders);
+        CUSTOM_VALUES = new HashMap<>(CUSTOM_DATA_HEADERS.length);
 
         SKILL_NAME = Globals.loadSkillName(data, dataHeaders);
         DESCRIPTION = Globals.loadSkillDesc(data, dataHeaders);
@@ -39,7 +37,9 @@ public class SkillBowPower extends Skill {
         IS_PASSIVE = Globals.loadBooleanValue(data, dataHeaders, Globals.SKILL_PASSIVE_HEADER);
         REQ_LEVEL = Globals.loadSkillReqLevel(data, dataHeaders);
 
-        CUSTOM_VALUES.put(CUSTOMHEADER_MAXLEVELBONUSCRITDMG, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_MAXLEVELBONUSCRITDMG) * 100);
+        for (String customHeader : CUSTOM_DATA_HEADERS) {
+            CUSTOM_VALUES.put(customHeader, Globals.loadDoubleValue(data, dataHeaders, customHeader) * 100);
+        }
     }
 
     @Override
@@ -96,7 +96,7 @@ public class SkillBowPower extends Skill {
             "Deals " + Globals.NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "% damage."
         };
         this.maxBonusDesc = new String[]{
-            "Critical Hits deal +" + Globals.NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_MAXLEVELBONUSCRITDMG)) + "% Critical Hit damage.",
+            "Critical Hits deal +" + Globals.NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOM_DATA_HEADERS[0])) + "% Critical Hit damage.",
             HYPER_STANCE_DESC
         };
     }

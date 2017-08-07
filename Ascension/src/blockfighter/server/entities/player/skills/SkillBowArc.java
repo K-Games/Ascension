@@ -9,15 +9,8 @@ import java.util.HashMap;
 
 public class SkillBowArc extends Skill {
 
-    public static final String CUSTOMHEADER_LIFESTEAL = "[lifesteal]",
-            CUSTOMHEADER_MAXLIFESTEAL = "[maxlifesteal]";
-
-    public static final String[] CUSTOM_DATA_HEADERS = {
-        CUSTOMHEADER_LIFESTEAL,
-        CUSTOMHEADER_MAXLIFESTEAL
-    };
-
-    private static final HashMap<String, Double> CUSTOM_VALUES = new HashMap<>(2);
+    public static final String[] CUSTOM_DATA_HEADERS;
+    private static final HashMap<String, Double> CUSTOM_VALUES;
 
     private static final byte SKILL_CODE = Globals.BOW_ARC;
     private static final boolean IS_PASSIVE;
@@ -32,17 +25,21 @@ public class SkillBowArc extends Skill {
 
     static {
         String[] data = Globals.loadSkillData(SKILL_CODE);
-        HashMap<String, Integer> dataHeaders = Globals.getDataHeaders(data, CUSTOM_DATA_HEADERS);
+        HashMap<String, Integer> dataHeaders = Globals.getDataHeaders(data);
+
+        CUSTOM_DATA_HEADERS = Globals.loadSkillCustomHeaders(data, dataHeaders);
+        CUSTOM_VALUES = new HashMap<>(CUSTOM_DATA_HEADERS.length);
 
         REQ_WEAPON = Globals.loadReqWeapon(data, dataHeaders);
-        REQ_LEVEL = Globals.loadSkillReqLevel(data, dataHeaders);
         MAX_COOLDOWN = (long) Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MAXCOOLDOWN_HEADER);
         BASE_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_BASEVALUE_HEADER);
         MULT_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MULTVALUE_HEADER);
         IS_PASSIVE = Globals.loadBooleanValue(data, dataHeaders, Globals.SKILL_PASSIVE_HEADER);
+        REQ_LEVEL = Globals.loadSkillReqLevel(data, dataHeaders);
 
-        CUSTOM_VALUES.put(CUSTOMHEADER_LIFESTEAL, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_LIFESTEAL));
-        CUSTOM_VALUES.put(CUSTOMHEADER_MAXLIFESTEAL, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_MAXLIFESTEAL));
+        for (String customHeader : CUSTOM_DATA_HEADERS) {
+            CUSTOM_VALUES.put(customHeader, Globals.loadDoubleValue(data, dataHeaders, customHeader));
+        }
     }
 
     public SkillBowArc(final LogicModule l) {

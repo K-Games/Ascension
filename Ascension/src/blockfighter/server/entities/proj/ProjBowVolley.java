@@ -46,8 +46,8 @@ public class ProjBowVolley extends Projectile {
             if (!this.buffed) {
                 this.buffed = true;
                 if (owner.isSkillMaxed(Globals.BOW_VOLLEY)) {
-                    int buffDuration = owner.getSkill(Globals.BOW_VOLLEY).getCustomValue(SkillBowVolley.CUSTOMHEADER_MAXLVLBUFFDURATION).intValue();
-                    double buffDamage = owner.getSkill(Globals.BOW_VOLLEY).getCustomValue(SkillBowVolley.CUSTOMHEADER_MAXLVLBUFFDMG);
+                    int buffDuration = owner.getSkill(Globals.BOW_VOLLEY).getCustomValue(SkillBowVolley.CUSTOM_DATA_HEADERS[1]).intValue();
+                    double buffDamage = owner.getSkill(Globals.BOW_VOLLEY).getCustomValue(SkillBowVolley.CUSTOM_DATA_HEADERS[0]);
                     owner.queueBuff(new BuffBowVolley(this.logic, buffDuration, buffDamage, owner));
                     final byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
                     bytes[0] = Globals.DATA_PARTICLE_EFFECT;
@@ -70,8 +70,8 @@ public class ProjBowVolley extends Projectile {
             if (!this.buffed) {
                 this.buffed = true;
                 if (owner.isSkillMaxed(Globals.BOW_VOLLEY)) {
-                    int buffDuration = owner.getSkill(Globals.BOW_VOLLEY).getCustomValue(SkillBowVolley.CUSTOMHEADER_MAXLVLBUFFDURATION).intValue();
-                    double buffDamage = owner.getSkill(Globals.BOW_VOLLEY).getCustomValue(SkillBowVolley.CUSTOMHEADER_MAXLVLBUFFDMG);
+                    int buffDuration = owner.getSkill(Globals.BOW_VOLLEY).getCustomValue(SkillBowVolley.CUSTOM_DATA_HEADERS[1]).intValue();
+                    double buffDamage = owner.getSkill(Globals.BOW_VOLLEY).getCustomValue(SkillBowVolley.CUSTOM_DATA_HEADERS[0]);
                     owner.queueBuff(new BuffBowVolley(this.logic, buffDuration, buffDamage, owner));
                     final byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
                     bytes[0] = Globals.DATA_PARTICLE_EFFECT;

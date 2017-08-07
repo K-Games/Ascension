@@ -638,8 +638,8 @@ public class Player implements GameEntity, Callable<Player> {
                 double passiveReduct = 0;
                 // Defender Mastery Passive Reduction
                 if (hasSkill(Globals.PASSIVE_SHIELDMASTERY) && getSkill(Globals.PASSIVE_SHIELDMASTERY).canCast(this)) {
-                    double baseReduct = getSkill(Globals.PASSIVE_SHIELDMASTERY).getCustomValue(SkillPassiveShieldMastery.CUSTOMHEADER_BASEDMGREDUCT);
-                    double multReduct = getSkill(Globals.PASSIVE_SHIELDMASTERY).getCustomValue(SkillPassiveShieldMastery.CUSTOMHEADER_MULTDMGREDUCT);
+                    double baseReduct = getSkill(Globals.PASSIVE_SHIELDMASTERY).getCustomValue(SkillPassiveShieldMastery.CUSTOM_DATA_HEADERS[0]);
+                    double multReduct = getSkill(Globals.PASSIVE_SHIELDMASTERY).getCustomValue(SkillPassiveShieldMastery.CUSTOM_DATA_HEADERS[1]);
                     passiveReduct += baseReduct + multReduct * getSkillLevel(Globals.PASSIVE_SHIELDMASTERY);
                 }
 
@@ -652,7 +652,7 @@ public class Player implements GameEntity, Callable<Player> {
 
                 // Dual Wield Passive Reduction
                 if (hasSkill(Globals.PASSIVE_DUALSWORD) && getSkill(Globals.PASSIVE_DUALSWORD).canCast(this)) {
-                    double dmgReductMult = getSkill(Globals.PASSIVE_DUALSWORD).getCustomValue(SkillPassiveDualSword.CUSTOMHEADER_DMGREDUCTMULT);
+                    double dmgReductMult = getSkill(Globals.PASSIVE_DUALSWORD).getCustomValue(SkillPassiveDualSword.CUSTOM_DATA_HEADERS[0]);
                     passiveReduct += dmgReductMult * getSkillLevel(Globals.PASSIVE_DUALSWORD);
                 }
                 finalDamage = finalDamage * (1 - passiveReduct);

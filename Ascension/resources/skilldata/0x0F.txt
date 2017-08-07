@@ -16,6 +16,8 @@ dealing a portion of damage taken.
 0.02
 [passive]
 false
+[customvalues]
+maxleveldmgreduct,buffduration
 [maxleveldmgreduct]
 0.33
 [buffduration]

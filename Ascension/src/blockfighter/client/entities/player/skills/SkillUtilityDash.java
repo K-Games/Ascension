@@ -22,16 +22,17 @@ public class SkillUtilityDash extends Skill {
     static {
         DISABLED_ICON = Globals.getDisabledIcon(ICON);
         String[] data = Globals.loadSkillData(SKILL_CODE);
-        HashMap<String, Integer> dataHeaders = Globals.getDataHeaders(data, null);
+        HashMap<String, Integer> dataHeaders = Globals.getDataHeaders(data);
 
         SKILL_NAME = Globals.loadSkillName(data, dataHeaders);
         DESCRIPTION = Globals.loadSkillDesc(data, dataHeaders);
         REQ_WEAPON = Globals.loadReqWeapon(data, dataHeaders);
         MAX_COOLDOWN = (long) Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MAXCOOLDOWN_HEADER);
-        BASE_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_BASEVALUE_HEADER) * 100;
-        MULT_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MULTVALUE_HEADER) * 100;
+        BASE_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_BASEVALUE_HEADER);
+        MULT_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MULTVALUE_HEADER);
         IS_PASSIVE = Globals.loadBooleanValue(data, dataHeaders, Globals.SKILL_PASSIVE_HEADER);
         REQ_LEVEL = Globals.loadSkillReqLevel(data, dataHeaders);
+
     }
 
     @Override
@@ -82,10 +83,10 @@ public class SkillUtilityDash extends Skill {
     @Override
     public void updateDesc() {
         this.skillCurLevelDesc = new String[]{
-            "Increases damage dealt by " + Globals.NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * this.level) + "%."
+            "Increases damage dealt by " + Globals.NUMBER_FORMAT.format((BASE_VALUE + MULT_VALUE * this.level) * 100) + "%."
         };
         this.skillNextLevelDesc = new String[]{
-            "Increases damage dealt by " + Globals.NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "%."
+            "Increases damage dealt by " + Globals.NUMBER_FORMAT.format((BASE_VALUE + MULT_VALUE * (this.level + 1)) * 100) + "%."
         };
         this.maxBonusDesc = new String[]{
             "Invulnerable during dash."

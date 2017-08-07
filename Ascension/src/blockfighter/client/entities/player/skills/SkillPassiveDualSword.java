@@ -6,13 +6,8 @@ import java.util.HashMap;
 
 public class SkillPassiveDualSword extends Skill {
 
-    public static final String CUSTOMHEADER_DMGREDUCTMULT = "[dmgreductmult]";
-
-    private static final String[] CUSTOM_DATA_HEADERS = {
-        CUSTOMHEADER_DMGREDUCTMULT
-    };
-
-    private static final HashMap<String, Double> CUSTOM_VALUES = new HashMap<>(1);
+    private static final String[] CUSTOM_DATA_HEADERS;
+    private static final HashMap<String, Double> CUSTOM_VALUES;
 
     private static final byte SKILL_CODE = Globals.PASSIVE_DUALSWORD;
     private static final BufferedImage ICON = Globals.SKILL_ICON[SKILL_CODE];
@@ -30,17 +25,23 @@ public class SkillPassiveDualSword extends Skill {
     static {
         DISABLED_ICON = Globals.getDisabledIcon(ICON);
         String[] data = Globals.loadSkillData(SKILL_CODE);
-        HashMap<String, Integer> dataHeaders = Globals.getDataHeaders(data, CUSTOM_DATA_HEADERS);
+        HashMap<String, Integer> dataHeaders = Globals.getDataHeaders(data);
+
+        CUSTOM_DATA_HEADERS = Globals.loadSkillCustomHeaders(data, dataHeaders);
+        CUSTOM_VALUES = new HashMap<>(CUSTOM_DATA_HEADERS.length);
 
         SKILL_NAME = Globals.loadSkillName(data, dataHeaders);
         DESCRIPTION = Globals.loadSkillDesc(data, dataHeaders);
         REQ_WEAPON = Globals.loadReqWeapon(data, dataHeaders);
         MAX_COOLDOWN = (long) Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MAXCOOLDOWN_HEADER);
-        BASE_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_BASEVALUE_HEADER) * 100;
-        MULT_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MULTVALUE_HEADER) * 100;
+        BASE_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_BASEVALUE_HEADER);
+        MULT_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MULTVALUE_HEADER);
         IS_PASSIVE = Globals.loadBooleanValue(data, dataHeaders, Globals.SKILL_PASSIVE_HEADER);
         REQ_LEVEL = Globals.loadSkillReqLevel(data, dataHeaders);
-        CUSTOM_VALUES.put(CUSTOMHEADER_DMGREDUCTMULT, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_DMGREDUCTMULT) * 100);
+
+        for (String customHeader : CUSTOM_DATA_HEADERS) {
+            CUSTOM_VALUES.put(customHeader, Globals.loadDoubleValue(data, dataHeaders, customHeader));
+        }
     }
 
     @Override
@@ -91,12 +92,12 @@ public class SkillPassiveDualSword extends Skill {
     @Override
     public void updateDesc() {
         this.skillCurLevelDesc = new String[]{
-            "Additional " + Globals.NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * this.level) + "% Critical Hit Chance.",
-            "Take " + Globals.NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_DMGREDUCTMULT) * this.level) + "% reduced damage."
+            "Additional " + Globals.NUMBER_FORMAT.format((BASE_VALUE + MULT_VALUE * this.level) * 100) + "% Critical Hit Chance.",
+            "Take " + Globals.NUMBER_FORMAT.format(CUSTOM_VALUES.get((CUSTOM_DATA_HEADERS[0])) * this.level * 100) + "% reduced damage."
         };
         this.skillNextLevelDesc = new String[]{
-            "Additional " + Globals.NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "% Critical Hit Chance.",
-            "Take " + Globals.NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_DMGREDUCTMULT) * (this.level + 1)) + "% reduced damage."
+            "Additional " + Globals.NUMBER_FORMAT.format((BASE_VALUE + MULT_VALUE * (this.level + 1)) * 100) + "% Critical Hit Chance.",
+            "Take " + Globals.NUMBER_FORMAT.format(CUSTOM_VALUES.get((CUSTOM_DATA_HEADERS[0])) * (this.level + 1) * 100) + "% reduced damage."
         };
     }
 

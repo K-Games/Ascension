@@ -6,15 +6,8 @@ import java.util.HashMap;
 
 public class SkillBowArc extends Skill {
 
-    public static final String CUSTOMHEADER_LIFESTEAL = "[lifesteal]",
-            CUSTOMHEADER_MAXLIFESTEAL = "[maxlifesteal]";
-
-    private static final String[] CUSTOM_DATA_HEADERS = {
-        CUSTOMHEADER_LIFESTEAL,
-        CUSTOMHEADER_MAXLIFESTEAL
-    };
-
-    private static final HashMap<String, Double> CUSTOM_VALUES = new HashMap<>(2);
+    public static final String[] CUSTOM_DATA_HEADERS;
+    private static final HashMap<String, Double> CUSTOM_VALUES;
 
     private static final byte SKILL_CODE = Globals.BOW_ARC;
     private static final BufferedImage ICON = Globals.SKILL_ICON[SKILL_CODE];
@@ -30,18 +23,23 @@ public class SkillBowArc extends Skill {
     static {
         DISABLED_ICON = Globals.getDisabledIcon(ICON);
         String[] data = Globals.loadSkillData(SKILL_CODE);
-        HashMap<String, Integer> dataHeaders = Globals.getDataHeaders(data, CUSTOM_DATA_HEADERS);
+        HashMap<String, Integer> dataHeaders = Globals.getDataHeaders(data);
+
+        CUSTOM_DATA_HEADERS = Globals.loadSkillCustomHeaders(data, dataHeaders);
+        CUSTOM_VALUES = new HashMap<>(CUSTOM_DATA_HEADERS.length);
 
         SKILL_NAME = Globals.loadSkillName(data, dataHeaders);
         DESCRIPTION = Globals.loadSkillDesc(data, dataHeaders);
         REQ_WEAPON = Globals.loadReqWeapon(data, dataHeaders);
         MAX_COOLDOWN = (long) Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MAXCOOLDOWN_HEADER);
-        BASE_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_BASEVALUE_HEADER) * 100;
-        MULT_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MULTVALUE_HEADER) * 100;
+        BASE_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_BASEVALUE_HEADER);
+        MULT_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MULTVALUE_HEADER);
         IS_PASSIVE = Globals.loadBooleanValue(data, dataHeaders, Globals.SKILL_PASSIVE_HEADER);
         REQ_LEVEL = Globals.loadSkillReqLevel(data, dataHeaders);
-        CUSTOM_VALUES.put(CUSTOMHEADER_LIFESTEAL, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_LIFESTEAL) * 100);
-        CUSTOM_VALUES.put(CUSTOMHEADER_MAXLIFESTEAL, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_MAXLIFESTEAL) * 100);
+
+        for (String customHeader : CUSTOM_DATA_HEADERS) {
+            CUSTOM_VALUES.put(customHeader, Globals.loadDoubleValue(data, dataHeaders, customHeader));
+        }
     }
 
     @Override
@@ -97,13 +95,13 @@ public class SkillBowArc extends Skill {
     @Override
     public void updateDesc() {
         this.skillCurLevelDesc = new String[]{
-            "Deal " + Globals.NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * this.level) + "% damage per hit."
+            "Deal " + Globals.NUMBER_FORMAT.format((BASE_VALUE + MULT_VALUE * this.level) * 100) + "% damage per hit."
         };
         this.skillNextLevelDesc = new String[]{
-            "Deal " + Globals.NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "% damage per hit."
+            "Deal " + Globals.NUMBER_FORMAT.format((BASE_VALUE + MULT_VALUE * (this.level + 1)) * 100) + "% damage per hit."
         };
         this.maxBonusDesc = new String[]{
-            "Restore " + Globals.NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_LIFESTEAL)) + "% damage to HP. Maximum of " + Globals.NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_MAXLIFESTEAL)) + "% HP."
+            "Restore " + Globals.NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOM_DATA_HEADERS[0]) * 100) + "% damage to HP. Maximum of " + Globals.NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOM_DATA_HEADERS[1]) * 100) + "% HP."
         };
     }
 

@@ -9,19 +9,8 @@ import java.util.HashMap;
 
 public class SkillBowFrost extends Skill {
 
-    public static final String CUSTOMHEADER_BASESTUN = "[basestun]",
-            CUSTOMHEADER_MAXLEVELSTUN = "[maxlevelstun]",
-            CUSTOMHEADER_MAXLEVELBONUSPROJ = "[maxlevelbonusproj]",
-            CUSTOMHEADER_MAXLEVELBONUSDAMAGE = "[maxlevelbonusdamage]";
-
-    public static final String[] CUSTOM_DATA_HEADERS = {
-        CUSTOMHEADER_BASESTUN,
-        CUSTOMHEADER_MAXLEVELSTUN,
-        CUSTOMHEADER_MAXLEVELBONUSPROJ,
-        CUSTOMHEADER_MAXLEVELBONUSDAMAGE
-    };
-
-    private static final HashMap<String, Double> CUSTOM_VALUES = new HashMap<>(4);
+    public static final String[] CUSTOM_DATA_HEADERS;
+    private static final HashMap<String, Double> CUSTOM_VALUES;
 
     private static final byte SKILL_CODE = Globals.BOW_FROST;
     private static final boolean IS_PASSIVE;
@@ -36,19 +25,21 @@ public class SkillBowFrost extends Skill {
 
     static {
         String[] data = Globals.loadSkillData(SKILL_CODE);
-        HashMap<String, Integer> dataHeaders = Globals.getDataHeaders(data, CUSTOM_DATA_HEADERS);
+        HashMap<String, Integer> dataHeaders = Globals.getDataHeaders(data);
+
+        CUSTOM_DATA_HEADERS = Globals.loadSkillCustomHeaders(data, dataHeaders);
+        CUSTOM_VALUES = new HashMap<>(CUSTOM_DATA_HEADERS.length);
 
         REQ_WEAPON = Globals.loadReqWeapon(data, dataHeaders);
-        REQ_LEVEL = Globals.loadSkillReqLevel(data, dataHeaders);
         MAX_COOLDOWN = (long) Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MAXCOOLDOWN_HEADER);
         BASE_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_BASEVALUE_HEADER);
         MULT_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MULTVALUE_HEADER);
         IS_PASSIVE = Globals.loadBooleanValue(data, dataHeaders, Globals.SKILL_PASSIVE_HEADER);
+        REQ_LEVEL = Globals.loadSkillReqLevel(data, dataHeaders);
 
-        CUSTOM_VALUES.put(CUSTOMHEADER_BASESTUN, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_BASESTUN));
-        CUSTOM_VALUES.put(CUSTOMHEADER_MAXLEVELSTUN, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_MAXLEVELSTUN));
-        CUSTOM_VALUES.put(CUSTOMHEADER_MAXLEVELBONUSDAMAGE, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_MAXLEVELBONUSDAMAGE));
-        CUSTOM_VALUES.put(CUSTOMHEADER_MAXLEVELBONUSPROJ, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_MAXLEVELBONUSPROJ));
+        for (String customHeader : CUSTOM_DATA_HEADERS) {
+            CUSTOM_VALUES.put(customHeader, Globals.loadDoubleValue(data, dataHeaders, customHeader));
+        }
     }
 
     public SkillBowFrost(final LogicModule l) {
@@ -108,7 +99,7 @@ public class SkillBowFrost extends Skill {
     @Override
     public void updateSkillUse(Player player) {
         final long duration = Globals.nsToMs(this.logic.getTime() - player.getSkillCastTime());
-        final int numHits = (int) (player.isSkillMaxed(Globals.BOW_FROST) ? CUSTOM_VALUES.get(CUSTOMHEADER_MAXLEVELBONUSPROJ) + 1 : 1);
+        final int numHits = (int) (player.isSkillMaxed(Globals.BOW_FROST) ? CUSTOM_VALUES.get(CUSTOM_DATA_HEADERS[2]) + 1 : 1);
         if (Globals.hasPastDuration(duration, 160 + player.getSkillCounter() * 90) && player.getSkillCounter() < numHits) {
             player.incrementSkillCounter();
             final ProjBowFrost proj = new ProjBowFrost(this.logic, player, player.getX(), player.getY(), false);

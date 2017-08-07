@@ -17,3 +17,7 @@ Invulnerable during the skill duration.
 0.2
 [passive]
 false
+[customvalues]
+hppercent
+[hppercent]
+0.03

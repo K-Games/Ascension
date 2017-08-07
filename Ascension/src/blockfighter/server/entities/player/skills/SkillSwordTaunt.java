@@ -12,17 +12,8 @@ public class SkillSwordTaunt extends Skill {
 
     private ProjSwordTaunt proj;
 
-    public static final String CUSTOMHEADER_BUFFDURATION = "[buffduration]",
-            CUSTOMHEADER_DMGREDUCT = "[damagereduct]",
-            CUSTOMHEADER_DMGINC = "[damageinc]";
-
-    public static final String[] CUSTOM_DATA_HEADERS = {
-        CUSTOMHEADER_BUFFDURATION,
-        CUSTOMHEADER_DMGREDUCT,
-        CUSTOMHEADER_DMGINC
-    };
-
-    private static final HashMap<String, Double> CUSTOM_VALUES = new HashMap<>(3);
+    public static final String[] CUSTOM_DATA_HEADERS;
+    private static final HashMap<String, Double> CUSTOM_VALUES;
 
     private static final byte SKILL_CODE = Globals.SWORD_TAUNT;
     private static final boolean IS_PASSIVE;
@@ -37,17 +28,21 @@ public class SkillSwordTaunt extends Skill {
 
     static {
         String[] data = Globals.loadSkillData(SKILL_CODE);
-        HashMap<String, Integer> dataHeaders = Globals.getDataHeaders(data, CUSTOM_DATA_HEADERS);
+        HashMap<String, Integer> dataHeaders = Globals.getDataHeaders(data);
+
+        CUSTOM_DATA_HEADERS = Globals.loadSkillCustomHeaders(data, dataHeaders);
+        CUSTOM_VALUES = new HashMap<>(CUSTOM_DATA_HEADERS.length);
 
         REQ_WEAPON = Globals.loadReqWeapon(data, dataHeaders);
-        REQ_LEVEL = Globals.loadSkillReqLevel(data, dataHeaders);
         MAX_COOLDOWN = (long) Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MAXCOOLDOWN_HEADER);
         BASE_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_BASEVALUE_HEADER);
         MULT_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MULTVALUE_HEADER);
         IS_PASSIVE = Globals.loadBooleanValue(data, dataHeaders, Globals.SKILL_PASSIVE_HEADER);
-        CUSTOM_VALUES.put(CUSTOMHEADER_BUFFDURATION, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_BUFFDURATION));
-        CUSTOM_VALUES.put(CUSTOMHEADER_DMGREDUCT, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_DMGREDUCT));
-        CUSTOM_VALUES.put(CUSTOMHEADER_DMGINC, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_DMGINC));
+        REQ_LEVEL = Globals.loadSkillReqLevel(data, dataHeaders);
+
+        for (String customHeader : CUSTOM_DATA_HEADERS) {
+            CUSTOM_VALUES.put(customHeader, Globals.loadDoubleValue(data, dataHeaders, customHeader));
+        }
     }
 
     public SkillSwordTaunt(final LogicModule l) {
@@ -111,8 +106,8 @@ public class SkillSwordTaunt extends Skill {
             player.incrementSkillCounter();
             if (player.isSkillMaxed(Globals.SWORD_TAUNT)) {
                 player.setHyperStance(true);
-                double buffDuration = getCustomValue(CUSTOMHEADER_BUFFDURATION);
-                player.queueBuff(new BuffSwordTaunt(this.logic, (int) buffDuration, getCustomValue(CUSTOMHEADER_DMGREDUCT), getCustomValue(CUSTOMHEADER_DMGINC), player));
+                double buffDuration = getCustomValue(CUSTOM_DATA_HEADERS[0]);
+                player.queueBuff(new BuffSwordTaunt(this.logic, (int) buffDuration, getCustomValue(CUSTOM_DATA_HEADERS[2]), getCustomValue(CUSTOM_DATA_HEADERS[1]), player));
                 PacketSender.sendParticle(this.logic, Globals.Particles.SWORD_TAUNT_BUFF_EMITTER.getParticleCode(), player.getKey());
             }
             proj = new ProjSwordTaunt(this.logic, player, player.getX(), player.getY());

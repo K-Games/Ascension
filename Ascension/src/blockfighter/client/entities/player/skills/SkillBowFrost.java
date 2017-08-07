@@ -6,19 +6,8 @@ import java.util.HashMap;
 
 public class SkillBowFrost extends Skill {
 
-    public static final String CUSTOMHEADER_BASESTUN = "[basestun]",
-            CUSTOMHEADER_MAXLEVELSTUN = "[maxlevelstun]",
-            CUSTOMHEADER_MAXLEVELBONUSPROJ = "[maxlevelbonusproj]",
-            CUSTOMHEADER_MAXLEVELBONUSDAMAGE = "[maxlevelbonusdamage]";
-
-    private static final String[] CUSTOM_DATA_HEADERS = {
-        CUSTOMHEADER_BASESTUN,
-        CUSTOMHEADER_MAXLEVELSTUN,
-        CUSTOMHEADER_MAXLEVELBONUSPROJ,
-        CUSTOMHEADER_MAXLEVELBONUSDAMAGE
-    };
-
-    private static final HashMap<String, Double> CUSTOM_VALUES = new HashMap<>(4);
+    public static final String[] CUSTOM_DATA_HEADERS;
+    private static final HashMap<String, Double> CUSTOM_VALUES;
 
     private static final byte SKILL_CODE = Globals.BOW_FROST;
     private static final BufferedImage ICON = Globals.SKILL_ICON[SKILL_CODE];
@@ -34,21 +23,23 @@ public class SkillBowFrost extends Skill {
     static {
         DISABLED_ICON = Globals.getDisabledIcon(ICON);
         String[] data = Globals.loadSkillData(SKILL_CODE);
-        HashMap<String, Integer> dataHeaders = Globals.getDataHeaders(data, CUSTOM_DATA_HEADERS);
+        HashMap<String, Integer> dataHeaders = Globals.getDataHeaders(data);
+
+        CUSTOM_DATA_HEADERS = Globals.loadSkillCustomHeaders(data, dataHeaders);
+        CUSTOM_VALUES = new HashMap<>(CUSTOM_DATA_HEADERS.length);
 
         SKILL_NAME = Globals.loadSkillName(data, dataHeaders);
         DESCRIPTION = Globals.loadSkillDesc(data, dataHeaders);
         REQ_WEAPON = Globals.loadReqWeapon(data, dataHeaders);
         MAX_COOLDOWN = (long) Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MAXCOOLDOWN_HEADER);
-        BASE_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_BASEVALUE_HEADER) * 100;
-        MULT_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MULTVALUE_HEADER) * 100;
+        BASE_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_BASEVALUE_HEADER);
+        MULT_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MULTVALUE_HEADER);
         IS_PASSIVE = Globals.loadBooleanValue(data, dataHeaders, Globals.SKILL_PASSIVE_HEADER);
         REQ_LEVEL = Globals.loadSkillReqLevel(data, dataHeaders);
 
-        CUSTOM_VALUES.put(CUSTOMHEADER_BASESTUN, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_BASESTUN) / 1000D);
-        CUSTOM_VALUES.put(CUSTOMHEADER_MAXLEVELSTUN, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_MAXLEVELSTUN) / 1000D);
-        CUSTOM_VALUES.put(CUSTOMHEADER_MAXLEVELBONUSDAMAGE, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_MAXLEVELBONUSDAMAGE) * 100);
-        CUSTOM_VALUES.put(CUSTOMHEADER_MAXLEVELBONUSPROJ, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_MAXLEVELBONUSPROJ));
+        for (String customHeader : CUSTOM_DATA_HEADERS) {
+            CUSTOM_VALUES.put(customHeader, Globals.loadDoubleValue(data, dataHeaders, customHeader));
+        }
     }
 
     @Override
@@ -99,14 +90,14 @@ public class SkillBowFrost extends Skill {
     @Override
     public void updateDesc() {
         this.skillCurLevelDesc = new String[]{
-            "Deals " + Globals.NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * this.level) + "% damage. Stuns for " + Globals.TIME_NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_BASESTUN)) + " seconds."
+            "Deals " + Globals.NUMBER_FORMAT.format((BASE_VALUE + MULT_VALUE * this.level) * 100) + "% damage. Stuns for " + Globals.TIME_NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOM_DATA_HEADERS[0]) / 1000D) + " seconds."
         };
         this.skillNextLevelDesc = new String[]{
-            "Deals " + Globals.NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "% damage. Stuns for " + Globals.TIME_NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_BASESTUN)) + " seconds."
+            "Deals " + Globals.NUMBER_FORMAT.format((BASE_VALUE + MULT_VALUE * (this.level + 1)) * 100) + "% damage. Stuns for " + Globals.TIME_NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOM_DATA_HEADERS[0]) / 1000D) + " seconds."
         };
         this.maxBonusDesc = new String[]{
-            "Stun now lasts for " + Globals.TIME_NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_MAXLEVELSTUN)) + " seconds.",
-            "Hits an additional " + Globals.NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_MAXLEVELBONUSPROJ)) + " times dealing " + Globals.NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_MAXLEVELBONUSDAMAGE)) + "% damage."
+            "Stun now lasts for " + Globals.TIME_NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOM_DATA_HEADERS[1]) / 1000D) + " seconds.",
+            "Hits an additional " + Globals.NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOM_DATA_HEADERS[2])) + " times dealing " + Globals.NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOM_DATA_HEADERS[3]) * 100) + "% damage."
         };
     }
 
