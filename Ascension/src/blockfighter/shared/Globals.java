@@ -14,7 +14,12 @@ import static com.esotericsoftware.minlog.Log.*;
 import com.esotericsoftware.minlog.Log.Logger;
 import java.awt.Font;
 import java.awt.FontFormatException;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
+import java.awt.image.FilteredImageSource;
+import java.awt.image.ImageProducer;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
@@ -40,6 +45,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import javax.imageio.ImageIO;
+import javax.swing.GrayFilter;
 import javax.swing.JTextArea;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -899,6 +905,17 @@ public class Globals {
         SKILL_MULTVALUE_HEADER,
         SKILL_PASSIVE_HEADER,
         SKILL_REQLEVEL_HEADER};
+
+    public static BufferedImage getDisabledIcon(BufferedImage icon) {
+        GrayFilter filter = new GrayFilter(true, 15);
+        ImageProducer prod = new FilteredImageSource(icon.getSource(), filter);
+        Image disabled = Toolkit.getDefaultToolkit().createImage(prod);
+        BufferedImage result = new BufferedImage(disabled.getWidth(null), disabled.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+        Graphics g = result.getGraphics();
+        g.drawImage(disabled, 0, 0, null);
+        g.dispose();
+        return result;
+    }
 
     public static HashMap<String, Integer> getDataHeaders(final String[] data, final String[] customDataHeaders) {
         HashMap<String, Integer> dataHeader = new HashMap<>();

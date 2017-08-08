@@ -15,8 +15,9 @@ import javax.swing.SwingUtilities;
 
 public class ScreenSkills extends ScreenMenu {
 
-    private static final String UNLOCK_SKILL_TEXT1 = "Skill is unlocked";
-    private static final String UNLOCK_SKILL_TEXT2 = "at level ";
+    private static final String UNLOCK_SKILL_TEXT1 = "Unlocked at";
+    private static final String UNLOCK_SKILL_TEXT2 = "level ";
+    private static final String UNLOCK_SKILL_TEXT3 = "Level";
     private static final String RESET_SKILLS_TEXT = "Reset Skills";
     private static final String SKILL_POINTS_TEXT = "Skill Points: ";
     private static final String MAX_BUTTON_TEXT = "Max";
@@ -217,12 +218,13 @@ public class ScreenSkills extends ScreenMenu {
                 g.drawString(Globals.getStatName(Globals.STAT_LEVEL) + Globals.COLON_SPACE_TEXT + this.skillList[i].getLevel(), (int) SKILL_SLOTS[i].x + 70, (int) SKILL_SLOTS[i].y + 50);
                 drawSkillAddButton(g, i);
             } else {
+                this.skillList[i].drawDisabled(g, (int) SKILL_SLOTS[i].x, (int) SKILL_SLOTS[i].y);
                 g.setFont(Globals.ARIAL_15PT);
-                drawStringOutline(g, UNLOCK_SKILL_TEXT1, (int) SKILL_SLOTS[i].x + 64, (int) SKILL_SLOTS[i].y + 25, 1);
-                drawStringOutline(g, UNLOCK_SKILL_TEXT2 + this.skillList[i].getReqLevel(), (int) SKILL_SLOTS[i].x + 64, (int) SKILL_SLOTS[i].y + 45, 1);
+                drawStringOutline(g, UNLOCK_SKILL_TEXT1, (int) SKILL_SLOTS[i].x + 70, (int) SKILL_SLOTS[i].y + 25, 1);
+                drawStringOutline(g, UNLOCK_SKILL_TEXT2 + this.skillList[i].getReqLevel(), (int) SKILL_SLOTS[i].x + 70, (int) SKILL_SLOTS[i].y + 45, 1);
                 g.setColor(Color.WHITE);
-                g.drawString(UNLOCK_SKILL_TEXT1, (int) SKILL_SLOTS[i].x + 64, (int) SKILL_SLOTS[i].y + 25);
-                g.drawString(UNLOCK_SKILL_TEXT2 + this.skillList[i].getReqLevel(), (int) SKILL_SLOTS[i].x + 64, (int) SKILL_SLOTS[i].y + 45);
+                g.drawString(UNLOCK_SKILL_TEXT1, (int) SKILL_SLOTS[i].x + 70, (int) SKILL_SLOTS[i].y + 25);
+                g.drawString(UNLOCK_SKILL_TEXT2 + this.skillList[i].getReqLevel(), (int) SKILL_SLOTS[i].x + 70, (int) SKILL_SLOTS[i].y + 45);
             }
         }
 
@@ -235,6 +237,16 @@ public class ScreenSkills extends ScreenMenu {
                 g.setColor(Color.WHITE);
                 g.drawString(Globals.getStatName(Globals.STAT_LEVEL) + Globals.COLON_SPACE_TEXT + this.skillList[i].getLevel(), (int) SKILL_SLOTS[i].x, (int) SKILL_SLOTS[i].y + 80);
                 drawSkillAddButton(g, i);
+            } else {
+                this.skillList[i].drawDisabled(g, (int) SKILL_SLOTS[i].x, (int) SKILL_SLOTS[i].y);
+                g.setFont(Globals.ARIAL_15PT);
+                int line1X = (int) (SKILL_SLOTS[i].x + SKILL_SLOTS[i].width / 2 - g.getFontMetrics().stringWidth(UNLOCK_SKILL_TEXT3) / 2);
+                int line2X = (int) (SKILL_SLOTS[i].x + SKILL_SLOTS[i].width / 2 - g.getFontMetrics().stringWidth(Integer.toString(this.skillList[i].getReqLevel())) / 2);
+                drawStringOutline(g, UNLOCK_SKILL_TEXT3, line1X, (int) SKILL_SLOTS[i].y + 25, 1);
+                drawStringOutline(g, Integer.toString(this.skillList[i].getReqLevel()), line2X, (int) SKILL_SLOTS[i].y + 45, 1);
+                g.setColor(Color.WHITE);
+                g.drawString(UNLOCK_SKILL_TEXT3, line1X, (int) SKILL_SLOTS[i].y + 25);
+                g.drawString(Integer.toString(this.skillList[i].getReqLevel()), line2X, (int) SKILL_SLOTS[i].y + 45);
             }
         }
     }

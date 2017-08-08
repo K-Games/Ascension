@@ -20,6 +20,7 @@ public class SkillSwordTaunt extends Skill {
 
     private static final byte SKILL_CODE = Globals.SWORD_TAUNT;
     private static final BufferedImage ICON = Globals.SKILL_ICON[SKILL_CODE];
+    private static final BufferedImage DISABLED_ICON;
 
     private static final String SKILL_NAME;
     private static final String[] DESCRIPTION;
@@ -31,6 +32,7 @@ public class SkillSwordTaunt extends Skill {
     private static final int REQ_LEVEL;
 
     static {
+        DISABLED_ICON = Globals.getDisabledIcon(ICON);
         String[] data = Globals.loadSkillData(SKILL_CODE);
         HashMap<String, Integer> dataHeaders = Globals.getDataHeaders(data, CUSTOM_DATA_HEADERS);
 
@@ -105,5 +107,10 @@ public class SkillSwordTaunt extends Skill {
             "Deal  " + Globals.NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_DMGINC)) + "% increased damage for " + Globals.TIME_NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_BUFFDURATION)) + " seconds.",
             HYPER_STANCE_DESC
         };
+    }
+
+    @Override
+    public BufferedImage getDisabledIcon() {
+        return DISABLED_ICON;
     }
 }

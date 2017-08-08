@@ -8,6 +8,7 @@ public class SkillPassiveHarmony extends Skill {
 
     private static final byte SKILL_CODE = Globals.PASSIVE_HARMONY;
     private static final BufferedImage ICON = Globals.SKILL_ICON[SKILL_CODE];
+    private static final BufferedImage DISABLED_ICON;
 
     private static final String SKILL_NAME;
     private static final String[] DESCRIPTION;
@@ -19,6 +20,7 @@ public class SkillPassiveHarmony extends Skill {
     private static final int REQ_LEVEL;
 
     static {
+        DISABLED_ICON = Globals.getDisabledIcon(ICON);
         String[] data = Globals.loadSkillData(SKILL_CODE);
         HashMap<String, Integer> dataHeaders = Globals.getDataHeaders(data, null);
 
@@ -85,5 +87,10 @@ public class SkillPassiveHarmony extends Skill {
         this.skillNextLevelDesc = new String[]{
             "Gain " + Globals.NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "% of Max HP as bonus damage."
         };
+    }
+
+    @Override
+    public BufferedImage getDisabledIcon() {
+        return DISABLED_ICON;
     }
 }

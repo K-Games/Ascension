@@ -18,6 +18,7 @@ public class SkillPassiveShieldMastery extends Skill {
 
     private static final byte SKILL_CODE = Globals.PASSIVE_SHIELDMASTERY;
     private static final BufferedImage ICON = Globals.SKILL_ICON[SKILL_CODE];
+    private static final BufferedImage DISABLED_ICON;
 
     private static final String SKILL_NAME;
     private static final String[] DESCRIPTION;
@@ -29,6 +30,7 @@ public class SkillPassiveShieldMastery extends Skill {
     private static final int REQ_LEVEL;
 
     static {
+        DISABLED_ICON = Globals.getDisabledIcon(ICON);
         String[] data = Globals.loadSkillData(SKILL_CODE);
         HashMap<String, Integer> dataHeaders = Globals.getDataHeaders(data, CUSTOM_DATA_HEADERS);
 
@@ -104,5 +106,10 @@ public class SkillPassiveShieldMastery extends Skill {
             "Deal additional " + Globals.NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "% damage.",
             "Take " + Globals.NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_BASEDMGREDUCT) + CUSTOM_VALUES.get(CUSTOMHEADER_MULTDMGREDUCT) * (this.level + 1)) + "% reduced damage."
         };
+    }
+
+    @Override
+    public BufferedImage getDisabledIcon() {
+        return DISABLED_ICON;
     }
 }

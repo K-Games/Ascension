@@ -26,6 +26,10 @@ public abstract class Skill {
         g.drawImage(getIcon(), x, y, null);
     }
 
+    public void drawDisabled(final Graphics2D g, final int x, final int y) {
+        g.drawImage(getDisabledIcon(), x, y, null);
+    }
+
     public void drawInfo(final Graphics2D g, final int x, final int y) {
         if (fontMetric == null) {
             fontMetric = g.getFontMetrics(Globals.ARIAL_15PT);
@@ -105,6 +109,8 @@ public abstract class Skill {
     public abstract void updateDesc();
 
     public abstract BufferedImage getIcon();
+
+    public abstract BufferedImage getDisabledIcon();
 
     public abstract String[] getDesc();
 

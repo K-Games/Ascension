@@ -17,6 +17,7 @@ public class SkillBowVolley extends Skill {
 
     private static final byte SKILL_CODE = Globals.BOW_VOLLEY;
     private static final BufferedImage ICON = Globals.SKILL_ICON[SKILL_CODE];
+    private static final BufferedImage DISABLED_ICON;
 
     private static final String SKILL_NAME;
     private static final String[] DESCRIPTION;
@@ -28,6 +29,7 @@ public class SkillBowVolley extends Skill {
     private static final int REQ_LEVEL;
 
     static {
+        DISABLED_ICON = Globals.getDisabledIcon(ICON);
         String[] data = Globals.loadSkillData(SKILL_CODE);
         HashMap<String, Integer> dataHeaders = Globals.getDataHeaders(data, CUSTOM_DATA_HEADERS);
 
@@ -104,5 +106,10 @@ public class SkillBowVolley extends Skill {
 
     public static double getBuffDuration() {
         return CUSTOM_VALUES.get(CUSTOMHEADER_MAXLVLBUFFDURATION);
+    }
+
+    @Override
+    public BufferedImage getDisabledIcon() {
+        return DISABLED_ICON;
     }
 }

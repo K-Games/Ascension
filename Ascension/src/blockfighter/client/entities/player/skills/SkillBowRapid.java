@@ -17,6 +17,7 @@ public class SkillBowRapid extends Skill {
 
     private static final byte SKILL_CODE = Globals.BOW_RAPID;
     private static final BufferedImage ICON = Globals.SKILL_ICON[SKILL_CODE];
+    private static final BufferedImage DISABLED_ICON;
 
     private static final String SKILL_NAME;
     private static final String[] DESCRIPTION;
@@ -27,6 +28,7 @@ public class SkillBowRapid extends Skill {
     private static final int REQ_LEVEL;
 
     static {
+        DISABLED_ICON = Globals.getDisabledIcon(ICON);
         String[] data = Globals.loadSkillData(SKILL_CODE);
         HashMap<String, Integer> dataHeaders = Globals.getDataHeaders(data, CUSTOM_DATA_HEADERS);
 
@@ -99,6 +101,11 @@ public class SkillBowRapid extends Skill {
         this.maxBonusDesc = new String[]{
             "Each shot has " + Globals.NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_MAXLVLBONUSCHC)) + "% Chance to deal " + Globals.NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_MAXLVLDMGMULT)) + "x damage."
         };
+    }
+
+    @Override
+    public BufferedImage getDisabledIcon() {
+        return DISABLED_ICON;
     }
 
 }

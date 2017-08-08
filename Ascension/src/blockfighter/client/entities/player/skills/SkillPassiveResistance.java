@@ -8,6 +8,7 @@ public class SkillPassiveResistance extends Skill {
 
     private static final byte SKILL_CODE = Globals.PASSIVE_RESIST;
     private static final BufferedImage ICON = Globals.SKILL_ICON[SKILL_CODE];
+    private static final BufferedImage DISABLED_ICON;
 
     private static final String SKILL_NAME;
     private static final String[] DESCRIPTION;
@@ -19,6 +20,7 @@ public class SkillPassiveResistance extends Skill {
     private static final int REQ_LEVEL;
 
     static {
+        DISABLED_ICON = Globals.getDisabledIcon(ICON);
         String[] data = Globals.loadSkillData(SKILL_CODE);
         HashMap<String, Integer> dataHeaders = Globals.getDataHeaders(data, null);
 
@@ -90,5 +92,10 @@ public class SkillPassiveResistance extends Skill {
         this.skillNextLevelDesc = new String[]{
             "Reduce cooldown by " + Globals.NUMBER_FORMAT.format(BASE_VALUE / 1000 + MULT_VALUE / 1000 * (this.level + 1)) + ((BASE_VALUE / 1000 + MULT_VALUE / 1000 * (this.level + 1) > 1) ? " seconds." : " second.")
         };
+    }
+
+    @Override
+    public BufferedImage getDisabledIcon() {
+        return DISABLED_ICON;
     }
 }
