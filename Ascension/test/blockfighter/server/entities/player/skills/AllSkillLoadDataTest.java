@@ -55,7 +55,7 @@ public class AllSkillLoadDataTest {
             this.serverClass = serverClass;
             this.reqEquipSlot = reqEquipSlot;
             this.playerCastState = playerCastState;
-            this.data = Globals.loadSkillData(skillCode);
+            this.data = Globals.loadSkillRawData(skillCode);
             this.customHeaders = customHeaders;
             this.dataHeaders = Globals.getDataHeaders(data);
         }
@@ -172,7 +172,7 @@ public class AllSkillLoadDataTest {
             HashMap<String, Integer> dataHeaders = skill.dataHeaders;
             Skill skillInstance = newSkillInstance(skill.serverClass);
 
-            byte expResult = Globals.loadReqWeapon(data, dataHeaders);
+            byte expResult = Globals.loadSkillReqWeapon(data, dataHeaders);
             byte result = skillInstance.getReqWeapon();
             System.out.println("Testing " + skill + ": Expected=" + expResult + " Result=" + result);
             assertEquals(expResult, result);

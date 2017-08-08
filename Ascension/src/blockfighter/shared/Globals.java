@@ -946,7 +946,7 @@ public class Globals {
         return dataHeader;
     }
 
-    public static String[] loadSkillCustomHeaders(final String[] data, final HashMap<String, Integer> dataHeaders) {
+    public static String[] getSkillCustomHeaders(final String[] data, final HashMap<String, Integer> dataHeaders) {
         try {
             String[] value = loadStringValue(data, dataHeaders, SKILL_CUSTOM_VALUES_HEADER).split(",");
             for (int i = 0; i < value.length; i++) {
@@ -984,7 +984,7 @@ public class Globals {
         return 0;
     }
 
-    public static byte loadReqWeapon(final String[] data, final HashMap<String, Integer> dataHeaders) {
+    public static byte loadSkillReqWeapon(final String[] data, final HashMap<String, Integer> dataHeaders) {
         try {
             byte weaponData = Byte.parseByte(data[dataHeaders.get(SKILL_REQWEAPON_HEADER) + 1]);
             return (weaponData >= Globals.NUM_EQUIP_TYPES) ? -1 : weaponData;
@@ -994,7 +994,7 @@ public class Globals {
         return -1;
     }
 
-    public static String[] loadSkillData(final byte skillCode) {
+    public static String[] loadSkillRawData(final byte skillCode) {
         //Globals.log(Globals.class, "Loading Skill " + String.format("0x%02X", skillCode) + " Data...", Globals.LOG_TYPE_DATA);
         try {
             InputStream skillDataFile = Globals.loadResourceAsStream("skilldata/" + String.format("0x%02X", skillCode) + ".txt");

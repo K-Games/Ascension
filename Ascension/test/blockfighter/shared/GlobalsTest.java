@@ -211,7 +211,7 @@ public class GlobalsTest {
         String[] data = {customHeaders[0], "testBool,testBool2", customHeaders[1], "true", customHeaders[2], "false"};
 
         HashMap<String, Integer> dataHeaders = Globals.getDataHeaders(data);
-        String[] headers = Globals.loadSkillCustomHeaders(data, dataHeaders);
+        String[] headers = Globals.getSkillCustomHeaders(data, dataHeaders);
         String header = headers[0];
 
         boolean result = Globals.loadBooleanValue(data, dataHeaders, header);
@@ -231,7 +231,7 @@ public class GlobalsTest {
         String[] data = {customHeaders[0], "testDouble,testDouble2", customHeaders[1], String.valueOf(customDataValue[0]), customHeaders[2], String.valueOf(customDataValue[1])};
 
         HashMap<String, Integer> dataHeaders = Globals.getDataHeaders(data);
-        String[] headers = Globals.loadSkillCustomHeaders(data, dataHeaders);
+        String[] headers = Globals.getSkillCustomHeaders(data, dataHeaders);
         String header = headers[0];
         double result = Globals.loadDoubleValue(data, dataHeaders, header);
 
@@ -249,11 +249,11 @@ public class GlobalsTest {
 
         HashMap<String, Integer> dataHeaders = Globals.getDataHeaders(data);
 
-        assertEquals(-1, Globals.loadReqWeapon(data, dataHeaders));
+        assertEquals(-1, Globals.loadSkillReqWeapon(data, dataHeaders));
         for (int i = 0; i < Globals.NUM_EQUIP_TYPES; i++) {
             data = new String[]{Globals.SKILL_REQWEAPON_HEADER, String.valueOf(i)};
 
-            byte result = Globals.loadReqWeapon(data, dataHeaders);
+            byte result = Globals.loadSkillReqWeapon(data, dataHeaders);
             dataHeaders = Globals.getDataHeaders(data);
 
             assertEquals(i, result);
@@ -264,7 +264,7 @@ public class GlobalsTest {
     public void testLoadSkillData() {
         Globals.LOGGING = false;
         for (byte i = 0; i < Globals.NUM_SKILLS; i++) {
-            String[] result = Globals.loadSkillData(i);
+            String[] result = Globals.loadSkillRawData(i);
             assertNotNull(result);
         }
     }

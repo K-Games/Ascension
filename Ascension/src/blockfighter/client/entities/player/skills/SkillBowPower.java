@@ -22,15 +22,15 @@ public class SkillBowPower extends Skill {
 
     static {
         DISABLED_ICON = Globals.getDisabledIcon(ICON);
-        String[] data = Globals.loadSkillData(SKILL_CODE);
+        String[] data = Globals.loadSkillRawData(SKILL_CODE);
         HashMap<String, Integer> dataHeaders = Globals.getDataHeaders(data);
 
-        CUSTOM_DATA_HEADERS = Globals.loadSkillCustomHeaders(data, dataHeaders);
+        CUSTOM_DATA_HEADERS = Globals.getSkillCustomHeaders(data, dataHeaders);
         CUSTOM_VALUES = new HashMap<>(CUSTOM_DATA_HEADERS.length);
 
         SKILL_NAME = Globals.loadSkillName(data, dataHeaders);
         DESCRIPTION = Globals.loadSkillDesc(data, dataHeaders);
-        REQ_WEAPON = Globals.loadReqWeapon(data, dataHeaders);
+        REQ_WEAPON = Globals.loadSkillReqWeapon(data, dataHeaders);
         MAX_COOLDOWN = (long) Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MAXCOOLDOWN_HEADER);
         BASE_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_BASEVALUE_HEADER) * 100;
         MULT_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MULTVALUE_HEADER) * 100;
