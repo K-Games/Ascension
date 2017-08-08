@@ -6,7 +6,7 @@ Deal a powerful hit that afflicts enemies with Burn for 4 seconds.
 [reqweapon]
 0
 [reqlevel]
-0
+20
 [maxcooldown]
 12000
 [basevalue]
