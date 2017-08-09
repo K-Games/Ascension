@@ -7,7 +7,7 @@ that can absorb up to a percentage of your Max HP in damage.
 [reqweapon]
 -1
 [reqlevel]
-0
+31
 [maxcooldown]
 30000
 [basevalue]

@@ -6,7 +6,7 @@ Send enemies flying with a ferocious roar.
 [reqweapon]
 10
 [reqlevel]
-0
+10
 [maxcooldown]
 13000
 [basevalue]

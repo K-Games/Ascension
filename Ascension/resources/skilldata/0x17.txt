@@ -7,7 +7,7 @@ When taking damage over 25% of your Max HP within
 [reqweapon]
 -1
 [reqlevel]
-0
+35
 [maxcooldown]
 40000
 [basevalue]

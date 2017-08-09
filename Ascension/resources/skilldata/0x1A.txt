@@ -6,7 +6,7 @@ Gain additional damage base on Max HP.
 [reqweapon]
 -1
 [reqlevel]
-0
+35
 [maxcooldown]
 0
 [basevalue]
