@@ -47,6 +47,8 @@ public abstract class ScreenMenu extends Screen {
     ));
 
     protected long lastParticleUpdateTime = 0, lastUpdateTime = 0;
+    private long lastSaveValidateTime = 0;
+
     protected final static ConcurrentHashMap<Integer, Particle> PARTICLES = new ConcurrentHashMap<>(3);
     private static final Rectangle2D.Double[] MENU_BOX = new Rectangle2D.Double[7];
     protected boolean fadeIn = false;
@@ -99,6 +101,11 @@ public abstract class ScreenMenu extends Screen {
                     finishedFadeIn = true;
                 }
             }
+        }
+
+        if (Core.getLogicModule().getSelectedChar() != null && now - lastSaveValidateTime >= Globals.msToNs(3000)) {
+            Core.getLogicModule().getSelectedChar().validate();
+            lastSaveValidateTime = now;
         }
     }
 

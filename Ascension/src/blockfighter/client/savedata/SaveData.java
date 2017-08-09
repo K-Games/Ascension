@@ -509,5 +509,14 @@ public class SaveData {
 
     public void sortUpgradeItems() {
         Arrays.sort(this.upgrades, Comparator.nullsLast(Comparator.reverseOrder()));
+        writeSaveData(this.saveNum, this);
+    }
+
+    public void validate() {
+        for (int i = 0; i < getHotkeys().length; i++) {
+            if (getHotkeys()[i] != null && getTotalStats()[Globals.STAT_LEVEL] < getHotkeys()[i].getReqLevel()) {
+                getHotkeys()[i] = null;
+            }
+        }
     }
 }
