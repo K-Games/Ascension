@@ -152,7 +152,7 @@ public class ScreenSkills extends ScreenMenu {
                 drawSkillInfo(g, SKILL_SLOTS[this.drawInfoSkill], this.skillList[this.drawInfoSkill]);
             }
         } else if (this.drawInfoHotkey != -1) {
-            if (this.saveData.getTotalStats()[Globals.STAT_LEVEL] >= this.skillList[this.drawInfoHotkey].getReqLevel()) {
+            if (this.saveData.getTotalStats()[Globals.STAT_LEVEL] >= this.hotkeyList[this.drawInfoHotkey].getReqLevel()) {
                 drawSkillInfo(g, HOTKEY_SLOTS[this.drawInfoHotkey], this.hotkeyList[this.drawInfoHotkey]);
             }
         }
