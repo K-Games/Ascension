@@ -94,6 +94,7 @@ public class LogicModule implements Runnable {
                 updatePlayers();
                 updateMobs();
                 updateProjectiles();
+                sendPlayerUpdates();
                 this.lastUpdateTime = currentTime;
             }
 
@@ -222,38 +223,22 @@ public class LogicModule implements Runnable {
         }
     }
 
-    private void updatePlayers() {
+    private void sendPlayerUpdates() {
         final ConcurrentHashMap<Byte, Player> players = this.room.getPlayers();
-        LinkedList<Future<Player>> futures = new LinkedList<>();
 
         final LinkedList<byte[]> posDatas = new LinkedList<>();
+        final LinkedList<byte[]> stateDatas = new LinkedList<>();
 
-        this.room.clearPlayerBuckets();
-        for (final Map.Entry<Byte, Player> player : players.entrySet()) {
-            this.room.putPlayerIntoBuckets(player.getValue());
-        }
-
-        for (final Map.Entry<Byte, Player> player : players.entrySet()) {
-            futures.add(Core.SHARED_THREADPOOL.submit(player.getValue()));
-        }
-
-        for (Future<Player> task : futures) {
+        for (final Map.Entry<Byte, Player> playerEntry : players.entrySet()) {
             try {
-                Player player = task.get();
+                Player player = playerEntry.getValue();
                 if (player.isUpdatePos() && !player.isUpdateAnimState()) {
                     byte[] posData = player.getPosData();
                     posDatas.add(posData);
                 }
                 if (player.isUpdateAnimState()) {
-                    player.sendState();
-                }
-                if (!player.isConnected()) {
-                    this.room.getPlayers().remove(player.getKey());
-                    this.room.returnPlayerKey(player.getKey());
-                } else {
-                    if (this.winningPlayer == null || this.winningPlayer.getScore() < player.getScore()) {
-                        this.winningPlayer = player;
-                    }
+                    byte[] stateData = player.getStateData();
+                    stateDatas.add(stateData);
                 }
             } catch (Exception ex) {
                 Globals.logError(ex.toString(), ex);
@@ -280,6 +265,58 @@ public class LogicModule implements Runnable {
                     PacketSender.sendAll(bytes, this);
                 }
             });
+        }
+
+        if (stateDatas.size() > 0) {
+            Core.SHARED_THREADPOOL.execute(() -> {
+                final int maxPosCount = 50;
+                while (!stateDatas.isEmpty()) {
+                    int packetSize = (stateDatas.size() >= maxPosCount) ? maxPosCount : stateDatas.size();
+                    byte[] bytes = new byte[Globals.PACKET_BYTE * 1
+                            + (Globals.PACKET_BYTE * 3 + Globals.PACKET_INT * 2) * packetSize];
+                    Arrays.fill(bytes, (byte) -1);
+
+                    bytes[0] = Globals.DATA_PLAYER_SET_STATE;
+                    int bytePos = 1;
+
+                    for (int i = 0; i < maxPosCount && !stateDatas.isEmpty(); i++) {
+                        byte[] stateData = stateDatas.poll();
+                        System.arraycopy(stateData, 0, bytes, bytePos, stateData.length);
+                        bytePos += stateData.length;
+                    }
+                    PacketSender.sendAll(bytes, this);
+                }
+            });
+        }
+    }
+
+    private void updatePlayers() {
+        final ConcurrentHashMap<Byte, Player> players = this.room.getPlayers();
+        LinkedList<Future<Player>> futures = new LinkedList<>();
+
+        this.room.clearPlayerBuckets();
+        for (final Map.Entry<Byte, Player> player : players.entrySet()) {
+            this.room.putPlayerIntoBuckets(player.getValue());
+        }
+
+        for (final Map.Entry<Byte, Player> player : players.entrySet()) {
+            futures.add(Core.SHARED_THREADPOOL.submit(player.getValue()));
+        }
+
+        for (Future<Player> task : futures) {
+            try {
+                Player player = task.get();
+                if (!player.isConnected()) {
+                    this.room.getPlayers().remove(player.getKey());
+                    this.room.returnPlayerKey(player.getKey());
+                } else {
+                    if (this.winningPlayer == null || this.winningPlayer.getScore() < player.getScore()) {
+                        this.winningPlayer = player;
+                    }
+                }
+            } catch (Exception ex) {
+                Globals.logError(ex.toString(), ex);
+            }
         }
     }
 

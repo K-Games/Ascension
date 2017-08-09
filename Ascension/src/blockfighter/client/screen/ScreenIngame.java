@@ -765,15 +765,20 @@ public class ScreenIngame extends Screen {
     }
 
     private void dataPlayerSetState(final byte[] data) {
-        final byte key = data[1];
-        spawnPlayer(key);
-        final byte state = data[2];
-        final byte frame = data[3];
-        final int x = Globals.bytesToInt(Arrays.copyOfRange(data, 4, 8));
-        final int y = Globals.bytesToInt(Arrays.copyOfRange(data, 8, 12));
-        this.players.get(key).setPos(x, y);
-        this.players.get(key).setState(state);
-        this.players.get(key).setFrame(frame);
+        for (int i = 0; i < (data.length - 1) / 11; i++) {
+            final byte key = data[i * 11 + 1];
+            if (key != -1) {
+                spawnPlayer(key);
+                final byte state = data[i * 11 + 2];
+                final byte frame = data[i * 11 + 3];
+                final int x = Globals.bytesToInt(Arrays.copyOfRange(data, i * 11 + 4, i * 11 + 8));
+                final int y = Globals.bytesToInt(Arrays.copyOfRange(data, i * 11 + 8, i * 11 + 12));
+                this.players.get(key).setPos(x, y);
+                this.players.get(key).setState(state);
+                this.players.get(key).setFrame(frame);
+            }
+        }
+
     }
 
     private void dataPlayerDisconnect(final byte[] data) {

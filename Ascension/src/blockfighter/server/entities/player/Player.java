@@ -325,7 +325,7 @@ public class Player implements GameEntity, Callable<Player> {
     public void setPos(final double x, final double y) {
         this.x = this.map.getValidX(x, y);
         this.y = y;
-        sendState();
+        this.updatePos = true;
     }
 
     public void setYSpeed(final double speed) {
@@ -1533,24 +1533,23 @@ public class Player implements GameEntity, Callable<Player> {
         this.updateFacing = false;
     }
 
-    public void sendState() {
-        final byte[] bytes = new byte[Globals.PACKET_BYTE * 4 + Globals.PACKET_INT * 2];
-        bytes[0] = Globals.DATA_PLAYER_SET_STATE;
-        bytes[1] = this.key;
-        bytes[2] = this.animState;
+    public byte[] getStateData() {
+        final byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT * 2];
+        bytes[0] = this.key;
+        bytes[1] = this.animState;
         if (this.frame < 0) {
-            bytes[3] = 0;
+            bytes[2] = 0;
         } else {
-            bytes[3] = this.frame;
+            bytes[2] = this.frame;
         }
         final byte[] posXInt = Globals.intToBytes((int) this.x);
-        System.arraycopy(posXInt, 0, bytes, 4, posXInt.length);
+        System.arraycopy(posXInt, 0, bytes, 3, posXInt.length);
 
         final byte[] posYInt = Globals.intToBytes((int) this.y);
-        System.arraycopy(posYInt, 0, bytes, 8, posYInt.length);
+        System.arraycopy(posYInt, 0, bytes, 7, posYInt.length);
 
-        PacketSender.sendAll(bytes, this.logic);
         this.updateAnimState = false;
+        return bytes;
     }
 
     public void sendCooldown(final byte[] data) {
