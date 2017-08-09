@@ -47,6 +47,8 @@ public abstract class ScreenMenu extends Screen {
     ));
 
     protected long lastParticleUpdateTime = 0, lastUpdateTime = 0;
+    private long lastSaveValidateTime = 0;
+
     protected final static ConcurrentHashMap<Integer, Particle> PARTICLES = new ConcurrentHashMap<>(3);
     private static final Rectangle2D.Double[] MENU_BOX = new Rectangle2D.Double[7];
     protected boolean fadeIn = false;
@@ -100,6 +102,11 @@ public abstract class ScreenMenu extends Screen {
                 }
             }
         }
+
+        if (Core.getLogicModule().getSelectedChar() != null && now - lastSaveValidateTime >= Globals.msToNs(3000)) {
+            Core.getLogicModule().getSelectedChar().validate();
+            lastSaveValidateTime = now;
+        }
     }
 
     @Override
@@ -140,7 +147,6 @@ public abstract class ScreenMenu extends Screen {
         if (SwingUtilities.isLeftMouseButton(e)) {
             for (byte i = 0; i < MENU_BOX.length; i++) {
                 if (MENU_BOX[i].contains(scaled)) {
-                    SaveData.writeSaveData(Core.getLogicModule().getSelectedChar().getSaveNum(), Core.getLogicModule().getSelectedChar());
                     if (!(Core.getLogicModule().getScreen().getClass() == SCREEN_CLASS.get(i))) {
                         try {
                             Core.getLogicModule().setScreen(SCREEN_CLASS.get(i).newInstance());
