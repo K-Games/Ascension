@@ -497,6 +497,7 @@ public class SaveData {
                 this.keybinds[i] = -1;
             }
         }
+        writeSaveData(this.saveNum, this);
     }
 
     public void setPlayerName(final String name) {
