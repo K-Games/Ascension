@@ -6,15 +6,8 @@ import java.util.HashMap;
 
 public class SkillShieldReflect extends Skill {
 
-    public static final String CUSTOMHEADER_MAXLVLDMGREDUCT = "[maxleveldmgreduct]",
-            CUSTOMHEADER_BUFFDURATION = "[buffduration]";
-
-    private static final String[] CUSTOM_DATA_HEADERS = {
-        CUSTOMHEADER_MAXLVLDMGREDUCT,
-        CUSTOMHEADER_BUFFDURATION
-    };
-
-    private static final HashMap<String, Double> CUSTOM_VALUES = new HashMap<>(2);
+    private static final String[] CUSTOM_DATA_HEADERS;
+    private static final HashMap<String, Double> CUSTOM_VALUES;
 
     private static final byte SKILL_CODE = Globals.SHIELD_REFLECT;
     private static final BufferedImage ICON = Globals.SKILL_ICON[SKILL_CODE];
@@ -31,20 +24,24 @@ public class SkillShieldReflect extends Skill {
 
     static {
         DISABLED_ICON = Globals.getDisabledIcon(ICON);
-        String[] data = Globals.loadSkillData(SKILL_CODE);
-        HashMap<String, Integer> dataHeaders = Globals.getDataHeaders(data, CUSTOM_DATA_HEADERS);
+        String[] data = Globals.loadSkillRawData(SKILL_CODE);
+        HashMap<String, Integer> dataHeaders = Globals.getDataHeaders(data);
+
+        CUSTOM_DATA_HEADERS = Globals.getSkillCustomHeaders(data, dataHeaders);
+        CUSTOM_VALUES = new HashMap<>(CUSTOM_DATA_HEADERS.length);
 
         SKILL_NAME = Globals.loadSkillName(data, dataHeaders);
         DESCRIPTION = Globals.loadSkillDesc(data, dataHeaders);
-        REQ_WEAPON = Globals.loadReqWeapon(data, dataHeaders);
+        REQ_WEAPON = Globals.loadSkillReqWeapon(data, dataHeaders);
         MAX_COOLDOWN = (long) Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MAXCOOLDOWN_HEADER);
-        BASE_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_BASEVALUE_HEADER) * 100;
-        MULT_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MULTVALUE_HEADER) * 100;
+        BASE_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_BASEVALUE_HEADER);
+        MULT_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MULTVALUE_HEADER);
         IS_PASSIVE = Globals.loadBooleanValue(data, dataHeaders, Globals.SKILL_PASSIVE_HEADER);
         REQ_LEVEL = Globals.loadSkillReqLevel(data, dataHeaders);
-        CUSTOM_VALUES.put(CUSTOMHEADER_MAXLVLDMGREDUCT, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_MAXLVLDMGREDUCT) * 100);
-        CUSTOM_VALUES.put(CUSTOMHEADER_BUFFDURATION, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_BUFFDURATION) / 1000);
 
+        for (String customHeader : CUSTOM_DATA_HEADERS) {
+            CUSTOM_VALUES.put(customHeader, Globals.loadDoubleValue(data, dataHeaders, customHeader));
+        }
     }
 
     @Override
@@ -95,13 +92,13 @@ public class SkillShieldReflect extends Skill {
     @Override
     public void updateDesc() {
         this.skillCurLevelDesc = new String[]{
-            "Deals " + Globals.NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * this.level) + "% of damage taken."
+            "Deals " + Globals.NUMBER_FORMAT.format((BASE_VALUE + MULT_VALUE * this.level) * 100) + "% of damage taken."
         };
         this.skillNextLevelDesc = new String[]{
-            "Deals " + Globals.NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "% of damage taken."
+            "Deals " + Globals.NUMBER_FORMAT.format((BASE_VALUE + MULT_VALUE * (this.level + 1)) * 100) + "% of damage taken."
         };
         this.maxBonusDesc = new String[]{
-            "Reduce damage taken by " + Globals.NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_MAXLVLDMGREDUCT)) + "%."
+            "Reduce damage taken by " + Globals.NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOM_DATA_HEADERS[0]) * 100) + "%."
         };
     }
 

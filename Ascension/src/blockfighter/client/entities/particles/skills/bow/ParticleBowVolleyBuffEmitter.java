@@ -14,7 +14,7 @@ public class ParticleBowVolleyBuffEmitter extends Particle {
     public ParticleBowVolleyBuffEmitter(final Player p) {
         super(p);
         this.frame = 0;
-        this.duration = (int) (SkillBowVolley.getBuffDuration() * 1000);
+        this.duration = (int) (SkillBowVolley.getBuffDuration());
     }
 
     @Override

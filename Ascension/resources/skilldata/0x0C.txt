@@ -16,6 +16,8 @@ damage taken for 5 seconds.
 0.007
 [passive]
 false
+[customvalues]
+buffduration,heal,movespeedbase,movespeedmult
 [buffduration]
 5000
 [heal]

@@ -15,6 +15,8 @@ Send enemies flying with a ferocious roar.
 0.15
 [passive]
 false
+[customvalues]
+stunduration,basedefense,multdefense,multbasedefense
 [stunduration]
 2000
 [basedefense]

@@ -6,15 +6,8 @@ import java.util.HashMap;
 
 public class SkillPassiveShieldMastery extends Skill {
 
-    public static final String CUSTOMHEADER_BASEDMGREDUCT = "[basedmgreduct]",
-            CUSTOMHEADER_MULTDMGREDUCT = "[multdmgreduct]";
-
-    private static final String[] CUSTOM_DATA_HEADERS = {
-        CUSTOMHEADER_BASEDMGREDUCT,
-        CUSTOMHEADER_MULTDMGREDUCT
-    };
-
-    private static final HashMap<String, Double> CUSTOM_VALUES = new HashMap<>(2);
+    private static final String[] CUSTOM_DATA_HEADERS;
+    private static final HashMap<String, Double> CUSTOM_VALUES;
 
     private static final byte SKILL_CODE = Globals.PASSIVE_SHIELDMASTERY;
     private static final BufferedImage ICON = Globals.SKILL_ICON[SKILL_CODE];
@@ -31,20 +24,23 @@ public class SkillPassiveShieldMastery extends Skill {
 
     static {
         DISABLED_ICON = Globals.getDisabledIcon(ICON);
-        String[] data = Globals.loadSkillData(SKILL_CODE);
-        HashMap<String, Integer> dataHeaders = Globals.getDataHeaders(data, CUSTOM_DATA_HEADERS);
+        String[] data = Globals.loadSkillRawData(SKILL_CODE);
+        HashMap<String, Integer> dataHeaders = Globals.getDataHeaders(data);
+
+        CUSTOM_DATA_HEADERS = Globals.getSkillCustomHeaders(data, dataHeaders);
+        CUSTOM_VALUES = new HashMap<>(CUSTOM_DATA_HEADERS.length);
 
         SKILL_NAME = Globals.loadSkillName(data, dataHeaders);
         DESCRIPTION = Globals.loadSkillDesc(data, dataHeaders);
-        REQ_WEAPON = Globals.loadReqWeapon(data, dataHeaders);
+        REQ_WEAPON = Globals.loadSkillReqWeapon(data, dataHeaders);
         MAX_COOLDOWN = (long) Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MAXCOOLDOWN_HEADER);
-        BASE_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_BASEVALUE_HEADER) * 100;
-        MULT_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MULTVALUE_HEADER) * 100;
+        BASE_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_BASEVALUE_HEADER);
+        MULT_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MULTVALUE_HEADER);
         IS_PASSIVE = Globals.loadBooleanValue(data, dataHeaders, Globals.SKILL_PASSIVE_HEADER);
         REQ_LEVEL = Globals.loadSkillReqLevel(data, dataHeaders);
 
-        CUSTOM_VALUES.put(CUSTOMHEADER_BASEDMGREDUCT, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_BASEDMGREDUCT) * 100);
-        CUSTOM_VALUES.put(CUSTOMHEADER_MULTDMGREDUCT, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_MULTDMGREDUCT) * 100);
+        CUSTOM_VALUES.put(CUSTOM_DATA_HEADERS[0], Globals.loadDoubleValue(data, dataHeaders, CUSTOM_DATA_HEADERS[0]));
+        CUSTOM_VALUES.put(CUSTOM_DATA_HEADERS[1], Globals.loadDoubleValue(data, dataHeaders, CUSTOM_DATA_HEADERS[1]));
     }
 
     @Override
@@ -99,12 +95,12 @@ public class SkillPassiveShieldMastery extends Skill {
 //            "additional damage and take reduced damage."
 //        };
         this.skillCurLevelDesc = new String[]{
-            "Deal additional " + Globals.NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * this.level) + "% damage.",
-            "Take " + Globals.NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_BASEDMGREDUCT) + CUSTOM_VALUES.get(CUSTOMHEADER_MULTDMGREDUCT) * this.level) + "% reduced damage."
+            "Deal additional " + Globals.NUMBER_FORMAT.format((BASE_VALUE + MULT_VALUE * this.level) * 100) + "% damage.",
+            "Take " + Globals.NUMBER_FORMAT.format((CUSTOM_VALUES.get(CUSTOM_DATA_HEADERS[0]) + CUSTOM_VALUES.get(CUSTOM_DATA_HEADERS[1]) * this.level) * 100) + "% reduced damage."
         };
         this.skillNextLevelDesc = new String[]{
-            "Deal additional " + Globals.NUMBER_FORMAT.format(BASE_VALUE + MULT_VALUE * (this.level + 1)) + "% damage.",
-            "Take " + Globals.NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOMHEADER_BASEDMGREDUCT) + CUSTOM_VALUES.get(CUSTOMHEADER_MULTDMGREDUCT) * (this.level + 1)) + "% reduced damage."
+            "Deal additional " + Globals.NUMBER_FORMAT.format((BASE_VALUE + MULT_VALUE * (this.level + 1)) * 100) + "% damage.",
+            "Take " + Globals.NUMBER_FORMAT.format((CUSTOM_VALUES.get(CUSTOM_DATA_HEADERS[0]) + CUSTOM_VALUES.get(CUSTOM_DATA_HEADERS[1]) * (this.level + 1)) * 100) + "% reduced damage."
         };
     }
 

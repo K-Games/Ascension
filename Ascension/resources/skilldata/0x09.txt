@@ -16,6 +16,8 @@ violently out of the ground, freezing targets hit.
 0.2
 [passive]
 false
+[customvalues]
+basestun, maxlevelstun, maxlevelbonusproj, maxlevelbonusdamage
 [basestun]
 1500
 [maxlevelstun]

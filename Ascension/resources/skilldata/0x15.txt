@@ -16,6 +16,8 @@ additional damage and take reduced damage.
 0.002
 [passive]
 true
+[customvalues]
+basedmgreduct,multdmgreduct
 [basedmgreduct]
 0.04
 [multdmgreduct]

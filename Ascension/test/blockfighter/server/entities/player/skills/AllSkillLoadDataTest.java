@@ -43,25 +43,25 @@ public class AllSkillLoadDataTest {
         PASSIVE_STATIC(Globals.PASSIVE_STATIC, SkillPassiveStatic.class, (byte) -1, (byte) -1, null);
 
         byte skillCode;
-        Class serverClass;
+        Class<? extends Skill> serverClass;
         byte reqEquipSlot;
         byte playerCastState;
         String[] data;
         HashMap<String, Integer> dataHeaders;
         String[] customHeaders;
 
-        SkillServerClass(final byte skillCode, final Class serverClass, final byte reqEquipSlot, final byte playerCastState, final String[] customHeaders) {
+        SkillServerClass(final byte skillCode, final Class<? extends Skill> serverClass, final byte reqEquipSlot, final byte playerCastState, final String[] customHeaders) {
             this.skillCode = skillCode;
             this.serverClass = serverClass;
             this.reqEquipSlot = reqEquipSlot;
             this.playerCastState = playerCastState;
-            this.data = Globals.loadSkillData(skillCode);
+            this.data = Globals.loadSkillRawData(skillCode);
             this.customHeaders = customHeaders;
-            this.dataHeaders = Globals.getDataHeaders(data, this.customHeaders);
+            this.dataHeaders = Globals.getDataHeaders(data);
         }
     }
 
-    private Skill newSkillInstance(Class skillServerClass) {
+    private Skill newSkillInstance(Class<? extends Skill> skillServerClass) {
         try {
             Constructor<? extends Skill> constructor = skillServerClass.getDeclaredConstructor(LogicModule.class);
             return constructor.newInstance((LogicModule) null);
@@ -82,7 +82,7 @@ public class AllSkillLoadDataTest {
                 for (String customHeader : skill.customHeaders) {
                     double expResult = Globals.loadDoubleValue(data, dataHeaders, customHeader);
                     double result = skillInstance.getCustomValue(customHeader);
-                    System.out.println("Testing " + skill + ": Expected=" + expResult + " Result=" + result);
+                    System.out.println("Testing " + skill + " " + customHeader + ": Expected=" + expResult + " Result=" + result);
                     assertEquals(expResult, result, 0.0);
                 }
             } else {
@@ -172,7 +172,7 @@ public class AllSkillLoadDataTest {
             HashMap<String, Integer> dataHeaders = skill.dataHeaders;
             Skill skillInstance = newSkillInstance(skill.serverClass);
 
-            byte expResult = Globals.loadReqWeapon(data, dataHeaders);
+            byte expResult = Globals.loadSkillReqWeapon(data, dataHeaders);
             byte result = skillInstance.getReqWeapon();
             System.out.println("Testing " + skill + ": Expected=" + expResult + " Result=" + result);
             assertEquals(expResult, result);

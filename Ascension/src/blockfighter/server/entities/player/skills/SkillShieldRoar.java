@@ -9,19 +9,8 @@ import java.util.HashMap;
 
 public class SkillShieldRoar extends Skill {
 
-    public static final String CUSTOMHEADER_BASEDEF = "[basedefense]",
-            CUSTOMHEADER_MULTDEF = "[multdefense]",
-            CUSTOMHEADER_MULTBASEDEF = "[multbasedefense]",
-            CUSTOMHEADER_STUN = "[stunduration]";
-
-    public static final String[] CUSTOM_DATA_HEADERS = {
-        CUSTOMHEADER_BASEDEF,
-        CUSTOMHEADER_MULTDEF,
-        CUSTOMHEADER_STUN,
-        CUSTOMHEADER_MULTBASEDEF
-    };
-
-    private static final HashMap<String, Double> CUSTOM_VALUES = new HashMap<>(4);
+    public static final String[] CUSTOM_DATA_HEADERS;
+    private static final HashMap<String, Double> CUSTOM_VALUES;
 
     private static final byte SKILL_CODE = Globals.SHIELD_ROAR;
 
@@ -36,19 +25,22 @@ public class SkillShieldRoar extends Skill {
     private static final int SKILL_DURATION = 500;
 
     static {
-        String[] data = Globals.loadSkillData(SKILL_CODE);
-        HashMap<String, Integer> dataHeaders = Globals.getDataHeaders(data, CUSTOM_DATA_HEADERS);
+        String[] data = Globals.loadSkillRawData(SKILL_CODE);
+        HashMap<String, Integer> dataHeaders = Globals.getDataHeaders(data);
 
-        REQ_WEAPON = Globals.loadReqWeapon(data, dataHeaders);
-        REQ_LEVEL = Globals.loadSkillReqLevel(data, dataHeaders);
+        CUSTOM_DATA_HEADERS = Globals.getSkillCustomHeaders(data, dataHeaders);
+        CUSTOM_VALUES = new HashMap<>(CUSTOM_DATA_HEADERS.length);
+
+        REQ_WEAPON = Globals.loadSkillReqWeapon(data, dataHeaders);
         MAX_COOLDOWN = (long) Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MAXCOOLDOWN_HEADER);
         BASE_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_BASEVALUE_HEADER);
         MULT_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MULTVALUE_HEADER);
         IS_PASSIVE = Globals.loadBooleanValue(data, dataHeaders, Globals.SKILL_PASSIVE_HEADER);
-        CUSTOM_VALUES.put(CUSTOMHEADER_BASEDEF, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_BASEDEF));
-        CUSTOM_VALUES.put(CUSTOMHEADER_MULTDEF, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_MULTDEF));
-        CUSTOM_VALUES.put(CUSTOMHEADER_STUN, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_STUN));
-        CUSTOM_VALUES.put(CUSTOMHEADER_MULTBASEDEF, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_MULTBASEDEF));
+        REQ_LEVEL = Globals.loadSkillReqLevel(data, dataHeaders);
+
+        for (String customHeader : CUSTOM_DATA_HEADERS) {
+            CUSTOM_VALUES.put(customHeader, Globals.loadDoubleValue(data, dataHeaders, customHeader));
+        }
     }
 
     public SkillShieldRoar(final LogicModule l) {

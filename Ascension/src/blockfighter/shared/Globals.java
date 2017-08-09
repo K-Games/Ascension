@@ -894,7 +894,8 @@ public class Globals {
             SKILL_NAME_HEADER = "[name]",
             SKILL_PASSIVE_HEADER = "[passive]",
             SKILL_REQWEAPON_HEADER = "[reqweapon]",
-            SKILL_REQLEVEL_HEADER = "[reqlevel]";
+            SKILL_REQLEVEL_HEADER = "[reqlevel]",
+            SKILL_CUSTOM_VALUES_HEADER = "[customvalues]";
 
     public static final String[] DATA_HEADERS = {
         SKILL_NAME_HEADER,
@@ -904,7 +905,9 @@ public class Globals {
         SKILL_BASEVALUE_HEADER,
         SKILL_MULTVALUE_HEADER,
         SKILL_PASSIVE_HEADER,
-        SKILL_REQLEVEL_HEADER};
+        SKILL_REQLEVEL_HEADER,
+        SKILL_CUSTOM_VALUES_HEADER
+    };
 
     public static BufferedImage getDisabledIcon(BufferedImage icon) {
         GrayFilter filter = new GrayFilter(true, 15);
@@ -917,7 +920,7 @@ public class Globals {
         return result;
     }
 
-    public static HashMap<String, Integer> getDataHeaders(final String[] data, final String[] customDataHeaders) {
+    public static HashMap<String, Integer> getDataHeaders(final String[] data) {
         HashMap<String, Integer> dataHeader = new HashMap<>();
         for (int i = 0; i < data.length; i++) {
             for (String header : DATA_HEADERS) {
@@ -925,15 +928,42 @@ public class Globals {
                     dataHeader.put(header, i);
                 }
             }
-            if (customDataHeaders != null) {
-                for (String header : customDataHeaders) {
-                    if (data[i].equalsIgnoreCase(header)) {
-                        dataHeader.put(header, i);
+        }
+
+        String customHeadersRaw = loadStringValue(data, dataHeader, SKILL_CUSTOM_VALUES_HEADER);
+        if (customHeadersRaw != null) {
+            String[] customDataHeaders = customHeadersRaw.split(",");
+            for (String customDataHeader : customDataHeaders) {
+                String formattedHeader = "[" + customDataHeader.trim().toLowerCase() + "]";
+                for (int j = 0; j < data.length; j++) {
+                    if (data[j].equalsIgnoreCase(formattedHeader)) {
+                        dataHeader.put(formattedHeader, j);
                     }
                 }
             }
+
         }
         return dataHeader;
+    }
+
+    public static String[] getSkillCustomHeaders(final String[] data, final HashMap<String, Integer> dataHeaders) {
+        try {
+            String[] value = loadStringValue(data, dataHeaders, SKILL_CUSTOM_VALUES_HEADER).split(",");
+            for (int i = 0; i < value.length; i++) {
+                value[i] = "[" + value[i].trim().toLowerCase() + "]";
+            }
+            return value;
+        } catch (Exception e) {
+        }
+        return null;
+    }
+
+    public static String loadStringValue(final String[] data, final HashMap<String, Integer> dataHeaders, String header) {
+        try {
+            return data[dataHeaders.get(header) + 1];
+        } catch (Exception e) {
+        }
+        return null;
     }
 
     public static boolean loadBooleanValue(final String[] data, final HashMap<String, Integer> dataHeaders, String header) {
@@ -954,7 +984,7 @@ public class Globals {
         return 0;
     }
 
-    public static byte loadReqWeapon(final String[] data, final HashMap<String, Integer> dataHeaders) {
+    public static byte loadSkillReqWeapon(final String[] data, final HashMap<String, Integer> dataHeaders) {
         try {
             byte weaponData = Byte.parseByte(data[dataHeaders.get(SKILL_REQWEAPON_HEADER) + 1]);
             return (weaponData >= Globals.NUM_EQUIP_TYPES) ? -1 : weaponData;
@@ -964,13 +994,13 @@ public class Globals {
         return -1;
     }
 
-    public static String[] loadSkillData(final byte skillCode) {
+    public static String[] loadSkillRawData(final byte skillCode) {
         //Globals.log(Globals.class, "Loading Skill " + String.format("0x%02X", skillCode) + " Data...", Globals.LOG_TYPE_DATA);
         try {
             InputStream skillDataFile = Globals.loadResourceAsStream("skilldata/" + String.format("0x%02X", skillCode) + ".txt");
             List<String> fileLines = IOUtils.readLines(skillDataFile, "UTF-8");
             String[] data = fileLines.toArray(new String[fileLines.size()]);
-            HashMap<String, Integer> dataHeaders = Globals.getDataHeaders(data, null);
+            HashMap<String, Integer> dataHeaders = Globals.getDataHeaders(data);
             String name = Globals.loadSkillName(data, dataHeaders);
             //Globals.log(Globals.class, "Finished loading Skill " + String.format("0x%02X", skillCode) + "(" + name + ") Data...", Globals.LOG_TYPE_DATA);
             return data;

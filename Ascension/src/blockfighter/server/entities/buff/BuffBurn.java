@@ -16,13 +16,13 @@ public class BuffBurn extends Buff implements BuffDmgTakenAmp {
     public BuffBurn(final LogicModule l, final int d, final double amp, final double dmg, final Player o, final Player t) {
         super(l, d, o, t);
         this.dmgAmp = amp;
-        this.dmgPerSec = dmg * o.getSkill(Globals.SWORD_CINDER).getCustomValue(SkillSwordCinder.CUSTOMHEADER_BURNDMG);
+        this.dmgPerSec = dmg * o.getSkill(Globals.SWORD_CINDER).getCustomValue(SkillSwordCinder.CUSTOM_DATA_HEADERS[2]);
     }
 
     public BuffBurn(final LogicModule l, final int d, final double amp, final double dmg, final Player o, final Mob t) {
         super(l, d, o, t);
         this.dmgAmp = amp;
-        this.dmgPerSec = dmg * o.getSkill(Globals.SWORD_CINDER).getCustomValue(SkillSwordCinder.CUSTOMHEADER_BURNDMG);;
+        this.dmgPerSec = dmg * o.getSkill(Globals.SWORD_CINDER).getCustomValue(SkillSwordCinder.CUSTOM_DATA_HEADERS[2]);
     }
 
     @Override

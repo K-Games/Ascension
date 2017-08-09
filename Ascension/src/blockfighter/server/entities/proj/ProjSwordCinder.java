@@ -37,13 +37,13 @@ public class ProjSwordCinder extends Projectile {
     @Override
     public void applyDamage(Player target) {
         final Player owner = getOwner();
-        double bonusCritChc = owner.getSkill(Globals.SWORD_CINDER).getCustomValue(SkillSwordCinder.CUSTOMHEADER_BONUSCRITCHC);
+        double bonusCritChc = owner.getSkill(Globals.SWORD_CINDER).getCustomValue(SkillSwordCinder.CUSTOM_DATA_HEADERS[3]);
         final boolean isCrit = owner.rollCrit((owner.isSkillMaxed(Globals.SWORD_CINDER)) ? bonusCritChc : 0);
         final int damage = calculateDamage(isCrit);
         target.queueDamage(new Damage(damage, true, owner, target, isCrit));
         target.queueBuff(new BuffKnockback(this.logic, 300, (owner.getFacing() == Globals.RIGHT) ? 5 : -5, -8, owner, target));
-        double buffDuration = owner.getSkill(Globals.SWORD_CINDER).getCustomValue(SkillSwordCinder.CUSTOMHEADER_BUFFDURATION);
-        double damageAmp = owner.getSkill(Globals.SWORD_CINDER).getCustomValue(SkillSwordCinder.CUSTOMHEADER_DMGAMP);
+        double buffDuration = owner.getSkill(Globals.SWORD_CINDER).getCustomValue(SkillSwordCinder.CUSTOM_DATA_HEADERS[0]);
+        double damageAmp = owner.getSkill(Globals.SWORD_CINDER).getCustomValue(SkillSwordCinder.CUSTOM_DATA_HEADERS[1]);
         target.queueBuff(new BuffBurn(this.logic, (int) buffDuration, owner.getSkillLevel(Globals.SWORD_CINDER) * damageAmp,
                 owner.isSkillMaxed(Globals.SWORD_CINDER) ? owner.rollDamage() : 0, owner, target));
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
@@ -56,12 +56,12 @@ public class ProjSwordCinder extends Projectile {
     @Override
     public void applyDamage(Mob target) {
         final Player owner = getOwner();
-        double bonusCritChc = owner.getSkill(Globals.SWORD_CINDER).getCustomValue(SkillSwordCinder.CUSTOMHEADER_BONUSCRITCHC);
+        double bonusCritChc = owner.getSkill(Globals.SWORD_CINDER).getCustomValue(SkillSwordCinder.CUSTOM_DATA_HEADERS[3]);
         final boolean isCrit = owner.rollCrit((owner.isSkillMaxed(Globals.SWORD_CINDER)) ? bonusCritChc : 0);
         final int damage = calculateDamage(isCrit);
         target.queueDamage(new Damage(damage, true, owner, target, isCrit));
-        double buffDuration = owner.getSkill(Globals.SWORD_CINDER).getCustomValue(SkillSwordCinder.CUSTOMHEADER_BUFFDURATION);
-        double damageAmp = owner.getSkill(Globals.SWORD_CINDER).getCustomValue(SkillSwordCinder.CUSTOMHEADER_DMGAMP);
+        double buffDuration = owner.getSkill(Globals.SWORD_CINDER).getCustomValue(SkillSwordCinder.CUSTOM_DATA_HEADERS[0]);
+        double damageAmp = owner.getSkill(Globals.SWORD_CINDER).getCustomValue(SkillSwordCinder.CUSTOM_DATA_HEADERS[1]);
         target.queueBuff(new BuffBurn(this.logic, (int) buffDuration, owner.getSkillLevel(Globals.SWORD_CINDER) * damageAmp,
                 owner.isSkillMaxed(Globals.SWORD_CINDER) ? owner.rollDamage() : 0, owner, target));
     }

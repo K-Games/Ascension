@@ -12,7 +12,7 @@ public class ParticleBowStormEmitter extends Particle {
     public ParticleBowStormEmitter(final int x, final int y, final byte f) {
         super(x, y, f);
         this.frame = 0;
-        this.duration = (int) (new SkillBowStorm().getCustomValues().get(SkillBowStorm.CUSTOMHEADER_DURATION) * 1000);
+        this.duration = new SkillBowStorm().getCustomValues().get(SkillBowStorm.CUSTOM_DATA_HEADERS[1]).intValue();
     }
 
     @Override

@@ -9,19 +9,8 @@ import java.util.HashMap;
 
 public class SkillUtilityAdrenaline extends Skill {
 
-    public static final String CUSTOMHEADER_BUFFDURATION = "[buffduration]",
-            CUSTOMHEADER_HEAL = "[heal]",
-            CUSTOMHEADER_MOVESPEED_BASE = "[movespeedbase]",
-            CUSTOMHEADER_MOVESPEED_MULT = "[movespeedmult]";
-
-    public static final String[] CUSTOM_DATA_HEADERS = {
-        CUSTOMHEADER_BUFFDURATION,
-        CUSTOMHEADER_HEAL,
-        CUSTOMHEADER_MOVESPEED_BASE,
-        CUSTOMHEADER_MOVESPEED_MULT
-    };
-
-    private static final HashMap<String, Double> CUSTOM_VALUES = new HashMap<>(2);
+    public static final String[] CUSTOM_DATA_HEADERS;
+    private static final HashMap<String, Double> CUSTOM_VALUES;
 
     private static final byte SKILL_CODE = Globals.UTILITY_ADRENALINE;
     private static final boolean IS_PASSIVE;
@@ -35,19 +24,22 @@ public class SkillUtilityAdrenaline extends Skill {
     private static final int SKILL_DURATION = 350;
 
     static {
-        String[] data = Globals.loadSkillData(SKILL_CODE);
-        HashMap<String, Integer> dataHeaders = Globals.getDataHeaders(data, CUSTOM_DATA_HEADERS);
+        String[] data = Globals.loadSkillRawData(SKILL_CODE);
+        HashMap<String, Integer> dataHeaders = Globals.getDataHeaders(data);
 
-        REQ_WEAPON = Globals.loadReqWeapon(data, dataHeaders);
-        REQ_LEVEL = Globals.loadSkillReqLevel(data, dataHeaders);
+        CUSTOM_DATA_HEADERS = Globals.getSkillCustomHeaders(data, dataHeaders);
+        CUSTOM_VALUES = new HashMap<>(CUSTOM_DATA_HEADERS.length);
+
+        REQ_WEAPON = Globals.loadSkillReqWeapon(data, dataHeaders);
         MAX_COOLDOWN = (long) Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MAXCOOLDOWN_HEADER);
         BASE_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_BASEVALUE_HEADER);
         MULT_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MULTVALUE_HEADER);
         IS_PASSIVE = Globals.loadBooleanValue(data, dataHeaders, Globals.SKILL_PASSIVE_HEADER);
-        CUSTOM_VALUES.put(CUSTOMHEADER_BUFFDURATION, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_BUFFDURATION));
-        CUSTOM_VALUES.put(CUSTOMHEADER_HEAL, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_HEAL));
-        CUSTOM_VALUES.put(CUSTOMHEADER_MOVESPEED_BASE, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_MOVESPEED_BASE));
-        CUSTOM_VALUES.put(CUSTOMHEADER_MOVESPEED_MULT, Globals.loadDoubleValue(data, dataHeaders, CUSTOMHEADER_MOVESPEED_MULT));
+        REQ_LEVEL = Globals.loadSkillReqLevel(data, dataHeaders);
+
+        for (String customHeader : CUSTOM_DATA_HEADERS) {
+            CUSTOM_VALUES.put(customHeader, Globals.loadDoubleValue(data, dataHeaders, customHeader));
+        }
     }
 
     public SkillUtilityAdrenaline(final LogicModule l) {
@@ -115,7 +107,7 @@ public class SkillUtilityAdrenaline extends Skill {
 
         if (Globals.hasPastDuration(duration, getSkillDuration()) && player.getSkillCounter() == 1) {
             player.incrementSkillCounter();
-            double buffDuration = getCustomValue(CUSTOMHEADER_BUFFDURATION);
+            double buffDuration = getCustomValue(CUSTOM_DATA_HEADERS[0]);
             player.queueBuff(new BuffUtilityAdrenaline(this.logic, (int) buffDuration, BASE_VALUE + MULT_VALUE * player.getSkillLevel(Globals.UTILITY_ADRENALINE), player));
             PacketSender.sendParticle(this.logic, Globals.Particles.UTILITY_ADRENALINE_CLONE_EMITTER.getParticleCode(), player.getKey());
         }

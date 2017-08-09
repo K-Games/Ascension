@@ -15,5 +15,7 @@ Swing your blade 4 times.
 0.03
 [passive]
 false
+[customvalues]
+lifesteal
 [lifesteal]
 0.0075
