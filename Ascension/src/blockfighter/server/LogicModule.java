@@ -235,8 +235,7 @@ public class LogicModule implements Runnable {
                 if (player.isUpdatePos() && !player.isUpdateAnimState()) {
                     byte[] posData = player.getPosData();
                     posDatas.add(posData);
-                }
-                if (player.isUpdateAnimState()) {
+                } else if (player.isUpdateAnimState()) {
                     byte[] stateData = player.getStateData();
                     stateDatas.add(stateData);
                 }
