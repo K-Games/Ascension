@@ -7,7 +7,7 @@ additional damage and take reduced damage.
 [reqweapon]
 -1
 [reqlevel]
-0
+13
 [maxcooldown]
 0
 [basevalue]

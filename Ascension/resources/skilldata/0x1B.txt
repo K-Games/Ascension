@@ -6,7 +6,7 @@ Boost your natural resilience to damage.
 [reqweapon]
 -1
 [reqlevel]
-0
+27
 [maxcooldown]
 0
 [basevalue]

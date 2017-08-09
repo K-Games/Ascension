@@ -7,7 +7,7 @@ damage taken for 5 seconds.
 [reqweapon]
 -1
 [reqlevel]
-0
+24
 [maxcooldown]
 24000
 [basevalue]

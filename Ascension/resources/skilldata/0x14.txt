@@ -6,7 +6,7 @@ Increases Critical Hit Damage.
 [reqweapon]
 -1
 [reqlevel]
-0
+31
 [maxcooldown]
 0
 [basevalue]

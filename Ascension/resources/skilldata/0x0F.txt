@@ -7,7 +7,7 @@ dealing a portion of damage taken.
 [reqweapon]
 10
 [reqlevel]
-0
+6
 [maxcooldown]
 9000
 [basevalue]

@@ -2,12 +2,12 @@
 Static Charge
 [desc]
 2
-Shock a nearby enemy for damage based on your 
+Shock a nearby enemy for damage based on your
 Armour when you deal damage.
 [reqweapon]
 -1
 [reqlevel]
-0
+31
 [maxcooldown]
 0
 [basevalue]

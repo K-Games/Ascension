@@ -7,7 +7,7 @@ you gain additional Critical Hit Damage.
 [reqweapon]
 -1
 [reqlevel]
-0
+13
 [maxcooldown]
 0
 [basevalue]
