@@ -7,7 +7,7 @@ Critical Hit Chance and take reduced damage.
 [reqweapon]
 -1
 [reqlevel]
-16
+13
 [maxcooldown]
 0
 [basevalue]

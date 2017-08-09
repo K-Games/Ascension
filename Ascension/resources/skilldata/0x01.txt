@@ -8,7 +8,7 @@ Invulnerable during the skill duration.
 [reqweapon]
 0
 [reqlevel]
-13
+10
 [maxcooldown]
 16000
 [basevalue]

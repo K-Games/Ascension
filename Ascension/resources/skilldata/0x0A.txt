@@ -6,7 +6,7 @@ Launch a hail of arrows, bombarding the area.
 [reqweapon]
 11
 [reqlevel]
-8
+5
 [maxcooldown]
 12000
 [basevalue]
