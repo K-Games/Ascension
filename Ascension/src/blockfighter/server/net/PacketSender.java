@@ -5,7 +5,7 @@ import blockfighter.server.LogicModule;
 import blockfighter.server.entities.player.Player;
 import blockfighter.shared.Globals;
 import com.esotericsoftware.kryonet.Connection;
-import java.util.LinkedList;
+import java.util.ArrayDeque;
 import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
@@ -130,7 +130,7 @@ public class PacketSender implements Runnable {
     }
 
     private static byte[][] splitBatchData(final Queue<byte[]> batch) {
-        LinkedList<byte[]> packetBatch = new LinkedList<>();
+        ArrayDeque<byte[]> packetBatch = new ArrayDeque<>(batch.size());
         int packetSize = 0;
         while (!batch.isEmpty() && packetSize < Globals.PACKET_MAX_SIZE * 0.85) {
             byte[] singlePacket = batch.poll();
