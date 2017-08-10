@@ -6,7 +6,7 @@ Increases Critical Hit Chance.
 [reqweapon]
 -1
 [reqlevel]
-27
+15
 [maxcooldown]
 0
 [basevalue]

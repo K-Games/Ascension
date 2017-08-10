@@ -7,7 +7,7 @@ Armour when you deal damage.
 [reqweapon]
 -1
 [reqlevel]
-31
+20
 [maxcooldown]
 0
 [basevalue]

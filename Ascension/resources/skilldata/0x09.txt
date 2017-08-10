@@ -7,7 +7,7 @@ violently out of the ground, freezing targets hit.
 [reqweapon]
 11
 [reqlevel]
-20
+17
 [maxcooldown]
 12000
 [basevalue]

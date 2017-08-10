@@ -7,7 +7,7 @@ deal damage based on your Defense.
 [reqweapon]
 10
 [reqlevel]
-18
+16
 [maxcooldown]
 11000
 [basevalue]
