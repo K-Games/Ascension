@@ -113,7 +113,7 @@ public class PacketSender implements Runnable {
     @Override
     public void run() {
         if ((Boolean) Globals.ServerConfig.UDP_MODE.getValue()) {
-            for (final Map.Entry<Connection, ConcurrentLinkedQueue<byte[]>> entry : CONN_PACKET_BATCH.entrySet()) {
+            CONN_PACKET_BATCH.entrySet().forEach((entry) -> {
                 Connection c = entry.getKey();
                 ConcurrentLinkedQueue<byte[]> batch = entry.getValue();
                 synchronized (c) {
@@ -124,7 +124,7 @@ public class PacketSender implements Runnable {
                         sendData(c, splitBatchData(batch));
                     }
                 });
-            }
+            });
         }
 
     }

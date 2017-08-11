@@ -5,10 +5,10 @@ import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.proj.Projectile;
 import blockfighter.server.net.PacketSender;
 import blockfighter.shared.Globals;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -131,10 +131,10 @@ public class LogicModule implements Runnable {
     private void sendMatchEndRewards() {
         ArrayList<Player> sortedPlayers = new ArrayList<>(this.room.getPlayers().values());
         Collections.sort(sortedPlayers, (Player a, Player b) -> b.getScore() - a.getScore());
-        LinkedList<Player> firsts = new LinkedList<>();
-        LinkedList<Player> seconds = new LinkedList<>();
-        LinkedList<Player> thirds = new LinkedList<>();
-        LinkedList<Player> rest = new LinkedList<>();
+        ArrayDeque<Player> firsts = new ArrayDeque<>();
+        ArrayDeque<Player> seconds = new ArrayDeque<>();
+        ArrayDeque<Player> thirds = new ArrayDeque<>();
+        ArrayDeque<Player> rest = new ArrayDeque<>();
         for (Player player : sortedPlayers) {
             if (player.getScore() > 0) {
                 if (firsts.isEmpty() || firsts.getFirst().getScore() == player.getScore()) {
@@ -205,7 +205,7 @@ public class LogicModule implements Runnable {
     }
 
     private void updateMobs() {
-        LinkedList<Future<Mob>> futures = new LinkedList<>();
+        ArrayDeque<Future<Mob>> futures = new ArrayDeque<>(this.room.getMobs().size());
         for (final Map.Entry<Integer, Mob> mob : this.room.getMobs().entrySet()) {
             futures.add(Core.SHARED_THREADPOOL.submit(mob.getValue()));
         }
@@ -226,8 +226,8 @@ public class LogicModule implements Runnable {
     private void sendPlayerUpdates() {
         final ConcurrentHashMap<Byte, Player> players = this.room.getPlayers();
 
-        final LinkedList<byte[]> posDatas = new LinkedList<>();
-        final LinkedList<byte[]> stateDatas = new LinkedList<>();
+        final ArrayDeque<byte[]> posDatas = new ArrayDeque<>(this.room.getPlayers().size());
+        final ArrayDeque<byte[]> stateDatas = new ArrayDeque<>(this.room.getPlayers().size());
 
         for (final Map.Entry<Byte, Player> playerEntry : players.entrySet()) {
             try {
@@ -291,7 +291,7 @@ public class LogicModule implements Runnable {
 
     private void updatePlayers() {
         final ConcurrentHashMap<Byte, Player> players = this.room.getPlayers();
-        LinkedList<Future<Player>> futures = new LinkedList<>();
+        ArrayDeque<Future<Player>> futures = new ArrayDeque<>(players.size());
 
         this.room.clearPlayerBuckets();
         for (final Map.Entry<Byte, Player> player : players.entrySet()) {
@@ -322,7 +322,7 @@ public class LogicModule implements Runnable {
     private void updateProjectiles() {
         final ConcurrentHashMap<Integer, Projectile> projectiles = this.room.getProj();
 
-        LinkedList<Future<Projectile>> futures = new LinkedList<>();
+        ArrayDeque<Future<Projectile>> futures = new ArrayDeque<>(projectiles.size());
         for (final Map.Entry<Integer, Projectile> p : projectiles.entrySet()) {
             futures.add(Core.SHARED_THREADPOOL.submit(p.getValue()));
         }

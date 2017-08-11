@@ -8,8 +8,8 @@ import blockfighter.server.entities.player.Player;
 import blockfighter.server.net.PacketSender;
 import blockfighter.shared.Globals;
 import java.awt.geom.Rectangle2D;
+import java.util.ArrayDeque;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
@@ -27,9 +27,9 @@ public abstract class Projectile implements GameEntity, Callable<Projectile> {
     private Mob mobOwner;
 
     protected HashMap<Byte, Player> pHit = new HashMap<>();
-    protected final LinkedList<Player> playerQueue = new LinkedList<>();
+    protected final ArrayDeque<Player> playerQueue = new ArrayDeque<>();
     protected HashMap<Integer, Mob> bHit = new HashMap<>();
-    protected final LinkedList<Mob> mobQueue = new LinkedList<>();
+    protected final ArrayDeque<Mob> mobQueue = new ArrayDeque<>();
 
     protected int duration;
 

@@ -6,7 +6,7 @@ import blockfighter.shared.Globals;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.util.LinkedList;
+import java.util.ArrayDeque;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
 
@@ -50,7 +50,7 @@ public abstract class GameMap {
     }
 
     public void updateParticles() {
-        LinkedList<Future<Particle>> futures = new LinkedList<>();
+        ArrayDeque<Future<Particle>> futures = new ArrayDeque<>(this.particles.size());
         this.particles.entrySet().forEach((pEntry) -> {
             futures.add(Core.SHARED_THREADPOOL.submit(pEntry.getValue()));
         });
