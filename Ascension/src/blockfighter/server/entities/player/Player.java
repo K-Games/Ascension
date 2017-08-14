@@ -1195,7 +1195,7 @@ public class Player implements GameEntity, Callable<Player> {
 
     public void queueSkillUse(final byte[] data) {
         this.lastActionTime = this.logic.getTime();
-        if (!isDead() && this.skills.get(data[3]).canCast(this) && !isUsingSkill()) {
+        if (!isDead() && !this.skills.get(data[3]).isPassive() && this.skills.get(data[3]).canCast(this) && !isUsingSkill()) {
             this.skillUseQueue.add(data);
         }
     }
