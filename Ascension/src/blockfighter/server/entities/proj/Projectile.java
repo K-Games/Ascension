@@ -71,24 +71,24 @@ public abstract class Projectile implements GameEntity, Callable<Projectile> {
             return;
         }
         if (this.room.getMap().isPvP()) {
-            for (final Map.Entry<Byte, Player> pEntry : this.room.getPlayersNearProj(this).entrySet()) {
+            this.room.getPlayersNearProj(this).entrySet().forEach((pEntry) -> {
                 final Player p = pEntry.getValue();
                 if (p != getOwner() && !this.pHit.containsKey(p.getKey()) && !p.isDead() && !p.isInvulnerable() && p.intersectHitbox(this.hitbox[0])) {
                     this.playerQueue.add(p);
                     this.pHit.put(p.getKey(), p);
                     queueEffect(this);
                 }
-            }
+            });
         }
 
-        for (final Map.Entry<Integer, Mob> bEntry : this.room.getMobs().entrySet()) {
+        this.room.getMobs().entrySet().forEach((bEntry) -> {
             final Mob b = bEntry.getValue();
             if (!this.bHit.containsKey(b.getKey()) && b.intersectHitbox(this.hitbox[0])) {
                 this.mobQueue.add(b);
                 this.bHit.put(b.getKey(), b);
                 queueEffect(this);
             }
-        }
+        });
     }
 
     public double getX() {

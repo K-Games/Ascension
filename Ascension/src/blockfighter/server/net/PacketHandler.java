@@ -385,10 +385,10 @@ public class PacketHandler {
 
     private static void receivePlayerGetAll(final byte[] data, final LogicModule room, final Connection c) {
         final ConcurrentHashMap<Byte, Player> players = room.getRoomData().getPlayers();
-        for (final Map.Entry<Byte, Player> pEntry : players.entrySet()) {
+        players.entrySet().forEach((pEntry) -> {
             final Player player = pEntry.getValue();
             PacketSender.sendConnection(player.getData(), c);
-        }
+        });
     }
 
     private static void receivePlayerSetMove(final byte[] data, final LogicModule room, final Connection c) {

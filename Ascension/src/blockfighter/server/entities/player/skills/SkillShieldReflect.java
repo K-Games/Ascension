@@ -122,20 +122,20 @@ public class SkillShieldReflect extends Skill {
         if (this.logic.getRoomData().getMap().isPvP()) {
             ArrayList<Player> playersInRange = this.logic.getRoomData().getPlayersInRange(player, radius);
             if (!playersInRange.isEmpty()) {
-                for (Player p : playersInRange) {
+                playersInRange.forEach((p) -> {
                     final Damage dmgEntity = new Damage((int) (dmgTaken * mult), true, player, p, false, new Point2D.Double(p.getX(), p.getY()));
                     dmgEntity.setCanReflect(false);
                     p.queueDamage(dmgEntity);
-                }
+                });
             }
         } else {
             ArrayList<Mob> mobsInRange = this.logic.getRoomData().getMobsInRange(player, radius);
             if (!mobsInRange.isEmpty()) {
-                for (Mob mob : mobsInRange) {
+                mobsInRange.forEach((mob) -> {
                     final Damage dmgEntity = new Damage((int) (dmgTaken * mult), true, player, mob, false, new Point2D.Double(mob.getX(), mob.getY()));
                     dmgEntity.setCanReflect(false);
                     mob.queueDamage(dmgEntity);
-                }
+                });
             }
         }
         PacketSender.sendParticle(this.logic, Globals.Particles.SHIELD_REFLECT_HIT.getParticleCode(), player.getX(), player.getY());

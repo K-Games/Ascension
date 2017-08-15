@@ -98,16 +98,16 @@ public class PacketSender implements Runnable {
     }
 
     public static void sendAll(final byte[] data, final LogicModule room) {
-        for (final Map.Entry<Byte, Player> pEntry : room.getRoomData().getPlayers().entrySet()) {
+        room.getRoomData().getPlayers().entrySet().forEach((pEntry) -> {
             sendPlayer(data, pEntry.getValue());
-        }
+        });
     }
 
     public static void sendAllPlayerData(final LogicModule room) {
-        for (final Map.Entry<Byte, Player> pEntry : room.getRoomData().getPlayers().entrySet()) {
+        room.getRoomData().getPlayers().entrySet().forEach((pEntry) -> {
             final Player player = pEntry.getValue();
             player.sendData();
-        }
+        });
     }
 
     @Override
@@ -155,12 +155,12 @@ public class PacketSender implements Runnable {
     }
 
     public static void clearDisconnectedConnectionBatch() {
-        for (final Map.Entry<Connection, ConcurrentLinkedQueue<byte[]>> entry : CONN_PACKET_BATCH.entrySet()) {
+        CONN_PACKET_BATCH.entrySet().forEach((entry) -> {
             Connection c = entry.getKey();
             if (!c.isConnected() && CONN_PACKET_BATCH.containsKey(c)) {
                 CONN_PACKET_BATCH.remove(c);
             }
-        }
+        });
     }
 
 }

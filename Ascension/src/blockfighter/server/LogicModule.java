@@ -115,17 +115,17 @@ public class LogicModule implements Runnable {
 
     private void disconnectAllPlayers() {
         final ConcurrentHashMap<Byte, Player> players = this.room.getPlayers();
-        for (final Map.Entry<Byte, Player> player : players.entrySet()) {
+        players.entrySet().forEach((player) -> {
             player.getValue().disconnect();
-        }
+        });
     }
 
     private void sendScoreAndPing() {
         final ConcurrentHashMap<Byte, Player> players = this.room.getPlayers();
-        for (final Map.Entry<Byte, Player> player : players.entrySet()) {
+        players.entrySet().forEach((player) -> {
             player.getValue().getConnection().updateReturnTripTime();
             player.getValue().updateClientScore();
-        }
+        });
     }
 
     private void sendMatchEndRewards() {
@@ -135,7 +135,7 @@ public class LogicModule implements Runnable {
         ArrayDeque<Player> seconds = new ArrayDeque<>();
         ArrayDeque<Player> thirds = new ArrayDeque<>();
         ArrayDeque<Player> rest = new ArrayDeque<>();
-        for (Player player : sortedPlayers) {
+        sortedPlayers.forEach((player) -> {
             if (player.getScore() > 0) {
                 if (firsts.isEmpty() || firsts.getFirst().getScore() == player.getScore()) {
                     firsts.add(player);
@@ -151,40 +151,40 @@ public class LogicModule implements Runnable {
                 rest.add(player);
                 Globals.log(LogicModule.class, player.getPlayerName() + " did not place", Globals.LOG_TYPE_DATA);
             }
-        }
+        });
 
         // 1st - 3 Items + 20% exp
-        for (Player player : firsts) {
+        firsts.forEach((player) -> {
             for (int i = 0; i < 3; i++) {
                 player.giveEquipDrop(player.getStats()[Globals.STAT_LEVEL], true);
             }
             player.giveEXP(player.getStats()[Globals.STAT_MAXEXP] * 0.2);
             player.sendMatchResult(Globals.VictoryStatus.FIRST);
-        }
+        });
 
         // 2nd - 2 Items + 15% exp
-        for (Player player : seconds) {
+        seconds.forEach((player) -> {
             for (int i = 0; i < 2; i++) {
                 player.giveEquipDrop(player.getStats()[Globals.STAT_LEVEL], true);
             }
             player.giveEXP(player.getStats()[Globals.STAT_MAXEXP] * 0.15);
             player.sendMatchResult(Globals.VictoryStatus.SECOND);
-        }
+        });
 
         //3rd - 1 Item + 10% exp
-        for (Player player : thirds) {
+        thirds.forEach((player) -> {
             for (int i = 0; i < 1; i++) {
                 player.giveEquipDrop(player.getStats()[Globals.STAT_LEVEL], true);
             }
             player.giveEXP(player.getStats()[Globals.STAT_MAXEXP] * 0.1);
             player.sendMatchResult(Globals.VictoryStatus.THIRD);
-        }
+        });
 
         // Rest - 10% exp
-        for (Player player : rest) {
+        rest.forEach((player) -> {
             player.giveEXP(player.getStats()[Globals.STAT_MAXEXP] * 0.1);
             player.sendMatchResult(Globals.VictoryStatus.LAST);
-        }
+        });
     }
 
     private void updateFinishingMatch() {
@@ -206,11 +206,10 @@ public class LogicModule implements Runnable {
 
     private void updateMobs() {
         ArrayDeque<Future<Mob>> futures = new ArrayDeque<>(this.room.getMobs().size());
-        for (final Map.Entry<Integer, Mob> mob : this.room.getMobs().entrySet()) {
+        this.room.getMobs().entrySet().forEach((mob) -> {
             futures.add(Core.SHARED_THREADPOOL.submit(mob.getValue()));
-        }
-
-        for (Future<Mob> task : futures) {
+        });
+        futures.forEach((task) -> {
             try {
                 Mob mob = task.get();
                 if (mob.isDead()) {
@@ -220,7 +219,7 @@ public class LogicModule implements Runnable {
             } catch (final Exception ex) {
                 Globals.logError(ex.toString(), ex);
             }
-        }
+        });
     }
 
     private void sendPlayerUpdates() {
@@ -229,7 +228,7 @@ public class LogicModule implements Runnable {
         final ArrayDeque<byte[]> posDatas = new ArrayDeque<>(this.room.getPlayers().size());
         final ArrayDeque<byte[]> stateDatas = new ArrayDeque<>(this.room.getPlayers().size());
 
-        for (final Map.Entry<Byte, Player> playerEntry : players.entrySet()) {
+        players.entrySet().forEach((playerEntry) -> {
             try {
                 Player player = playerEntry.getValue();
                 if (player.isUpdatePos() && !player.isUpdateAnimState()) {
@@ -242,7 +241,7 @@ public class LogicModule implements Runnable {
             } catch (Exception ex) {
                 Globals.logError(ex.toString(), ex);
             }
-        }
+        });
 
         if (posDatas.size() > 0) {
             Core.SHARED_THREADPOOL.execute(() -> {
@@ -294,15 +293,13 @@ public class LogicModule implements Runnable {
         ArrayDeque<Future<Player>> futures = new ArrayDeque<>(players.size());
 
         this.room.clearPlayerBuckets();
-        for (final Map.Entry<Byte, Player> player : players.entrySet()) {
+        players.entrySet().forEach((player) -> {
             this.room.putPlayerIntoBuckets(player.getValue());
-        }
-
-        for (final Map.Entry<Byte, Player> player : players.entrySet()) {
+        });
+        players.entrySet().forEach((player) -> {
             futures.add(Core.SHARED_THREADPOOL.submit(player.getValue()));
-        }
-
-        for (Future<Player> task : futures) {
+        });
+        futures.forEach((task) -> {
             try {
                 Player player = task.get();
                 if (!player.isConnected()) {
@@ -316,18 +313,17 @@ public class LogicModule implements Runnable {
             } catch (Exception ex) {
                 Globals.logError(ex.toString(), ex);
             }
-        }
+        });
     }
 
     private void updateProjectiles() {
         final ConcurrentHashMap<Integer, Projectile> projectiles = this.room.getProj();
 
         ArrayDeque<Future<Projectile>> futures = new ArrayDeque<>(projectiles.size());
-        for (final Map.Entry<Integer, Projectile> p : projectiles.entrySet()) {
+        projectiles.entrySet().forEach((p) -> {
             futures.add(Core.SHARED_THREADPOOL.submit(p.getValue()));
-        }
-
-        for (Future<Projectile> task : futures) {
+        });
+        futures.forEach((task) -> {
             try {
                 Projectile projectile = task.get();
                 if (projectile.isExpired()) {
@@ -337,7 +333,7 @@ public class LogicModule implements Runnable {
             } catch (final Exception ex) {
                 Globals.logError(ex.toString(), ex);
             }
-        }
+        });
     }
 
     public RoomData getRoomData() {
