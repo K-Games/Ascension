@@ -85,14 +85,11 @@ public class LogicModule implements Runnable {
         }
     }
 
-    public void setMyPlayerKey(final byte key) {
+    public void setMyPlayerKey(final Byte key) {
         this.myPlayerKey = key;
     }
 
-    public byte getMyPlayerKey() {
-        if (this.myPlayerKey == null) {
-            throw new NullPointerException("myPlayerKey is null");
-        }
+    public Byte getMyPlayerKey() {
         return this.myPlayerKey;
     }
 
@@ -131,7 +128,7 @@ public class LogicModule implements Runnable {
 
     public void shutdownClient(final byte status) {
         client.shutdownClient(status);
-        setMyPlayerKey((byte) -1);
+        setMyPlayerKey(null);
     }
 
     public void startLoginAttemptTimeout() {

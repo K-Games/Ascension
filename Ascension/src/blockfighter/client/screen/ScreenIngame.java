@@ -281,7 +281,7 @@ public class ScreenIngame extends Screen {
         this.players.entrySet().forEach((pEntry) -> {
             pEntry.getValue().updatePos();
         });
-        if (this.players != null && Core.getLogicModule().getMyPlayerKey() != -1 && this.players.containsKey(Core.getLogicModule().getMyPlayerKey())) {
+        if (this.players != null && Core.getLogicModule().getMyPlayerKey() != null && this.players.containsKey(Core.getLogicModule().getMyPlayerKey())) {
             try {
                 this.map.drawBg(g, this.players.get(Core.getLogicModule().getMyPlayerKey()).getX(), this.players.get(Core.getLogicModule().getMyPlayerKey()).getY());
                 double scale = 1;
