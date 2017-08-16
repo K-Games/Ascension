@@ -25,13 +25,13 @@ public abstract class MobProjectile extends Projectile {
             return;
         }
 
-        for (final Map.Entry<Byte, Player> pEntry : this.room.getPlayers().entrySet()) {
+        this.room.getPlayers().entrySet().forEach((pEntry) -> {
             final Player p = pEntry.getValue();
             if (p != getOwner() && !this.pHit.containsKey(p.getKey()) && !p.isInvulnerable() && p.intersectHitbox(this.hitbox[0])) {
                 this.playerQueue.add(p);
                 this.pHit.put(p.getKey(), p);
                 queueEffect(this);
             }
-        }
+        });
     }
 }

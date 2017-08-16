@@ -114,16 +114,16 @@ public class SkillShieldMagnetize extends Skill {
             if (this.logic.getRoomData().getMap().isPvP()) {
                 this.playersCaught = this.logic.getRoomData().getPlayersInRange(player, radius);
                 if (!this.playersCaught.isEmpty()) {
-                    for (Player p : this.playersCaught) {
+                    this.playersCaught.forEach((p) -> {
                         PacketSender.sendParticle(this.logic, Globals.Particles.SHIELD_MAGNETIZE.getParticleCode(), player.getKey(), p.getKey());
-                    }
+                    });
                 }
             } else {
                 this.mobsCaught = this.logic.getRoomData().getMobsInRange(player, radius);
                 if (!this.mobsCaught.isEmpty()) {
-                    for (Mob mob : this.mobsCaught) {
+                    this.mobsCaught.forEach((mob) -> {
                         PacketSender.sendParticle(this.logic, Globals.Particles.SHIELD_MAGNETIZE.getParticleCode(), player.getKey(), mob.getKey());
-                    }
+                    });
                 }
             }
             player.incrementSkillCounter();
@@ -133,7 +133,7 @@ public class SkillShieldMagnetize extends Skill {
             if (this.logic.getRoomData().getMap().isPvP()) {
                 if (!this.playersCaught.isEmpty()) {
                     int numOfTicks = (int) ((500 - duration) / Globals.nsToMs(Globals.SERVER_LOGIC_UPDATE));
-                    for (Player p : this.playersCaught) {
+                    this.playersCaught.forEach((p) -> {
                         if (numOfTicks > 0) {
                             double distanceX = (player.getX() - p.getX()) / numOfTicks;
                             double distanceY = (player.getY() - p.getY()) / numOfTicks;
@@ -143,7 +143,7 @@ public class SkillShieldMagnetize extends Skill {
                             p.setXSpeed(0);
                             p.setYSpeed(0.01);
                         }
-                    }
+                    });
                 }
             }
         }

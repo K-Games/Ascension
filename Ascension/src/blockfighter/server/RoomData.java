@@ -92,9 +92,9 @@ public class RoomData {
     }
 
     public void clearPlayerBuckets() {
-        for (final Map.Entry<Integer, ConcurrentHashMap<Byte, Player>> playerBucket : this.playerBuckets.entrySet()) {
+        this.playerBuckets.entrySet().forEach((playerBucket) -> {
             playerBucket.getValue().clear();
-        }
+        });
     }
 
     public void putPlayerIntoBuckets(Player player) {
@@ -111,11 +111,11 @@ public class RoomData {
         Integer[] bucketIDs = getBucketIDsForRect(rect);
         for (int bucketID : bucketIDs) {
             if (this.playerBuckets.containsKey(bucketID)) {
-                for (final Map.Entry<Byte, Player> player : this.playerBuckets.get(bucketID).entrySet()) {
+                this.playerBuckets.get(bucketID).entrySet().forEach((player) -> {
                     if (!nearbyPlayerBuckets.containsKey(player.getKey())) {
                         nearbyPlayerBuckets.put(player.getKey(), player.getValue());
                     }
-                }
+                });
             }
         }
         return nearbyPlayerBuckets;
@@ -248,27 +248,27 @@ public class RoomData {
     public ArrayList<Player> getPlayersInRange(final Player player, final double radius) {
         Rectangle2D.Double rect = new Rectangle2D.Double(player.getX() - radius, player.getY() - radius, radius * 2, radius * 2);
         ArrayList<Player> playersInRange = new ArrayList<>((Integer) Globals.ServerConfig.MAX_PLAYERS.getValue());
-        for (final Map.Entry<Byte, Player> pEntry : getPlayersNearRect(rect).entrySet()) {
-            final Player p = pEntry.getValue();
+        getPlayersNearRect(rect).entrySet().forEach((p2) -> {
+            final Player p = p2.getValue();
             if (p != player && !p.isDead() && !p.isInvulnerable()) {
                 double distance = Math.sqrt(Math.pow((player.getX() - p.getX()), 2) + Math.pow((player.getY() - p.getY()), 2));
                 if (distance <= radius) {
                     playersInRange.add(p);
                 }
             }
-        }
+        });
         return playersInRange;
     }
 
     public ArrayList<Mob> getMobsInRange(final Player player, final double radius) {
         ArrayList<Mob> mobInRange = new ArrayList<>(getMobs().size());
-        for (final Map.Entry<Integer, Mob> bEntry : getMobs().entrySet()) {
-            final Mob b = bEntry.getValue();
+        getMobs().entrySet().forEach((mob) -> {
+            final Mob b = mob.getValue();
             double distance = Math.sqrt(Math.pow((player.getX() - b.getX()), 2) + Math.pow((player.getY() - b.getY()), 2));
             if (distance <= 100) {
                 mobInRange.add(b);
             }
-        }
+        });
         return mobInRange;
     }
 

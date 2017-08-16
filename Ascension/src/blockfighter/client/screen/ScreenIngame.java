@@ -32,9 +32,9 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
+import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -182,7 +182,7 @@ public class ScreenIngame extends Screen {
     }
 
     private void updateEmotes() {
-        LinkedList<Future<Emote>> futures = new LinkedList<>();
+        ArrayDeque<Future<Emote>> futures = new ArrayDeque<>(this.emotes.size());
         this.emotes.entrySet().forEach((emote) -> {
             futures.add(Core.SHARED_THREADPOOL.submit(emote.getValue()));
         });
@@ -200,7 +200,7 @@ public class ScreenIngame extends Screen {
     }
 
     private void updateIngameNumber() {
-        LinkedList<Future<IngameNumber>> futures = new LinkedList<>();
+        ArrayDeque<Future<IngameNumber>> futures = new ArrayDeque<>(this.ingameNumber.size());
         this.ingameNumber.entrySet().forEach((n) -> {
             futures.add(Core.SHARED_THREADPOOL.submit(n.getValue()));
         });
@@ -219,7 +219,7 @@ public class ScreenIngame extends Screen {
     }
 
     private void updateNotifications() {
-        LinkedList<Future<Notification>> futures = new LinkedList<>();
+        ArrayDeque<Future<Notification>> futures = new ArrayDeque<>(this.notifications.size());
         this.notifications.forEach((n) -> {
             futures.add(Core.SHARED_THREADPOOL.submit(n));
         });
@@ -243,7 +243,7 @@ public class ScreenIngame extends Screen {
     }
 
     private void updateMobs() {
-        LinkedList<Future<Mob>> futures = new LinkedList<>();
+        ArrayDeque<Future<Mob>> futures = new ArrayDeque<>(this.mobs.size());
         this.mobs.entrySet().forEach((pEntry) -> {
             futures.add(Core.SHARED_THREADPOOL.submit(pEntry.getValue()));
         });
@@ -257,7 +257,7 @@ public class ScreenIngame extends Screen {
     }
 
     private void updatePlayers() {
-        LinkedList<Future<Player>> futures = new LinkedList<>();
+        ArrayDeque<Future<Player>> futures = new ArrayDeque<>(this.players.size());
         this.players.entrySet().forEach((pEntry) -> {
             futures.add(Core.SHARED_THREADPOOL.submit(pEntry.getValue()));
         });

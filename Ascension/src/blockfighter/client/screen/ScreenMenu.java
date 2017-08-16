@@ -111,9 +111,9 @@ public abstract class ScreenMenu extends Screen {
 
     @Override
     public void draw(final Graphics2D g) {
-        for (final Map.Entry<Integer, Particle> pEntry : PARTICLES.entrySet()) {
+        PARTICLES.entrySet().forEach((pEntry) -> {
             pEntry.getValue().draw(g);
-        }
+        });
         if (this.fadeIn && !this.finishedFadeIn) {
             g.setColor(fadeInColor);
             g.fillRect(0, 0, Globals.WINDOW_WIDTH, Globals.WINDOW_HEIGHT);

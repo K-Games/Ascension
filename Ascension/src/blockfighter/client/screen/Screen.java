@@ -11,7 +11,7 @@ import java.awt.event.FocusListener;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.util.LinkedList;
+import java.util.ArrayDeque;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
 
@@ -38,7 +38,7 @@ public abstract class Screen implements KeyListener, MouseListener, MouseMotionL
     }
 
     public void updateParticles(final ConcurrentHashMap<Integer, Particle> updateParticles) {
-        LinkedList<Future<Particle>> futures = new LinkedList<>();
+        ArrayDeque<Future<Particle>> futures = new ArrayDeque<>(updateParticles.size());
         updateParticles.entrySet().forEach((pEntry) -> {
             futures.add(Core.SHARED_THREADPOOL.submit(pEntry.getValue()));
         });
