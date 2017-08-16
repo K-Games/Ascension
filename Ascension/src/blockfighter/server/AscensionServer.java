@@ -19,12 +19,22 @@ import javax.swing.ScrollPaneConstants;
 
 public class AscensionServer {
 
-    private static JTextArea DATA_LOG, ERROR_LOG;
+    private final static JTextArea DATA_LOG, ERROR_LOG;
     private static ConcurrentHashMap<Byte, LogicModule> SERVER_ROOMS;
     private static GameServer SERVER;
 
     static {
+        DATA_LOG = new JTextArea();
+        ERROR_LOG = new JTextArea();
+        DATA_LOG.setEditable(false);
+        DATA_LOG.setText("Data Log");
+        ERROR_LOG.setEditable(false);
+        ERROR_LOG.setText("Error Log");
+
         Globals.createLogDirectory();
+        Globals.setGUILog(DATA_LOG, ERROR_LOG);
+
+        Globals.log(AscensionServer.class, Globals.WINDOW_TITLE + " Server", Globals.LOG_TYPE_DATA);
         Globals.loadServer();
         Globals.loadServerConfig();
 
@@ -40,9 +50,7 @@ public class AscensionServer {
     }
 
     public void launch(final String[] args) {
-        System.out.println(Globals.WINDOW_TITLE + " Server");
         Globals.LOGGING = true;
-
         boolean isGUI = false;
 
         if (args.length > 0) {
@@ -52,9 +60,6 @@ public class AscensionServer {
         }
 
         if (isGUI) {
-            DATA_LOG = new JTextArea();
-            ERROR_LOG = new JTextArea();
-            Globals.setGUILog(DATA_LOG, ERROR_LOG);
             javax.swing.SwingUtilities.invokeLater(() -> {
                 createAndShowGUI();
             });
@@ -92,15 +97,10 @@ public class AscensionServer {
         final JScrollPane dataLogPane = new JScrollPane(DATA_LOG);
         dataLogPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         dataLogPane.setBounds(0, 0, 500, 300);
-        DATA_LOG.setLineWrap(true);
-        DATA_LOG.setEditable(false);
-        DATA_LOG.setText("Data Log");
 
         final JScrollPane errLogPane = new JScrollPane(ERROR_LOG);
         errLogPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         errLogPane.setBounds(0, 300, 500, 300);
-        ERROR_LOG.setEditable(false);
-        ERROR_LOG.setText("Error Log");
 
         panel.add(dataLogPane);
         panel.add(errLogPane);
