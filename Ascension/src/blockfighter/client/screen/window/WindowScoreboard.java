@@ -39,9 +39,11 @@ public class WindowScoreboard extends Window {
     private static final String SCOREBOARD_PLAYER_PING_TEXT = "Ping";
 
     private Player[] scoreboardList;
+    private final Byte myPlayerKey;
 
     public WindowScoreboard(Screen parent) {
         super(parent);
+        this.myPlayerKey = Core.getLogicModule().getMyPlayerKey();
     }
 
     @Override
@@ -79,12 +81,12 @@ public class WindowScoreboard extends Window {
                 continue;
             }
             drawScore(g, player, i);
-            if (player.getKey() == Core.getLogicModule().getMyPlayerKey()) {
+            if (player.getKey() == myPlayerKey) {
                 drawMyScore = false;
             }
         }
         if (drawMyScore) {
-            drawScore(g, ((ScreenIngame) this.parentScreen).getPlayers().get(Core.getLogicModule().getMyPlayerKey()), 10);
+            drawScore(g, ((ScreenIngame) this.parentScreen).getPlayers().get(myPlayerKey), 10);
         }
     }
 
@@ -102,7 +104,7 @@ public class WindowScoreboard extends Window {
             g.fillRoundRect(SCOREBOARD_PLAYER_NAME_X + 1, rowY, 5, SCOREBOARD_ROW_HEIGHT, 10, 10);
 
             g.setColor(Color.WHITE);
-            if (player.getKey() == Core.getLogicModule().getMyPlayerKey()) {
+            if (player.getKey() == myPlayerKey) {
                 g.drawRoundRect(SCOREBOARD_PLAYER_NAME_X, rowY, SCOREBOARD_PLAYER_NAME_COL_WIDTH, SCOREBOARD_ROW_HEIGHT, 10, 10);
                 g.drawRoundRect(SCOREBOARD_PLAYER_LEVEL_X, rowY, SCOREBOARD_PLAYER_LEVEL_COL_WIDTH, SCOREBOARD_ROW_HEIGHT, 10, 10);
                 g.drawRoundRect(SCOREBOARD_PLAYER_SCORE_X, rowY, SCOREBOARD_PLAYER_SCORE_COL_WIDTH, SCOREBOARD_ROW_HEIGHT, 10, 10);

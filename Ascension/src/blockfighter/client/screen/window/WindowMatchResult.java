@@ -33,6 +33,7 @@ public class WindowMatchResult extends Window {
     private static final Color SECOND_PLACE = new Color(188, 198, 204);
     private static final Color THIRD_PLACE = new Color(193, 115, 73);
 
+    private final Byte myPlayerKey;
     private final ConcurrentLinkedQueue<Item> ITEMS_GAINED = new ConcurrentLinkedQueue<>();
     private double expGained = 0;
     private long countdownStartTime = 0;
@@ -50,6 +51,7 @@ public class WindowMatchResult extends Window {
 
     public WindowMatchResult(Screen parent) {
         super(parent);
+        this.myPlayerKey = Core.getLogicModule().getMyPlayerKey();
     }
 
     public void startCountdown() {
@@ -172,7 +174,7 @@ public class WindowMatchResult extends Window {
             scaled = new Point2D.Double(e.getX(), e.getY());
         }
         if (RETURN_BUTTON.contains(scaled)) {
-            PacketSender.sendDisconnect(Core.getLogicModule().getConnectedRoom(), Core.getLogicModule().getMyPlayerKey());
+            PacketSender.sendDisconnect(Core.getLogicModule().getConnectedRoom(), myPlayerKey);
         }
     }
 

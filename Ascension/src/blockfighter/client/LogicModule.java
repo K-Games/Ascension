@@ -128,7 +128,6 @@ public class LogicModule implements Runnable {
 
     public void shutdownClient(final byte status) {
         client.shutdownClient(status);
-        setMyPlayerKey(null);
     }
 
     public void startLoginAttemptTimeout() {
