@@ -420,6 +420,7 @@ public class ScreenSkills extends ScreenMenu {
 
     @Override
     public void unload() {
+        SaveData.writeSaveData(Core.getLogicModule().getSelectedChar().getSaveNum(), Core.getLogicModule().getSelectedChar());
     }
 
 }
