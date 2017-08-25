@@ -7,6 +7,7 @@ import blockfighter.client.savedata.SaveData;
 import blockfighter.client.savedata.SaveDataReader;
 import blockfighter.shared.Globals;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.UUID;
 
 public class SaveDataReaderImpl extends SaveDataReader {
@@ -93,11 +94,11 @@ public class SaveDataReaderImpl extends SaveDataReader {
     @Override
     protected int readHotkeys(final byte[] data, final SaveData c, final int pos) {
         int nextPos = pos;
-        final Skill[] e = c.getHotkeys();
-        for (int i = 0; i < e.length; i++) {
+        final HashMap<Byte, Skill> e = c.getHotkeys();
+        for (byte i = 0; i < 12; i++) {
             final byte skillCode = data[nextPos];
             if (skillCode != -1) {
-                e[i] = c.getSkills()[skillCode];
+                e.put(i, c.getSkills().get(skillCode));
             }
             nextPos += 1;
         }
@@ -186,8 +187,8 @@ public class SaveDataReaderImpl extends SaveDataReader {
     @Override
     protected int readSkills(final byte[] data, final SaveData c, final int pos) {
         int nextPos = pos;
-        for (int i = 0; i < Globals.NUM_SKILLS; i++) {
-            c.getSkills()[i].setLevel(data[nextPos]);
+        for (byte i = 0; i < Globals.NUM_SKILLS; i++) {
+            c.getSkills().get(i).setLevel(data[nextPos]);
             nextPos += 1;
         }
         return nextPos;

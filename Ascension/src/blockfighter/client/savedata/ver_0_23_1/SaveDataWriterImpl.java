@@ -135,8 +135,8 @@ public class SaveDataWriterImpl extends SaveDataWriter {
     @Override
     protected int saveSkills(final byte[] data, final SaveData c, final int pos, final int numSkills) {
         int nextPos = pos;
-        for (int i = 0; i < numSkills; i++) {
-            data[nextPos] = c.getSkills()[i].getLevel();
+        for (byte i = 0; i < numSkills; i++) {
+            data[nextPos] = c.getSkills().get(i).getLevel();
             nextPos += 1;
         }
         return nextPos;
@@ -145,8 +145,8 @@ public class SaveDataWriterImpl extends SaveDataWriter {
     @Override
     protected int saveHotkeys(final byte[] data, final SaveData c, final int pos, final int numHotkeys) {
         int nextPos = pos;
-        for (int i = 0; i < numHotkeys; i++) {
-            Skill hotkey = c.getHotkeys()[i];
+        for (byte i = 0; i < numHotkeys; i++) {
+            Skill hotkey = c.getHotkeys().get(i);
             if (hotkey == null) {
                 data[nextPos] = -1;
             } else {

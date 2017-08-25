@@ -48,7 +48,7 @@ public class LogicModule implements Runnable {
     public void connect(final String server) {
         boolean skillReady = false;
         boolean equipReady = false;
-        for (Skill s : this.selectedSaveData.getHotkeys()) {
+        for (Skill s : this.selectedSaveData.getHotkeys().values()) {
             if (s != null) {
                 skillReady = true;
             }

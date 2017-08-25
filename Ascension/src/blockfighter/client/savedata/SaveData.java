@@ -4,36 +4,6 @@ import blockfighter.client.entities.items.Item;
 import blockfighter.client.entities.items.ItemEquip;
 import blockfighter.client.entities.items.ItemUpgrade;
 import blockfighter.client.entities.player.skills.Skill;
-import blockfighter.client.entities.player.skills.SkillBowArc;
-import blockfighter.client.entities.player.skills.SkillBowFrost;
-import blockfighter.client.entities.player.skills.SkillBowPower;
-import blockfighter.client.entities.player.skills.SkillBowRapid;
-import blockfighter.client.entities.player.skills.SkillBowStorm;
-import blockfighter.client.entities.player.skills.SkillBowVolley;
-import blockfighter.client.entities.player.skills.SkillPassiveBarrier;
-import blockfighter.client.entities.player.skills.SkillPassiveBowMastery;
-import blockfighter.client.entities.player.skills.SkillPassiveDualSword;
-import blockfighter.client.entities.player.skills.SkillPassiveHarmony;
-import blockfighter.client.entities.player.skills.SkillPassiveKeenEye;
-import blockfighter.client.entities.player.skills.SkillPassiveResistance;
-import blockfighter.client.entities.player.skills.SkillPassiveShadowAttack;
-import blockfighter.client.entities.player.skills.SkillPassiveShieldMastery;
-import blockfighter.client.entities.player.skills.SkillPassiveStatic;
-import blockfighter.client.entities.player.skills.SkillPassiveTough;
-import blockfighter.client.entities.player.skills.SkillPassiveVitalHit;
-import blockfighter.client.entities.player.skills.SkillPassiveWillpower;
-import blockfighter.client.entities.player.skills.SkillShieldCharge;
-import blockfighter.client.entities.player.skills.SkillShieldMagnetize;
-import blockfighter.client.entities.player.skills.SkillShieldReflect;
-import blockfighter.client.entities.player.skills.SkillShieldRoar;
-import blockfighter.client.entities.player.skills.SkillSwordCinder;
-import blockfighter.client.entities.player.skills.SkillSwordGash;
-import blockfighter.client.entities.player.skills.SkillSwordPhantom;
-import blockfighter.client.entities.player.skills.SkillSwordSlash;
-import blockfighter.client.entities.player.skills.SkillSwordTaunt;
-import blockfighter.client.entities.player.skills.SkillSwordVorpal;
-import blockfighter.client.entities.player.skills.SkillUtilityAdrenaline;
-import blockfighter.client.entities.player.skills.SkillUtilityDash;
 import blockfighter.shared.Globals;
 import java.awt.event.KeyEvent;
 import java.io.File;
@@ -76,48 +46,18 @@ public class SaveData {
     private final ItemUpgrade[] upgrades = new ItemUpgrade[100];
     private final ItemEquip[] equipment = new ItemEquip[Globals.NUM_EQUIP_SLOTS];
 
-    private final Skill[] hotkeys = new Skill[12];
-    private final Skill[] skills = new Skill[Globals.NUM_SKILLS];
+    private final HashMap<Byte, Skill> hotkeys = new HashMap<>(12);
+    private final HashMap<Byte, Skill> skills = new HashMap<>(Globals.NUM_SKILLS);
     private final int[] keybinds = new int[Globals.NUM_KEYBINDS];
 
-    public SaveData(final String n, final byte saveNumber) {
+    public SaveData(final String n, final byte saveNumber) throws InstantiationException, IllegalAccessException {
         this.saveNum = saveNumber;
         this.name = n;
         this.uniqueID = UUID.randomUUID();
         // initalize skill list
-        this.skills[Globals.SWORD_CINDER] = new SkillSwordCinder();
-        this.skills[Globals.SWORD_GASH] = new SkillSwordGash();
-        this.skills[Globals.SWORD_PHANTOM] = new SkillSwordPhantom();
-        this.skills[Globals.SWORD_SLASH] = new SkillSwordSlash();
-        this.skills[Globals.SWORD_TAUNT] = new SkillSwordTaunt();
-        this.skills[Globals.SWORD_VORPAL] = new SkillSwordVorpal();
-
-        this.skills[Globals.BOW_ARC] = new SkillBowArc();
-        this.skills[Globals.BOW_FROST] = new SkillBowFrost();
-        this.skills[Globals.BOW_POWER] = new SkillBowPower();
-        this.skills[Globals.BOW_RAPID] = new SkillBowRapid();
-        this.skills[Globals.BOW_STORM] = new SkillBowStorm();
-        this.skills[Globals.BOW_VOLLEY] = new SkillBowVolley();
-
-        this.skills[Globals.UTILITY_ADRENALINE] = new SkillUtilityAdrenaline();
-        this.skills[Globals.SHIELD_ROAR] = new SkillShieldRoar();
-        this.skills[Globals.SHIELD_CHARGE] = new SkillShieldCharge();
-        this.skills[Globals.SHIELD_REFLECT] = new SkillShieldReflect();
-        this.skills[Globals.SHIELD_MAGNETIZE] = new SkillShieldMagnetize();
-        this.skills[Globals.UTILITY_DASH] = new SkillUtilityDash();
-
-        this.skills[Globals.PASSIVE_DUALSWORD] = new SkillPassiveDualSword();
-        this.skills[Globals.PASSIVE_KEENEYE] = new SkillPassiveKeenEye();
-        this.skills[Globals.PASSIVE_VITALHIT] = new SkillPassiveVitalHit();
-        this.skills[Globals.PASSIVE_SHIELDMASTERY] = new SkillPassiveShieldMastery();
-        this.skills[Globals.PASSIVE_BARRIER] = new SkillPassiveBarrier();
-        this.skills[Globals.PASSIVE_RESIST] = new SkillPassiveResistance();
-        this.skills[Globals.PASSIVE_BOWMASTERY] = new SkillPassiveBowMastery();
-        this.skills[Globals.PASSIVE_WILLPOWER] = new SkillPassiveWillpower();
-        this.skills[Globals.PASSIVE_HARMONY] = new SkillPassiveHarmony();
-        this.skills[Globals.PASSIVE_TOUGH] = new SkillPassiveTough();
-        this.skills[Globals.PASSIVE_SHADOWATTACK] = new SkillPassiveShadowAttack();
-        this.skills[Globals.PASSIVE_STATIC] = new SkillPassiveStatic();
+        for (Globals.SkillClassMap skill : Globals.SkillClassMap.values()) {
+            this.skills.put(skill.getByteCode(), skill.getClientClass().newInstance());
+        }
         Arrays.fill(this.keybinds, -1);
     }
 
@@ -192,7 +132,7 @@ public class SaveData {
         }
     }
 
-    public static SaveData readSaveData(final byte saveNum) {
+    public static SaveData readSaveData(final byte saveNum) throws InstantiationException, IllegalAccessException {
         final SaveData c = new SaveData("", saveNum);
         final int legacyLength = LEGACY_SAVE_DATA_LENGTH;
         byte[] data;
@@ -223,11 +163,11 @@ public class SaveData {
         return reader.readSaveData(c, data);
     }
 
-    public Skill[] getHotkeys() {
+    public HashMap<Byte, Skill> getHotkeys() {
         return this.hotkeys;
     }
 
-    public Skill[] getSkills() {
+    public HashMap<Byte, Skill> getSkills() {
         return this.skills;
     }
 
@@ -306,13 +246,13 @@ public class SaveData {
         }
 
         int totalSP = 0;
-        for (final Skill s : this.skills) {
+        for (final Skill s : this.skills.values()) {
             totalSP += s.getLevel();
         }
         this.baseStats[Globals.STAT_SKILLPOINTS] = Globals.SP_PER_LEVEL * this.baseStats[Globals.STAT_LEVEL] - totalSP;
 
         if (totalSP > Globals.SP_PER_LEVEL * this.baseStats[Globals.STAT_LEVEL]) {
-            for (final Skill s : this.skills) {
+            for (final Skill s : this.skills.values()) {
                 s.setLevel((byte) 0);
             }
             this.baseStats[Globals.STAT_SKILLPOINTS] = Globals.SP_PER_LEVEL * this.baseStats[Globals.STAT_LEVEL];
@@ -380,7 +320,7 @@ public class SaveData {
     }
 
     public void resetSkill() {
-        for (final Skill skill : this.skills) {
+        for (final Skill skill : this.skills.values()) {
             skill.setLevel((byte) 0);
         }
         calcStats();
@@ -388,20 +328,20 @@ public class SaveData {
     }
 
     public void addSkill(final byte skillCode, final boolean isMax) {
-        if (this.baseStats[Globals.STAT_SKILLPOINTS] <= 0 || this.skills[skillCode].getLevel() >= 30) {
+        if (this.baseStats[Globals.STAT_SKILLPOINTS] <= 0 || this.skills.get(skillCode).getLevel() >= 30) {
             return;
         }
         if (!isMax) {
             this.baseStats[Globals.STAT_SKILLPOINTS]--;
-            this.skills[skillCode].addLevel((byte) 1);
+            this.skills.get(skillCode).addLevel((byte) 1);
         } else {
-            double skillPointsRequired = 30 - this.skills[skillCode].getLevel();
+            double skillPointsRequired = 30 - this.skills.get(skillCode).getLevel();
             double amount = skillPointsRequired;
             if (this.baseStats[Globals.STAT_SKILLPOINTS] < skillPointsRequired) {
                 amount = this.baseStats[Globals.STAT_SKILLPOINTS];
             }
             this.baseStats[Globals.STAT_SKILLPOINTS] -= amount;
-            this.skills[skillCode].addLevel((byte) amount);
+            this.skills.get(skillCode).addLevel((byte) amount);
         }
         writeSaveData(this.saveNum, this);
     }
@@ -514,9 +454,9 @@ public class SaveData {
     }
 
     public void validate() {
-        for (int i = 0; i < getHotkeys().length; i++) {
-            if (getHotkeys()[i] != null && getTotalStats()[Globals.STAT_LEVEL] < getHotkeys()[i].getReqLevel()) {
-                getHotkeys()[i] = null;
+        for (byte i = 0; i < getHotkeys().size(); i++) {
+            if (getHotkeys().get(i) != null && getTotalStats()[Globals.STAT_LEVEL] < getHotkeys().get(i).getReqLevel()) {
+                getHotkeys().remove(i);
             }
         }
     }

@@ -5,6 +5,7 @@ import blockfighter.client.entities.player.skills.Skill;
 import blockfighter.client.savedata.SaveData;
 import blockfighter.shared.Globals;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 
 public class PacketSender {
 
@@ -111,8 +112,8 @@ public class PacketSender {
             pos += temp.length;
         }
 
-        final Skill[] skills = c.getHotkeys();
-        for (Skill skill : skills) {
+        final HashMap<Byte, Skill> skills = c.getHotkeys();
+        for (Skill skill : skills.values()) {
             temp = new byte[2];
             if (skill == null) {
                 temp[0] = -1;

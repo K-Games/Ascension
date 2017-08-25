@@ -13,6 +13,8 @@ import blockfighter.shared.Globals;
 import com.esotericsoftware.kryonet.Connection;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -346,97 +348,11 @@ public class Player implements GameEntity, Callable<Player> {
 
     public void setSkill(final byte skillCode, final byte level) {
         Skill newSkill = null;
-        switch (skillCode) {
-            case Globals.SWORD_CINDER:
-                newSkill = new SkillSwordCinder(this.logic);
-                break;
-            case Globals.SWORD_GASH:
-                newSkill = new SkillSwordGash(this.logic);
-                break;
-            case Globals.SWORD_PHANTOM:
-                newSkill = new SkillSwordPhantom(this.logic);
-                break;
-            case Globals.SWORD_SLASH:
-                newSkill = new SkillSwordSlash(this.logic);
-                break;
-            case Globals.SWORD_TAUNT:
-                newSkill = new SkillSwordTaunt(this.logic);
-                break;
-            case Globals.SWORD_VORPAL:
-                newSkill = new SkillSwordVorpal(this.logic);
-                break;
-            case Globals.BOW_ARC:
-                newSkill = new SkillBowArc(this.logic);
-                break;
-            case Globals.BOW_FROST:
-                newSkill = new SkillBowFrost(this.logic);
-                break;
-            case Globals.BOW_POWER:
-                newSkill = new SkillBowPower(this.logic);
-                break;
-            case Globals.BOW_RAPID:
-                newSkill = new SkillBowRapid(this.logic);
-                break;
-            case Globals.BOW_STORM:
-                newSkill = new SkillBowStorm(this.logic);
-                break;
-            case Globals.BOW_VOLLEY:
-                newSkill = new SkillBowVolley(this.logic);
-                break;
-            case Globals.UTILITY_ADRENALINE:
-                newSkill = new SkillUtilityAdrenaline(this.logic);
-                break;
-            case Globals.SHIELD_ROAR:
-                newSkill = new SkillShieldRoar(this.logic);
-                break;
-            case Globals.SHIELD_CHARGE:
-                newSkill = new SkillShieldCharge(this.logic);
-                break;
-            case Globals.SHIELD_REFLECT:
-                newSkill = new SkillShieldReflect(this.logic);
-                break;
-            case Globals.SHIELD_MAGNETIZE:
-                newSkill = new SkillShieldMagnetize(this.logic);
-                break;
-            case Globals.UTILITY_DASH:
-                newSkill = new SkillUtilityDash(this.logic);
-                break;
-            case Globals.PASSIVE_DUALSWORD:
-                newSkill = new SkillPassiveDualSword(this.logic);
-                break;
-            case Globals.PASSIVE_KEENEYE:
-                newSkill = new SkillPassiveKeenEye(this.logic);
-                break;
-            case Globals.PASSIVE_VITALHIT:
-                newSkill = new SkillPassiveVitalHit(this.logic);
-                break;
-            case Globals.PASSIVE_SHIELDMASTERY:
-                newSkill = new SkillPassiveShieldMastery(this.logic);
-                break;
-            case Globals.PASSIVE_BARRIER:
-                newSkill = new SkillPassiveBarrier(this.logic);
-                break;
-            case Globals.PASSIVE_RESIST:
-                newSkill = new SkillPassiveResistance(this.logic);
-                break;
-            case Globals.PASSIVE_BOWMASTERY:
-                newSkill = new SkillPassiveBowMastery(this.logic);
-                break;
-            case Globals.PASSIVE_WILLPOWER:
-                newSkill = new SkillPassiveWillpower(this.logic);
-                break;
-            case Globals.PASSIVE_HARMONY:
-                newSkill = new SkillPassiveHarmony(this.logic);
-                break;
-            case Globals.PASSIVE_TOUGH:
-                newSkill = new SkillPassiveTough(this.logic);
-                break;
-            case Globals.PASSIVE_SHADOWATTACK:
-                newSkill = new SkillPassiveShadowAttack(this.logic);
-                break;
-            case Globals.PASSIVE_STATIC:
-                newSkill = new SkillPassiveStatic(this.logic);
-                break;
+        try {
+            Constructor<? extends Skill> constructor = Globals.SkillClassMap.get(skillCode).getServerClass().getDeclaredConstructor(LogicModule.class);
+            newSkill = constructor.newInstance(this.logic);
+        } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            Globals.logError(ex.toString(), ex);
         }
         if (newSkill != null) {
             newSkill.setLevel(level);

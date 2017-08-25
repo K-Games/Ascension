@@ -169,7 +169,7 @@ public class ScreenSelectChar extends ScreenMenu {
 
     }
 
-    private void mouseReleased_Create(final MouseEvent e) {
+    private void mouseReleased_Create(final MouseEvent e) throws InstantiationException, IllegalAccessException {
         Point2D.Double scaled;
         if (Globals.WINDOW_SCALE_ENABLED) {
             scaled = new Point2D.Double(e.getX() / Globals.WINDOW_SCALE, e.getY() / Globals.WINDOW_SCALE);
@@ -231,7 +231,11 @@ public class ScreenSelectChar extends ScreenMenu {
         }
         if (SwingUtilities.isLeftMouseButton(e)) {
             if (this.createPrompt) {
-                mouseReleased_Create(e);
+                try {
+                    mouseReleased_Create(e);
+                } catch (InstantiationException | IllegalAccessException ex) {
+                    Globals.logError(ex.toString(), ex);
+                }
                 return;
             }
             for (byte i = 0; i < SELECT_BOX.length; i++) {
