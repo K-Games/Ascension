@@ -79,8 +79,8 @@ public class SkillPassiveDualSword extends SkillPassive {
 
     @Override
     public boolean canCast(final Player player) {
-        return Items.getItemType(player.getEquips()[Globals.EQUIP_WEAPON]) == Globals.ITEM_SWORD
-                && Items.getItemType(player.getEquips()[Globals.EQUIP_OFFHAND]) == Globals.ITEM_SWORD;
+        return Globals.getEquipType(player.getEquips()[Globals.EQUIP_WEAPON]) == Globals.ITEM_SWORD
+                && Globals.getEquipType(player.getEquips()[Globals.EQUIP_OFFHAND]) == Globals.ITEM_SWORD;
     }
 
     @Override

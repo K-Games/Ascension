@@ -5,7 +5,6 @@ import blockfighter.server.RoomData;
 import blockfighter.server.entities.GameEntity;
 import blockfighter.server.entities.buff.*;
 import blockfighter.server.entities.damage.Damage;
-import blockfighter.server.entities.items.Items;
 import blockfighter.server.entities.player.skills.*;
 import blockfighter.server.maps.GameMap;
 import blockfighter.server.net.PacketSender;
@@ -896,8 +895,8 @@ public class Player implements GameEntity, Callable<Player> {
         double totalCritChance = this.stats[Globals.STAT_CRITCHANCE] + bonusCritChance;
         // Dual Sword Passive
         if (hasSkill(Globals.PASSIVE_DUALSWORD)
-                && Items.getItemType(this.equips[Globals.EQUIP_WEAPON]) == Globals.ITEM_SWORD
-                && Items.getItemType(this.equips[Globals.EQUIP_WEAPON]) == Globals.ITEM_SWORD) {
+                && Globals.getEquipType(this.equips[Globals.EQUIP_WEAPON]) == Globals.ITEM_SWORD
+                && Globals.getEquipType(this.equips[Globals.EQUIP_WEAPON]) == Globals.ITEM_SWORD) {
             // Check if has Dual Sword passive AND Mainhand/Offhand are both Swords.
             double baseValue = getSkill(Globals.PASSIVE_DUALSWORD).getBaseValue();
             double multValue = getSkill(Globals.PASSIVE_DUALSWORD).getMultValue();

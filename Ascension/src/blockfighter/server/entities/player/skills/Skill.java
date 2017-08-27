@@ -62,7 +62,7 @@ public abstract class Skill {
     }
 
     public boolean canCast(final Player player) {
-        return !isPassive() && (getReqWeapon() == -1 || getReqEquipSlot() == -1 || Items.getItemType(player.getEquips()[getReqEquipSlot()]) == getReqWeapon())
+        return !isPassive() && (getReqWeapon() == -1 || getReqEquipSlot() == -1 || Globals.getEquipType(player.getEquips()[getReqEquipSlot()]) == getReqWeapon())
                 && canCast() && player.getStats()[Globals.STAT_LEVEL] >= getReqLevel();
     }
 

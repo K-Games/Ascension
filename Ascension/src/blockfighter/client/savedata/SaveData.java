@@ -79,7 +79,7 @@ public class SaveData {
             addItem(new ItemUpgrade(ItemUpgrade.ITEM_TOME, (int) this.baseStats[Globals.STAT_LEVEL]));
         }
 
-        Globals.ITEM_CODES.stream().map((itemCode) -> new ItemEquip(itemCode, this.baseStats[Globals.STAT_LEVEL], Globals.TEST_MAX_LEVEL)).forEachOrdered((startEq) -> {
+        Globals.ITEM_EQUIP_CODES.stream().map((itemCode) -> new ItemEquip(itemCode, this.baseStats[Globals.STAT_LEVEL], Globals.TEST_MAX_LEVEL)).forEachOrdered((startEq) -> {
             addItem(startEq);
         });
 
@@ -407,7 +407,7 @@ public class SaveData {
     }
 
     public void addItem(final ItemEquip e) {
-        int equipTab = e.getItemType();
+        int equipTab = e.getEquipType();
         if (equipTab == Globals.ITEM_SHIELD || equipTab == Globals.ITEM_ARROW || equipTab == Globals.ITEM_BOW) {
             equipTab = Globals.EQUIP_WEAPON;
         }

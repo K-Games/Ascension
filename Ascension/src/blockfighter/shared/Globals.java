@@ -125,6 +125,41 @@ public class Globals {
 
     public final static int NUM_SOUND_EFFECTS = 0;
 
+    public static byte getEquipType(final int i) {
+        if (i >= 100000 && i <= 109999) {
+            // Swords
+            return Globals.ITEM_SWORD;
+        } else if (i >= 110000 && i <= 119999) {
+            // Shields
+            return Globals.ITEM_SHIELD;
+        } else if (i >= 120000 && i <= 129999) {
+            // Bows
+            return Globals.ITEM_BOW;
+        } else if (i >= 130000 && i <= 199999) {
+            // Arrow Enchantments
+            return Globals.ITEM_ARROW;
+        } else if (i >= 200000 && i <= 209999) {
+            return Globals.ITEM_HEAD;
+        } else if (i >= 300000 && i <= 309999) {
+            return Globals.ITEM_CHEST;
+        } else if (i >= 400000 && i <= 409999) {
+            return Globals.ITEM_PANTS;
+        } else if (i >= 500000 && i <= 509999) {
+            return Globals.ITEM_SHOULDER;
+        } else if (i >= 600000 && i <= 609999) {
+            return Globals.ITEM_GLOVE;
+        } else if (i >= 700000 && i <= 709999) {
+            return Globals.ITEM_SHOE;
+        } else if (i >= 800000 && i <= 809999) {
+            return Globals.ITEM_BELT;
+        } else if (i >= 900000 && i <= 909999) {
+            return Globals.ITEM_RING;
+        } else if (i >= 1000000 && i <= 1009999) {
+            return Globals.ITEM_AMULET;
+        }
+        return -1;
+    }
+
     public enum GameMaps {
         FIELD((byte) 0x00, "Field", blockfighter.client.maps.GameMapArena.class, blockfighter.server.maps.GameMapArena.class),
         GRAND_LIBRARY((byte) 0x01, "Grand Library", blockfighter.client.maps.GameMapAsymArena.class, blockfighter.server.maps.GameMapAsymArena.class),
@@ -953,8 +988,9 @@ public class Globals {
 
     public final static double GRAVITY = 0.4, MAX_FALLSPEED = 15, WALK_SPEED = 3.8;
 
-    public final static HashSet<Integer> ITEM_CODES = new HashSet<>();
-    public static final HashSet<Integer> ITEM_UPGRADE_CODES = new HashSet<>();
+    public final static HashSet<Integer> ITEM_EQUIP_CODES = new HashSet<>();
+    public final static HashSet<Integer> ITEM_UPGRADE_CODES = new HashSet<>();
+    public final static HashMap<Byte, HashSet<Integer>> ITEM_EQUIP_TYPE_CODES_MAP = new HashMap<>(NUM_EQUIP_TYPES);
 
     public static final String SKILL_BASEVALUE_HEADER = "[basevalue]",
             SKILL_DESC_HEADER = "[desc]",
@@ -1553,13 +1589,22 @@ public class Globals {
                     String line = it.nextLine();
                     try {
                         int itemcode = Integer.parseInt(line);
-                        ITEM_CODES.add(itemcode);
+                        ITEM_EQUIP_CODES.add(itemcode);
                     } catch (NumberFormatException e) {
                     }
                 }
             } finally {
                 LineIterator.closeQuietly(it);
             }
+
+            for (byte equipType = 0; equipType < NUM_EQUIP_TYPES; equipType++) {
+                ITEM_EQUIP_TYPE_CODES_MAP.put(equipType, new HashSet<>(10));
+            }
+
+            for (int equipCode : ITEM_EQUIP_CODES) {
+                ITEM_EQUIP_TYPE_CODES_MAP.get(getEquipType(equipCode)).add(equipCode);
+            }
+
         } catch (IOException e) {
             Globals.logError("Could not load item codes from data", e);
             System.exit(102);

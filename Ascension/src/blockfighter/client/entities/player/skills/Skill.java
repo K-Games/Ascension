@@ -56,7 +56,7 @@ public abstract class Skill {
         g.drawString(getSkillName(), drawX + 80, drawY + 30);
         g.setFont(Globals.ARIAL_15PT);
         if (getReqWeapon() != -1) {
-            g.drawString("Level: " + this.level + " - Requires " + ItemEquip.getItemTypeName(getReqWeapon()), drawX + 80, drawY + 50);
+            g.drawString("Level: " + this.level + " - Requires " + ItemEquip.getEquipTypeName(getReqWeapon()), drawX + 80, drawY + 50);
         } else {
             g.drawString("Level: " + this.level, drawX + 80, drawY + 50);
         }
@@ -134,7 +134,7 @@ public abstract class Skill {
         }
         boxHeight = ((this.level < 30) ? 130 : 105) + getDesc().length * 20 + skillCurLevelDesc.length * 20 + ((this.level < 30) ? skillNextLevelDesc.length * 20 : 0) + ((isPassive()) ? 20 : maxBonusDesc.length * 20 + 25);
 
-        boxWidth = fontMetric.stringWidth("Level: " + this.level + " - Requires " + ItemEquip.getItemTypeName(getReqWeapon())) + 90;
+        boxWidth = fontMetric.stringWidth("Level: " + this.level + " - Requires " + ItemEquip.getEquipTypeName(getReqWeapon())) + 90;
         for (String s : getDesc()) {
             boxWidth = Math.max(boxWidth, fontMetric.stringWidth(s) + 20);
         }
