@@ -1,2 +1,4 @@
 [name]
 Pantaloons
+[desc]
+Do these look fat on me?

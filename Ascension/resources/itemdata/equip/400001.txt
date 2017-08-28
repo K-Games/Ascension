@@ -1,2 +1,4 @@
 [name]
 Moonlight Gleam
+[desc]
+A concord of light.
