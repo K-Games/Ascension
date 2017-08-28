@@ -5,6 +5,16 @@
 ## Version 0.25.0
 
 ### Gameplay Changes
+* Save file location have been moved to `%USERPROFILE%/K-Games/Ascension` on Windows and `~/K-Games/Ascension` on OSX
+	* Your current save files are in the game installation directory.
+	* Move them to the new location to keep your save file.
+* Skills
+	* Added level requirement to unlock and use Skills.
+		* To lessen the decision burden from new players and emphasis progression.
+* Score to win is now updated dynamically to match server rules.
+* New characters now only begin with a weapon of each type.(Sword, Shield, Bow, Arrow Enchantment)
+* Updated some Equipment descriptions.
+* Equipment drops determine equipment type before equipment to evenly distributed for each type's drop rate.
 
 #### Stats
 
@@ -15,18 +25,40 @@
 #### Skill Changes
 
 ##### Sword
-
+* Phantom Reaper
+	* Time between strikes increased by 50%.
+	
 ##### Bow
 
 ##### Shield
-
+* Reflect Damage
+	* Level 30 Bonus Reworked
+		* No longer reflect damage received by other players.
+		* Added 33% damage reduction. Stacks multiplicatively with other damage reduction buffs.
+* Overwhelm
+	* No longer knocks back.
+	* Players are dragged and stunned when hit by charge.
+		* This change makes Overwhelm a consistent Skill that brings players within melee range.
+	
 ##### Utility
 
 ##### Passive
 
 ### Client Changes
+* Moved save files to user home directory.
+* Abstracted ingame scoreboard to a Window class.
+* Skill data have `[reqlevel]` header and now define their own custom headers.
+* Rearranged some Skills to match new level requirements.
+* Validate and remove any Skills not meeting level requirement assigned in hotkeys.
+* Fixed sRGB chunks in splash art.
+* Fixed -1 being an invalid player key.
+* Minor performance improvement.
+* Simplified Skills data structure for adding new Skills.
 
 ### Server Changes
+* Added support for 255 max players in a room.
+* Player states are now sent in batches like player positions.
+* Fixed Passive Skills hotkey being queued in player actions.
 
 ---
 
