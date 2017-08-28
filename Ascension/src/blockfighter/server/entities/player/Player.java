@@ -5,7 +5,6 @@ import blockfighter.server.RoomData;
 import blockfighter.server.entities.GameEntity;
 import blockfighter.server.entities.buff.*;
 import blockfighter.server.entities.damage.Damage;
-import blockfighter.server.entities.items.Items;
 import blockfighter.server.entities.player.skills.*;
 import blockfighter.server.maps.GameMap;
 import blockfighter.server.net.PacketSender;
@@ -896,8 +895,8 @@ public class Player implements GameEntity, Callable<Player> {
         double totalCritChance = this.stats[Globals.STAT_CRITCHANCE] + bonusCritChance;
         // Dual Sword Passive
         if (hasSkill(Globals.PASSIVE_DUALSWORD)
-                && Items.getItemType(this.equips[Globals.EQUIP_WEAPON]) == Globals.ITEM_SWORD
-                && Items.getItemType(this.equips[Globals.EQUIP_WEAPON]) == Globals.ITEM_SWORD) {
+                && Globals.getEquipType(this.equips[Globals.EQUIP_WEAPON]) == Globals.ITEM_SWORD
+                && Globals.getEquipType(this.equips[Globals.EQUIP_WEAPON]) == Globals.ITEM_SWORD) {
             // Check if has Dual Sword passive AND Mainhand/Offhand are both Swords.
             double baseValue = getSkill(Globals.PASSIVE_DUALSWORD).getBaseValue();
             double multValue = getSkill(Globals.PASSIVE_DUALSWORD).getMultValue();
@@ -960,6 +959,10 @@ public class Player implements GameEntity, Callable<Player> {
     }
 
     public void giveEquipDrop(final double lvl, final boolean guaranteed) {
+        giveEquipDrop(lvl, null, guaranteed);
+    }
+
+    public void giveEquipDrop(final double lvl, final Byte equipType, final boolean guaranteed) {
         if (Globals.rng((Integer) Globals.ServerConfig.EQUIP_DROP_RATE_ROLL.getValue()) < (Integer) Globals.ServerConfig.EQUIP_DROP_SUCCESS_RATE.getValue() || guaranteed) {
             final byte[] bytes = new byte[Globals.PACKET_BYTE + Globals.PACKET_INT * 2];
             bytes[0] = Globals.DATA_PLAYER_GIVEDROP;
@@ -967,11 +970,23 @@ public class Player implements GameEntity, Callable<Player> {
             final byte[] level = Globals.intToBytes((int) lvl);
             System.arraycopy(level, 0, bytes, 1, level.length);
 
-            Integer[] equipCodes = Globals.ITEM_CODES.toArray(new Integer[Globals.ITEM_CODES.size()]);
-            final byte[] itemCode = Globals.intToBytes(equipCodes[Globals.rng(equipCodes.length)]);
-            System.arraycopy(itemCode, 0, bytes, 5, itemCode.length);
+            // Fetch random item equip type table
+            HashSet<Integer> equipsOfType;
+            if (equipType != null) {
+                equipsOfType = Globals.ITEM_EQUIP_TYPE_CODES_MAP.get(equipType);
+            } else {
+                equipsOfType = Globals.ITEM_EQUIP_TYPE_CODES_MAP.get((byte) Globals.rng(Globals.ITEM_EQUIP_TYPE_CODES_MAP.size()));
+            }
 
-            PacketSender.sendPlayer(bytes, this);
+            if (equipsOfType != null) {
+                // Random code from type
+                Integer[] equipCodes = equipsOfType.toArray(new Integer[equipsOfType.size()]);
+
+                final byte[] itemCode = Globals.intToBytes(equipCodes[Globals.rng(equipCodes.length)]);
+                System.arraycopy(itemCode, 0, bytes, 5, itemCode.length);
+
+                PacketSender.sendPlayer(bytes, this);
+            }
         }
     }
 

@@ -1,7 +1,6 @@
 package blockfighter.server.entities.player.skills;
 
 import blockfighter.server.LogicModule;
-import blockfighter.server.entities.items.Items;
 import blockfighter.server.entities.player.Player;
 import blockfighter.shared.Globals;
 import java.util.HashMap;
@@ -79,8 +78,8 @@ public class SkillPassiveShieldMastery extends SkillPassive {
 
     @Override
     public boolean canCast(final Player player) {
-        return Items.getItemType(player.getEquips()[Globals.EQUIP_WEAPON]) == Globals.ITEM_SWORD
-                && Items.getItemType(player.getEquips()[Globals.EQUIP_OFFHAND]) == Globals.ITEM_SHIELD;
+        return Globals.getEquipType(player.getEquips()[Globals.EQUIP_WEAPON]) == Globals.ITEM_SWORD
+                && Globals.getEquipType(player.getEquips()[Globals.EQUIP_OFFHAND]) == Globals.ITEM_SHIELD;
     }
 
     @Override
