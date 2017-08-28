@@ -75,13 +75,23 @@ public class SaveData {
             this.inventory[i] = new ItemEquip[100];
         }
 
-        for (int i = 0; i < 5; i++) {
-            addItem(new ItemUpgrade(ItemUpgrade.ITEM_TOME, (int) this.baseStats[Globals.STAT_LEVEL]));
+        if (testMax) {
+            for (int i = 0; i < 5; i++) {
+                addItem(new ItemUpgrade(ItemUpgrade.ITEM_TOME, (int) this.baseStats[Globals.STAT_LEVEL]));
+            }
+            Globals.ITEM_EQUIP_CODES.stream().map((itemCode) -> new ItemEquip(itemCode, this.baseStats[Globals.STAT_LEVEL], Globals.TEST_MAX_LEVEL)).forEachOrdered((startEq) -> {
+                addItem(startEq);
+            });
+        } else {
+            // Insanity Blade
+            addItem(new ItemEquip(100000, this.baseStats[Globals.STAT_LEVEL], false));
+            // Poor Man's Shield
+            addItem(new ItemEquip(110000, this.baseStats[Globals.STAT_LEVEL], false));
+            // Eaglethorn
+            addItem(new ItemEquip(120000, this.baseStats[Globals.STAT_LEVEL], false));
+            // Silver Gems
+            addItem(new ItemEquip(130000, this.baseStats[Globals.STAT_LEVEL], false));
         }
-
-        Globals.ITEM_EQUIP_CODES.stream().map((itemCode) -> new ItemEquip(itemCode, this.baseStats[Globals.STAT_LEVEL], Globals.TEST_MAX_LEVEL)).forEachOrdered((startEq) -> {
-            addItem(startEq);
-        });
 
         this.keybinds[Globals.KEYBIND_SKILL1] = KeyEvent.VK_Q;
         this.keybinds[Globals.KEYBIND_SKILL2] = KeyEvent.VK_W;

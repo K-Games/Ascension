@@ -1,2 +1,4 @@
 [name]
 Moonlight Glint
+[desc]
+A harmony of hope.

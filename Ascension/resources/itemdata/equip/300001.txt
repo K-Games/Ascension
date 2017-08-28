@@ -1,2 +1,4 @@
 [name]
 Moonlight Cuirass
+[desc]
+A symphony of stars.

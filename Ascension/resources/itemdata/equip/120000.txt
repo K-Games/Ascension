@@ -1,4 +1,4 @@
 [name]
-Eaglehorn
+Eaglethorn
 [Desc]
-A legendary bow that cannot miss.
+Crafted from the talons of a rare mythical bird.

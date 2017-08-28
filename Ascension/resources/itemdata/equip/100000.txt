@@ -1,4 +1,4 @@
 [name]
 Insanity Blade
 [desc]
-Ignore the voices that whispers from this blade.
+Madness and insanity manifests within this blade.
