@@ -9,7 +9,6 @@ import blockfighter.shared.Globals;
 import com.esotericsoftware.kryonet.Connection;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -230,7 +229,7 @@ public class PacketHandler {
 
         if (roomData.containsPlayerID(id)) {
             if (roomData.getPlayers().get(roomData.getPlayerKey(id)).getConnection() == c) {
-                final byte[] bytes = new byte[Globals.PACKET_BYTE * 4];
+                final byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
                 bytes[0] = Globals.DATA_PLAYER_CREATE;
                 bytes[1] = roomData.getMap().getMapCode();
                 bytes[2] = roomData.getPlayerKey(id);
@@ -301,10 +300,14 @@ public class PacketHandler {
         desc += "Equips=" + Arrays.toString(newPlayer.getEquips()) + "\n";
         Globals.log(PacketHandler.class, "DATA_PLAYER_CREATE " + c + " Queueing new player <" + newPlayer.getPlayerName() + "> into room " + roomData.getRoomIndex() + ". Key: " + String.format("0x%02X", freeKey) + desc, Globals.LOG_TYPE_DATA);
 
-        final byte[] bytes = new byte[Globals.PACKET_BYTE * 4];
+        final byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT];
         bytes[0] = Globals.DATA_PLAYER_CREATE;
         bytes[1] = roomData.getMap().getMapCode();
         bytes[2] = freeKey;
+
+        final byte[] winScore = Globals.intToBytes((int) (Integer) Globals.ServerConfig.WIN_SCORE_COUNT.getValue());
+        System.arraycopy(winScore, 0, bytes, 3, winScore.length);
+
         PacketSender.sendConnection(bytes, c);
         GameServer.addPlayerConnection(c, newPlayer);
 

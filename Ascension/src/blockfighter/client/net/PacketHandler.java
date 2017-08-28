@@ -7,6 +7,7 @@ import blockfighter.client.screen.ScreenIngame;
 import blockfighter.client.screen.ScreenLoading;
 import blockfighter.client.screen.ScreenServerList;
 import blockfighter.shared.Globals;
+import java.util.Arrays;
 
 public class PacketHandler {
 
@@ -35,6 +36,7 @@ public class PacketHandler {
         final byte mapCode = data[1],
                 key = data[2];
 
+        final int matchScore = Globals.bytesToInt(Arrays.copyOfRange(data, 3, 7));
         Core.getLogicModule().stopCharacterLoginAttemptTimeout();
         Core.getLogicModule().setMyPlayerKey(key);
         final ScreenLoading loading = new ScreenLoading();
@@ -49,6 +51,7 @@ public class PacketHandler {
             }
             Globals.log(PacketHandler.class, "Finished loading.", Globals.LOG_TYPE_DATA);
             ScreenIngame ingameScreen = new ScreenIngame(loading.getLoadedMap(), gameClient);
+            ingameScreen.setMatchWinScore(matchScore);
             Core.getLogicModule().setScreen(ingameScreen);
             PacketSender.sendGetAll(Core.getLogicModule().getConnectedRoom(), key);
         } catch (final Exception e) {
