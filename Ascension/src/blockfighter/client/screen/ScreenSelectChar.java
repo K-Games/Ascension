@@ -35,6 +35,7 @@ public class ScreenSelectChar extends ScreenMenu {
     private static final Rectangle[] SELECT_BOX = new Rectangle[3];
 
     private byte selectNum = -1;
+    private boolean savesLoaded = false;
 
     static {
         CREATE_NAMEFIELD.addFocusListener(Core.FOCUS_HANDLER);
@@ -59,7 +60,6 @@ public class ScreenSelectChar extends ScreenMenu {
 
     public ScreenSelectChar(final boolean fadeIn) {
         super(fadeIn);
-        loadSaveData();
     }
 
     public ScreenSelectChar() {
@@ -78,6 +78,15 @@ public class ScreenSelectChar extends ScreenMenu {
             }
         }
         Globals.log(ScreenSelectChar.class, "Finished loading Save Data.", Globals.LOG_TYPE_DATA);
+        this.savesLoaded = true;
+    }
+
+    @Override
+    public void update() {
+        super.update();
+        if (!savesLoaded) {
+            loadSaveData();
+        }
     }
 
     @Override

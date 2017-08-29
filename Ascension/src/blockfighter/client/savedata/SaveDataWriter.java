@@ -21,4 +21,5 @@ public abstract class SaveDataWriter {
 
     protected abstract int saveItems(final byte[] data, final ItemEquip[] e, final int pos, final int numSlots);
 
+    protected abstract int saveHash(final byte[] data, final int pos);
 }

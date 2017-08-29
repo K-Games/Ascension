@@ -193,4 +193,9 @@ public class SaveDataReaderImpl extends SaveDataReader {
         }
         return nextPos;
     }
+
+    @Override
+    protected int readHash(byte[] data, int pos) {
+        return pos;
+    }
 }

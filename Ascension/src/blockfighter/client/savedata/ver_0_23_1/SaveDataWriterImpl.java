@@ -209,4 +209,8 @@ public class SaveDataWriterImpl extends SaveDataWriter {
         return nextPos;
     }
 
+    @Override
+    protected int saveHash(byte[] data, int pos) {
+        return pos;
+    }
 }

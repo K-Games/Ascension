@@ -21,4 +21,5 @@ public abstract class SaveDataReader {
 
     protected abstract int readSkills(final byte[] data, final SaveData c, final int pos);
 
+    protected abstract int readHash(final byte[] data, final int pos);
 }

@@ -17,18 +17,22 @@ import org.apache.commons.io.FileUtils;
 public class SaveData {
 
     private static final int LEGACY_SAVE_DATA_LENGTH = 45485;
+
+    public static final int SAVE_VERSION_0250 = 250;
     public static final int SAVE_VERSION_0240 = 240;
     public static final int SAVE_VERSION_0232 = 232;
     public static final int SAVE_VERSION_0231 = 231;
-    private static final int CURRENT_SAVE_VERSION = SAVE_VERSION_0240;
+    private static final int CURRENT_SAVE_VERSION = SAVE_VERSION_0250;
     private static final HashMap<Integer, Class<? extends SaveDataReader>> SAVE_READERS = new HashMap<>();
     private static final HashMap<Integer, Class<? extends SaveDataWriter>> SAVE_WRITERS = new HashMap<>();
 
     static {
+        SAVE_READERS.put(SAVE_VERSION_0250, blockfighter.client.savedata.ver_0_25_0.SaveDataReaderImpl.class);
         SAVE_READERS.put(SAVE_VERSION_0240, blockfighter.client.savedata.ver_0_24_0.SaveDataReaderImpl.class);
         SAVE_READERS.put(SAVE_VERSION_0232, blockfighter.client.savedata.ver_0_23_2.SaveDataReaderImpl.class);
         SAVE_READERS.put(SAVE_VERSION_0231, blockfighter.client.savedata.ver_0_23_1.SaveDataReaderImpl.class);
 
+        SAVE_WRITERS.put(SAVE_VERSION_0250, blockfighter.client.savedata.ver_0_25_0.SaveDataWriterImpl.class);
         SAVE_WRITERS.put(SAVE_VERSION_0240, blockfighter.client.savedata.ver_0_24_0.SaveDataWriterImpl.class);
         SAVE_WRITERS.put(SAVE_VERSION_0232, blockfighter.client.savedata.ver_0_23_2.SaveDataWriterImpl.class);
         SAVE_WRITERS.put(SAVE_VERSION_0231, blockfighter.client.savedata.ver_0_23_1.SaveDataWriterImpl.class);
@@ -262,9 +266,9 @@ public class SaveData {
         this.baseStats[Globals.STAT_SKILLPOINTS] = Globals.SP_PER_LEVEL * this.baseStats[Globals.STAT_LEVEL] - totalSP;
 
         if (totalSP > Globals.SP_PER_LEVEL * this.baseStats[Globals.STAT_LEVEL]) {
-            for (final Skill s : this.skills.values()) {
+            this.skills.values().forEach((s) -> {
                 s.setLevel((byte) 0);
-            }
+            });
             this.baseStats[Globals.STAT_SKILLPOINTS] = Globals.SP_PER_LEVEL * this.baseStats[Globals.STAT_LEVEL];
         }
 
