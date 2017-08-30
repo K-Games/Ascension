@@ -21,6 +21,7 @@ public class TestLogicModule {
             client.sendMoveKey(this.myKey, Globals.UP, Globals.rng(2) == 0);
             client.sendMoveKey(this.myKey, (Globals.rng(2) == 0) ? Globals.LEFT : Globals.RIGHT, Globals.rng(2) == 0);
             client.sendGetPing();
+            client.sendUseSkill(this.myKey, Main.TEST_SKILLS[selectedChar.getAI()][Globals.rng(Main.TEST_SKILLS[selectedChar.getAI()].length)]);
             this.ping = client.getPing();
         }
     }

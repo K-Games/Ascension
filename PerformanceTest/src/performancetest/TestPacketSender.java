@@ -1,8 +1,10 @@
 package performancetest;
 
+import blockfighter.client.entities.items.ItemEquip;
 import blockfighter.shared.Globals;
 import com.esotericsoftware.kryonet.Client;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 
 public class TestPacketSender {
 
@@ -94,6 +96,41 @@ public class TestPacketSender {
         System.arraycopy(temp, 0, bytes, pos, temp.length);
         pos += temp.length;
 
+        final ItemEquip[] equip = new ItemEquip[Globals.NUM_EQUIP_SLOTS];
+        equip[Globals.EQUIP_WEAPON] = new ItemEquip((c.getAI() == 0) ? 120000 : 100000);
+        equip[Globals.EQUIP_OFFHAND] = new ItemEquip((c.getAI() == 0) ? 0 : 110000);
+        for (ItemEquip equip1 : equip) {
+            if (equip1 == null) {
+                temp = Globals.intToBytes(0);
+                System.arraycopy(temp, 0, bytes, pos, temp.length);
+                pos += temp.length;
+                continue;
+            }
+            temp = Globals.intToBytes(equip1.getItemCode());
+            System.arraycopy(temp, 0, bytes, pos, temp.length);
+            pos += temp.length;
+        }
+
+        final HashMap<Byte, Byte> skills = new HashMap<>(12);
+        for (byte i = 0; i < Main.TEST_SKILLS[c.getAI()].length; i++) {
+            skills.put(i, Main.TEST_SKILLS[c.getAI()][i]);
+        }
+
+        for (byte i = 0; i < Globals.NUM_HOTKEYS; i++) {
+            Byte skill = skills.get(i);
+            temp = new byte[2];
+            if (skill == null) {
+                temp[0] = -1;
+                temp[1] = 0;
+                System.arraycopy(temp, 0, bytes, pos, temp.length);
+                pos += temp.length;
+                continue;
+            }
+            temp[0] = skill;
+            temp[1] = 2;
+            System.arraycopy(temp, 0, bytes, pos, temp.length);
+            pos += temp.length;
+        }
         sendPacket(bytes, client);
     }
 
@@ -129,6 +166,15 @@ public class TestPacketSender {
         bytes[1] = room;
         bytes[2] = myKey;
         bytes[3] = pID;
+        sendPacket(bytes, client);
+    }
+
+    public static void sendUseSkill(final byte room, final byte key, final byte skillCode, final Client client) {
+        final byte[] bytes = new byte[Globals.PACKET_BYTE * 4];
+        bytes[0] = Globals.DATA_PLAYER_USESKILL;
+        bytes[1] = room;
+        bytes[2] = key;
+        bytes[3] = skillCode;
         sendPacket(bytes, client);
     }
 

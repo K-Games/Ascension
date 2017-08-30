@@ -40,9 +40,14 @@ public class TestRunner implements Runnable {
         int testers = 0;
         for (TestLogicModule lm : logic) {
             if (lm != null) {
-                lm.run();
-                avgPing += lm.getPing();
-                testers++;
+                try {
+                    lm.run();
+                    avgPing += lm.getPing();
+                    testers++;
+                } catch (Exception ex) {
+//                    ex.printStackTrace();
+//                    lm.getGC().shutdownClient();
+                }
             }
         }
     }

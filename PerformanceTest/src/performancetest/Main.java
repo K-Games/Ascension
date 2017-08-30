@@ -1,5 +1,6 @@
 package performancetest;
 
+import blockfighter.shared.Globals;
 import com.esotericsoftware.minlog.Log;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -22,6 +23,33 @@ public class Main {
     public static boolean UDP_MODE;
     public static byte MIN_LEVEL, MAX_LEVEL;
     public static int PLAYERS;
+
+    public static Byte[][] TEST_SKILLS = {
+        {
+            Globals.SkillClassMap.BOW_ARC.getByteCode(),
+            Globals.SkillClassMap.BOW_FROST.getByteCode(),
+            Globals.SkillClassMap.BOW_POWER.getByteCode(),
+            Globals.SkillClassMap.BOW_RAPID.getByteCode(),
+            Globals.SkillClassMap.BOW_STORM.getByteCode(),
+            Globals.SkillClassMap.BOW_VOLLEY.getByteCode(),
+            Globals.SkillClassMap.UTILITY_ADRENALINE.getByteCode(),
+            Globals.SkillClassMap.UTILITY_DASH.getByteCode()
+        },
+        {
+            Globals.SkillClassMap.SWORD_VORPAL.getByteCode(),
+            Globals.SkillClassMap.SWORD_CINDER.getByteCode(),
+            Globals.SkillClassMap.SWORD_GASH.getByteCode(),
+            Globals.SkillClassMap.SWORD_PHANTOM.getByteCode(),
+            Globals.SkillClassMap.SWORD_SLASH.getByteCode(),
+            Globals.SkillClassMap.SWORD_TAUNT.getByteCode(),
+            Globals.SkillClassMap.SHIELD_CHARGE.getByteCode(),
+            Globals.SkillClassMap.SHIELD_MAGNETIZE.getByteCode(),
+            Globals.SkillClassMap.SHIELD_REFLECT.getByteCode(),
+            Globals.SkillClassMap.SHIELD_ROAR.getByteCode(),
+            Globals.SkillClassMap.UTILITY_ADRENALINE.getByteCode(),
+            Globals.SkillClassMap.UTILITY_DASH.getByteCode()
+        }
+    };
 
     public static void main(final String[] args) {
         Log.set(Log.LEVEL_NONE);

@@ -93,6 +93,10 @@ public class TestGameClient implements Runnable {
         TestPacketSender.sendMove(logic.getSelectedRoom(), k, dir, b, this.client);
     }
 
+    public void sendUseSkill(final byte k, final byte skillCode) {
+        TestPacketSender.sendUseSkill(logic.getSelectedRoom(), k, skillCode, this.client);
+    }
+
     public void sendGetPing() {
         this.client.updateReturnTripTime();
     }
