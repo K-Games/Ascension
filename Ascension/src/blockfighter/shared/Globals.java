@@ -565,6 +565,8 @@ public class Globals {
             KEYBIND_EMOTE10 = 25,
             KEYBIND_SCOREBOARD = 26;
 
+    public final static byte NUM_HOTKEYS = 12;
+
     public final static byte NUM_EQUIP_TABS = 10,
             EQUIP_TAB_WEAPON = 0,
             EQUIP_TAB_HEAD = 1,

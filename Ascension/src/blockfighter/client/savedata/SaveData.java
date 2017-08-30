@@ -468,7 +468,7 @@ public class SaveData {
     }
 
     public void validate() {
-        for (byte i = 0; i < getHotkeys().size(); i++) {
+        for (byte i = 0; i < Globals.NUM_HOTKEYS; i++) {
             if (getHotkeys().get(i) != null && getTotalStats()[Globals.STAT_LEVEL] < getHotkeys().get(i).getReqLevel()) {
                 getHotkeys().remove(i);
             }

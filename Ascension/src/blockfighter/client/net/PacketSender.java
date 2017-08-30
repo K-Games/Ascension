@@ -113,7 +113,8 @@ public class PacketSender {
         }
 
         final HashMap<Byte, Skill> skills = c.getHotkeys();
-        for (Skill skill : skills.values()) {
+        for (byte i = 0; i < Globals.NUM_HOTKEYS; i++) {
+            Skill skill = skills.get(i);
             temp = new byte[2];
             if (skill == null) {
                 temp[0] = -1;
