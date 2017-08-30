@@ -293,7 +293,7 @@ public class Globals {
     public static final Class[] PARTICLE_PARAM_POS = {int.class, int.class};
 
     public enum Particles {
-        BLOOD((byte) 0x00, null, 0, ParticleBlood.class, PARTICLE_PARAM_POS_AND_FACING),
+        BLOOD((byte) 0x00, "blood", 1, ParticleBlood.class, PARTICLE_PARAM_POS_AND_FACING),
         BLOOD_DEATH_EMITTER((byte) 0x01, null, 0, ParticleBloodEmitter.class, PARTICLE_PARAM_PLAYER),
         BLOOD_EMITTER((byte) 0x02, null, 0, ParticleBloodEmitter.class, PARTICLE_PARAM_PLAYER_AND_TARGET),
         BOW_ARC((byte) 0x03, "arc", 8, ParticleBowArc.class, PARTICLE_PARAM_POS_AND_FACING),

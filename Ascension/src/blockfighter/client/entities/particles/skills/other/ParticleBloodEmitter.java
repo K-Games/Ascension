@@ -34,7 +34,7 @@ public class ParticleBloodEmitter extends Particle {
                 this.x = p.x;
                 this.y = p.y;
             }
-            for (int i = 0; i < ((source == null) ? 5 : 15); i++) {
+            for (int i = 0; i < 7; i++) {
                 if (source == null) {
                     final ParticleBlood b = new ParticleBlood(this.x, this.y, this.owner.getFacing());
                     Core.getLogicModule().getScreen().addParticle(b);

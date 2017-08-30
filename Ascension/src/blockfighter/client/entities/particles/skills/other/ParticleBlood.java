@@ -2,8 +2,8 @@ package blockfighter.client.entities.particles.skills.other;
 
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.shared.Globals;
-import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 
 public class ParticleBlood extends Particle {
 
@@ -34,7 +34,14 @@ public class ParticleBlood extends Particle {
 
     @Override
     public void draw(final Graphics2D g) {
-        g.setColor(Color.RED);
-        g.fillOval(this.x, this.y, (int) this.drawSize, (int) this.drawSize);
+        if (Globals.Particles.BLOOD.getSprite() == null) {
+            return;
+        }
+        if (this.frame >= Globals.Particles.BLOOD.getSprite().length) {
+            return;
+        }
+
+        final BufferedImage sprite = Globals.Particles.BLOOD.getSprite()[this.frame];
+        g.drawImage(sprite, this.x, this.y, (int) this.drawSize, (int) this.drawSize, null);
     }
 }
