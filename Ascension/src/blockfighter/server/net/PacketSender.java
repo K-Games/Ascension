@@ -144,7 +144,7 @@ public class PacketSender implements Runnable {
             if ((Boolean) Globals.ServerConfig.UDP_MODE.getValue()) {
                 c.sendUDP(data);
             } else {
-                if (c.getTcpWriteBufferSize() < Globals.PACKET_MAX_SIZE * (Byte) Globals.ServerConfig.MAX_PACKETS_PER_CON.getValue() * 0.75) {
+                if (c.getTcpWriteBufferSize() < Globals.PACKET_MAX_SIZE * (Integer) Globals.ServerConfig.MAX_NUM_PACKETS.getValue() * 0.75) {
                     c.sendTCP(data);
                 }
             }

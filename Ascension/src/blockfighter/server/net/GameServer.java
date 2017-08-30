@@ -20,7 +20,7 @@ public class GameServer {
 
     public void start() {
         try {
-            this.server = new Server(Globals.PACKET_MAX_SIZE * (Byte) Globals.ServerConfig.MAX_PACKETS_PER_CON.getValue(), Globals.PACKET_MAX_SIZE, new AscensionSerialization());
+            this.server = new Server(Globals.PACKET_MAX_SIZE * (Integer) Globals.ServerConfig.MAX_NUM_PACKETS.getValue(), Globals.PACKET_MAX_SIZE, new AscensionSerialization());
             this.receiver = new PacketReceiver();
             this.server.addListener(new Listener.ThreadedListener(this.receiver));
             if ((Boolean) Globals.ServerConfig.UDP_MODE.getValue()) {
