@@ -78,7 +78,7 @@ public class GameMapAsymArena extends GameMap {
 
         this.boundary[Globals.MAP_LEFT] = 0;
         this.boundary[Globals.MAP_RIGHT] = 3800D;
-        this.boundary[Globals.MAP_TOP] = -500;
+        this.boundary[Globals.MAP_TOP] = -1000;
         this.boundary[Globals.MAP_BOTTOM] = 2500D;
         setupMap();
     }
