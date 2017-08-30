@@ -276,6 +276,7 @@ public class ItemEquip implements Item {
                                     break;
                             }
                             load[state][frames] = Globals.loadTextureResource("sprites/equip/" + code + "/" + hand + "/" + stateFolder + "/" + frames + ".png");
+                            EQUIP_SPRITES.put(Integer.toString(code) + hand, load);
                         }
                     }
                 }
@@ -633,13 +634,15 @@ public class ItemEquip implements Item {
                 offsetY = EQUIP_DRAWOFFSET.get(this.equipCode + hand + state).y;
             }
 
-            BufferedImage sprite = EQUIP_SPRITES.get(this.equipCode + hand)[state][frame];
-            if (sprite != null) {
-                int sX = x + ((facing == Globals.RIGHT) ? 1 : -1) * offsetX;
-                int sY = y + offsetY;
-                int dX = sX + ((facing == Globals.RIGHT) ? 1 : -1) * sprite.getWidth();
-                int dY = sY + sprite.getHeight();
-                g.drawImage(sprite, sX, sY, dX, dY, 0, 0, sprite.getWidth(), sprite.getHeight(), null);
+            if (EQUIP_SPRITES.get(this.equipCode + hand) != null && EQUIP_SPRITES.get(this.equipCode + hand)[state] != null) {
+                BufferedImage sprite = EQUIP_SPRITES.get(this.equipCode + hand)[state][frame];
+                if (sprite != null) {
+                    int sX = x + ((facing == Globals.RIGHT) ? 1 : -1) * offsetX;
+                    int sY = y + offsetY;
+                    int dX = sX + ((facing == Globals.RIGHT) ? 1 : -1) * sprite.getWidth();
+                    int dY = sY + sprite.getHeight();
+                    g.drawImage(sprite, sX, sY, dX, dY, 0, 0, sprite.getWidth(), sprite.getHeight(), null);
+                }
             }
         } else {
             ItemEquip.loadItemSprite(this.equipCode, offhand);
