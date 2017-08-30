@@ -5,6 +5,7 @@ import blockfighter.server.LogicModule;
 import blockfighter.server.RoomData;
 import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
+import blockfighter.server.entities.player.skills.Skill;
 import blockfighter.shared.Globals;
 import com.esotericsoftware.kryonet.Connection;
 import java.nio.charset.StandardCharsets;
@@ -298,6 +299,12 @@ public class PacketHandler {
             desc += Globals.getStatName(i) + Globals.COLON_SPACE_TEXT + newPlayer.getStats()[i] + "\n";
         }
         desc += "Equips=" + Arrays.toString(newPlayer.getEquips()) + "\n";
+        desc += "Skills=[";
+        for (Skill skill : newPlayer.getSkills().values()) {
+            desc += skill.getClass().getSimpleName() + "(" + skill.getLevel() + "), ";
+        }
+        desc += "]\n";
+
         Globals.log(PacketHandler.class, "DATA_PLAYER_CREATE " + c + " Queueing new player <" + newPlayer.getPlayerName() + "> into room " + roomData.getRoomIndex() + ". Key: " + String.format("0x%02X", freeKey) + desc, Globals.LOG_TYPE_DATA);
 
         final byte[] bytes = new byte[Globals.PACKET_BYTE * 3 + Globals.PACKET_INT];

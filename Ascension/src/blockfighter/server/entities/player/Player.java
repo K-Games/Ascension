@@ -276,6 +276,10 @@ public class Player implements GameEntity, Callable<Player> {
         return this.equips;
     }
 
+    public ConcurrentHashMap<Byte, Skill> getSkills() {
+        return this.skills;
+    }
+
     public boolean isDead() {
         return this.isDead;
     }
