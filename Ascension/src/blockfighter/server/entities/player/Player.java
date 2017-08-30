@@ -1027,7 +1027,7 @@ public class Player implements GameEntity, Callable<Player> {
         bytes[3] = exp[2];
         bytes[4] = exp[3];
         PacketSender.sendPlayer(bytes, this);
-        Globals.log(Player.class, "Giving " + this.name + " " + (int) amount + " EXP", Globals.LOG_TYPE_DATA);
+        //Globals.log(Player.class, "Giving " + this.name + " " + (int) amount + " EXP", Globals.LOG_TYPE_DATA);
     }
 
     public boolean intersectHitbox(final Rectangle2D.Double box) {
