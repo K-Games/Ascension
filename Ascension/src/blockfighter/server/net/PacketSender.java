@@ -6,7 +6,6 @@ import blockfighter.server.entities.player.Player;
 import blockfighter.shared.Globals;
 import com.esotericsoftware.kryonet.Connection;
 import java.util.ArrayDeque;
-import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -75,7 +74,7 @@ public class PacketSender implements Runnable {
         System.arraycopy(posXInt, 0, bytes, 2, posXInt.length);
         final byte[] posYInt = Globals.intToBytes((int) soundY);
         System.arraycopy(posYInt, 0, bytes, 6, posYInt.length);
-        sendAll(bytes, room);
+        //sendAll(bytes, room);
     }
 
     public static void sendConnection(final byte[] data, final Connection c) {
