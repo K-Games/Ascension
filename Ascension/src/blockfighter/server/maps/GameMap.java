@@ -122,10 +122,14 @@ public abstract class GameMap {
         Rectangle2D.Double fallingArea = new Rectangle2D.Double(x - 25, y - 1, 50, 0.1);
         Integer[] bucketIDs = getBucketIDsForRect(fallingArea);
         for (int bucketID : bucketIDs) {
-            for (GameMapPlatform platform : this.platformBuckets.get(bucketID)) {
-                if (platform.intersects(fallingArea)) {
-                    return Math.min(platform.getY(fallingArea.getMinX() + 7), platform.getY(fallingArea.getMaxX() - 7));
+            if (this.platformBuckets.get(bucketID) != null) {
+                for (GameMapPlatform platform : this.platformBuckets.get(bucketID)) {
+                    if (platform.intersects(fallingArea)) {
+                        return Math.min(platform.getY(fallingArea.getMinX() + 7), platform.getY(fallingArea.getMaxX() - 7));
+                    }
                 }
+            } else {
+                Globals.log(GameMap.class, "Y out of bounds: " + y, Globals.LOG_TYPE_DATA);
             }
         }
         return y;
