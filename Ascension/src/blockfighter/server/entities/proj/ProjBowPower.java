@@ -40,7 +40,7 @@ public class ProjBowPower extends Projectile {
         final Player owner = getOwner();
         final boolean isCrit = owner.rollCrit();
         final int damage = calculateDamage(isCrit);
-        target.queueDamage(new Damage(damage, true, owner, target, isCrit));
+        target.queueDamage(new Damage(damage, true, owner, target, isCrit, true));
         target.queueBuff(new BuffKnockback(this.logic, 500, (owner.getFacing() == Globals.RIGHT) ? 20 : -20, -25, owner, target));
     }
 
@@ -49,7 +49,7 @@ public class ProjBowPower extends Projectile {
         final Player owner = getOwner();
         final boolean isCrit = owner.rollCrit();
         final int damage = calculateDamage(isCrit);
-        target.queueDamage(new Damage(damage, true, owner, target, isCrit));
+        target.queueDamage(new Damage(damage, true, owner, target, isCrit, true));
     }
 
 }

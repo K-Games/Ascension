@@ -29,7 +29,7 @@ public class ProjShieldRoar extends Projectile {
         final Player owner = getOwner();
         final boolean isCrit = owner.rollCrit();
         final int damage = calculateDamage(isCrit);
-        target.queueDamage(new Damage(damage, true, owner, target, isCrit));
+        target.queueDamage(new Damage(damage, true, owner, target, isCrit, true));
         target.queueBuff(new BuffKnockback(this.logic, 200, (1 - Math.abs(target.getX() - owner.getX()) / 600D) * ((owner.getFacing() == Globals.RIGHT) ? 30 : -30), 0, owner, target));
         PacketSender.sendParticle(this.logic, Globals.Particles.SHIELD_ROARHIT.getParticleCode(), target.getKey());
         if (owner.isSkillMaxed(Globals.SHIELD_ROAR)) {

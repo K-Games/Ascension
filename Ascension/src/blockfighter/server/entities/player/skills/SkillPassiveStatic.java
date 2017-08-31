@@ -83,7 +83,7 @@ public class SkillPassiveStatic extends SkillPassive {
                         damage = (int) player.criticalDamage(damage);
                     }
                     Point2D.Double newPos = new Point2D.Double(target.getHitbox().x + target.getHitbox().width / 2, target.getHitbox().y + target.getHitbox().height / 2);
-                    target.queueDamage(new Damage(damage, false, player, target, crit, newPos));
+                    target.queueDamage(new Damage(damage, false, player, target, crit, newPos, true));
                     PacketSender.sendParticle(this.logic, Globals.Particles.PASSIVE_STATIC.getParticleCode(), player.getKey(), target.getKey());
                 }
             } else {
@@ -95,7 +95,7 @@ public class SkillPassiveStatic extends SkillPassive {
                         damage = (int) player.criticalDamage(damage);
                     }
                     Point2D.Double newPos = new Point2D.Double(target.getHitbox().x + target.getHitbox().width / 2, target.getHitbox().y + target.getHitbox().height / 2);
-                    target.queueDamage(new Damage(damage, false, player, target, crit, newPos));
+                    target.queueDamage(new Damage(damage, false, player, target, crit, newPos, true));
                 }
             }
         }

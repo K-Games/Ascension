@@ -48,7 +48,7 @@ public class ProjBowFrost extends Projectile {
         final Player owner = getOwner();
         final boolean isCrit = owner.rollCrit();
         final int damage = calculateDamage(isCrit);
-        target.queueDamage(new Damage(damage, true, owner, target, isCrit));
+        target.queueDamage(new Damage(damage, true, owner, target, isCrit, true));
         target.queueBuff(new BuffKnockback(this.logic, 200, (owner.getFacing() == Globals.RIGHT) ? 1 : -1, -4, owner, target));
         if (!this.isSecondary) {
             Skill skill = owner.getSkill(Globals.BOW_FROST);
@@ -62,7 +62,7 @@ public class ProjBowFrost extends Projectile {
         final Player owner = getOwner();
         final boolean isCrit = owner.rollCrit();
         final int damage = calculateDamage(isCrit);
-        target.queueDamage(new Damage(damage, true, owner, target, isCrit));
+        target.queueDamage(new Damage(damage, true, owner, target, isCrit, true));
         if (!this.isSecondary) {
             Skill skill = owner.getSkill(Globals.BOW_FROST);
             double stunDuration = (skill.isMaxed()) ? skill.getCustomValue(SkillBowFrost.CUSTOM_DATA_HEADERS[1]) : skill.getCustomValue(SkillBowFrost.CUSTOM_DATA_HEADERS[0]);

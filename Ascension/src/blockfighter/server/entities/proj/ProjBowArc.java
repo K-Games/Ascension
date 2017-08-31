@@ -37,7 +37,7 @@ public class ProjBowArc extends Projectile {
         final Player owner = getOwner();
         final boolean isCrit = owner.rollCrit();
         final int damage = calculateDamage(isCrit);
-        target.queueDamage(new Damage(damage, true, owner, target, isCrit));
+        target.queueDamage(new Damage(damage, true, owner, target, isCrit, true));
         if (owner.isSkillMaxed(Globals.BOW_ARC)) {
             double lifesteal = owner.getSkill(Globals.BOW_ARC).getCustomValue(SkillBowArc.CUSTOM_DATA_HEADERS[0]) / 3;
             double maxLifesteal = owner.getSkill(Globals.BOW_ARC).getCustomValue(SkillBowArc.CUSTOM_DATA_HEADERS[1]) / 3;
@@ -55,7 +55,7 @@ public class ProjBowArc extends Projectile {
         final Player owner = getOwner();
         final boolean isCrit = owner.rollCrit();
         final int damage = calculateDamage(isCrit);
-        target.queueDamage(new Damage(damage, true, owner, target, isCrit));
+        target.queueDamage(new Damage(damage, true, owner, target, isCrit, true));
         if (owner.isSkillMaxed(Globals.BOW_ARC)) {
             double lifesteal = owner.getSkill(Globals.BOW_ARC).getCustomValue(SkillBowArc.CUSTOM_DATA_HEADERS[0]) / 3;
             double maxLifesteal = owner.getSkill(Globals.BOW_ARC).getCustomValue(SkillBowArc.CUSTOM_DATA_HEADERS[1]) / 3;

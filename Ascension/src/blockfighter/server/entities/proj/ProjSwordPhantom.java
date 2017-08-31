@@ -34,7 +34,7 @@ public class ProjSwordPhantom extends Projectile {
         final Player owner = getOwner();
         final boolean isCrit = owner.rollCrit();
         int damage = calculateDamage(isCrit);
-        target.queueDamage(new Damage(damage, true, owner, target, isCrit));
+        target.queueDamage(new Damage(damage, true, owner, target, isCrit, true));
     }
 
     @Override
@@ -42,7 +42,7 @@ public class ProjSwordPhantom extends Projectile {
         final Player owner = getOwner();
         final boolean isCrit = owner.rollCrit();
         int damage = calculateDamage(isCrit);
-        target.queueDamage(new Damage(damage, true, owner, target, isCrit));
+        target.queueDamage(new Damage(damage, true, owner, target, isCrit, true));
 
     }
 

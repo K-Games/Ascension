@@ -123,7 +123,7 @@ public class SkillShieldReflect extends Skill {
             ArrayList<Player> playersInRange = this.logic.getRoomData().getPlayersInRange(player, radius);
             if (!playersInRange.isEmpty()) {
                 playersInRange.forEach((p) -> {
-                    final Damage dmgEntity = new Damage((int) (dmgTaken * mult), true, player, p, false, new Point2D.Double(p.getX(), p.getY()));
+                    final Damage dmgEntity = new Damage((int) (dmgTaken * mult), true, player, p, false, new Point2D.Double(p.getX(), p.getY()), false);
                     dmgEntity.setCanReflect(false);
                     p.queueDamage(dmgEntity);
                 });
@@ -132,7 +132,7 @@ public class SkillShieldReflect extends Skill {
             ArrayList<Mob> mobsInRange = this.logic.getRoomData().getMobsInRange(player, radius);
             if (!mobsInRange.isEmpty()) {
                 mobsInRange.forEach((mob) -> {
-                    final Damage dmgEntity = new Damage((int) (dmgTaken * mult), true, player, mob, false, new Point2D.Double(mob.getX(), mob.getY()));
+                    final Damage dmgEntity = new Damage((int) (dmgTaken * mult), true, player, mob, false, new Point2D.Double(mob.getX(), mob.getY()), false);
                     dmgEntity.setCanReflect(false);
                     mob.queueDamage(dmgEntity);
                 });

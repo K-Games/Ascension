@@ -22,7 +22,7 @@ public class DamageTest {
 
         Player expPlayer = new Player(new LogicModule((byte) 0, (byte) Globals.rng(65), (byte) ((byte) Globals.rng(65) + 64)), (byte) 0, null, new GameMapArena());
         Point2D.Double expPoint = new Point2D.Double(0, 0);
-        Damage instance = new Damage(expDamage, expMob, expPlayer, expPoint);
+        Damage instance = new Damage(expDamage, expMob, expPlayer, expPoint, true);
         assertEquals(expDamage, instance.getDamage());
         assertEquals(expMob, instance.getMobOwner());
         assertEquals(expPlayer, instance.getTarget());
@@ -34,7 +34,7 @@ public class DamageTest {
         assertTrue(instance.canReflect());
         assertEquals(Globals.NUMBER_TYPE_MOB, instance.getDamageType());
 
-        instance = new Damage(expDamage, expMob, expPlayer);
+        instance = new Damage(expDamage, expMob, expPlayer, true);
         assertEquals(expDamage, instance.getDamage());
         assertEquals(expMob, instance.getMobOwner());
         assertEquals(expPlayer, instance.getTarget());
@@ -46,7 +46,7 @@ public class DamageTest {
         assertTrue(instance.canReflect());
         assertEquals(Globals.NUMBER_TYPE_MOB, instance.getDamageType());
 
-        instance = new Damage(expDamage, true, expMob, expPlayer, expPoint);
+        instance = new Damage(expDamage, true, expMob, expPlayer, expPoint, true);
         assertEquals(expDamage, instance.getDamage());
         assertEquals(expMob, instance.getMobOwner());
         assertEquals(expPlayer, instance.getTarget());
@@ -58,7 +58,7 @@ public class DamageTest {
         assertTrue(instance.canReflect());
         assertEquals(Globals.NUMBER_TYPE_MOB, instance.getDamageType());
 
-        instance = new Damage(expDamage, false, expMob, expPlayer, expPoint);
+        instance = new Damage(expDamage, false, expMob, expPlayer, expPoint, true);
         assertEquals(expDamage, instance.getDamage());
         assertEquals(expMob, instance.getMobOwner());
         assertEquals(expPlayer, instance.getTarget());
@@ -70,7 +70,7 @@ public class DamageTest {
         assertTrue(instance.canReflect());
         assertEquals(Globals.NUMBER_TYPE_MOB, instance.getDamageType());
 
-        instance = new Damage(expDamage, true, expMob, expPlayer);
+        instance = new Damage(expDamage, true, expMob, expPlayer, true);
         assertEquals(expDamage, instance.getDamage());
         assertEquals(expMob, instance.getMobOwner());
         assertEquals(expPlayer, instance.getTarget());
@@ -82,7 +82,7 @@ public class DamageTest {
         assertTrue(instance.canReflect());
         assertEquals(Globals.NUMBER_TYPE_MOB, instance.getDamageType());
 
-        instance = new Damage(expDamage, false, expMob, expPlayer);
+        instance = new Damage(expDamage, false, expMob, expPlayer, true);
         assertEquals(expDamage, instance.getDamage());
         assertEquals(expMob, instance.getMobOwner());
         assertEquals(expPlayer, instance.getTarget());
@@ -105,7 +105,7 @@ public class DamageTest {
         };
         Player expOwner = new Player(new LogicModule((byte) 0, (byte) Globals.rng(65), (byte) ((byte) Globals.rng(65) + 64)), (byte) 0, null, new GameMapArena());
         Point2D.Double expPoint = new Point2D.Double(0, 0);
-        Damage instance = new Damage(expDamage, expOwner, expMob, true, expPoint);
+        Damage instance = new Damage(expDamage, expOwner, expMob, true, expPoint, true);
         assertEquals(expDamage, instance.getDamage());
         assertEquals(expMob, instance.getMobTarget());
         assertEquals(expOwner, instance.getOwner());
@@ -117,7 +117,7 @@ public class DamageTest {
         assertTrue(instance.canReflect());
         assertEquals(Globals.NUMBER_TYPE_PLAYERCRIT, instance.getDamageType());
 
-        instance = new Damage(expDamage, expOwner, expMob, false, expPoint);
+        instance = new Damage(expDamage, expOwner, expMob, false, expPoint, true);
         assertEquals(expDamage, instance.getDamage());
         assertEquals(expMob, instance.getMobTarget());
         assertEquals(expOwner, instance.getOwner());
@@ -129,7 +129,7 @@ public class DamageTest {
         assertTrue(instance.canReflect());
         assertEquals(Globals.NUMBER_TYPE_PLAYER, instance.getDamageType());
 
-        instance = new Damage(expDamage, expOwner, expMob, true);
+        instance = new Damage(expDamage, expOwner, expMob, true, false);
         assertEquals(expDamage, instance.getDamage());
         assertEquals(expMob, instance.getMobTarget());
         assertEquals(expOwner, instance.getOwner());
@@ -140,7 +140,7 @@ public class DamageTest {
         assertFalse(instance.isTrueDamage());
         assertTrue(instance.canReflect());
         assertEquals(Globals.NUMBER_TYPE_PLAYERCRIT, instance.getDamageType());
-        instance = new Damage(expDamage, expOwner, expMob, false);
+        instance = new Damage(expDamage, expOwner, expMob, false, false);
         assertEquals(expDamage, instance.getDamage());
         assertEquals(expMob, instance.getMobTarget());
         assertEquals(expOwner, instance.getOwner());
@@ -152,7 +152,7 @@ public class DamageTest {
         assertTrue(instance.canReflect());
         assertEquals(Globals.NUMBER_TYPE_PLAYER, instance.getDamageType());
 
-        instance = new Damage(expDamage, true, expOwner, expMob, true, expPoint);
+        instance = new Damage(expDamage, true, expOwner, expMob, true, expPoint, true);
         assertEquals(expDamage, instance.getDamage());
         assertEquals(expMob, instance.getMobTarget());
         assertEquals(expOwner, instance.getOwner());
@@ -164,7 +164,7 @@ public class DamageTest {
         assertTrue(instance.canReflect());
         assertEquals(Globals.NUMBER_TYPE_PLAYERCRIT, instance.getDamageType());
 
-        instance = new Damage(expDamage, false, expOwner, expMob, false, expPoint);
+        instance = new Damage(expDamage, false, expOwner, expMob, false, expPoint, true);
         assertEquals(expDamage, instance.getDamage());
         assertEquals(expMob, instance.getMobTarget());
         assertEquals(expOwner, instance.getOwner());
@@ -176,7 +176,7 @@ public class DamageTest {
         assertTrue(instance.canReflect());
         assertEquals(Globals.NUMBER_TYPE_PLAYER, instance.getDamageType());
 
-        instance = new Damage(expDamage, true, expOwner, expMob, true);
+        instance = new Damage(expDamage, true, expOwner, expMob, true, true);
         assertEquals(expDamage, instance.getDamage());
         assertEquals(expMob, instance.getMobTarget());
         assertEquals(expOwner, instance.getOwner());
@@ -188,7 +188,7 @@ public class DamageTest {
         assertTrue(instance.canReflect());
         assertEquals(Globals.NUMBER_TYPE_PLAYERCRIT, instance.getDamageType());
 
-        instance = new Damage(expDamage, false, expOwner, expMob, false);
+        instance = new Damage(expDamage, false, expOwner, expMob, false, true);
         assertEquals(expDamage, instance.getDamage());
         assertEquals(expMob, instance.getMobTarget());
         assertEquals(expOwner, instance.getOwner());
@@ -207,7 +207,7 @@ public class DamageTest {
         Player expOwner = new Player(new LogicModule((byte) 0, (byte) Globals.rng(65), (byte) ((byte) Globals.rng(65) + 64)), (byte) 0, null, new GameMapArena());
         Player expTarget = new Player(new LogicModule((byte) 0, (byte) Globals.rng(65), (byte) ((byte) Globals.rng(65) + 64)), (byte) 0, null, new GameMapArena());
         Point2D.Double expPoint = new Point2D.Double(0, 0);
-        Damage instance = new Damage(expDamage, true, expOwner, expTarget, true, expPoint);
+        Damage instance = new Damage(expDamage, true, expOwner, expTarget, true, expPoint, true);
         assertEquals(expDamage, instance.getDamage());
         assertEquals(expTarget, instance.getTarget());
         assertEquals(expOwner, instance.getOwner());
@@ -231,7 +231,7 @@ public class DamageTest {
         instance.setHidden(false);
         assertFalse(instance.isHidden());
 
-        instance = new Damage(expDamage, false, expOwner, expTarget, false, expPoint);
+        instance = new Damage(expDamage, false, expOwner, expTarget, false, expPoint, true);
         assertEquals(expDamage, instance.getDamage());
         assertEquals(expTarget, instance.getTarget());
         assertEquals(expOwner, instance.getOwner());
@@ -243,7 +243,7 @@ public class DamageTest {
         assertTrue(instance.canReflect());
         assertEquals(Globals.NUMBER_TYPE_PLAYER, instance.getDamageType());
 
-        instance = new Damage(expDamage, true, expOwner, expTarget, true);
+        instance = new Damage(expDamage, true, expOwner, expTarget, true, true);
         assertEquals(expDamage, instance.getDamage());
         assertEquals(expTarget, instance.getTarget());
         assertEquals(expOwner, instance.getOwner());
@@ -255,7 +255,7 @@ public class DamageTest {
         assertTrue(instance.canReflect());
         assertEquals(Globals.NUMBER_TYPE_PLAYERCRIT, instance.getDamageType());
 
-        instance = new Damage(expDamage, false, expOwner, expTarget, false);
+        instance = new Damage(expDamage, false, expOwner, expTarget, false, true);
         assertEquals(expDamage, instance.getDamage());
         assertEquals(expTarget, instance.getTarget());
         assertEquals(expOwner, instance.getOwner());

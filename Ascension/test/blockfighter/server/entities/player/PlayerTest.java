@@ -52,7 +52,7 @@ public class PlayerTest {
     @Test
     public void testStatReduction() {
         Player player = new Player(lm, (byte) 0, c, map);
-        Damage dmg = new Damage(Globals.rng(2999), player, new Player(lm, (byte) 0, c, map));
+        Damage dmg = new Damage(Globals.rng(2999), player, new Player(lm, (byte) 0, c, map), true);
         player.setStat(Globals.STAT_LEVEL, 100);
         player.setStat(Globals.STAT_DEFENSE, Globals.rng(1500));
         player.queueDamage(dmg);
@@ -68,7 +68,7 @@ public class PlayerTest {
     @Test
     public void testShieldMasteryReduction() {
         Player player = new Player(lm, (byte) 0, c, map);
-        Damage dmg = new Damage(Globals.rng(2999), player, new Player(lm, (byte) 0, c, map));
+        Damage dmg = new Damage(Globals.rng(2999), player, new Player(lm, (byte) 0, c, map), true);
         player.setStat(Globals.STAT_LEVEL, 100);
         player.setStat(Globals.STAT_DEFENSE, Globals.rng(1500));
         player.setSkill(Globals.PASSIVE_SHIELDMASTERY, (byte) 30);
@@ -94,7 +94,7 @@ public class PlayerTest {
     @Test
     public void testToughSkinReduction() {
         Player player = new Player(lm, (byte) 0, c, map);
-        Damage dmg = new Damage(Globals.rng(2999), player, new Player(lm, (byte) 0, c, map));
+        Damage dmg = new Damage(Globals.rng(2999), player, new Player(lm, (byte) 0, c, map), true);
         player.setStat(Globals.STAT_LEVEL, 100);
         player.setStat(Globals.STAT_DEFENSE, Globals.rng(1500));
         player.setSkill(Globals.PASSIVE_TOUGH, (byte) 30);
@@ -118,7 +118,7 @@ public class PlayerTest {
     @Test
     public void testDualMasteryReduction() {
         Player player = new Player(lm, (byte) 0, c, map);
-        Damage dmg = new Damage(Globals.rng(2999), player, new Player(lm, (byte) 0, c, map));
+        Damage dmg = new Damage(Globals.rng(2999), player, new Player(lm, (byte) 0, c, map), true);
         player.setStat(Globals.STAT_LEVEL, 100);
         player.setStat(Globals.STAT_DEFENSE, Globals.rng(1500));
         player.setSkill(Globals.PASSIVE_DUALSWORD, (byte) 30);
@@ -144,7 +144,7 @@ public class PlayerTest {
     @Test
     public void testResistanceBuffReduction() {
         Player player = new Player(lm, (byte) 0, c, map);
-        Damage dmg = new Damage(Globals.rng(2999), player, new Player(lm, (byte) 0, c, map));
+        Damage dmg = new Damage(Globals.rng(2999), player, new Player(lm, (byte) 0, c, map), true);
         player.setStat(Globals.STAT_LEVEL, 100);
         player.setStat(Globals.STAT_DEFENSE, Globals.rng(1500));
         player.setSkill(Globals.PASSIVE_RESIST, (byte) 30);
@@ -160,7 +160,7 @@ public class PlayerTest {
     @Test
     public void testBarrierBuffReduction() {
         Player player = new Player(lm, (byte) 0, c, map);
-        Damage dmg = new Damage(10000, player, new Player(lm, (byte) 0, c, map));
+        Damage dmg = new Damage(10000, player, new Player(lm, (byte) 0, c, map), true);
         player.setStat(Globals.STAT_LEVEL, 100);
         player.setStat(Globals.STAT_DEFENSE, 500);
         player.setSkill(Globals.PASSIVE_RESIST, (byte) 30);
@@ -178,7 +178,7 @@ public class PlayerTest {
     @Test
     public void testSlashBuffReduction() {
         Player player = new Player(lm, (byte) 0, c, map);
-        Damage dmg = new Damage(Globals.rng(2999), player, new Player(lm, (byte) 0, c, map));
+        Damage dmg = new Damage(Globals.rng(2999), player, new Player(lm, (byte) 0, c, map), true);
         player.setStat(Globals.STAT_LEVEL, 100);
         player.setStat(Globals.STAT_DEFENSE, Globals.rng(1500));
         player.setSkill(Globals.SWORD_SLASH, (byte) 30);
@@ -200,7 +200,7 @@ public class PlayerTest {
     @Test
     public void testTauntBuffReduction() {
         Player player = new Player(lm, (byte) 0, c, map);
-        Damage dmg = new Damage(Globals.rng(2999), player, new Player(lm, (byte) 0, c, map));
+        Damage dmg = new Damage(Globals.rng(2999), player, new Player(lm, (byte) 0, c, map), true);
         player.setStat(Globals.STAT_LEVEL, 100);
         player.setStat(Globals.STAT_DEFENSE, Globals.rng(1500));
         player.setSkill(Globals.SWORD_TAUNT, (byte) 30);
@@ -225,7 +225,7 @@ public class PlayerTest {
     @Test
     public void testAdrenalineBuffReduction() {
         Player player = new Player(lm, (byte) 0, c, map);
-        Damage dmg = new Damage(Globals.rng(2999), player, new Player(lm, (byte) 0, c, map));
+        Damage dmg = new Damage(Globals.rng(2999), player, new Player(lm, (byte) 0, c, map), true);
         player.setStat(Globals.STAT_LEVEL, 100);
         player.setStat(Globals.STAT_DEFENSE, Globals.rng(1500));
         player.setSkill(Globals.UTILITY_ADRENALINE, (byte) 30);
@@ -252,7 +252,7 @@ public class PlayerTest {
     @Test
     public void testReflectBuffReduction() {
         Player player = new Player(lm, (byte) 0, c, map);
-        Damage dmg = new Damage(Globals.rng(2999), player, new Player(lm, (byte) 0, c, map));
+        Damage dmg = new Damage(Globals.rng(2999), player, new Player(lm, (byte) 0, c, map), true);
         player.setStat(Globals.STAT_LEVEL, 100);
         player.setStat(Globals.STAT_DEFENSE, Globals.rng(1500));
         player.setSkill(Globals.SHIELD_REFLECT, (byte) 30);
@@ -280,7 +280,7 @@ public class PlayerTest {
     @Test
     public void testMultipleBuffReduction() {
         Player player = new Player(lm, (byte) 0, c, map);
-        Damage dmg = new Damage(Globals.rng(2999), player, new Player(lm, (byte) 0, c, map));
+        Damage dmg = new Damage(Globals.rng(2999), player, new Player(lm, (byte) 0, c, map), true);
         player.setStat(Globals.STAT_LEVEL, 100);
         player.setStat(Globals.STAT_DEFENSE, Globals.rng(1500));
 

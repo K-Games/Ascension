@@ -40,7 +40,7 @@ public class ProjSwordVorpal extends Projectile {
         final Player owner = getOwner();
         final boolean isCrit = owner.rollCrit(owner.isSkillMaxed(Globals.SWORD_VORPAL) ? owner.getSkill(Globals.SWORD_VORPAL).getCustomValue(SkillSwordVorpal.CUSTOM_DATA_HEADERS[0]) : 0);
         final int damage = calculateDamage(isCrit);
-        target.queueDamage(new Damage(damage, true, owner, target, isCrit));
+        target.queueDamage(new Damage(damage, true, owner, target, isCrit, true));
         target.queueBuff(new BuffKnockback(this.logic, 200, (owner.getFacing() == Globals.RIGHT) ? 3 : -3, 0.1, owner, target));
     }
 
@@ -49,7 +49,7 @@ public class ProjSwordVorpal extends Projectile {
         final Player owner = getOwner();
         final boolean isCrit = owner.rollCrit(owner.isSkillMaxed(Globals.SWORD_VORPAL) ? 0.3 : 0);
         final int damage = calculateDamage(isCrit);
-        target.queueDamage(new Damage(damage, true, owner, target, isCrit));
+        target.queueDamage(new Damage(damage, true, owner, target, isCrit, true));
     }
 
 }

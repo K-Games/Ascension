@@ -45,7 +45,7 @@ public class ProjBowStorm extends Projectile {
         final Player owner = getOwner();
         final boolean isCrit = owner.rollCrit();
         int damage = calculateDamage(isCrit);
-        target.queueDamage(new Damage(damage, true, owner, target, isCrit));
+        target.queueDamage(new Damage(damage, true, owner, target, isCrit, true));
         target.queueBuff(new BuffKnockback(this.logic, 50, (Globals.rng(2) == 0) ? 3 : -3, 0, owner, target));
     }
 
@@ -54,7 +54,7 @@ public class ProjBowStorm extends Projectile {
         final Player owner = getOwner();
         final boolean isCrit = owner.rollCrit();
         int damage = calculateDamage(isCrit);
-        target.queueDamage(new Damage(damage, true, owner, target, isCrit));
+        target.queueDamage(new Damage(damage, true, owner, target, isCrit, true));
     }
 
     @Override
