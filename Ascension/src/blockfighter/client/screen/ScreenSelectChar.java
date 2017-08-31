@@ -24,6 +24,7 @@ public class ScreenSelectChar extends ScreenMenu {
     private static final String ENTER_NEW_NAME_TEXT = "Enter New Character Name";
     private static final String SELECT_A_CHARACTER_TEXT = "Select a Character";
     private static final String NEW_CHARACTER_TEXT = "New Character";
+    private static final String LOADING_CHARACTER_TEXT = "Loading Save...";
 
     private static final SaveData[] CHARACTER_DATA = new SaveData[3];
 
@@ -102,10 +103,11 @@ public class ScreenSelectChar extends ScreenMenu {
         for (int j = 0; j < 3; j++) {
             if (CHARACTER_DATA[j] == null) {
                 g.setFont(Globals.ARIAL_30PT);
-                drawStringOutline(g, NEW_CHARACTER_TEXT, 20 + 420 * j + 200 - g.getFontMetrics().stringWidth(NEW_CHARACTER_TEXT) / 2, 310, 2);
+                String text = (savesLoaded) ? NEW_CHARACTER_TEXT : LOADING_CHARACTER_TEXT;
+                drawStringOutline(g, text, 20 + 420 * j + 200 - g.getFontMetrics().stringWidth(text) / 2, 310, 2);
 
                 g.setColor(Color.WHITE);
-                g.drawString(NEW_CHARACTER_TEXT, 20 + 420 * j + 200 - g.getFontMetrics().stringWidth(NEW_CHARACTER_TEXT) / 2, 310);
+                g.drawString(text, 20 + 420 * j + 200 - g.getFontMetrics().stringWidth(text) / 2, 310);
 
             } else {
                 final double[] stats = CHARACTER_DATA[j].getBaseStats(), bonus = CHARACTER_DATA[j].getBonusStats();
@@ -250,13 +252,15 @@ public class ScreenSelectChar extends ScreenMenu {
             for (byte i = 0; i < SELECT_BOX.length; i++) {
                 if (SELECT_BOX[i].contains(scaled)) {
                     if (CHARACTER_DATA[i] == null) {
-                        this.createPrompt = true;
-                        if (panel != null) {
-                            panel.add(CREATE_NAMEFIELD);
-                            panel.revalidate();
+                        if (savesLoaded) {
+                            this.createPrompt = true;
+                            if (panel != null) {
+                                panel.add(CREATE_NAMEFIELD);
+                                panel.revalidate();
+                            }
+                            this.selectNum = i;
+                            break;
                         }
-                        this.selectNum = i;
-                        break;
                     } else {
                         Core.getLogicModule().setSelectedSaveData(CHARACTER_DATA[i]);
                         Core.getLogicModule().setScreen(new ScreenStats());
