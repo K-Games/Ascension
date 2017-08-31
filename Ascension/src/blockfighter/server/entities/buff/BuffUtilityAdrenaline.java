@@ -7,7 +7,7 @@ import blockfighter.shared.Globals;
 
 public class BuffUtilityAdrenaline extends Buff implements BuffDmgReduct, BuffXSpeedIncrease {
 
-    private double xSpeedBonus;
+    private final double xSpeedBonus;
     private final double dmgReduct, dmgTakenMult;
     private final int maxDuration;
     private long lastHPHeal = 0;
@@ -19,7 +19,7 @@ public class BuffUtilityAdrenaline extends Buff implements BuffDmgReduct, BuffXS
         this.dmgTakenMult = 1D - this.dmgReduct;
         double moveSpeedBase = o.getSkill(Globals.UTILITY_ADRENALINE).getCustomValue(SkillUtilityAdrenaline.CUSTOM_DATA_HEADERS[2]);
         double moveSpeedMult = o.getSkill(Globals.UTILITY_ADRENALINE).getCustomValue(SkillUtilityAdrenaline.CUSTOM_DATA_HEADERS[3]) * o.getSkillLevel(Globals.UTILITY_ADRENALINE);
-        this.xSpeedBonus = Globals.WALK_SPEED * (moveSpeedBase + moveSpeedMult);
+        this.xSpeedBonus = moveSpeedBase + moveSpeedMult;
     }
 
     @Override

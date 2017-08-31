@@ -691,7 +691,7 @@ public class Player implements GameEntity, Callable<Player> {
         this.reflects.clear();
         this.dmgReduct = 1;
         this.dmgAmp = 1;
-        this.xSpeedBonus = 0;
+        this.xSpeedBonus = 1;
 
         // Empty and add buffs from queue
         while (!this.buffQueue.isEmpty()) {
@@ -1092,7 +1092,7 @@ public class Player implements GameEntity, Callable<Player> {
     }
 
     private void updateMove(final boolean xChanged) {
-        double totalXSpeed = Globals.WALK_SPEED + this.xSpeedBonus;
+        double totalXSpeed = Globals.WALK_SPEED * this.xSpeedBonus;
         if (this.dirKeydown[Globals.RIGHT] && !this.dirKeydown[Globals.LEFT]) {
             if (this.ySpeed == 0) {
                 setXSpeed(totalXSpeed);
