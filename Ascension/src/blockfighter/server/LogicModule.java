@@ -135,17 +135,15 @@ public class LogicModule implements Runnable {
         ArrayDeque<Player> thirds = new ArrayDeque<>();
         ArrayDeque<Player> rest = new ArrayDeque<>();
         sortedPlayers.forEach((player) -> {
-            if (player.getScore() > 0) {
-                if (firsts.isEmpty() || firsts.getFirst().getScore() == player.getScore()) {
-                    firsts.add(player);
-                    Globals.log(LogicModule.class, player.getPlayerName() + " finished 1st", Globals.LOG_TYPE_DATA);
-                } else if (seconds.isEmpty() || seconds.getFirst().getScore() == player.getScore()) {
-                    seconds.add(player);
-                    Globals.log(LogicModule.class, player.getPlayerName() + " finished 2nd", Globals.LOG_TYPE_DATA);
-                } else if (thirds.isEmpty() || thirds.getFirst().getScore() == player.getScore()) {
-                    thirds.add(player);
-                    Globals.log(LogicModule.class, player.getPlayerName() + " finished 3rd", Globals.LOG_TYPE_DATA);
-                }
+            if (firsts.isEmpty() || firsts.getFirst().getScore() == player.getScore()) {
+                firsts.add(player);
+                Globals.log(LogicModule.class, player.getPlayerName() + " finished 1st", Globals.LOG_TYPE_DATA);
+            } else if (seconds.isEmpty() || seconds.getFirst().getScore() == player.getScore()) {
+                seconds.add(player);
+                Globals.log(LogicModule.class, player.getPlayerName() + " finished 2nd", Globals.LOG_TYPE_DATA);
+            } else if (thirds.isEmpty() || thirds.getFirst().getScore() == player.getScore()) {
+                thirds.add(player);
+                Globals.log(LogicModule.class, player.getPlayerName() + " finished 3rd", Globals.LOG_TYPE_DATA);
             } else {
                 rest.add(player);
                 Globals.log(LogicModule.class, player.getPlayerName() + " did not place", Globals.LOG_TYPE_DATA);
