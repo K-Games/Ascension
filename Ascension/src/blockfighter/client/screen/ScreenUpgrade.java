@@ -169,7 +169,7 @@ public class ScreenUpgrade extends ScreenItemManagement {
     }
 
     private void drawUpgradeBox(final Graphics2D g) {
-        g.setColor(SKILL_BOX_BG_COLOR);
+        g.setColor(BOX_BG_COLOR);
         g.fillRoundRect(UPGRADE_BOX_X - 20, UPGRADE_BOX_Y - 20, 340, 280, 15, 15);
 
         g.setFont(Globals.ARIAL_15PT);

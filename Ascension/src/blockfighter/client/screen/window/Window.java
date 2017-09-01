@@ -25,13 +25,7 @@ public abstract class Window implements KeyListener, MouseListener, MouseMotionL
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        Point2D.Double scaled;
-        if (Globals.WINDOW_SCALE_ENABLED) {
-            scaled = new Point2D.Double(e.getX() / Globals.WINDOW_SCALE, e.getY() / Globals.WINDOW_SCALE);
-        } else {
-            scaled = new Point2D.Double(e.getX(), e.getY());
-        }
-        this.mousePos = scaled;
+        mouseMoved(e);
     }
 
     @Override
@@ -43,5 +37,10 @@ public abstract class Window implements KeyListener, MouseListener, MouseMotionL
             scaled = new Point2D.Double(e.getX(), e.getY());
         }
         this.mousePos = scaled;
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        mouseMoved(e);
     }
 }

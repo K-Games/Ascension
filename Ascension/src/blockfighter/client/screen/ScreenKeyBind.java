@@ -136,7 +136,7 @@ public class ScreenKeyBind extends ScreenMenu {
 
     private void drawButtons(final Graphics2D g) {
         final BufferedImage button = Globals.MENU_BUTTON[Globals.BUTTON_SMALLRECT];
-        g.setColor(SKILL_BOX_BG_COLOR);
+        g.setColor(BOX_BG_COLOR);
         g.fillRoundRect((int) KEY_BOX[16].x - 10 - 50, (int) KEY_BOX[16].y - 10,
                 (int) ((KEY_BOX[16 + Globals.Emotes.values().length - 1].x + KEY_BOX[16 + Globals.Emotes.values().length - 1].width + 10) - (KEY_BOX[16].x - 10 - 50)),
                 (int) ((KEY_BOX[16 + Globals.Emotes.values().length - 1].y + KEY_BOX[16 + Globals.Emotes.values().length - 1].height + 10) - (KEY_BOX[16].y - 10)), 15, 15);

@@ -17,7 +17,7 @@ import java.util.concurrent.Future;
 
 public abstract class Screen implements KeyListener, MouseListener, MouseMotionListener, FocusListener {
 
-    protected static final Color SKILL_BOX_BG_COLOR = new Color(0, 0, 0, 115);
+    public static final Color BOX_BG_COLOR = new Color(0, 0, 0, 115);
 
     public abstract void update();
 
@@ -27,7 +27,7 @@ public abstract class Screen implements KeyListener, MouseListener, MouseMotionL
 
     protected static RenderPanel panel;
 
-    public void drawStringOutline(final Graphics2D g, final String s, final int x, final int y, final int width) {
+    public static void drawStringOutline(final Graphics2D g, final String s, final int x, final int y, final int width) {
         if (s != null) {
             for (int i = 0; i < 2; i++) {
                 g.setColor(Color.BLACK);

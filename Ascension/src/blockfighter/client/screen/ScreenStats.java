@@ -70,7 +70,7 @@ public class ScreenStats extends ScreenMenu {
     }
 
     private void drawMainStats(final Graphics2D g) {
-        g.setColor(SKILL_BOX_BG_COLOR);
+        g.setColor(BOX_BG_COLOR);
         g.fillRoundRect(MAINSTAT_BOX_X - 10, MAINSTAT_BOX_Y - 25, 470, 205, 15, 15);
 
         double[] baseStats = this.c.getBaseStats();
@@ -109,7 +109,7 @@ public class ScreenStats extends ScreenMenu {
     }
 
     private void drawSecondaryStats(final Graphics2D g) {
-        g.setColor(SKILL_BOX_BG_COLOR);
+        g.setColor(BOX_BG_COLOR);
         g.fillRoundRect(SECSTAT_BOX_X - 10, SECSTAT_BOX_Y - 25, 470, 220, 15, 15);
         double[] baseStats = this.c.getBaseStats();
         double[] totalStats = this.c.getTotalStats();
@@ -143,7 +143,7 @@ public class ScreenStats extends ScreenMenu {
     }
 
     private void drawEXPBar(final Graphics2D g) {
-        g.setColor(SKILL_BOX_BG_COLOR);
+        g.setColor(BOX_BG_COLOR);
         g.fillRoundRect(EXPBAR_BOX_X - 10, EXPBAR_BOX_Y - 20, 470, 75, 15, 15);
 
         double[] baseStats = this.c.getBaseStats();
