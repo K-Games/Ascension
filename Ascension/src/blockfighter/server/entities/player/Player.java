@@ -61,7 +61,7 @@ public class Player implements GameEntity, Callable<Player> {
 
     private UUID uniqueID;
     private String name = "";
-    private double x, y, ySpeed, xSpeed, targetXSpeed, xSpeedBonus;
+    private double x, y, ySpeed, xSpeed, targetXSpeed, xSpeedMultiplier;
     private final boolean[] dirKeydown = new boolean[4];
     private boolean isFalling = false, isJumping = false, isInvulnerable = false, isDead = false, isRemoveDebuff = false, isHyperStance = false;
     private boolean updatePos = false, updateFacing = false, updateAnimState = false;
@@ -691,7 +691,7 @@ public class Player implements GameEntity, Callable<Player> {
         this.reflects.clear();
         this.dmgReduct = 1;
         this.dmgAmp = 1;
-        this.xSpeedBonus = 1;
+        this.xSpeedMultiplier = 1;
 
         // Empty and add buffs from queue
         while (!this.buffQueue.isEmpty()) {
@@ -773,7 +773,11 @@ public class Player implements GameEntity, Callable<Player> {
             }
 
             if (buff instanceof BuffXSpeedIncrease) {
-                this.xSpeedBonus += ((BuffXSpeedIncrease) buff).getXSpeedIncrease();
+                this.xSpeedMultiplier += ((BuffXSpeedIncrease) buff).getXSpeedIncrease();
+            }
+
+            if (buff instanceof BuffXSpeedDecrease) {
+                this.xSpeedMultiplier -= ((BuffXSpeedDecrease) buff).getXSpeedDecrease();
             }
 
             // Remove expired buffs/remove debuffs when invulnerable/special state
@@ -784,6 +788,8 @@ public class Player implements GameEntity, Callable<Player> {
                 returnBuffKey(bEntry.getKey());
             }
         }
+        this.xSpeedMultiplier = (this.xSpeedMultiplier < 0.3) ? 0.3 : this.xSpeedMultiplier;
+        this.xSpeedMultiplier = (this.xSpeedMultiplier > 2) ? 2 : this.xSpeedMultiplier;
     }
 
     protected void die(final Player killer) {
@@ -1092,7 +1098,7 @@ public class Player implements GameEntity, Callable<Player> {
     }
 
     private void updateMove(final boolean xChanged) {
-        double totalXSpeed = Globals.WALK_SPEED * this.xSpeedBonus;
+        double totalXSpeed = Globals.WALK_SPEED * this.xSpeedMultiplier;
         if (this.dirKeydown[Globals.RIGHT] && !this.dirKeydown[Globals.LEFT]) {
             if (this.ySpeed == 0) {
                 setXSpeed(totalXSpeed);
