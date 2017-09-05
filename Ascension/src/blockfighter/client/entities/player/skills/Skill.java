@@ -23,11 +23,11 @@ public abstract class Skill {
     protected String[] maxBonusDesc = new String[0];
 
     public void draw(final Graphics2D g, final int x, final int y) {
-        g.drawImage(getIcon(), x, y, null);
+        draw(g, x, y, false);
     }
 
-    public void drawDisabled(final Graphics2D g, final int x, final int y) {
-        g.drawImage(getDisabledIcon(), x, y, null);
+    public void draw(final Graphics2D g, final int x, final int y, final boolean disabled) {
+        g.drawImage((disabled) ? getDisabledIcon() : getIcon(), x, y, null);
     }
 
     public void drawInfo(final Graphics2D g, final int x, final int y) {

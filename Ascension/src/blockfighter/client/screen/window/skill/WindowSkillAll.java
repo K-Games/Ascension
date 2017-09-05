@@ -127,8 +127,9 @@ public class WindowSkillAll extends WindowSkill {
 
         for (byte i = 0; i < 18; i++) {
             g.drawImage(button, (int) SKILL_SLOTS.get(i).x, (int) SKILL_SLOTS.get(i).y, null);
-            if (this.saveData.getTotalStats()[Globals.STAT_LEVEL] >= this.skillList.get(i).getReqLevel()) {
-                this.skillList.get(i).draw(g, (int) SKILL_SLOTS.get(i).x, (int) SKILL_SLOTS.get(i).y);
+            boolean disabled = this.saveData.getTotalStats()[Globals.STAT_LEVEL] < this.skillList.get(i).getReqLevel();
+            this.skillList.get(i).draw(g, (int) SKILL_SLOTS.get(i).x, (int) SKILL_SLOTS.get(i).y, disabled);
+            if (!disabled) {
                 g.setFont(Globals.ARIAL_15PT);
                 drawStringOutline(g, this.skillList.get(i).getSkillName(), (int) SKILL_SLOTS.get(i).x + 70, (int) SKILL_SLOTS.get(i).y + 20, 1);
                 drawStringOutline(g, Globals.getStatName(Globals.STAT_LEVEL) + Globals.COLON_SPACE_TEXT + this.skillList.get(i).getLevel(), (int) SKILL_SLOTS.get(i).x + 70, (int) SKILL_SLOTS.get(i).y + 50,
@@ -138,7 +139,6 @@ public class WindowSkillAll extends WindowSkill {
                 g.drawString(Globals.getStatName(Globals.STAT_LEVEL) + Globals.COLON_SPACE_TEXT + this.skillList.get(i).getLevel(), (int) SKILL_SLOTS.get(i).x + 70, (int) SKILL_SLOTS.get(i).y + 50);
                 drawSkillAddButton(g, i);
             } else {
-                this.skillList.get(i).drawDisabled(g, (int) SKILL_SLOTS.get(i).x, (int) SKILL_SLOTS.get(i).y);
                 g.setFont(Globals.ARIAL_15PT);
                 drawStringOutline(g, UNLOCK_SKILL_TEXT1, (int) SKILL_SLOTS.get(i).x + 70, (int) SKILL_SLOTS.get(i).y + 25, 1);
                 drawStringOutline(g, UNLOCK_SKILL_TEXT2 + this.skillList.get(i).getReqLevel(), (int) SKILL_SLOTS.get(i).x + 70, (int) SKILL_SLOTS.get(i).y + 45, 1);
@@ -150,15 +150,15 @@ public class WindowSkillAll extends WindowSkill {
 
         for (byte i = 18; i < SKILL_SLOTS.size(); i++) {
             g.drawImage(button, (int) SKILL_SLOTS.get(i).x, (int) SKILL_SLOTS.get(i).y, null);
-            if (this.saveData.getTotalStats()[Globals.STAT_LEVEL] >= this.skillList.get(i).getReqLevel()) {
-                this.skillList.get(i).draw(g, (int) SKILL_SLOTS.get(i).x, (int) SKILL_SLOTS.get(i).y);
+            boolean disabled = this.saveData.getTotalStats()[Globals.STAT_LEVEL] < this.skillList.get(i).getReqLevel();
+            this.skillList.get(i).draw(g, (int) SKILL_SLOTS.get(i).x, (int) SKILL_SLOTS.get(i).y, disabled);
+            if (!disabled) {
                 g.setFont(Globals.ARIAL_15PT);
                 drawStringOutline(g, Globals.getStatName(Globals.STAT_LEVEL) + Globals.COLON_SPACE_TEXT + this.skillList.get(i).getLevel(), (int) SKILL_SLOTS.get(i).x, (int) SKILL_SLOTS.get(i).y + 80, 1);
                 g.setColor(Color.WHITE);
                 g.drawString(Globals.getStatName(Globals.STAT_LEVEL) + Globals.COLON_SPACE_TEXT + this.skillList.get(i).getLevel(), (int) SKILL_SLOTS.get(i).x, (int) SKILL_SLOTS.get(i).y + 80);
                 drawSkillAddButton(g, i);
             } else {
-                this.skillList.get(i).drawDisabled(g, (int) SKILL_SLOTS.get(i).x, (int) SKILL_SLOTS.get(i).y);
                 g.setFont(Globals.ARIAL_15PT);
                 int line1X = (int) (SKILL_SLOTS.get(i).x + SKILL_SLOTS.get(i).width / 2 - g.getFontMetrics().stringWidth(UNLOCK_SKILL_TEXT3) / 2);
                 int line2X = (int) (SKILL_SLOTS.get(i).x + SKILL_SLOTS.get(i).width / 2 - g.getFontMetrics().stringWidth(Integer.toString(this.skillList.get(i).getReqLevel())) / 2);

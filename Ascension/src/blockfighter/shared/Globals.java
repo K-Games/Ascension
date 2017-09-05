@@ -827,6 +827,7 @@ public class Globals {
     public final static BufferedImage[] EXP_WORD = new BufferedImage[1];
 
     public final static BufferedImage[] SKILL_ICON = new BufferedImage[NUM_SKILLS];
+    public final static BufferedImage[] SKILL_DISABLED_ICON = new BufferedImage[NUM_SKILLS];
 
     public final static int[] PLAYER_NUM_ANIM_FRAMES = new int[NUM_PLAYER_ANIM_STATE];
 
@@ -1371,6 +1372,7 @@ public class Globals {
         MENU_SMOKE[0] = Globals.loadTextureResource("sprites/ui/menu/smoke.png");
         for (byte i = 0; i < 30; i++) {
             SKILL_ICON[i] = Globals.loadTextureResource("sprites/skillicon/" + i + ".png");
+            SKILL_DISABLED_ICON[i] = getDisabledIcon(SKILL_ICON[i]);
         }
 
 //        for (byte i = 0; i < 10; i++) {

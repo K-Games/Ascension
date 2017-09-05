@@ -7,9 +7,6 @@ import java.util.HashMap;
 public class SkillUtilityDash extends Skill {
 
     private static final byte SKILL_CODE = Globals.UTILITY_DASH;
-    private static final BufferedImage ICON = Globals.SKILL_ICON[SKILL_CODE];
-    private static final BufferedImage DISABLED_ICON;
-
     private static final String SKILL_NAME;
     private static final String[] DESCRIPTION;
     private static final boolean IS_PASSIVE;
@@ -20,7 +17,6 @@ public class SkillUtilityDash extends Skill {
     private static final int REQ_LEVEL;
 
     static {
-        DISABLED_ICON = Globals.getDisabledIcon(ICON);
         String[] data = Globals.loadSkillRawData(SKILL_CODE);
         HashMap<String, Integer> dataHeaders = Globals.getDataHeaders(data);
 
@@ -47,7 +43,7 @@ public class SkillUtilityDash extends Skill {
 
     @Override
     public BufferedImage getIcon() {
-        return ICON;
+        return Globals.SKILL_ICON[SKILL_CODE];
     }
 
     @Override
@@ -95,6 +91,6 @@ public class SkillUtilityDash extends Skill {
 
     @Override
     public BufferedImage getDisabledIcon() {
-        return DISABLED_ICON;
+        return Globals.SKILL_DISABLED_ICON[SKILL_CODE];
     }
 }
