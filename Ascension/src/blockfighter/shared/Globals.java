@@ -1063,7 +1063,7 @@ public class Globals {
             return value;
         } catch (Exception e) {
         }
-        return null;
+        return new String[0];
     }
 
     public static String loadStringValue(final String[] data, final HashMap<String, Integer> dataHeaders, String header) {
