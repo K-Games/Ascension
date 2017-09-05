@@ -112,7 +112,7 @@ public class ScreenInventory extends ScreenItemManagement {
     }
 
     private void drawStats(final Graphics2D g) {
-        g.setColor(SKILL_BOX_BG_COLOR);
+        g.setColor(BOX_BG_COLOR);
         g.fillRoundRect(STAT_BOX_X - 10, STAT_BOX_Y - 20, 320, 255, 15, 15);
 
         for (byte i = 0; i < statString.length; i++) {

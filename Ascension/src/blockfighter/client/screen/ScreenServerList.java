@@ -138,7 +138,7 @@ public class ScreenServerList extends ScreenMenu {
         final BufferedImage bg = Globals.MENU_BG[1];
         g.drawImage(bg, 0, 0, null);
 
-        g.setColor(SKILL_BOX_BG_COLOR);
+        g.setColor(BOX_BG_COLOR);
         g.fillRoundRect(SERVER_LIST_AREA_X, SERVER_LIST_AREA_Y - 35, SERVER_LIST_ADDRESS_COL_WIDTH, 30, 10, 10);
         g.fillRoundRect(SERVER_LIST_AREA_X + SERVER_LIST_ADDRESS_COL_WIDTH + 5, SERVER_LIST_AREA_Y - 35, SERVER_LIST_REGION_COL_WIDTH, 30, 10, 10);
         g.fillRoundRect(SERVER_LIST_AREA_X + SERVER_LIST_ADDRESS_COL_WIDTH + 10 + SERVER_LIST_REGION_COL_WIDTH, SERVER_LIST_AREA_Y - 35, SERVER_LIST_CAPACITY_COL_WIDTH, 30, 10, 10);

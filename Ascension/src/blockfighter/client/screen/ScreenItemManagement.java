@@ -3,13 +3,13 @@ package blockfighter.client.screen;
 import blockfighter.client.Core;
 import blockfighter.client.entities.items.ItemEquip;
 import blockfighter.client.savedata.SaveData;
-import static blockfighter.client.screen.Screen.SKILL_BOX_BG_COLOR;
 import blockfighter.shared.Globals;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import static blockfighter.client.screen.Screen.BOX_BG_COLOR;
 
 public abstract class ScreenItemManagement extends ScreenMenu {
 
@@ -125,7 +125,7 @@ public abstract class ScreenItemManagement extends ScreenMenu {
     }
 
     protected void drawEquipSlots(final Graphics2D g) {
-        g.setColor(SKILL_BOX_BG_COLOR);
+        g.setColor(BOX_BG_COLOR);
         g.fillRoundRect(EQUIP_BOX_X - 10, EQUIP_BOX_Y - 10, 240, 360, 15, 15);
         final BufferedImage characterSprite = Globals.CHAR_SPRITE[Globals.PLAYER_ANIM_STATE_STAND][this.charFrame];
         final int x = EQUIP_BOX_X + 90 + characterSprite.getWidth() / 2, y = EQUIP_BOX_Y + 160 + characterSprite.getHeight();
