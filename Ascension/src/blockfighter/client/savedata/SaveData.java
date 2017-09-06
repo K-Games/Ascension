@@ -61,6 +61,7 @@ public class SaveData {
         // initalize skill list
         for (Globals.SkillClassMap skill : Globals.SkillClassMap.values()) {
             this.skills.put(skill.getByteCode(), skill.getClientClass().newInstance());
+            this.skills.get(skill.getByteCode()).updateDesc();
         }
         Arrays.fill(this.keybinds, -1);
     }
