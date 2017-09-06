@@ -1018,6 +1018,9 @@ public class Globals {
     };
 
     public static BufferedImage getDisabledIcon(BufferedImage icon) {
+        if (icon == null) {
+            return null;
+        }
         GrayFilter filter = new GrayFilter(true, 15);
         ImageProducer prod = new FilteredImageSource(icon.getSource(), filter);
         Image disabled = Toolkit.getDefaultToolkit().createImage(prod);
