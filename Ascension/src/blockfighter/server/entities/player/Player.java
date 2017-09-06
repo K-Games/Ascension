@@ -71,7 +71,6 @@ public class Player implements GameEntity, Callable<Player> {
     private final Rectangle2D.Double hitbox;
 
     private final ConcurrentHashMap<Integer, Buff> buffs = new ConcurrentHashMap<>(150, 0.9f, 1);
-    private Buff stunDebuff, knockbackDebuff, barrierBuff, resistBuff;
     private final ConcurrentHashMap<Integer, Buff> reflects = new ConcurrentHashMap<>(10, 0.9f, 1);
     private double dmgReduct, dmgAmp;
     private double barrierDmgTaken = 0;
@@ -92,6 +91,8 @@ public class Player implements GameEntity, Callable<Player> {
 
     private final ConcurrentLinkedQueue<Integer> buffKeys = new ConcurrentLinkedQueue<>();
     private final ConcurrentLinkedQueue<Double> resistDamageSum;
+
+    private final HashMap<Class<? extends Buff>, Buff> buffsMap = new HashMap<>();
 
     private int maxBuffKeys = 0;
     private Byte nextState;
@@ -310,10 +311,14 @@ public class Player implements GameEntity, Callable<Player> {
         return this.skills.containsKey(skillCode);
     }
 
-    public Map.Entry<Integer, Buff> hasBuff(final Class<?> buffType) {
+    public boolean hasBuff(final Class<? extends Buff> buffClass) {
+        return this.buffsMap.get(buffClass) != null;
+    }
+
+    public Map.Entry<Integer, Buff> getExistingBuff(final Class<? extends Buff> buffClass) {
         for (final Map.Entry<Integer, Buff> bEntry : this.buffs.entrySet()) {
             final Buff b = bEntry.getValue();
-            if (buffType.isInstance(b)) {
+            if (buffClass.isInstance(b)) {
                 return bEntry;
             }
         }
@@ -577,12 +582,12 @@ public class Player implements GameEntity, Callable<Player> {
                 finalDamage = finalDamage * (1 - passiveReduct);
 
                 // Barrier reduction
-                if (this.barrierBuff != null) {
-                    finalDamage = ((BuffPassiveBarrier) this.barrierBuff).reduceDmg(finalDamage);
+                if (hasBuff(BuffPassiveBarrier.class)) {
+                    finalDamage = ((BuffPassiveBarrier) this.buffsMap.get(BuffPassiveBarrier.class)).reduceDmg(finalDamage);
                     PacketSender.sendParticle(this.logic, Globals.Particles.PASSIVE_BARRIER.getParticleCode(), dmg.getDmgPoint().x, dmg.getDmgPoint().y);
                 }
 
-                if (this.resistBuff != null) {
+                if (hasBuff(BuffPassiveResist.class)) {
                     PacketSender.sendParticle(this.logic, Globals.Particles.PASSIVE_RESIST.getParticleCode(), dmg.getDmgPoint().x, dmg.getDmgPoint().y);
                 }
 
@@ -684,10 +689,7 @@ public class Player implements GameEntity, Callable<Player> {
 
     private void updateBuffs() {
         // Update exisiting buffs
-        this.stunDebuff = null;
-        this.knockbackDebuff = null;
-        this.barrierBuff = null;
-        this.resistBuff = null;
+        this.buffsMap.clear();
         this.reflects.clear();
         this.dmgReduct = 1;
         this.dmgAmp = 1;
@@ -707,12 +709,12 @@ public class Player implements GameEntity, Callable<Player> {
                 }
 
                 if (b instanceof BuffUtilityDash) {
-                    final Map.Entry<Integer, Buff> prevBuff = hasBuff(BuffUtilityDash.class);
+                    final Map.Entry<Integer, Buff> prevBuff = getExistingBuff(BuffUtilityDash.class);
                     if (prevBuff != null) {
                         this.buffs.remove(prevBuff.getKey());
                     }
                 } else if (b instanceof BuffSwordSlash) {
-                    final Map.Entry<Integer, Buff> prevBuff = hasBuff(BuffSwordSlash.class);
+                    final Map.Entry<Integer, Buff> prevBuff = getExistingBuff(BuffSwordSlash.class);
                     if (prevBuff != null) {
                         this.buffs.remove(prevBuff.getKey());
                     }
@@ -735,12 +737,12 @@ public class Player implements GameEntity, Callable<Player> {
             if (canDebuffAffect()) {
                 if (!isHyperStance()) {
                     if (buff instanceof BuffStun) {
-                        if (this.stunDebuff == null) {
-                            this.stunDebuff = buff;
+                        if (!hasBuff(BuffStun.class)) {
+                            this.buffsMap.put(BuffStun.class, buff);
                         }
                     } else if (buff instanceof BuffKnockback) {
-                        if (this.knockbackDebuff == null) {
-                            this.knockbackDebuff = buff;
+                        if (!hasBuff(BuffKnockback.class)) {
+                            this.buffsMap.put(BuffKnockback.class, buff);
                         }
                     }
                 }
@@ -751,14 +753,14 @@ public class Player implements GameEntity, Callable<Player> {
             }
 
             if (buff instanceof BuffPassiveBarrier) {
-                if (this.barrierBuff == null) {
-                    this.barrierBuff = buff;
+                if (!hasBuff(BuffPassiveBarrier.class)) {
+                    this.buffsMap.put(BuffPassiveBarrier.class, buff);
                 }
             }
 
             if (buff instanceof BuffPassiveResist) {
-                if (this.resistBuff == null) {
-                    this.resistBuff = buff;
+                if (!hasBuff(BuffPassiveResist.class)) {
+                    this.buffsMap.put(BuffPassiveResist.class, buff);
                 }
             }
 
@@ -1047,11 +1049,11 @@ public class Player implements GameEntity, Callable<Player> {
     }
 
     public boolean isStunned() {
-        return this.stunDebuff != null;
+        return hasBuff(BuffStun.class);
     }
 
     public boolean isKnockback() {
-        return this.knockbackDebuff != null;
+        return hasBuff(BuffKnockback.class);
     }
 
     public boolean isUsingSkill() {
