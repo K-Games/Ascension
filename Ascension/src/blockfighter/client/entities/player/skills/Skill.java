@@ -65,10 +65,10 @@ public abstract class Skill {
         }
 
         int totalDescY = 0;
-        for (int i = 0; i < getDesc().length; i++) {
-            g.drawString(getDesc()[i], drawX + 10, drawY + 90 + i * 20);
+        for (String desc : getDesc()) {
+            g.drawString(desc, drawX + 10, drawY + 90 + totalDescY);
+            totalDescY += 20;
         }
-        totalDescY += getDesc().length * 20;
 
         if (isPassive()) {
             g.setColor(new Color(255, 190, 0));
@@ -77,32 +77,33 @@ public abstract class Skill {
             g.setColor(Color.WHITE);
         }
 
-        g.drawString("[Level " + this.level + "]", drawX + 10, drawY + 95 + totalDescY);
-        for (int i = 0; i < skillCurLevelDesc.length; i++) {
-            g.drawString(skillCurLevelDesc[i], drawX + 10, drawY + 115 + totalDescY + i * 20);
+        totalDescY += 5;
+        g.drawString("[Level " + this.level + "]", drawX + 10, drawY + 90 + totalDescY);
+        totalDescY += 20;
+        for (String descText : skillCurLevelDesc) {
+            g.drawString(descText, drawX + 10, drawY + 90 + totalDescY);
+            totalDescY += 20;
         }
-        totalDescY += skillCurLevelDesc.length * 20;
 
-        if (this.level < 30) {
-            g.drawString("[Level " + (this.level + 1) + "]", drawX + 10, drawY + 120 + totalDescY);
-            for (int i = 0; i < skillNextLevelDesc.length; i++) {
-                g.drawString(skillNextLevelDesc[i], drawX + 10, drawY + 140 + totalDescY + i * 20);
+        if (this.level < 30 && skillNextLevelDesc.length > 0) {
+            totalDescY += 5;
+            g.drawString("[Level " + (this.level + 1) + "]", drawX + 10, drawY + 90 + totalDescY);
+            totalDescY += 20;
+            for (String descText : skillNextLevelDesc) {
+                g.drawString(descText, drawX + 10, drawY + 90 + totalDescY);
+                totalDescY += 20;
             }
-            totalDescY += skillNextLevelDesc.length * 20;
         }
 
         if (!isPassive()) {
-            if (this.level < 30) {
-                g.drawString("[Level 30 Bonus]", drawX + 10, drawY + 145 + totalDescY);
-                for (int i = 0; i < maxBonusDesc.length; i++) {
-                    g.drawString(maxBonusDesc[i], drawX + 10, drawY + 165 + totalDescY + i * 20);
-                }
-            } else {
-                g.drawString("[Level 30 Bonus]", drawX + 10, drawY + 120 + totalDescY);
-                for (int i = 0; i < maxBonusDesc.length; i++) {
-                    g.drawString(maxBonusDesc[i], drawX + 10, drawY + 140 + totalDescY + i * 20);
-                }
+            totalDescY += 5;
+            g.drawString("[Level 30 Bonus]", drawX + 10, drawY + 90 + totalDescY);
+            totalDescY += 20;
+            for (String descText : maxBonusDesc) {
+                g.drawString(descText, drawX + 10, drawY + 90 + totalDescY);
+                totalDescY += 20;
             }
+            totalDescY += 5;
         }
     }
 
@@ -132,7 +133,30 @@ public abstract class Skill {
         if (fontMetric == null) {
             return;
         }
-        boxHeight = ((this.level < 30) ? 130 : 105) + getDesc().length * 20 + skillCurLevelDesc.length * 20 + ((this.level < 30) ? skillNextLevelDesc.length * 20 : 0) + ((isPassive()) ? 20 : maxBonusDesc.length * 20 + 25);
+        int totalDescY = 0;
+        totalDescY += getDesc().length * 20;
+
+        if (isPassive()) {
+            totalDescY += 20;
+        }
+
+        totalDescY += 5;
+        totalDescY += 20;
+        totalDescY += skillCurLevelDesc.length * 20;
+
+        if (this.level < 30 && skillNextLevelDesc.length > 0) {
+            totalDescY += 5;
+            totalDescY += 20;
+            totalDescY += skillNextLevelDesc.length * 20;
+        }
+
+        if (!isPassive()) {
+            totalDescY += 5;
+            totalDescY += 20;
+            totalDescY += maxBonusDesc.length * 20;
+        }
+
+        boxHeight = 80 + totalDescY;
 
         boxWidth = fontMetric.stringWidth("Level: " + this.level + " - Requires " + ItemEquip.getEquipTypeName(getReqWeapon())) + 90;
         for (String s : getDesc()) {
