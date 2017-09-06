@@ -7,7 +7,7 @@ import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.player.skills.Skill;
-import blockfighter.server.entities.player.skills.SkillBowFrost;
+import blockfighter.server.entities.player.skills.bow.SkillBowFrost;
 import blockfighter.shared.Globals;
 import java.awt.geom.Rectangle2D;
 

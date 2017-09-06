@@ -2,7 +2,7 @@ package blockfighter.client.entities.particles.skills.bow;
 
 import blockfighter.client.Core;
 import blockfighter.client.entities.particles.Particle;
-import blockfighter.client.entities.player.skills.SkillBowStorm;
+import blockfighter.client.entities.player.skills.bow.SkillBowStorm;
 import blockfighter.shared.Globals;
 
 public class ParticleBowStormEmitter extends Particle {

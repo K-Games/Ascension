@@ -3,7 +3,7 @@ package blockfighter.client.entities.particles.skills.bow;
 import blockfighter.client.Core;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.client.entities.player.Player;
-import blockfighter.client.entities.player.skills.SkillBowVolley;
+import blockfighter.client.entities.player.skills.bow.SkillBowVolley;
 import blockfighter.shared.Globals;
 import java.awt.Point;
 

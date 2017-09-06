@@ -5,7 +5,7 @@ import blockfighter.server.entities.buff.BuffStun;
 import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
-import blockfighter.server.entities.player.skills.SkillShieldCharge;
+import blockfighter.server.entities.player.skills.shield.SkillShieldCharge;
 import blockfighter.shared.Globals;
 import java.awt.geom.Rectangle2D;
 

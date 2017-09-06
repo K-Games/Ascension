@@ -5,7 +5,7 @@ import blockfighter.server.entities.buff.BuffKnockback;
 import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
-import blockfighter.server.entities.player.skills.SkillBowArc;
+import blockfighter.server.entities.player.skills.bow.SkillBowArc;
 import blockfighter.shared.Globals;
 import java.awt.geom.Rectangle2D;
 

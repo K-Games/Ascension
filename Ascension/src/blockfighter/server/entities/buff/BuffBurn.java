@@ -4,7 +4,7 @@ import blockfighter.server.LogicModule;
 import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
-import blockfighter.server.entities.player.skills.SkillSwordCinder;
+import blockfighter.server.entities.player.skills.sword.SkillSwordCinder;
 import blockfighter.shared.Globals;
 import java.awt.geom.Point2D;
 

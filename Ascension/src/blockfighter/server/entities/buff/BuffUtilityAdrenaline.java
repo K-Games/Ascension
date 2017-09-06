@@ -2,7 +2,7 @@ package blockfighter.server.entities.buff;
 
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.player.Player;
-import blockfighter.server.entities.player.skills.SkillUtilityAdrenaline;
+import blockfighter.server.entities.player.skills.utility.SkillUtilityAdrenaline;
 import blockfighter.shared.Globals;
 
 public class BuffUtilityAdrenaline extends Buff implements BuffDmgReduct, BuffXSpeedIncrease {

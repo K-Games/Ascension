@@ -1,5 +1,8 @@
 package blockfighter.server.entities.player;
 
+import blockfighter.server.entities.player.skills.shield.SkillShieldReflect;
+import blockfighter.server.entities.player.skills.passive.SkillPassiveDualSword;
+import blockfighter.server.entities.player.skills.passive.SkillPassiveShieldMastery;
 import blockfighter.server.LogicModule;
 import blockfighter.server.RoomData;
 import blockfighter.server.entities.GameEntity;

@@ -2,7 +2,7 @@ package blockfighter.server.entities.damage;
 
 import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
-import blockfighter.server.entities.player.skills.SkillPassiveShadowAttack;
+import blockfighter.server.entities.player.skills.passive.SkillPassiveShadowAttack;
 import blockfighter.shared.Globals;
 import java.awt.geom.Point2D;
 
