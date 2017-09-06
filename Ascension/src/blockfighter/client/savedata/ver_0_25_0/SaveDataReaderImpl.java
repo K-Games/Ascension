@@ -10,6 +10,8 @@ import java.util.UUID;
 
 public class SaveDataReaderImpl extends blockfighter.client.savedata.ver_0_24_0.SaveDataReaderImpl {
 
+    private static final int NUM_SKILLS = 30;
+
     @Override
     public SaveData readSaveData(final SaveData c, final byte[] data) {
         byte[] temp;
@@ -86,6 +88,16 @@ public class SaveDataReaderImpl extends blockfighter.client.savedata.ver_0_24_0.
             if (saveHash[i] != digest[i]) {
                 throw new IllegalStateException("Save data corrupted");
             }
+        }
+        return nextPos;
+    }
+
+    @Override
+    protected int readSkills(final byte[] data, final SaveData c, final int pos) {
+        int nextPos = pos;
+        for (byte i = 0; i < NUM_SKILLS; i++) {
+            c.getSkills().get(i).setLevel(data[nextPos]);
+            nextPos += 1;
         }
         return nextPos;
     }
