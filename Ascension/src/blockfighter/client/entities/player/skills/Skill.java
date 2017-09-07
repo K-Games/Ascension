@@ -77,12 +77,14 @@ public abstract class Skill {
             g.setColor(Color.WHITE);
         }
 
-        totalDescY += 5;
-        g.drawString("[Level " + this.level + "]", drawX + 10, drawY + 90 + totalDescY);
-        totalDescY += 20;
-        for (String descText : skillCurLevelDesc) {
-            g.drawString(descText, drawX + 10, drawY + 90 + totalDescY);
+        if (skillCurLevelDesc.length > 0) {
+            totalDescY += 5;
+            g.drawString("[Level " + this.level + "]", drawX + 10, drawY + 90 + totalDescY);
             totalDescY += 20;
+            for (String descText : skillCurLevelDesc) {
+                g.drawString(descText, drawX + 10, drawY + 90 + totalDescY);
+                totalDescY += 20;
+            }
         }
 
         if (this.level < 30 && skillNextLevelDesc.length > 0) {
@@ -140,9 +142,11 @@ public abstract class Skill {
             totalDescY += 20;
         }
 
-        totalDescY += 5;
-        totalDescY += 20;
-        totalDescY += skillCurLevelDesc.length * 20;
+        if (skillCurLevelDesc.length > 0) {
+            totalDescY += 5;
+            totalDescY += 20;
+            totalDescY += skillCurLevelDesc.length * 20;
+        }
 
         if (this.level < 30 && skillNextLevelDesc.length > 0) {
             totalDescY += 5;
