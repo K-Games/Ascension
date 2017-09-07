@@ -5,6 +5,7 @@ import blockfighter.client.entities.player.skills.Skill;
 import blockfighter.client.savedata.SaveData;
 import blockfighter.client.screen.window.skill.WindowSkill;
 import blockfighter.client.screen.window.skill.WindowSkillAll;
+import blockfighter.client.screen.window.skill.WindowSkillDebug;
 import blockfighter.shared.Globals;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -35,7 +36,7 @@ public class ScreenSkills extends ScreenMenu {
 
     private byte drawInfoHotkey = -1;
     private byte dragHotkey = -1;
-    private WindowSkill skillWindow = new WindowSkillAll(this);
+    private WindowSkill skillWindow = (!Globals.DEBUG_MODE) ? new WindowSkillAll(this) : new WindowSkillDebug(this);
 
     static {
         for (int i = 0; i < HOTKEY_SLOTS.length; i++) {
