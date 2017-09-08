@@ -1,14 +1,14 @@
 package blockfighter.server.entities.player;
 
-import blockfighter.server.entities.player.skills.shield.SkillShieldReflect;
-import blockfighter.server.entities.player.skills.passive.SkillPassiveDualSword;
-import blockfighter.server.entities.player.skills.passive.SkillPassiveShieldMastery;
 import blockfighter.server.LogicModule;
 import blockfighter.server.RoomData;
 import blockfighter.server.entities.GameEntity;
 import blockfighter.server.entities.buff.*;
 import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.player.skills.*;
+import blockfighter.server.entities.player.skills.passive.SkillPassiveDualSword;
+import blockfighter.server.entities.player.skills.passive.SkillPassiveShieldMastery;
+import blockfighter.server.entities.player.skills.shield.SkillShieldReflect;
 import blockfighter.server.maps.GameMap;
 import blockfighter.server.net.PacketSender;
 import blockfighter.shared.Globals;
@@ -64,7 +64,7 @@ public class Player implements GameEntity, Callable<Player> {
 
     private UUID uniqueID;
     private String name = "";
-    private double x, y, ySpeed, xSpeed, targetXSpeed, xSpeedMultiplier;
+    private double x, y, ySpeed, xSpeed, targetXSpeed, xSpeedMultiplier, ySpeedMultiplier;
     private final boolean[] dirKeydown = new boolean[4];
     private boolean isFalling = false, isJumping = false, isInvulnerable = false, isDead = false, isRemoveDebuff = false, isHyperStance = false;
     private boolean updatePos = false, updateFacing = false, updateAnimState = false;
@@ -697,6 +697,7 @@ public class Player implements GameEntity, Callable<Player> {
         this.dmgReduct = 1;
         this.dmgAmp = 1;
         this.xSpeedMultiplier = 1;
+        this.ySpeedMultiplier = 1;
 
         // Empty and add buffs from queue
         while (!this.buffQueue.isEmpty()) {
@@ -781,8 +782,9 @@ public class Player implements GameEntity, Callable<Player> {
                 this.xSpeedMultiplier += ((BuffXSpeedIncrease) buff).getXSpeedIncrease();
             }
 
-            if (buff instanceof BuffXSpeedDecrease) {
-                this.xSpeedMultiplier -= ((BuffXSpeedDecrease) buff).getXSpeedDecrease();
+            if (buff instanceof BuffSpeedDecrease) {
+                this.xSpeedMultiplier -= ((BuffSpeedDecrease) buff).getXSpeedDecrease();
+                this.ySpeedMultiplier -= ((BuffSpeedDecrease) buff).getYSpeedDecrease();
             }
 
             // Remove expired buffs/remove debuffs when invulnerable/special state
@@ -795,6 +797,7 @@ public class Player implements GameEntity, Callable<Player> {
         }
         this.xSpeedMultiplier = (this.xSpeedMultiplier < 0.3) ? 0.3 : this.xSpeedMultiplier;
         this.xSpeedMultiplier = (this.xSpeedMultiplier > 2) ? 2 : this.xSpeedMultiplier;
+        this.ySpeedMultiplier = (this.ySpeedMultiplier < 0.2) ? 0.2 : this.ySpeedMultiplier;
     }
 
     protected void die(final Player killer) {
@@ -1075,7 +1078,7 @@ public class Player implements GameEntity, Callable<Player> {
 
     private void updateJump() {
         if (this.dirKeydown[Globals.UP]) {
-            setYSpeed(-15);
+            setYSpeed(-15 * this.ySpeedMultiplier);
         }
     }
 

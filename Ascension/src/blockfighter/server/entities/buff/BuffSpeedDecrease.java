@@ -1,6 +1,8 @@
 package blockfighter.server.entities.buff;
 
-public interface BuffXSpeedDecrease {
+public interface BuffSpeedDecrease {
 
     public double getXSpeedDecrease();
+
+    public double getYSpeedDecrease();
 }
