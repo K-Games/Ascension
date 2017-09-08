@@ -365,7 +365,7 @@ public class Player implements GameEntity, Callable<Player> {
         } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
             Globals.logError(ex.toString(), ex);
         }
-        if (newSkill != null) {
+        if (newSkill != null && getStats()[Globals.STAT_LEVEL] >= newSkill.getReqLevel()) {
             newSkill.setLevel(level);
             this.skills.put(skillCode, newSkill);
         }
