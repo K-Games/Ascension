@@ -15,7 +15,10 @@
 * New characters now only begin with a weapon of each type.(Sword, Shield, Bow, Arrow Enchantment)
 * Updated some Equipment descriptions.
 * Equipment drops determine equipment type before equipment to evenly distributed for each type's drop rate.
-
+* New Debuff
+	* Cripple - Slow movement and reduce jump height by a percentage.
+		* Some Skills now now utilize this debuff.
+	
 #### Stats
 
 #### Equipment Stats
@@ -39,6 +42,7 @@
 	* No longer knocks back.
 	* Players are dragged and stunned when hit by charge.
 		* This change makes Overwhelm a consistent Skill that brings players within melee range.
+		* A 0.5s 70% Cripple is applied at the end to improve the overall feel of the Skill.
 	
 ##### Utility
 
@@ -54,11 +58,23 @@
 * Fixed -1 being an invalid player key.
 * Minor performance improvement.
 * Simplified Skills data structure for adding new Skills.
+* Improved SaveData validation.
+* Improved Skill info box rendering.
+* Fixed Skill descriptions not loading if SaveData did not previously have any data. Mainly affects new Skills.
+* Fixed sprites that have no completed loading freezing the game.
+* Blood particles now use a sprite to improve performance.
+* Disabled SFX.
+* Fixed potential legacy SaveData breaking.
 
 ### Server Changes
 * Added support for 255 max players in a room.
 * Player states are now sent in batches like player positions.
 * Fixed Passive Skills hotkey being queued in player actions.
+* Improved Buff tracking with HashMap.
+* Disable adding Skills players not meeting level requirement for.
+* Added parameter to Damage class to enable/disable hit particle.
+* Moved Grand Library top boundary higher.
+* Fixed invalid Y plaform check.
 
 ---
 
