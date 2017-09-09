@@ -129,7 +129,7 @@ public abstract class Skill {
 
     public abstract int getReqLevel();
 
-    public abstract HashMap<String, Double> getCustomValues();
+    public abstract Double getCustomValue(String customHeader);
 
     public void updateInfoBoxSize() {
         if (fontMetric == null) {

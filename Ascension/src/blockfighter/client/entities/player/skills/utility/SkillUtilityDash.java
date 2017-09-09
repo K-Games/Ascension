@@ -33,7 +33,7 @@ public class SkillUtilityDash extends Skill {
     }
 
     @Override
-    public HashMap<String, Double> getCustomValues() {
+    public Double getCustomValue(String customHeader) {
         return null;
     }
 
