@@ -1,6 +1,7 @@
 package blockfighter.server.entities.proj;
 
 import blockfighter.server.LogicModule;
+import blockfighter.server.entities.buff.BuffChargeCripple;
 import blockfighter.server.entities.buff.BuffStun;
 import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.mob.Mob;
@@ -44,6 +45,7 @@ public class ProjShieldCharge extends Projectile {
         } else {
             target.queueBuff(new BuffStun(this.logic, 200));
         }
+        target.queueBuff(new BuffChargeCripple(this.logic, 700));
     }
 
     @Override
@@ -58,6 +60,7 @@ public class ProjShieldCharge extends Projectile {
         } else {
             target.queueBuff(new BuffStun(this.logic, 200));
         }
+        target.queueBuff(new BuffChargeCripple(this.logic, 700));
     }
 
     @Override
