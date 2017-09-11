@@ -116,22 +116,6 @@ public class AscensionClient {
                             System.exit(8);
                         }
                         break;
-                    case "-scale":
-                        try {
-                            double scale = Double.parseDouble(args[i + 1]);
-                            if (scale > 0) {
-                                Globals.WINDOW_SCALE_ENABLED = true;
-                                Globals.WINDOW_SCALE = scale;
-                                Globals.log(AscensionClient.class, "Scaling window to " + Globals.WINDOW_SCALE, Globals.LOG_TYPE_DATA);
-                            } else {
-                                System.err.println("-scale Scale factor must be greater than 0");
-                                System.exit(9);
-                            }
-                        } catch (Exception e) {
-                            System.err.println("-scale Scale factor must be greater than 0");
-                            System.exit(10);
-                        }
-                        break;
                 }
             }
         }

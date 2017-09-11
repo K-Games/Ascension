@@ -61,6 +61,8 @@ public class Globals {
     public static String SERVER_ADDRESS;
 
     public static final String SAVE_FILE_DIRECTORY = System.getProperty("user.home") + File.separator + "K-Games" + File.separator + "Ascension";
+    public static final String SETTINGS_FILE = SAVE_FILE_DIRECTORY + File.separator + "settings.properties";
+
     public static final String DEV_PASSPHRASE = "amFwAkjuy0K/lSvUUyZvdiIFdn/Dzu/OAxStgUEdLKk=";
     public static final String COLON_SPACE_TEXT = ": ";
 
@@ -78,8 +80,8 @@ public class Globals {
 
     public final static String GAME_NAME = "{Soul}Ascension";
     public final static String WINDOW_TITLE = GAME_NAME + " " + GAME_RELEASE_VERSION;
-    public static boolean WINDOW_SCALE_ENABLED = false;
-    public static double WINDOW_SCALE = 1D;
+    public static boolean WINDOW_SCALE_ENABLED = true;
+    public static double WINDOW_SCALE;
     public final static int WINDOW_WIDTH = 1280;
     public final static int WINDOW_HEIGHT = 720;
 
@@ -124,6 +126,77 @@ public class Globals {
     public final static byte RIGHT = 0, LEFT = 1, DOWN = 2, UP = 3;
 
     public final static int NUM_SOUND_EFFECTS = 0;
+
+    public enum ClientOptions {
+        WINDOW_SCALE("windowscale", Double.class, Double.valueOf(1.0), "Window Scale"),
+        SOUND_ENABLE("soundenable", Boolean.class, true, "Sound Enabled"),
+        VOLUME_LEVEL("volumelevel", Integer.class, Integer.valueOf(50), "Volume Level Control"),
+        DAMAGE_FORMAT("damageformat", Integer.class, Integer.valueOf(1), "Damage Display Format");
+
+        private final String key;
+        private final Class type;
+        private final Object defaultValue;
+        private final String desc;
+        private Object value = null;
+
+        private static final Map<String, ClientOptions> lookup = new HashMap<>();
+
+        ClientOptions(String key, Class type, Object defaultValue, String desc) {
+            this.key = key;
+            this.type = type;
+            this.defaultValue = defaultValue;
+            this.desc = desc;
+        }
+
+        static {
+            for (ClientOptions config : ClientOptions.values()) {
+                lookup.put(config.getKey(), config);
+            }
+        }
+
+        public static ClientOptions get(String key) {
+            return lookup.get(key);
+        }
+
+        public Class getType() {
+            return this.type;
+        }
+
+        public String getKey() {
+            return this.key;
+        }
+
+        public void setValue(String value) {
+            if (this.type == Byte.class) {
+                this.value = Byte.valueOf(value);
+            } else if (this.type == Integer.class) {
+                this.value = Integer.valueOf(value);
+            } else if (this.type == Double.class) {
+                this.value = Double.valueOf(value);
+            } else if (this.type == Float.class) {
+                this.value = Float.valueOf(value);
+            } else if (this.type == Long.class) {
+                this.value = Long.valueOf(value);
+            } else if (this.type == Boolean.class) {
+                this.value = Boolean.valueOf(value);
+            } else if (this.type == String.class) {
+                this.value = value;
+            }
+        }
+
+        public Object getValue() {
+            return (this.value == null) ? this.defaultValue : this.value;
+        }
+
+        @Override
+        public String toString() {
+            return this.desc + COLON_SPACE_TEXT + this.getValue();
+        }
+
+        public String getDesc() {
+            return this.desc;
+        }
+    }
 
     public static byte getEquipType(final int i) {
         if (i >= 100000 && i <= 109999) {
@@ -1175,9 +1248,42 @@ public class Globals {
         PLAYER_NUM_ANIM_FRAMES[PLAYER_ANIM_STATE_DEAD] = 10;
         PLAYER_NUM_ANIM_FRAMES[PLAYER_ANIM_STATE_ROLL] = 10;
         PLAYER_NUM_ANIM_FRAMES[PLAYER_ANIM_STATE_JUMP] = 3;
+        loadClientOptions();
+        WINDOW_SCALE = (Double) ClientOptions.WINDOW_SCALE.getValue();
         loadGFX();
         loadNumberFormats();
         loadItemCodes();
+    }
+
+    public final static void loadClientOptions() {
+        InputStream inputStream = null;
+        try {
+            final Properties prop = new Properties();
+
+            inputStream = new FileInputStream(SETTINGS_FILE);
+            prop.load(inputStream);
+            for (ClientOptions options : ClientOptions.values()) {
+                if (prop.getProperty(options.getKey()) != null) {
+                    options.setValue(prop.getProperty(options.getKey()));
+                }
+            }
+        } catch (final FileNotFoundException e) {
+            log(Globals.class, "Options", "settings.properties not found in save directory. Using default values.", Globals.LOG_TYPE_DATA);
+        } catch (final IOException ex) {
+            logError(ex.toString(), ex);
+        } finally {
+            if (inputStream != null) {
+                try {
+                    inputStream.close();
+                } catch (final IOException ex) {
+                    logError(ex.toString(), ex);
+
+                }
+            }
+            for (ClientOptions options : ClientOptions.values()) {
+                log(Globals.class, "Options", options.toString(), Globals.LOG_TYPE_DATA);
+            }
+        }
     }
 
     private static void loadNumberFormats() {

@@ -24,6 +24,7 @@ public abstract class ScreenMenu extends Screen {
     private static final String UPGRADES_TEXT = "Infusion";
     private static final String INVENTORY_TEXT = "Inventory";
     private static final String STATS_TEXT = "Stats";
+    private static final String OPTIONS_TEXT = "Options";
 
     private static final String[] BUTTON_TEXT = {STATS_TEXT,
         INVENTORY_TEXT,
@@ -31,6 +32,7 @@ public abstract class ScreenMenu extends Screen {
         SKILLS_TEXT,
         LOGIN_TEXT,
         KEY_BINDINGS_TEXT,
+        OPTIONS_TEXT,
         CHARACTERS_TEXT
     };
 
@@ -41,6 +43,7 @@ public abstract class ScreenMenu extends Screen {
             ScreenSkills.class,
             ScreenServerList.class,
             ScreenKeyBind.class,
+            ScreenOptions.class,
             ScreenSelectChar.class
     ));
 
@@ -48,7 +51,7 @@ public abstract class ScreenMenu extends Screen {
     private long lastSaveValidateTime = 0;
 
     protected final static ConcurrentHashMap<Integer, Particle> PARTICLES = new ConcurrentHashMap<>(3);
-    private static final Rectangle2D.Double[] MENU_BOX = new Rectangle2D.Double[7];
+    private static final Rectangle2D.Double[] MENU_BOX = new Rectangle2D.Double[SCREEN_CLASS.size()];
     protected boolean fadeIn = false;
 
     protected Point2D.Double mousePos;
