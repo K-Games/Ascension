@@ -47,7 +47,7 @@ public class IngameNumberStack extends IngameNumber {
     }
 
     public boolean canAddNumber() {
-        return this.numbers.size() < 15 && Globals.nsToMs(Core.getLogicModule().getTime() - this.startTime) <= 500;
+        return this.numbers.size() < 15 && Globals.nsToMs(Core.getLogicModule().getTime() - this.startTime) <= 400;
     }
 
     @Override
