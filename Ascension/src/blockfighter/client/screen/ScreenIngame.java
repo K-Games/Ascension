@@ -3,6 +3,8 @@ package blockfighter.client.screen;
 import blockfighter.client.Core;
 import blockfighter.client.entities.emotes.Emote;
 import blockfighter.client.entities.ingamenumber.IngameNumber;
+import blockfighter.client.entities.ingamenumber.IngameNumberAscend;
+import blockfighter.client.entities.ingamenumber.IngameNumberStack;
 import blockfighter.client.entities.items.Item;
 import blockfighter.client.entities.items.ItemEquip;
 import blockfighter.client.entities.items.ItemUpgrade;
@@ -54,6 +56,8 @@ public class ScreenIngame extends Screen {
     private final ConcurrentHashMap<Integer, Mob> mobs = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Integer, Particle> particles = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Integer, IngameNumber> ingameNumber = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Point2D, IngameNumberStack> ingameNumberDealtStack = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Point2D, IngameNumberStack> ingameNumberTakenStack = new ConcurrentHashMap<>();
     private final ConcurrentLinkedQueue<Notification> notifications = new ConcurrentLinkedQueue<>();
     private final ConcurrentHashMap<Integer, Emote> emotes = new ConcurrentHashMap<>();
     private double screenShakeX, screenShakeY;
@@ -224,6 +228,17 @@ public class ScreenIngame extends Screen {
             }
         });
 
+        for (Entry<Point2D, IngameNumberStack> entry : this.ingameNumberDealtStack.entrySet()) {
+            if (entry.getValue().isExpired()) {
+                this.ingameNumberDealtStack.remove(entry.getKey());
+            }
+        }
+
+        for (Entry<Point2D, IngameNumberStack> entry : this.ingameNumberTakenStack.entrySet()) {
+            if (entry.getValue().isExpired()) {
+                this.ingameNumberTakenStack.remove(entry.getKey());
+            }
+        }
     }
 
     private void updateNotifications() {
@@ -815,14 +830,51 @@ public class ScreenIngame extends Screen {
     }
 
     private void dataIngameNumber(final byte[] data) {
-        if (this.players.containsKey(myPlayerKey)) {
+        final int format = (Integer) Globals.ClientOptions.DAMAGE_FORMAT.getValue();
+        if (format != Globals.DAMAGE_DISPLAY_OFF && this.players.containsKey(myPlayerKey)) {
             final byte type = data[1];
             final int x = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 6));
             final int y = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
             final int value = Globals.bytesToInt(Arrays.copyOfRange(data, 10, 14));
-            IngameNumber newNumber = new IngameNumber(value, type, new Point(x, y), this.players.get(myPlayerKey));
-            this.ingameNumber.put(newNumber.getKey(), newNumber);
+            IngameNumber newNumber = null;
+            switch (format) {
+                case Globals.DAMAGE_DISPLAY_ARC:
+                    newNumber = new IngameNumber(value, type, new Point(x, y), this.players.get(myPlayerKey));
+                    break;
+                case Globals.DAMAGE_DISPLAY_ASCEND:
+                    newNumber = new IngameNumberAscend(value, type, new Point(x, y), this.players.get(myPlayerKey));
+                    break;
+                case Globals.DAMAGE_DISPLAY_STACK:
+                    newNumber = addNumberToIngameNumberStack(value, type, x, y);
+                    break;
+            }
+            if (newNumber != null) {
+                this.ingameNumber.put(newNumber.getKey(), newNumber);
+            }
         }
+    }
+
+    private IngameNumber addNumberToIngameNumberStack(final int value, final byte type, final int x, final int y) {
+        ConcurrentHashMap<Point2D, IngameNumberStack> stackCollection = this.ingameNumberDealtStack;
+        if (type == Globals.NUMBER_TYPE_MOB || type == Globals.NUMBER_TYPE_MOBCRIT) {
+            stackCollection = this.ingameNumberTakenStack;
+        } else if (type == Globals.NUMBER_TYPE_PLAYERCRIT || type == Globals.NUMBER_TYPE_PLAYER) {
+            stackCollection = this.ingameNumberDealtStack;
+        }
+
+        for (Entry<Point2D, IngameNumberStack> entry : stackCollection.entrySet()) {
+            if (entry.getValue().canAddNumber()
+                    && Math.abs(entry.getKey().getX() - x) <= 100
+                    && Math.abs(entry.getKey().getY() - y) <= 100) {
+                entry.getValue().addNumber(value, type);
+                return null;
+            }
+        }
+
+        IngameNumberStack newNumber = new IngameNumberStack(value, type, new Point(x, y), this.players.get(myPlayerKey));
+        newNumber.addNumber(value, type);
+        stackCollection.put(new Point2D.Double(x, y), newNumber);
+        return newNumber;
     }
 
     private void dataParticleEffect(final byte[] data) {
