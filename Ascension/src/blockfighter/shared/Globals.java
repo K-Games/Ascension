@@ -127,11 +127,16 @@ public class Globals {
 
     public final static int NUM_SOUND_EFFECTS = 0;
 
+    public final static int DAMAGE_DISPLAY_OFF = 0,
+            DAMAGE_DISPLAY_ARC = 1,
+            DAMAGE_DISPLAY_ASCEND = 2,
+            DAMAGE_DISPLAY_STACK = 3;
+
     public enum ClientOptions {
         WINDOW_SCALE("windowscale", Double.class, Double.valueOf(1.0), "Window Scale"),
         SOUND_ENABLE("soundenable", Boolean.class, true, "Sound Enabled"),
         VOLUME_LEVEL("volumelevel", Integer.class, Integer.valueOf(50), "Volume Level Control"),
-        DAMAGE_FORMAT("damageformat", Integer.class, Integer.valueOf(1), "Damage Display Format");
+        DAMAGE_FORMAT("damageformat", Integer.class, DAMAGE_DISPLAY_ARC, "Damage Display Format");
 
         private final String key;
         private final Class type;

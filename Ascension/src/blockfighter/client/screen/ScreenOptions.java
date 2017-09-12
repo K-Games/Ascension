@@ -61,7 +61,7 @@ public class ScreenOptions extends ScreenMenu {
         switch (option) {
             case DAMAGE_FORMAT:
                 int value = (Integer) option.getValue() + 1;
-                value = (value > 2) ? 0 : value;
+                value = (value > 3) ? 0 : value;
                 option.setValue(String.valueOf(value));
                 break;
             case SOUND_ENABLE:
@@ -95,12 +95,14 @@ public class ScreenOptions extends ScreenMenu {
                 return Globals.NUMBER_FORMAT.format(option.getValue());
             case DAMAGE_FORMAT:
                 switch ((Integer) option.getValue()) {
-                    case 0:
+                    case Globals.DAMAGE_DISPLAY_OFF:
                         return "Off";
-                    case 1:
-                        return "Single Numbers";
-                    case 2:
-                        return "Stacked Numbers";
+                    case Globals.DAMAGE_DISPLAY_ARC:
+                        return "Drop Down";
+                    case Globals.DAMAGE_DISPLAY_ASCEND:
+                        return "Float Up";
+                    case Globals.DAMAGE_DISPLAY_STACK:
+                        return "Grouped";
                     default:
                         return "Off";
                 }

@@ -11,19 +11,19 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class IngameNumber implements Callable<IngameNumber> {
 
-    private static final Color DAMAGE_RED = new Color(255, 15, 0);
-    private static final Color DAMAGE_ORANGE = new Color(255, 200, 0);
-    private static final Color DAMAGE_BLUE = new Color(105, 185, 255);
+    protected static final Color DAMAGE_RED = new Color(255, 15, 0);
+    protected static final Color DAMAGE_ORANGE = new Color(255, 200, 0);
+    protected static final Color DAMAGE_BLUE = new Color(105, 185, 255);
 
     private final int key;
     private final byte type;
-    private double x, y;
+    protected double x, y;
 
-    private final double speedX;
-    private double speedY;
+    protected final double speedX;
+    protected double speedY;
     private final int number;
-    private long startTime = 0;
-    private final int duration = 1000;
+    protected long startTime = 0;
+    protected final int duration = 1000;
 
     private static final ConcurrentLinkedQueue<Integer> AVAILABLE_KEYS = new ConcurrentLinkedQueue<>();
     private static int keyCount = 0;
@@ -49,7 +49,7 @@ public class IngameNumber implements Callable<IngameNumber> {
         this.type = t;
         this.x = loc.x - myPlayer.getX() + 640;
         this.y = loc.y - 18 - myPlayer.getY() + 500;
-        this.speedY = -14 + Globals.rng(40) / 10D;
+        this.speedY = -8 + Globals.rng(10) / 10D;
         this.speedX = (Globals.rng(8) - 4) / 2D;
     }
 
@@ -59,7 +59,7 @@ public class IngameNumber implements Callable<IngameNumber> {
 
     @Override
     public IngameNumber call() {
-        this.speedY += 0.5;
+        this.speedY += 0.25;
         this.y += this.speedY;
         this.x += this.speedX;
         return this;
