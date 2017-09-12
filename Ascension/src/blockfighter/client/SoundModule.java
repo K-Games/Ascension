@@ -17,7 +17,8 @@ public class SoundModule implements Runnable {
     @Override
     public void run() {
         this.soundModule = new SoundSystemJPCT();
-        this.soundModule.setMasterVolume(0.5f);
+        updateVolume();
+
         SoundSystemConfig.setSoundFilesPackage("resources/sounds/");
         Core.SHARED_SCHEDULED_THREADPOOL.scheduleAtFixedRate(() -> {
             if (isLoaded()) {
@@ -76,11 +77,24 @@ public class SoundModule implements Runnable {
     }
 
     public void unmute() {
-        if (!isLoaded()) {
+        if (!isLoaded() || !(Boolean) Globals.ClientOptions.SOUND_ENABLE.getValue()) {
             return;
         }
         if (this.soundModule.getMasterVolume() <= 0) {
             this.soundModule.setMasterVolume(originVol);
+        }
+    }
+
+    public void updateVolume() {
+        if (!isLoaded()) {
+            return;
+        }
+
+        if (!(Boolean) Globals.ClientOptions.SOUND_ENABLE.getValue()) {
+            mute();
+        } else {
+            this.soundModule.setMasterVolume(((Integer) Globals.ClientOptions.VOLUME_LEVEL.getValue()) / 100f);
+            this.originVol = ((Integer) Globals.ClientOptions.VOLUME_LEVEL.getValue()) / 100f;
         }
     }
 }
