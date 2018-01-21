@@ -93,8 +93,9 @@ public class SoundModule implements Runnable {
         if (!(Boolean) Globals.ClientOptions.SOUND_ENABLE.getValue()) {
             mute();
         } else {
-            this.soundModule.setMasterVolume(((Integer) Globals.ClientOptions.VOLUME_LEVEL.getValue()) / 100f);
-            this.originVol = ((Integer) Globals.ClientOptions.VOLUME_LEVEL.getValue()) / 100f;
+            float volume = (float) Math.pow(((Integer) Globals.ClientOptions.VOLUME_LEVEL.getValue()) / 100f, 2.7);
+            this.soundModule.setMasterVolume(volume);
+            this.originVol = volume;
         }
     }
 }
