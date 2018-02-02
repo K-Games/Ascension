@@ -119,4 +119,14 @@ public class SkillSwordCinder extends Skill {
     public int getReqLevel() {
         return REQ_LEVEL;
     }
+
+    @Override
+    public void updatePlayerAnimState(Player player) {
+        final long frameDuration = Globals.nsToMs(this.logic.getTime() - player.getLastFrameTime());
+        player.setAnimState(Globals.PLAYER_ANIM_STATE_ATTACK);
+        if (frameDuration >= ((player.getFrame() == 4) ? 40 : 30) && player.getFrame() < 5) {
+            player.setFrame((byte) (player.getFrame() + 1));
+            player.setLastFrameTime(this.logic.getTime());
+        }
+    }
 }

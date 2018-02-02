@@ -195,6 +195,14 @@ public class Player implements GameEntity, Callable<Player> {
         updateClientScore();
     }
 
+    public long getLastFrameTime() {
+        return this.lastFrameTime;
+    }
+
+    public void setLastFrameTime(long time) {
+        lastFrameTime = time;
+    }
+
     public int getScore() {
         return this.score;
     }
@@ -242,6 +250,10 @@ public class Player implements GameEntity, Callable<Player> {
 
     public byte getAnimState() {
         return this.animState;
+    }
+
+    public void setAnimState(byte newAnimState) {
+        this.animState = newAnimState;
     }
 
     public Connection getConnection() {
@@ -1268,47 +1280,6 @@ public class Player implements GameEntity, Callable<Player> {
                     this.lastFrameTime = this.logic.getTime();
                 }
                 break;
-            case PLAYER_STATE_SWORD_SLASH:
-                if (frameDuration >= 20) {
-                    this.animState = Globals.PLAYER_ANIM_STATE_ATTACK;
-                    if (this.frame < 5) {
-                        this.frame++;
-                    }
-                    this.lastFrameTime = this.logic.getTime();
-                }
-                break;
-            case PLAYER_STATE_SWORD_GASH:
-                this.animState = Globals.PLAYER_ANIM_STATE_ATTACK;
-                if (frameDuration >= ((this.frame == 4) ? 150 : 20) && this.frame < 5) {
-                    this.frame++;
-
-                    this.lastFrameTime = this.logic.getTime();
-                }
-                break;
-            case PLAYER_STATE_SWORD_PHANTOM:
-                this.animState = Globals.PLAYER_ANIM_STATE_INVIS;
-                break;
-            case PLAYER_STATE_SWORD_VORPAL:
-                this.animState = Globals.PLAYER_ANIM_STATE_ATTACK;
-                if (frameDuration >= 100 && this.frame == 0 || frameDuration >= 40 && this.frame < 5 && this.frame > 0) {
-                    this.frame++;
-                    this.lastFrameTime = this.logic.getTime();
-                }
-                break;
-            case PLAYER_STATE_SWORD_CINDER:
-                this.animState = Globals.PLAYER_ANIM_STATE_ATTACK;
-                if (frameDuration >= ((this.frame == 4) ? 40 : 30) && this.frame < 5) {
-                    this.frame++;
-                    this.lastFrameTime = this.logic.getTime();
-                }
-                break;
-            case PLAYER_STATE_SWORD_TAUNT:
-                this.animState = Globals.PLAYER_ANIM_STATE_ATTACK;
-                if (frameDuration >= ((this.frame == 4) ? 150 : 30) && this.frame < 5) {
-                    this.frame++;
-                    this.lastFrameTime = this.logic.getTime();
-                }
-                break;
             case PLAYER_STATE_BOW_ARC:
                 this.animState = Globals.PLAYER_ANIM_STATE_ATTACKBOW;
                 if (this.frame < 7 && frameDuration >= 30) {
@@ -1398,6 +1369,10 @@ public class Player implements GameEntity, Callable<Player> {
                     this.lastFrameTime = this.logic.getTime();
                 }
                 break;
+            default:
+                if (getSkill(PLAYER_STATE_SKILLCODE.get(this.playerState)) != null) {
+                    getSkill(PLAYER_STATE_SKILLCODE.get(this.playerState)).updatePlayerAnimState(this);
+                }
         }
         if (this.animState != prevAnimState || this.frame != prevFrame) {
             this.updateAnimState = true;

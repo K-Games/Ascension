@@ -72,4 +72,9 @@ public abstract class Skill {
     public void updateSkillUse(Player player) {
 
     }
+
+    public void updatePlayerAnimState(Player player) {
+
+    }
+
 }
