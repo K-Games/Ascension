@@ -1280,23 +1280,9 @@ public class Player implements GameEntity, Callable<Player> {
                     this.lastFrameTime = this.logic.getTime();
                 }
                 break;
-            case PLAYER_STATE_UTILITY_DASH:
-                this.animState = Globals.PLAYER_ANIM_STATE_ROLL;
-                if (frameDuration >= 40 && this.frame < 9) {
-                    this.frame++;
-                    this.lastFrameTime = this.logic.getTime();
-                }
-                break;
             case PLAYER_STATE_SHIELD_CHARGE:
                 this.animState = Globals.PLAYER_ANIM_STATE_ATTACK;
                 if (frameDuration >= ((this.frame == 1) ? 4 : 20) && this.frame < 4) {
-                    this.frame++;
-                    this.lastFrameTime = this.logic.getTime();
-                }
-                break;
-            case PLAYER_STATE_UTILITY_ADRENALINE:
-                this.animState = Globals.PLAYER_ANIM_STATE_BUFF;
-                if (frameDuration >= 30 && this.frame < 4) {
                     this.frame++;
                     this.lastFrameTime = this.logic.getTime();
                 }
