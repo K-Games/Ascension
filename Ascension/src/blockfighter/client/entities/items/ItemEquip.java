@@ -26,18 +26,18 @@ public class ItemEquip implements Item {
     private static final String FOLDER_OFFHAND = "offhand";
     private static final String FOLDER_MAINHAND = "mainhand";
 
-    private final static double UPGRADE_CRITCHANCE = 0.001, // 0.1%
-            UPGRADE_CRITDMG = 0.02, // 2%
-            UPGRADE_REGEN = 10,
-            UPGRADE_ARMOUR = 18,
-            UPGRADE_MULT = 0.0,
-            UPGRADE_STAT_FLATBONUS = 1.25;
+    private final static double BASESTAT_BASEMULT_BONUS = 0D,
+            BASESTAT_CRITCHANCE = 0.001,
+            BASESTAT_CRITDMG = 0.01,
+            BASESTAT_REGEN = 10,
+            BASESTAT_ARMOUR = 7.5;
 
-    private final static double NEWSTAT_BASEMULT_BONUS = 0.25D,
-            NEWSTAT_CRITCHANCE = 0.001,
-            NEWSTAT_CRITDMG = 0.02,
-            NEWSTAT_REGEN = 10,
-            NEWSTAT_ARMOUR = 18;
+    private final static double UPGRADE_CRITCHANCE = BASESTAT_CRITCHANCE, // 0.1%
+            UPGRADE_CRITDMG = BASESTAT_CRITDMG, // 2%
+            UPGRADE_REGEN = BASESTAT_REGEN,
+            UPGRADE_ARMOUR = BASESTAT_ARMOUR,
+            UPGRADE_MULT = 0.0,
+            UPGRADE_STAT_FLATBONUS = 1;
 
     private final static HashMap<Byte, String> EQUIP_TYPE_NAME = new HashMap<>(13);
     private final static HashMap<Integer, String> EQUIP_NAMES;
@@ -46,13 +46,13 @@ public class ItemEquip implements Item {
     private final static HashMap<Integer, String> EQUIP_DESC;
     private final static HashMap<String, Point> EQUIP_DRAWOFFSET = new HashMap<>();
 
-    public final static byte TIER_COMMON = 0; //0-0.49 internal multiplier
-    public final static byte TIER_UNCOMMON = 1; //0.5-0.69
-    public final static byte TIER_RARE = 2; //0.7-0.84
-    public final static byte TIER_RUNIC = 3; //0.85-0.89
-    public final static byte TIER_LEGENDARY = 4; //0.9-0.94
-    public final static byte TIER_MYSTIC = 5; //0.95-1.09
-    public final static byte TIER_DIVINE = 6;    //1.10+
+    public final static byte TIER_COMMON = 0;
+    public final static byte TIER_UNCOMMON = 1;
+    public final static byte TIER_RARE = 2;
+    public final static byte TIER_RUNIC = 3;
+    public final static byte TIER_LEGENDARY = 4;
+    public final static byte TIER_MYSTIC = 5;
+    public final static byte TIER_DIVINE = 6;
 
     private static final String TIER_DIVINE_STRING = "Ascended";
     private static final String TIER_MYSTIC_STRING = "Mystic";
@@ -355,99 +355,95 @@ public class ItemEquip implements Item {
 
     public ItemEquip(final int ic, final double level, final boolean legendary) {
         this(ic);
-        this.baseStats = newEquipStat(ic, level);
+        this.baseStats = calcEquipStat(ic, level);
         if (legendary) {
-            this.bonusMult = (Globals.rng(7) + 90) / 100D;
+            this.bonusMult = (Globals.rng(9) + 90) / 100D;
         } else {
             this.bonusMult = Globals.rng(90) / 100D;
         }
-        this.upgrades = 0;
+        this.upgrades = (Globals.DEBUG_MODE) ? 20 : 0;
         updateStats();
     }
 
-    public static double newItemPowerStat(final double level) {
-        return level + NEWSTAT_BASEMULT_BONUS * level + Globals.rng(6);
+    public static double calcItemPowerStat(final double level) {
+        return (level / 5 + 1) + BASESTAT_BASEMULT_BONUS * level;
     }
 
-    public static double newItemDefenseStat(final double level) {
-        return level + NEWSTAT_BASEMULT_BONUS * level + Globals.rng(6);
+    public static double calcItemDefenseStat(final double level) {
+        return (level / 5 + 1) + BASESTAT_BASEMULT_BONUS * level;
     }
 
-    public static double newItemSpiritStat(final double level) {
-        return level + NEWSTAT_BASEMULT_BONUS * level + Globals.rng(6);
+    public static double calcItemSpiritStat(final double level) {
+        return (level / 5 + 1) + BASESTAT_BASEMULT_BONUS * level;
     }
 
-    public static double newItemCritChance(final double level) {
-        return (level + Globals.rng(11)) * NEWSTAT_CRITCHANCE;
+    public static double calcItemCritChance(final double level) {
+        return (level / 5 + 1) * BASESTAT_CRITCHANCE;
     }
 
-    public static double newItemCritDmg(final double level) {
-        return level * NEWSTAT_CRITDMG + Globals.rng(11) * 0.01;
+    public static double calcItemCritDmg(final double level) {
+        return (level / 5 + 1) * BASESTAT_CRITDMG;
     }
 
-    public static double newItemRegen(final double level) {
-        return (level + Globals.rng(4)) * NEWSTAT_REGEN;
+    public static double calcItemRegen(final double level) {
+        return (level / 5 + 1) * BASESTAT_REGEN;
     }
 
-    public static double newItemArmour(final double level) {
-        return (level + Globals.rng(4)) * NEWSTAT_ARMOUR;
+    public static double calcItemArmour(final double level) {
+        return (level / 5 + 1) * BASESTAT_ARMOUR;
     }
 
-    public static double[] newEquipStat(final int ic, final double level) {
-        final double[] newStats = new double[Globals.NUM_STATS];
-        newStats[Globals.STAT_LEVEL] = level;
+    public static double[] calcEquipStat(final int ic, final double level) {
+        final double[] stats = new double[Globals.NUM_STATS];
+        stats[Globals.STAT_LEVEL] = level;
 
         switch (Globals.getEquipType(ic)) {
             case Globals.ITEM_SWORD:
-                newStats[Globals.STAT_POWER] = newItemPowerStat(level);
+                stats[Globals.STAT_CRITDMG] = calcItemCritDmg(level);
                 break;
             case Globals.ITEM_BOW:
-                newStats[Globals.STAT_POWER] = newItemPowerStat(level);
+                stats[Globals.STAT_CRITDMG] = calcItemCritDmg(level);
                 break;
             case Globals.ITEM_SHIELD:
-                newStats[Globals.STAT_DEFENSE] = newItemDefenseStat(level);
+                stats[Globals.STAT_ARMOUR] = calcItemArmour(level);
                 break;
             case Globals.ITEM_ARROW:
-                newStats[Globals.STAT_POWER] = newItemPowerStat(level);
-                newStats[Globals.STAT_CRITCHANCE] = newItemCritChance(level);
+                stats[Globals.STAT_CRITCHANCE] = calcItemCritChance(level);
                 break;
             case Globals.ITEM_CHEST:
-                newStats[Globals.STAT_DEFENSE] = newItemDefenseStat(level);
+                stats[Globals.STAT_DEFENSE] = calcItemDefenseStat(level);
                 break;
             case Globals.ITEM_PANTS:
-                newStats[Globals.STAT_DEFENSE] = newItemDefenseStat(level);
+                stats[Globals.STAT_DEFENSE] = calcItemDefenseStat(level);
                 break;
             case Globals.ITEM_HEAD:
-                newStats[Globals.STAT_DEFENSE] = newItemDefenseStat(level);
-                newStats[Globals.STAT_SPIRIT] = newItemSpiritStat(level);
+                stats[Globals.STAT_SPIRIT] = calcItemSpiritStat(level);
                 break;
             case Globals.ITEM_SHOE:
-                newStats[Globals.STAT_SPIRIT] = newItemSpiritStat(level);
+                stats[Globals.STAT_SPIRIT] = calcItemSpiritStat(level);
                 break;
             case Globals.ITEM_BELT:
-                newStats[Globals.STAT_SPIRIT] = newItemSpiritStat(level);
+                stats[Globals.STAT_ARMOUR] = calcItemArmour(level);
                 break;
             case Globals.ITEM_SHOULDER:
-                newStats[Globals.STAT_DEFENSE] = newItemDefenseStat(level);
-                newStats[Globals.STAT_POWER] = newItemPowerStat(level);
+                stats[Globals.STAT_POWER] = calcItemPowerStat(level);
                 break;
             case Globals.ITEM_GLOVE:
-                newStats[Globals.STAT_SPIRIT] = newItemSpiritStat(level);
-                newStats[Globals.STAT_POWER] = newItemPowerStat(level);
+                stats[Globals.STAT_POWER] = calcItemPowerStat(level);
                 break;
             case Globals.ITEM_AMULET:
-                newStats[Globals.STAT_CRITDMG] = newItemCritDmg(level);
-                newStats[Globals.STAT_REGEN] = newItemRegen(level);
+                stats[Globals.STAT_CRITDMG] = calcItemCritDmg(level);
+                stats[Globals.STAT_ARMOUR] = calcItemArmour(level);
                 break;
             case Globals.ITEM_RING:
-                newStats[Globals.STAT_CRITCHANCE] = newItemCritChance(level);
-                newStats[Globals.STAT_ARMOUR] = newItemArmour(level);
+                stats[Globals.STAT_CRITCHANCE] = calcItemCritChance(level);
+                stats[Globals.STAT_REGEN] = calcItemRegen(level);
                 break;
         }
-        newStats[Globals.STAT_POWER] = Math.round(newStats[Globals.STAT_POWER]);
-        newStats[Globals.STAT_DEFENSE] = Math.round(newStats[Globals.STAT_DEFENSE]);
-        newStats[Globals.STAT_SPIRIT] = Math.round(newStats[Globals.STAT_SPIRIT]);
-        return newStats;
+        stats[Globals.STAT_POWER] = Math.round(stats[Globals.STAT_POWER]);
+        stats[Globals.STAT_DEFENSE] = Math.round(stats[Globals.STAT_DEFENSE]);
+        stats[Globals.STAT_SPIRIT] = Math.round(stats[Globals.STAT_SPIRIT]);
+        return stats;
     }
 
     public ItemEquip(final double[] bs, final int u, final double mult, final int ic) {
@@ -656,28 +652,41 @@ public class ItemEquip implements Item {
 
     private void updateStats() {
         updateTier();
+
+        this.baseStats = calcEquipStat(this.equipCode, this.baseStats[Globals.STAT_LEVEL]);
+
         System.arraycopy(this.baseStats, 0, this.totalStats, 0, this.baseStats.length);
-        this.totalStats[Globals.STAT_POWER] = Math
-                .round((this.baseStats[Globals.STAT_POWER] + ((this.baseStats[Globals.STAT_POWER] > 0) ? this.upgrades * UPGRADE_STAT_FLATBONUS : 0)) * (1 + this.bonusMult + this.upgrades * UPGRADE_MULT));
-        this.totalStats[Globals.STAT_DEFENSE] = Math
-                .round((this.baseStats[Globals.STAT_DEFENSE] + ((this.baseStats[Globals.STAT_DEFENSE] > 0) ? this.upgrades * UPGRADE_STAT_FLATBONUS : 0)) * (1 + this.bonusMult + this.upgrades * UPGRADE_MULT));
-        this.totalStats[Globals.STAT_SPIRIT] = Math
-                .round((this.baseStats[Globals.STAT_SPIRIT] + ((this.baseStats[Globals.STAT_SPIRIT] > 0) ? this.upgrades * UPGRADE_STAT_FLATBONUS : 0)) * (1 + this.bonusMult + this.upgrades * UPGRADE_MULT));
+
+        this.totalStats[Globals.STAT_POWER] = this.baseStats[Globals.STAT_POWER];
+        this.totalStats[Globals.STAT_POWER] += (this.baseStats[Globals.STAT_POWER] > 0) ? this.upgrades * UPGRADE_STAT_FLATBONUS : 0;
+        this.totalStats[Globals.STAT_POWER] *= 1 + this.bonusMult + this.upgrades * UPGRADE_MULT;
+        this.totalStats[Globals.STAT_POWER] = Math.round(this.totalStats[Globals.STAT_POWER]);
+
+        this.totalStats[Globals.STAT_DEFENSE] = this.baseStats[Globals.STAT_DEFENSE];
+        this.totalStats[Globals.STAT_DEFENSE] += (this.baseStats[Globals.STAT_DEFENSE] > 0) ? this.upgrades * UPGRADE_STAT_FLATBONUS : 0;
+        this.totalStats[Globals.STAT_DEFENSE] *= 1 + this.bonusMult + this.upgrades * UPGRADE_MULT;
+        this.totalStats[Globals.STAT_DEFENSE] = Math.round(this.totalStats[Globals.STAT_DEFENSE]);
+
+        this.totalStats[Globals.STAT_SPIRIT] = this.baseStats[Globals.STAT_SPIRIT];
+        this.totalStats[Globals.STAT_SPIRIT] += (this.baseStats[Globals.STAT_SPIRIT] > 0) ? this.upgrades * UPGRADE_STAT_FLATBONUS : 0;
+        this.totalStats[Globals.STAT_SPIRIT] *= 1 + this.bonusMult + this.upgrades * UPGRADE_MULT;
+        this.totalStats[Globals.STAT_SPIRIT] = Math.round(this.totalStats[Globals.STAT_SPIRIT]);
 
         if (this.baseStats[Globals.STAT_CRITCHANCE] > 0) {
-            this.totalStats[Globals.STAT_CRITCHANCE] = this.baseStats[Globals.STAT_CRITCHANCE] + (0.003 * (this.bonusMult / 0.05)) + this.upgrades * UPGRADE_CRITCHANCE;
+            this.totalStats[Globals.STAT_CRITCHANCE] = this.baseStats[Globals.STAT_CRITCHANCE]
+                    + (0.003 * (this.bonusMult / 0.05))
+                    + this.upgrades * UPGRADE_CRITCHANCE;
         }
         if (this.baseStats[Globals.STAT_CRITDMG] > 0) {
-            this.totalStats[Globals.STAT_CRITDMG] = this.baseStats[Globals.STAT_CRITDMG] + (0.04 * (this.bonusMult / 0.05))
+            this.totalStats[Globals.STAT_CRITDMG] = this.baseStats[Globals.STAT_CRITDMG]
+                    + (0.04 * (this.bonusMult / 0.05))
                     + this.upgrades * UPGRADE_CRITDMG;
         }
         if (this.baseStats[Globals.STAT_ARMOUR] > 0) {
-            this.totalStats[Globals.STAT_ARMOUR] = Math
-                    .round((this.baseStats[Globals.STAT_ARMOUR] + this.upgrades * UPGRADE_ARMOUR) * (1 + this.bonusMult / 2D));
+            this.totalStats[Globals.STAT_ARMOUR] = Math.round((this.baseStats[Globals.STAT_ARMOUR] + this.upgrades * UPGRADE_ARMOUR) * (1 + this.bonusMult / 2D));
         }
         if (this.baseStats[Globals.STAT_REGEN] > 0) {
-            this.totalStats[Globals.STAT_REGEN] = Math
-                    .round(10D * (this.baseStats[Globals.STAT_REGEN] + this.upgrades * UPGRADE_REGEN) * (2 + this.bonusMult)) / 10D;
+            this.totalStats[Globals.STAT_REGEN] = Math.round(10D * (this.baseStats[Globals.STAT_REGEN] + this.upgrades * UPGRADE_REGEN) * (2 + this.bonusMult)) / 10D;
         }
     }
 

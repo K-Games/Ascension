@@ -245,8 +245,20 @@ public class SaveData {
                 }
             }
         }
+        double totalStatPoints = 0;
+        for (int i = 1; i <= this.baseStats[Globals.STAT_LEVEL]; i++) {
+            if (i <= 40) {
+                totalStatPoints += 3;
+            } else if (i <= 70) {
+                totalStatPoints += 4;
+            } else if (i <= 90) {
+                totalStatPoints += 6;
+            } else if (i <= 100) {
+                totalStatPoints += 12;
+            }
+        }
 
-        this.baseStats[Globals.STAT_POINTS] = this.baseStats[Globals.STAT_LEVEL] * Globals.STAT_PER_LEVEL
+        this.baseStats[Globals.STAT_POINTS] = totalStatPoints
                 - (this.baseStats[Globals.STAT_POWER]
                 + this.baseStats[Globals.STAT_DEFENSE]
                 + this.baseStats[Globals.STAT_SPIRIT]);
