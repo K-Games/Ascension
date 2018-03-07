@@ -1280,52 +1280,6 @@ public class Player implements GameEntity, Callable<Player> {
                     this.lastFrameTime = this.logic.getTime();
                 }
                 break;
-            case PLAYER_STATE_BOW_ARC:
-                this.animState = Globals.PLAYER_ANIM_STATE_ATTACKBOW;
-                if (this.frame < 7 && frameDuration >= 30) {
-                    this.frame++;
-                    this.lastFrameTime = this.logic.getTime();
-                }
-                break;
-            case PLAYER_STATE_BOW_RAPID:
-                this.animState = Globals.PLAYER_ANIM_STATE_ATTACKBOW;
-                if (this.frame < 7 && frameDuration >= 30) {
-                    this.frame++;
-                    this.lastFrameTime = this.logic.getTime();
-                }
-                break;
-            case PLAYER_STATE_BOW_POWER:
-                this.animState = Globals.PLAYER_ANIM_STATE_ATTACKBOW;
-                if (frameDuration >= ((this.frame < 3) ? 30 : 70)) {
-                    if (getSkillCounter() < 20 && this.frame != 3) {
-                        this.frame++;
-                    } else if (getSkillCounter() == 21 && this.frame < 7) {
-                        this.frame++;
-                    }
-                    this.lastFrameTime = this.logic.getTime();
-                }
-                break;
-            case PLAYER_STATE_BOW_VOLLEY:
-                this.animState = Globals.PLAYER_ANIM_STATE_ATTACKBOW;
-                if (this.frame < 3 && frameDuration >= 30) {
-                    this.frame++;
-                    this.lastFrameTime = this.logic.getTime();
-                }
-                break;
-            case PLAYER_STATE_BOW_STORM:
-                this.animState = Globals.PLAYER_ANIM_STATE_ATTACKBOW;
-                if (this.frame < 7 && frameDuration >= 30) {
-                    this.frame++;
-                    this.lastFrameTime = this.logic.getTime();
-                }
-                break;
-            case PLAYER_STATE_BOW_FROST:
-                this.animState = Globals.PLAYER_ANIM_STATE_ATTACKBOW;
-                if (this.frame < 7 && frameDuration >= 30) {
-                    this.frame++;
-                    this.lastFrameTime = this.logic.getTime();
-                }
-                break;
             case PLAYER_STATE_UTILITY_DASH:
                 this.animState = Globals.PLAYER_ANIM_STATE_ROLL;
                 if (frameDuration >= 40 && this.frame < 9) {

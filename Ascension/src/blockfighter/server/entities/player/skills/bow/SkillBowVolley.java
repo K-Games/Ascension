@@ -119,4 +119,14 @@ public class SkillBowVolley extends Skill {
     public int getReqLevel() {
         return REQ_LEVEL;
     }
+
+    @Override
+    public void updatePlayerAnimState(Player player) {
+        final long frameDuration = Globals.nsToMs(this.logic.getTime() - player.getLastFrameTime());
+        player.setAnimState(Globals.PLAYER_ANIM_STATE_ATTACKBOW);
+        if (player.getFrame() < 3 && frameDuration >= 30) {
+            player.setFrame((byte) (player.getFrame() + 1));
+            player.setLastFrameTime(this.logic.getTime());
+        }
+    }
 }
