@@ -1280,35 +1280,6 @@ public class Player implements GameEntity, Callable<Player> {
                     this.lastFrameTime = this.logic.getTime();
                 }
                 break;
-            case PLAYER_STATE_SHIELD_CHARGE:
-                this.animState = Globals.PLAYER_ANIM_STATE_ATTACK;
-                if (frameDuration >= ((this.frame == 1) ? 4 : 20) && this.frame < 4) {
-                    this.frame++;
-                    this.lastFrameTime = this.logic.getTime();
-                }
-                break;
-            case PLAYER_STATE_SHIELD_REFLECT:
-                this.animState = Globals.PLAYER_ANIM_STATE_BUFF;
-                if (frameDuration >= 20 && this.frame < 4) {
-                    this.frame++;
-                }
-                break;
-            case PLAYER_STATE_SHIELD_ROAR:
-                this.animState = Globals.PLAYER_ANIM_STATE_BUFF;
-                if (frameDuration >= 30 && this.frame < 4) {
-                    this.frame++;
-                    this.lastFrameTime = this.logic.getTime();
-                }
-                break;
-            case PLAYER_STATE_SHIELD_MAGNETIZE:
-                this.animState = Globals.PLAYER_ANIM_STATE_BUFF;
-                if (getSkillCounter() == 1) {
-                    this.frame = 0;
-                } else if (frameDuration >= 30 && this.frame < 4) {
-                    this.frame++;
-                    this.lastFrameTime = this.logic.getTime();
-                }
-                break;
             default:
                 if (getSkill(PLAYER_STATE_SKILLCODE.get(this.playerState)) != null) {
                     getSkill(PLAYER_STATE_SKILLCODE.get(this.playerState)).updatePlayerAnimState(this);
