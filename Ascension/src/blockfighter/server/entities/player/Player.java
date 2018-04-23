@@ -195,6 +195,14 @@ public class Player implements GameEntity, Callable<Player> {
         updateClientScore();
     }
 
+    public long getLastFrameTime() {
+        return this.lastFrameTime;
+    }
+
+    public void setLastFrameTime(long time) {
+        lastFrameTime = time;
+    }
+
     public int getScore() {
         return this.score;
     }
@@ -242,6 +250,10 @@ public class Player implements GameEntity, Callable<Player> {
 
     public byte getAnimState() {
         return this.animState;
+    }
+
+    public void setAnimState(byte newAnimState) {
+        this.animState = newAnimState;
     }
 
     public Connection getConnection() {
@@ -1268,136 +1280,10 @@ public class Player implements GameEntity, Callable<Player> {
                     this.lastFrameTime = this.logic.getTime();
                 }
                 break;
-            case PLAYER_STATE_SWORD_SLASH:
-                if (frameDuration >= 20) {
-                    this.animState = Globals.PLAYER_ANIM_STATE_ATTACK;
-                    if (this.frame < 5) {
-                        this.frame++;
-                    }
-                    this.lastFrameTime = this.logic.getTime();
+            default:
+                if (getSkill(PLAYER_STATE_SKILLCODE.get(this.playerState)) != null) {
+                    getSkill(PLAYER_STATE_SKILLCODE.get(this.playerState)).updatePlayerAnimState(this);
                 }
-                break;
-            case PLAYER_STATE_SWORD_GASH:
-                this.animState = Globals.PLAYER_ANIM_STATE_ATTACK;
-                if (frameDuration >= ((this.frame == 4) ? 150 : 20) && this.frame < 5) {
-                    this.frame++;
-
-                    this.lastFrameTime = this.logic.getTime();
-                }
-                break;
-            case PLAYER_STATE_SWORD_PHANTOM:
-                this.animState = Globals.PLAYER_ANIM_STATE_INVIS;
-                break;
-            case PLAYER_STATE_SWORD_VORPAL:
-                this.animState = Globals.PLAYER_ANIM_STATE_ATTACK;
-                if (frameDuration >= 100 && this.frame == 0 || frameDuration >= 40 && this.frame < 5 && this.frame > 0) {
-                    this.frame++;
-                    this.lastFrameTime = this.logic.getTime();
-                }
-                break;
-            case PLAYER_STATE_SWORD_CINDER:
-                this.animState = Globals.PLAYER_ANIM_STATE_ATTACK;
-                if (frameDuration >= ((this.frame == 4) ? 40 : 30) && this.frame < 5) {
-                    this.frame++;
-                    this.lastFrameTime = this.logic.getTime();
-                }
-                break;
-            case PLAYER_STATE_SWORD_TAUNT:
-                this.animState = Globals.PLAYER_ANIM_STATE_ATTACK;
-                if (frameDuration >= ((this.frame == 4) ? 150 : 30) && this.frame < 5) {
-                    this.frame++;
-                    this.lastFrameTime = this.logic.getTime();
-                }
-                break;
-            case PLAYER_STATE_BOW_ARC:
-                this.animState = Globals.PLAYER_ANIM_STATE_ATTACKBOW;
-                if (this.frame < 7 && frameDuration >= 30) {
-                    this.frame++;
-                    this.lastFrameTime = this.logic.getTime();
-                }
-                break;
-            case PLAYER_STATE_BOW_RAPID:
-                this.animState = Globals.PLAYER_ANIM_STATE_ATTACKBOW;
-                if (this.frame < 7 && frameDuration >= 30) {
-                    this.frame++;
-                    this.lastFrameTime = this.logic.getTime();
-                }
-                break;
-            case PLAYER_STATE_BOW_POWER:
-                this.animState = Globals.PLAYER_ANIM_STATE_ATTACKBOW;
-                if (frameDuration >= ((this.frame < 3) ? 30 : 70)) {
-                    if (getSkillCounter() < 20 && this.frame != 3) {
-                        this.frame++;
-                    } else if (getSkillCounter() == 21 && this.frame < 7) {
-                        this.frame++;
-                    }
-                    this.lastFrameTime = this.logic.getTime();
-                }
-                break;
-            case PLAYER_STATE_BOW_VOLLEY:
-                this.animState = Globals.PLAYER_ANIM_STATE_ATTACKBOW;
-                if (this.frame < 3 && frameDuration >= 30) {
-                    this.frame++;
-                    this.lastFrameTime = this.logic.getTime();
-                }
-                break;
-            case PLAYER_STATE_BOW_STORM:
-                this.animState = Globals.PLAYER_ANIM_STATE_ATTACKBOW;
-                if (this.frame < 7 && frameDuration >= 30) {
-                    this.frame++;
-                    this.lastFrameTime = this.logic.getTime();
-                }
-                break;
-            case PLAYER_STATE_BOW_FROST:
-                this.animState = Globals.PLAYER_ANIM_STATE_ATTACKBOW;
-                if (this.frame < 7 && frameDuration >= 30) {
-                    this.frame++;
-                    this.lastFrameTime = this.logic.getTime();
-                }
-                break;
-            case PLAYER_STATE_UTILITY_DASH:
-                this.animState = Globals.PLAYER_ANIM_STATE_ROLL;
-                if (frameDuration >= 40 && this.frame < 9) {
-                    this.frame++;
-                    this.lastFrameTime = this.logic.getTime();
-                }
-                break;
-            case PLAYER_STATE_SHIELD_CHARGE:
-                this.animState = Globals.PLAYER_ANIM_STATE_ATTACK;
-                if (frameDuration >= ((this.frame == 1) ? 4 : 20) && this.frame < 4) {
-                    this.frame++;
-                    this.lastFrameTime = this.logic.getTime();
-                }
-                break;
-            case PLAYER_STATE_UTILITY_ADRENALINE:
-                this.animState = Globals.PLAYER_ANIM_STATE_BUFF;
-                if (frameDuration >= 30 && this.frame < 4) {
-                    this.frame++;
-                    this.lastFrameTime = this.logic.getTime();
-                }
-                break;
-            case PLAYER_STATE_SHIELD_REFLECT:
-                this.animState = Globals.PLAYER_ANIM_STATE_BUFF;
-                if (frameDuration >= 20 && this.frame < 4) {
-                    this.frame++;
-                }
-                break;
-            case PLAYER_STATE_SHIELD_ROAR:
-                this.animState = Globals.PLAYER_ANIM_STATE_BUFF;
-                if (frameDuration >= 30 && this.frame < 4) {
-                    this.frame++;
-                    this.lastFrameTime = this.logic.getTime();
-                }
-                break;
-            case PLAYER_STATE_SHIELD_MAGNETIZE:
-                this.animState = Globals.PLAYER_ANIM_STATE_BUFF;
-                if (getSkillCounter() == 1) {
-                    this.frame = 0;
-                } else if (frameDuration >= 30 && this.frame < 4) {
-                    this.frame++;
-                    this.lastFrameTime = this.logic.getTime();
-                }
-                break;
         }
         if (this.animState != prevAnimState || this.frame != prevFrame) {
             this.updateAnimState = true;

@@ -128,4 +128,20 @@ public class SkillBowPower extends Skill {
     public int getReqLevel() {
         return REQ_LEVEL;
     }
+
+    @Override
+    public void updatePlayerAnimState(Player player) {
+        final long frameDuration = Globals.nsToMs(this.logic.getTime() - player.getLastFrameTime());
+        player.setAnimState(Globals.PLAYER_ANIM_STATE_ATTACKBOW);
+        if (frameDuration >= ((player.getFrame() < 3) ? 30 : 70)) {
+            if (player.getSkillCounter() < 20 && player.getFrame() != 3) {
+
+                player.setFrame((byte) (player.getFrame() + 1));
+            } else if (player.getSkillCounter() == 21 && player.getFrame() < 7) {
+
+                player.setFrame((byte) (player.getFrame() + 1));
+            }
+            player.setLastFrameTime(this.logic.getTime());
+        }
+    }
 }

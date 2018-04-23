@@ -158,4 +158,9 @@ public class SkillSwordPhantom extends Skill {
     public int getReqLevel() {
         return REQ_LEVEL;
     }
+
+    @Override
+    public void updatePlayerAnimState(Player player) {
+        player.setAnimState(Globals.PLAYER_ANIM_STATE_INVIS);
+    }
 }
