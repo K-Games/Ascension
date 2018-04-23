@@ -246,14 +246,14 @@ public class SaveData {
             }
         }
         double totalStatPoints = 0;
-        for (int i = 1; i <= this.baseStats[Globals.STAT_LEVEL]; i++) {
-            if (i <= 40) {
+        for (int level = 1; level <= this.baseStats[Globals.STAT_LEVEL]; level++) {
+            if (level <= 40) {
                 totalStatPoints += 3;
-            } else if (i <= 70) {
+            } else if (level <= 70) {
                 totalStatPoints += 4;
-            } else if (i <= 90) {
+            } else if (level <= 90) {
                 totalStatPoints += 6;
-            } else if (i <= 100) {
+            } else if (level <= 100) {
                 totalStatPoints += 12;
             }
         }
