@@ -27,8 +27,20 @@ public class TestSaveData {
     }
 
     public void newCharacter(final int lvl) {
-        double remainingSP = lvl * Globals.STAT_PER_LEVEL * 3;
+
         this.baseStats[Globals.STAT_LEVEL] = lvl;
+        double remainingSP = 0;
+        for (int level = 1; level <= this.baseStats[Globals.STAT_LEVEL]; level++) {
+            if (level <= 40) {
+                remainingSP += 3;
+            } else if (level <= 70) {
+                remainingSP += 4;
+            } else if (level <= 90) {
+                remainingSP += 6;
+            } else if (level <= 100) {
+                remainingSP += 12;
+            }
+        }
         this.baseStats[Globals.STAT_POWER] = Globals.rng((int) remainingSP);
         remainingSP -= this.baseStats[Globals.STAT_POWER];
         this.baseStats[Globals.STAT_DEFENSE] = Globals.rng((int) remainingSP);
