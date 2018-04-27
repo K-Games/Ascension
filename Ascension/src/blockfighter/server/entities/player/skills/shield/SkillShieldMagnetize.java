@@ -138,11 +138,8 @@ public class SkillShieldMagnetize extends Skill {
                         if (numOfTicks > 0) {
                             double distanceX = (player.getX() - p.getX()) / numOfTicks;
                             double distanceY = (player.getY() - p.getY()) / numOfTicks;
-                            p.setXSpeed(distanceX);
-                            p.setYSpeed(distanceY);
-                        } else {
-                            p.setXSpeed(0);
-                            p.setYSpeed(0.01);
+                            p.queueXChange(distanceX);
+                            p.queueYChange(distanceY);
                         }
                     });
                 }
