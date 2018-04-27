@@ -90,6 +90,10 @@ public class Player implements GameEntity, Callable<Player> {
     private final ConcurrentLinkedQueue<Integer> healQueue = new ConcurrentLinkedQueue<>();
     private final ConcurrentLinkedQueue<byte[]> skillUseQueue = new ConcurrentLinkedQueue<>();
     private final ConcurrentLinkedQueue<Buff> buffQueue = new ConcurrentLinkedQueue<>();
+
+    private final ConcurrentLinkedQueue<Double> xChangeQueue = new ConcurrentLinkedQueue<>();
+    private final ConcurrentLinkedQueue<Double> yChangeQueue = new ConcurrentLinkedQueue<>();
+
     private final HashMap<Player, Double> playerDamageCount = new HashMap<>();
 
     private final ConcurrentLinkedQueue<Integer> buffKeys = new ConcurrentLinkedQueue<>();
@@ -347,6 +351,16 @@ public class Player implements GameEntity, Callable<Player> {
         this.dirKeydown[direction] = move;
     }
 
+    /**
+     * Set a player's position instantly.
+     *
+     * Do not use in player-player interaction to move another player, e.g during skill usage.
+     *
+     * Only use to move self or during projectile-player interaction.
+     *
+     * @param x X position to be set
+     * @param y Y position to be set
+     */
     public void setPos(final double x, final double y) {
         this.x = this.map.getValidX(x, y);
         this.y = y;
@@ -358,9 +372,9 @@ public class Player implements GameEntity, Callable<Player> {
     }
 
     public void setXSpeed(final double speed) {
-        if (isDead()) {
-            this.xSpeed = 0;
-        }
+//        if (isDead()) {
+//            this.xSpeed = 0;
+//        }
         this.xSpeed = speed;
         this.targetXSpeed = this.xSpeed;
     }
@@ -407,7 +421,9 @@ public class Player implements GameEntity, Callable<Player> {
         if (this.xSpeed != this.targetXSpeed) {
             updateXAcceleration();
         }
-        final boolean xChanged = updateX(this.xSpeed);
+
+        this.xChangeQueue.add(this.xSpeed);
+        final boolean xChanged = updateX();
 
         if (isDead()) {
             // Update respawn Timer
@@ -509,7 +525,7 @@ public class Player implements GameEntity, Callable<Player> {
         this.skillUseQueue.clear();
         if (data != null) {
             byte skillCode = data[3];
-            if (skillCode == Globals.SHIELD_ROAR || !isStunned()) {
+            if (!isStunned()) {
                 if (hasSkill(skillCode)) {
                     castSkill(skillCode);
                 }
@@ -1095,7 +1111,8 @@ public class Player implements GameEntity, Callable<Player> {
     }
 
     private void updateFall() {
-        updateY(this.ySpeed);
+        this.yChangeQueue.add(this.ySpeed);
+        updateY();
         if (this.ySpeed != 0) {
             queuePlayerState(PLAYER_STATE_JUMP);
         }
@@ -1175,6 +1192,14 @@ public class Player implements GameEntity, Callable<Player> {
         }
     }
 
+    public void queueXChange(final double delta) {
+        this.xChangeQueue.add(delta);
+    }
+
+    public void queueYChange(final double delta) {
+        this.yChangeQueue.add(delta);
+    }
+
     public void setFacing(final byte f) {
         this.facing = f;
         this.updateFacing = true;
@@ -1198,27 +1223,35 @@ public class Player implements GameEntity, Callable<Player> {
         }
     }
 
-    private boolean updateX(final double change) {
-        if (change == 0) {
-            return false;
-        }
+    private boolean updateX() {
+        boolean updated = false;
+        while (!this.xChangeQueue.isEmpty()) {
+            double change = this.xChangeQueue.poll();
+            if (change == 0) {
+                continue;
+            }
 
-        if (this.map.isOutOfBounds(this.x + change)) {
-            return false;
+            if (this.map.isOutOfBounds(this.x + change)) {
+                continue;
+            }
+            this.x = this.map.getValidX(this.x + change, this.y);
+            updated = this.updatePos = true;
         }
-        this.x = this.map.getValidX(this.x + change, this.y);
-        this.updatePos = true;
-        return true;
+        return updated;
     }
 
-    private boolean updateY(final double change) {
-        if (change == 0) {
-            return false;
-        }
+    private boolean updateY() {
+        boolean updated = false;
+        while (!this.yChangeQueue.isEmpty()) {
+            double change = this.yChangeQueue.poll();
+            if (change == 0) {
+                continue;
+            }
 
-        this.y = this.map.getValidY(this.x, this.y + change);
-        this.updatePos = true;
-        return true;
+            this.y = this.map.getValidY(this.x, this.y + change);
+            updated = this.updatePos = true;
+        }
+        return updated;
     }
 
     public void queuePlayerState(final byte newState) {
