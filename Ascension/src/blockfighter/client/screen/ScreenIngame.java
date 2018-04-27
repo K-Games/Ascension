@@ -865,7 +865,7 @@ public class ScreenIngame extends Screen {
         for (Entry<Point2D, IngameNumberStack> entry : stackCollection.entrySet()) {
             if (entry.getValue().canAddNumber()
                     && Math.abs(entry.getKey().getX() - x) <= 100
-                    && Math.abs(entry.getKey().getY() - y) <= 100) {
+                    && Math.abs(entry.getKey().getY() - y) <= 200) {
                 entry.getValue().addNumber(value, type);
                 return null;
             }
