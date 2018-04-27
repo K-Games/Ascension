@@ -27,9 +27,9 @@ public class ItemEquip implements Item {
     private static final String FOLDER_MAINHAND = "mainhand";
 
     private final static double BASESTAT_BASEMULT_BONUS = 0D,
-            BASESTAT_CRITCHANCE = 0.001,
+            BASESTAT_CRITCHANCE = 0.0002,
             BASESTAT_CRITDMG = 0.01,
-            BASESTAT_REGEN = 10,
+            BASESTAT_REGEN = 10 / 2,
             BASESTAT_ARMOUR = 7.5;
 
     private final static double UPGRADE_CRITCHANCE = BASESTAT_CRITCHANCE, // 0.1%
@@ -365,79 +365,64 @@ public class ItemEquip implements Item {
         updateStats();
     }
 
-    public static double calcItemPowerStat(final double level) {
-        return (level / 5 + 1) + BASESTAT_BASEMULT_BONUS * level;
-    }
-
-    public static double calcItemDefenseStat(final double level) {
-        return (level / 5 + 1) + BASESTAT_BASEMULT_BONUS * level;
-    }
-
-    public static double calcItemSpiritStat(final double level) {
-        return (level / 5 + 1) + BASESTAT_BASEMULT_BONUS * level;
-    }
-
-    public static double calcItemCritChance(final double level) {
-        return (level / 5 + 1) * BASESTAT_CRITCHANCE;
-    }
-
-    public static double calcItemCritDmg(final double level) {
-        return (level / 5 + 1) * BASESTAT_CRITDMG;
-    }
-
-    public static double calcItemRegen(final double level) {
-        return (level / 5 + 1) * BASESTAT_REGEN;
-    }
-
-    public static double calcItemArmour(final double level) {
-        return (level / 5 + 1) * BASESTAT_ARMOUR;
+    private static double calcNewStat(final double level, final int statID) {
+        switch (statID) {
+            case Globals.STAT_POWER:
+            case Globals.STAT_DEFENSE:
+            case Globals.STAT_SPIRIT:
+                return Globals.rng(2) + (level / 10 + 1) + BASESTAT_BASEMULT_BONUS * level;
+            case Globals.STAT_CRITCHANCE:
+                return (level / 5 + 1) * BASESTAT_CRITCHANCE;
+            case Globals.STAT_CRITDMG:
+                return (level / 5 + 1) * BASESTAT_CRITDMG;
+            case Globals.STAT_REGEN:
+                return (level / 5 + 1) * BASESTAT_REGEN;
+            case Globals.STAT_ARMOUR:
+                return (level / 5 + 1) * BASESTAT_ARMOUR;
+        }
+        return 0;
     }
 
     public static double[] calcEquipStat(final int ic, final double level) {
         final double[] stats = new double[Globals.NUM_STATS];
         stats[Globals.STAT_LEVEL] = level;
 
+        int[] armorStatRollPool = {Globals.STAT_POWER, Globals.STAT_DEFENSE, Globals.STAT_SPIRIT};
+        int[] weaponStatRollPool = {Globals.STAT_CRITDMG, Globals.STAT_CRITCHANCE, Globals.STAT_ARMOUR, Globals.STAT_REGEN};
+        int[] trinketRollPool = {Globals.STAT_ARMOUR, Globals.STAT_REGEN, Globals.STAT_CRITCHANCE};
+
         switch (Globals.getEquipType(ic)) {
             case Globals.ITEM_SWORD:
-                stats[Globals.STAT_CRITDMG] = calcItemCritDmg(level);
-                break;
             case Globals.ITEM_BOW:
-                stats[Globals.STAT_CRITDMG] = calcItemCritDmg(level);
-                break;
-            case Globals.ITEM_SHIELD:
-                stats[Globals.STAT_ARMOUR] = calcItemArmour(level);
-                break;
             case Globals.ITEM_ARROW:
-                stats[Globals.STAT_CRITCHANCE] = calcItemCritChance(level);
+            case Globals.ITEM_SHIELD:
+                for (byte numRolls = 0; numRolls < 2; numRolls++) {
+                    int rng = Globals.rng(weaponStatRollPool.length);
+                    while (stats[weaponStatRollPool[rng]] != 0) {
+                        rng = Globals.rng(weaponStatRollPool.length);
+                    }
+                    stats[weaponStatRollPool[rng]] = calcNewStat(level, weaponStatRollPool[rng]);
+                }
                 break;
             case Globals.ITEM_CHEST:
-                stats[Globals.STAT_DEFENSE] = calcItemDefenseStat(level);
-                break;
             case Globals.ITEM_PANTS:
-                stats[Globals.STAT_DEFENSE] = calcItemDefenseStat(level);
-                break;
             case Globals.ITEM_HEAD:
-                stats[Globals.STAT_SPIRIT] = calcItemSpiritStat(level);
-                break;
+            case Globals.ITEM_SHOULDER:
             case Globals.ITEM_SHOE:
-                stats[Globals.STAT_SPIRIT] = calcItemSpiritStat(level);
+            case Globals.ITEM_GLOVE:
+                for (int statID : armorStatRollPool) {
+                    stats[statID] = calcNewStat(level, statID);
+                }
+                stats[armorStatRollPool[Globals.rng(armorStatRollPool.length)]] = 0;
                 break;
             case Globals.ITEM_BELT:
-                stats[Globals.STAT_ARMOUR] = calcItemArmour(level);
-                break;
-            case Globals.ITEM_SHOULDER:
-                stats[Globals.STAT_POWER] = calcItemPowerStat(level);
-                break;
-            case Globals.ITEM_GLOVE:
-                stats[Globals.STAT_POWER] = calcItemPowerStat(level);
-                break;
             case Globals.ITEM_AMULET:
-                stats[Globals.STAT_CRITDMG] = calcItemCritDmg(level);
-                stats[Globals.STAT_ARMOUR] = calcItemArmour(level);
-                break;
             case Globals.ITEM_RING:
-                stats[Globals.STAT_CRITCHANCE] = calcItemCritChance(level);
-                stats[Globals.STAT_REGEN] = calcItemRegen(level);
+                //trinket
+                for (int statID : trinketRollPool) {
+                    stats[statID] = calcNewStat(level, statID);
+                }
+                stats[trinketRollPool[Globals.rng(trinketRollPool.length)]] = 0;
                 break;
         }
         stats[Globals.STAT_POWER] = Math.round(stats[Globals.STAT_POWER]);
@@ -652,8 +637,6 @@ public class ItemEquip implements Item {
 
     private void updateStats() {
         updateTier();
-
-        this.baseStats = calcEquipStat(this.equipCode, this.baseStats[Globals.STAT_LEVEL]);
 
         System.arraycopy(this.baseStats, 0, this.totalStats, 0, this.baseStats.length);
 
