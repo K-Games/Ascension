@@ -3,13 +3,13 @@ package blockfighter.client.screen;
 import blockfighter.client.Core;
 import blockfighter.client.entities.items.ItemEquip;
 import blockfighter.client.savedata.SaveData;
+import static blockfighter.client.screen.Screen.BOX_BG_COLOR;
 import blockfighter.shared.Globals;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-import static blockfighter.client.screen.Screen.BOX_BG_COLOR;
 
 public abstract class ScreenItemManagement extends ScreenMenu {
 

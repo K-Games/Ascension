@@ -10,7 +10,6 @@ import blockfighter.shared.Globals;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayDeque;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.Callable;
 
 public abstract class Projectile implements GameEntity, Callable<Projectile> {

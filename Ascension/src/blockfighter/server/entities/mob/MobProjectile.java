@@ -3,7 +3,6 @@ package blockfighter.server.entities.mob;
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.proj.Projectile;
-import java.util.Map;
 
 public abstract class MobProjectile extends Projectile {
 
