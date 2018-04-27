@@ -9,10 +9,10 @@ import paulscode.sound.SoundSystemJPCT;
 public class SoundModule implements Runnable {
 
     private SoundSystemJPCT soundModule;
-    private float originVol = 0.2f;
     private byte currentBGM = -1;
     private final ConcurrentLinkedQueue<Byte> bgmQueue = new ConcurrentLinkedQueue<>();
     private final ConcurrentLinkedQueue<Byte> sfxQueue = new ConcurrentLinkedQueue<>();
+    private boolean muted = (Boolean) Globals.ClientOptions.SOUND_ENABLE.getValue();
 
     @Override
     public void run() {
@@ -67,22 +67,13 @@ public class SoundModule implements Runnable {
     }
 
     public void mute() {
-        if (!isLoaded()) {
-            return;
-        }
-        if (this.soundModule.getMasterVolume() > 0) {
-            originVol = this.soundModule.getMasterVolume();
-            this.soundModule.setMasterVolume(0f);
-        }
+        this.muted = true;
+        updateVolume();
     }
 
     public void unmute() {
-        if (!isLoaded() || !(Boolean) Globals.ClientOptions.SOUND_ENABLE.getValue()) {
-            return;
-        }
-        if (this.soundModule.getMasterVolume() <= 0) {
-            this.soundModule.setMasterVolume(originVol);
-        }
+        this.muted = false;
+        updateVolume();
     }
 
     public void updateVolume() {
@@ -90,12 +81,12 @@ public class SoundModule implements Runnable {
             return;
         }
 
-        if (!(Boolean) Globals.ClientOptions.SOUND_ENABLE.getValue()) {
-            mute();
-        } else {
+        if (!muted) {
             float volume = (float) Math.pow(((Integer) Globals.ClientOptions.VOLUME_LEVEL.getValue()) / 100f, 2.7);
             this.soundModule.setMasterVolume(volume);
-            this.originVol = volume;
+        } else {
+            this.soundModule.setMasterVolume(0f);
         }
+
     }
 }

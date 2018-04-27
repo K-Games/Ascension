@@ -66,7 +66,11 @@ public class ScreenOptions extends ScreenMenu {
                 break;
             case SOUND_ENABLE:
                 option.setValue(String.valueOf(!(Boolean) option.getValue()));
-                Core.getSoundModule().updateVolume();
+                if ((Boolean) option.getValue()) {
+                    Core.getSoundModule().unmute();
+                } else {
+                    Core.getSoundModule().mute();
+                }
                 break;
         }
     }
@@ -245,6 +249,10 @@ public class ScreenOptions extends ScreenMenu {
         for (Globals.ClientOptions option : Globals.ClientOptions.values()) {
             option.setValue(ORIGINAL_VALUES.get(option).toString());
         }
-        Core.getSoundModule().updateVolume();
+        if ((Boolean) Globals.ClientOptions.SOUND_ENABLE.getValue()) {
+            Core.getSoundModule().unmute();
+        } else {
+            Core.getSoundModule().mute();
+        }
     }
 }
