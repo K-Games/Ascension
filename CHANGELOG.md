@@ -8,6 +8,10 @@
 * Save file location have been moved to `%USERPROFILE%/K-Games/Ascension` on Windows and `~/K-Games/Ascension` on OSX
 	* Your current save files are in the game installation directory.
 	* Move them to the new location to keep your save file.
+* Options Menu
+	* Added different Damage number styles and option to disable it entirely.
+	* Added screen scaling - Requires restart.
+	* Added volume adjustment and disabler.
 * Skills
 	* Added level requirement to unlock and use Skills.
 		* To lessen the decision burden from new players and emphasis progression.
@@ -20,8 +24,20 @@
 		* Some Skills now now utilize this debuff.
 	
 #### Stats
+* Stat distribution reworked.
+	* Greatly reduced the number of Stat Points overall.
+	* Gaining a flat amount points per level lowered the impact of leveling as you reach higher levels.
+		* As a result, the amount of Stat Points you gain at higher levels is increased at certain points.
+	* Levels 1 to 40 grants 3 Stat Points per level.
+	* Levels 41 to 70 grants 4 Stat Points per level.
+	* Levels 71 to 90 grants 6 Stat Points per level.
+	* Levels 91 to 100 grants 12 Stat Points per level.
+	* Totals to 480 points.
 
 #### Equipment Stats
+* Randomized Stat Rolls
+	* Equipment can now roll 2 different Stats from a select pool based on equipment type.
+* Greatly reduced the Stats on equipment pieces.
 
 #### Infusion
 
@@ -65,6 +81,7 @@
 * Blood particles now use a sprite to improve performance.
 * Disabled SFX.
 * Fixed potential legacy SaveData breaking.
+* Fixed minor sound muting bug.
 
 ### Server Changes
 * Added support for 255 max players in a room.
@@ -75,6 +92,8 @@
 * Added parameter to Damage class to enable/disable hit particle.
 * Moved Grand Library top boundary higher.
 * Fixed invalid Y plaform check.
+* Refactored animation updating to be handled within Skill class instead of the Player class.
+* Enforced player position changes to be made through a queue during player-player interactions.
 
 ---
 
