@@ -5,7 +5,9 @@
 ## Version 0.25.0
 
 ### Gameplay Changes
-* Save file location have been moved to `%USERPROFILE%/K-Games/Ascension` on Windows and `~/K-Games/Ascension` on OSX
+* Save file location have been moved.
+	* Windows - `%USERPROFILE%/K-Games/Ascension`
+	* OSX - `~/K-Games/Ascension`
 	* Your current save files are in the game installation directory.
 	* Move them to the new location to keep your save file.
 * Options Menu
@@ -14,20 +16,20 @@
 	* Added volume adjustment and disabler.
 * Skills
 	* Added level requirement to unlock and use Skills.
-		* To lessen the decision burden from new players and emphasis progression.
+		* Reduces the scope of skill new players are introduced to.
 * Score to win is now updated dynamically to match server rules.
 * New characters now only begin with a weapon of each type.(Sword, Shield, Bow, Arrow Enchantment)
 * Updated some Equipment descriptions.
-* Equipment drops determine equipment type before equipment to evenly distributed for each type's drop rate.
+* Equipment drops determine their type before appearance to evenly distributed for each type's drop rate.
 * New Debuff
 	* Cripple - Slow movement and reduce jump height by a percentage.
-		* Some Skills now now utilize this debuff.
+		* Some Skills now utilize this debuff.
 	
 #### Stats
 * Stat distribution reworked.
 	* Greatly reduced the number of Stat Points overall.
 	* Gaining a flat amount points per level lowered the impact of leveling as you reach higher levels.
-		* As a result, the amount of Stat Points you gain at higher levels is increased at certain points.
+		* To continue making leveling feel impactful, the Stat Points you gain at higher levels is increased at certain points.
 	* Levels 1 to 40 grants 3 Stat Points per level.
 	* Levels 41 to 70 grants 4 Stat Points per level.
 	* Levels 71 to 90 grants 6 Stat Points per level.
@@ -77,7 +79,7 @@
 * Improved SaveData validation.
 * Improved Skill info box rendering.
 * Fixed Skill descriptions not loading if SaveData did not previously have any data. Mainly affects new Skills.
-* Fixed sprites that have no completed loading freezing the game.
+* Fixed sprites that have not completed loading to freeze the game.
 * Blood particles now use a sprite to improve performance.
 * Disabled SFX.
 * Fixed potential legacy SaveData breaking.
