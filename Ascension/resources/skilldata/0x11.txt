@@ -14,6 +14,8 @@ Increases damage dealt for 5 seconds.
 0.01
 [multvalue]
 0.003
+[customvalues]
+buffduration
 [passive]
 false
 [buffduration]

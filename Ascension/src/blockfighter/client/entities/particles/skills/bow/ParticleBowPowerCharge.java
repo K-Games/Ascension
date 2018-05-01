@@ -4,7 +4,6 @@ import blockfighter.client.Core;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.client.entities.player.Player;
 import blockfighter.shared.Globals;
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
@@ -26,11 +25,11 @@ public class ParticleBowPowerCharge extends Particle {
         this.duration = 400;
         this.x = owner.getX() + Globals.rng(300) - 150;
         this.y = (int) ((owner.getY() - 75) + (Globals.rng(2) == 0 ? 1 : -1) * Math.sqrt(150 * 150 - (owner.getX() - this.x) * (owner.getX() - this.x)));
+        this.particleData = Globals.Particles.BOW_POWER_CHARGE;
     }
 
     @Override
     public void update() {
-        super.update();
         long durationLeft = this.duration - Globals.nsToMs(Core.getLogicModule().getTime() - this.particleStartTime);
         double numberOfTicks = 1f * durationLeft / Globals.nsToMs((long) Globals.CLIENT_LOGIC_UPDATE);
         if (numberOfTicks <= 1) {
@@ -42,24 +41,13 @@ public class ParticleBowPowerCharge extends Particle {
             this.x += this.speedX;
             this.y += this.speedY;
         }
-        this.lastFrameTime = Core.getLogicModule().getTime();
-
     }
 
     @Override
     public void draw(final Graphics2D g) {
-        if (Globals.Particles.BOW_POWER_CHARGE.getSprite() == null) {
-            return;
+        if (this.spriteFrameExists()) {
+            final BufferedImage sprite = Globals.Particles.BOW_POWER_CHARGE.getSprites()[this.frame];
+            draw(g, -sprite.getWidth() / 2, 0, false);
         }
-        if (this.frame >= Globals.Particles.BOW_POWER_CHARGE.getSprite().length) {
-            return;
-        }
-        final BufferedImage sprite = Globals.Particles.BOW_POWER_CHARGE.getSprite()[this.frame];
-        final int drawSrcX = this.x - sprite.getWidth() / 2;
-        final int drawSrcY = this.y;
-        final int drawDscY = drawSrcY + sprite.getHeight();
-        final int drawDscX = drawSrcX + sprite.getWidth();
-        g.drawImage(sprite, drawSrcX, drawSrcY, drawDscX, drawDscY, 0, 0, sprite.getWidth(), sprite.getHeight(), null);
-        g.setColor(Color.WHITE);
     }
 }

@@ -14,11 +14,11 @@ public class ParticleShieldReflectEmitter extends Particle {
         super(p);
         this.frame = 0;
         this.duration = 3000;
+        this.particleData = Globals.Particles.SHIELD_REFLECT_EMITTER;
     }
 
     @Override
     public void update() {
-        super.update();
         if (!isExpired() && Globals.nsToMs(Core.getLogicModule().getTime() - lastParticleTime) >= 50) {
             final Point p = this.owner.getPos();
             if (p != null) {

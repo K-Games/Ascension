@@ -19,11 +19,11 @@ public class ParticleBlood extends Particle {
         this.ySpeed = (.1 * Globals.rng(100) - 14);
         this.frame = 0;
         this.duration = 300 + Globals.rng(30) * 10;
+        this.particleData = Globals.Particles.BLOOD;
     }
 
     @Override
     public void update() {
-        super.update();
         this.drawSize -= .03;
         this.ySpeed += Globals.GRAVITY * 1.5;
         this.xDouble += this.xSpeed;
@@ -34,14 +34,9 @@ public class ParticleBlood extends Particle {
 
     @Override
     public void draw(final Graphics2D g) {
-        if (Globals.Particles.BLOOD.getSprite() == null) {
-            return;
+        if (this.spriteFrameExists()) {
+            final BufferedImage sprite = Globals.Particles.BLOOD.getSprites()[this.frame];
+            g.drawImage(sprite, this.x, this.y, (int) this.drawSize, (int) this.drawSize, null);
         }
-        if (this.frame >= Globals.Particles.BLOOD.getSprite().length) {
-            return;
-        }
-
-        final BufferedImage sprite = Globals.Particles.BLOOD.getSprite()[this.frame];
-        g.drawImage(sprite, this.x, this.y, (int) this.drawSize, (int) this.drawSize, null);
     }
 }

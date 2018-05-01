@@ -2,6 +2,7 @@ package blockfighter.client.entities.particles.skills.utility;
 
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.client.entities.player.Player;
+import blockfighter.shared.Globals;
 import java.awt.AlphaComposite;
 import java.awt.Composite;
 import java.awt.Graphics2D;
@@ -16,6 +17,7 @@ public class ParticleUtilityAdrenalineCloneParticle extends Particle {
         this.cloneFacing = facing;
         this.cloneAnimState = animState;
         this.cloneFrame = frame;
+        this.particleData = Globals.Particles.UTILITY_ADRENALINE_CLONE_PARTICLE;
     }
 
     @Override

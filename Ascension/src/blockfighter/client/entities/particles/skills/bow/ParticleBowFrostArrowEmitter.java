@@ -13,17 +13,16 @@ public class ParticleBowFrostArrowEmitter extends Particle {
         super(x, y, f);
         this.frame = 0;
         this.duration = 500;
+        this.particleData = Globals.Particles.BOW_FROSTARROW_EMITTER;
     }
 
     @Override
     public void update() {
-        super.update();
         if (!isExpired() && Globals.nsToMs(Core.getLogicModule().getTime() - lastParticleTime) >= 100) {
             final ParticleBowFrostArrow b = new ParticleBowFrostArrow(this.x + count * ((this.facing == Globals.RIGHT) ? 180 : -180), this.y, this.facing);
             Core.getLogicModule().getScreen().addParticle(b);
             count++;
             lastParticleTime = Core.getLogicModule().getTime();
         }
-
     }
 }

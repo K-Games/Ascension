@@ -42,8 +42,6 @@ public class EmoteSweat extends Emote {
         final BufferedImage sprite = Globals.Emotes.SWEAT.getSprite()[this.frame];
         final int drawSrcX = this.x;
         final int drawSrcY = this.y;
-        final int drawDscY = drawSrcY + sprite.getHeight();
-        final int drawDscX = drawSrcX + sprite.getWidth();
-        g.drawImage(sprite, drawSrcX, drawSrcY, drawDscX, drawDscY, 0, 0, sprite.getWidth(), sprite.getHeight(), null);
+        g.drawImage(sprite, drawSrcX, drawSrcY, sprite.getWidth(), sprite.getHeight(), null);
     }
 }

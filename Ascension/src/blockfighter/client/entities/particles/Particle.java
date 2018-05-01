@@ -10,6 +10,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public abstract class Particle implements Callable<Particle> {
 
+    protected Globals.Particles particleData;
     protected int x, y;
     protected double size = 10.0;
     protected int frameDuration;
@@ -45,7 +46,7 @@ public abstract class Particle implements Callable<Particle> {
     public static void unloadParticles() {
         Globals.log(Particle.class, "Unloading Particles...", Globals.LOG_TYPE_DATA);
         for (Globals.Particles particle : Globals.Particles.values()) {
-            for (int j = 0; particle.getSprite() != null && j < particle.getSprite().length; j++) {
+            for (int j = 0; particle.getSprites() != null && j < particle.getSprites().length; j++) {
                 particle.setSprite(null);
             }
         }
@@ -70,7 +71,17 @@ public abstract class Particle implements Callable<Particle> {
         }
     }
 
+    public boolean spriteFrameExists() {
+        return this.particleData.getSprites() != null && this.frame < this.particleData.getSprites().length;
+    }
+
     public void update() {
+        if (this.particleData != null && Globals.nsToMs(Core.getLogicModule().getTime() - this.lastFrameTime) >= this.frameDuration) {
+            if (this.particleData.getSprites() != null && this.frame < this.particleData.getSprites().length) {
+                this.frame++;
+            }
+            this.lastFrameTime = Core.getLogicModule().getTime();
+        }
     }
 
     public double getX() {
@@ -117,6 +128,7 @@ public abstract class Particle implements Callable<Particle> {
         if (owner != null) {
             this.facing = owner.getFacing();
         }
+        this.particleData = null;
     }
 
     public Particle(final int x, final int y) {
@@ -147,6 +159,40 @@ public abstract class Particle implements Callable<Particle> {
     }
 
     public void draw(final Graphics2D g) {
+    }
+
+    public void draw(final Graphics2D g, final int xOffset, final int yOffset) {
+        draw(g, xOffset, yOffset, true);
+    }
+
+    public void draw(final Graphics2D g, final int xOffset, final int yOffset, final boolean mirrored) {
+        draw(g, xOffset, yOffset, 0, 0, mirrored);
+    }
+
+    public void draw(final Graphics2D g, final int xOffset, final int yOffset, final int addWidth, final int addHeight, final boolean mirrored) {
+        if (!this.spriteFrameExists()) {
+            return;
+        }
+        final BufferedImage sprite = this.particleData.getSprites()[this.frame];
+        final int drawSrcX = this.x + ((this.facing == Globals.RIGHT) ? xOffset : -xOffset);
+        final int drawSrcY = this.y - sprite.getHeight() + yOffset;
+
+        if (addWidth != 0 || addHeight != 0) {
+            if (mirrored) {
+                final int drawDscY = drawSrcY + sprite.getHeight() + addHeight;
+                final int drawDscX = drawSrcX + ((this.facing == Globals.RIGHT) ? (sprite.getWidth() + addWidth) : -(sprite.getWidth() + addWidth));
+                g.drawImage(sprite, drawSrcX, drawSrcY, drawDscX, drawDscY, 0, 0, sprite.getWidth(), sprite.getHeight(), null);
+            } else {
+                g.drawImage(sprite, this.x + xOffset, this.y - sprite.getHeight() + yOffset, sprite.getWidth() + addWidth, sprite.getHeight() + addHeight, null);
+            }
+        } else {
+            if (mirrored) {
+                int drawWidth = ((this.facing == Globals.RIGHT) ? 1 : -1) * sprite.getWidth();
+                g.drawImage(sprite, drawSrcX, drawSrcY, drawWidth, sprite.getHeight(), null);
+            } else {
+                g.drawImage(sprite, this.x + xOffset, this.y - sprite.getHeight() + yOffset, null);
+            }
+        }
     }
 
     public void setExpire() {
