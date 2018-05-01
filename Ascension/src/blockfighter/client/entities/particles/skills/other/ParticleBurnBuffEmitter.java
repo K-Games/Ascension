@@ -14,11 +14,11 @@ public class ParticleBurnBuffEmitter extends Particle {
         super(p);
         this.frame = 0;
         this.duration = 4000;
+        this.particleData = Globals.Particles.BURN_BUFF_EMITTER;
     }
 
     @Override
     public void update() {
-        super.update();
         if (!isExpired() && Globals.nsToMs(Core.getLogicModule().getTime() - lastParticleTime) >= 500) {
             final Point p = this.owner.getPos();
             if (p != null) {

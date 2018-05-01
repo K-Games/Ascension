@@ -27,7 +27,6 @@ public class ParticleMenuUpgradeSelect extends Particle {
 
     @Override
     public void update() {
-        super.update();
         this.realX += this.deltaX;
         this.realY += this.deltaY;
         this.x = (int) this.realX;

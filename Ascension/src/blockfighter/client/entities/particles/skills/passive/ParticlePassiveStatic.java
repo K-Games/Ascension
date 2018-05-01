@@ -24,11 +24,11 @@ public class ParticlePassiveStatic extends Particle {
         this.duration = 300;
         this.lightningPointsX = new int[3][20];
         this.lightningPointsY = new int[3][20];
+        this.particleData = Globals.Particles.PASSIVE_STATIC;
     }
 
     @Override
     public void update() {
-        super.update();
         if (Globals.nsToMs(Core.getLogicModule().getTime() - this.lastFrameTime) >= this.frameDuration) {
             int distanceX = (this.target.getX() - this.owner.getX()) / this.lightningPointsX[0].length;
             int distanceY = ((this.target.getY() - 75) - (this.owner.getY() - 75)) / this.lightningPointsY[0].length;

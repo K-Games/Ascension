@@ -462,7 +462,7 @@ public class Globals {
             this.sprite = sprite;
         }
 
-        public BufferedImage[] getSprite() {
+        public BufferedImage[] getSprites() {
             return this.sprite;
         }
 

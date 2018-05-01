@@ -10,7 +10,10 @@ import java.util.HashMap;
 
 public class SkillUtilityDash extends Skill {
 
-    private static final byte SKILL_CODE = Globals.UTILITY_DASH;
+    public static final String[] CUSTOM_DATA_HEADERS;
+    public static final HashMap<String, Double> CUSTOM_VALUES;
+
+    public static final byte SKILL_CODE = Globals.UTILITY_DASH;
 
     private static final boolean IS_PASSIVE;
     private static final byte REQ_WEAPON;
@@ -26,12 +29,19 @@ public class SkillUtilityDash extends Skill {
         String[] data = Globals.loadSkillRawData(SKILL_CODE);
         HashMap<String, Integer> dataHeaders = Globals.getDataHeaders(data);
 
+        CUSTOM_DATA_HEADERS = Globals.getSkillCustomHeaders(data, dataHeaders);
+        CUSTOM_VALUES = new HashMap<>(CUSTOM_DATA_HEADERS.length);
+
         REQ_WEAPON = Globals.loadSkillReqWeapon(data, dataHeaders);
-        REQ_LEVEL = Globals.loadSkillReqLevel(data, dataHeaders);
         MAX_COOLDOWN = (long) Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MAXCOOLDOWN_HEADER);
         BASE_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_BASEVALUE_HEADER);
         MULT_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MULTVALUE_HEADER);
         IS_PASSIVE = Globals.loadBooleanValue(data, dataHeaders, Globals.SKILL_PASSIVE_HEADER);
+        REQ_LEVEL = Globals.loadSkillReqLevel(data, dataHeaders);
+
+        for (String customHeader : CUSTOM_DATA_HEADERS) {
+            CUSTOM_VALUES.put(customHeader, Globals.loadDoubleValue(data, dataHeaders, customHeader));
+        }
     }
 
     public SkillUtilityDash(final LogicModule l) {
@@ -106,7 +116,7 @@ public class SkillUtilityDash extends Skill {
 
         if (player.getSkillCounter() == 1 && duration >= getSkillDuration()) {
             player.incrementSkillCounter();
-            player.queueBuff(new BuffUtilityDash(this.logic, 5000, getBaseValue() + getMultValue() * player.getSkillLevel(Globals.UTILITY_DASH), player));
+            player.queueBuff(new BuffUtilityDash(this.logic, getCustomValue(CUSTOM_DATA_HEADERS[0]).intValue(), getBaseValue() + getMultValue() * player.getSkillLevel(Globals.UTILITY_DASH), player));
             PacketSender.sendParticle(this.logic, Globals.Particles.UTILITY_DASH_BUFF_EMITTER.getParticleCode(), player.getKey());
         }
         if (player.updateSkillEnd(duration, getSkillDuration(), true, true)) {

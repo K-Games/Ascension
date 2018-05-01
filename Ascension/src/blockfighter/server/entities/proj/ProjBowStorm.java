@@ -22,7 +22,6 @@ public class ProjBowStorm extends Projectile {
             this.hitbox[0] = new Rectangle2D.Double(this.x + 80, this.y - 450, 700, 450);
         } else {
             this.hitbox[0] = new Rectangle2D.Double(this.x - 700 - 80, this.y - 450, 700, 450);
-
         }
     }
 
