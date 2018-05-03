@@ -12,13 +12,13 @@ public abstract class Buff implements GameEntity {
     private Mob mobOwner, mobTarget;
     private boolean isDebuff = false;
     private final Byte particleID = null;
-    protected LogicModule room;
+    protected LogicModule logic;
 
     protected int duration;
-    private long buffStartTime;
+    protected long buffStartTime;
 
     public Buff(final LogicModule l, final int d) {
-        this.room = l;
+        this.logic = l;
         this.duration = d;
         this.buffStartTime = l.getTime();
     }
@@ -102,7 +102,7 @@ public abstract class Buff implements GameEntity {
     }
 
     public boolean isExpired() {
-        return Globals.nsToMs(this.room.getTime() - this.buffStartTime) >= this.duration;
+        return Globals.nsToMs(this.logic.getTime() - this.buffStartTime) >= this.duration;
     }
 
     public boolean isDebuff() {
