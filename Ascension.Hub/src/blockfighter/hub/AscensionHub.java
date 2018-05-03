@@ -9,7 +9,7 @@ import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
 public class AscensionHub {
 
-    private final static String RELEASE_VERSION = "0.1.1";
+    private final static String RELEASE_VERSION = "0.1.2";
 
     private final static ScheduledExecutorService HUB_SCHEDULER = Executors.newSingleThreadScheduledExecutor(new BasicThreadFactory.Builder()
             .namingPattern("HUB-%d")
