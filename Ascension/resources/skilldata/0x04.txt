@@ -21,3 +21,5 @@ buffduration,damagereduct
 2000
 [damagereduct]
 0.1
+[cantlevel]
+false

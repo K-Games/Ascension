@@ -20,3 +20,5 @@ false
 stunduration
 [stunduration]
 1000
+[cantlevel]
+false

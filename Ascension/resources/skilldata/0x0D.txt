@@ -25,3 +25,5 @@ stunduration,basedefense,multdefense,multbasedefense
 0.15
 [multbasedefense]
 16
+[cantlevel]
+false

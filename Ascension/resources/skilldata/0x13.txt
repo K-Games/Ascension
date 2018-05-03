@@ -15,3 +15,5 @@ Increases Critical Hit Chance.
 0.003
 [passive]
 true
+[cantlevel]
+false

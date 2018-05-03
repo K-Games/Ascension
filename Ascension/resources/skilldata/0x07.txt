@@ -20,3 +20,5 @@ false
 maxlevelbonuscritdamage
 [maxlevelbonuscritdamage]
 3
+[cantlevel]
+false

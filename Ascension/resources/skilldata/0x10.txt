@@ -24,3 +24,5 @@ basedefense,multdefense,maxlevelmult
 1
 [maxlevelmult]
 2
+[cantlevel]
+false

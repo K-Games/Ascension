@@ -21,3 +21,5 @@ maxleveldamagemult,maxlevelbonuschance
 2
 [maxlevelbonuschance]
 50
+[cantlevel]
+false

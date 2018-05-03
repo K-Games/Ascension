@@ -26,3 +26,5 @@ basestun, maxlevelstun, maxlevelbonusproj, maxlevelbonusdamage
 2
 [maxlevelbonusdamage]
 2.5
+[cantlevel]
+false

@@ -16,3 +16,5 @@ you gain additional Critical Hit Damage.
 0.04
 [passive]
 true
+[cantlevel]
+false

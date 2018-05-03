@@ -46,7 +46,7 @@ public class PlayerTest {
         when(lm.getRoomData()).thenReturn(roomData);
         when(roomData.getPlayers()).thenReturn(new ConcurrentHashMap<>());
         when(c.sendUDP(any())).thenReturn(0);
-
+        Globals.SERVER_MODE = true;
     }
 
     @Test

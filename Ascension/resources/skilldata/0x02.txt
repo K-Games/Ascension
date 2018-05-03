@@ -25,3 +25,5 @@ buffduration,damageamp,burndamage,bonuscritchc
 3.75
 [bonuscritchc]
 1
+[cantlevel]
+false

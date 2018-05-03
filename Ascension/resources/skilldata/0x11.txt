@@ -20,3 +20,5 @@ buffduration
 false
 [buffduration]
 5000
+[cantlevel]
+false

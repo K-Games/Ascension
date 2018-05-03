@@ -60,6 +60,8 @@ public class Globals {
     public static boolean SKIP_TITLE = false;
     public static String SERVER_ADDRESS;
 
+    public static boolean SERVER_MODE = false, CLIENT_MODE = true;
+
     public static final String SAVE_FILE_DIRECTORY = System.getProperty("user.home") + File.separator + "K-Games" + File.separator + "Ascension";
     public static final String SETTINGS_FILE = SAVE_FILE_DIRECTORY + File.separator + "settings.properties";
 
@@ -1081,7 +1083,8 @@ public class Globals {
             SKILL_PASSIVE_HEADER = "[passive]",
             SKILL_REQWEAPON_HEADER = "[reqweapon]",
             SKILL_REQLEVEL_HEADER = "[reqlevel]",
-            SKILL_CUSTOM_VALUES_HEADER = "[customvalues]";
+            SKILL_CUSTOM_VALUES_HEADER = "[customvalues]",
+            SKILL_CANT_LEVEL_HEADER = "[cantlevel]";
 
     public static final String[] DATA_HEADERS = {
         SKILL_NAME_HEADER,
@@ -1092,7 +1095,8 @@ public class Globals {
         SKILL_MULTVALUE_HEADER,
         SKILL_PASSIVE_HEADER,
         SKILL_REQLEVEL_HEADER,
-        SKILL_CUSTOM_VALUES_HEADER
+        SKILL_CUSTOM_VALUES_HEADER,
+        SKILL_CANT_LEVEL_HEADER
     };
 
     public static BufferedImage getDisabledIcon(BufferedImage icon) {
@@ -1159,7 +1163,7 @@ public class Globals {
         try {
             return Boolean.parseBoolean(data[dataHeaders.get(header) + 1]);
         } catch (Exception e) {
-            Globals.logError(e.toString(), e);
+            Globals.logError("Cannot find header " + header, e);
         }
         return false;
     }
