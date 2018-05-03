@@ -1,0 +1,19 @@
+[name]
+BLOWBACK: Passive 2
+[desc]
+1
+TODO
+[reqweapon]
+-1
+[reqlevel]
+0
+[maxcooldown]
+0
+[basevalue]
+0
+[multvalue]
+0
+[passive]
+true
+[cantlevel]
+false

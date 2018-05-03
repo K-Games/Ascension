@@ -1,0 +1,24 @@
+[name]
+Aggression: Surge
+[desc]
+2
+A rush of energy envelops you, increasing
+movement speed by 60% for 2 seconds.
+[reqweapon]
+-1
+[reqlevel]
+0
+[maxcooldown]
+0
+[basevalue]
+0.6
+[multvalue]
+0
+[passive]
+true
+[customvalues]
+duration
+[duration]
+2000
+[cantlevel]
+false

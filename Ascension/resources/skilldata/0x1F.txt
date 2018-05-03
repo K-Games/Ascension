@@ -1,0 +1,29 @@
+[name]
+Vorpal Strike: Demise
+[desc]
+5
+Enemies hit by Vorpal Strike will be crippled,
+slowing movement speed by 5% for 2 seconds.
+After 2 seconds enemies will also receive 200% damage.
+Each Vorpal Strike hit will apply a new Demise debuff.
+Demise debuffs stack.
+[reqweapon]
+-1
+[reqlevel]
+0
+[maxcooldown]
+0
+[basevalue]
+2
+[multvalue]
+0
+[passive]
+true
+[customvalues]
+dmgTime, slowamount
+[dmgTime]
+2000
+[slowamount]
+0.05
+[cantlevel]
+false

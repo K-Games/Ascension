@@ -437,7 +437,9 @@ public class Globals {
         UTILITY_ADRENALINE_CLONE_EMITTER((byte) 0x36, null, ParticleUtilityAdrenalineCloneEmitter.class, PARTICLE_PARAM_PLAYER),
         UTILITY_ADRENALINE_CLONE_PARTICLE((byte) 0x37, null, ParticleUtilityAdrenalineCloneParticle.class, null),
         HIT((byte) 0x38, "hit", ParticleHit.class, PARTICLE_PARAM_POS_AND_FACING),
-        ITEM_DROP((byte) 0x39, null, ParticleItemDrop.class, PARTICLE_PARAM_PLAYER_AND_TARGET);
+        ITEM_DROP((byte) 0x39, null, ParticleItemDrop.class, PARTICLE_PARAM_PLAYER_AND_TARGET),
+        SWORD_VORPAL_DEMISE((byte) 0x3A, "vorpaldemise", ParticleSwordVorpalDemise.class, PARTICLE_PARAM_PLAYER),
+        SWORD_TAUNT_SURGE((byte) 0x3B, null, ParticleSwordTauntSurge.class, PARTICLE_PARAM_PLAYER);
 
         private final byte particleCode;
 
@@ -800,47 +802,87 @@ public class Globals {
             LOGIN_FAIL_NO_ROOMS = 0x03;
 
     public enum SkillClassMap {
-        SWORD_VORPAL(Globals.SWORD_VORPAL, blockfighter.client.entities.player.skills.sword.SkillSwordVorpal.class, blockfighter.server.entities.player.skills.sword.SkillSwordVorpal.class),
-        SWORD_PHANTOM(Globals.SWORD_PHANTOM, blockfighter.client.entities.player.skills.sword.SkillSwordPhantom.class, blockfighter.server.entities.player.skills.sword.SkillSwordPhantom.class),
-        SWORD_CINDER(Globals.SWORD_CINDER, blockfighter.client.entities.player.skills.sword.SkillSwordCinder.class, blockfighter.server.entities.player.skills.sword.SkillSwordCinder.class),
-        SWORD_GASH(Globals.SWORD_GASH, blockfighter.client.entities.player.skills.sword.SkillSwordGash.class, blockfighter.server.entities.player.skills.sword.SkillSwordGash.class),
-        SWORD_SLASH(Globals.SWORD_SLASH, blockfighter.client.entities.player.skills.sword.SkillSwordSlash.class, blockfighter.server.entities.player.skills.sword.SkillSwordSlash.class),
-        SWORD_TAUNT(Globals.SWORD_TAUNT, blockfighter.client.entities.player.skills.sword.SkillSwordTaunt.class, blockfighter.server.entities.player.skills.sword.SkillSwordTaunt.class),
-        BOW_ARC(Globals.BOW_ARC, blockfighter.client.entities.player.skills.bow.SkillBowArc.class, blockfighter.server.entities.player.skills.bow.SkillBowArc.class),
-        BOW_POWER(Globals.BOW_POWER, blockfighter.client.entities.player.skills.bow.SkillBowPower.class, blockfighter.server.entities.player.skills.bow.SkillBowPower.class),
-        BOW_RAPID(Globals.BOW_RAPID, blockfighter.client.entities.player.skills.bow.SkillBowRapid.class, blockfighter.server.entities.player.skills.bow.SkillBowRapid.class),
-        BOW_FROST(Globals.BOW_FROST, blockfighter.client.entities.player.skills.bow.SkillBowFrost.class, blockfighter.server.entities.player.skills.bow.SkillBowFrost.class),
-        BOW_STORM(Globals.BOW_STORM, blockfighter.client.entities.player.skills.bow.SkillBowStorm.class, blockfighter.server.entities.player.skills.bow.SkillBowStorm.class),
-        BOW_VOLLEY(Globals.BOW_VOLLEY, blockfighter.client.entities.player.skills.bow.SkillBowVolley.class, blockfighter.server.entities.player.skills.bow.SkillBowVolley.class),
-        UTILITY_ADRENALINE(Globals.UTILITY_ADRENALINE, blockfighter.client.entities.player.skills.utility.SkillUtilityAdrenaline.class, blockfighter.server.entities.player.skills.utility.SkillUtilityAdrenaline.class),
-        SHIELD_ROAR(Globals.SHIELD_ROAR, blockfighter.client.entities.player.skills.shield.SkillShieldRoar.class, blockfighter.server.entities.player.skills.shield.SkillShieldRoar.class),
-        SHIELD_CHARGE(Globals.SHIELD_CHARGE, blockfighter.client.entities.player.skills.shield.SkillShieldCharge.class, blockfighter.server.entities.player.skills.shield.SkillShieldCharge.class),
-        SHIELD_REFLECT(Globals.SHIELD_REFLECT, blockfighter.client.entities.player.skills.shield.SkillShieldReflect.class, blockfighter.server.entities.player.skills.shield.SkillShieldReflect.class),
-        SHIELD_MAGNETIZE(Globals.SHIELD_MAGNETIZE, blockfighter.client.entities.player.skills.shield.SkillShieldMagnetize.class, blockfighter.server.entities.player.skills.shield.SkillShieldMagnetize.class),
-        UTILITY_DASH(Globals.UTILITY_DASH, blockfighter.client.entities.player.skills.utility.SkillUtilityDash.class, blockfighter.server.entities.player.skills.utility.SkillUtilityDash.class),
-        PASSIVE_DUALSWORD(Globals.PASSIVE_DUALSWORD, blockfighter.client.entities.player.skills.passive.SkillPassiveDualSword.class, blockfighter.server.entities.player.skills.passive.SkillPassiveDualSword.class),
-        PASSIVE_KEENEYE(Globals.PASSIVE_KEENEYE, blockfighter.client.entities.player.skills.passive.SkillPassiveKeenEye.class, blockfighter.server.entities.player.skills.passive.SkillPassiveKeenEye.class),
-        PASSIVE_VITALHIT(Globals.PASSIVE_VITALHIT, blockfighter.client.entities.player.skills.passive.SkillPassiveVitalHit.class, blockfighter.server.entities.player.skills.passive.SkillPassiveVitalHit.class),
-        PASSIVE_SHIELDMASTERY(Globals.PASSIVE_SHIELDMASTERY, blockfighter.client.entities.player.skills.passive.SkillPassiveShieldMastery.class, blockfighter.server.entities.player.skills.passive.SkillPassiveShieldMastery.class),
-        PASSIVE_BARRIER(Globals.PASSIVE_BARRIER, blockfighter.client.entities.player.skills.passive.SkillPassiveBarrier.class, blockfighter.server.entities.player.skills.passive.SkillPassiveBarrier.class),
-        PASSIVE_RESIST(Globals.PASSIVE_RESIST, blockfighter.client.entities.player.skills.passive.SkillPassiveResistance.class, blockfighter.server.entities.player.skills.passive.SkillPassiveResistance.class),
-        PASSIVE_BOWMASTERY(Globals.PASSIVE_BOWMASTERY, blockfighter.client.entities.player.skills.passive.SkillPassiveBowMastery.class, blockfighter.server.entities.player.skills.passive.SkillPassiveBowMastery.class),
-        PASSIVE_WILLPOWER(Globals.PASSIVE_WILLPOWER, blockfighter.client.entities.player.skills.passive.SkillPassiveWillpower.class, blockfighter.server.entities.player.skills.passive.SkillPassiveWillpower.class),
-        PASSIVE_HARMONY(Globals.PASSIVE_HARMONY, blockfighter.client.entities.player.skills.passive.SkillPassiveHarmony.class, blockfighter.server.entities.player.skills.passive.SkillPassiveHarmony.class),
-        PASSIVE_TOUGH(Globals.PASSIVE_TOUGH, blockfighter.client.entities.player.skills.passive.SkillPassiveTough.class, blockfighter.server.entities.player.skills.passive.SkillPassiveTough.class),
-        PASSIVE_SHADOWATTACK(Globals.PASSIVE_SHADOWATTACK, blockfighter.client.entities.player.skills.passive.SkillPassiveShadowAttack.class, blockfighter.server.entities.player.skills.passive.SkillPassiveShadowAttack.class),
-        PASSIVE_STATIC(Globals.PASSIVE_STATIC, blockfighter.client.entities.player.skills.passive.SkillPassiveStatic.class, blockfighter.server.entities.player.skills.passive.SkillPassiveStatic.class);
+        SWORD_VORPAL(Globals.SWORD_VORPAL, "sword.SkillSwordVorpal"),
+        SWORD_PHANTOM(Globals.SWORD_PHANTOM, "sword.SkillSwordPhantom"),
+        SWORD_CINDER(Globals.SWORD_CINDER, "sword.SkillSwordCinder"),
+        SWORD_GASH(Globals.SWORD_GASH, "sword.SkillSwordGash"),
+        SWORD_SLASH(Globals.SWORD_SLASH, "sword.SkillSwordSlash"),
+        SWORD_TAUNT(Globals.SWORD_TAUNT, "sword.SkillSwordTaunt"),
+        BOW_ARC(Globals.BOW_ARC, "bow.SkillBowArc"),
+        BOW_POWER(Globals.BOW_POWER, "bow.SkillBowPower"),
+        BOW_RAPID(Globals.BOW_RAPID, "bow.SkillBowRapid"),
+        BOW_FROST(Globals.BOW_FROST, "bow.SkillBowFrost"),
+        BOW_STORM(Globals.BOW_STORM, "bow.SkillBowStorm"),
+        BOW_VOLLEY(Globals.BOW_VOLLEY, "bow.SkillBowVolley"),
+        UTILITY_ADRENALINE(Globals.UTILITY_ADRENALINE, "utility.SkillUtilityAdrenaline"),
+        SHIELD_ROAR(Globals.SHIELD_ROAR, "shield.SkillShieldRoar"),
+        SHIELD_CHARGE(Globals.SHIELD_CHARGE, "shield.SkillShieldCharge"),
+        SHIELD_REFLECT(Globals.SHIELD_REFLECT, "shield.SkillShieldReflect"),
+        SHIELD_MAGNETIZE(Globals.SHIELD_MAGNETIZE, "shield.SkillShieldMagnetize"),
+        UTILITY_DASH(Globals.UTILITY_DASH, "utility.SkillUtilityDash"),
+        PASSIVE_DUALSWORD(Globals.PASSIVE_DUALSWORD, "passive.SkillPassiveDualSword"),
+        PASSIVE_KEENEYE(Globals.PASSIVE_KEENEYE, "passive.SkillPassiveKeenEye"),
+        PASSIVE_VITALHIT(Globals.PASSIVE_VITALHIT, "passive.SkillPassiveVitalHit"),
+        PASSIVE_SHIELDMASTERY(Globals.PASSIVE_SHIELDMASTERY, "passive.SkillPassiveShieldMastery"),
+        PASSIVE_BARRIER(Globals.PASSIVE_BARRIER, "passive.SkillPassiveBarrier"),
+        PASSIVE_RESIST(Globals.PASSIVE_RESIST, "passive.SkillPassiveResistance"),
+        PASSIVE_BOWMASTERY(Globals.PASSIVE_BOWMASTERY, "passive.SkillPassiveBowMastery"),
+        PASSIVE_WILLPOWER(Globals.PASSIVE_WILLPOWER, "passive.SkillPassiveWillpower"),
+        PASSIVE_HARMONY(Globals.PASSIVE_HARMONY, "passive.SkillPassiveHarmony"),
+        PASSIVE_TOUGH(Globals.PASSIVE_TOUGH, "passive.SkillPassiveTough"),
+        PASSIVE_SHADOWATTACK(Globals.PASSIVE_SHADOWATTACK, "passive.SkillPassiveShadowAttack"),
+        PASSIVE_STATIC(Globals.PASSIVE_STATIC, "passive.SkillPassiveStatic"),
+        SWORD_VORPAL_GHOST(Globals.SWORD_VORPAL_GHOST, "sword.SkillSwordVorpalGhost"),
+        SWORD_VORPAL_DEMISE(Globals.SWORD_VORPAL_DEMISE, "sword.SkillSwordVorpalDemise"),
+        SWORD_PHANTOM_PASSIVE1(Globals.SWORD_PHANTOM_PASSIVE1, "sword.SkillSwordPhantomPassive1"),
+        SWORD_PHANTOM_PASSIVE2(Globals.SWORD_PHANTOM_PASSIVE2, "sword.SkillSwordPhantomPassive2"),
+        SWORD_CINDER_PASSIVE1(Globals.SWORD_CINDER_PASSIVE1, "sword.SkillSwordCinderPassive1"),
+        SWORD_CINDER_PASSIVE2(Globals.SWORD_CINDER_PASSIVE2, "sword.SkillSwordCinderPassive2"),
+        SWORD_TAUNT_CRIPPLE(Globals.SWORD_TAUNT_CRIPPLE, "sword.SkillSwordTauntCripple"),
+        SWORD_TAUNT_SURGE(Globals.SWORD_TAUNT_SURGE, "sword.SkillSwordTauntSurge"),
+        SWORD_KNOCKUP(Globals.SWORD_KNOCKUP, "sword.SkillSwordKnockup"),
+        SWORD_KNOCKUP_PASSIVE1(Globals.SWORD_KNOCKUP_PASSIVE1, "sword.SkillSwordKnockupPassive1"),
+        SWORD_KNOCKUP_PASSIVE2(Globals.SWORD_KNOCKUP_PASSIVE2, "sword.SkillSwordKnockupPassive2"),
+        SWORD_WHIRLWIND(Globals.SWORD_WHIRLWIND, "sword.SkillSwordWhirlwind"),
+        SWORD_WHIRLWIND_PASSIVE1(Globals.SWORD_WHIRLWIND_PASSIVE1, "sword.SkillSwordWhirlwindPassive1"),
+        SWORD_WHIRLWIND_PASSIVE2(Globals.SWORD_WHIRLWIND_PASSIVE2, "sword.SkillSwordWhirlwindPassive2"),
+        SWORD_WAVE(Globals.SWORD_WAVE, "sword.SkillSwordWave"),
+        SWORD_WAVE_PASSIVE1(Globals.SWORD_WAVE_PASSIVE1, "sword.SkillSwordWavePassive1"),
+        SWORD_WAVE_PASSIVE2(Globals.SWORD_WAVE_PASSIVE2, "sword.SkillSwordWavePassive2"),
+        BOW_POWER_PASSIVE1(Globals.BOW_POWER_PASSIVE1, "bow.SkillBowPowerPassive1"),
+        BOW_POWER_PASSIVE2(Globals.BOW_POWER_PASSIVE2, "bow.SkillBowPowerPassive2"),
+        BOW_FROST_PASSIVE1(Globals.BOW_FROST_PASSIVE1, "bow.SkillBowFrostPassive1"),
+        BOW_FROST_PASSIVE2(Globals.BOW_FROST_PASSIVE2, "bow.SkillBowFrostPassive2"),
+        BOW_STORM_PASSIVE1(Globals.BOW_STORM_PASSIVE1, "bow.SkillBowStormPassive1"),
+        BOW_STORM_PASSIVE2(Globals.BOW_STORM_PASSIVE2, "bow.SkillBowStormPassive2"),
+        BOW_VOLLEY_PASSIVE1(Globals.BOW_VOLLEY_PASSIVE1, "bow.SkillBowVolleyPassive1"),
+        BOW_VOLLEY_PASSIVE2(Globals.BOW_VOLLEY_PASSIVE2, "bow.SkillBowVolleyPassive2"),
+        BOW_BLOWBACK(Globals.BOW_BLOWBACK, "bow.SkillBowBlowback"),
+        BOW_BLOWBACK_PASSIVE1(Globals.BOW_BLOWBACK_PASSIVE1, "bow.SkillBowBlowbackPassive1"),
+        BOW_BLOWBACK_PASSIVE2(Globals.BOW_BLOWBACK_PASSIVE2, "bow.SkillBowBlowbackPassive2"),
+        BOW_AOE(Globals.BOW_AOE, "bow.SkillBowAoe"),
+        BOW_AOE_PASSIVE1(Globals.BOW_AOE_PASSIVE1, "bow.SkillBowAoePassive1"),
+        BOW_AOE_PASSIVE2(Globals.BOW_AOE_PASSIVE2, "bow.SkillBowAoePassive2"),
+        BOW_BUFF(Globals.BOW_BUFF, "bow.SkillBowBuff"),
+        BOW_BUFF_PASSIVE1(Globals.BOW_BUFF_PASSIVE1, "bow.SkillBowBuffPassive1"),
+        BOW_BUFF_PASSIVE2(Globals.BOW_BUFF_PASSIVE2, "bow.SkillBowBuffPassive2");
 
-        private final Class<? extends blockfighter.client.entities.player.skills.Skill> CLIENT_CLASS;
-        private final Class<? extends blockfighter.server.entities.player.skills.Skill> SERVER_CLASS;
+        private Class<? extends blockfighter.client.entities.player.skills.Skill> CLIENT_CLASS;
+        private Class<? extends blockfighter.server.entities.player.skills.Skill> SERVER_CLASS;
         private final byte BYTE_CODE;
 
-        SkillClassMap(final byte bytecode,
-                final Class<? extends blockfighter.client.entities.player.skills.Skill> clientClass,
-                final Class<? extends blockfighter.server.entities.player.skills.Skill> serverClass) {
+        SkillClassMap(final byte bytecode, final String className) {
             this.BYTE_CODE = bytecode;
-            this.CLIENT_CLASS = clientClass;
-            this.SERVER_CLASS = serverClass;
+            try {
+                if (CLIENT_MODE) {
+                    this.CLIENT_CLASS = Class.forName("blockfighter.client.entities.player.skills." + className).asSubclass(blockfighter.client.entities.player.skills.Skill.class);
+                }
+                if (SERVER_MODE) {
+                    this.SERVER_CLASS = Class.forName("blockfighter.server.entities.player.skills." + className).asSubclass(blockfighter.server.entities.player.skills.Skill.class);
+                }
+            } catch (ClassNotFoundException ex) {
+                logError("[FATAL] Could not find skill class.", ex);
+            }
         }
 
         private static final Map<Byte, SkillClassMap> lookup = new HashMap<>();
@@ -868,7 +910,7 @@ public class Globals {
         }
     }
 
-    public final static byte NUM_SKILLS = 30,
+    public final static byte NUM_SKILLS = 64,
             SWORD_VORPAL = 0x00,
             SWORD_PHANTOM = 0x01,
             SWORD_CINDER = 0x02,
@@ -898,7 +940,41 @@ public class Globals {
             PASSIVE_HARMONY = 0x1A,
             PASSIVE_TOUGH = 0x1B,
             PASSIVE_SHADOWATTACK = 0x1C,
-            PASSIVE_STATIC = 0x1D;
+            PASSIVE_STATIC = 0x1D,
+            SWORD_VORPAL_GHOST = 0x1E,
+            SWORD_VORPAL_DEMISE = 0x1F,
+            SWORD_PHANTOM_PASSIVE1 = 0x20,
+            SWORD_PHANTOM_PASSIVE2 = 0x21,
+            SWORD_CINDER_PASSIVE1 = 0x22,
+            SWORD_CINDER_PASSIVE2 = 0x23,
+            SWORD_TAUNT_CRIPPLE = 0x24,
+            SWORD_TAUNT_SURGE = 0x25,
+            SWORD_KNOCKUP = 0x26,
+            SWORD_KNOCKUP_PASSIVE1 = 0x27,
+            SWORD_KNOCKUP_PASSIVE2 = 0x28,
+            SWORD_WHIRLWIND = 0x29,
+            SWORD_WHIRLWIND_PASSIVE1 = 0x2A,
+            SWORD_WHIRLWIND_PASSIVE2 = 0x2B,
+            SWORD_WAVE = 0x2C,
+            SWORD_WAVE_PASSIVE1 = 0x2D,
+            SWORD_WAVE_PASSIVE2 = 0x2E,
+            BOW_POWER_PASSIVE1 = 0x2F,
+            BOW_POWER_PASSIVE2 = 0x30,
+            BOW_FROST_PASSIVE1 = 0x31,
+            BOW_FROST_PASSIVE2 = 0x32,
+            BOW_STORM_PASSIVE1 = 0x33,
+            BOW_STORM_PASSIVE2 = 0x34,
+            BOW_VOLLEY_PASSIVE1 = 0x35,
+            BOW_VOLLEY_PASSIVE2 = 0x36,
+            BOW_BLOWBACK = 0x37,
+            BOW_BLOWBACK_PASSIVE1 = 0x38,
+            BOW_BLOWBACK_PASSIVE2 = 0x39,
+            BOW_AOE = 0x3A,
+            BOW_AOE_PASSIVE1 = 0x3B,
+            BOW_AOE_PASSIVE2 = 0x3C,
+            BOW_BUFF = 0x3D,
+            BOW_BUFF_PASSIVE1 = 0x3E,
+            BOW_BUFF_PASSIVE2 = 0x3F;
 
     public final static BufferedImage[][] CHAR_SPRITE = new BufferedImage[NUM_PLAYER_ANIM_STATE][];
     public final static BufferedImage[] HUD = new BufferedImage[4];
@@ -1248,6 +1324,12 @@ public class Globals {
     public static void loadServer() {
         loadNumberFormats();
         loadItemCodes();
+        loadServerSkillClasses();
+    }
+
+    public static void loadServerSkillClasses() {
+        for (SkillClassMap skillMap : SkillClassMap.values()) {
+        }
     }
 
     public static void loadClient() {

@@ -1,0 +1,21 @@
+[name]
+Vorpal Strike: Ghost
+[desc]
+3
+Infuse Vorpal Strike with ghostly essence to pierce through armor.
+Converts 3% of damage to True Damage.
+True Damage does not apply to Vorpal Strike: Demise debuff.
+[reqweapon]
+-1
+[reqlevel]
+0
+[maxcooldown]
+0
+[basevalue]
+0.03
+[multvalue]
+0
+[passive]
+true
+[cantlevel]
+false
