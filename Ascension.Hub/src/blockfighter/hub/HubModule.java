@@ -25,7 +25,7 @@ public class HubModule implements Runnable {
     private static final HashMap<String, String> REGION_NAMES = new HashMap<>();
 
     private static final ConcurrentHashMap<Connection, ServerInfo> CONN_SERVERINFO_MAP = new ConcurrentHashMap<>();
-    private final static ScheduledExecutorService GET_SERVERSTAT_SCHEDULER = Executors.newScheduledThreadPool(2, new BasicThreadFactory.Builder()
+    private final static ScheduledExecutorService GET_SERVERSTAT_SHAREDTHREADS = Executors.newScheduledThreadPool(2, new BasicThreadFactory.Builder()
             .namingPattern("GET_SERVERSTAT-%d")
             .daemon(true)
             .priority(Thread.NORM_PRIORITY)
@@ -98,7 +98,7 @@ public class HubModule implements Runnable {
     @Override
     public void run() {
         CONN_SERVERINFO_MAP.entrySet().stream().map((infoEntry) -> infoEntry.getKey()).forEach((c) -> {
-            GET_SERVERSTAT_SCHEDULER.submit(() -> {
+            GET_SERVERSTAT_SHAREDTHREADS.submit(() -> {
                 HubSender.sendGetServerInfo(c);
             });
         });
