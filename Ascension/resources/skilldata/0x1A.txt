@@ -3,6 +3,9 @@ Vigor
 [desc]
 1
 Gain additional damage base on Max HP.
+[leveldesc]
+1
+Gain %BV% of Max HP as bonus damage.
 [reqweapon]
 -1
 [reqlevel]

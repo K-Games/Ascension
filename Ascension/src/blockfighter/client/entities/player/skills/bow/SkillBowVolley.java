@@ -11,7 +11,11 @@ public class SkillBowVolley extends Skill {
 
     public static final byte SKILL_CODE = Globals.BOW_VOLLEY;
     public static final String SKILL_NAME;
+
     public static final String[] DESCRIPTION;
+    public static final String[] LEVEL_DESC;
+    public static final String[] MAX_BONUS_DESC;
+
     public static final boolean IS_PASSIVE;
     public static final boolean CANT_LEVEL;
     public static final byte REQ_WEAPON;
@@ -28,7 +32,11 @@ public class SkillBowVolley extends Skill {
         CUSTOM_VALUES = new HashMap<>(CUSTOM_DATA_HEADERS.length);
 
         SKILL_NAME = Globals.loadSkillName(data, dataHeaders);
+
         DESCRIPTION = Globals.loadSkillDesc(data, dataHeaders);
+        LEVEL_DESC = Globals.loadSkillLevelDesc(data, dataHeaders);
+        MAX_BONUS_DESC = Globals.loadSkillMaxBonusDesc(data, dataHeaders);
+
         REQ_WEAPON = Globals.loadSkillReqWeapon(data, dataHeaders);
         MAX_COOLDOWN = (long) Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MAXCOOLDOWN_HEADER);
         BASE_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_BASEVALUE_HEADER);
@@ -40,19 +48,6 @@ public class SkillBowVolley extends Skill {
         for (String customHeader : CUSTOM_DATA_HEADERS) {
             CUSTOM_VALUES.put(customHeader, Globals.loadDoubleValue(data, dataHeaders, customHeader));
         }
-    }
-
-    @Override
-    public void updateDesc() {
-        this.skillCurLevelDesc = new String[]{
-            "Deals " + Globals.NUMBER_FORMAT.format((BASE_VALUE + MULT_VALUE * this.level) * 100) + "% damage per hit"
-        };
-        this.skillNextLevelDesc = new String[]{
-            "Deals " + Globals.NUMBER_FORMAT.format((BASE_VALUE + MULT_VALUE * (this.level + 1)) * 100) + "% damage per hit"
-        };
-        this.maxBonusDesc = new String[]{
-            "Each Critical Hit increases damage by " + Globals.NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOM_DATA_HEADERS[0]) * 100) + "% for " + Globals.TIME_NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOM_DATA_HEADERS[1]) / 1000) + " seconds."
-        };
     }
 
     public static double getBuffDuration() {

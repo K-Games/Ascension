@@ -21,4 +21,4 @@ duration
 [duration]
 4000
 [cantlevel]
-false
+true

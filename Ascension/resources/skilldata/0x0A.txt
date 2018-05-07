@@ -3,6 +3,12 @@ Bombardment
 [desc]
 1
 Launch a hail of arrows, bombarding the area.
+[leveldesc]
+1
+Deals %BV% damage per second for %T(duration / 1000, duration)^ seconds.
+[maxbonusdesc]
+1
+Critical Hits have bonus %D(maxlevelbonuscritdamage * 100, maxlevelbonuscritdamage)^% Critical Hit Damage.
 [reqweapon]
 11
 [reqlevel]

@@ -11,7 +11,9 @@ public class SkillSwordTauntSurge extends Skill {
 
     public static final byte SKILL_CODE = Globals.SWORD_TAUNT_SURGE;
     public static final String SKILL_NAME;
+
     public static final String[] DESCRIPTION;
+
     public static final boolean IS_PASSIVE;
     public static final boolean CANT_LEVEL;
     public static final byte REQ_WEAPON;
@@ -28,7 +30,9 @@ public class SkillSwordTauntSurge extends Skill {
         CUSTOM_VALUES = new HashMap<>(CUSTOM_DATA_HEADERS.length);
 
         SKILL_NAME = Globals.loadSkillName(data, dataHeaders);
+
         DESCRIPTION = Globals.loadSkillDesc(data, dataHeaders);
+
         REQ_WEAPON = Globals.loadSkillReqWeapon(data, dataHeaders);
         MAX_COOLDOWN = (long) Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MAXCOOLDOWN_HEADER);
         BASE_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_BASEVALUE_HEADER);

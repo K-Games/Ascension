@@ -26,4 +26,4 @@ dmgTime, slowamount
 [slowamount]
 0.05
 [cantlevel]
-false
+true

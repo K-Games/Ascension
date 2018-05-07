@@ -1169,7 +1169,9 @@ public class Globals {
             SKILL_REQWEAPON_HEADER = "[reqweapon]",
             SKILL_REQLEVEL_HEADER = "[reqlevel]",
             SKILL_CUSTOM_VALUES_HEADER = "[customvalues]",
-            SKILL_CANT_LEVEL_HEADER = "[cantlevel]";
+            SKILL_CANT_LEVEL_HEADER = "[cantlevel]",
+            SKILL_LEVEL_DESC_HEADER = "[leveldesc]",
+            SKILL_MAX_BONUS_DESC_HEADER = "[maxbonusdesc]";
 
     public static final String[] DATA_HEADERS = {
         SKILL_NAME_HEADER,
@@ -1181,7 +1183,9 @@ public class Globals {
         SKILL_PASSIVE_HEADER,
         SKILL_REQLEVEL_HEADER,
         SKILL_CUSTOM_VALUES_HEADER,
-        SKILL_CANT_LEVEL_HEADER
+        SKILL_CANT_LEVEL_HEADER,
+        SKILL_LEVEL_DESC_HEADER,
+        SKILL_MAX_BONUS_DESC_HEADER
     };
 
     public static BufferedImage getDisabledIcon(BufferedImage icon) {
@@ -1289,18 +1293,31 @@ public class Globals {
         }
     }
 
-    public static String[] loadSkillDesc(final String[] data, final HashMap<String, Integer> dataHeaders) {
+    public static String[] loadSkillDesc(final String[] data, final HashMap<String, Integer> dataHeaders, final String descHeader) {
         try {
-            int numOfLines = Integer.parseInt(data[dataHeaders.get(SKILL_DESC_HEADER) + 1]);
+            int numOfLines = Integer.parseInt(data[dataHeaders.get(descHeader) + 1]);
             String[] description = new String[numOfLines];
             for (int line = 0; line < numOfLines; line++) {
-                description[line] = data[dataHeaders.get(SKILL_DESC_HEADER) + 2 + line];
+                description[line] = data[dataHeaders.get(descHeader) + 2 + line];
             }
             return description;
         } catch (Exception e) {
             Globals.logError(e.toString(), e);
         }
         return new String[0];
+    }
+
+    public static String[] loadSkillDesc(final String[] data, final HashMap<String, Integer> dataHeaders) {
+        return loadSkillDesc(data, dataHeaders, SKILL_DESC_HEADER);
+    }
+
+    public static String[] loadSkillLevelDesc(final String[] data, final HashMap<String, Integer> dataHeaders) {
+        return loadSkillDesc(data, dataHeaders, SKILL_LEVEL_DESC_HEADER);
+
+    }
+
+    public static String[] loadSkillMaxBonusDesc(final String[] data, final HashMap<String, Integer> dataHeaders) {
+        return loadSkillDesc(data, dataHeaders, SKILL_MAX_BONUS_DESC_HEADER);
     }
 
     public static String loadSkillName(final String[] data, final HashMap<String, Integer> dataHeaders) {

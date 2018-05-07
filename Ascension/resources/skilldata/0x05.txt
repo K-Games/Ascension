@@ -2,7 +2,16 @@
 Aggression
 [desc]
 1
-Deal an immense deadly blow.
+Swing aggressively overhead for a deadly blow.
+[leveldesc]
+1
+Deals %BV% damage.
+[maxbonusdesc]
+4
+%HYPERSTANCE
+Reduce damage taken by %D(damagereduct * 100, damagereduct)^%.
+Increase damage by %D(damageinc * 100, damageinc)^%.
+Lasts %T(buffduration / 1000, buffduration)^ seconds.
 [reqweapon]
 0
 [reqlevel]

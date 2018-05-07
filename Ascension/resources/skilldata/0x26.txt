@@ -3,6 +3,10 @@ Knockup
 [desc]
 1
 TODO
+[leveldesc]
+0
+[maxbonusdesc]
+0
 [reqweapon]
 0
 [reqlevel]

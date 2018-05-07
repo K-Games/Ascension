@@ -11,7 +11,11 @@ public class SkillSwordWave extends Skill {
 
     public static final byte SKILL_CODE = Globals.SWORD_WAVE;
     public static final String SKILL_NAME;
+
     public static final String[] DESCRIPTION;
+    public static final String[] LEVEL_DESC;
+    public static final String[] MAX_BONUS_DESC;
+
     public static final boolean IS_PASSIVE;
     public static final boolean CANT_LEVEL;
     public static final byte REQ_WEAPON;
@@ -28,7 +32,11 @@ public class SkillSwordWave extends Skill {
         CUSTOM_VALUES = new HashMap<>(CUSTOM_DATA_HEADERS.length);
 
         SKILL_NAME = Globals.loadSkillName(data, dataHeaders);
+
         DESCRIPTION = Globals.loadSkillDesc(data, dataHeaders);
+        LEVEL_DESC = Globals.loadSkillLevelDesc(data, dataHeaders);
+        MAX_BONUS_DESC = Globals.loadSkillMaxBonusDesc(data, dataHeaders);
+
         REQ_WEAPON = Globals.loadSkillReqWeapon(data, dataHeaders);
         MAX_COOLDOWN = (long) Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MAXCOOLDOWN_HEADER);
         BASE_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_BASEVALUE_HEADER);
@@ -41,5 +49,4 @@ public class SkillSwordWave extends Skill {
             CUSTOM_VALUES.put(customHeader, Globals.loadDoubleValue(data, dataHeaders, customHeader));
         }
     }
-
 }

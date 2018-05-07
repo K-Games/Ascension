@@ -4,6 +4,9 @@ Resistance
 2
 When taking damage over 25% of your Max HP within
 2 seconds, block all damage for the next 2 seconds.
+[leveldesc]
+1
+Reduce cooldown by %T((basevalue + multvalue * lvl) / 1000, basevalue, multvalue, lvl)^ seconds.
 [reqweapon]
 -1
 [reqlevel]

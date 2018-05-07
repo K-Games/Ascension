@@ -16,4 +16,4 @@ TODO
 [passive]
 true
 [cantlevel]
-false
+true

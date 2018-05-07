@@ -3,6 +3,12 @@ Blade Flurry
 [desc]
 1
 Swing your blade 4 times.
+[leveldesc]
+1
+Deals %BV% damage per hit.
+[maxbonusdesc]
+1
+Restore %D(lifesteal * 100, lifesteal)^% HP per hit.
 [reqweapon]
 0
 [reqlevel]

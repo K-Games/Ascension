@@ -3,6 +3,12 @@ Hellion Roar
 [desc]
 1
 Send enemies flying with a ferocious roar.
+[leveldesc]
+1
+Deals %BV% + Defense multiplied by %D(multbasedefense * (basedefense + multdefense * lvl), multbasedefense, basedefense, multdefense, lvl)^ damage.
+[maxbonusdesc]
+1
+Enemies are stunned for %T(stunduration / 1000, stunduration)^ seconds.
 [reqweapon]
 10
 [reqlevel]

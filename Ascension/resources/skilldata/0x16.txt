@@ -4,6 +4,9 @@ Barrier
 2
 After taking damage equal to 50% of HP, gain a barrier
 that can absorb up to a percentage of your Max HP in damage.
+[leveldesc]
+1
+Absorbs up to %BV% of Max HP.
 [reqweapon]
 -1
 [reqlevel]

@@ -4,6 +4,13 @@ Adrenaline
 2
 Increase your movement speed and reduce
 damage taken for 5 seconds.
+[leveldesc]
+2
+Reduce damage taken by %BV%.
+Increase movement speed by %D((movespeedbase + movespeedmult * lvl) * 100, movespeedbase, movespeedmult, lvl)^%.
+[maxbonusdesc]
+1
+Restore %D(heal * 100, heal)^% HP over %T(buffduration / 1000, buffduration)^ seconds.
 [reqweapon]
 -1
 [reqlevel]

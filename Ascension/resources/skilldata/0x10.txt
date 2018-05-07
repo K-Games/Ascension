@@ -4,6 +4,12 @@ Magnetize
 2
 Pull enemies within 400 range towards you and
 deal damage based on your Defense.
+[leveldesc]
+1
+Deals %BV% damage + Defense multiplied by %D(basedefense + multdefense * lvl, basedefense, multdefense, lvl)^.
+[maxbonusdesc]
+1
+Deals %D(maxlevelmult, maxlevelmult)^x damage.
 [reqweapon]
 10
 [reqlevel]

@@ -3,6 +3,12 @@ Rapid Fire
 [desc]
 1
 Fire 3 shots over 0.5 seconds.
+[leveldesc]
+1
+Deals %BV% damage per hit.
+[maxbonusdesc]
+1
+Each shot have %D(maxlevelbonuschance, maxlevelbonuschance)^% Chance to deal %D(maxleveldamagemult, maxleveldamagemult)^x damage.
 [reqweapon]
 11
 [reqlevel]

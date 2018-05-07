@@ -18,4 +18,4 @@ True Damage does not apply to Vorpal Strike: Demise debuff.
 [passive]
 true
 [cantlevel]
-false
+true

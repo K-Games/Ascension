@@ -2,7 +2,16 @@
 Vorpal Strike
 [desc]
 1
-Dash a short distance and strike 3 times.
+Dash forward and strike 3 times.
+[leveldesc]
+3
+Deals %BV% damage per hit.
+Critical Hits deal additional %D((basebonuscritdamage + multbonuscritdamage * lvl) * 100, basebonuscritdamage, multbonuscritdamage, lvl)^% Critical Damage.
+%HYPERSTANCE
+[maxbonusdesc]
+2
+Strikes 5 times.
+Additional %D(bonuscritchc * 100, bonuscritchc)^% Critical Hit Chance.
 [reqweapon]
 0
 [reqlevel]

@@ -4,6 +4,12 @@ Vortex Bolts
 2
 Fire 20 bolts over 2 seconds.
 Can be interrupted by stuns and knockback.
+[leveldesc]
+1
+Deals %BV% damage per hit.
+[maxbonusdesc]
+1
+Each Critical Hit increases damage by %D(maxlevelbuffdamage  * 100, maxlevelbuffdamage)^% for %T(maxlevelbuffduration / 1000, maxlevelbuffduration)^ seconds.
 [reqweapon]
 11
 [reqlevel]
