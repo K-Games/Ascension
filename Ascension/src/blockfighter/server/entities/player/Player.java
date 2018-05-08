@@ -1270,14 +1270,38 @@ public class Player implements GameEntity, Callable<Player> {
         final long frameDuration = Globals.nsToMs(this.logic.getTime() - this.lastFrameTime);
         switch (this.playerState) {
             case PLAYER_STATE_STAND:
-                this.animState = Globals.PLAYER_ANIM_STATE_STAND;
-                if (frameDuration >= 250) {
-                    if (this.frame == 3) {
-                        this.frame = 0;
-                    } else {
-                        this.frame++;
+                if (this.isStunned()) {
+                    this.animState = Globals.PLAYER_ANIM_STATE_DEAD;
+                    if (this.frame == 0) {
+                        this.frame = 3;
+                        this.lastFrameTime = this.logic.getTime();
                     }
-                    this.lastFrameTime = this.logic.getTime();
+                    if (frameDuration >= 60 && this.frame < 6) {
+                        this.frame++;
+                        this.lastFrameTime = this.logic.getTime();
+                    }
+                } else {
+                    if (this.animState == Globals.PLAYER_ANIM_STATE_DEAD && this.frame == 6) {
+                        this.animState = Globals.PLAYER_ANIM_STATE_ROLL;
+                        this.frame = 9;
+                        this.lastFrameTime = this.logic.getTime();
+                    } else if (this.animState == Globals.PLAYER_ANIM_STATE_ROLL && this.frame == 9) {
+                        if (frameDuration >= 50) {
+                            this.animState = Globals.PLAYER_ANIM_STATE_STAND;
+                            this.frame = 0;
+                            this.lastFrameTime = this.logic.getTime();
+                        }
+                    } else {
+                        this.animState = Globals.PLAYER_ANIM_STATE_STAND;
+                        if (frameDuration >= 250) {
+                            if (this.frame >= 3) {
+                                this.frame = 0;
+                            } else {
+                                this.frame++;
+                            }
+                            this.lastFrameTime = this.logic.getTime();
+                        }
+                    }
                 }
                 break;
             case PLAYER_STATE_DEAD:
@@ -1301,16 +1325,22 @@ public class Player implements GameEntity, Callable<Player> {
                 }
                 break;
             case PLAYER_STATE_JUMP:
-                this.animState = Globals.PLAYER_ANIM_STATE_JUMP;
-                if (frameDuration >= 60) {
-                    if (this.isFalling && this.map.isWithinDistanceToGround(this.x, this.y, 110)) {
-                        this.frame = 2;
-                    } else if (this.frame < 1) {
-                        this.frame++;
-                    } else if (!this.isFalling && this.frame == 2) {
-                        this.frame = 0;
-                    }
+                if (this.isKnockback() || this.isStunned()) {
+                    this.animState = Globals.PLAYER_ANIM_STATE_DEAD;
+                    this.frame = 2;
                     this.lastFrameTime = this.logic.getTime();
+                } else {
+                    this.animState = Globals.PLAYER_ANIM_STATE_JUMP;
+                    if (frameDuration >= 60) {
+                        if (this.isFalling && this.map.isWithinDistanceToGround(this.x, this.y, 110)) {
+                            this.frame = 2;
+                        } else if (this.frame < 1) {
+                            this.frame++;
+                        } else if (!this.isFalling && this.frame == 2) {
+                            this.frame = 0;
+                        }
+                        this.lastFrameTime = this.logic.getTime();
+                    }
                 }
                 break;
             default:
