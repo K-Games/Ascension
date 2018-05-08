@@ -36,9 +36,9 @@ public class ProjSwordTaunt extends Projectile {
         super.applyDamage(target);
         final Player owner = getOwner();
         if (!owner.hasSkill(Globals.SWORD_TAUNT_CRIPPLE)) {
-            target.queueBuff(new BuffKnockback(this.logic, 300, (owner.getFacing() == Globals.RIGHT) ? 6 : -6, -7, owner, target));
+            target.queueBuff(new BuffKnockback(this.logic, 300, (owner.getFacing() == Globals.RIGHT) ? 3 : -3, 6, owner, target));
         } else {
-            target.queueBuff(new BuffKnockback(this.logic, 300, (owner.getFacing() == Globals.RIGHT) ? 3 : -3, -5, owner, target));
+            target.queueBuff(new BuffKnockback(this.logic, 300, (owner.getFacing() == Globals.RIGHT) ? 1.5 : -1.5, 6, owner, target));
             target.queueBuff(new BuffTauntCripple(logic, owner.getSkill(Globals.SWORD_TAUNT_CRIPPLE).getCustomValue(SkillSwordTauntCripple.CUSTOM_DATA_HEADERS[0]).intValue(), owner, owner));
         }
     }
