@@ -14,11 +14,11 @@ public class ParticleSwordTauntBuffEmitter extends Particle {
         super(p);
         this.frame = 0;
         this.duration = 5000;
+        this.particleData = Globals.Particles.SWORD_TAUNT_BUFF_EMITTER;
     }
 
     @Override
     public void update() {
-        super.update();
         if (!isExpired() && Globals.nsToMs(Core.getLogicModule().getTime() - lastParticleTime) >= 50) {
             final Point p = this.owner.getPos();
             if (p != null) {

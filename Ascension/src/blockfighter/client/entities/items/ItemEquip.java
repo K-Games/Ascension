@@ -620,9 +620,8 @@ public class ItemEquip implements Item {
                 if (sprite != null) {
                     int sX = x + ((facing == Globals.RIGHT) ? 1 : -1) * offsetX;
                     int sY = y + offsetY;
-                    int dX = sX + ((facing == Globals.RIGHT) ? 1 : -1) * sprite.getWidth();
-                    int dY = sY + sprite.getHeight();
-                    g.drawImage(sprite, sX, sY, dX, dY, 0, 0, sprite.getWidth(), sprite.getHeight(), null);
+                    int drawWidth = ((facing == Globals.RIGHT) ? 1 : -1) * sprite.getWidth();
+                    g.drawImage(sprite, sX, sY, drawWidth, sprite.getHeight(), null);
                 }
             }
         } else {

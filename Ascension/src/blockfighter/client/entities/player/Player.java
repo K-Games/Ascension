@@ -196,18 +196,12 @@ public class Player implements Callable<Player> {
         final BufferedImage sprite = Globals.CHAR_SPRITE[animState][frame];
         final int drawSrcX = x - ((facing == Globals.RIGHT) ? 1 : -1) * sprite.getWidth() / 2;
         final int drawSrcY = y - sprite.getHeight();
-        final int drawDscY = drawSrcY + sprite.getHeight();
-        /*
-		 * switch (animState) { case Globals.PLAYER_ANIM_STATE_ATTACK: drawSrcX += ((facing == Globals.RIGHT) ? 1 : -1) * 10; break; case
-		 * Globals.PLAYER_STATE_ATTACK2: drawSrcX += ((facing == Globals.RIGHT) ? 1 : -1) * 25; break; case Globals.PLAYER_STATE_ATTACKOFF1:
-		 * drawSrcX += ((facing == Globals.RIGHT) ? 1 : -1) * 40; break; case Globals.PLAYER_STATE_ATTACKOFF2: drawSrcX += ((facing ==
-		 * Globals.RIGHT) ? 1 : -1) * 40; break; }
-         */
-        final int drawDscX = drawSrcX + ((facing == Globals.RIGHT) ? 1 : -1) * sprite.getWidth();
+
+        final int drawWidth = ((facing == Globals.RIGHT) ? 1 : -1) * sprite.getWidth();
         if (this.equips[Globals.EQUIP_OFFHAND] != null) {
             this.equips[Globals.EQUIP_OFFHAND].drawIngame(g, x, y, animState, frame, facing, true);
         }
-        g.drawImage(sprite, drawSrcX, drawSrcY, drawDscX, drawDscY, 0, 0, sprite.getWidth(), sprite.getHeight(), null);
+        g.drawImage(sprite, drawSrcX, drawSrcY, drawWidth, sprite.getHeight(), null);
 
         if (this.equips[Globals.EQUIP_CHEST] != null) {
             this.equips[Globals.EQUIP_CHEST].drawIngame(g, x, y, animState, frame, facing);

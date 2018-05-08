@@ -1,6 +1,5 @@
 package blockfighter.client.entities.particles.skills.sword;
 
-import blockfighter.client.Core;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.shared.Globals;
 import java.awt.Graphics2D;
@@ -13,35 +12,15 @@ public class ParticleSwordPhantom extends Particle {
         this.frame = 0;
         this.frameDuration = 25;
         this.duration = 200;
-    }
-
-    @Override
-    public void update() {
-        super.update();
-
-        if (Globals.nsToMs(Core.getLogicModule().getTime() - this.lastFrameTime) >= this.frameDuration) {
-            this.frameDuration = 25;
-            if (Globals.Particles.SWORD_PHANTOM.getSprite() != null && this.frame < Globals.Particles.SWORD_PHANTOM.getSprite().length - 1) {
-                this.frame++;
-            }
-            this.lastFrameTime = Core.getLogicModule().getTime();
-        }
+        this.particleData = Globals.Particles.SWORD_PHANTOM;
     }
 
     @Override
     public void draw(final Graphics2D g) {
-
-        if (Globals.Particles.SWORD_PHANTOM.getSprite() == null) {
+        if (this.particleData.getSprites() == null || this.frame >= this.particleData.getSprites().length) {
             return;
         }
-        if (this.frame >= Globals.Particles.SWORD_PHANTOM.getSprite().length) {
-            return;
-        }
-        final BufferedImage sprite = Globals.Particles.SWORD_PHANTOM.getSprite()[this.frame];
-        final int drawSrcX = this.x + ((this.facing == Globals.RIGHT) ? sprite.getWidth() / -2 : sprite.getWidth() / 2);
-        final int drawSrcY = this.y - sprite.getHeight();
-        final int drawDscY = drawSrcY + sprite.getHeight();
-        final int drawDscX = this.x + ((this.facing == Globals.RIGHT) ? sprite.getWidth() / 2 : sprite.getWidth() / -2);
-        g.drawImage(sprite, drawSrcX, drawSrcY, drawDscX, drawDscY, 0, 0, sprite.getWidth(), sprite.getHeight(), null);
+        final BufferedImage sprite = this.particleData.getSprites()[this.frame];
+        draw(g, sprite.getWidth() / -2, 0);
     }
 }

@@ -15,11 +15,11 @@ public class ParticleBowVolleyBuffEmitter extends Particle {
         super(p);
         this.frame = 0;
         this.duration = (int) (SkillBowVolley.getBuffDuration());
+        this.particleData = Globals.Particles.BOW_VOLLEY_BUFF_EMITTER;
     }
 
     @Override
     public void update() {
-        super.update();
         if (!isExpired() && Globals.nsToMs(Core.getLogicModule().getTime() - lastParticleTime) >= 100) {
             final Point p = this.owner.getPos();
             if (p != null) {

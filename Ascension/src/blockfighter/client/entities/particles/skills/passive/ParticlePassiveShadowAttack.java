@@ -3,9 +3,7 @@ package blockfighter.client.entities.particles.skills.passive;
 import blockfighter.client.Core;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.shared.Globals;
-import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
 
 public class ParticlePassiveShadowAttack extends Particle {
 
@@ -46,12 +44,11 @@ public class ParticlePassiveShadowAttack extends Particle {
         this.dX = this.x;
         this.dY = this.y;
         this.frame = this.type * 4;
+        this.particleData = Globals.Particles.PASSIVE_SHADOWATTACK;
     }
 
     @Override
     public void update() {
-        super.update();
-
         this.dX += this.speedX;
         this.dY += this.speedY;
         this.x = (int) this.dX;
@@ -66,18 +63,6 @@ public class ParticlePassiveShadowAttack extends Particle {
 
     @Override
     public void draw(final Graphics2D g) {
-        if (Globals.Particles.PASSIVE_SHADOWATTACK.getSprite() == null) {
-            return;
-        }
-        if (this.frame >= Globals.Particles.PASSIVE_SHADOWATTACK.getSprite().length) {
-            return;
-        }
-        final BufferedImage sprite = Globals.Particles.PASSIVE_SHADOWATTACK.getSprite()[this.frame];
-        final int drawSrcX = this.x - sprite.getWidth();
-        final int drawSrcY = this.y - sprite.getHeight();
-        final int drawDscY = drawSrcY + sprite.getHeight();
-        final int drawDscX = drawSrcX + sprite.getWidth();
-        g.drawImage(sprite, drawSrcX, drawSrcY, drawDscX, drawDscY, 0, 0, sprite.getWidth(), sprite.getHeight(), null);
-        g.setColor(Color.WHITE);
+        draw(g, 0, 0, false);
     }
 }

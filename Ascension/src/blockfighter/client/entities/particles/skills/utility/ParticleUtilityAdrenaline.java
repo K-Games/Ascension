@@ -4,7 +4,6 @@ import blockfighter.client.Core;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.client.entities.player.Player;
 import blockfighter.shared.Globals;
-import java.awt.Graphics2D;
 
 public class ParticleUtilityAdrenaline extends Particle {
 
@@ -13,11 +12,11 @@ public class ParticleUtilityAdrenaline extends Particle {
         this.frame = 0;
         this.frameDuration = 50;
         this.duration = 300;
+        this.particleData = Globals.Particles.UTILITY_ADRENALINE;
     }
 
     @Override
     public void update() {
-        super.update();
         if (Globals.nsToMs(Core.getLogicModule().getTime() - this.lastFrameTime) >= this.frameDuration) {
             this.x = owner.getX();
             this.y = owner.getY();
@@ -35,9 +34,5 @@ public class ParticleUtilityAdrenaline extends Particle {
 
             this.lastFrameTime = Core.getLogicModule().getTime();
         }
-    }
-
-    @Override
-    public void draw(final Graphics2D g) {
     }
 }

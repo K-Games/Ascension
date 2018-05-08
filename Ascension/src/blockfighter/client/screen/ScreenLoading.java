@@ -48,8 +48,8 @@ public class ScreenLoading extends ScreenMenu {
         if (this.particlesReady && !this.particlesRendered) {
             Globals.log(ScreenLoading.class, "Prerendering " + particleIndex + " Particles...", Globals.LOG_TYPE_DATA);
             if (Globals.Particles.values()[this.particleIndex] != null) {
-                if (Globals.Particles.values()[this.particleIndex].getSprite() != null) {
-                    for (final BufferedImage sprite : Globals.Particles.values()[this.particleIndex].getSprite()) {
+                if (Globals.Particles.values()[this.particleIndex].getSprites() != null) {
+                    for (final BufferedImage sprite : Globals.Particles.values()[this.particleIndex].getSprites()) {
                         g.drawImage(sprite, 0, 0, null);
                     }
                 }

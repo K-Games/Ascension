@@ -4,7 +4,6 @@ import blockfighter.client.Core;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.shared.Globals;
 import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
 
 public class ParticleSwordTaunt extends Particle {
 
@@ -13,15 +12,13 @@ public class ParticleSwordTaunt extends Particle {
         this.frame = 0;
         this.frameDuration = 50;
         this.duration = 300;
+        this.particleData = Globals.Particles.SWORD_TAUNT;
     }
 
     @Override
     public void update() {
-        super.update();
-
         if (Globals.nsToMs(Core.getLogicModule().getTime() - this.lastFrameTime) >= this.frameDuration) {
-
-            if (Globals.Particles.SWORD_TAUNT.getSprite() != null && this.frame < Globals.Particles.SWORD_TAUNT.getSprite().length) {
+            if (Globals.Particles.SWORD_TAUNT.getSprites() != null && this.frame < Globals.Particles.SWORD_TAUNT.getSprites().length) {
                 this.frame++;
                 this.frameDuration = (this.frame == 2) ? 100 : 50;
             }
@@ -31,17 +28,6 @@ public class ParticleSwordTaunt extends Particle {
 
     @Override
     public void draw(final Graphics2D g) {
-        if (Globals.Particles.SWORD_TAUNT.getSprite() == null) {
-            return;
-        }
-        if (this.frame >= Globals.Particles.SWORD_TAUNT.getSprite().length) {
-            return;
-        }
-        final BufferedImage sprite = Globals.Particles.SWORD_TAUNT.getSprite()[this.frame];
-        final int drawSrcX = this.x + ((this.facing == Globals.RIGHT) ? -170 : 170);
-        final int drawSrcY = this.y - sprite.getHeight() + 80;
-        final int drawDscY = drawSrcY + sprite.getHeight();
-        final int drawDscX = drawSrcX + ((this.facing == Globals.RIGHT) ? sprite.getWidth() : -sprite.getWidth());
-        g.drawImage(sprite, drawSrcX, drawSrcY, drawDscX, drawDscY, 0, 0, sprite.getWidth(), sprite.getHeight(), null);
+        draw(g, -170, 80);
     }
 }

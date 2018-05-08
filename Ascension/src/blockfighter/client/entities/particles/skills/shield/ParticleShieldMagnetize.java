@@ -24,11 +24,11 @@ public class ParticleShieldMagnetize extends Particle {
         this.duration = 350;
         this.lightningPointsX = new int[3][20];
         this.lightningPointsY = new int[3][20];
+        this.particleData = Globals.Particles.SHIELD_MAGNETIZE;
     }
 
     @Override
     public void update() {
-        super.update();
         if (Globals.nsToMs(Core.getLogicModule().getTime() - this.lastFrameTime) >= this.frameDuration) {
             this.colourIndex = Globals.rng(color.length);
             int distanceX = (this.target.getX() - this.owner.getX()) / this.lightningPointsX[0].length;

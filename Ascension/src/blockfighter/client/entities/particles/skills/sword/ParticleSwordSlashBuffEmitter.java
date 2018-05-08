@@ -14,11 +14,11 @@ public class ParticleSwordSlashBuffEmitter extends Particle {
         super(p);
         this.frame = 0;
         this.duration = 1700;
+        this.particleData = Globals.Particles.SWORD_SLASH_BUFF_EMITTER;
     }
 
     @Override
     public void update() {
-        super.update();
         if (!isExpired() && Globals.nsToMs(Core.getLogicModule().getTime() - lastParticleTime) >= 50) {
             final Point p = this.owner.getPos();
             if (p != null) {
