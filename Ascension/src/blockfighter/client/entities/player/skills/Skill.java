@@ -7,6 +7,7 @@ import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 
 public abstract class Skill {
 
@@ -26,7 +27,11 @@ public abstract class Skill {
     }
 
     public void draw(final Graphics2D g, final int x, final int y, final boolean disabled) {
-        g.drawImage((disabled) ? getDisabledIcon() : getIcon(), x, y, null);
+        if (getIcon() != null) {
+            g.drawImage((disabled) ? getDisabledIcon() : getIcon(), x, y, null);
+        } else {
+            g.drawString("PH", x + 25, y + 25);
+        }
     }
 
     public void drawInfo(final Graphics2D g, final int x, final int y) {
@@ -108,27 +113,65 @@ public abstract class Skill {
         }
     }
 
-    public abstract void updateDesc();
+    public final <T> T getStaticFieldValue(String fieldName, Class<T> fieldType) {
+        try {
+            return fieldType.cast(this.getClass().getDeclaredField(fieldName).get(null));
+        } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException ex) {
+            Globals.logError("Could not find static field: " + fieldName + " in " + this.getClass().getSimpleName(), ex);
+        }
+        return null;
+    }
 
-    public abstract BufferedImage getIcon();
+    public final Double getCustomValue(String customHeader) {
+        HashMap customValues = getStaticFieldValue("CUSTOM_VALUES", HashMap.class);
+        return (Double) customValues.get(customHeader);
+    }
 
-    public abstract BufferedImage getDisabledIcon();
+    public final String[] getDesc() {
+        return getStaticFieldValue("DESCRIPTION", String[].class);
+    }
 
-    public abstract String[] getDesc();
+    public final BufferedImage getIcon() {
+        return Globals.SKILL_ICON[getSkillCode()];
+    }
 
-    public abstract String getSkillName();
+    public final BufferedImage getDisabledIcon() {
+        return Globals.SKILL_DISABLED_ICON[getSkillCode()];
+    }
 
-    public abstract byte getSkillCode();
+    public long getMaxCooldown() {
+        return getStaticFieldValue("MAX_COOLDOWN", Long.class);
+    }
 
-    public abstract boolean isPassive();
+    public final int getReqLevel() {
+        return getStaticFieldValue("REQ_LEVEL", Integer.class);
+    }
 
-    public abstract long getMaxCooldown();
+    public final byte getReqWeapon() {
+        return getStaticFieldValue("REQ_WEAPON", Byte.class);
+    }
 
-    public abstract byte getReqWeapon();
+    public final byte getSkillCode() {
+        return getStaticFieldValue("SKILL_CODE", Byte.class);
+    }
 
-    public abstract int getReqLevel();
+    public final String getSkillName() {
+        return getStaticFieldValue("SKILL_NAME", String.class);
+    }
 
-    public abstract Double getCustomValue(String customHeader);
+    public final boolean isPassive() {
+        return getStaticFieldValue("IS_PASSIVE", Boolean.class);
+    }
+
+    public final boolean cantLevel() {
+        return getStaticFieldValue("CANT_LEVEL", Boolean.class);
+    }
+
+    public void updateDesc() {
+        this.skillCurLevelDesc = new String[]{};
+        this.skillNextLevelDesc = new String[]{};
+        this.maxBonusDesc = new String[]{};
+    }
 
     public void updateInfoBoxSize() {
         if (fontMetric == null) {

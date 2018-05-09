@@ -15,3 +15,5 @@ Increases Critical Hit Damage.
 0.02
 [passive]
 true
+[cantlevel]
+false

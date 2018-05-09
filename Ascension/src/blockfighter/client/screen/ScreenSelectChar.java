@@ -36,7 +36,7 @@ public class ScreenSelectChar extends ScreenMenu {
     private static final Rectangle[] SELECT_BOX = new Rectangle[3];
 
     private byte selectNum = -1;
-    private boolean savesLoaded = false;
+    private static boolean savesLoaded = false, loadingData = false;
 
     static {
         CREATE_NAMEFIELD.addFocusListener(Core.FOCUS_HANDLER);
@@ -68,6 +68,10 @@ public class ScreenSelectChar extends ScreenMenu {
     }
 
     private void loadSaveData() {
+        if (loadingData) {
+            return;
+        }
+        loadingData = true;
         Globals.log(ScreenSelectChar.class, "Loading Save Data...", Globals.LOG_TYPE_DATA);
         for (byte i = 0; i < CHARACTER_DATA.length; i++) {
             try {
@@ -250,17 +254,16 @@ public class ScreenSelectChar extends ScreenMenu {
                 return;
             }
             for (byte i = 0; i < SELECT_BOX.length; i++) {
-                if (SELECT_BOX[i].contains(scaled)) {
+                if (savesLoaded && SELECT_BOX[i].contains(scaled)) {
                     if (CHARACTER_DATA[i] == null) {
-                        if (savesLoaded) {
-                            this.createPrompt = true;
-                            if (panel != null) {
-                                panel.add(CREATE_NAMEFIELD);
-                                panel.revalidate();
-                            }
-                            this.selectNum = i;
-                            break;
+                        this.createPrompt = true;
+                        if (panel != null) {
+                            panel.add(CREATE_NAMEFIELD);
+                            panel.revalidate();
                         }
+                        this.selectNum = i;
+                        break;
+
                     } else {
                         Core.getLogicModule().setSelectedSaveData(CHARACTER_DATA[i]);
                         Core.getLogicModule().setScreen(new ScreenStats());

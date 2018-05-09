@@ -2,23 +2,23 @@ package blockfighter.client.entities.player.skills.bow;
 
 import blockfighter.client.entities.player.skills.Skill;
 import blockfighter.shared.Globals;
-import java.awt.image.BufferedImage;
 import java.util.HashMap;
 
 public class SkillBowVolley extends Skill {
 
-    private static final String[] CUSTOM_DATA_HEADERS;
-    private static final HashMap<String, Double> CUSTOM_VALUES;
+    public static final String[] CUSTOM_DATA_HEADERS;
+    public static final HashMap<String, Double> CUSTOM_VALUES;
 
-    private static final byte SKILL_CODE = Globals.BOW_VOLLEY;
-    private static final String SKILL_NAME;
-    private static final String[] DESCRIPTION;
-    private static final boolean IS_PASSIVE;
-    private static final byte REQ_WEAPON;
-    private static final long MAX_COOLDOWN;
+    public static final byte SKILL_CODE = Globals.BOW_VOLLEY;
+    public static final String SKILL_NAME;
+    public static final String[] DESCRIPTION;
+    public static final boolean IS_PASSIVE;
+    public static final boolean CANT_LEVEL;
+    public static final byte REQ_WEAPON;
+    public static final long MAX_COOLDOWN;
 
-    private static final double BASE_VALUE, MULT_VALUE;
-    private static final int REQ_LEVEL;
+    public static final double BASE_VALUE, MULT_VALUE;
+    public static final int REQ_LEVEL;
 
     static {
         String[] data = Globals.loadSkillRawData(SKILL_CODE);
@@ -34,56 +34,12 @@ public class SkillBowVolley extends Skill {
         BASE_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_BASEVALUE_HEADER);
         MULT_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MULTVALUE_HEADER);
         IS_PASSIVE = Globals.loadBooleanValue(data, dataHeaders, Globals.SKILL_PASSIVE_HEADER);
+        CANT_LEVEL = Globals.loadBooleanValue(data, dataHeaders, Globals.SKILL_CANT_LEVEL_HEADER);
         REQ_LEVEL = Globals.loadSkillReqLevel(data, dataHeaders);
 
         for (String customHeader : CUSTOM_DATA_HEADERS) {
             CUSTOM_VALUES.put(customHeader, Globals.loadDoubleValue(data, dataHeaders, customHeader));
         }
-    }
-
-    @Override
-    public Double getCustomValue(String customHeader) {
-        return CUSTOM_VALUES.get(customHeader);
-    }
-
-    @Override
-    public String[] getDesc() {
-        return DESCRIPTION;
-    }
-
-    @Override
-    public BufferedImage getIcon() {
-        return Globals.SKILL_ICON[SKILL_CODE];
-    }
-
-    @Override
-    public long getMaxCooldown() {
-        return MAX_COOLDOWN;
-    }
-
-    @Override
-    public byte getReqWeapon() {
-        return REQ_WEAPON;
-    }
-
-    @Override
-    public byte getSkillCode() {
-        return SKILL_CODE;
-    }
-
-    @Override
-    public String getSkillName() {
-        return SKILL_NAME;
-    }
-
-    @Override
-    public boolean isPassive() {
-        return IS_PASSIVE;
-    }
-
-    @Override
-    public int getReqLevel() {
-        return REQ_LEVEL;
     }
 
     @Override
@@ -103,8 +59,4 @@ public class SkillBowVolley extends Skill {
         return CUSTOM_VALUES.get(CUSTOM_DATA_HEADERS[1]);
     }
 
-    @Override
-    public BufferedImage getDisabledIcon() {
-        return Globals.SKILL_DISABLED_ICON[SKILL_CODE];
-    }
 }

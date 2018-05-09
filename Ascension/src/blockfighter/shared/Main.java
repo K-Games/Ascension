@@ -12,6 +12,10 @@ public class Main {
     public static void main(final String[] args) {
         final HashSet<String> arguments = new HashSet<>();
         arguments.addAll(Arrays.asList(args));
+
+        Globals.SERVER_MODE = arguments.contains("-server");
+        Globals.CLIENT_MODE = !arguments.contains("-noclient");
+
         if (arguments.contains("-server")) {
             asc = new AscensionServer();
             asc.launch(args);
@@ -19,6 +23,5 @@ public class Main {
         if (!arguments.contains("-noclient")) {
             AscensionClient.launch(args);
         }
-
     }
 }

@@ -19,3 +19,5 @@ false
 lifesteal
 [lifesteal]
 0.0075
+[cantlevel]
+false

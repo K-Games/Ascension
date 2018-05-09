@@ -167,6 +167,7 @@ public class AscensionServer {
             Map.Entry<Byte, LogicModule> room = iter.next();
             totalPlayers += room.getValue().getRoomData().getPlayers().size();
         }
-        return Math.round(100f * totalPlayers / ((Integer) Globals.ServerConfig.MAX_ROOMS.getValue() * (Integer) Globals.ServerConfig.MAX_PLAYERS.getValue()));
+
+        return (int) Math.round(100f * Math.log10(1 + (9f * (totalPlayers / ((Integer) Globals.ServerConfig.MAX_ROOMS.getValue() * (Integer) Globals.ServerConfig.MAX_PLAYERS.getValue())))));
     }
 }

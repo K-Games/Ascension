@@ -33,9 +33,9 @@ public class BuffBurn extends Buff implements BuffDmgTakenAmp {
     @Override
     public void update() {
         super.update();
-        long sinceLastDamage = Globals.nsToMs(this.room.getTime() - this.lastDmgTime);
+        long sinceLastDamage = Globals.nsToMs(this.logic.getTime() - this.lastDmgTime);
         if (this.dmgPerSec > 0 && sinceLastDamage >= 500) {
-            this.lastDmgTime = this.room.getTime();
+            this.lastDmgTime = this.logic.getTime();
             if (getTarget() != null) {
                 final Point2D.Double dmgPoint = new Point2D.Double(getTarget().getHitbox().x,
                         getTarget().getHitbox().y + getTarget().getHitbox().height / 2);

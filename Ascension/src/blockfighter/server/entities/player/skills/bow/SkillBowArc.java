@@ -11,18 +11,18 @@ import java.util.HashMap;
 public class SkillBowArc extends Skill {
 
     public static final String[] CUSTOM_DATA_HEADERS;
-    private static final HashMap<String, Double> CUSTOM_VALUES;
+    public static final HashMap<String, Double> CUSTOM_VALUES;
 
-    private static final byte SKILL_CODE = Globals.BOW_ARC;
-    private static final boolean IS_PASSIVE;
-    private static final byte REQ_WEAPON;
-    private static final long MAX_COOLDOWN;
-    private static final double BASE_VALUE, MULT_VALUE;
-    private static final int REQ_LEVEL;
+    public static final byte SKILL_CODE = Globals.BOW_ARC;
+    public static final boolean IS_PASSIVE;
+    public static final byte REQ_WEAPON;
+    public static final long MAX_COOLDOWN;
+    public static final double BASE_VALUE, MULT_VALUE;
+    public static final int REQ_LEVEL;
 
-    private static final byte REQ_EQUIP_SLOT = Globals.EQUIP_WEAPON;
-    private static final byte PLAYER_STATE = Player.PLAYER_STATE_BOW_ARC;
-    private static final int SKILL_DURATION = 400;
+    public static final byte REQ_EQUIP_SLOT = Globals.EQUIP_WEAPON;
+    public static final byte PLAYER_STATE = Player.PLAYER_STATE_BOW_ARC;
+    public static final int SKILL_DURATION = 400;
 
     static {
         String[] data = Globals.loadSkillRawData(SKILL_CODE);
@@ -48,56 +48,6 @@ public class SkillBowArc extends Skill {
     }
 
     @Override
-    public byte castPlayerState() {
-        return PLAYER_STATE;
-    }
-
-    @Override
-    public double getBaseValue() {
-        return BASE_VALUE;
-    }
-
-    @Override
-    public Double getCustomValue(String customHeader) {
-        return CUSTOM_VALUES.get(customHeader);
-    }
-
-    @Override
-    public long getMaxCooldown() {
-        return MAX_COOLDOWN;
-    }
-
-    @Override
-    public double getMultValue() {
-        return MULT_VALUE;
-    }
-
-    @Override
-    public byte getReqEquipSlot() {
-        return REQ_EQUIP_SLOT;
-    }
-
-    @Override
-    public byte getReqWeapon() {
-        return REQ_WEAPON;
-    }
-
-    @Override
-    public byte getSkillCode() {
-        return SKILL_CODE;
-    }
-
-    @Override
-    public int getSkillDuration() {
-        return SKILL_DURATION;
-    }
-
-    @Override
-    public boolean isPassive() {
-        return IS_PASSIVE;
-    }
-
-    @Override
     public void updateSkillUse(Player player) {
         final long duration = Globals.nsToMs(this.logic.getTime() - player.getSkillCastTime());
         final int numHits = 3;
@@ -111,11 +61,6 @@ public class SkillBowArc extends Skill {
             }
         }
         player.updateSkillEnd(duration, getSkillDuration(), false, false);
-    }
-
-    @Override
-    public int getReqLevel() {
-        return REQ_LEVEL;
     }
 
     @Override

@@ -22,3 +22,5 @@ maxleveldmgreduct,buffduration
 0.33
 [buffduration]
 3000
+[cantlevel]
+false

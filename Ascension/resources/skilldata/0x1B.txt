@@ -15,3 +15,5 @@ Boost your natural resilience to damage.
 0.003
 [passive]
 true
+[cantlevel]
+false

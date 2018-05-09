@@ -16,3 +16,5 @@ Armour when you deal damage.
 0.15
 [passive]
 true
+[cantlevel]
+false

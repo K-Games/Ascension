@@ -22,3 +22,5 @@ maxlevelbuffdamage,maxlevelbuffduration
 0.01
 [maxlevelbuffduration]
 7000
+[cantlevel]
+false

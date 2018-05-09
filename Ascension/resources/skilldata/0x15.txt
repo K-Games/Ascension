@@ -22,3 +22,5 @@ basedmgreduct,multdmgreduct
 0.04
 [multdmgreduct]
 0.003
+[cantlevel]
+false

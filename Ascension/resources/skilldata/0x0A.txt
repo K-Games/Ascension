@@ -21,3 +21,5 @@ maxlevelbonuscritdamage,duration
 5
 [duration]
 3500
+[cantlevel]
+false

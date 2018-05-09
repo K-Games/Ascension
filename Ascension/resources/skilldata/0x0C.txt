@@ -26,3 +26,5 @@ buffduration,heal,movespeedbase,movespeedmult
 0.20
 [movespeedmult]
 0.005
+[cantlevel]
+false

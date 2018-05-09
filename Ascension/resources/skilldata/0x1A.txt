@@ -15,3 +15,5 @@ Gain additional damage base on Max HP.
 0.001
 [passive]
 true
+[cantlevel]
+false

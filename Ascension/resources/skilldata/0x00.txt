@@ -23,3 +23,5 @@ bonuscritchc,basebonuscritdamage,multbonuscritdamage
 0.4
 [multbonuscritdamage]
 0.03
+[cantlevel]
+false

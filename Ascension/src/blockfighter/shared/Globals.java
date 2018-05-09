@@ -60,6 +60,8 @@ public class Globals {
     public static boolean SKIP_TITLE = false;
     public static String SERVER_ADDRESS;
 
+    public static boolean SERVER_MODE = false, CLIENT_MODE = true;
+
     public static final String SAVE_FILE_DIRECTORY = System.getProperty("user.home") + File.separator + "K-Games" + File.separator + "Ascension";
     public static final String SETTINGS_FILE = SAVE_FILE_DIRECTORY + File.separator + "settings.properties";
 
@@ -239,13 +241,13 @@ public class Globals {
     }
 
     public enum GameMaps {
-        FIELD((byte) 0x00, "Field", blockfighter.client.maps.GameMapArena.class, blockfighter.server.maps.GameMapArena.class),
-        GRAND_LIBRARY((byte) 0x01, "Grand Library", blockfighter.client.maps.GameMapAsymArena.class, blockfighter.server.maps.GameMapAsymArena.class),
-        DEBUG((byte) 0x02, "Debug Room", blockfighter.client.maps.GameMapDebug.class, blockfighter.server.maps.GameMapDebug.class);
+        FIELD((byte) 0x00, "Field", "GameMapArena"),
+        GRAND_LIBRARY((byte) 0x01, "Grand Library", "GameMapAsymArena"),
+        DEBUG((byte) 0x02, "Debug Room", "GameMapDebug");
 
         private final byte mapCode;
-        private final Class<? extends blockfighter.client.maps.GameMap> clientGameMapClass;
-        private final Class<? extends blockfighter.server.maps.GameMap> serverGameMapClass;
+        private Class<? extends blockfighter.client.maps.GameMap> clientGameMapClass;
+        private Class<? extends blockfighter.server.maps.GameMap> serverGameMapClass;
         private final String mapName;
         private static final Map<Byte, GameMaps> lookup = new HashMap<>();
 
@@ -259,13 +261,19 @@ public class Globals {
             return lookup.get(code);
         }
 
-        GameMaps(byte mapCode, String mapName,
-                Class<? extends blockfighter.client.maps.GameMap> clientGameMapClass,
-                Class<? extends blockfighter.server.maps.GameMap> serverGameMapClass) {
+        GameMaps(byte mapCode, String mapName, String className) {
             this.mapCode = mapCode;
             this.mapName = mapName;
-            this.clientGameMapClass = clientGameMapClass;
-            this.serverGameMapClass = serverGameMapClass;
+            try {
+                if (CLIENT_MODE) {
+                    this.clientGameMapClass = Class.forName("blockfighter.client.maps." + className).asSubclass(blockfighter.client.maps.GameMap.class);
+                }
+                if (SERVER_MODE) {
+                    this.serverGameMapClass = Class.forName("blockfighter.server.maps." + className).asSubclass(blockfighter.server.maps.GameMap.class);
+                }
+            } catch (ClassNotFoundException ex) {
+                logError("[FATAL] Could not find GameMap class.", ex);
+            }
         }
 
         public byte getMapCode() {
@@ -1081,7 +1089,8 @@ public class Globals {
             SKILL_PASSIVE_HEADER = "[passive]",
             SKILL_REQWEAPON_HEADER = "[reqweapon]",
             SKILL_REQLEVEL_HEADER = "[reqlevel]",
-            SKILL_CUSTOM_VALUES_HEADER = "[customvalues]";
+            SKILL_CUSTOM_VALUES_HEADER = "[customvalues]",
+            SKILL_CANT_LEVEL_HEADER = "[cantlevel]";
 
     public static final String[] DATA_HEADERS = {
         SKILL_NAME_HEADER,
@@ -1092,7 +1101,8 @@ public class Globals {
         SKILL_MULTVALUE_HEADER,
         SKILL_PASSIVE_HEADER,
         SKILL_REQLEVEL_HEADER,
-        SKILL_CUSTOM_VALUES_HEADER
+        SKILL_CUSTOM_VALUES_HEADER,
+        SKILL_CANT_LEVEL_HEADER
     };
 
     public static BufferedImage getDisabledIcon(BufferedImage icon) {
@@ -1159,7 +1169,7 @@ public class Globals {
         try {
             return Boolean.parseBoolean(data[dataHeaders.get(header) + 1]);
         } catch (Exception e) {
-            Globals.logError(e.toString(), e);
+            Globals.logError("Cannot find header " + header, e);
         }
         return false;
     }

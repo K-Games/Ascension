@@ -21,3 +21,5 @@ lifesteal, maxlifesteal
 0.05
 [maxlifesteal]
 0.1
+[cantlevel]
+false

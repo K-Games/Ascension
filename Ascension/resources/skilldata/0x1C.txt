@@ -16,3 +16,5 @@ pierces that same target for 50% of the damage dealt
 1
 [passive]
 true
+[cantlevel]
+false

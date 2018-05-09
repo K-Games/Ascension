@@ -23,3 +23,5 @@ buffduration,damageinc,damagereduct
 0.2
 [damagereduct]
 0.2
+[cantlevel]
+false

@@ -16,3 +16,5 @@ More remaining HP grants more damage increase.
 0.005
 [passive]
 true
+[cantlevel]
+false

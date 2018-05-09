@@ -16,3 +16,5 @@ that can absorb up to a percentage of your Max HP in damage.
 0.005
 [passive]
 true
+[cantlevel]
+false

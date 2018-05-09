@@ -16,3 +16,5 @@ When taking damage over 25% of your Max HP within
 1000
 [passive]
 true
+[cantlevel]
+false
