@@ -161,7 +161,7 @@ public class AscensionServer {
     }
 
     public static int getServerCapacityStatus() {
-        int totalPlayers = 0;
+        float totalPlayers = 0;
         Iterator<Map.Entry<Byte, LogicModule>> iter = SERVER_ROOMS.entrySet().iterator();
         while (iter.hasNext()) {
             Map.Entry<Byte, LogicModule> room = iter.next();
