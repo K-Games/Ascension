@@ -39,16 +39,14 @@ public class SkillPassiveShadowAttack extends SkillPassive {
         if (Globals.rng(100) + 1 <= 20 + getBaseValue() + getMultValue() * player.getSkillLevel(Globals.PASSIVE_SHADOWATTACK)) {
             player.getSkill(Globals.PASSIVE_SHADOWATTACK).setCooldown();
             player.sendCooldown(Globals.PASSIVE_SHADOWATTACK);
-            PacketSender.sendParticle(this.logic, Globals.Particles.PASSIVE_SHADOWATTACK.getParticleCode(), dmg.getDmgPoint().x, dmg.getDmgPoint().y);
+            PacketSender.sendParticle(this.logic, Globals.Particles.PASSIVE_SHADOWATTACK.getParticleCode(), dmg.getTarget().getX(), dmg.getTarget().getY());
             Point2D.Double newPos = new Point2D.Double(dmg.getDmgPoint().x, dmg.getDmgPoint().y + 20);
             if (dmg.getTarget() != null) {
                 final Damage shadow = new Damage((int) (dmg.getDamage() * 0.5D), false, dmg.getOwner(), dmg.getTarget(), false, newPos, true);
-                shadow.setHidden(true);
                 shadow.setCanReflect(false);
                 dmg.getTarget().queueDamage(shadow);
             } else if (dmg.getMobTarget() != null) {
                 final Damage shadow = new Damage((int) (dmg.getDamage() * 0.5D), false, dmg.getOwner(), dmg.getMobTarget(), false, newPos, true);
-                shadow.setHidden(true);
                 shadow.setCanReflect(false);
                 dmg.getMobTarget().queueDamage(shadow);
             }
