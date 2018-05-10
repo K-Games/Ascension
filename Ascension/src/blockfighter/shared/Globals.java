@@ -1530,7 +1530,7 @@ public class Globals {
                 return ImageIO.read(resource);
             }
         } catch (IOException ex) {
-            System.err.println("Failed to load texture: " + path);
+            logError("Failed to load texture: " + path, ex);
         }
         return null;
     }
@@ -1539,7 +1539,7 @@ public class Globals {
         try {
             return FileUtils.openInputStream(new File("resources/" + path));
         } catch (IOException ex) {
-            //System.err.println("Failed to load resource: " + path);
+            logError("Failed to load resource: " + path, ex);
         }
         return null;
     }

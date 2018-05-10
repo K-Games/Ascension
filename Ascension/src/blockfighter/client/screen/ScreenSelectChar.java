@@ -78,7 +78,7 @@ public class ScreenSelectChar extends ScreenMenu {
                 CHARACTER_DATA[i] = SaveData.readSaveData(i);
                 CHARACTER_DATA[i].validate();
             } catch (final Exception e) {
-                System.err.println("Corrupted savefile: " + i);
+                Globals.logError("Corrupted savefile: " + i, e);
                 CHARACTER_DATA[i] = null;
             }
         }

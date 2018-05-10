@@ -36,6 +36,10 @@ public class AscensionClient {
                     } catch (Exception e) {
                         System.err.println("-pass Enter the developer passphrase");
                     }
+                }
+                if (args[i].toLowerCase().equals("-log")) {
+                    Globals.LOGGING = true;
+                    Globals.createLogDirectory();
                     break;
                 }
             }
@@ -92,10 +96,6 @@ public class AscensionClient {
                     case "-tcpmode":
                         Globals.ServerConfig.UDP_MODE.setValue("false");
                         Globals.log(AscensionClient.class, "Disabling UDP. Using TCP only mode", Globals.LOG_TYPE_DATA);
-                        break;
-                    case "-log":
-                        Globals.LOGGING = true;
-                        Globals.createLogDirectory();
                         break;
                     case "-hubaddress":
                         Globals.ServerConfig.HUB_SERVER_ADDRESS.setValue(args[i + 1]);
