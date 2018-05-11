@@ -22,7 +22,6 @@ public class ParticleBurnBuffParticle extends Particle {
         if (Globals.nsToMs(Core.getLogicModule().getTime() - this.lastFrameTime) >= this.frameDuration) {
             this.y -= 3;
             super.update();
-            this.lastFrameTime = Core.getLogicModule().getTime();
         }
     }
 

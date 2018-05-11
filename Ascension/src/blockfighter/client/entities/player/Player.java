@@ -249,7 +249,7 @@ public class Player implements Callable<Player> {
     }
 
     public boolean isDead() {
-        return this.animState == Globals.PLAYER_ANIM_STATE_DEAD;
+        return this.animState == Globals.PLAYER_ANIM_STATE_DEAD && this.frame == Globals.CHAR_SPRITE[Globals.PLAYER_ANIM_STATE_DEAD].length;
     }
 
     public Color getPlayerColor() {
