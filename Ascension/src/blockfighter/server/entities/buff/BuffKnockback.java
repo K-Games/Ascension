@@ -1,7 +1,6 @@
 package blockfighter.server.entities.buff;
 
 import blockfighter.server.LogicModule;
-import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
 
 public class BuffKnockback extends Buff {
@@ -10,13 +9,6 @@ public class BuffKnockback extends Buff {
     private boolean applied = false;
 
     public BuffKnockback(final LogicModule l, final int d, final double x, final double y, final Player o, final Player t) {
-        super(l, d, o, t);
-        this.xSpeed = x;
-        this.ySpeed = y;
-        super.setDebuff(true);
-    }
-
-    public BuffKnockback(final LogicModule l, final int d, final double x, final double y, final Mob o, final Player t) {
         super(l, d, o, t);
         this.xSpeed = x;
         this.ySpeed = y;

@@ -1,6 +1,5 @@
 package blockfighter.server;
 
-import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.proj.Projectile;
 import blockfighter.server.net.PacketSender;
@@ -25,7 +24,6 @@ public class LogicModule implements Runnable {
     private ConcurrentLinkedQueue<byte[]> playUseSkillQueue = new ConcurrentLinkedQueue<>();
     private ConcurrentLinkedQueue<Projectile> projEffectQueue = new ConcurrentLinkedQueue<>();
     private ConcurrentLinkedQueue<Projectile> projAddQueue = new ConcurrentLinkedQueue<>();
-    private ConcurrentLinkedQueue<Mob> mobAddQueue = new ConcurrentLinkedQueue<>();
 
     private long lastRefreshAll = 0;
     private long lastUpdateTime = 0, lastProcessQueue = 0, lastFinishCheckTime = 0, matchEndStartTime = 0, roomIdleStartTime = 0;
@@ -91,7 +89,6 @@ public class LogicModule implements Runnable {
             if (currentTime - this.lastUpdateTime >= Globals.SERVER_LOGIC_UPDATE) {
                 this.roomIdleStartTime = currentTime;
                 updatePlayers();
-                updateMobs();
                 updateProjectiles();
                 sendPlayerUpdates();
                 this.lastUpdateTime = currentTime;
@@ -199,24 +196,6 @@ public class LogicModule implements Runnable {
             disconnectAllPlayers();
             closeRoom();
         }
-    }
-
-    private void updateMobs() {
-        ArrayDeque<Future<Mob>> futures = new ArrayDeque<>(this.room.getMobs().size());
-        this.room.getMobs().entrySet().forEach((mob) -> {
-            futures.add(Core.SHARED_THREADPOOL.submit(mob.getValue()));
-        });
-        futures.forEach((task) -> {
-            try {
-                Mob mob = task.get();
-                if (mob.isDead()) {
-                    this.room.getMobs().remove(mob.getKey());
-                    this.room.returnMobKey(mob.getKey());
-                }
-            } catch (final Exception ex) {
-                Globals.logError(ex.toString(), ex);
-            }
-        });
     }
 
     private void sendPlayerUpdates() {
@@ -353,19 +332,12 @@ public class LogicModule implements Runnable {
         this.projAddQueue.add(projectile);
     }
 
-    public void queueAddMob(final Mob mob) {
-        if (mob.getKey() != -1) {
-            this.mobAddQueue.add(mob);
-        }
-    }
-
     public void queueProjEffect(final Projectile p) {
         this.projEffectQueue.add(p);
     }
 
     private void processQueues() {
         final ConcurrentHashMap<Byte, Player> players = this.room.getPlayers();
-        final ConcurrentHashMap<Integer, Mob> mobs = this.room.getMobs();
         final ConcurrentHashMap<Integer, Projectile> projectiles = this.room.getProj();
 
         Core.SHARED_THREADPOOL.execute(() -> {
@@ -374,19 +346,6 @@ public class LogicModule implements Runnable {
                     final Player newPlayer = this.playAddQueue.poll();
                     if (newPlayer != null) {
                         this.room.addPlayer(newPlayer);
-                    }
-                }
-            } catch (final Exception ex) {
-                Globals.logError(ex.toString(), ex);
-            }
-        });
-
-        Core.SHARED_THREADPOOL.execute(() -> {
-            try {
-                while (!this.mobAddQueue.isEmpty()) {
-                    final Mob p = this.mobAddQueue.poll();
-                    if (p != null) {
-                        mobs.put(p.getKey(), p);
                     }
                 }
             } catch (final Exception ex) {
@@ -484,10 +443,6 @@ public class LogicModule implements Runnable {
 
     public void setProjAddQueue(ConcurrentLinkedQueue<Projectile> projAddQueue) {
         this.projAddQueue = projAddQueue;
-    }
-
-    public void setMobAddQueue(ConcurrentLinkedQueue<Mob> mobAddQueue) {
-        this.mobAddQueue = mobAddQueue;
     }
 
     public void setFuture(final ScheduledFuture f) {

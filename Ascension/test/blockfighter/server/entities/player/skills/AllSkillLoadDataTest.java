@@ -36,6 +36,7 @@ import blockfighter.shared.Globals;
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import static org.junit.Assert.*;
+import org.junit.Before;
 import org.junit.Test;
 
 public class AllSkillLoadDataTest {
@@ -99,6 +100,11 @@ public class AllSkillLoadDataTest {
             System.err.println(ex);
         }
         return null;
+    }
+
+    @Before
+    public void before() {
+        Globals.SERVER_MODE = true;
     }
 
     @Test

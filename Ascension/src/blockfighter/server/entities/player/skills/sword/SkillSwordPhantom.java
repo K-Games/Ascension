@@ -1,7 +1,6 @@
 package blockfighter.server.entities.player.skills.sword;
 
 import blockfighter.server.LogicModule;
-import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.player.skills.Skill;
 import blockfighter.server.entities.proj.ProjSwordPhantom;
@@ -63,22 +62,6 @@ public class SkillSwordPhantom extends Skill {
                     target = playersInRange.get(Globals.rng(playersInRange.size()));
 
                     double teleX = ((player.getFacing() == Globals.RIGHT)) ? target.getHitbox().x + target.getHitbox().width + 70 + Globals.rng(50) : target.getHitbox().x - 70 - Globals.rng(50);
-                    player.setPos(teleX, target.getY() - 10 * Globals.rng(5));
-                    if (target.getX() < player.getX()) {
-                        player.setFacing(Globals.LEFT);
-                    } else if (target.getX() > player.getX()) {
-                        player.setFacing(Globals.RIGHT);
-                    }
-                } else {
-                    endPhantom = true;
-                }
-            } else {
-                Mob target;
-                ArrayList<Mob> mobsInRange = this.logic.getRoomData().getMobsInRange(player, radius);
-
-                if (!mobsInRange.isEmpty()) {
-                    target = mobsInRange.get(Globals.rng(mobsInRange.size()));
-                    double teleX = (Globals.rng(2) == 0) ? target.getHitbox().x + target.getHitbox().width + 100 + Globals.rng(50) : target.getHitbox().x - 100 - Globals.rng(50);
                     player.setPos(teleX, target.getY() - 10 * Globals.rng(5));
                     if (target.getX() < player.getX()) {
                         player.setFacing(Globals.LEFT);

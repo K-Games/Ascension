@@ -3,8 +3,6 @@ package blockfighter.server.entities.proj;
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.buff.BuffKnockback;
 import blockfighter.server.entities.buff.BuffStun;
-import blockfighter.server.entities.damage.Damage;
-import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.player.skills.shield.SkillShieldRoar;
 import blockfighter.server.net.PacketSender;
@@ -26,20 +24,14 @@ public class ProjShieldRoar extends Projectile {
 
     @Override
     public void applyDamage(Player target) {
+        super.applyDamage(target);
         final Player owner = getOwner();
-        final boolean isCrit = owner.rollCrit();
-        final int damage = calculateDamage(isCrit);
-        target.queueDamage(new Damage(damage, true, owner, target, isCrit, true));
         target.queueBuff(new BuffKnockback(this.logic, 200, (1 - Math.abs(target.getX() - owner.getX()) / 600D) * ((owner.getFacing() == Globals.RIGHT) ? 30 : -30), 0, owner, target));
         PacketSender.sendParticle(this.logic, Globals.Particles.SHIELD_ROARHIT.getParticleCode(), target.getKey());
         if (owner.isSkillMaxed(Globals.SHIELD_ROAR)) {
             double stunDuration = owner.getSkill(Globals.SHIELD_ROAR).getCustomValue(SkillShieldRoar.CUSTOM_DATA_HEADERS[0]);
             target.queueBuff(new BuffStun(this.logic, (int) stunDuration));
         }
-    }
-
-    @Override
-    public void applyDamage(Mob target) {
     }
 
     @Override

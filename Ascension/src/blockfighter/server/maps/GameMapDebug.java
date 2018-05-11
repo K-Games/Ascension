@@ -1,6 +1,5 @@
 package blockfighter.server.maps;
 
-import blockfighter.server.LogicModule;
 import blockfighter.shared.Globals;
 import blockfighter.shared.Globals.GameMaps;
 import java.awt.geom.Point2D;
@@ -27,7 +26,4 @@ public class GameMapDebug extends GameMap {
         setupMap();
     }
 
-    @Override
-    public void spawnMapMobs(final LogicModule l) {
-    }
 }

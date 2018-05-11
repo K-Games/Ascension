@@ -3,8 +3,7 @@ package blockfighter.server.entities.proj;
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.buff.BuffBowVolley;
 import blockfighter.server.entities.buff.BuffKnockback;
-import blockfighter.server.entities.damage.Damage;
-import blockfighter.server.entities.mob.Mob;
+import blockfighter.server.entities.damage.DamageBuilder;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.player.skills.bow.SkillBowVolley;
 import blockfighter.server.net.PacketSender;
@@ -57,31 +56,13 @@ public class ProjBowVolley extends Projectile {
                 }
             }
         }
-        target.queueDamage(new Damage(damage, true, owner, target, isCrit, true));
+        target.queueDamage(new DamageBuilder()
+                .setDamage(damage)
+                .setOwner(owner)
+                .setTarget(target)
+                .setIsCrit(isCrit)
+                .build());
         target.queueBuff(new BuffKnockback(this.logic, 50, (owner.getFacing() == Globals.RIGHT) ? 1.5 : -1.5, -0.5, owner, target));
-    }
-
-    @Override
-    public void applyDamage(Mob target) {
-        final Player owner = getOwner();
-        final boolean isCrit = owner.rollCrit();
-        final int damage = calculateDamage(isCrit);
-        if (isCrit) {
-            if (!this.buffed) {
-                this.buffed = true;
-                if (owner.isSkillMaxed(Globals.BOW_VOLLEY)) {
-                    int buffDuration = owner.getSkill(Globals.BOW_VOLLEY).getCustomValue(SkillBowVolley.CUSTOM_DATA_HEADERS[1]).intValue();
-                    double buffDamage = owner.getSkill(Globals.BOW_VOLLEY).getCustomValue(SkillBowVolley.CUSTOM_DATA_HEADERS[0]);
-                    owner.queueBuff(new BuffBowVolley(this.logic, buffDuration, buffDamage, owner));
-                    final byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
-                    bytes[0] = Globals.DATA_PARTICLE_EFFECT;
-                    bytes[1] = Globals.Particles.BOW_VOLLEY_BUFF_EMITTER.getParticleCode();
-                    bytes[2] = owner.getKey();
-                    PacketSender.sendAll(bytes, this.logic);
-                }
-            }
-        }
-        target.queueDamage(new Damage(damage, true, owner, target, isCrit, true));
     }
 
 }

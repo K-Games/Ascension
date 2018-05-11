@@ -174,8 +174,6 @@ public abstract class GameMap {
         return this.isPvP;
     }
 
-    public abstract void spawnMapMobs(LogicModule l);
-
     public Point2D.Double getRandomSpawnPoint() {
         if (this.spawnPoints == null) {
             return new Point2D.Double(this.boundary[Globals.MAP_LEFT] + 50, 0);

@@ -785,19 +785,13 @@ public class Globals {
             DATA_PLAYER_SET_COOLDOWN = 0x0E,
             DATA_NUMBER = 0x0F,
             DATA_PLAYER_GIVEEXP = 0x10,
-            DATA_MOB_SET_POS = 0x11,
-            DATA_MOB_SET_FACING = 0x12,
-            DATA_MOB_SET_STATE = 0x13,
-            DATA_MOB_PARTICLE_EFFECT = 0x14,
-            DATA_MOB_SET_TYPE = 0x15,
-            DATA_MOB_GET_STAT = 0x16,
-            DATA_PLAYER_GIVEDROP = 0x17,
-            DATA_PLAYER_CREATE = 0x18,
-            DATA_SCREEN_SHAKE = 0x19,
-            DATA_PLAYER_EMOTE = 0x1A,
-            DATA_NOTIFICATION_KILL = 0x1B,
-            DATA_PLAYER_SCORE = 0x1C,
-            DATA_PLAYER_MATCH_RESULT = 0x1D;
+            DATA_PLAYER_GIVEDROP = 0x11,
+            DATA_PLAYER_CREATE = 0x12,
+            DATA_SCREEN_SHAKE = 0x13,
+            DATA_PLAYER_EMOTE = 0x14,
+            DATA_NOTIFICATION_KILL = 0x15,
+            DATA_PLAYER_SCORE = 0x16,
+            DATA_PLAYER_MATCH_RESULT = 0x17;
 
     public static final byte LOGIN_SUCCESS = 0x00,
             LOGIN_FAIL_UID_IN_ROOM = 0x01,
@@ -919,7 +913,6 @@ public class Globals {
 
     // Use Cooper Std Black size 25
     public final static BufferedImage[][] DAMAGE_FONT = new BufferedImage[4][10];
-    public final static BufferedImage[] EXP_WORD = new BufferedImage[1];
 
     public final static BufferedImage[] SKILL_ICON = new BufferedImage[NUM_SKILLS];
     public final static BufferedImage[] SKILL_DISABLED_ICON = new BufferedImage[NUM_SKILLS];
@@ -949,8 +942,8 @@ public class Globals {
 
     public static final byte NUMBER_TYPE_PLAYER = 0,
             NUMBER_TYPE_PLAYERCRIT = 1,
-            NUMBER_TYPE_MOB = 2,
-            NUMBER_TYPE_MOBCRIT = 3;
+            NUMBER_TYPE_ENEMY = 2,
+            NUMBER_TYPE_ENEMYCRIT = 3;
 
     public static final byte NOTIFICATION_EXP = 0,
             NOTIFICATION_ITEM = 1,
@@ -1507,14 +1500,6 @@ public class Globals {
             SKILL_ICON[i] = Globals.loadTextureResource("sprites/skillicon/" + i + ".png");
             SKILL_DISABLED_ICON[i] = getDisabledIcon(SKILL_ICON[i]);
         }
-
-//        for (byte i = 0; i < 10; i++) {
-//            DAMAGE_FONT[NUMBER_TYPE_MOB][i] = Globals.loadTextureResource("sprites/number/boss/" + i + ".png");
-//            DAMAGE_FONT[NUMBER_TYPE_PLAYER][i] = Globals.loadTextureResource("sprites/number/player/" + i + ".png");
-//            DAMAGE_FONT[NUMBER_TYPE_PLAYERCRIT][i] = Globals.loadTextureResource("sprites/number/playercrit/" + i + ".png");
-//            DAMAGE_FONT[NUMBER_TYPE_EXP][i] = Globals.loadTextureResource("sprites/number/exp/" + i + ".png");
-//        }
-        EXP_WORD[0] = Globals.loadTextureResource("sprites/number/exp/exp.png");
     }
 
     public static final long nsToMs(final long time) {

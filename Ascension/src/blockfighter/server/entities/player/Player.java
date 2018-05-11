@@ -1484,7 +1484,7 @@ public class Player implements GameEntity, Callable<Player> {
             PacketSender.sendPlayer(bytes, dmg.getOwner());
 
             final byte[] pvpBytes = Arrays.copyOf(bytes, bytes.length);
-            pvpBytes[1] = (!dmg.isCrit()) ? Globals.NUMBER_TYPE_MOB : Globals.NUMBER_TYPE_MOBCRIT;
+            pvpBytes[1] = (!dmg.isCrit()) ? Globals.NUMBER_TYPE_ENEMY : Globals.NUMBER_TYPE_ENEMYCRIT;
             PacketSender.sendPlayer(pvpBytes, this);
         } else {
             PacketSender.sendAll(bytes, this.logic);

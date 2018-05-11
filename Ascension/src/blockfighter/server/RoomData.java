@@ -1,6 +1,5 @@
 package blockfighter.server;
 
-import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.proj.Projectile;
 import blockfighter.server.maps.GameMap;
@@ -21,17 +20,14 @@ public class RoomData {
 
     private ConcurrentHashMap<Byte, Player> players = new ConcurrentHashMap<>((Integer) Globals.ServerConfig.MAX_PLAYERS.getValue(), 0.9f,
             Math.max((Integer) Globals.ServerConfig.MAX_PLAYERS.getValue() / 5, 3));
-    private ConcurrentHashMap<Integer, Mob> mobs = new ConcurrentHashMap<>(1, 0.9f, 1);
     private ConcurrentHashMap<Integer, Projectile> projectiles = new ConcurrentHashMap<>(500, 0.75f, 3);
 
     private GameMap map;
     private int projMaxKeys = 0;
-    private int mobMaxKeys = 255;
     private int minLevel = 0, maxLevel = 0;
 
     private ConcurrentLinkedQueue<Byte> playerKeys = new ConcurrentLinkedQueue<>();
     private ConcurrentLinkedQueue<Integer> projKeys = new ConcurrentLinkedQueue<>();
-    private ConcurrentLinkedQueue<Integer> mobKeys = new ConcurrentLinkedQueue<>();
 
     public RoomData(final byte roomIndex, final byte minLevel, final byte maxLevel) {
         this.minLevel = minLevel;
@@ -55,10 +51,6 @@ public class RoomData {
         Globals.log(RoomData.class, "Resetting room keys", Globals.LOG_TYPE_DATA);
         projMaxKeys = 0;
         this.projKeys.clear();
-
-        this.mobMaxKeys = 0;
-        this.mobKeys.clear();
-
         byte keyCount = Byte.MIN_VALUE;
         this.playerKeys.clear();
         while (this.playerKeys.size() < (Integer) Globals.ServerConfig.MAX_PLAYERS.getValue() && keyCount <= Byte.MAX_VALUE) {
@@ -80,7 +72,6 @@ public class RoomData {
 
     public final void reset() {
         this.players.clear();
-        this.mobs.clear();
         this.projectiles.clear();
 
         GameMaps[] maps = (GameMaps[]) Globals.ServerConfig.GAME_MAPS_LIST.getValue();
@@ -88,7 +79,6 @@ public class RoomData {
 
         resetKeys();
         resetPlayerBuckets();
-        //this.map.spawnMapMobs(this);
     }
 
     public void clearPlayerBuckets() {
@@ -171,10 +161,6 @@ public class RoomData {
         return this.players;
     }
 
-    public ConcurrentHashMap<Integer, Mob> getMobs() {
-        return this.mobs;
-    }
-
     public ConcurrentHashMap<Integer, Projectile> getProj() {
         return this.projectiles;
     }
@@ -190,13 +176,6 @@ public class RoomData {
         return this.playerKeys.poll();
     }
 
-    public int getNextMobKey() {
-        if (this.mobKeys.isEmpty()) {
-            return -1;
-        }
-        return this.mobKeys.poll();
-    }
-
     public int getNextProjKey() {
         Integer nextKey = this.projKeys.poll();
         while (nextKey == null) {
@@ -209,10 +188,6 @@ public class RoomData {
 
     public void returnProjKey(final int key) {
         this.projKeys.add(key);
-    }
-
-    public void returnMobKey(final int key) {
-        this.mobKeys.add(key);
     }
 
     public void returnPlayerKey(final byte key) {
@@ -260,24 +235,8 @@ public class RoomData {
         return playersInRange;
     }
 
-    public ArrayList<Mob> getMobsInRange(final Player player, final double radius) {
-        ArrayList<Mob> mobInRange = new ArrayList<>(getMobs().size());
-        getMobs().entrySet().forEach((mob) -> {
-            final Mob b = mob.getValue();
-            double distance = Math.sqrt(Math.pow((player.getX() - b.getX()), 2) + Math.pow((player.getY() - b.getY()), 2));
-            if (distance <= 100) {
-                mobInRange.add(b);
-            }
-        });
-        return mobInRange;
-    }
-
     public void setPlayerKeys(ConcurrentLinkedQueue<Byte> playerKeys) {
         this.playerKeys = playerKeys;
-    }
-
-    public void setMobKeys(ConcurrentLinkedQueue<Integer> mobKeys) {
-        this.mobKeys = mobKeys;
     }
 
     public void setProjKeys(ConcurrentLinkedQueue<Integer> projKeys) {
@@ -287,10 +246,6 @@ public class RoomData {
 
     public void setPlayers(ConcurrentHashMap<Byte, Player> players) {
         this.players = players;
-    }
-
-    public void setMobs(ConcurrentHashMap<Integer, Mob> mobs) {
-        this.mobs = mobs;
     }
 
     public void setProjectiles(ConcurrentHashMap<Integer, Projectile> projectiles) {

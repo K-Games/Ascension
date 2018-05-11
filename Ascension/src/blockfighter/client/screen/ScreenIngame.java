@@ -8,7 +8,6 @@ import blockfighter.client.entities.ingamenumber.IngameNumberStack;
 import blockfighter.client.entities.items.Item;
 import blockfighter.client.entities.items.ItemEquip;
 import blockfighter.client.entities.items.ItemUpgrade;
-import blockfighter.client.entities.mob.Mob;
 import blockfighter.client.entities.notification.Notification;
 import blockfighter.client.entities.particles.*;
 import blockfighter.client.entities.particles.skills.other.ParticleItemDrop;
@@ -53,7 +52,6 @@ public class ScreenIngame extends Screen {
 
     private final DecimalFormat COOLDOWN_FORMAT = new DecimalFormat("0.0");
     private final ConcurrentHashMap<Byte, Player> players;
-    private final ConcurrentHashMap<Integer, Mob> mobs = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Integer, Particle> particles = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Integer, IngameNumber> ingameNumber = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Point2D, IngameNumberStack> ingameNumberDealtStack = new ConcurrentHashMap<>();
@@ -150,7 +148,6 @@ public class ScreenIngame extends Screen {
             updateIngameNumber();
             updateParticles(this.particles);
             updatePlayers();
-            updateMobs();
             updateNotifications();
             updateEmotes();
             updateHudTimer();
@@ -265,20 +262,6 @@ public class ScreenIngame extends Screen {
         });
     }
 
-    private void updateMobs() {
-        ArrayDeque<Future<Mob>> futures = new ArrayDeque<>(this.mobs.size());
-        this.mobs.entrySet().forEach((pEntry) -> {
-            futures.add(Core.SHARED_THREADPOOL.submit(pEntry.getValue()));
-        });
-        futures.forEach((task) -> {
-            try {
-                task.get();
-            } catch (final Exception ex) {
-                Globals.logError(ex.toString(), ex);
-            }
-        });
-    }
-
     private void updatePlayers() {
         ArrayDeque<Future<Player>> futures = new ArrayDeque<>(this.players.size());
         this.players.entrySet().forEach((pEntry) -> {
@@ -330,12 +313,6 @@ public class ScreenIngame extends Screen {
         }
 
         this.map.draw(g);
-
-        if (this.mobs != null) {
-            this.mobs.entrySet().forEach((pEntry) -> {
-                pEntry.getValue().draw(g);
-            });
-        }
 
         this.players.entrySet().forEach((pEntry) -> {
             if (pEntry.getValue().getKey() != myPlayerKey) {
@@ -612,24 +589,6 @@ public class ScreenIngame extends Screen {
                 case Globals.DATA_PLAYER_GIVEEXP:
                     dataPlayerGiveEXP(data);
                     break;
-                case Globals.DATA_MOB_GET_STAT:
-                    dataMobGetStat(data);
-                    break;
-                case Globals.DATA_MOB_PARTICLE_EFFECT:
-                    dataMobParticleEffect(data);
-                    break;
-                case Globals.DATA_MOB_SET_POS:
-                    dataMobSetPos(data);
-                    break;
-                case Globals.DATA_MOB_SET_FACING:
-                    dataMobSetFacing(data);
-                    break;
-                case Globals.DATA_MOB_SET_STATE:
-                    dataMobSetState(data);
-                    break;
-                case Globals.DATA_MOB_SET_TYPE:
-                    dataMobSetType(data);
-                    break;
                 case Globals.DATA_PLAYER_GIVEDROP:
                     dataPlayerGiveDrop(data);
                     break;
@@ -856,7 +815,7 @@ public class ScreenIngame extends Screen {
 
     private IngameNumber addNumberToIngameNumberStack(final int value, final byte type, final int x, final int y) {
         ConcurrentHashMap<Point2D, IngameNumberStack> stackCollection = this.ingameNumberDealtStack;
-        if (type == Globals.NUMBER_TYPE_MOB || type == Globals.NUMBER_TYPE_MOBCRIT) {
+        if (type == Globals.NUMBER_TYPE_ENEMY || type == Globals.NUMBER_TYPE_ENEMYCRIT) {
             stackCollection = this.ingameNumberTakenStack;
         } else if (type == Globals.NUMBER_TYPE_PLAYERCRIT || type == Globals.NUMBER_TYPE_PLAYER) {
             stackCollection = this.ingameNumberDealtStack;
@@ -919,59 +878,6 @@ public class ScreenIngame extends Screen {
         this.players.get(key).setPlayerName(new String(temp, StandardCharsets.UTF_8).trim());
     }
 
-    private void dataMobParticleEffect(final byte[] data) {
-        final int key = Globals.bytesToInt(Arrays.copyOfRange(data, 1, 5));
-        if (this.mobs.containsKey(key)) {
-            this.mobs.get(key).addParticle(data);
-        }
-    }
-
-    private void dataMobSetType(final byte[] data) {
-        final int key = Globals.bytesToInt(Arrays.copyOfRange(data, 1, 5));
-        final byte type = data[5];
-        if (!this.mobs.containsKey(key)) {
-            final int x = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
-            final int y = Globals.bytesToInt(Arrays.copyOfRange(data, 10, 14));
-            this.mobs.put(key, Mob.spawnMob(type, key, x, y, this.client));
-        }
-    }
-
-    private void dataMobSetPos(final byte[] data) {
-        final int key = Globals.bytesToInt(Arrays.copyOfRange(data, 1, 5));
-        if (isExistingMob(key)) {
-            final int x = Globals.bytesToInt(Arrays.copyOfRange(data, 5, 9));
-            final int y = Globals.bytesToInt(Arrays.copyOfRange(data, 9, 13));
-            this.mobs.get(key).setPos(x, y);
-        }
-    }
-
-    private void dataMobSetFacing(final byte[] data) {
-        final int key = Globals.bytesToInt(Arrays.copyOfRange(data, 1, 5));
-        if (isExistingMob(key)) {
-            final byte facing = data[5];
-            this.mobs.get(key).setFacing(facing);
-        }
-    }
-
-    private void dataMobSetState(final byte[] data) {
-        final int key = Globals.bytesToInt(Arrays.copyOfRange(data, 1, 5));
-        if (isExistingMob(key)) {
-            final byte state = data[5];
-            final byte frame = data[6];
-            this.mobs.get(key).setState(state);
-            this.mobs.get(key).setFrame(frame);
-        }
-    }
-
-    private void dataMobGetStat(final byte[] data) {
-        final int key = Globals.bytesToInt(Arrays.copyOfRange(data, 1, 5));
-        if (isExistingMob(key)) {
-            final byte stat = data[5];
-            final int amount = Globals.bytesToInt(Arrays.copyOfRange(data, 6, 10));
-            this.mobs.get(key).setStat(stat, amount);
-        }
-    }
-
     @Override
     public void addParticle(final Particle newParticle) {
         this.particles.put(newParticle.getKey(), newParticle);
@@ -996,14 +902,6 @@ public class ScreenIngame extends Screen {
 
     private void spawnPlayer(final byte key) {
         spawnPlayer(key, 0, 0);
-    }
-
-    private boolean isExistingMob(final int key) {
-        if (!this.mobs.containsKey(key)) {
-            PacketSender.sendSetMobType(Core.getLogicModule().getConnectedRoom(), key);
-            return false;
-        }
-        return true;
     }
 
     private void spawnPlayer(final byte key, final int x, final int y) {
@@ -1288,9 +1186,6 @@ public class ScreenIngame extends Screen {
         Particle.unloadParticles();
         Emote.unloadEmotes();
         ItemEquip.unloadSprites();
-        this.mobs.entrySet().forEach((mobEntry) -> {
-            mobEntry.getValue().unload();
-        });
     }
 
 }

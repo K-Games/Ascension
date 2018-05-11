@@ -2,8 +2,6 @@ package blockfighter.server.entities.proj;
 
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.buff.BuffKnockback;
-import blockfighter.server.entities.damage.Damage;
-import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.player.skills.bow.SkillBowRapid;
 import blockfighter.shared.Globals;
@@ -37,18 +35,8 @@ public class ProjBowRapid extends Projectile {
 
     @Override
     public void applyDamage(Player target) {
+        super.applyDamage(target);
         final Player owner = getOwner();
-        final boolean isCrit = owner.rollCrit();
-        final int damage = calculateDamage(isCrit);
-        target.queueDamage(new Damage(damage, true, owner, target, isCrit, true));
         target.queueBuff(new BuffKnockback(this.logic, 20, (owner.getFacing() == Globals.RIGHT) ? 4 : -4, 0, owner, target));
-    }
-
-    @Override
-    public void applyDamage(Mob target) {
-        final Player owner = getOwner();
-        final boolean isCrit = owner.rollCrit();
-        final int damage = calculateDamage(isCrit);
-        target.queueDamage(new Damage(damage, true, owner, target, isCrit, true));
     }
 }

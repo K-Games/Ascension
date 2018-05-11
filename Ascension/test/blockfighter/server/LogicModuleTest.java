@@ -1,6 +1,5 @@
 package blockfighter.server;
 
-import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.proj.Projectile;
 import blockfighter.shared.Globals;
@@ -28,7 +27,8 @@ public class LogicModuleTest {
     }
 
     @Before
-    public void setUp() throws Exception {
+    public void before() {
+        Globals.SERVER_MODE = true;
     }
 
     @After
@@ -84,17 +84,6 @@ public class LogicModuleTest {
         lm.queueAddProj(projectile);
 
         assertTrue(projAddQueue.contains(projectile));
-    }
-
-    @Test
-    public void testQueueAddMob() {
-        ConcurrentLinkedQueue<Mob> mobQueue = new ConcurrentLinkedQueue<>();
-        Mob mob = mock(Mob.class);
-        LogicModule lm = new LogicModule((byte) 0, (byte) Globals.rng(65), (byte) ((byte) Globals.rng(65) + 64));
-        lm.setMobAddQueue(mobQueue);
-        lm.queueAddMob(mob);
-
-        assertTrue(mobQueue.contains(mob));
     }
 
     @Test
