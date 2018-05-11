@@ -1474,7 +1474,7 @@ public class Player implements GameEntity, Callable<Player> {
         final byte[] posXInt = Globals.intToBytes((int) this.x);
         System.arraycopy(posXInt, 0, bytes, 2, posXInt.length);
 
-        final byte[] posYInt = Globals.intToBytes((int) this.y - 20);
+        final byte[] posYInt = Globals.intToBytes((int) this.y);
         System.arraycopy(posYInt, 0, bytes, 6, posYInt.length);
 
         final byte[] d = Globals.intToBytes(dmgDealt);

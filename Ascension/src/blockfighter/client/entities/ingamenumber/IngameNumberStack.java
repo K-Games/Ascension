@@ -29,7 +29,7 @@ public class IngameNumberStack extends IngameNumber {
         super(num, t, loc, myPlayer);
         this.speedY = -1.25;
         this.lastUpdateTime = Core.getLogicModule().getTime();
-        this.x += -25 + Globals.rng(51);
+        this.x += -35 + Globals.rng(51);
     }
 
     @Override

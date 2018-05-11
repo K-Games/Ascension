@@ -48,7 +48,7 @@ public class IngameNumber implements Callable<IngameNumber> {
         this.number = num;
         this.type = t;
         this.x = loc.x - myPlayer.getX() + 640;
-        this.y = loc.y - 18 - myPlayer.getY() + 500;
+        this.y = loc.y - 40 - myPlayer.getY() + 500;
         this.speedY = -8 + Globals.rng(10) / 10D;
         this.speedX = (Globals.rng(8) - 4) / 2D;
     }
