@@ -379,68 +379,68 @@ public class Globals {
     public static final Class[] PARTICLE_PARAM_POS = {int.class, int.class};
 
     public enum Particles {
-        BLOOD((byte) 0x00, "blood", 1, ParticleBlood.class, PARTICLE_PARAM_POS_AND_FACING),
-        BLOOD_DEATH_EMITTER((byte) 0x01, null, 0, ParticleBloodEmitter.class, PARTICLE_PARAM_PLAYER),
-        BLOOD_EMITTER((byte) 0x02, null, 0, ParticleBloodEmitter.class, PARTICLE_PARAM_PLAYER_AND_TARGET),
-        BOW_ARC((byte) 0x03, "arc", 8, ParticleBowArc.class, PARTICLE_PARAM_POS_AND_FACING),
-        BOW_FROSTARROW((byte) 0x04, "frostarrow", 14, ParticleBowFrostArrow.class, PARTICLE_PARAM_POS_AND_FACING),
-        BOW_FROSTARROW_EMITTER((byte) 0x05, null, 0, ParticleBowFrostArrowEmitter.class, PARTICLE_PARAM_POS_AND_FACING),
-        BOW_POWER((byte) 0x06, "power", 5, ParticleBowPower.class, PARTICLE_PARAM_POS_AND_FACING),
-        BOW_POWER_CHARGE((byte) 0x07, "powercharge", 1, ParticleBowPowerCharge.class, PARTICLE_PARAM_PLAYER),
-        BOW_POWER_PARTICLE((byte) 0x08, "power2", 10, ParticleBowPowerParticle.class, PARTICLE_PARAM_POS_AND_FACING),
-        BOW_RAPID((byte) 0x09, "rapid", 6, ParticleBowRapid.class, PARTICLE_PARAM_POS_AND_FACING),
-        BOW_RAPID2((byte) 0x0A, "rapid2", 3, ParticleBowRapid2.class, PARTICLE_PARAM_POS_AND_FACING),
-        BOW_STORM_ARROW((byte) 0x0B, "stormarrow", 5, ParticleBowStormArrow.class, PARTICLE_PARAM_POS_AND_FACING),
-        BOW_STORM_EMITTER((byte) 0x0C, null, 0, ParticleBowStormEmitter.class, PARTICLE_PARAM_POS_AND_FACING),
-        BOW_VOLLEY_BOW((byte) 0x0D, "volleybow", 9, ParticleBowVolleyBow.class, PARTICLE_PARAM_FACING_AND_PLAYER),
-        BOW_VOLLEY_ARROW((byte) 0x0E, "volley", 7, ParticleBowVolleyArrow.class, PARTICLE_PARAM_POS_AND_FACING),
-        BOW_VOLLEY_BUFF_EMITTER((byte) 0x0F, null, 0, ParticleBowVolleyBuffEmitter.class, PARTICLE_PARAM_PLAYER),
-        BOW_VOLLEY_BUFF_PARTICLE((byte) 0x10, "volleybuff", 6, ParticleBowVolleyBuffParticle.class, PARTICLE_PARAM_POS_AND_FACING),
-        BURN_BUFF_EMITTER((byte) 0x11, null, 0, ParticleBurnBuffEmitter.class, PARTICLE_PARAM_PLAYER),
-        BURN_BUFF_PARTICLE((byte) 0x12, "burn", 20, ParticleBurnBuffParticle.class, PARTICLE_PARAM_POS_AND_FACING),
-        PASSIVE_BARRIER((byte) 0x13, "barrier", 7, ParticlePassiveBarrier.class, PARTICLE_PARAM_POS),
-        PASSIVE_RESIST((byte) 0x14, "resist", 12, ParticlePassiveResist.class, PARTICLE_PARAM_POS),
-        PASSIVE_SHADOWATTACK((byte) 0x15, "shadowattack", 16, ParticlePassiveShadowAttack.class, PARTICLE_PARAM_POS),
-        PASSIVE_STATIC((byte) 0x16, null, 0, ParticlePassiveStatic.class, PARTICLE_PARAM_PLAYER_AND_TARGET),
-        SHIELD_CHARGE((byte) 0x17, "charge", 1, ParticleShieldCharge.class, PARTICLE_PARAM_FACING_AND_PLAYER),
-        SHIELD_CHARGE_PARTICLE((byte) 0x18, "charge2", 5, ParticleShieldChargeParticle.class, PARTICLE_PARAM_POS_AND_FACING),
-        SHIELD_MAGNETIZE((byte) 0x19, null, 0, ParticleShieldMagnetize.class, PARTICLE_PARAM_PLAYER_AND_TARGET),
-        SHIELD_MAGNETIZE_BURST((byte) 0x1A, "magnetizeburst", 12, ParticleShieldMagnetizeBurst.class, PARTICLE_PARAM_PLAYER),
-        SHIELD_MAGNETIZE_START((byte) 0x1B, "magnetizestart", 13, ParticleShieldMagnetizeStart.class, PARTICLE_PARAM_PLAYER),
-        SHIELD_REFLECT_BUFF((byte) 0x1C, "reflectbuff", 16, ParticleShieldReflectBuff.class, PARTICLE_PARAM_POS_AND_FACING),
-        SHIELD_REFLECT_CAST((byte) 0x1D, "reflectcast", 16, ParticleShieldReflectCast.class, PARTICLE_PARAM_PLAYER),
-        SHIELD_REFLECT_EMITTER((byte) 0x1E, null, 0, ParticleShieldReflectEmitter.class, PARTICLE_PARAM_PLAYER),
-        SHIELD_REFLECT_HIT((byte) 0x1F, "reflecthit", 10, ParticleShieldReflectHit.class, PARTICLE_PARAM_POS),
-        SHIELD_ROAR((byte) 0x20, "roar", 10, ParticleShieldRoar.class, PARTICLE_PARAM_FACING_AND_PLAYER),
-        SHIELD_ROARHIT((byte) 0x21, "roarhit", 7, ParticleShieldRoarHit.class, PARTICLE_PARAM_PLAYER),
-        SWORD_CINDER((byte) 0x22, "cinder", 6, ParticleSwordCinder.class, PARTICLE_PARAM_POS_AND_FACING),
-        SWORD_GASH1((byte) 0x23, "gash1", 4, ParticleSwordGash.class, PARTICLE_PARAM_POS_AND_FACING),
-        SWORD_GASH2((byte) 0x24, "gash2", 4, ParticleSwordGash2.class, PARTICLE_PARAM_POS_AND_FACING),
-        SWORD_PHANTOM((byte) 0x25, "phantom", 6, ParticleSwordPhantom.class, PARTICLE_PARAM_POS_AND_FACING),
-        SWORD_PHANTOM2((byte) 0x26, "phantomslash", 4, ParticleSwordPhantom2.class, PARTICLE_PARAM_PLAYER),
-        SWORD_SLASH1((byte) 0x27, "slash1", 3, ParticleSwordSlash1.class, PARTICLE_PARAM_POS_AND_FACING),
-        SWORD_SLASH2((byte) 0x28, "slash2", 3, ParticleSwordSlash2.class, PARTICLE_PARAM_POS_AND_FACING),
-        SWORD_SLASH3((byte) 0x29, "slash3", 5, ParticleSwordSlash3.class, PARTICLE_PARAM_POS_AND_FACING),
-        SWORD_SLASH_BUFF_EMITTER((byte) 0x2A, null, 0, ParticleSwordSlashBuffEmitter.class, PARTICLE_PARAM_PLAYER),
-        SWORD_SLASH_BUFF_PARTICLE((byte) 0x2B, "slashbuff", 6, ParticleSwordSlashBuffParticle.class, PARTICLE_PARAM_POS_AND_FACING),
-        SWORD_TAUNT((byte) 0x2C, "taunt", 5, ParticleSwordTaunt.class, PARTICLE_PARAM_POS_AND_FACING),
-        SWORD_TAUNT_AURA((byte) 0x2D, "tauntaura", 5, ParticleSwordTauntAura.class, PARTICLE_PARAM_PLAYER),
-        SWORD_TAUNT_AURA_PARTICLE((byte) 0x2E, "tauntaura2", 10, ParticleSwordTauntAuraParticle.class, PARTICLE_PARAM_POS_AND_FACING),
-        SWORD_TAUNT_BUFF_EMITTER((byte) 0x2F, null, 0, ParticleSwordTauntBuffEmitter.class, PARTICLE_PARAM_PLAYER),
-        SWORD_VORPAL((byte) 0x30, "vorpal", 4, ParticleSwordVorpal.class, PARTICLE_PARAM_POS_AND_FACING),
-        UTILITY_DASH((byte) 0x31, "dash", 8, ParticleUtilityDash.class, PARTICLE_PARAM_FACING_AND_PLAYER),
-        UTILITY_DASH_BUFF_EMITTER((byte) 0x32, null, 0, ParticleUtilityDashBuffEmitter.class, PARTICLE_PARAM_PLAYER),
-        UTILITY_DASH_BUFF_PARTICLE((byte) 0x33, "dashbuff", 1, ParticleUtilityDashBuffParticle.class, PARTICLE_PARAM_POS_AND_FACING),
-        UTILITY_DASH_EMITTER((byte) 0x34, null, 0, ParticleUtilityDashEmitter.class, PARTICLE_PARAM_FACING_AND_PLAYER),
-        UTILITY_ADRENALINE((byte) 0x35, null, 0, ParticleUtilityAdrenaline.class, PARTICLE_PARAM_PLAYER),
-        UTILITY_ADRENALINE_CLONE_EMITTER((byte) 0x36, null, 0, ParticleUtilityAdrenalineCloneEmitter.class, PARTICLE_PARAM_PLAYER),
-        UTILITY_ADRENALINE_CLONE_PARTICLE((byte) 0x37, null, 0, ParticleUtilityAdrenalineCloneParticle.class, null),
-        HIT((byte) 0x38, "hit", 6, ParticleHit.class, PARTICLE_PARAM_POS_AND_FACING),
-        ITEM_DROP((byte) 0x39, null, 0, ParticleItemDrop.class, PARTICLE_PARAM_PLAYER_AND_TARGET);
+        BLOOD((byte) 0x00, "blood", ParticleBlood.class, PARTICLE_PARAM_POS_AND_FACING),
+        BLOOD_DEATH_EMITTER((byte) 0x01, null, ParticleBloodEmitter.class, PARTICLE_PARAM_PLAYER),
+        BLOOD_EMITTER((byte) 0x02, null, ParticleBloodEmitter.class, PARTICLE_PARAM_PLAYER_AND_TARGET),
+        BOW_ARC((byte) 0x03, "arc", ParticleBowArc.class, PARTICLE_PARAM_POS_AND_FACING),
+        BOW_FROSTARROW((byte) 0x04, "frostarrow", ParticleBowFrostArrow.class, PARTICLE_PARAM_POS_AND_FACING),
+        BOW_FROSTARROW_EMITTER((byte) 0x05, null, ParticleBowFrostArrowEmitter.class, PARTICLE_PARAM_POS_AND_FACING),
+        BOW_POWER((byte) 0x06, "power", ParticleBowPower.class, PARTICLE_PARAM_POS_AND_FACING),
+        BOW_POWER_CHARGE((byte) 0x07, "powercharge", ParticleBowPowerCharge.class, PARTICLE_PARAM_PLAYER),
+        BOW_POWER_PARTICLE((byte) 0x08, "power2", ParticleBowPowerParticle.class, PARTICLE_PARAM_POS_AND_FACING),
+        BOW_RAPID((byte) 0x09, "rapid", ParticleBowRapid.class, PARTICLE_PARAM_POS_AND_FACING),
+        BOW_RAPID2((byte) 0x0A, "rapid2", ParticleBowRapid2.class, PARTICLE_PARAM_POS_AND_FACING),
+        BOW_STORM_ARROW((byte) 0x0B, "stormarrow", ParticleBowStormArrow.class, PARTICLE_PARAM_POS_AND_FACING),
+        BOW_STORM_EMITTER((byte) 0x0C, null, ParticleBowStormEmitter.class, PARTICLE_PARAM_POS_AND_FACING),
+        BOW_VOLLEY_BOW((byte) 0x0D, "volleybow", ParticleBowVolleyBow.class, PARTICLE_PARAM_FACING_AND_PLAYER),
+        BOW_VOLLEY_ARROW((byte) 0x0E, "volley", ParticleBowVolleyArrow.class, PARTICLE_PARAM_POS_AND_FACING),
+        BOW_VOLLEY_BUFF_EMITTER((byte) 0x0F, null, ParticleBowVolleyBuffEmitter.class, PARTICLE_PARAM_PLAYER),
+        BOW_VOLLEY_BUFF_PARTICLE((byte) 0x10, "volleybuff", ParticleBowVolleyBuffParticle.class, PARTICLE_PARAM_POS_AND_FACING),
+        BURN_BUFF_EMITTER((byte) 0x11, null, ParticleBurnBuffEmitter.class, PARTICLE_PARAM_PLAYER),
+        BURN_BUFF_PARTICLE((byte) 0x12, "burn", ParticleBurnBuffParticle.class, PARTICLE_PARAM_POS_AND_FACING),
+        PASSIVE_BARRIER((byte) 0x13, "barrier", ParticlePassiveBarrier.class, PARTICLE_PARAM_POS),
+        PASSIVE_RESIST((byte) 0x14, "resist", ParticlePassiveResist.class, PARTICLE_PARAM_POS),
+        PASSIVE_SHADOWATTACK((byte) 0x15, "shadowattack", ParticlePassiveShadowAttack.class, PARTICLE_PARAM_POS),
+        PASSIVE_STATIC((byte) 0x16, null, ParticlePassiveStatic.class, PARTICLE_PARAM_PLAYER_AND_TARGET),
+        SHIELD_CHARGE((byte) 0x17, "charge", ParticleShieldCharge.class, PARTICLE_PARAM_FACING_AND_PLAYER),
+        SHIELD_CHARGE_PARTICLE((byte) 0x18, "charge2", ParticleShieldChargeParticle.class, PARTICLE_PARAM_POS_AND_FACING),
+        SHIELD_MAGNETIZE((byte) 0x19, null, ParticleShieldMagnetize.class, PARTICLE_PARAM_PLAYER_AND_TARGET),
+        SHIELD_MAGNETIZE_BURST((byte) 0x1A, "magnetizeburst", ParticleShieldMagnetizeBurst.class, PARTICLE_PARAM_PLAYER),
+        SHIELD_MAGNETIZE_START((byte) 0x1B, "magnetizestart", ParticleShieldMagnetizeStart.class, PARTICLE_PARAM_PLAYER),
+        SHIELD_REFLECT_BUFF((byte) 0x1C, "reflectbuff", ParticleShieldReflectBuff.class, PARTICLE_PARAM_POS_AND_FACING),
+        SHIELD_REFLECT_CAST((byte) 0x1D, "reflectcast", ParticleShieldReflectCast.class, PARTICLE_PARAM_PLAYER),
+        SHIELD_REFLECT_EMITTER((byte) 0x1E, null, ParticleShieldReflectEmitter.class, PARTICLE_PARAM_PLAYER),
+        SHIELD_REFLECT_HIT((byte) 0x1F, "reflecthit", ParticleShieldReflectHit.class, PARTICLE_PARAM_POS),
+        SHIELD_ROAR((byte) 0x20, "roar", ParticleShieldRoar.class, PARTICLE_PARAM_FACING_AND_PLAYER),
+        SHIELD_ROARHIT((byte) 0x21, "roarhit", ParticleShieldRoarHit.class, PARTICLE_PARAM_PLAYER),
+        SWORD_CINDER((byte) 0x22, "cinder", ParticleSwordCinder.class, PARTICLE_PARAM_POS_AND_FACING),
+        SWORD_GASH1((byte) 0x23, "gash1", ParticleSwordGash.class, PARTICLE_PARAM_POS_AND_FACING),
+        SWORD_GASH2((byte) 0x24, "gash2", ParticleSwordGash2.class, PARTICLE_PARAM_POS_AND_FACING),
+        SWORD_PHANTOM((byte) 0x25, "phantom", ParticleSwordPhantom.class, PARTICLE_PARAM_POS_AND_FACING),
+        SWORD_PHANTOM2((byte) 0x26, "phantomslash", ParticleSwordPhantom2.class, PARTICLE_PARAM_PLAYER),
+        SWORD_SLASH1((byte) 0x27, "slash1", ParticleSwordSlash1.class, PARTICLE_PARAM_POS_AND_FACING),
+        SWORD_SLASH2((byte) 0x28, "slash2", ParticleSwordSlash2.class, PARTICLE_PARAM_POS_AND_FACING),
+        SWORD_SLASH3((byte) 0x29, "slash3", ParticleSwordSlash3.class, PARTICLE_PARAM_POS_AND_FACING),
+        SWORD_SLASH_BUFF_EMITTER((byte) 0x2A, null, ParticleSwordSlashBuffEmitter.class, PARTICLE_PARAM_PLAYER),
+        SWORD_SLASH_BUFF_PARTICLE((byte) 0x2B, "slashbuff", ParticleSwordSlashBuffParticle.class, PARTICLE_PARAM_POS_AND_FACING),
+        SWORD_TAUNT((byte) 0x2C, "taunt", ParticleSwordTaunt.class, PARTICLE_PARAM_POS_AND_FACING),
+        SWORD_TAUNT_AURA((byte) 0x2D, "tauntaura", ParticleSwordTauntAura.class, PARTICLE_PARAM_PLAYER),
+        SWORD_TAUNT_AURA_PARTICLE((byte) 0x2E, "tauntaura2", ParticleSwordTauntAuraParticle.class, PARTICLE_PARAM_POS_AND_FACING),
+        SWORD_TAUNT_BUFF_EMITTER((byte) 0x2F, null, ParticleSwordTauntBuffEmitter.class, PARTICLE_PARAM_PLAYER),
+        SWORD_VORPAL((byte) 0x30, "vorpal", ParticleSwordVorpal.class, PARTICLE_PARAM_POS_AND_FACING),
+        UTILITY_DASH((byte) 0x31, "dash", ParticleUtilityDash.class, PARTICLE_PARAM_FACING_AND_PLAYER),
+        UTILITY_DASH_BUFF_EMITTER((byte) 0x32, null, ParticleUtilityDashBuffEmitter.class, PARTICLE_PARAM_PLAYER),
+        UTILITY_DASH_BUFF_PARTICLE((byte) 0x33, "dashbuff", ParticleUtilityDashBuffParticle.class, PARTICLE_PARAM_POS_AND_FACING),
+        UTILITY_DASH_EMITTER((byte) 0x34, null, ParticleUtilityDashEmitter.class, PARTICLE_PARAM_FACING_AND_PLAYER),
+        UTILITY_ADRENALINE((byte) 0x35, null, ParticleUtilityAdrenaline.class, PARTICLE_PARAM_PLAYER),
+        UTILITY_ADRENALINE_CLONE_EMITTER((byte) 0x36, null, ParticleUtilityAdrenalineCloneEmitter.class, PARTICLE_PARAM_PLAYER),
+        UTILITY_ADRENALINE_CLONE_PARTICLE((byte) 0x37, null, ParticleUtilityAdrenalineCloneParticle.class, null),
+        HIT((byte) 0x38, "hit", ParticleHit.class, PARTICLE_PARAM_POS_AND_FACING),
+        ITEM_DROP((byte) 0x39, null, ParticleItemDrop.class, PARTICLE_PARAM_PLAYER_AND_TARGET);
 
         private final byte particleCode;
 
-        private final int numFrames;
+        private int numFrames;
         private final String spriteFolder;
         private final Class<? extends Particle> particleClass;
         private final Class[] parameterTypes;
@@ -458,12 +458,21 @@ public class Globals {
             return lookup.get(code);
         }
 
-        Particles(byte particleCode, String spriteFolder, int numFrames, Class<? extends Particle> particleClass, Class[] parameterTypes) {
+        Particles(byte particleCode, String spriteFolder, Class<? extends Particle> particleClass, Class[] parameterTypes) {
             this.particleCode = particleCode;
-            this.numFrames = numFrames;
             this.spriteFolder = spriteFolder;
             this.particleClass = particleClass;
             this.parameterTypes = parameterTypes;
+            int numFiles = 0;
+            if (spriteFolder != null) {
+                try {
+                    numFiles = (int) Files.list(Paths.get("resources/sprites/particle/" + spriteFolder + "/"))
+                            .filter(p -> p.toFile().isFile())
+                            .count();
+                } catch (IOException ex) {
+                }
+            }
+            this.numFrames = numFiles;
         }
 
         public void setSprite(BufferedImage[] sprite) {
