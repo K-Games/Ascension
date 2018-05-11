@@ -3,7 +3,6 @@ package blockfighter.server.entities.proj;
 import blockfighter.server.LogicModule;
 import blockfighter.server.RoomData;
 import blockfighter.server.entities.GameEntity;
-import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.net.PacketSender;
 import blockfighter.shared.Globals;
@@ -23,12 +22,8 @@ public abstract class Projectile implements GameEntity, Callable<Projectile> {
 
     private Player owner;
 
-    private Mob mobOwner;
-
     protected HashMap<Byte, Player> pHit = new HashMap<>();
     protected final ArrayDeque<Player> playerQueue = new ArrayDeque<>();
-    protected HashMap<Integer, Mob> bHit = new HashMap<>();
-    protected final ArrayDeque<Mob> mobQueue = new ArrayDeque<>();
 
     protected int duration;
 
@@ -55,15 +50,6 @@ public abstract class Projectile implements GameEntity, Callable<Projectile> {
         this.duration = duration;
     }
 
-    public Projectile(final LogicModule l, final Mob o, final double x, final double y, final int duration) {
-        this(l);
-        this.mobOwner = o;
-        this.x = x;
-        this.y = y;
-        this.hitbox = new Rectangle2D.Double[1];
-        this.duration = duration;
-    }
-
     @Override
     public void update() {
         if (this.hitbox[0] == null) {
@@ -80,14 +66,6 @@ public abstract class Projectile implements GameEntity, Callable<Projectile> {
             });
         }
 
-        this.room.getMobs().entrySet().forEach((bEntry) -> {
-            final Mob b = bEntry.getValue();
-            if (!this.bHit.containsKey(b.getKey()) && b.intersectHitbox(this.hitbox[0])) {
-                this.mobQueue.add(b);
-                this.bHit.put(b.getKey(), b);
-                queueEffect(this);
-            }
-        });
     }
 
     public double getX() {
@@ -104,14 +82,6 @@ public abstract class Projectile implements GameEntity, Callable<Projectile> {
 
     public Player getOwner() {
         return this.owner;
-    }
-
-    public void setMobOwner(final Mob owner) {
-        this.mobOwner = owner;
-    }
-
-    public Mob getMobOwner() {
-        return this.mobOwner;
     }
 
     @Override
@@ -144,12 +114,6 @@ public abstract class Projectile implements GameEntity, Callable<Projectile> {
             }
         }
 
-        while (!this.mobQueue.isEmpty()) {
-            final Mob b = this.mobQueue.poll();
-            if (b != null && !b.isDead()) {
-                applyDamage(b);
-            }
-        }
         this.queuedEffect = false;
     }
 
@@ -168,8 +132,6 @@ public abstract class Projectile implements GameEntity, Callable<Projectile> {
     }
 
     public abstract void applyDamage(final Player target);
-
-    public abstract void applyDamage(final Mob target);
 
     public abstract int calculateDamage(final boolean isCrit);
 }

@@ -59,10 +59,10 @@ public class IngameNumberStack extends IngameNumber {
             if (count >= numDisplayed) {
                 break;
             }
-            g.setFont((num.type == Globals.NUMBER_TYPE_PLAYERCRIT || num.type == Globals.NUMBER_TYPE_MOBCRIT) ? Globals.ARIAL_21PTBOLD : Globals.ARIAL_19PTBOLD);
+            g.setFont((num.type == Globals.NUMBER_TYPE_PLAYERCRIT || num.type == Globals.NUMBER_TYPE_ENEMYCRIT) ? Globals.ARIAL_21PTBOLD : Globals.ARIAL_19PTBOLD);
 
             String output = Globals.NUMBER_FORMAT.format(num.number);
-            output = (num.type == Globals.NUMBER_TYPE_PLAYERCRIT || num.type == Globals.NUMBER_TYPE_MOBCRIT) ? output + "!" : output;
+            output = (num.type == Globals.NUMBER_TYPE_PLAYERCRIT || num.type == Globals.NUMBER_TYPE_ENEMYCRIT) ? output + "!" : output;
 
             for (int i = 0; i < 2; i++) {
                 g.setColor(Color.BLACK);
@@ -76,8 +76,8 @@ public class IngameNumberStack extends IngameNumber {
                 case Globals.NUMBER_TYPE_PLAYERCRIT:
                     g.setColor(DAMAGE_ORANGE);
                     break;
-                case Globals.NUMBER_TYPE_MOB:
-                case Globals.NUMBER_TYPE_MOBCRIT:
+                case Globals.NUMBER_TYPE_ENEMY:
+                case Globals.NUMBER_TYPE_ENEMYCRIT:
                     g.setColor(DAMAGE_BLUE);
                     break;
             }

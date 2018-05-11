@@ -4,7 +4,6 @@ import blockfighter.server.LogicModule;
 import blockfighter.server.entities.buff.BuffChargeCripple;
 import blockfighter.server.entities.buff.BuffStun;
 import blockfighter.server.entities.damage.Damage;
-import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.player.skills.shield.SkillShieldCharge;
 import blockfighter.shared.Globals;
@@ -35,21 +34,6 @@ public class ProjShieldCharge extends Projectile {
 
     @Override
     public void applyDamage(Player target) {
-        final Player owner = getOwner();
-        final boolean isCrit = owner.rollCrit();
-        final int damage = calculateDamage(isCrit);
-        target.queueDamage(new Damage(damage, true, owner, target, isCrit, true));
-        if (owner.isSkillMaxed(Globals.SHIELD_CHARGE)) {
-            double stunDuration = owner.getSkill(Globals.SHIELD_CHARGE).getCustomValue(SkillShieldCharge.CUSTOM_DATA_HEADERS[0]);
-            target.queueBuff(new BuffStun(this.logic, (int) stunDuration + 200));
-        } else {
-            target.queueBuff(new BuffStun(this.logic, 200));
-        }
-        target.queueBuff(new BuffChargeCripple(this.logic, 700));
-    }
-
-    @Override
-    public void applyDamage(Mob target) {
         final Player owner = getOwner();
         final boolean isCrit = owner.rollCrit();
         final int damage = calculateDamage(isCrit);

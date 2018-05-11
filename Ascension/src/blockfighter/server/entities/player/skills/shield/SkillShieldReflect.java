@@ -3,7 +3,6 @@ package blockfighter.server.entities.player.skills.shield;
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.buff.BuffShieldReflect;
 import blockfighter.server.entities.damage.Damage;
-import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.player.skills.Skill;
 import blockfighter.server.net.PacketSender;
@@ -77,15 +76,6 @@ public class SkillShieldReflect extends Skill {
                     final Damage dmgEntity = new Damage((int) (dmgTaken * mult), true, player, p, false, new Point2D.Double(p.getX(), p.getY()), false);
                     dmgEntity.setCanReflect(false);
                     p.queueDamage(dmgEntity);
-                });
-            }
-        } else {
-            ArrayList<Mob> mobsInRange = this.logic.getRoomData().getMobsInRange(player, radius);
-            if (!mobsInRange.isEmpty()) {
-                mobsInRange.forEach((mob) -> {
-                    final Damage dmgEntity = new Damage((int) (dmgTaken * mult), true, player, mob, false, new Point2D.Double(mob.getX(), mob.getY()), false);
-                    dmgEntity.setCanReflect(false);
-                    mob.queueDamage(dmgEntity);
                 });
             }
         }

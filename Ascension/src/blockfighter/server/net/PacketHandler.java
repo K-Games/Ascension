@@ -3,7 +3,6 @@ package blockfighter.server.net;
 import blockfighter.server.AscensionServer;
 import blockfighter.server.LogicModule;
 import blockfighter.server.RoomData;
-import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.player.skills.Skill;
 import blockfighter.shared.Globals;
@@ -82,12 +81,6 @@ public class PacketHandler {
             case Globals.DATA_PLAYER_GET_EQUIP:
                 receivePlayerGetEquip(data, room, c);
                 break;
-            case Globals.DATA_MOB_GET_STAT:
-                receiveMobGetStat(data, room, c);
-                break;
-            case Globals.DATA_MOB_SET_TYPE:
-                receiveMobSetType(data, room, c);
-                break;
             case Globals.DATA_PLAYER_EMOTE:
                 receivePlayerUseEmote(data, room, c);
                 break;
@@ -95,53 +88,6 @@ public class PacketHandler {
                 Globals.log(PacketHandler.class, "DATA_UNKNOWN " + c + " Unknown data type: " + dataType, Globals.LOG_TYPE_DATA);
                 break;
         }
-    }
-
-    private static void receiveMobGetStat(final byte[] data, final LogicModule room, final Connection c) {
-        final ConcurrentHashMap<Integer, Mob> mobs = room.getRoomData().getMobs();
-        final int key = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 2 + Globals.PACKET_INT));
-        final byte statID = data[6];
-        if (!mobs.containsKey(key)) {
-            return;
-        }
-        byte[] stat;
-        switch (statID) {
-            case Mob.STAT_MAXHP:
-                stat = Globals.intToBytes(10000);
-                break;
-            case Mob.STAT_MINHP:
-                final double[] bStats = mobs.get(key).getStats();
-                final double hpPercent = bStats[Mob.STAT_MINHP] / bStats[Mob.STAT_MAXHP] * 10000;
-                stat = Globals.intToBytes((int) hpPercent);
-                break;
-            default:
-                stat = Globals.intToBytes((int) mobs.get(key).getStats()[statID]);
-        }
-        final byte[] bytes = new byte[Globals.PACKET_BYTE * 2 + Globals.PACKET_INT * 2];
-        bytes[0] = Globals.DATA_MOB_GET_STAT;
-        final byte[] intKey = Globals.intToBytes(key);
-        System.arraycopy(intKey, 0, bytes, 1, intKey.length);
-        bytes[5] = statID;
-        System.arraycopy(stat, 0, bytes, 6, stat.length);
-        PacketSender.sendConnection(bytes, c);
-    }
-
-    private static void receiveMobSetType(final byte[] data, final LogicModule room, final Connection c) {
-        final ConcurrentHashMap<Integer, Mob> mobs = room.getRoomData().getMobs();
-        final int key = Globals.bytesToInt(Arrays.copyOfRange(data, 2, 2 + Globals.PACKET_INT));
-        if (!mobs.containsKey(key)) {
-            return;
-        }
-        final byte[] bytes = new byte[Globals.PACKET_BYTE * 2 + Globals.PACKET_INT * 3];
-        bytes[0] = Globals.DATA_MOB_SET_TYPE;
-        final byte[] intKey = Globals.intToBytes(key);
-        System.arraycopy(intKey, 0, bytes, 1, intKey.length);
-        bytes[5] = mobs.get(key).getType();
-        final byte[] posXInt = Globals.intToBytes((int) mobs.get(key).getX());
-        System.arraycopy(posXInt, 0, bytes, 6, posXInt.length);
-        final byte[] posYInt = Globals.intToBytes((int) mobs.get(key).getY());
-        System.arraycopy(posYInt, 0, bytes, 10, posYInt.length);
-        PacketSender.sendConnection(bytes, c);
     }
 
     private static void receivePlayerGetEquip(final byte[] data, final LogicModule room, final Connection c) {

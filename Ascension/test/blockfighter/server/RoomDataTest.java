@@ -17,8 +17,6 @@ public class RoomDataTest {
 
     @Mock
     ConcurrentLinkedQueue<Byte> playerKeys;
-    @Mock
-    ConcurrentLinkedQueue<Integer> mobKeys;
 
     @Test
     public void testGetNextPlayerKeyReturnInvalidKeyWhenPlayerKeysIsEmpty() {
@@ -45,31 +43,6 @@ public class RoomDataTest {
     }
 
     @Test
-    public void testGetNextMobKeyReturnInvalidKeyWhenPlayerKeysIsEmpty() {
-        RoomData room = new RoomData((byte) 0, (byte) Globals.rng(65), (byte) ((byte) Globals.rng(65) + 64));
-        room.setMobKeys(mobKeys);
-        when(mobKeys.isEmpty()).thenReturn(true);
-
-        int expResult = -1;
-        int result = room.getNextMobKey();
-
-        assertEquals(expResult, result);
-    }
-
-    @Test
-    public void testGetNextMobKeyReturnAKeyWhenPlayerKeysIsNotEmpty() {
-        RoomData room = new RoomData((byte) 0, (byte) Globals.rng(65), (byte) ((byte) Globals.rng(65) + 64));
-        room.setMobKeys(mobKeys);
-        when(mobKeys.isEmpty()).thenReturn(false);
-        when(mobKeys.poll()).thenReturn(1);
-
-        int expResult = 1;
-        int result = room.getNextMobKey();
-
-        assertEquals(expResult, result);
-    }
-
-    @Test
     public void testGetNextProjKey() {
         RoomData room = new RoomData((byte) 0, (byte) Globals.rng(65), (byte) ((byte) Globals.rng(65) + 64));
         for (int i = 0; i < 10000; i++) {
@@ -91,23 +64,6 @@ public class RoomDataTest {
         }
         for (int i = 0; i < 200; i++) {
             room.returnProjKey(i);
-        }
-        verify(spy, atLeast(200)).add(any());
-
-        int expResult = 200;
-        int result = spy.size();
-
-        assertEquals(expResult, result);
-    }
-
-    @Test
-    public void testReturnMobKey() {
-        ConcurrentLinkedQueue<Integer> spyMobKeys = new ConcurrentLinkedQueue<>();
-        ConcurrentLinkedQueue<Integer> spy = spy(spyMobKeys);
-        RoomData room = new RoomData((byte) 0, (byte) Globals.rng(65), (byte) ((byte) Globals.rng(65) + 64));
-        room.setMobKeys(spy);
-        for (int i = 0; i < 200; i++) {
-            room.returnMobKey((byte) i);
         }
         verify(spy, atLeast(200)).add(any());
 

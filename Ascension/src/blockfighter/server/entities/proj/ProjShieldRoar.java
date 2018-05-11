@@ -4,7 +4,6 @@ import blockfighter.server.LogicModule;
 import blockfighter.server.entities.buff.BuffKnockback;
 import blockfighter.server.entities.buff.BuffStun;
 import blockfighter.server.entities.damage.Damage;
-import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.player.skills.shield.SkillShieldRoar;
 import blockfighter.server.net.PacketSender;
@@ -36,10 +35,6 @@ public class ProjShieldRoar extends Projectile {
             double stunDuration = owner.getSkill(Globals.SHIELD_ROAR).getCustomValue(SkillShieldRoar.CUSTOM_DATA_HEADERS[0]);
             target.queueBuff(new BuffStun(this.logic, (int) stunDuration));
         }
-    }
-
-    @Override
-    public void applyDamage(Mob target) {
     }
 
     @Override

@@ -3,7 +3,6 @@ package blockfighter.server.entities.proj;
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.buff.BuffKnockback;
 import blockfighter.server.entities.damage.Damage;
-import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.player.skills.bow.SkillBowStorm;
 import blockfighter.shared.Globals;
@@ -49,20 +48,11 @@ public class ProjBowStorm extends Projectile {
     }
 
     @Override
-    public void applyDamage(Mob target) {
-        final Player owner = getOwner();
-        final boolean isCrit = owner.rollCrit();
-        int damage = calculateDamage(isCrit);
-        target.queueDamage(new Damage(damage, true, owner, target, isCrit, true));
-    }
-
-    @Override
     public void update() {
         super.update();
         if (Globals.nsToMs(this.logic.getTime() - lastDamageTime) >= DAMAGE_INSTANCE_DELAY) {
             lastDamageTime = this.logic.getTime();
             this.pHit.clear();
-            this.bHit.clear();
         }
     }
 }

@@ -2,7 +2,6 @@ package blockfighter.server.entities.proj;
 
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.damage.Damage;
-import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.player.skills.sword.SkillSwordGash;
 import blockfighter.shared.Globals;
@@ -43,16 +42,4 @@ public class ProjSwordGash extends Projectile {
         }
     }
 
-    @Override
-    public void applyDamage(Mob target) {
-        final Player owner = getOwner();
-        final boolean isCrit = owner.rollCrit();
-        final int damage = calculateDamage(isCrit);
-        target.queueDamage(new Damage(damage, true, owner, target, isCrit, true));
-        if (!this.healed && owner.isSkillMaxed(Globals.SWORD_GASH)) {
-            final double heal = owner.getStats()[Globals.STAT_MAXHP] * owner.getSkill(Globals.SWORD_GASH).getCustomValue(SkillSwordGash.CUSTOM_DATA_HEADERS[0]);
-            owner.queueHeal((int) heal);
-            this.healed = true;
-        }
-    }
 }

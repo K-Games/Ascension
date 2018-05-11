@@ -4,7 +4,6 @@ import blockfighter.server.LogicModule;
 import blockfighter.server.entities.buff.BuffBurn;
 import blockfighter.server.entities.buff.BuffKnockback;
 import blockfighter.server.entities.damage.Damage;
-import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.player.skills.sword.SkillSwordCinder;
 import blockfighter.server.net.PacketSender;
@@ -53,16 +52,4 @@ public class ProjSwordCinder extends Projectile {
         PacketSender.sendAll(bytes, this.logic);
     }
 
-    @Override
-    public void applyDamage(Mob target) {
-        final Player owner = getOwner();
-        double bonusCritChc = owner.getSkill(Globals.SWORD_CINDER).getCustomValue(SkillSwordCinder.CUSTOM_DATA_HEADERS[3]);
-        final boolean isCrit = owner.rollCrit((owner.isSkillMaxed(Globals.SWORD_CINDER)) ? bonusCritChc : 0);
-        final int damage = calculateDamage(isCrit);
-        target.queueDamage(new Damage(damage, true, owner, target, isCrit, true));
-        double buffDuration = owner.getSkill(Globals.SWORD_CINDER).getCustomValue(SkillSwordCinder.CUSTOM_DATA_HEADERS[0]);
-        double damageAmp = owner.getSkill(Globals.SWORD_CINDER).getCustomValue(SkillSwordCinder.CUSTOM_DATA_HEADERS[1]);
-        target.queueBuff(new BuffBurn(this.logic, (int) buffDuration, owner.getSkillLevel(Globals.SWORD_CINDER) * damageAmp,
-                owner.isSkillMaxed(Globals.SWORD_CINDER) ? owner.rollDamage() : 0, owner, target));
-    }
 }

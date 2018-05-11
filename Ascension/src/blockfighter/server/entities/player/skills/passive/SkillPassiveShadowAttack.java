@@ -45,10 +45,6 @@ public class SkillPassiveShadowAttack extends SkillPassive {
                 final Damage shadow = new Damage((int) (dmg.getDamage() * 0.5D), false, dmg.getOwner(), dmg.getTarget(), false, newPos, true);
                 shadow.setCanReflect(false);
                 dmg.getTarget().queueDamage(shadow);
-            } else if (dmg.getMobTarget() != null) {
-                final Damage shadow = new Damage((int) (dmg.getDamage() * 0.5D), false, dmg.getOwner(), dmg.getMobTarget(), false, newPos, true);
-                shadow.setCanReflect(false);
-                dmg.getMobTarget().queueDamage(shadow);
             }
         }
     }

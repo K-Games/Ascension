@@ -2,7 +2,6 @@ package blockfighter.server.entities.player.skills.passive;
 
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.damage.Damage;
-import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.player.skills.SkillPassive;
 import blockfighter.server.net.PacketSender;
@@ -56,17 +55,6 @@ public class SkillPassiveStatic extends SkillPassive {
                     Point2D.Double newPos = new Point2D.Double(target.getHitbox().x + target.getHitbox().width / 2, target.getHitbox().y + target.getHitbox().height / 2);
                     target.queueDamage(new Damage(damage, false, player, target, crit, newPos, true));
                     PacketSender.sendParticle(this.logic, Globals.Particles.PASSIVE_STATIC.getParticleCode(), player.getKey(), target.getKey());
-                }
-            } else {
-                ArrayList<Mob> mobsInRange = this.logic.getRoomData().getMobsInRange(player, radius);
-                if (!mobsInRange.isEmpty()) {
-                    Mob target = mobsInRange.get(Globals.rng(mobsInRange.size()));
-                    final boolean crit = player.rollCrit();
-                    if (crit) {
-                        damage = (int) player.criticalDamage(damage);
-                    }
-                    Point2D.Double newPos = new Point2D.Double(target.getHitbox().x + target.getHitbox().width / 2, target.getHitbox().y + target.getHitbox().height / 2);
-                    target.queueDamage(new Damage(damage, false, player, target, crit, newPos, true));
                 }
             }
         }

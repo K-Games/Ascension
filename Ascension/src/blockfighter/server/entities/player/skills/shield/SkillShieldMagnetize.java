@@ -1,7 +1,6 @@
 package blockfighter.server.entities.player.skills.shield;
 
 import blockfighter.server.LogicModule;
-import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.player.skills.Skill;
 import blockfighter.server.entities.proj.ProjShieldMagnetize;
@@ -13,7 +12,6 @@ import java.util.HashMap;
 public class SkillShieldMagnetize extends Skill {
 
     ArrayList<Player> playersCaught;
-    ArrayList<Mob> mobsCaught;
 
     public static final String[] CUSTOM_DATA_HEADERS;
     public static final HashMap<String, Double> CUSTOM_VALUES;
@@ -67,13 +65,6 @@ public class SkillShieldMagnetize extends Skill {
                 if (!this.playersCaught.isEmpty()) {
                     this.playersCaught.forEach((p) -> {
                         PacketSender.sendParticle(this.logic, Globals.Particles.SHIELD_MAGNETIZE.getParticleCode(), player.getKey(), p.getKey());
-                    });
-                }
-            } else {
-                this.mobsCaught = this.logic.getRoomData().getMobsInRange(player, radius);
-                if (!this.mobsCaught.isEmpty()) {
-                    this.mobsCaught.forEach((mob) -> {
-                        PacketSender.sendParticle(this.logic, Globals.Particles.SHIELD_MAGNETIZE.getParticleCode(), player.getKey(), mob.getKey());
                     });
                 }
             }

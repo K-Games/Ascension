@@ -2,14 +2,12 @@ package blockfighter.server.entities.buff;
 
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.GameEntity;
-import blockfighter.server.entities.mob.Mob;
 import blockfighter.server.entities.player.Player;
 import blockfighter.shared.Globals;
 
 public abstract class Buff implements GameEntity {
 
     private Player playerOwner, playerTarget;
-    private Mob mobOwner, mobTarget;
     private boolean isDebuff = false;
     private final Byte particleID = null;
     protected LogicModule logic;
@@ -34,18 +32,6 @@ public abstract class Buff implements GameEntity {
         this.playerTarget = t;
     }
 
-    public Buff(final LogicModule l, final int d, Player o, Mob t) {
-        this(l, d);
-        this.playerOwner = o;
-        this.mobTarget = t;
-    }
-
-    public Buff(final LogicModule l, final int d, Mob o, Player t) {
-        this(l, d);
-        this.mobOwner = o;
-        this.playerTarget = t;
-    }
-
     public void reduceDuration(final int amount) {
         this.duration -= amount;
         if (this.duration < 500) {
@@ -57,24 +43,8 @@ public abstract class Buff implements GameEntity {
         this.playerOwner = owner;
     }
 
-    public void setOwner(final Mob owner) {
-        this.mobOwner = owner;
-    }
-
-    public void setMobOwner(final Mob owner) {
-        this.mobOwner = owner;
-    }
-
     public void setTarget(final Player t) {
         this.playerTarget = t;
-    }
-
-    public void setTarget(final Mob t) {
-        this.mobTarget = t;
-    }
-
-    public void setMobTarget(final Mob t) {
-        this.mobTarget = t;
     }
 
     public Player getOwner() {
@@ -83,14 +53,6 @@ public abstract class Buff implements GameEntity {
 
     public Player getTarget() {
         return this.playerTarget;
-    }
-
-    public Mob getMobOwner() {
-        return this.mobOwner;
-    }
-
-    public Mob getMobTarget() {
-        return this.mobTarget;
     }
 
     @Override
