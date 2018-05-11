@@ -1,68 +1,27 @@
 package blockfighter.client.entities.particles.skills.passive;
 
-import blockfighter.client.Core;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.shared.Globals;
 import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 
 public class ParticlePassiveShadowAttack extends Particle {
-
-    private final byte type;
-    private double speedX, speedY, dX, dY;
 
     public ParticlePassiveShadowAttack(final int x, final int y) {
         super(x, y, Globals.RIGHT);
         this.frame = 0;
+        this.y -= Globals.rng(15);
         this.frameDuration = 50;
-        this.duration = 200;
-        this.type = (byte) Globals.rng(4);
-        switch (this.type) {
-            case 0:
-                this.x += 200;
-                this.y -= 50;
-                this.speedX = -20;
-                this.speedY = 15;
-                break;
-            case 1:
-                this.x += 250;
-                this.y -= 20;
-                this.speedX = -40;
-                break;
-            case 2:
-                this.x -= 50;
-                this.y -= 50;
-                this.speedX = 20;
-                this.speedY = 15;
-                break;
-            case 3:
-                this.x -= 150;
-                this.y -= 10;
-                this.speedX = 40;
-                break;
-        }
-
-        this.dX = this.x;
-        this.dY = this.y;
-        this.frame = this.type * 4;
+        this.duration = 350;
         this.particleData = Globals.Particles.PASSIVE_SHADOWATTACK;
     }
 
     @Override
-    public void update() {
-        this.dX += this.speedX;
-        this.dY += this.speedY;
-        this.x = (int) this.dX;
-        this.y = (int) this.dY;
-        if (Globals.nsToMs(Core.getLogicModule().getTime() - this.lastFrameTime) >= this.frameDuration) {
-            if (this.frame < this.type * 3 + 3) {
-                this.frame++;
-            }
-            this.lastFrameTime = Core.getLogicModule().getTime();
-        }
-    }
-
-    @Override
     public void draw(final Graphics2D g) {
-        draw(g, 0, 0, false);
+        if (!this.spriteFrameExists()) {
+            return;
+        }
+        final BufferedImage sprite = this.particleData.getSprites()[this.frame];
+        draw(g, -sprite.getWidth() / 2, 0, false);
     }
 }
