@@ -3,7 +3,7 @@ package blockfighter.server.entities.proj;
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.buff.BuffBurn;
 import blockfighter.server.entities.buff.BuffKnockback;
-import blockfighter.server.entities.damage.Damage;
+import blockfighter.server.entities.damage.DamageBuilder;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.player.skills.sword.SkillSwordCinder;
 import blockfighter.server.net.PacketSender;
@@ -39,7 +39,12 @@ public class ProjSwordCinder extends Projectile {
         double bonusCritChc = owner.getSkill(Globals.SWORD_CINDER).getCustomValue(SkillSwordCinder.CUSTOM_DATA_HEADERS[3]);
         final boolean isCrit = owner.rollCrit((owner.isSkillMaxed(Globals.SWORD_CINDER)) ? bonusCritChc : 0);
         final int damage = calculateDamage(isCrit);
-        target.queueDamage(new Damage(damage, true, owner, target, isCrit, true));
+        target.queueDamage(new DamageBuilder()
+                .setDamage(damage)
+                .setOwner(owner)
+                .setTarget(target)
+                .setIsCrit(isCrit)
+                .build());
         target.queueBuff(new BuffKnockback(this.logic, 300, (owner.getFacing() == Globals.RIGHT) ? 5 : -5, -8, owner, target));
         double buffDuration = owner.getSkill(Globals.SWORD_CINDER).getCustomValue(SkillSwordCinder.CUSTOM_DATA_HEADERS[0]);
         double damageAmp = owner.getSkill(Globals.SWORD_CINDER).getCustomValue(SkillSwordCinder.CUSTOM_DATA_HEADERS[1]);

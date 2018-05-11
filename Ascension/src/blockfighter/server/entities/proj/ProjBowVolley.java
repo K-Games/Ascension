@@ -3,7 +3,7 @@ package blockfighter.server.entities.proj;
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.buff.BuffBowVolley;
 import blockfighter.server.entities.buff.BuffKnockback;
-import blockfighter.server.entities.damage.Damage;
+import blockfighter.server.entities.damage.DamageBuilder;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.player.skills.bow.SkillBowVolley;
 import blockfighter.server.net.PacketSender;
@@ -56,7 +56,12 @@ public class ProjBowVolley extends Projectile {
                 }
             }
         }
-        target.queueDamage(new Damage(damage, true, owner, target, isCrit, true));
+        target.queueDamage(new DamageBuilder()
+                .setDamage(damage)
+                .setOwner(owner)
+                .setTarget(target)
+                .setIsCrit(isCrit)
+                .build());
         target.queueBuff(new BuffKnockback(this.logic, 50, (owner.getFacing() == Globals.RIGHT) ? 1.5 : -1.5, -0.5, owner, target));
     }
 

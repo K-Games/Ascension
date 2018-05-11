@@ -11,6 +11,7 @@ import blockfighter.server.entities.buff.BuffSwordSlash;
 import blockfighter.server.entities.buff.BuffSwordTaunt;
 import blockfighter.server.entities.buff.BuffUtilityAdrenaline;
 import blockfighter.server.entities.damage.Damage;
+import blockfighter.server.entities.damage.DamageBuilder;
 import blockfighter.server.entities.player.skills.Skill;
 import blockfighter.server.entities.player.skills.passive.SkillPassiveDualSword;
 import blockfighter.server.entities.player.skills.passive.SkillPassiveShieldMastery;
@@ -49,118 +50,107 @@ public class PlayerTest {
         Globals.SERVER_MODE = true;
     }
 
-    @Test
-    public void testStatReduction() {
+    private Player newPlayer() {
         Player player = new Player(lm, (byte) 0, c, map);
-        Damage dmg = new Damage(Globals.rng(2999), player, new Player(lm, (byte) 0, c, map), true);
         player.setStat(Globals.STAT_LEVEL, 100);
-        player.setStat(Globals.STAT_DEFENSE, Globals.rng(1500));
+        player.setStat(Globals.STAT_DEFENSE, 100);
+        return player;
+    }
+
+    private void testDamageReduction(Player player) {
+        testDamageReduction(player, 0);
+    }
+
+    private void testDamageReduction(Player player, double extraReduct) {
+        Damage dmg = new DamageBuilder()
+                .setDamage(10000)
+                .setOwner(player)
+                .setTarget(new Player(lm, (byte) 0, c, map))
+                .build();
+
         player.queueDamage(dmg);
 
         double finalDamage = dmg.getDamage() * player.getStats()[Globals.STAT_DAMAGEREDUCT];
+        finalDamage = finalDamage * (1 - extraReduct);
+
         double expResult = player.getStats()[Globals.STAT_MINHP] - (int) finalDamage;
         expResult += player.getStats()[Globals.STAT_REGEN] / Globals.SERVER_LOGIC_TICKS_PER_SEC;
-
+        if (expResult > player.getStats()[Globals.STAT_MAXHP]) {
+            expResult = player.getStats()[Globals.STAT_MAXHP];
+        }
         player.update();
+        System.out.println("Testing Dmg Reduct: Expected=" + expResult + " Result=" + player.getStats()[Globals.STAT_MINHP]);
         Assert.assertEquals(expResult, player.getStats()[Globals.STAT_MINHP], 0);
     }
 
     @Test
+    public void testStatReduction() {
+        Player player = newPlayer();
+        testDamageReduction(player);
+    }
+
+    @Test
     public void testShieldMasteryReduction() {
-        Player player = new Player(lm, (byte) 0, c, map);
-        Damage dmg = new Damage(Globals.rng(2999), player, new Player(lm, (byte) 0, c, map), true);
-        player.setStat(Globals.STAT_LEVEL, 100);
-        player.setStat(Globals.STAT_DEFENSE, Globals.rng(1500));
+        Player player = newPlayer();
+
         player.setSkill(Globals.PASSIVE_SHIELDMASTERY, (byte) 30);
         player.setEquip(Globals.EQUIP_WEAPON, 100000);
         player.setEquip(Globals.EQUIP_OFFHAND, 110000);
-        player.queueDamage(dmg);
 
         double baseReduct = player.getSkill(Globals.PASSIVE_SHIELDMASTERY).getCustomValue(SkillPassiveShieldMastery.CUSTOM_DATA_HEADERS[0]);
         double multReduct = player.getSkill(Globals.PASSIVE_SHIELDMASTERY).getCustomValue(SkillPassiveShieldMastery.CUSTOM_DATA_HEADERS[1]);
         double reduction = baseReduct + multReduct * player.getSkillLevel(Globals.PASSIVE_SHIELDMASTERY);
 
-        double finalDamage = dmg.getDamage();
-        finalDamage = finalDamage * player.getStats()[Globals.STAT_DAMAGEREDUCT];
-        finalDamage = finalDamage * (1 - reduction);
-
-        double expResult = player.getStats()[Globals.STAT_MINHP] - (int) finalDamage;
-        expResult += player.getStats()[Globals.STAT_REGEN] / Globals.SERVER_LOGIC_TICKS_PER_SEC;
-
-        player.update();
-        Assert.assertEquals(expResult, player.getStats()[Globals.STAT_MINHP], 0);
+        testDamageReduction(player, reduction);
     }
 
     @Test
     public void testToughSkinReduction() {
-        Player player = new Player(lm, (byte) 0, c, map);
-        Damage dmg = new Damage(Globals.rng(2999), player, new Player(lm, (byte) 0, c, map), true);
-        player.setStat(Globals.STAT_LEVEL, 100);
-        player.setStat(Globals.STAT_DEFENSE, Globals.rng(1500));
+        Player player = newPlayer();
+
         player.setSkill(Globals.PASSIVE_TOUGH, (byte) 30);
-        player.queueDamage(dmg);
 
         double baseReduct = player.getSkill(Globals.PASSIVE_TOUGH).getBaseValue();
         double multReduct = player.getSkill(Globals.PASSIVE_TOUGH).getMultValue();
         double reduction = baseReduct + multReduct * player.getSkillLevel(Globals.PASSIVE_TOUGH);
 
-        double finalDamage = dmg.getDamage();
-        finalDamage = finalDamage * player.getStats()[Globals.STAT_DAMAGEREDUCT];
-        finalDamage = finalDamage * (1 - reduction);
-
-        double expResult = player.getStats()[Globals.STAT_MINHP] - (int) finalDamage;
-        expResult += player.getStats()[Globals.STAT_REGEN] / Globals.SERVER_LOGIC_TICKS_PER_SEC;
-
-        player.update();
-        Assert.assertEquals(expResult, player.getStats()[Globals.STAT_MINHP], 0);
+        testDamageReduction(player, reduction);
     }
 
     @Test
     public void testDualMasteryReduction() {
-        Player player = new Player(lm, (byte) 0, c, map);
-        Damage dmg = new Damage(Globals.rng(2999), player, new Player(lm, (byte) 0, c, map), true);
-        player.setStat(Globals.STAT_LEVEL, 100);
-        player.setStat(Globals.STAT_DEFENSE, Globals.rng(1500));
+        Player player = newPlayer();
+
         player.setSkill(Globals.PASSIVE_DUALSWORD, (byte) 30);
 
         player.setEquip(Globals.EQUIP_WEAPON, 100000);
         player.setEquip(Globals.EQUIP_OFFHAND, 100000);
-        player.queueDamage(dmg);
 
         double multReduct = player.getSkill(Globals.PASSIVE_DUALSWORD).getCustomValue(SkillPassiveDualSword.CUSTOM_DATA_HEADERS[0]);
         double reduction = multReduct * player.getSkillLevel(Globals.PASSIVE_DUALSWORD);
 
-        double finalDamage = dmg.getDamage();
-        finalDamage = finalDamage * player.getStats()[Globals.STAT_DAMAGEREDUCT];
-        finalDamage = finalDamage * (1 - reduction);
-
-        double expResult = player.getStats()[Globals.STAT_MINHP] - (int) finalDamage;
-        expResult += player.getStats()[Globals.STAT_REGEN] / Globals.SERVER_LOGIC_TICKS_PER_SEC;
-
-        player.update();
-        Assert.assertEquals(expResult, player.getStats()[Globals.STAT_MINHP], 0);
+        testDamageReduction(player, reduction);
     }
 
     @Test
     public void testResistanceBuffReduction() {
-        Player player = new Player(lm, (byte) 0, c, map);
-        Damage dmg = new Damage(Globals.rng(2999), player, new Player(lm, (byte) 0, c, map), true);
-        player.setStat(Globals.STAT_LEVEL, 100);
-        player.setStat(Globals.STAT_DEFENSE, Globals.rng(1500));
+        Player player = newPlayer();
+
         player.setSkill(Globals.PASSIVE_RESIST, (byte) 30);
         player.queueBuff(new BuffPassiveResist(lm, 2000, 1));
-        player.queueDamage(dmg);
 
-        double expResult = player.getStats()[Globals.STAT_MINHP];
-
-        player.update();
-        Assert.assertEquals(expResult, player.getStats()[Globals.STAT_MINHP], 0);
+        testDamageReduction(player, 1);
     }
 
     @Test
     public void testBarrierBuffReduction() {
-        Player player = new Player(lm, (byte) 0, c, map);
-        Damage dmg = new Damage(10000, player, new Player(lm, (byte) 0, c, map), true);
+        Player player = newPlayer();
+        Damage dmg = new DamageBuilder()
+                .setDamage(20000)
+                .setOwner(player)
+                .setTarget(new Player(lm, (byte) 0, c, map))
+                .build();
+
         player.setStat(Globals.STAT_LEVEL, 100);
         player.setStat(Globals.STAT_DEFENSE, 500);
         player.setSkill(Globals.PASSIVE_RESIST, (byte) 30);
@@ -168,41 +158,34 @@ public class PlayerTest {
         player.queueDamage(dmg);
 
         double finalDamage = dmg.getDamage() * player.getStats()[Globals.STAT_DAMAGEREDUCT];
-        double expResult = player.getStats()[Globals.STAT_MINHP] - (int) (finalDamage - 500);
-        expResult += player.getStats()[Globals.STAT_REGEN] / Globals.SERVER_LOGIC_TICKS_PER_SEC;
+        finalDamage -= 500;
 
+        double expResult = player.getStats()[Globals.STAT_MINHP] - (int) finalDamage;
+        expResult += player.getStats()[Globals.STAT_REGEN] / Globals.SERVER_LOGIC_TICKS_PER_SEC;
+        if (expResult > player.getStats()[Globals.STAT_MAXHP]) {
+            expResult = player.getStats()[Globals.STAT_MAXHP];
+        }
         player.update();
         Assert.assertEquals(expResult, player.getStats()[Globals.STAT_MINHP], 0);
+
     }
 
     @Test
     public void testSlashBuffReduction() {
-        Player player = new Player(lm, (byte) 0, c, map);
-        Damage dmg = new Damage(Globals.rng(2999), player, new Player(lm, (byte) 0, c, map), true);
-        player.setStat(Globals.STAT_LEVEL, 100);
-        player.setStat(Globals.STAT_DEFENSE, Globals.rng(1500));
+        Player player = newPlayer();
         player.setSkill(Globals.SWORD_SLASH, (byte) 30);
 
         double buffduration = player.getSkill(Globals.SWORD_SLASH).getCustomValue(SkillSwordSlash.CUSTOM_DATA_HEADERS[0]);
         BuffSwordSlash buff = new BuffSwordSlash(lm, (int) buffduration, player.getSkill(Globals.SWORD_SLASH).getCustomValue(SkillSwordSlash.CUSTOM_DATA_HEADERS[1]), player);
         player.queueBuff(buff);
-        player.queueDamage(dmg);
 
-        double finalDamage = dmg.getDamage() * player.getStats()[Globals.STAT_DAMAGEREDUCT];
-        finalDamage = finalDamage * buff.getDmgTakenMult();
-        double expResult = player.getStats()[Globals.STAT_MINHP] - (int) finalDamage;
-        expResult += player.getStats()[Globals.STAT_REGEN] / Globals.SERVER_LOGIC_TICKS_PER_SEC;
-
-        player.update();
-        Assert.assertEquals(expResult, player.getStats()[Globals.STAT_MINHP], 0);
+        testDamageReduction(player, buff.getDmgReduction());
     }
 
     @Test
     public void testTauntBuffReduction() {
-        Player player = new Player(lm, (byte) 0, c, map);
-        Damage dmg = new Damage(Globals.rng(2999), player, new Player(lm, (byte) 0, c, map), true);
-        player.setStat(Globals.STAT_LEVEL, 100);
-        player.setStat(Globals.STAT_DEFENSE, Globals.rng(1500));
+        Player player = newPlayer();
+
         player.setSkill(Globals.SWORD_TAUNT, (byte) 30);
 
         double buffDuration = player.getSkill(Globals.SWORD_TAUNT).getCustomValue(SkillSwordTaunt.CUSTOM_DATA_HEADERS[0]);
@@ -211,23 +194,14 @@ public class PlayerTest {
                 player.getSkill(Globals.SWORD_TAUNT).getCustomValue(SkillSwordTaunt.CUSTOM_DATA_HEADERS[1]),
                 player);
         player.queueBuff(buff);
-        player.queueDamage(dmg);
 
-        double finalDamage = dmg.getDamage() * player.getStats()[Globals.STAT_DAMAGEREDUCT];
-        finalDamage = finalDamage * buff.getDmgTakenMult();
-        double expResult = player.getStats()[Globals.STAT_MINHP] - (int) finalDamage;
-        expResult += player.getStats()[Globals.STAT_REGEN] / Globals.SERVER_LOGIC_TICKS_PER_SEC;
-
-        player.update();
-        Assert.assertEquals(expResult, player.getStats()[Globals.STAT_MINHP], 0);
+        testDamageReduction(player, buff.getDmgReduction());
     }
 
     @Test
     public void testAdrenalineBuffReduction() {
-        Player player = new Player(lm, (byte) 0, c, map);
-        Damage dmg = new Damage(Globals.rng(2999), player, new Player(lm, (byte) 0, c, map), true);
-        player.setStat(Globals.STAT_LEVEL, 100);
-        player.setStat(Globals.STAT_DEFENSE, Globals.rng(1500));
+        Player player = newPlayer();
+
         player.setSkill(Globals.UTILITY_ADRENALINE, (byte) 30);
 
         Skill skill = player.getSkill(Globals.UTILITY_ADRENALINE);
@@ -236,25 +210,16 @@ public class PlayerTest {
         BuffUtilityAdrenaline buff = new BuffUtilityAdrenaline(lm, (int) buffDuration,
                 skill.getBaseValue() + skill.getMultValue() * player.getSkillLevel(Globals.UTILITY_ADRENALINE),
                 player);
-
         player.queueBuff(buff);
-        player.queueDamage(dmg);
 
-        double finalDamage = dmg.getDamage() * player.getStats()[Globals.STAT_DAMAGEREDUCT];
-        finalDamage = finalDamage * buff.getDmgTakenMult();
-        double expResult = player.getStats()[Globals.STAT_MINHP] - (int) finalDamage;
-        expResult += player.getStats()[Globals.STAT_REGEN] / Globals.SERVER_LOGIC_TICKS_PER_SEC;
-
-        player.update();
-        Assert.assertEquals(expResult, player.getStats()[Globals.STAT_MINHP], 0);
+        testDamageReduction(player, buff.getDmgReduction());
     }
 
     @Test
     public void testReflectBuffReduction() {
-        Player player = new Player(lm, (byte) 0, c, map);
-        Damage dmg = new Damage(Globals.rng(2999), player, new Player(lm, (byte) 0, c, map), true);
-        player.setStat(Globals.STAT_LEVEL, 100);
-        player.setStat(Globals.STAT_DEFENSE, Globals.rng(1500));
+
+        Player player = newPlayer();
+
         player.setSkill(Globals.SHIELD_REFLECT, (byte) 30);
 
         Skill skill = player.getSkill(Globals.SHIELD_REFLECT);
@@ -266,23 +231,12 @@ public class PlayerTest {
                 player, player, skill.getCustomValue(SkillShieldReflect.CUSTOM_DATA_HEADERS[0]));
 
         player.queueBuff(buff);
-        player.queueDamage(dmg);
-
-        double finalDamage = dmg.getDamage() * player.getStats()[Globals.STAT_DAMAGEREDUCT];
-        finalDamage = finalDamage * buff.getDmgTakenMult();
-        double expResult = player.getStats()[Globals.STAT_MINHP] - (int) finalDamage;
-        expResult += player.getStats()[Globals.STAT_REGEN] / Globals.SERVER_LOGIC_TICKS_PER_SEC;
-
-        player.update();
-        Assert.assertEquals(expResult, player.getStats()[Globals.STAT_MINHP], 0);
+        testDamageReduction(player, buff.getDmgReduction());
     }
 
     @Test
     public void testMultipleBuffReduction() {
-        Player player = new Player(lm, (byte) 0, c, map);
-        Damage dmg = new Damage(Globals.rng(2999), player, new Player(lm, (byte) 0, c, map), true);
-        player.setStat(Globals.STAT_LEVEL, 100);
-        player.setStat(Globals.STAT_DEFENSE, Globals.rng(1500));
+        Player player = newPlayer();
 
         player.setSkill(Globals.SHIELD_REFLECT, (byte) 30);
         player.setSkill(Globals.UTILITY_ADRENALINE, (byte) 30);
@@ -323,14 +277,6 @@ public class PlayerTest {
             player.queueBuff(buff);
             dmgReduct *= ((BuffDmgReduct) buff).getDmgTakenMult();
         }
-        player.queueDamage(dmg);
-
-        double finalDamage = dmg.getDamage() * player.getStats()[Globals.STAT_DAMAGEREDUCT];
-        finalDamage = finalDamage * dmgReduct;
-        double expResult = player.getStats()[Globals.STAT_MINHP] - (int) finalDamage;
-        expResult += player.getStats()[Globals.STAT_REGEN] / Globals.SERVER_LOGIC_TICKS_PER_SEC;
-
-        player.update();
-        Assert.assertEquals(expResult, player.getStats()[Globals.STAT_MINHP], 0);
+        testDamageReduction(player, 1D - dmgReduct);
     }
 }

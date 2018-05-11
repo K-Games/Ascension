@@ -3,7 +3,6 @@ package blockfighter.server.entities.proj;
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.buff.BuffKnockback;
 import blockfighter.server.entities.buff.BuffStun;
-import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.player.skills.Skill;
 import blockfighter.server.entities.player.skills.bow.SkillBowFrost;
@@ -44,10 +43,8 @@ public class ProjBowFrost extends Projectile {
 
     @Override
     public void applyDamage(Player target) {
+        super.applyDamage(target);
         final Player owner = getOwner();
-        final boolean isCrit = owner.rollCrit();
-        final int damage = calculateDamage(isCrit);
-        target.queueDamage(new Damage(damage, true, owner, target, isCrit, true));
         target.queueBuff(new BuffKnockback(this.logic, 200, (owner.getFacing() == Globals.RIGHT) ? 1 : -1, -4, owner, target));
         if (!this.isSecondary) {
             Skill skill = owner.getSkill(Globals.BOW_FROST);

@@ -27,7 +27,8 @@ public class LogicModuleTest {
     }
 
     @Before
-    public void setUp() throws Exception {
+    public void before() {
+        Globals.SERVER_MODE = true;
     }
 
     @After

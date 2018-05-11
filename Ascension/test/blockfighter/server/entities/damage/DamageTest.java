@@ -6,9 +6,15 @@ import blockfighter.server.maps.GameMapArena;
 import blockfighter.shared.Globals;
 import java.awt.geom.Point2D;
 import static org.junit.Assert.*;
+import org.junit.Before;
 import org.junit.Test;
 
 public class DamageTest {
+
+    @Before
+    public void before() {
+        Globals.SERVER_MODE = true;
+    }
 
     @Test
     public void testDamagePlayerOwnerPlayerTargetConstructors() {
@@ -16,7 +22,15 @@ public class DamageTest {
         Player expOwner = new Player(new LogicModule((byte) 0, (byte) Globals.rng(65), (byte) ((byte) Globals.rng(65) + 64)), (byte) 0, null, new GameMapArena());
         Player expTarget = new Player(new LogicModule((byte) 0, (byte) Globals.rng(65), (byte) ((byte) Globals.rng(65) + 64)), (byte) 0, null, new GameMapArena());
         Point2D.Double expPoint = new Point2D.Double(0, 0);
-        Damage instance = new Damage(expDamage, true, expOwner, expTarget, true, expPoint, true);
+        Damage instance = new DamageBuilder()
+                .setDamage(expDamage)
+                .setCanProc(true)
+                .setOwner(expOwner)
+                .setTarget(expTarget)
+                .setIsCrit(true)
+                .setShowParticle(true)
+                .setDmgPoint(expPoint)
+                .build();
         assertEquals(expDamage, instance.getDamage());
         assertEquals(expTarget, instance.getTarget());
         assertEquals(expOwner, instance.getOwner());
@@ -28,19 +42,45 @@ public class DamageTest {
         assertTrue(instance.canReflect());
         assertEquals(Globals.NUMBER_TYPE_PLAYERCRIT, instance.getDamageType());
 
-        instance.setCanReflect(true);
+        instance = new DamageBuilder()
+                .setDamage(expDamage)
+                .setOwner(expOwner)
+                .setTarget(expTarget)
+                .setCanReflect(true)
+                .build();
         assertTrue(instance.canReflect());
 
-        instance.setCanReflect(false);
+        instance = new DamageBuilder()
+                .setDamage(expDamage)
+                .setOwner(expOwner)
+                .setTarget(expTarget)
+                .setCanReflect(false)
+                .build();
         assertFalse(instance.canReflect());
 
-        instance.setHidden(true);
+        instance = new DamageBuilder()
+                .setDamage(expDamage)
+                .setOwner(expOwner)
+                .setTarget(expTarget)
+                .setIsHidden(true)
+                .build();
         assertTrue(instance.isHidden());
 
-        instance.setHidden(false);
+        instance = new DamageBuilder()
+                .setDamage(expDamage)
+                .setOwner(expOwner)
+                .setTarget(expTarget)
+                .setIsHidden(false)
+                .build();
         assertFalse(instance.isHidden());
 
-        instance = new Damage(expDamage, false, expOwner, expTarget, false, expPoint, true);
+        instance = new DamageBuilder()
+                .setDamage(expDamage)
+                .setOwner(expOwner)
+                .setTarget(expTarget)
+                .setDmgPoint(expPoint)
+                .setCanProc(false)
+                .build();
         assertEquals(expDamage, instance.getDamage());
         assertEquals(expTarget, instance.getTarget());
         assertEquals(expOwner, instance.getOwner());
@@ -52,7 +92,12 @@ public class DamageTest {
         assertTrue(instance.canReflect());
         assertEquals(Globals.NUMBER_TYPE_PLAYER, instance.getDamageType());
 
-        instance = new Damage(expDamage, true, expOwner, expTarget, true, true);
+        instance = new DamageBuilder()
+                .setDamage(expDamage)
+                .setOwner(expOwner)
+                .setTarget(expTarget)
+                .setIsCrit(true)
+                .build();
         assertEquals(expDamage, instance.getDamage());
         assertEquals(expTarget, instance.getTarget());
         assertEquals(expOwner, instance.getOwner());
@@ -64,7 +109,12 @@ public class DamageTest {
         assertTrue(instance.canReflect());
         assertEquals(Globals.NUMBER_TYPE_PLAYERCRIT, instance.getDamageType());
 
-        instance = new Damage(expDamage, false, expOwner, expTarget, false, true);
+        instance = new DamageBuilder()
+                .setDamage(expDamage)
+                .setOwner(expOwner)
+                .setCanProc(false)
+                .setTarget(expTarget)
+                .build();
         assertEquals(expDamage, instance.getDamage());
         assertEquals(expTarget, instance.getTarget());
         assertEquals(expOwner, instance.getOwner());

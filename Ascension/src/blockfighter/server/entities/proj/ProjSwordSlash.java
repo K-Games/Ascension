@@ -1,7 +1,6 @@
 package blockfighter.server.entities.proj;
 
 import blockfighter.server.LogicModule;
-import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.player.Player;
 import blockfighter.shared.Globals;
 import java.awt.geom.Rectangle2D;
@@ -23,14 +22,6 @@ public class ProjSwordSlash extends Projectile {
         double damage = owner.rollDamage() * (baseValue + multValue * owner.getSkillLevel(Globals.SWORD_SLASH));
         damage = (isCrit) ? owner.criticalDamage(damage) : damage;
         return (int) damage;
-    }
-
-    @Override
-    public void applyDamage(Player target) {
-        final Player owner = getOwner();
-        final boolean isCrit = owner.rollCrit();
-        final int damage = calculateDamage(isCrit);
-        target.queueDamage(new Damage(damage, true, owner, target, isCrit, true));
     }
 
 }

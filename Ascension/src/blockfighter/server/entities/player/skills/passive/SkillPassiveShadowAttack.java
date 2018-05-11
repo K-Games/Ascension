@@ -2,6 +2,7 @@ package blockfighter.server.entities.player.skills.passive;
 
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.damage.Damage;
+import blockfighter.server.entities.damage.DamageBuilder;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.player.skills.SkillPassive;
 import blockfighter.server.net.PacketSender;
@@ -42,8 +43,15 @@ public class SkillPassiveShadowAttack extends SkillPassive {
             PacketSender.sendParticle(this.logic, Globals.Particles.PASSIVE_SHADOWATTACK.getParticleCode(), dmg.getTarget().getX(), dmg.getTarget().getY());
             Point2D.Double newPos = new Point2D.Double(dmg.getDmgPoint().x, dmg.getDmgPoint().y + 20);
             if (dmg.getTarget() != null) {
-                final Damage shadow = new Damage((int) (dmg.getDamage() * 0.5D), false, dmg.getOwner(), dmg.getTarget(), false, newPos, true);
-                shadow.setCanReflect(false);
+                final Damage shadow = new DamageBuilder()
+                        .setDamage((int) (dmg.getDamage() * 0.5D))
+                        .setCanProc(false)
+                        .setOwner(dmg.getOwner())
+                        .setTarget(dmg.getTarget())
+                        .setIsCrit(false)
+                        .setShowParticle(false)
+                        .setDmgPoint(newPos)
+                        .build();
                 dmg.getTarget().queueDamage(shadow);
             }
         }

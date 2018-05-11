@@ -1,7 +1,7 @@
 package blockfighter.server.entities.buff;
 
 import blockfighter.server.LogicModule;
-import blockfighter.server.entities.damage.Damage;
+import blockfighter.server.entities.damage.DamageBuilder;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.player.skills.sword.SkillSwordCinder;
 import blockfighter.shared.Globals;
@@ -32,7 +32,14 @@ public class BuffBurn extends Buff implements BuffDmgTakenAmp {
             if (getTarget() != null) {
                 final Point2D.Double dmgPoint = new Point2D.Double(getTarget().getHitbox().x,
                         getTarget().getHitbox().y + getTarget().getHitbox().height / 2);
-                getTarget().queueDamage(new Damage((int) (this.dmgPerSec / 2), false, getOwner(), getTarget(), false, dmgPoint, false));
+                getTarget().queueDamage(new DamageBuilder()
+                        .setDamage((int) (this.dmgPerSec / 2))
+                        .setCanProc(false)
+                        .setOwner(getOwner())
+                        .setTarget(getTarget())
+                        .setIsCrit(false)
+                        .setShowParticle(false).setDmgPoint(dmgPoint)
+                        .build());
             }
         }
     }

@@ -7,37 +7,39 @@ import java.awt.geom.Point2D;
 
 public class Damage {
 
-    private static final int RANDOM_DELTA = 40, RANDOM_CONST = -20;
-
     private final byte type;
     private final int damage;
-    private boolean canProc = false,
-            isTrueDamage = false,
-            isCrit = false,
-            canReflect = true,
-            isHidden = false,
-            showParticle = false;
+    private final boolean canProc,
+            isTrueDamage,
+            isCrit,
+            canReflect,
+            isHidden,
+            showParticle;
 
-    private Player owner, target;
+    private final Player owner;
+    private final Player target;
     private final Point2D.Double dmgPoint;
 
-    public Damage(final int dmg, final boolean canProc, final Player o, final Player t, final boolean isCrit, final Point2D.Double p, final boolean showParticle) {
+    public Damage(final byte type, final int dmg,
+            final boolean canProc, final boolean isTrueDamage, final boolean isCrit,
+            final boolean canReflect, final boolean isHidden, final boolean showParticle,
+            final Player owner, final Player target,
+            final Point2D.Double dmgPoint) {
+
+        this.type = type;
         this.damage = dmg;
+
         this.canProc = canProc;
-        this.owner = o;
-        this.target = t;
-        this.dmgPoint = p;
+        this.isTrueDamage = isTrueDamage;
         this.isCrit = isCrit;
-        this.type = (this.isCrit) ? Globals.NUMBER_TYPE_PLAYERCRIT : Globals.NUMBER_TYPE_PLAYER;
+        this.canReflect = canReflect;
+        this.isHidden = isHidden;
         this.showParticle = showParticle;
-    }
 
-    public Damage(final int dmg, final Player o, final Player t, final boolean showParticle) {
-        this(dmg, false, o, t, false, new Point2D.Double(t.getHitbox().getCenterX() + Globals.rng(RANDOM_DELTA) + RANDOM_CONST, t.getHitbox().getCenterY() - 20 + Globals.rng(RANDOM_DELTA) + RANDOM_CONST), showParticle);
-    }
+        this.owner = owner;
+        this.target = target;
 
-    public Damage(final int dmg, final boolean canProc, final Player o, final Player t, final boolean isCrit, final boolean showParticle) {
-        this(dmg, canProc, o, t, isCrit, new Point2D.Double(t.getHitbox().getCenterX() + Globals.rng(RANDOM_DELTA) + RANDOM_CONST, t.getHitbox().getCenterY() - 20 + Globals.rng(RANDOM_DELTA) + RANDOM_CONST), showParticle);
+        this.dmgPoint = dmgPoint;
     }
 
     public int getDamage() {
@@ -82,14 +84,6 @@ public class Damage {
                 this.owner.getSkill(Globals.PASSIVE_STATIC).updateSkillUse(this.owner);
             }
         }
-    }
-
-    public void setCanReflect(final boolean set) {
-        this.canReflect = set;
-    }
-
-    public void setHidden(final boolean set) {
-        this.isHidden = set;
     }
 
     public boolean canReflect() {

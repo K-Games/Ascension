@@ -3,6 +3,7 @@ package blockfighter.server.entities.proj;
 import blockfighter.server.LogicModule;
 import blockfighter.server.RoomData;
 import blockfighter.server.entities.GameEntity;
+import blockfighter.server.entities.damage.DamageBuilder;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.net.PacketSender;
 import blockfighter.shared.Globals;
@@ -131,7 +132,16 @@ public abstract class Projectile implements GameEntity, Callable<Projectile> {
         }
     }
 
-    public abstract void applyDamage(final Player target);
+    public void applyDamage(final Player target) {
+        final boolean isCrit = this.owner.rollCrit();
+        final int damage = calculateDamage(isCrit);
+        target.queueDamage(new DamageBuilder()
+                .setDamage(damage)
+                .setOwner(this.owner)
+                .setTarget(target)
+                .setIsCrit(isCrit)
+                .build());
+    }
 
     public abstract int calculateDamage(final boolean isCrit);
 }

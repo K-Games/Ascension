@@ -2,7 +2,7 @@ package blockfighter.server.entities.proj;
 
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.buff.BuffKnockback;
-import blockfighter.server.entities.damage.Damage;
+import blockfighter.server.entities.damage.DamageBuilder;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.player.skills.bow.SkillBowArc;
 import blockfighter.shared.Globals;
@@ -36,7 +36,12 @@ public class ProjBowArc extends Projectile {
         final Player owner = getOwner();
         final boolean isCrit = owner.rollCrit();
         final int damage = calculateDamage(isCrit);
-        target.queueDamage(new Damage(damage, true, owner, target, isCrit, true));
+        target.queueDamage(new DamageBuilder()
+                .setDamage(damage)
+                .setOwner(owner)
+                .setTarget(target)
+                .setIsCrit(isCrit)
+                .build());
         if (owner.isSkillMaxed(Globals.BOW_ARC)) {
             double lifesteal = owner.getSkill(Globals.BOW_ARC).getCustomValue(SkillBowArc.CUSTOM_DATA_HEADERS[0]) / 3;
             double maxLifesteal = owner.getSkill(Globals.BOW_ARC).getCustomValue(SkillBowArc.CUSTOM_DATA_HEADERS[1]) / 3;
