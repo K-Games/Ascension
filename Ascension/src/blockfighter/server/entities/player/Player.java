@@ -557,7 +557,7 @@ public class Player implements GameEntity, Callable<Player> {
     private void updateHP() {
         long sinceLastHPSend = Globals.nsToMs(this.logic.getTime() - this.lastHPSendTime);
         // Empty damage queued
-        if (isInvulnerable()) {
+        if (isInvulnerable() || !this.logic.getRoomData().getMap().isPvP()) {
             // Take no damage
             this.damageQueue.clear();
         }

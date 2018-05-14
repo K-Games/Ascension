@@ -329,7 +329,9 @@ public class LogicModule implements Runnable {
     }
 
     public void queueAddProj(final Projectile projectile) {
-        this.projAddQueue.add(projectile);
+        if (this.room.getMap().isPvP()) {
+            this.projAddQueue.add(projectile);
+        }
     }
 
     public void queueProjEffect(final Projectile p) {
