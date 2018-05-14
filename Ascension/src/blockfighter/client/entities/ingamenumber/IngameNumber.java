@@ -70,18 +70,21 @@ public class IngameNumber implements Callable<IngameNumber> {
     }
 
     public void draw(final Graphics2D g) {
-        g.setFont((this.type == Globals.NUMBER_TYPE_PLAYERCRIT || this.type == Globals.NUMBER_TYPE_ENEMYCRIT) ? Globals.ARIAL_21PTBOLD : Globals.ARIAL_19PTBOLD);
+        drawNumber(g, (float) this.x, (float) this.y, this.type, this.number);
+    }
 
-        String output = Globals.NUMBER_FORMAT.format(this.number);
-        output = (this.type == Globals.NUMBER_TYPE_PLAYERCRIT || this.type == Globals.NUMBER_TYPE_ENEMYCRIT) ? output + "!" : output;
+    protected void drawNumber(final Graphics2D g, final float x, final float y, final byte type, final int number) {
+        g.setFont((type == Globals.NUMBER_TYPE_PLAYERCRIT || type == Globals.NUMBER_TYPE_ENEMYCRIT) ? Globals.ARIAL_21PTBOLD : Globals.ARIAL_19PTBOLD);
+        String output = Globals.NUMBER_FORMAT.format(number);
+        output = (type == Globals.NUMBER_TYPE_PLAYERCRIT || type == Globals.NUMBER_TYPE_ENEMYCRIT) ? output + "!" : output;
 
         int outputWidth = g.getFontMetrics().stringWidth(output);
         for (int i = 0; i < 2; i++) {
             g.setColor(Color.BLACK);
-            g.drawString(output, (float) this.x - outputWidth / 2 - 1 + i * 2 * 1, (float) this.y);
-            g.drawString(output, (float) this.x - outputWidth / 2, (float) this.y - 1 + i * 2 * 1);
+            g.drawString(output, x - outputWidth / 2 - 1 + i * 2 * 1, y);
+            g.drawString(output, x - outputWidth / 2, y - 1 + i * 2 * 1);
         }
-        switch (this.type) {
+        switch (type) {
             case Globals.NUMBER_TYPE_PLAYER:
                 g.setColor(DAMAGE_RED);
                 break;
@@ -93,6 +96,6 @@ public class IngameNumber implements Callable<IngameNumber> {
                 g.setColor(DAMAGE_BLUE);
                 break;
         }
-        g.drawString(output, (float) this.x - outputWidth / 2, (float) this.y);
+        g.drawString(output, x - outputWidth / 2, y);
     }
 }

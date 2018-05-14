@@ -1,10 +1,8 @@
 package blockfighter.client.entities.ingamenumber;
 
 import blockfighter.client.Core;
-import static blockfighter.client.entities.ingamenumber.IngameNumber.DAMAGE_RED;
 import blockfighter.client.entities.player.Player;
 import blockfighter.shared.Globals;
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.util.concurrent.ConcurrentLinkedDeque;
@@ -59,29 +57,8 @@ public class IngameNumberStack extends IngameNumber {
             if (count >= numDisplayed) {
                 break;
             }
-            g.setFont((num.type == Globals.NUMBER_TYPE_PLAYERCRIT || num.type == Globals.NUMBER_TYPE_ENEMYCRIT) ? Globals.ARIAL_21PTBOLD : Globals.ARIAL_19PTBOLD);
+            drawNumber(g, (float) (this.x + xDelta), (float) (this.y + yDelta), num.type, num.number);
 
-            String output = Globals.NUMBER_FORMAT.format(num.number);
-            output = (num.type == Globals.NUMBER_TYPE_PLAYERCRIT || num.type == Globals.NUMBER_TYPE_ENEMYCRIT) ? output + "!" : output;
-
-            for (int i = 0; i < 2; i++) {
-                g.setColor(Color.BLACK);
-                g.drawString(output, (float) (this.x + xDelta) - 1 + i * 2 * 1, (float) (this.y + yDelta));
-                g.drawString(output, (float) (this.x + xDelta), (float) (this.y + yDelta) - 1 + i * 2 * 1);
-            }
-            switch (num.type) {
-                case Globals.NUMBER_TYPE_PLAYER:
-                    g.setColor(DAMAGE_RED);
-                    break;
-                case Globals.NUMBER_TYPE_PLAYERCRIT:
-                    g.setColor(DAMAGE_ORANGE);
-                    break;
-                case Globals.NUMBER_TYPE_ENEMY:
-                case Globals.NUMBER_TYPE_ENEMYCRIT:
-                    g.setColor(DAMAGE_BLUE);
-                    break;
-            }
-            g.drawString(output, (float) (this.x + xDelta), (float) (this.y + yDelta));
             yDelta -= g.getFontMetrics().getHeight() * 0.6;
             xDelta = (xDelta == 10) ? 0 : 10;
             count++;
