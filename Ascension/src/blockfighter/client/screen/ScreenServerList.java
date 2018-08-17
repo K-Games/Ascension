@@ -1,7 +1,7 @@
 package blockfighter.client.screen;
 
 import blockfighter.client.Core;
-import blockfighter.client.net.hub.HubClient;
+import blockfighter.client.net.hub.http.HubServerInfoGetter;
 import blockfighter.shared.Globals;
 import blockfighter.shared.ServerInfo;
 import java.awt.Color;
@@ -93,7 +93,7 @@ public class ScreenServerList extends ScreenMenu {
 
     public ScreenServerList() {
         this(false);
-        Core.SHARED_THREADPOOL.execute(new HubClient());
+        Core.SHARED_THREADPOOL.execute(() -> HubServerInfoGetter.sendGetServerInfos());
     }
 
     public ScreenServerList(final boolean fadeIn) {
@@ -112,8 +112,8 @@ public class ScreenServerList extends ScreenMenu {
             enableFields();
             this.enabledInput = true;
         }
-        if (HubClient.getServerInfo() != null) {
-            serverList.setServerInfo(HubClient.getServerInfo());
+        if (HubServerInfoGetter.getServerList() != null) {
+            serverList.setServerInfo(HubServerInfoGetter.getServerList());
         }
     }
 
@@ -283,8 +283,7 @@ public class ScreenServerList extends ScreenMenu {
             }
             if (REFRESH_BOX.contains(scaled) && Core.getLogicModule().getTime() - this.lastRefreshTime >= Globals.msToNs(2000)) {
                 setStatus(STATUS_REFRESHING);
-                this.serverList.setServerInfo(null);
-                Core.SHARED_THREADPOOL.execute(new HubClient());
+                Core.SHARED_THREADPOOL.execute(() -> HubServerInfoGetter.sendGetServerInfos());
                 this.lastRefreshTime = Core.getLogicModule().getTime();
             }
 
@@ -401,7 +400,7 @@ public class ScreenServerList extends ScreenMenu {
 
         private static final int SERVERS_PER_PAGE = 14;
         private int page = 0, selectedIndex = -1;
-        private ServerInfo[] serverInfo;
+        private ServerInfo[] serverInfo = {};
         private Rectangle[] serverListBox;
 
         public void draw(final Graphics2D g) {

@@ -1,7 +1,6 @@
-package blockfighter.client.net.hub;
+package blockfighter.server.net.hub.tcp;
 
 import blockfighter.shared.Globals;
-import blockfighter.shared.ServerInfo;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 
@@ -9,13 +8,14 @@ public class HubReceiver implements Listener {
 
     @Override
     public void received(Connection c, Object object) {
-        if (object instanceof ServerInfo[]) {
-            HubHandler.process((ServerInfo[]) object, c);
+        if (object instanceof byte[]) {
+            HubHandler.process((byte[]) object, c);
         }
     }
 
     @Override
     public void disconnected(Connection c) {
-        Globals.log(HubReceiver.class, "Hub Server disconnected " + c, Globals.LOG_TYPE_DATA);
+        Globals.log(HubReceiver.class, "Lost connection to Hub Server.", Globals.LOG_TYPE_DATA);
+        HubClient.closeClient();
     }
 }

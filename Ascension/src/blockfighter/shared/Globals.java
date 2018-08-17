@@ -1056,8 +1056,8 @@ public class Globals {
         NUM_THREADS("numthreads", Byte.class, Byte.valueOf((byte) 3), "Number of threads"),
         NUM_SCHEDULED_THREADS("numscheduledthreads", Byte.class, Byte.valueOf((byte) 2), "Number of Scheduler Threads"),
         UDP_MODE("udpmode", Boolean.class, Boolean.valueOf(true), "UDP Mode"),
-        HUB_CONNECT("hubconnect", Boolean.class, Boolean.valueOf(false), "Connect to Hub"),
-        HUB_SERVER_ADDRESS("hubaddress", String.class, "asc-hub.servegame.com", "Hub Address"),
+        HUB_CONNECT("hubconnect", Boolean.class, Boolean.valueOf(true), "Connect to Hub"),
+        HUB_SERVER_ADDRESS("hubaddress", String.class, "localhost", "Hub Address"),
         HUB_SERVER_TCP_PORT("hubport", Integer.class, Integer.valueOf(25566), "Hub Port"),
         WIN_SCORE_COUNT("winscorecount", Integer.class, Integer.valueOf(30), "Score to Win"),
         MATCH_DURATION("matchduration", Integer.class, Integer.valueOf(300000), "Match Duration(ms)"),
@@ -1103,6 +1103,10 @@ public class Globals {
         }
 
         public void setValue(String value) {
+            if (value == null) {
+                this.value = null;
+                return;
+            }
             if (this.type == Byte.class) {
                 this.value = Byte.valueOf(value);
             } else if (this.type == Integer.class) {
@@ -1805,8 +1809,7 @@ public class Globals {
 
         try {
             InputStream itemFile = Globals.loadResourceAsStream("itemdata/equip/itemcodes.txt");
-            LineIterator it = IOUtils.lineIterator(itemFile, "UTF-8");
-            try {
+            try (LineIterator it = IOUtils.lineIterator(itemFile, "UTF-8")) {
                 while (it.hasNext()) {
                     String line = it.nextLine();
                     try {
@@ -1815,8 +1818,6 @@ public class Globals {
                     } catch (NumberFormatException e) {
                     }
                 }
-            } finally {
-                LineIterator.closeQuietly(it);
             }
 
             for (byte equipType = 0; equipType < NUM_EQUIP_TYPES; equipType++) {
