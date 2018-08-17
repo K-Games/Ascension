@@ -138,7 +138,8 @@ public class Globals {
         WINDOW_SCALE("windowscale", Integer.class, Integer.valueOf(100), "Window Scale"),
         SOUND_ENABLE("soundenable", Boolean.class, true, "Sound Enabled"),
         VOLUME_LEVEL("volumelevel", Integer.class, Integer.valueOf(50), "Volume Level Control"),
-        DAMAGE_FORMAT("damageformat", Integer.class, DAMAGE_DISPLAY_ARC, "Damage Display Format");
+        DAMAGE_FORMAT("damageformat", Integer.class, DAMAGE_DISPLAY_ARC, "Damage Display Format"),
+        PERFORMANCE_DISPLAY("performancedisplay", Boolean.class, true, "Show FPS and Ping");
 
         private final String key;
         private final Class type;

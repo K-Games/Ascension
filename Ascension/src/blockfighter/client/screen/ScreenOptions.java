@@ -72,6 +72,9 @@ public class ScreenOptions extends ScreenMenu {
                     Core.getSoundModule().mute();
                 }
                 break;
+            case PERFORMANCE_DISPLAY:
+                option.setValue(String.valueOf(!(Boolean) option.getValue()));
+                break;
         }
     }
 
@@ -96,6 +99,7 @@ public class ScreenOptions extends ScreenMenu {
     private String getSettingValue(final Globals.ClientOptions option) {
         switch (option) {
             case WINDOW_SCALE:
+            case VOLUME_LEVEL:
                 return ((Integer) option.getValue()).toString() + "%";
             case DAMAGE_FORMAT:
                 switch ((Integer) option.getValue()) {
@@ -111,9 +115,8 @@ public class ScreenOptions extends ScreenMenu {
                         return "Off";
                 }
             case SOUND_ENABLE:
+            case PERFORMANCE_DISPLAY:
                 return ((Boolean) option.getValue()) ? "On" : "Off";
-            case VOLUME_LEVEL:
-                return ((Integer) option.getValue()).toString();
         }
         return "";
     }

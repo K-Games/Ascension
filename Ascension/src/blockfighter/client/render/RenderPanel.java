@@ -55,11 +55,14 @@ public class RenderPanel extends JPanel {
             this.screen.draw(g2d);
         }
 
-        g2d.setFont(Globals.ARIAL_12PT);
-        g2d.setColor(Color.WHITE);
-        g2d.drawString("FPS: " + this.FPSCount, 1220, 15);
-        if (Globals.WINDOW_SCALE_ENABLED) {
-            g2d.setTransform(resetForm);
+        if ((Boolean) Globals.ClientOptions.PERFORMANCE_DISPLAY.getValue()) {
+            g2d.setFont(Globals.ARIAL_12PT);
+            Screen.drawStringOutline(g2d, "FPS: " + this.FPSCount, 1220, 15, 1);
+            g2d.setColor(Color.WHITE);
+            g2d.drawString("FPS: " + this.FPSCount, 1220, 15);
+            if (Globals.WINDOW_SCALE_ENABLED) {
+                g2d.setTransform(resetForm);
+            }
         }
 
         if (useGPU && vBuffer != null) {

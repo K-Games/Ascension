@@ -357,11 +357,12 @@ public class ScreenIngame extends Screen {
 
         drawNotifications(g);
 
-        g.setColor(new Color(25, 25, 25, 150));
-        g.fillRect(1210, 5, 65, 45);
-        g.setFont(Globals.ARIAL_12PT);
-        g.setColor(Color.WHITE);
-        g.drawString("Ping: " + this.ping, 1220, 40);
+        if ((Boolean) Globals.ClientOptions.PERFORMANCE_DISPLAY.getValue()) {
+            g.setFont(Globals.ARIAL_12PT);
+            drawStringOutline(g, "Ping: " + this.ping, 1220, 30, 1);
+            g.setColor(Color.WHITE);
+            g.drawString("Ping: " + this.ping, 1220, 30);
+        }
 
         g.setColor(Color.BLACK);
         g.setFont(Globals.ARIAL_15PT);
