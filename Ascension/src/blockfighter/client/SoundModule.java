@@ -2,44 +2,43 @@ package blockfighter.client;
 
 import blockfighter.shared.Globals;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.TimeUnit;
 import paulscode.sound.SoundSystemConfig;
 import paulscode.sound.SoundSystemJPCT;
 
 public class SoundModule implements Runnable {
 
-    private SoundSystemJPCT soundModule;
+    private final SoundSystemJPCT soundModule;
     private byte currentBGM = -1;
     private final ConcurrentLinkedQueue<Byte> bgmQueue = new ConcurrentLinkedQueue<>();
     private final ConcurrentLinkedQueue<Byte> sfxQueue = new ConcurrentLinkedQueue<>();
     private boolean muted = (Boolean) Globals.ClientOptions.SOUND_ENABLE.getValue();
 
-    @Override
-    public void run() {
+    public SoundModule() {
         this.soundModule = new SoundSystemJPCT();
         updateVolume();
-
         SoundSystemConfig.setSoundFilesPackage("resources/sounds/");
-        Core.SHARED_SCHEDULED_THREADPOOL.scheduleAtFixedRate(() -> {
-            if (isLoaded()) {
-                while (!this.sfxQueue.isEmpty()) {
-                    this.soundModule.quickPlay(Globals.SFXs.get(sfxQueue.poll()).getResourcePath(), false);
-                }
+    }
 
-                while (!this.bgmQueue.isEmpty()) {
-                    byte bgmID = this.bgmQueue.poll();
-                    if (bgmID > -1 && currentBGM != bgmID) {
-                        if (currentBGM != -1) {
-                            this.soundModule.fadeOut(Globals.BGMs.get(currentBGM).getResourcePath(), null, 1000);
-                        }
-                        this.soundModule.backgroundMusic(Globals.BGMs.get(bgmID).getResourcePath(), Globals.BGMs.get(bgmID).getResourcePath());
-                        currentBGM = bgmID;
-                        this.soundModule.setVolume(Globals.BGMs.get(bgmID).getResourcePath(), 1f);
-                        Globals.log(SoundModule.class, "Playing " + Globals.BGMs.get(bgmID), Globals.LOG_TYPE_DATA);
+    @Override
+    public void run() {
+        if (isLoaded()) {
+            while (!this.sfxQueue.isEmpty()) {
+                this.soundModule.quickPlay(Globals.SFXs.get(sfxQueue.poll()).getResourcePath(), false);
+            }
+
+            while (!this.bgmQueue.isEmpty()) {
+                byte bgmID = this.bgmQueue.poll();
+                if (bgmID > -1 && currentBGM != bgmID) {
+                    if (currentBGM != -1) {
+                        this.soundModule.fadeOut(Globals.BGMs.get(currentBGM).getResourcePath(), null, 1000);
                     }
+                    this.soundModule.backgroundMusic(Globals.BGMs.get(bgmID).getResourcePath(), Globals.BGMs.get(bgmID).getResourcePath());
+                    currentBGM = bgmID;
+                    this.soundModule.setVolume(Globals.BGMs.get(bgmID).getResourcePath(), 1f);
+                    Globals.log(SoundModule.class, "Playing " + Globals.BGMs.get(bgmID), Globals.LOG_TYPE_DATA);
                 }
             }
-        }, 0, 5, TimeUnit.MILLISECONDS);
+        }
     }
 
     public void setListenerPos(final int x, final int y) {
@@ -76,7 +75,7 @@ public class SoundModule implements Runnable {
         updateVolume();
     }
 
-    public void updateVolume() {
+    public final void updateVolume() {
         if (!isLoaded()) {
             return;
         }

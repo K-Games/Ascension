@@ -164,6 +164,7 @@ public class AscensionClient {
 
         Core.getLogicModule().setScreen((!Globals.SKIP_TITLE) ? new ScreenTitle() : new ScreenSelectChar());
         Core.SHARED_SCHEDULED_THREADPOOL.scheduleAtFixedRate(Core.getLogicModule(), 0, 1, TimeUnit.MILLISECONDS);
+        Core.SHARED_SCHEDULED_THREADPOOL.scheduleAtFixedRate(Core.getSoundModule(), 0, 5, TimeUnit.MILLISECONDS);
         Core.SHARED_SCHEDULED_THREADPOOL.scheduleAtFixedRate(render, 0, Globals.RENDER_UPDATE, TimeUnit.MICROSECONDS);
     }
 }

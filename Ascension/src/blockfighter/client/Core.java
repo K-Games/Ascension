@@ -44,6 +44,5 @@ public class Core {
     public static void setup() {
         LOGIC_MODULE = new LogicModule();
         SOUND_MODULE = new SoundModule();
-        SHARED_THREADPOOL.execute(SOUND_MODULE);
     }
 }
