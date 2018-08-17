@@ -9,6 +9,7 @@ import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.util.Arrays;
 
 public class ScreenLoading extends ScreenMenu {
 
@@ -44,14 +45,13 @@ public class ScreenLoading extends ScreenMenu {
 
     @Override
     public void draw(final Graphics2D g) {
+
         final BufferedImage bg = Globals.MENU_BG[0];
         if (this.particlesReady && !this.particlesRendered) {
             Globals.log(ScreenLoading.class, "Prerendering " + particleIndex + " Particles...", Globals.LOG_TYPE_DATA);
-            if (Globals.Particles.values()[this.particleIndex] != null) {
-                if (Globals.Particles.values()[this.particleIndex].getSprites() != null) {
-                    for (final BufferedImage sprite : Globals.Particles.values()[this.particleIndex].getSprites()) {
-                        g.drawImage(sprite, 0, 0, null);
-                    }
+            if (Globals.Particles.values()[this.particleIndex].getSprites() != null) {
+                for (final BufferedImage sprite : Globals.Particles.values()[this.particleIndex].getSprites()) {
+                    g.drawImage(sprite, 0, 0, null);
                 }
             }
             this.particleIndex++;
@@ -72,6 +72,16 @@ public class ScreenLoading extends ScreenMenu {
         if (this.map != null) {
             loadingString = "Loading " + this.map.getGameMap().getMapName() + "...";
         }
+
+        int numAssests = (int) Arrays.stream(Globals.Particles.values()).filter((t) -> t.getSpriteFolder() != null).count();
+        numAssests += (int) Arrays.stream(Globals.Emotes.values()).filter((t) -> t.getSpriteFolder() != null).count();
+        numAssests += Globals.Particles.values().length;
+
+        int loadedAssets = (int) Arrays.stream(Globals.Particles.values()).filter((t) -> t.getSpriteFolder() != null && t.getSprites() != null).count();
+        loadedAssets += Arrays.stream(Globals.Emotes.values()).filter((t) -> t.getSpriteFolder() != null && t.getSprite() != null).count();
+        loadedAssets += particleIndex;
+        loadingString += Math.round(100f * loadedAssets / numAssests) + "%";
+
         g.setFont(Globals.ARIAL_18PT);
         int stringWidth = g.getFontMetrics().stringWidth(loadingString);
         drawStringOutline(g, loadingString, Globals.WINDOW_WIDTH / 2 - stringWidth / 2, 640, 2);
