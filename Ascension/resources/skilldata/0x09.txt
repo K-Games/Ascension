@@ -1,9 +1,17 @@
 [name]
-Frost Bind
+Frost Eruption
 [desc]
 2
 Enchant your bow to cause ice pillars to erupt
 violently out of the ground, freezing targets hit.
+[leveldesc]
+2
+Deals %BV% damage.
+Stuns for %T(basestun / 1000, basestun)^ seconds.
+[maxbonusdesc]
+2
+Stun now lasts for %T(maxlevelstun / 1000, maxlevelstun)^ seconds.
+Hits an additional %D(maxlevelbonusproj , maxlevelbonusproj)^ times dealing %D(maxlevelbonusdamage *100, maxlevelbonusdamage)^% damage.
 [reqweapon]
 11
 [reqlevel]

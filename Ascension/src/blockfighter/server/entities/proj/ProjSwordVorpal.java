@@ -2,9 +2,11 @@ package blockfighter.server.entities.proj;
 
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.buff.BuffKnockback;
+import blockfighter.server.entities.buff.BuffVorpalDemise;
 import blockfighter.server.entities.damage.DamageBuilder;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.player.skills.sword.SkillSwordVorpal;
+import blockfighter.server.entities.player.skills.sword.SkillSwordVorpalDemise;
 import blockfighter.shared.Globals;
 import java.awt.geom.Rectangle2D;
 
@@ -37,15 +39,40 @@ public class ProjSwordVorpal extends Projectile {
     @Override
     public void applyDamage(Player target) {
         final Player owner = getOwner();
-        final boolean isCrit = owner.rollCrit(owner.isSkillMaxed(Globals.SWORD_VORPAL) ? 0.3 : 0);
+        final boolean isCrit = owner.rollCrit(owner.isSkillMaxed(Globals.SWORD_VORPAL) ? owner.getSkill(Globals.SWORD_VORPAL).getCustomValue(SkillSwordVorpal.CUSTOM_DATA_HEADERS[0]) : 0);
         final int damage = calculateDamage(isCrit);
-        target.queueDamage(new DamageBuilder()
-                .setDamage(damage)
-                .setOwner(owner)
-                .setTarget(target)
-                .setIsCrit(isCrit)
-                .build());
+        if (!owner.hasSkill(Globals.SWORD_VORPAL_GHOST)) {
+
+            target.queueDamage(new DamageBuilder()
+                    .setDamage(damage)
+                    .setOwner(owner)
+                    .setTarget(target)
+                    .setIsCrit(isCrit)
+                    .build());
+        } else {
+            final double trueDamage = damage * owner.getSkill(Globals.SWORD_VORPAL_GHOST).getBaseValue();
+            final double normalDamage = damage - trueDamage;
+
+            target.queueDamage(new DamageBuilder()
+                    .setDamage((int) normalDamage)
+                    .setOwner(owner)
+                    .setTarget(target)
+                    .setIsCrit(isCrit)
+                    .build());
+
+            target.queueDamage(new DamageBuilder()
+                    .setDamage((int) trueDamage)
+                    .setOwner(owner)
+                    .setTarget(target)
+                    .setIsCrit(isCrit)
+                    .setIsTrueDamage(true)
+                    .build());
+        }
         target.queueBuff(new BuffKnockback(this.logic, 200, (owner.getFacing() == Globals.RIGHT) ? 3 : -3, 0.1, owner, target));
+        if (owner.hasSkill(Globals.SWORD_VORPAL_DEMISE)) {
+            target.queueBuff(new BuffVorpalDemise(this.logic, (int) (getOwner().getSkill(Globals.SWORD_VORPAL_DEMISE).getCustomValue(SkillSwordVorpalDemise.CUSTOM_DATA_HEADERS[0]) + 50), owner, target));
+        }
+
     }
 
 }

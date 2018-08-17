@@ -2,7 +2,15 @@
 Firebrand
 [desc]
 1
-Deal a powerful hit that afflicts enemies with Burn for 4 seconds.
+Ignite your blade and inflict enemies with Burn.
+[leveldesc]
+2
+Deals %BV% damage
+Burning enemies take %D(damageamp * lvl * 100, damageamp, lvl)^% increased damage for %T(buffduration / 1000, buffduration)^ seconds.
+[maxbonusdesc]
+2
+Burn also deals %D(burndamage * 100, burndamage)^% damage per second.
+Firebrand has %D(bonuscritchc * 100, bonuscritchc)^% Critical Hit Chance.
 [reqweapon]
 0
 [reqlevel]

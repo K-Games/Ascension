@@ -4,6 +4,9 @@ Static Charge
 2
 Shock a nearby enemy for damage based on your
 Armour when you deal damage.
+[leveldesc]
+1
+20% Chance to shock a nearby enemy for %BV% of Armour as damage.
 [reqweapon]
 -1
 [reqlevel]

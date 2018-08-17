@@ -2,7 +2,9 @@ package blockfighter.server.entities.proj;
 
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.buff.BuffKnockback;
+import blockfighter.server.entities.buff.BuffTauntCripple;
 import blockfighter.server.entities.player.Player;
+import blockfighter.server.entities.player.skills.sword.SkillSwordTauntCripple;
 import blockfighter.shared.Globals;
 import java.awt.geom.Rectangle2D;
 
@@ -33,7 +35,12 @@ public class ProjSwordTaunt extends Projectile {
     public void applyDamage(Player target) {
         super.applyDamage(target);
         final Player owner = getOwner();
-        target.queueBuff(new BuffKnockback(this.logic, 300, (owner.getFacing() == Globals.RIGHT) ? 10 : -10, -7, owner, target));
+        if (!owner.hasSkill(Globals.SWORD_TAUNT_CRIPPLE)) {
+            target.queueBuff(new BuffKnockback(this.logic, 300, (owner.getFacing() == Globals.RIGHT) ? 3 : -3, 6, owner, target));
+        } else {
+            target.queueBuff(new BuffKnockback(this.logic, 300, (owner.getFacing() == Globals.RIGHT) ? 1.5 : -1.5, 6, owner, target));
+            target.queueBuff(new BuffTauntCripple(logic, owner.getSkill(Globals.SWORD_TAUNT_CRIPPLE).getCustomValue(SkillSwordTauntCripple.CUSTOM_DATA_HEADERS[0]).intValue(), owner, owner));
+        }
     }
 
 }

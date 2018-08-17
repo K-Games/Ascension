@@ -3,6 +3,9 @@ Tough Skin
 [desc]
 1
 Boost your natural resilience to damage.
+[leveldesc]
+1
+Take %BV% reduced damage.
 [reqweapon]
 -1
 [reqlevel]

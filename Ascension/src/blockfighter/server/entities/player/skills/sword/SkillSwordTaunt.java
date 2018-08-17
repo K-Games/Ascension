@@ -2,6 +2,7 @@ package blockfighter.server.entities.player.skills.sword;
 
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.buff.BuffSwordTaunt;
+import blockfighter.server.entities.buff.BuffTauntSurge;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.player.skills.Skill;
 import blockfighter.server.entities.proj.ProjSwordTaunt;
@@ -71,6 +72,10 @@ public class SkillSwordTaunt extends Skill {
 
         }
         if (player.updateSkillEnd(duration, getSkillDuration(), false, false)) {
+            if (player.hasSkill(Globals.SWORD_TAUNT_SURGE)) {
+                player.queueBuff(new BuffTauntSurge(this.logic, player.getSkill(Globals.SWORD_TAUNT_SURGE).getCustomValue(SkillSwordTauntSurge.CUSTOM_DATA_HEADERS[0]).intValue(), player));
+                PacketSender.sendParticle(this.logic, Globals.Particles.SWORD_TAUNT_SURGE.getParticleCode(), player.getKey());
+            }
             player.setHyperStance(false);
         }
     }

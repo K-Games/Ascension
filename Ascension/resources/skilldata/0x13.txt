@@ -3,6 +3,9 @@ Keen Eye
 [desc]
 1
 Increases Critical Hit Chance.
+[leveldesc]
+1
+Additional %BV% Critical Hit Chance
 [reqweapon]
 -1
 [reqlevel]

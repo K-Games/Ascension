@@ -1,0 +1,39 @@
+[name]
+Skill name
+[desc] Mains skill desc
+1 <- Number of lines in desc
+Line 1
+[leveldesc] Desc of each level
+2 <- Number of lines in desc
+Line 1 - %BV <- replaces with base value calculations ingame
+Line 2 - %D((basebonuscritdamage + multbonuscritdamage * lvl) * 100, basebonuscritdamage, multbonuscritdamage, lvl)^%
+%D(expr, var1, var2)^ - Evaluates the expression with number format with var1 and var2 values from customvalues.
+%T()^ - Evaluates the expression with time format.
+lvl is a special variable which grabs skill level value.
+basevalue/multvalue is special variable to grab basevalue/multvalue data
+
+[maxbonusdesc] Level 30 bonus desc
+1
+Line 1 - %HYPERSTANCE <- Replaces with Hyper stance text.
+[reqweapon] Weapon type req
+0
+[reqlevel] Min level to unlock
+0
+[maxcooldown] CD in ms
+8000
+[basevalue]
+1.45
+[multvalue]
+0.06
+[passive]
+false
+[customvalues]
+bonuscritchc,basebonuscritdamage,multbonuscritdamage
+[bonuscritchc]
+0.3
+[basebonuscritdamage]
+0.4
+[multbonuscritdamage]
+0.03
+[cantlevel]
+false

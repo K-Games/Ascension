@@ -4,6 +4,10 @@ Dual Wield Mastery
 2
 When equipped with 2 Swords you gain additional
 Critical Hit Chance and take reduced damage.
+[leveldesc]
+2
+Additional %BV% Critical Hit Chance
+Take %D(dmgreductmult * lvl * 100, dmgreductmult, lvl)^% reduced damage.
 [reqweapon]
 -1
 [reqlevel]

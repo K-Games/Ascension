@@ -2,8 +2,14 @@
 Dash
 [desc]
 2
-Dash a short distance over 0.4 seconds.
-Increases damage dealt for 5 seconds.
+Dash a short distance over 0.4 seconds and
+increase damage dealt.
+[leveldesc]
+1
+Increases damage dealt by %BV% for %T(buffduration / 1000, buffduration)^ seconds.
+[maxbonusdesc]
+1
+Invulnerable during dash.
 [reqweapon]
 -1
 [reqlevel]

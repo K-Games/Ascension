@@ -4,7 +4,12 @@ Phantom Reaper
 3
 Teleport multiple times to a random enemy
 within a 350 radius and strike in their direction.
-Invulnerable during the skill duration.
+Invulnerable while the skill is active.
+[leveldesc]
+1
+Perform 5 attacks for %BV% damage.
+[maxbonusdesc]
+0
 [reqweapon]
 0
 [reqlevel]

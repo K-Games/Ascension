@@ -4,6 +4,9 @@ Bow Mastery
 2
 When equipped with an Bow and Arrow Enchantment
 you gain additional Critical Hit Damage.
+[leveldesc]
+1
+Additional %BV% Critical Hit Damage.
 [reqweapon]
 -1
 [reqlevel]

@@ -4,6 +4,9 @@ Power Of Will
 2
 Increase damage dealt based on your remaining HP.
 More remaining HP grants more damage increase.
+[leveldesc]
+1
+Increase damage dealt up to %BV%.
 [reqweapon]
 -1
 [reqlevel]

@@ -2,8 +2,15 @@
 Reflect Damage
 [desc]
 2
-For 3 seconds, when you take damage, you explode
-dealing a portion of damage taken.
+When you take damage, you explode dealing
+a portion of damage taken.
+[leveldesc]
+2
+Deals %BV% of damage taken.
+Lasts %T(buffduration / 1000, buffduration)^ seconds.
+[maxbonusdesc]
+1
+Reduce damage taken by %D(maxleveldmgreduct * 100, maxleveldmgreduct)^%.
 [reqweapon]
 10
 [reqlevel]

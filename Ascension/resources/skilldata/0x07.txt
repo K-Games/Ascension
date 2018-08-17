@@ -4,6 +4,13 @@ Cannon Fire
 2
 Charge a powerful shot for 0.8 seconds.
 Can be interrupted by stuns and knockback.
+[leveldesc]
+1
+Deals %BV% damage.
+[maxbonusdesc]
+2
+%HYPERSTANCE
+Critical Hits have additional %D(maxlevelbonuscritdamage * 100, maxlevelbonuscritdamage)^% Critical Hit damage.
 [reqweapon]
 11
 [reqlevel]

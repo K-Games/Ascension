@@ -8,10 +8,18 @@ import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
+import net.objecthunter.exp4j.Expression;
+import net.objecthunter.exp4j.ExpressionBuilder;
 
 public abstract class Skill {
 
     protected static final String HYPER_STANCE_DESC = "Grants Hyper Stance - Ignore knockback and stuns.";
+    protected static final String HYPER_STANCE_KEY = "%HYPERSTANCE";
+    protected static final String BASE_VALUE_KEY = "%BV",
+            VALUE_EXPR_HEAD = "%D(", EXPR_END = ")^",
+            DURATION_EXPR_HEAD = "%T(",
+            REPLACE_KEY = "%REPLACE";
+
     private FontMetrics fontMetric;
     private int boxWidth, boxHeight;
 
@@ -21,6 +29,65 @@ public abstract class Skill {
     protected String[] skillCurLevelDesc = new String[0];
     protected String[] skillNextLevelDesc = new String[0];
     protected String[] maxBonusDesc = new String[0];
+
+    public static double calculateSkillValue(final double base, final double multiplier, final double level, final double factor) {
+        return (base + multiplier * level) * factor;
+    }
+
+    public String processDescLine(final String line, final double level) {
+        String result = line.replaceAll(Skill.HYPER_STANCE_KEY, Skill.HYPER_STANCE_DESC);
+
+        while (result.contains(VALUE_EXPR_HEAD)
+                && result.indexOf(EXPR_END) > result.indexOf(VALUE_EXPR_HEAD)) {
+            int exprStartIndex = result.indexOf(VALUE_EXPR_HEAD) + VALUE_EXPR_HEAD.length();
+            int exprEndIndex = result.indexOf(EXPR_END);
+
+            String exprData = result.substring(exprStartIndex, exprEndIndex);
+            result = result.replace(result.subSequence(exprStartIndex - VALUE_EXPR_HEAD.length(), exprEndIndex + EXPR_END.length()), REPLACE_KEY);
+            result = result.replace(REPLACE_KEY, Globals.NUMBER_FORMAT.format(evaluateSkillDesc(exprData, level)));
+        }
+
+        while (result.contains(DURATION_EXPR_HEAD)
+                && result.indexOf(EXPR_END) > result.indexOf(DURATION_EXPR_HEAD)) {
+            int exprStartIndex = result.indexOf(DURATION_EXPR_HEAD) + DURATION_EXPR_HEAD.length();
+            int exprEndIndex = result.indexOf(EXPR_END);
+
+            String exprData = result.substring(exprStartIndex, exprEndIndex);
+            result = result.replace(result.subSequence(exprStartIndex - DURATION_EXPR_HEAD.length(), exprEndIndex + EXPR_END.length()), REPLACE_KEY);
+            result = result.replace(REPLACE_KEY, Globals.TIME_NUMBER_FORMAT.format(evaluateSkillDesc(exprData, level)));
+        }
+        return result;
+    }
+
+    public double evaluateSkillDesc(final String exprData, final double level) {
+        String[] data = exprData.split(",");
+        String expr = data[0];
+        String[] variables = new String[data.length - 1];
+        for (byte i = 1; i < data.length; i++) {
+            variables[i - 1] = data[i].trim();
+        }
+
+        Expression e = new ExpressionBuilder(expr)
+                .variables(variables)
+                .build();
+
+        for (String variable : variables) {
+            switch (variable.toLowerCase()) {
+                case "lvl":
+                    e.setVariable(variable, level);
+                    break;
+                case "basevalue":
+                    e.setVariable(variable, getStaticFieldValue("BASE_VALUE", Double.class));
+                    break;
+                case "multvalue":
+                    e.setVariable(variable, getStaticFieldValue("MULT_VALUE", Double.class));
+                    break;
+                default:
+                    e.setVariable(variable, getCustomValue("[" + variable + "]"));
+            }
+        }
+        return e.evaluate();
+    }
 
     public void draw(final Graphics2D g, final int x, final int y) {
         draw(g, x, y, false);
@@ -168,9 +235,43 @@ public abstract class Skill {
     }
 
     public void updateDesc() {
-        this.skillCurLevelDesc = new String[]{};
-        this.skillNextLevelDesc = new String[]{};
-        this.maxBonusDesc = new String[]{};
+        if (this.cantLevel()) {
+            return;
+        }
+        String[] LEVEL_DESC = getStaticFieldValue("LEVEL_DESC", String[].class);
+        String[] MAX_BONUS_DESC = (this.isPassive() ? null : getStaticFieldValue("MAX_BONUS_DESC", String[].class));
+        double BASE_VALUE = getStaticFieldValue("BASE_VALUE", Double.class);
+        double MULT_VALUE = getStaticFieldValue("MULT_VALUE", Double.class);
+
+        double curLevelValue = calculateSkillValue(BASE_VALUE, MULT_VALUE, this.level, 100);
+        double nextLevelValue = calculateSkillValue(BASE_VALUE, MULT_VALUE, this.level + 1, 100);
+
+        if (LEVEL_DESC != null) {
+            this.skillCurLevelDesc = new String[LEVEL_DESC.length];
+            for (byte i = 0; i < LEVEL_DESC.length; i++) {
+                this.skillCurLevelDesc[i] = LEVEL_DESC[i].replaceAll(Skill.BASE_VALUE_KEY, Globals.NUMBER_FORMAT.format(curLevelValue));
+                this.skillCurLevelDesc[i] = processDescLine(this.skillCurLevelDesc[i], this.level);
+            }
+
+            this.skillNextLevelDesc = new String[LEVEL_DESC.length];
+            for (byte i = 0; i < LEVEL_DESC.length; i++) {
+                this.skillNextLevelDesc[i] = LEVEL_DESC[i].replaceAll(Skill.BASE_VALUE_KEY, Globals.NUMBER_FORMAT.format(nextLevelValue));
+                this.skillNextLevelDesc[i] = processDescLine(this.skillNextLevelDesc[i], this.level + 1);
+            }
+        } else {
+            this.skillCurLevelDesc = new String[]{};
+            this.skillNextLevelDesc = new String[]{};
+        }
+
+        if (MAX_BONUS_DESC != null) {
+            this.maxBonusDesc = new String[MAX_BONUS_DESC.length];
+            for (byte i = 0; i < MAX_BONUS_DESC.length; i++) {
+                this.maxBonusDesc[i] = MAX_BONUS_DESC[i];
+                this.maxBonusDesc[i] = processDescLine(this.maxBonusDesc[i], this.level);
+            }
+        } else {
+            this.maxBonusDesc = new String[]{};
+        }
     }
 
     public void updateInfoBoxSize() {

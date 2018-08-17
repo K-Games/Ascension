@@ -4,6 +4,9 @@ Piercing Shadows
 2
 When you deal damage there is a chance a shadow blade
 pierces that same target for 50% of the damage dealt
+[leveldesc]
+1
+%D(basevalue + multvalue * lvl, basevalue, multvalue, lvl)^% chance to summon a shadow blade.
 [reqweapon]
 -1
 [reqlevel]

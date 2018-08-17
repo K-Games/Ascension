@@ -4,6 +4,10 @@ Defender Mastery
 2
 When equipped with a Sword and Shield you deal
 additional damage and take reduced damage.
+[leveldesc]
+2
+Deal additional %BV% damage.
+Take %D((basedmgreduct + multdmgreduct * lvl) * 100, basedmgreduct, multdmgreduct, lvl)^% reduced damage.
 [reqweapon]
 -1
 [reqlevel]

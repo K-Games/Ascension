@@ -3,6 +3,9 @@ Vital Hit
 [desc]
 1
 Increases Critical Hit Damage.
+[leveldesc]
+1
+Additional %BV% Critical Hit Damage.
 [reqweapon]
 -1
 [reqlevel]

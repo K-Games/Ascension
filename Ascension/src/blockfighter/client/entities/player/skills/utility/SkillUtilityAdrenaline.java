@@ -11,7 +11,11 @@ public class SkillUtilityAdrenaline extends Skill {
 
     public static final byte SKILL_CODE = Globals.UTILITY_ADRENALINE;
     public static final String SKILL_NAME;
+
     public static final String[] DESCRIPTION;
+    public static final String[] LEVEL_DESC;
+    public static final String[] MAX_BONUS_DESC;
+
     public static final boolean IS_PASSIVE;
     public static final boolean CANT_LEVEL;
     public static final byte REQ_WEAPON;
@@ -28,7 +32,11 @@ public class SkillUtilityAdrenaline extends Skill {
         CUSTOM_VALUES = new HashMap<>(CUSTOM_DATA_HEADERS.length);
 
         SKILL_NAME = Globals.loadSkillName(data, dataHeaders);
+
         DESCRIPTION = Globals.loadSkillDesc(data, dataHeaders);
+        LEVEL_DESC = Globals.loadSkillLevelDesc(data, dataHeaders);
+        MAX_BONUS_DESC = Globals.loadSkillMaxBonusDesc(data, dataHeaders);
+
         REQ_WEAPON = Globals.loadSkillReqWeapon(data, dataHeaders);
         MAX_COOLDOWN = (long) Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MAXCOOLDOWN_HEADER);
         BASE_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_BASEVALUE_HEADER);
@@ -41,20 +49,4 @@ public class SkillUtilityAdrenaline extends Skill {
             CUSTOM_VALUES.put(customHeader, Globals.loadDoubleValue(data, dataHeaders, customHeader));
         }
     }
-
-    @Override
-    public void updateDesc() {
-        this.skillCurLevelDesc = new String[]{
-            "Reduce damage taken by " + Globals.NUMBER_FORMAT.format((BASE_VALUE + MULT_VALUE * this.level) * 100) + "%.",
-            "Increase movement speed by " + Globals.NUMBER_FORMAT.format((CUSTOM_VALUES.get(CUSTOM_DATA_HEADERS[2]) + CUSTOM_VALUES.get(CUSTOM_DATA_HEADERS[3]) * this.level) * 100) + "%."
-        };
-        this.skillNextLevelDesc = new String[]{
-            "Reduce damage taken by " + Globals.NUMBER_FORMAT.format((BASE_VALUE + MULT_VALUE * (this.level + 1)) * 100) + "%.",
-            "Increase movement speed by " + Globals.NUMBER_FORMAT.format((CUSTOM_VALUES.get(CUSTOM_DATA_HEADERS[2]) + CUSTOM_VALUES.get(CUSTOM_DATA_HEADERS[3]) * (this.level + 1)) * 100) + "%."
-        };
-        this.maxBonusDesc = new String[]{
-            "Restore " + Globals.NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOM_DATA_HEADERS[1]) * 100) + "% HP over " + Globals.TIME_NUMBER_FORMAT.format(CUSTOM_VALUES.get(CUSTOM_DATA_HEADERS[0]) / 1000) + " seconds."
-        };
-    }
-
 }
