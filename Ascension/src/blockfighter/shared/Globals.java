@@ -1533,7 +1533,7 @@ public class Globals {
         try {
             return FileUtils.openInputStream(new File("resources/" + path));
         } catch (IOException ex) {
-            logError("Failed to load resource: " + path, ex);
+            log(Globals.class, "Failed to load resource: " + path, LOG_TYPE_DATA);
         }
         return null;
     }
