@@ -78,9 +78,9 @@ public class ScreenOptions extends ScreenMenu {
     private void setSetting(final Globals.ClientOptions option, double delta) {
         switch (option) {
             case WINDOW_SCALE:
-                double scale = (Double) option.getValue() + delta;
-                scale = (scale >= 1.5) ? 1.5 : scale;
-                scale = (scale <= 0.5) ? 0.5 : scale;
+                int scale = (Integer) option.getValue() + (int) delta;
+                scale = (scale >= 150) ? 150 : scale;
+                scale = (scale <= 50) ? 50 : scale;
                 option.setValue(String.valueOf(scale));
                 break;
             case VOLUME_LEVEL:
@@ -96,7 +96,7 @@ public class ScreenOptions extends ScreenMenu {
     private String getSettingValue(final Globals.ClientOptions option) {
         switch (option) {
             case WINDOW_SCALE:
-                return Globals.NUMBER_FORMAT.format(option.getValue());
+                return ((Integer) option.getValue()).toString() + "%";
             case DAMAGE_FORMAT:
                 switch ((Integer) option.getValue()) {
                     case Globals.DAMAGE_DISPLAY_OFF:
@@ -238,9 +238,9 @@ public class ScreenOptions extends ScreenMenu {
         } else if (VOL_UP.contains(scaled)) {
             setSetting(Globals.ClientOptions.VOLUME_LEVEL, 1);
         } else if (WINDOW_SCALE_DOWN.contains(scaled)) {
-            setSetting(Globals.ClientOptions.WINDOW_SCALE, -0.1);
+            setSetting(Globals.ClientOptions.WINDOW_SCALE, -1);
         } else if (WINDOW_SCALE_UP.contains(scaled)) {
-            setSetting(Globals.ClientOptions.WINDOW_SCALE, 0.1);
+            setSetting(Globals.ClientOptions.WINDOW_SCALE, 1);
         }
     }
 

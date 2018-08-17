@@ -135,7 +135,7 @@ public class Globals {
             DAMAGE_DISPLAY_STACK = 3;
 
     public enum ClientOptions {
-        WINDOW_SCALE("windowscale", Double.class, Double.valueOf(1.0), "Window Scale"),
+        WINDOW_SCALE("windowscale", Integer.class, Integer.valueOf(100), "Window Scale"),
         SOUND_ENABLE("soundenable", Boolean.class, true, "Sound Enabled"),
         VOLUME_LEVEL("volumelevel", Integer.class, Integer.valueOf(50), "Volume Level Control"),
         DAMAGE_FORMAT("damageformat", Integer.class, DAMAGE_DISPLAY_ARC, "Damage Display Format");
@@ -1266,7 +1266,7 @@ public class Globals {
         PLAYER_NUM_ANIM_FRAMES[PLAYER_ANIM_STATE_ROLL] = 10;
         PLAYER_NUM_ANIM_FRAMES[PLAYER_ANIM_STATE_JUMP] = 3;
         loadClientOptions();
-        WINDOW_SCALE = (Double) ClientOptions.WINDOW_SCALE.getValue();
+        WINDOW_SCALE = (Integer) ClientOptions.WINDOW_SCALE.getValue() / 100D;
         loadGFX();
         loadNumberFormats();
         loadItemCodes();
