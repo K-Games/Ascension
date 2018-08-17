@@ -46,11 +46,11 @@ public class ScreenIngame extends Screen {
 
     private static final Color HUD_BG_COLOR = new Color(0, 0, 0, 190);
     private static final Color HUD_BG_COLOR2 = new Color(190, 190, 190, 190);
+    private static final DecimalFormat COOLDOWN_FORMAT = new DecimalFormat("0.0");
 
     private final GameClient client;
     private final Rectangle2D.Double[] hotkeySlots = new Rectangle2D.Double[12];
 
-    private final DecimalFormat COOLDOWN_FORMAT = new DecimalFormat("0.0");
     private final ConcurrentHashMap<Byte, Player> players;
     private final ConcurrentHashMap<Integer, Particle> particles = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Integer, IngameNumber> ingameNumber = new ConcurrentHashMap<>();
@@ -398,11 +398,11 @@ public class ScreenIngame extends Screen {
                         cdHeight);
                 if (hotkey.get(j).getCooldown() > 0) {
                     g.setFont(Globals.ARIAL_18PT);
-                    final int width = g.getFontMetrics().stringWidth(this.COOLDOWN_FORMAT.format(hotkey.get(j).getCooldown() / 1000D));
-                    drawStringOutline(g, this.COOLDOWN_FORMAT.format(hotkey.get(j).getCooldown() / 1000D), (int) this.hotkeySlots[j].x + 28 - width / 2,
+                    final int width = g.getFontMetrics().stringWidth(COOLDOWN_FORMAT.format(hotkey.get(j).getCooldown() / 1000D));
+                    drawStringOutline(g, COOLDOWN_FORMAT.format(hotkey.get(j).getCooldown() / 1000D), (int) this.hotkeySlots[j].x + 28 - width / 2,
                             (int) this.hotkeySlots[j].y + 33, 1);
                     g.setColor(Color.white);
-                    g.drawString(this.COOLDOWN_FORMAT.format(hotkey.get(j).getCooldown() / 1000D), (int) this.hotkeySlots[j].x + 28 - width / 2,
+                    g.drawString(COOLDOWN_FORMAT.format(hotkey.get(j).getCooldown() / 1000D), (int) this.hotkeySlots[j].x + 28 - width / 2,
                             (int) this.hotkeySlots[j].y + 33);
                 }
             }
