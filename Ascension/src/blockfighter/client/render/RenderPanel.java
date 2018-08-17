@@ -2,11 +2,9 @@ package blockfighter.client.render;
 
 import blockfighter.client.screen.Screen;
 import blockfighter.shared.Globals;
-import java.awt.AWTException;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.ImageCapabilities;
 import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
 import java.awt.image.VolatileImage;
@@ -18,8 +16,10 @@ public class RenderPanel extends JPanel {
     private int FPSCount = 0;
     private Screen screen = null;
     private boolean useGPU = true;
-    private VolatileImage vBuffer;
     private Graphics2D bufferGraphics;
+
+    private long lastFPSTime = 0;
+    private int fpsCountBuffer = 0;
 
     public RenderPanel() {
         super();
@@ -28,13 +28,9 @@ public class RenderPanel extends JPanel {
     @Override
     public void paintComponent(final Graphics g) {
         Graphics2D g2d;
-        if (useGPU && vBuffer == null) {
-            try {
-                vBuffer = getGraphicsConfiguration().createCompatibleVolatileImage((int) (Globals.WINDOW_WIDTH * ((Globals.WINDOW_SCALE_ENABLED) ? Globals.WINDOW_SCALE : 1)), (int) (Globals.WINDOW_HEIGHT * ((Globals.WINDOW_SCALE_ENABLED) ? Globals.WINDOW_SCALE : 1)), new ImageCapabilities(true));
-            } catch (AWTException ex) {
-                useGPU = false;
-                Globals.logError(ex.toString(), ex);
-            }
+        VolatileImage vBuffer = null;
+        if (useGPU) {
+            vBuffer = getGraphicsConfiguration().createCompatibleVolatileImage((int) (Globals.WINDOW_WIDTH * ((Globals.WINDOW_SCALE_ENABLED) ? Globals.WINDOW_SCALE : 1)), (int) (Globals.WINDOW_HEIGHT * ((Globals.WINDOW_SCALE_ENABLED) ? Globals.WINDOW_SCALE : 1)));
             bufferGraphics = vBuffer.createGraphics();
         }
 
@@ -68,6 +64,14 @@ public class RenderPanel extends JPanel {
 
         if (useGPU && vBuffer != null) {
             g.drawImage(vBuffer, 0, 0, null);
+        }
+        this.fpsCountBuffer++;
+
+        long now = System.currentTimeMillis();
+        if (now - this.lastFPSTime >= 1000) {
+            setFPSCount(this.fpsCountBuffer);
+            this.fpsCountBuffer = 0;
+            this.lastFPSTime = now;
         }
     }
 
