@@ -46,6 +46,14 @@ public class LogicModule implements Runnable {
     }
 
     public void connect(final String server) {
+        connect(new GameClient(server));
+    }
+
+    public void connect(final String server, final int tcpPort, final int udpPort) {
+        connect(new GameClient(server, tcpPort, udpPort));
+    }
+
+    public void connect(final GameClient gc) {
         boolean skillReady = false;
         boolean equipReady = false;
         for (Skill s : this.selectedSaveData.getHotkeys().values()) {
@@ -59,7 +67,7 @@ public class LogicModule implements Runnable {
         }
 
         if (skillReady && equipReady) {
-            client = new GameClient(this, server);
+            client = gc;
             Core.SHARED_THREADPOOL.execute(client);
         } else if (!skillReady && !equipReady) {
             if (getScreen() instanceof ScreenServerList) {

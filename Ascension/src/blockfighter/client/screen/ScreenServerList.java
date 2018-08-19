@@ -76,7 +76,6 @@ public class ScreenServerList extends ScreenMenu {
 
     static {
         SERVERADDRESS_FIELD.addFocusListener(Core.FOCUS_HANDLER);
-
         if (Globals.WINDOW_SCALE_ENABLED) {
             SERVERADDRESS_FIELD.setBounds((int) (330 * Globals.WINDOW_SCALE), (int) (640 * Globals.WINDOW_SCALE), (int) (670 * Globals.WINDOW_SCALE), (int) (40 * Globals.WINDOW_SCALE));
             SERVERADDRESS_FIELD.setFont(new Font(Globals.ARIAL_24PT.getFontName(), Globals.ARIAL_24PT.getStyle(), (int) (Globals.ARIAL_24PT.getSize() * Globals.WINDOW_SCALE)));
@@ -274,11 +273,20 @@ public class ScreenServerList extends ScreenMenu {
         if (SwingUtilities.isLeftMouseButton(e)) {
             if (CONNECT_BOX.contains(scaled)) {
                 // Connect
-                if (SERVERADDRESS_FIELD.getText().trim().length() > 0) {
+                SERVERADDRESS_FIELD.setText(SERVERADDRESS_FIELD.getText().trim());
+                String serverAddress = SERVERADDRESS_FIELD.getText();
+                if (serverAddress.length() > 0) {
                     connecting = true;
                     SERVERADDRESS_FIELD.setEnabled(false);
-                    saveServerList(SERVERADDRESS_FIELD.getText().trim());
-                    Core.getLogicModule().connect(SERVERADDRESS_FIELD.getText().trim());
+                    saveServerList(serverAddress);
+                    if (serverList.getSelectedServer() != null
+                            && serverAddress.equalsIgnoreCase(serverList.getSelectedServer().getAddress())) {
+                        Core.getLogicModule().connect(serverList.getSelectedServer().getAddress(),
+                                serverList.getSelectedServer().getTcpPort(),
+                                serverList.getSelectedServer().getUdpPort());
+                    } else {
+                        Core.getLogicModule().connect(serverAddress);
+                    }
                 }
             }
             if (REFRESH_BOX.contains(scaled) && Core.getLogicModule().getTime() - this.lastRefreshTime >= Globals.msToNs(2000)) {
@@ -474,6 +482,9 @@ public class ScreenServerList extends ScreenMenu {
         }
 
         private ServerInfo getSelectedServer() {
+            if (this.serverInfo.length == 0) {
+                return null;
+            }
             return this.serverInfo[this.selectedIndex];
         }
 
