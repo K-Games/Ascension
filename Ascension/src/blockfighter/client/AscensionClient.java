@@ -16,6 +16,7 @@ import javax.swing.JFrame;
 public class AscensionClient {
 
     static {
+        System.setProperty("sun.java2d.opengl", "true");
         Globals.loadClient();
     }
 
