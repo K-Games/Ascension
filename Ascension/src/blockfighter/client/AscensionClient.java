@@ -12,6 +12,7 @@ import java.security.MessageDigest;
 import java.util.Base64;
 import java.util.concurrent.TimeUnit;
 import javax.swing.JFrame;
+import org.jogamp.glg2d.GLG2DPanel;
 
 public class AscensionClient {
 
@@ -132,7 +133,6 @@ public class AscensionClient {
         final RenderModule render = new RenderModule(panel);
 
         Screen.setRenderPanel(panel);
-
         // frame.setUndecorated(true);
         frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -143,7 +143,9 @@ public class AscensionClient {
         }
         frame.pack();
         frame.setLocationRelativeTo(null);
-        frame.getContentPane().add(panel, null);
+        GLG2DPanel glPanel = new GLG2DPanel(panel);
+        glPanel.setGLDrawing(true);
+        frame.setContentPane(glPanel);
         frame.setVisible(true);
 
         panel.setLayout(null);
