@@ -1,9 +1,11 @@
-package blockfighter.shared;
+package blockfighter.hub;
 
 import java.io.Serializable;
 import org.json.JSONObject;
 
 public class ServerInfo implements Serializable {
+
+    private final long createdTime = System.currentTimeMillis();
 
     private String address;
     private String region;
@@ -81,5 +83,9 @@ public class ServerInfo implements Serializable {
     @Override
     public String toString() {
         return this.address + " TCP=" + tcpPort + " UDP=" + udpPort + " [Region=\"" + this.region + "\", Capacity=" + this.capacity + "]";
+    }
+
+    public long getTimeAlive() {
+        return System.currentTimeMillis() - createdTime;
     }
 }

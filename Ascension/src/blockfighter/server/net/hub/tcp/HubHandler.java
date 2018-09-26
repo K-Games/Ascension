@@ -1,4 +1,4 @@
-package blockfighter.server.net.hub;
+package blockfighter.server.net.hub.tcp;
 
 import blockfighter.shared.Globals;
 import com.esotericsoftware.kryonet.Connection;

@@ -1,5 +1,6 @@
 package blockfighter.client.net;
 
+import blockfighter.client.Core;
 import blockfighter.client.LogicModule;
 import blockfighter.client.screen.ScreenServerList;
 import blockfighter.shared.AscensionSerialization;
@@ -13,18 +14,24 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class GameClient implements Runnable {
 
     private static Client client;
-    private final LogicModule logic;
 
     private final ConcurrentLinkedQueue<byte[]> dataQueue = new ConcurrentLinkedQueue<>();
 
-    public GameClient(final LogicModule lm, final String server) {
-        this.logic = lm;
+    public GameClient(final String server) {
         Globals.SERVER_ADDRESS = server;
+        Globals.ServerConfig.TCP_PORT.setValue(null);
+        Globals.ServerConfig.UDP_PORT.setValue(null);
+    }
+
+    public GameClient(final String server, final int tcpPort, final int udpPort) {
+        Globals.SERVER_ADDRESS = server;
+        Globals.ServerConfig.TCP_PORT.setValue(Integer.toString(tcpPort));
+        Globals.ServerConfig.UDP_PORT.setValue(Integer.toString(udpPort));
     }
 
     @Override
     public void run() {
-
+        LogicModule logic = Core.getLogicModule();
         if (client == null) {
             client = new Client(Globals.PACKET_MAX_SIZE * 800, Globals.PACKET_MAX_SIZE, new AscensionSerialization());
             client.setTimeout(3000);
@@ -62,6 +69,7 @@ public class GameClient implements Runnable {
     }
 
     public void shutdownClient(final byte status) {
+        LogicModule logic = Core.getLogicModule();
         client.close();
         if (logic.getScreen() instanceof ScreenServerList) {
             ((ScreenServerList) logic.getScreen()).setStatus(status);

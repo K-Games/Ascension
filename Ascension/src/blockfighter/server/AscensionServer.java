@@ -2,7 +2,7 @@ package blockfighter.server;
 
 import blockfighter.server.net.GameServer;
 import blockfighter.server.net.PacketSender;
-import blockfighter.server.net.hub.HubClient;
+import blockfighter.server.net.hub.http.HubServerInfoSender;
 import blockfighter.shared.Globals;
 import java.awt.Dimension;
 import java.util.Arrays;
@@ -77,7 +77,7 @@ public class AscensionServer {
             }, 10, 10, TimeUnit.SECONDS);
 
             if ((Boolean) Globals.ServerConfig.HUB_CONNECT.getValue()) {
-                Core.SHARED_SCHEDULED_THREADPOOL.scheduleAtFixedRate(new HubClient(), 0, 10, TimeUnit.SECONDS);
+                Core.SHARED_SCHEDULED_THREADPOOL.scheduleAtFixedRate(new HubServerInfoSender(), 0, 10, TimeUnit.SECONDS);
             }
         } catch (final Exception ex) {
             Globals.logError(ex.toString(), ex);

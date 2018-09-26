@@ -1,4 +1,4 @@
-package blockfighter.client.net.hub;
+package blockfighter.client.net.hub.tcp;
 
 import blockfighter.client.Core;
 import blockfighter.client.screen.ScreenServerList;

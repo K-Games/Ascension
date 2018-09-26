@@ -1,4 +1,4 @@
-package blockfighter.client.net.hub;
+package blockfighter.client.net.hub.tcp;
 
 import blockfighter.shared.Globals;
 
