@@ -2,12 +2,16 @@ package blockfighter.client.render;
 
 import blockfighter.client.screen.Screen;
 import blockfighter.shared.Globals;
+import java.awt.AWTException;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.ImageCapabilities;
 import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
 import java.awt.image.VolatileImage;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JPanel;
 
 public class RenderPanel extends JPanel {
@@ -16,6 +20,7 @@ public class RenderPanel extends JPanel {
     private int FPSCount = 0;
     private Screen screen = null;
     private boolean useGPU = true;
+    private VolatileImage vBuffer = null;
     private Graphics2D bufferGraphics;
 
     private long lastFPSTime = 0;
@@ -28,10 +33,16 @@ public class RenderPanel extends JPanel {
     @Override
     public void paintComponent(final Graphics g) {
         Graphics2D g2d;
-        VolatileImage vBuffer = null;
-        if (useGPU) {
-            vBuffer = getGraphicsConfiguration().createCompatibleVolatileImage((int) (Globals.WINDOW_WIDTH * ((Globals.WINDOW_SCALE_ENABLED) ? Globals.WINDOW_SCALE : 1)), (int) (Globals.WINDOW_HEIGHT * ((Globals.WINDOW_SCALE_ENABLED) ? Globals.WINDOW_SCALE : 1)));
-            bufferGraphics = vBuffer.createGraphics();
+        if (vBuffer == null && useGPU) {
+            try {
+                vBuffer = getGraphicsConfiguration().createCompatibleVolatileImage(
+                        (int) (Globals.WINDOW_WIDTH * ((Globals.WINDOW_SCALE_ENABLED) ? Globals.WINDOW_SCALE : 1)),
+                        (int) (Globals.WINDOW_HEIGHT * ((Globals.WINDOW_SCALE_ENABLED) ? Globals.WINDOW_SCALE : 1)),
+                        new ImageCapabilities(true));
+                bufferGraphics = vBuffer.createGraphics();
+            } catch (AWTException ex) {
+                Logger.getLogger(RenderPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
         if (useGPU && vBuffer != null) {
