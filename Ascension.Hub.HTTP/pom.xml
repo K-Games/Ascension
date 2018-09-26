@@ -35,6 +35,21 @@
     <build>
         <plugins>
             <plugin>
+                <!-- Build an executable JAR -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/</classpathPrefix>
+                            <mainClass>blockfighter.hub.Main</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>2.3.2</version>
@@ -60,21 +75,11 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>Main</mainClass>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/</classpathPrefix>
+                            <mainClass>blockfighter.hub.Main</mainClass>
                         </manifest>
                     </archive>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>com.heroku.sdk</groupId>
-                <artifactId>heroku-maven-plugin</artifactId>
-                <version>0.4.4</version>
-                <configuration>
-                    <jdkVersion>1.8</jdkVersion>
-                    <appName>ascension-hub</appName>
-                    <processTypes>
-                        <web>java -jar ./Ascension.Hub.HTTP/target/Ascension.Hub.HTTP-0.0.1-SNAPSHOT-jar-with-dependencies</web>
-                    </processTypes>
                 </configuration>
             </plugin>
         </plugins>
