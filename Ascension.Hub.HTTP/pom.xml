@@ -73,7 +73,7 @@
                     <jdkVersion>1.8</jdkVersion>
                     <appName>ascension-hub</appName>
                     <processTypes>
-                        <web>java -jar ./target/my-app-1.0-jar-with-dependencies.jar</web>
+                        <web>java -jar ./Ascension.Hub.HTTP/target/Ascension.Hub.HTTP-0.0.1-SNAPSHOT-jar-with-dependencies</web>
                     </processTypes>
                 </configuration>
             </plugin>
