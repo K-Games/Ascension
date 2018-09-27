@@ -24,7 +24,7 @@
 * New Debuff
 	* Cripple - Slow movement and reduce jump height by a percentage.
 		* Some Skills now utilize this debuff.
-	
+
 #### Stats
 * Stat distribution reworked.
 	* Greatly reduced the number of Stat Points overall.
@@ -48,7 +48,7 @@
 ##### Sword
 * Phantom Reaper
 	* Time between strikes increased by 50%.
-	
+
 ##### Bow
 
 ##### Shield
@@ -61,7 +61,7 @@
 	* Players are dragged and stunned when hit by charge.
 		* This change makes Overwhelm a consistent Skill that brings players within melee range.
 		* A 0.5s 70% Cripple is applied at the end to improve the overall feel of the Skill.
-	
+
 ##### Utility
 
 ##### Passive
@@ -84,6 +84,9 @@
 * Disabled SFX.
 * Fixed potential legacy SaveData breaking.
 * Fixed minor sound muting bug.
+* True hardware acceleration using OpenGL rendering.
+* Server list now uses HTTP.
+* Skill descriptions are now dynamically generated.
 
 ### Server Changes
 * Added support for 255 max players in a room.
@@ -110,7 +113,7 @@
 	* Knockback no longer stops jump momentum.
 * Arc Shot
 	* Knockback no longer stops jump momentum.
-	
+
 ---
 
 ## Version 0.24.1
@@ -184,7 +187,7 @@
 * Client logic is updated more frequently to match framerate.
 * Enabled window scaling - Not officially supported.
 	* Use -scale launch option to scale window size.
-	
+
 ### Server Changes
 * Added Core class for centralised threads.
 * Room's level range is now determined by the creating player's level.
@@ -215,10 +218,10 @@
 		* Third - 1x Equipment + 10% EXP to next level.
 		* No Placement - 10% EXP to next level.
 * New emotes added - `Well Played!` and `GG`
-* Players now have colour associated with them. 
+* Players now have colour associated with them.
 	* Scoreboard and Kill notifications will have matching colours for quick readability.
 	* Player colour is shown next to player's name.
-	
+
 ### Client Changes
 * Added Scoreboard - Existing key binds will not have open Scoreboard binded.
 * Improved player name visibilty with a dark background.
@@ -366,7 +369,7 @@
 * Phantom Reaper
 	* Cooldown decreased from 20 to 16 seconds.
 	* Damage decreased from 800 + 20% per level to 650 + 20% per level.
-	
+
 #### Bow
 * Cannon Fire
 	* Cooldown decreased from 16 to 8 seconds.
@@ -378,7 +381,7 @@
 	* Knockback distance reduced.
 * Frost Bind
 	* Cooldown decreased from 22 to 12 seconds.
-	
+
 #### Shield
 * Hellion Roar
 	* Cooldown decreased from 20 to 13 seconds.
@@ -399,7 +402,7 @@
 #### Passive
 * Resistance
 	* Base cooldown increased from 35 to 40 seconds.
-	
+
 ### Client Changes
 * Fixed Max Skill button working incorrectly.
 
@@ -466,7 +469,7 @@
 	* Reworked - Dash a short distance and strike enemies.
 * Phantom Reaper
 	* Fixed not being at a valid Y position if Phantom Reaper ends inside a platform.
- 
+
 #### Bow
 * Arc Shot
 	* Increased knockback from 5 to 40.
@@ -493,7 +496,7 @@
 	* Increased Critical Hit Chance from 1% + 0.3% per Lvl to 5% + 0.3% per Lvl
 * Vital Hit
 	* Increased Critical Hit Damage from 10% + 2% per Lvl to 25% + 2% per Lvl
- 
+
 ### Client Changes
 * Fixed unable to draw ingame equips without offsets set in its item data.
 * Fixed sword attack animation having 1 extra frame.
@@ -714,7 +717,7 @@
 * Mob Buffs now parity Player buffs - Mobs now correctly take Damage Amplification and Reduction buffs.
 * Slight change in Damage Reduction calculation.
 * Added a 5 second grace period between clearing a level and resetting.
-* Fixed rare case where a level would not reset when finished. 
+* Fixed rare case where a level would not reset when finished.
 * Arena - When a player is killed, 20% of their required experience to level up is awarded to the killer.
 * Fixed a bug not denying login request when a player is logging in with the same character from the same IP.
 
