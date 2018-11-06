@@ -173,9 +173,9 @@ public class ScreenStats extends ScreenMenu {
         g.drawImage(bg, 0, 0, null);
 
         g.setFont(Globals.ARIAL_30PT);
-        drawStringOutline(g, this.c.getPlayerName(), 255, 76, 2);
+        drawStringOutline(g, this.c.getCharacterName(), 255, 76, 2);
         g.setColor(Color.WHITE);
-        g.drawString(this.c.getPlayerName(), 255, 76);
+        g.drawString(this.c.getCharacterName(), 255, 76);
 
         drawMainStats(g);
         drawAddStatButton(g);

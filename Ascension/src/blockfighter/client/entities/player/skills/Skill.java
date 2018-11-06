@@ -11,24 +11,68 @@ import java.util.HashMap;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 
-public abstract class Skill {
+public class Skill {
 
-    protected static final String HYPER_STANCE_DESC = "Grants Hyper Stance - Ignore knockback and stuns.";
-    protected static final String HYPER_STANCE_KEY = "%HYPERSTANCE";
-    protected static final String BASE_VALUE_KEY = "%BV",
+    private transient String[] CUSTOM_DATA_HEADERS;
+    private transient HashMap<String, Double> CUSTOM_VALUES;
+
+    private transient String SKILL_NAME;
+
+    private transient String[] DESCRIPTION;
+    private transient String[] LEVEL_DESC;
+    private transient String[] MAX_BONUS_DESC;
+
+    private transient boolean IS_PASSIVE;
+    private transient boolean CANT_LEVEL;
+    private transient byte REQ_WEAPON;
+    private transient long MAX_COOLDOWN;
+
+    private transient double BASE_VALUE, MULT_VALUE;
+    private transient int REQ_LEVEL;
+
+    private static final String HYPER_STANCE_DESC = "Grants Hyper Stance - Ignore knockback and stuns.";
+    private static final String HYPER_STANCE_KEY = "%HYPERSTANCE";
+    private static final String BASE_VALUE_KEY = "%BV",
             VALUE_EXPR_HEAD = "%D(", EXPR_END = ")^",
             DURATION_EXPR_HEAD = "%T(",
             REPLACE_KEY = "%REPLACE";
 
-    private FontMetrics fontMetric;
-    private int boxWidth, boxHeight;
+    private transient FontMetrics fontMetric;
+    private transient int boxWidth, boxHeight;
 
-    protected byte level;
-    protected long skillCastTime;
+    private byte level;
 
-    protected String[] skillCurLevelDesc = new String[0];
-    protected String[] skillNextLevelDesc = new String[0];
-    protected String[] maxBonusDesc = new String[0];
+    private transient byte skillCode;
+    private transient long skillCastTime;
+
+    private transient String[] skillCurLevelDesc = new String[0];
+    private transient String[] skillNextLevelDesc = new String[0];
+    private transient String[] maxBonusDesc = new String[0];
+
+    public Skill() {
+    }
+
+    public Skill(Skill skill) {
+        skillCode = skill.skillCode;
+        CUSTOM_DATA_HEADERS = skill.CUSTOM_DATA_HEADERS;
+        CUSTOM_VALUES = skill.CUSTOM_VALUES;
+
+        SKILL_NAME = skill.SKILL_NAME;
+
+        DESCRIPTION = skill.DESCRIPTION;
+        LEVEL_DESC = skill.LEVEL_DESC;
+        MAX_BONUS_DESC = skill.MAX_BONUS_DESC;
+
+        REQ_WEAPON = skill.REQ_WEAPON;
+        MAX_COOLDOWN = skill.MAX_COOLDOWN;
+        BASE_VALUE = skill.BASE_VALUE;
+        MULT_VALUE = skill.MULT_VALUE;
+        IS_PASSIVE = skill.IS_PASSIVE;
+        CANT_LEVEL = skill.CANT_LEVEL;
+        REQ_LEVEL = skill.REQ_LEVEL;
+
+        CUSTOM_VALUES = skill.CUSTOM_VALUES;
+    }
 
     public static double calculateSkillValue(final double base, final double multiplier, final double level, final double factor) {
         return (base + multiplier * level) * factor;
@@ -77,10 +121,10 @@ public abstract class Skill {
                     e.setVariable(variable, level);
                     break;
                 case "basevalue":
-                    e.setVariable(variable, getStaticFieldValue("BASE_VALUE", Double.class));
+                    e.setVariable(variable, BASE_VALUE);
                     break;
                 case "multvalue":
-                    e.setVariable(variable, getStaticFieldValue("MULT_VALUE", Double.class));
+                    e.setVariable(variable, MULT_VALUE);
                     break;
                 default:
                     e.setVariable(variable, getCustomValue("[" + variable + "]"));
@@ -180,22 +224,13 @@ public abstract class Skill {
         }
     }
 
-    public final <T> T getStaticFieldValue(String fieldName, Class<T> fieldType) {
-        try {
-            return fieldType.cast(this.getClass().getDeclaredField(fieldName).get(null));
-        } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException ex) {
-            Globals.logError("Could not find static field: " + fieldName + " in " + this.getClass().getSimpleName(), ex);
-        }
-        return null;
-    }
-
     public final Double getCustomValue(String customHeader) {
-        HashMap customValues = getStaticFieldValue("CUSTOM_VALUES", HashMap.class);
+        HashMap customValues = CUSTOM_VALUES;
         return (Double) customValues.get(customHeader);
     }
 
     public final String[] getDesc() {
-        return getStaticFieldValue("DESCRIPTION", String[].class);
+        return DESCRIPTION;
     }
 
     public final BufferedImage getIcon() {
@@ -207,41 +242,37 @@ public abstract class Skill {
     }
 
     public long getMaxCooldown() {
-        return getStaticFieldValue("MAX_COOLDOWN", Long.class);
+        return MAX_COOLDOWN;
     }
 
     public final int getReqLevel() {
-        return getStaticFieldValue("REQ_LEVEL", Integer.class);
+        return REQ_LEVEL;
     }
 
     public final byte getReqWeapon() {
-        return getStaticFieldValue("REQ_WEAPON", Byte.class);
+        return REQ_WEAPON;
     }
 
     public final byte getSkillCode() {
-        return getStaticFieldValue("SKILL_CODE", Byte.class);
+        return skillCode;
     }
 
     public final String getSkillName() {
-        return getStaticFieldValue("SKILL_NAME", String.class);
+        return SKILL_NAME;
     }
 
     public final boolean isPassive() {
-        return getStaticFieldValue("IS_PASSIVE", Boolean.class);
+        return IS_PASSIVE;
     }
 
     public final boolean cantLevel() {
-        return getStaticFieldValue("CANT_LEVEL", Boolean.class);
+        return CANT_LEVEL;
     }
 
     public void updateDesc() {
         if (this.cantLevel()) {
             return;
         }
-        String[] LEVEL_DESC = getStaticFieldValue("LEVEL_DESC", String[].class);
-        String[] MAX_BONUS_DESC = (this.isPassive() ? null : getStaticFieldValue("MAX_BONUS_DESC", String[].class));
-        double BASE_VALUE = getStaticFieldValue("BASE_VALUE", Double.class);
-        double MULT_VALUE = getStaticFieldValue("MULT_VALUE", Double.class);
 
         double curLevelValue = calculateSkillValue(BASE_VALUE, MULT_VALUE, this.level, 100);
         double nextLevelValue = calculateSkillValue(BASE_VALUE, MULT_VALUE, this.level + 1, 100);
@@ -365,4 +396,38 @@ public abstract class Skill {
         return this.level == 30;
     }
 
+    public void setSkillCode(byte skillCode) {
+        this.skillCode = skillCode;
+        loadSkillData();
+    }
+
+    private void loadSkillData() {
+        String[] data = Globals.loadSkillRawData(skillCode);
+        HashMap<String, Integer> dataHeaders = Globals.getDataHeaders(data);
+
+        CUSTOM_DATA_HEADERS = Globals.getSkillCustomHeaders(data, dataHeaders);
+        CUSTOM_VALUES = new HashMap<>(CUSTOM_DATA_HEADERS.length);
+
+        SKILL_NAME = Globals.loadSkillName(data, dataHeaders);
+
+        DESCRIPTION = Globals.loadSkillDesc(data, dataHeaders);
+        LEVEL_DESC = Globals.loadSkillLevelDesc(data, dataHeaders);
+        MAX_BONUS_DESC = Globals.loadSkillMaxBonusDesc(data, dataHeaders);
+
+        REQ_WEAPON = Globals.loadSkillReqWeapon(data, dataHeaders);
+        MAX_COOLDOWN = (long) Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MAXCOOLDOWN_HEADER);
+        BASE_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_BASEVALUE_HEADER);
+        MULT_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MULTVALUE_HEADER);
+        IS_PASSIVE = Globals.loadBooleanValue(data, dataHeaders, Globals.SKILL_PASSIVE_HEADER);
+        CANT_LEVEL = Globals.loadBooleanValue(data, dataHeaders, Globals.SKILL_CANT_LEVEL_HEADER);
+        REQ_LEVEL = Globals.loadSkillReqLevel(data, dataHeaders);
+
+        for (String customHeader : CUSTOM_DATA_HEADERS) {
+            CUSTOM_VALUES.put(customHeader, Globals.loadDoubleValue(data, dataHeaders, customHeader));
+        }
+    }
+
+    public String[] getCustomDataHeaders() {
+        return CUSTOM_DATA_HEADERS;
+    }
 }

@@ -31,7 +31,7 @@ public class ScreenSkills extends ScreenMenu {
     private static final int HOTKEY_BOX_X = 240, HOTKEY_BOX_Y = 605;
 
     // Actual skills stored
-    private final HashMap<Byte, Skill> hotkeyList;
+    private final HashMap<Byte, Byte> hotkeyList;
     private final HashMap<Byte, Skill> skillList;
 
     private byte drawInfoHotkey = -1;
@@ -73,8 +73,7 @@ public class ScreenSkills extends ScreenMenu {
         drawMenuButton(g);
 
         if (this.dragHotkey != -1) {
-            this.hotkeyList.get(this.dragHotkey).draw(g, (int) this.mousePos.x, (int) this.mousePos.y);
-
+            this.skillList.get(this.hotkeyList.get(this.dragHotkey)).draw(g, (int) this.mousePos.x, (int) this.mousePos.y);
         }
 
         if (this.skillWindow.getDraggingSkillCode() != -1) {
@@ -88,8 +87,9 @@ public class ScreenSkills extends ScreenMenu {
 
     private void drawSkillInfo(final Graphics2D g) {
         if (this.drawInfoHotkey != -1) {
-            if (this.saveData.getTotalStats()[Globals.STAT_LEVEL] >= this.hotkeyList.get(this.drawInfoHotkey).getReqLevel()) {
-                drawSkillInfo(g, HOTKEY_SLOTS[this.drawInfoHotkey], this.hotkeyList.get(this.drawInfoHotkey));
+            Skill skill = this.skillList.get(this.hotkeyList.get(this.drawInfoHotkey));
+            if (this.saveData.getTotalStats()[Globals.STAT_LEVEL] >= skill.getReqLevel()) {
+                drawSkillInfo(g, HOTKEY_SLOTS[this.drawInfoHotkey], skill);
             }
         }
     }
@@ -103,11 +103,12 @@ public class ScreenSkills extends ScreenMenu {
         for (byte i = 0; i < HOTKEY_SLOTS.length; i++) {
             g.drawImage(button, (int) HOTKEY_SLOTS[i].x, (int) HOTKEY_SLOTS[i].y, null);
             if (this.hotkeyList.get(i) != null) {
-                this.hotkeyList.get(i).draw(g, (int) HOTKEY_SLOTS[i].x, (int) HOTKEY_SLOTS[i].y);
+                Skill skill = this.skillList.get(this.hotkeyList.get(i));
+                skill.draw(g, (int) HOTKEY_SLOTS[i].x, (int) HOTKEY_SLOTS[i].y);
             }
             String key = UNKNOWN_KEY_TEXT;
-            if (this.saveData.getKeyBind()[i] != -1) {
-                key = KeyEvent.getKeyText(this.saveData.getKeyBind()[i]);
+            if (this.saveData.getKeyBind().get((int) i) != -1) {
+                key = KeyEvent.getKeyText(this.saveData.getKeyBind().get((int) i));
             }
             final int width = g.getFontMetrics().stringWidth(key);
             g.setFont(Globals.ARIAL_15PT);
@@ -165,12 +166,12 @@ public class ScreenSkills extends ScreenMenu {
                 if (HOTKEY_SLOTS[i].contains(scaled)) {
                     if (drSkill != -1) {
                         if (this.saveData.getTotalStats()[Globals.STAT_LEVEL] >= this.skillList.get(drSkill).getReqLevel()) {
-                            this.hotkeyList.put(i, this.skillList.get(drSkill));
+                            this.hotkeyList.put(i, this.skillList.get(drSkill).getSkillCode());
                         }
                         return;
                     }
                     if (drHK != -1) {
-                        final Skill temp = this.hotkeyList.get(i);
+                        final Byte temp = this.hotkeyList.get(i);
                         this.hotkeyList.put(i, this.hotkeyList.get(drHK));
                         this.hotkeyList.put(drHK, temp);
                         return;

@@ -62,13 +62,14 @@ public class ItemEquip implements Item {
     private static final String TIER_UNCOMMON_STRING = "Uncommon";
     private static final String TIER_COMMON_STRING = "Common";
 
-    protected double[] baseStats = new double[Globals.NUM_STATS],
-            totalStats = new double[Globals.NUM_STATS];
-    protected int upgrades;
-    protected double bonusMult;
-    protected byte tier = -1;
-    protected int equipCode;
-    protected byte equipType = -1, equipSlot = -1, equipTab = -1;
+    private int equipCode;
+    private double[] baseStats = new double[Globals.NUM_STATS];
+    private int upgrades;
+    private double bonusMult;
+
+    protected transient double[] totalStats = new double[Globals.NUM_STATS];
+    protected transient byte tier = -1;
+    protected transient byte equipType = -1, equipSlot = -1, equipTab = -1;
 
     static {
         loadItemTypeNames();
@@ -298,6 +299,25 @@ public class ItemEquip implements Item {
 
     public ItemEquip(final int ic) {
         this.equipCode = ic;
+        setEquipTypeAndTab(ic);
+    }
+
+    public ItemEquip(final int ic, final double level) {
+        this(ic, level, false);
+    }
+
+    public ItemEquip(final int ic, final double level, final boolean legendary) {
+        this(ic);
+        this.baseStats = calcEquipStat(ic, level);
+        if (legendary) {
+            this.bonusMult = (Globals.rng(9) + 90) / 100D;
+        } else {
+            this.bonusMult = Globals.rng(90) / 100D;
+        }
+        this.upgrades = (Globals.DEBUG_MODE) ? 20 : 0;
+    }
+
+    private void setEquipTypeAndTab(final int ic) {
         this.equipType = Globals.getEquipType(ic);
         switch (this.equipType) {
             case Globals.ITEM_AMULET:
@@ -347,22 +367,6 @@ public class ItemEquip implements Item {
                 this.equipTab = Globals.EQUIP_TAB_WEAPON;
                 break;
         }
-    }
-
-    public ItemEquip(final int ic, final double level) {
-        this(ic, level, false);
-    }
-
-    public ItemEquip(final int ic, final double level, final boolean legendary) {
-        this(ic);
-        this.baseStats = calcEquipStat(ic, level);
-        if (legendary) {
-            this.bonusMult = (Globals.rng(9) + 90) / 100D;
-        } else {
-            this.bonusMult = Globals.rng(90) / 100D;
-        }
-        this.upgrades = (Globals.DEBUG_MODE) ? 20 : 0;
-        updateStats();
     }
 
     private static double calcNewStat(final double level, final int statID) {
@@ -634,9 +638,11 @@ public class ItemEquip implements Item {
         return this.upgrades;
     }
 
-    private void updateStats() {
+    public void updateStats() {
+        setEquipTypeAndTab(this.equipCode);
         updateTier();
 
+        this.totalStats = new double[this.baseStats.length];
         System.arraycopy(this.baseStats, 0, this.totalStats, 0, this.baseStats.length);
 
         this.totalStats[Globals.STAT_POWER] = this.baseStats[Globals.STAT_POWER];

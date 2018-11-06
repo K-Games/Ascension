@@ -1,6 +1,5 @@
 package blockfighter.client;
 
-import blockfighter.client.entities.player.skills.Skill;
 import blockfighter.client.net.GameClient;
 import blockfighter.client.savedata.SaveData;
 import blockfighter.client.screen.Screen;
@@ -56,9 +55,10 @@ public class LogicModule implements Runnable {
     public void connect(final GameClient gc) {
         boolean skillReady = false;
         boolean equipReady = false;
-        for (Skill s : this.selectedSaveData.getHotkeys().values()) {
+        for (Byte s : this.selectedSaveData.getHotkeys().values()) {
             if (s != null) {
                 skillReady = true;
+                break;
             }
         }
 

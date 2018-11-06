@@ -137,7 +137,7 @@ public class ScreenIngame extends Screen {
             for (byte i = 0; i < this.skillKeyDown.length; i++) {
                 if (this.skillKeyDown[i]) {
                     if (myPlayerKey != null && this.c.getHotkeys().get(i) != null) {
-                        PacketSender.sendUseSkill(Core.getLogicModule().getConnectedRoom(), myPlayerKey, this.c.getHotkeys().get(i).getSkillCode());
+                        PacketSender.sendUseSkill(Core.getLogicModule().getConnectedRoom(), myPlayerKey, this.c.getHotkeys().get(i));
                     }
                 }
             }
@@ -352,7 +352,7 @@ public class ScreenIngame extends Screen {
         drawHotkeys(g);
 
         if (this.drawInfoHotkey != -1) {
-            drawSkillInfo(g, this.hotkeySlots[this.drawInfoHotkey], this.c.getHotkeys().get(this.drawInfoHotkey));
+            drawSkillInfo(g, this.hotkeySlots[this.drawInfoHotkey], this.c.getSkills().get(this.c.getHotkeys().get(this.drawInfoHotkey)));
         }
 
         drawNotifications(g);
@@ -388,29 +388,30 @@ public class ScreenIngame extends Screen {
     }
 
     private void drawHotkeys(final Graphics2D g) {
-        final HashMap<Byte, Skill> hotkey = this.c.getHotkeys();
-        for (byte j = 0; j < this.hotkeySlots.length; j++) {
-            if (hotkey.get(j) != null) {
-                hotkey.get(j).draw(g, (int) this.hotkeySlots[j].x, (int) this.hotkeySlots[j].y);
+        final HashMap<Byte, Byte> hotkeys = this.c.getHotkeys();
+        for (int j = 0; j < this.hotkeySlots.length; j++) {
+            if (hotkeys.get(j) != null) {
+                Skill skill = this.c.getSkills().get(hotkeys.get(j));
+                skill.draw(g, (int) this.hotkeySlots[j].x, (int) this.hotkeySlots[j].y);
                 g.setColor(new Color(100, 100, 100, 125));
-                final int cdHeight = (int) ((hotkey.get(j).getCooldown() / (hotkey.get(j).getMaxCooldown() * 1D)) * this.hotkeySlots[j].height);
+                final int cdHeight = (int) ((skill.getCooldown() / (skill.getMaxCooldown() * 1D)) * this.hotkeySlots[j].height);
                 g.fillRect((int) this.hotkeySlots[j].x, (int) (this.hotkeySlots[j].y + this.hotkeySlots[j].height - cdHeight),
                         (int) this.hotkeySlots[j].width,
                         cdHeight);
-                if (hotkey.get(j).getCooldown() > 0) {
+                if (skill.getCooldown() > 0) {
                     g.setFont(Globals.ARIAL_18PT);
-                    final int width = g.getFontMetrics().stringWidth(COOLDOWN_FORMAT.format(hotkey.get(j).getCooldown() / 1000D));
-                    drawStringOutline(g, COOLDOWN_FORMAT.format(hotkey.get(j).getCooldown() / 1000D), (int) this.hotkeySlots[j].x + 28 - width / 2,
+                    final int width = g.getFontMetrics().stringWidth(COOLDOWN_FORMAT.format(skill.getCooldown() / 1000D));
+                    drawStringOutline(g, COOLDOWN_FORMAT.format(skill.getCooldown() / 1000D), (int) this.hotkeySlots[j].x + 28 - width / 2,
                             (int) this.hotkeySlots[j].y + 33, 1);
                     g.setColor(Color.white);
-                    g.drawString(COOLDOWN_FORMAT.format(hotkey.get(j).getCooldown() / 1000D), (int) this.hotkeySlots[j].x + 28 - width / 2,
+                    g.drawString(COOLDOWN_FORMAT.format(skill.getCooldown() / 1000D), (int) this.hotkeySlots[j].x + 28 - width / 2,
                             (int) this.hotkeySlots[j].y + 33);
                 }
             }
             g.setFont(Globals.ARIAL_15PT);
             String key = "?";
-            if (this.c.getKeyBind()[j] != -1) {
-                key = KeyEvent.getKeyText(this.c.getKeyBind()[j]);
+            if (this.c.getKeyBind().get(j) != null) {
+                key = KeyEvent.getKeyText(this.c.getKeyBind().get(j));
             }
             final int width = g.getFontMetrics().stringWidth(key);
             drawStringOutline(g, key, (int) this.hotkeySlots[j].x + 58 - width, (int) this.hotkeySlots[j].y + 58, 1);
@@ -919,87 +920,87 @@ public class ScreenIngame extends Screen {
     @Override
     public void keyPressed(final KeyEvent e) {
         final int key = e.getKeyCode();
-        if (key == this.c.getKeyBind()[Globals.KEYBIND_JUMP]) {
+        if (key == this.c.getKeyBind().get(Globals.KEYBIND_JUMP)) {
             setKeyDown(Globals.UP, true);
             PacketSender.sendMove(Core.getLogicModule().getConnectedRoom(), myPlayerKey, Globals.UP, this.moveKeyDown[Globals.UP]);
-        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_DOWN]) {
+        } else if (key == this.c.getKeyBind().get(Globals.KEYBIND_DOWN)) {
             setKeyDown(Globals.DOWN, true);
             PacketSender.sendMove(Core.getLogicModule().getConnectedRoom(), myPlayerKey, Globals.DOWN, this.moveKeyDown[Globals.DOWN]);
-        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_LEFT]) {
+        } else if (key == this.c.getKeyBind().get(Globals.KEYBIND_LEFT)) {
             setKeyDown(Globals.LEFT, true);
             PacketSender.sendMove(Core.getLogicModule().getConnectedRoom(), myPlayerKey, Globals.LEFT, this.moveKeyDown[Globals.LEFT]);
-        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_RIGHT]) {
+        } else if (key == this.c.getKeyBind().get(Globals.KEYBIND_RIGHT)) {
             setKeyDown(Globals.RIGHT, true);
             PacketSender.sendMove(Core.getLogicModule().getConnectedRoom(), myPlayerKey, Globals.RIGHT, this.moveKeyDown[Globals.RIGHT]);
-        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_SKILL1]) {
+        } else if (key == this.c.getKeyBind().get(Globals.KEYBIND_SKILL1)) {
             if (this.c.getHotkeys().get((byte) 0) != null) {
                 setSkillKeyDown(0, true);
             }
-        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_SKILL2]) {
+        } else if (key == this.c.getKeyBind().get(Globals.KEYBIND_SKILL2)) {
             if (this.c.getHotkeys().get((byte) 1) != null) {
                 setSkillKeyDown(1, true);
             }
-        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_SKILL3]) {
+        } else if (key == this.c.getKeyBind().get(Globals.KEYBIND_SKILL3)) {
             if (this.c.getHotkeys().get((byte) 2) != null) {
                 setSkillKeyDown(2, true);
             }
-        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_SKILL4]) {
+        } else if (key == this.c.getKeyBind().get(Globals.KEYBIND_SKILL4)) {
             if (this.c.getHotkeys().get((byte) 3) != null) {
                 setSkillKeyDown(3, true);
             }
-        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_SKILL5]) {
+        } else if (key == this.c.getKeyBind().get(Globals.KEYBIND_SKILL5)) {
             if (this.c.getHotkeys().get((byte) 4) != null) {
                 setSkillKeyDown(4, true);
             }
-        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_SKILL6]) {
+        } else if (key == this.c.getKeyBind().get(Globals.KEYBIND_SKILL6)) {
             if (this.c.getHotkeys().get((byte) 5) != null) {
                 setSkillKeyDown(5, true);
             }
-        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_SKILL7]) {
+        } else if (key == this.c.getKeyBind().get(Globals.KEYBIND_SKILL7)) {
             if (this.c.getHotkeys().get((byte) 6) != null) {
                 setSkillKeyDown(6, true);
             }
-        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_SKILL8]) {
+        } else if (key == this.c.getKeyBind().get(Globals.KEYBIND_SKILL8)) {
             if (this.c.getHotkeys().get((byte) 7) != null) {
                 setSkillKeyDown(7, true);
             }
-        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_SKILL9]) {
+        } else if (key == this.c.getKeyBind().get(Globals.KEYBIND_SKILL9)) {
             if (this.c.getHotkeys().get((byte) 8) != null) {
                 setSkillKeyDown(8, true);
             }
-        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_SKILL10]) {
+        } else if (key == this.c.getKeyBind().get(Globals.KEYBIND_SKILL10)) {
             if (this.c.getHotkeys().get((byte) 9) != null) {
                 setSkillKeyDown(9, true);
             }
-        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_SKILL11]) {
+        } else if (key == this.c.getKeyBind().get(Globals.KEYBIND_SKILL11)) {
             if (this.c.getHotkeys().get((byte) 10) != null) {
                 setSkillKeyDown(10, true);
             }
-        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_SKILL12]) {
+        } else if (key == this.c.getKeyBind().get(Globals.KEYBIND_SKILL12)) {
             if (this.c.getHotkeys().get((byte) 11) != null) {
                 setSkillKeyDown(11, true);
             }
-        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE1]) {
+        } else if (key == this.c.getKeyBind().get(Globals.KEYBIND_EMOTE1)) {
             PacketSender.sendUseEmote(Core.getLogicModule().getConnectedRoom(), myPlayerKey, Globals.Emotes.ALERT.getEmoteCode());
-        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE2]) {
+        } else if (key == this.c.getKeyBind().get(Globals.KEYBIND_EMOTE2)) {
             PacketSender.sendUseEmote(Core.getLogicModule().getConnectedRoom(), myPlayerKey, Globals.Emotes.QUESTION.getEmoteCode());
-        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE3]) {
+        } else if (key == this.c.getKeyBind().get(Globals.KEYBIND_EMOTE3)) {
             PacketSender.sendUseEmote(Core.getLogicModule().getConnectedRoom(), myPlayerKey, Globals.Emotes.SWEAT.getEmoteCode());
-        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE4]) {
+        } else if (key == this.c.getKeyBind().get(Globals.KEYBIND_EMOTE4)) {
             PacketSender.sendUseEmote(Core.getLogicModule().getConnectedRoom(), myPlayerKey, Globals.Emotes.SLEEP.getEmoteCode());
-        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE5]) {
+        } else if (key == this.c.getKeyBind().get(Globals.KEYBIND_EMOTE5)) {
             PacketSender.sendUseEmote(Core.getLogicModule().getConnectedRoom(), myPlayerKey, Globals.Emotes.ANGRY.getEmoteCode());
-        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE6]) {
+        } else if (key == this.c.getKeyBind().get(Globals.KEYBIND_EMOTE6)) {
 //            PacketSender.sendUseEmote(Core.getLogicModule().getSelectedRoom(), Core.getLogicModule().getMyPlayerKey(), Globals.EMOTE_5);
-        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE7]) {
+        } else if (key == this.c.getKeyBind().get(Globals.KEYBIND_EMOTE7)) {
 //            PacketSender.sendUseEmote(Core.getLogicModule().getSelectedRoom(), Core.getLogicModule().getMyPlayerKey(), Globals.EMOTE_6);
-        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE8]) {
+        } else if (key == this.c.getKeyBind().get(Globals.KEYBIND_EMOTE8)) {
 //            PacketSender.sendUseEmote(Core.getLogicModule().getSelectedRoom(), Core.getLogicModule().getMyPlayerKey(), Globals.EMOTE_7);
-        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE9]) {
+        } else if (key == this.c.getKeyBind().get(Globals.KEYBIND_EMOTE9)) {
 //            PacketSender.sendUseEmote(Core.getLogicModule().getSelectedRoom(), Core.getLogicModule().getMyPlayerKey(), Globals.EMOTE_8);
-        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE10]) {
+        } else if (key == this.c.getKeyBind().get(Globals.KEYBIND_EMOTE10)) {
 //            PacketSender.sendUseEmote(Core.getLogicModule().getSelectedRoom(), Core.getLogicModule().getMyPlayerKey(), Globals.EMOTE_9);
-        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_SCOREBOARD]) {
+        } else if (key == this.c.getKeyBind().get(Globals.KEYBIND_SCOREBOARD)) {
             this.showScoreboard = true;
         }
 
@@ -1008,99 +1009,99 @@ public class ScreenIngame extends Screen {
     @Override
     public void keyReleased(final KeyEvent e) {
         final int key = e.getKeyCode();
-        if (key == this.c.getKeyBind()[Globals.KEYBIND_JUMP]) {
+        if (key == this.c.getKeyBind().get(Globals.KEYBIND_JUMP)) {
             setKeyDown(Globals.UP, false);
             PacketSender.sendMove(Core.getLogicModule().getConnectedRoom(), myPlayerKey, Globals.UP, this.moveKeyDown[Globals.UP]);
-        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_DOWN]) {
+        } else if (key == this.c.getKeyBind().get(Globals.KEYBIND_DOWN)) {
             setKeyDown(Globals.DOWN, false);
             PacketSender.sendMove(Core.getLogicModule().getConnectedRoom(), myPlayerKey, Globals.DOWN, this.moveKeyDown[Globals.DOWN]);
-        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_LEFT]) {
+        } else if (key == this.c.getKeyBind().get(Globals.KEYBIND_LEFT)) {
             setKeyDown(Globals.LEFT, false);
             PacketSender.sendMove(Core.getLogicModule().getConnectedRoom(), myPlayerKey, Globals.LEFT, this.moveKeyDown[Globals.LEFT]);
-        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_RIGHT]) {
+        } else if (key == this.c.getKeyBind().get(Globals.KEYBIND_RIGHT)) {
             setKeyDown(Globals.RIGHT, false);
             PacketSender.sendMove(Core.getLogicModule().getConnectedRoom(), myPlayerKey, Globals.RIGHT, this.moveKeyDown[Globals.RIGHT]);
-        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_SKILL1]) {
+        } else if (key == this.c.getKeyBind().get(Globals.KEYBIND_SKILL1)) {
             if (this.c.getHotkeys().get((byte) 0) != null) {
                 setSkillKeyDown(0, false);
-                PacketSender.sendUseSkill(Core.getLogicModule().getConnectedRoom(), myPlayerKey, this.c.getHotkeys().get((byte) 0).getSkillCode());
+                PacketSender.sendUseSkill(Core.getLogicModule().getConnectedRoom(), myPlayerKey, this.c.getHotkeys().get((byte) 0));
             }
-        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_SKILL2]) {
+        } else if (key == this.c.getKeyBind().get(Globals.KEYBIND_SKILL2)) {
             if (this.c.getHotkeys().get((byte) 1) != null) {
                 setSkillKeyDown(1, false);
-                PacketSender.sendUseSkill(Core.getLogicModule().getConnectedRoom(), myPlayerKey, this.c.getHotkeys().get((byte) 1).getSkillCode());
+                PacketSender.sendUseSkill(Core.getLogicModule().getConnectedRoom(), myPlayerKey, this.c.getHotkeys().get((byte) 1));
             }
-        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_SKILL3]) {
+        } else if (key == this.c.getKeyBind().get(Globals.KEYBIND_SKILL3)) {
             if (this.c.getHotkeys().get((byte) 2) != null) {
                 setSkillKeyDown(2, false);
-                PacketSender.sendUseSkill(Core.getLogicModule().getConnectedRoom(), myPlayerKey, this.c.getHotkeys().get((byte) 2).getSkillCode());
+                PacketSender.sendUseSkill(Core.getLogicModule().getConnectedRoom(), myPlayerKey, this.c.getHotkeys().get((byte) 2));
             }
-        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_SKILL4]) {
+        } else if (key == this.c.getKeyBind().get(Globals.KEYBIND_SKILL4)) {
             if (this.c.getHotkeys().get((byte) 3) != null) {
                 setSkillKeyDown(3, false);
-                PacketSender.sendUseSkill(Core.getLogicModule().getConnectedRoom(), myPlayerKey, this.c.getHotkeys().get((byte) 3).getSkillCode());
+                PacketSender.sendUseSkill(Core.getLogicModule().getConnectedRoom(), myPlayerKey, this.c.getHotkeys().get((byte) 3));
             }
-        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_SKILL5]) {
+        } else if (key == this.c.getKeyBind().get(Globals.KEYBIND_SKILL5)) {
             if (this.c.getHotkeys().get((byte) 4) != null) {
                 setSkillKeyDown(4, false);
-                PacketSender.sendUseSkill(Core.getLogicModule().getConnectedRoom(), myPlayerKey, this.c.getHotkeys().get((byte) 4).getSkillCode());
+                PacketSender.sendUseSkill(Core.getLogicModule().getConnectedRoom(), myPlayerKey, this.c.getHotkeys().get((byte) 4));
             }
-        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_SKILL6]) {
+        } else if (key == this.c.getKeyBind().get(Globals.KEYBIND_SKILL6)) {
             if (this.c.getHotkeys().get((byte) 5) != null) {
                 setSkillKeyDown(5, false);
-                PacketSender.sendUseSkill(Core.getLogicModule().getConnectedRoom(), myPlayerKey, this.c.getHotkeys().get((byte) 5).getSkillCode());
+                PacketSender.sendUseSkill(Core.getLogicModule().getConnectedRoom(), myPlayerKey, this.c.getHotkeys().get((byte) 5));
             }
-        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_SKILL7]) {
+        } else if (key == this.c.getKeyBind().get(Globals.KEYBIND_SKILL7)) {
             if (this.c.getHotkeys().get((byte) 6) != null) {
                 setSkillKeyDown(6, false);
-                PacketSender.sendUseSkill(Core.getLogicModule().getConnectedRoom(), myPlayerKey, this.c.getHotkeys().get((byte) 6).getSkillCode());
+                PacketSender.sendUseSkill(Core.getLogicModule().getConnectedRoom(), myPlayerKey, this.c.getHotkeys().get((byte) 6));
             }
-        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_SKILL8]) {
+        } else if (key == this.c.getKeyBind().get(Globals.KEYBIND_SKILL8)) {
             if (this.c.getHotkeys().get((byte) 7) != null) {
                 setSkillKeyDown(7, false);
-                PacketSender.sendUseSkill(Core.getLogicModule().getConnectedRoom(), myPlayerKey, this.c.getHotkeys().get((byte) 7).getSkillCode());
+                PacketSender.sendUseSkill(Core.getLogicModule().getConnectedRoom(), myPlayerKey, this.c.getHotkeys().get((byte) 7));
             }
-        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_SKILL9]) {
+        } else if (key == this.c.getKeyBind().get(Globals.KEYBIND_SKILL9)) {
             if (this.c.getHotkeys().get((byte) 8) != null) {
                 setSkillKeyDown(8, false);
-                PacketSender.sendUseSkill(Core.getLogicModule().getConnectedRoom(), myPlayerKey, this.c.getHotkeys().get((byte) 8).getSkillCode());
+                PacketSender.sendUseSkill(Core.getLogicModule().getConnectedRoom(), myPlayerKey, this.c.getHotkeys().get((byte) 8));
             }
-        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_SKILL10]) {
+        } else if (key == this.c.getKeyBind().get(Globals.KEYBIND_SKILL10)) {
             if (this.c.getHotkeys().get((byte) 9) != null) {
                 setSkillKeyDown(9, false);
-                PacketSender.sendUseSkill(Core.getLogicModule().getConnectedRoom(), myPlayerKey, this.c.getHotkeys().get((byte) 9).getSkillCode());
+                PacketSender.sendUseSkill(Core.getLogicModule().getConnectedRoom(), myPlayerKey, this.c.getHotkeys().get((byte) 9));
             }
-        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_SKILL11]) {
+        } else if (key == this.c.getKeyBind().get(Globals.KEYBIND_SKILL11)) {
             if (this.c.getHotkeys().get((byte) 10) != null) {
                 setSkillKeyDown(10, false);
-                PacketSender.sendUseSkill(Core.getLogicModule().getConnectedRoom(), myPlayerKey, this.c.getHotkeys().get((byte) 10).getSkillCode());
+                PacketSender.sendUseSkill(Core.getLogicModule().getConnectedRoom(), myPlayerKey, this.c.getHotkeys().get((byte) 10));
             }
-        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_SKILL12]) {
+        } else if (key == this.c.getKeyBind().get(Globals.KEYBIND_SKILL12)) {
             if (this.c.getHotkeys().get((byte) 11) != null) {
                 setSkillKeyDown(11, false);
-                PacketSender.sendUseSkill(Core.getLogicModule().getConnectedRoom(), myPlayerKey, this.c.getHotkeys().get((byte) 11).getSkillCode());
+                PacketSender.sendUseSkill(Core.getLogicModule().getConnectedRoom(), myPlayerKey, this.c.getHotkeys().get((byte) 11));
             }
-        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE1]) {
+        } else if (key == this.c.getKeyBind().get(Globals.KEYBIND_EMOTE1)) {
             PacketSender.sendUseEmote(Core.getLogicModule().getConnectedRoom(), myPlayerKey, Globals.Emotes.ALERT.getEmoteCode());
-        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE2]) {
+        } else if (key == this.c.getKeyBind().get(Globals.KEYBIND_EMOTE2)) {
             PacketSender.sendUseEmote(Core.getLogicModule().getConnectedRoom(), myPlayerKey, Globals.Emotes.QUESTION.getEmoteCode());
-        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE3]) {
+        } else if (key == this.c.getKeyBind().get(Globals.KEYBIND_EMOTE3)) {
             PacketSender.sendUseEmote(Core.getLogicModule().getConnectedRoom(), myPlayerKey, Globals.Emotes.SWEAT.getEmoteCode());
-        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE4]) {
+        } else if (key == this.c.getKeyBind().get(Globals.KEYBIND_EMOTE4)) {
             PacketSender.sendUseEmote(Core.getLogicModule().getConnectedRoom(), myPlayerKey, Globals.Emotes.SLEEP.getEmoteCode());
-        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE5]) {
+        } else if (key == this.c.getKeyBind().get(Globals.KEYBIND_EMOTE5)) {
             PacketSender.sendUseEmote(Core.getLogicModule().getConnectedRoom(), myPlayerKey, Globals.Emotes.ANGRY.getEmoteCode());
-        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE6]) {
+        } else if (key == this.c.getKeyBind().get(Globals.KEYBIND_EMOTE6)) {
             PacketSender.sendUseEmote(Core.getLogicModule().getConnectedRoom(), myPlayerKey, Globals.Emotes.WELL_PLAYED.getEmoteCode());
-        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE7]) {
+        } else if (key == this.c.getKeyBind().get(Globals.KEYBIND_EMOTE7)) {
             PacketSender.sendUseEmote(Core.getLogicModule().getConnectedRoom(), myPlayerKey, Globals.Emotes.GOOD_GAME.getEmoteCode());
-        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE8]) {
+        } else if (key == this.c.getKeyBind().get(Globals.KEYBIND_EMOTE8)) {
 //            PacketSender.sendUseEmote(Core.getLogicModule().getSelectedRoom(), Core.getLogicModule().getMyPlayerKey(), Globals.EMOTE_7);
-        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE9]) {
+        } else if (key == this.c.getKeyBind().get(Globals.KEYBIND_EMOTE9)) {
 //            PacketSender.sendUseEmote(Core.getLogicModule().getSelectedRoom(), Core.getLogicModule().getMyPlayerKey(), Globals.EMOTE_8);
-        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_EMOTE10]) {
+        } else if (key == this.c.getKeyBind().get(Globals.KEYBIND_EMOTE10)) {
 //            PacketSender.sendUseEmote(Core.getLogicModule().getSelectedRoom(), Core.getLogicModule().getMyPlayerKey(), Globals.EMOTE_9);
-        } else if (key == this.c.getKeyBind()[Globals.KEYBIND_SCOREBOARD]) {
+        } else if (key == this.c.getKeyBind().get(Globals.KEYBIND_SCOREBOARD)) {
             this.showScoreboard = false;
         }
 

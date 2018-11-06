@@ -12,6 +12,7 @@ import blockfighter.client.entities.player.Player;
 import com.esotericsoftware.minlog.Log;
 import static com.esotericsoftware.minlog.Log.*;
 import com.esotericsoftware.minlog.Log.Logger;
+import com.google.gson.Gson;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.Graphics;
@@ -67,6 +68,8 @@ public class Globals {
 
     public static final String DEV_PASSPHRASE = "amFwAkjuy0K/lSvUUyZvdiIFdn/Dzu/OAxStgUEdLKk=";
     public static final String COLON_SPACE_TEXT = ": ";
+
+    public static final Gson GSON = new Gson();
 
     public static boolean TEST_MAX_LEVEL = false,
             DEBUG_MODE = false;
@@ -443,7 +446,7 @@ public class Globals {
 
         private final byte particleCode;
 
-        private int numFrames;
+        private final int numFrames;
         private final String spriteFolder;
         private final Class<? extends Particle> particleClass;
         private final Class[] parameterTypes;
@@ -867,7 +870,7 @@ public class Globals {
         BOW_BUFF_PASSIVE1(Globals.BOW_BUFF_PASSIVE1, "bow.SkillBowBuffPassive1"),
         BOW_BUFF_PASSIVE2(Globals.BOW_BUFF_PASSIVE2, "bow.SkillBowBuffPassive2");
 
-        private Class<? extends blockfighter.client.entities.player.skills.Skill> CLIENT_CLASS;
+        private blockfighter.client.entities.player.skills.Skill clientSkillInstance;
         private Class<? extends blockfighter.server.entities.player.skills.Skill> SERVER_CLASS;
         private final byte BYTE_CODE;
 
@@ -875,7 +878,8 @@ public class Globals {
             this.BYTE_CODE = bytecode;
             try {
                 if (CLIENT_MODE) {
-                    this.CLIENT_CLASS = Class.forName("blockfighter.client.entities.player.skills." + className).asSubclass(blockfighter.client.entities.player.skills.Skill.class);
+                    this.clientSkillInstance = new blockfighter.client.entities.player.skills.Skill();
+                    this.clientSkillInstance.setSkillCode(bytecode);
                 }
                 if (SERVER_MODE) {
                     this.SERVER_CLASS = Class.forName("blockfighter.server.entities.player.skills." + className).asSubclass(blockfighter.server.entities.player.skills.Skill.class);
@@ -901,8 +905,8 @@ public class Globals {
             return this.BYTE_CODE;
         }
 
-        public Class<? extends blockfighter.client.entities.player.skills.Skill> getClientClass() {
-            return this.CLIENT_CLASS;
+        public blockfighter.client.entities.player.skills.Skill getClientSkillInstance() {
+            return this.clientSkillInstance;
         }
 
         public Class<? extends blockfighter.server.entities.player.skills.Skill> getServerClass() {
@@ -1281,14 +1285,14 @@ public class Globals {
     }
 
     public static String[] loadSkillRawData(final byte skillCode) {
-        //Globals.log(Globals.class, "Loading Skill " + String.format("0x%02X", skillCode) + " Data...", Globals.LOG_TYPE_DATA);
+        Globals.log(Globals.class, "Loading Skill " + String.format("0x%02X", skillCode) + " Data...", Globals.LOG_TYPE_DATA);
         try {
             InputStream skillDataFile = Globals.loadResourceAsStream("skilldata/" + String.format("0x%02X", skillCode) + ".txt");
             List<String> fileLines = IOUtils.readLines(skillDataFile, "UTF-8");
             String[] data = fileLines.toArray(new String[fileLines.size()]);
             HashMap<String, Integer> dataHeaders = Globals.getDataHeaders(data);
             String name = Globals.loadSkillName(data, dataHeaders);
-            //Globals.log(Globals.class, "Finished loading Skill " + String.format("0x%02X", skillCode) + "(" + name + ") Data...", Globals.LOG_TYPE_DATA);
+            Globals.log(Globals.class, "Finished loading Skill " + String.format("0x%02X", skillCode) + "(" + name + ") Data...", Globals.LOG_TYPE_DATA);
             return data;
         } catch (IOException | NullPointerException e) {
             Globals.logError("Could not load Skill " + String.format("0x%02X", skillCode) + " Data." + e.toString(), e);
@@ -1306,7 +1310,6 @@ public class Globals {
             }
             return description;
         } catch (Exception e) {
-            Globals.logError(e.toString(), e);
         }
         return new String[0];
     }

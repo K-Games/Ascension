@@ -41,7 +41,7 @@ public class PacketSender {
         bytes[1] = room;
         int pos = 2;
 
-        byte[] temp = c.getPlayerName().getBytes(StandardCharsets.UTF_8);
+        byte[] temp = c.getCharacterName().getBytes(StandardCharsets.UTF_8);
         System.arraycopy(temp, 0, bytes, pos, temp.length);
         pos += Globals.MAX_NAME_LENGTH;
 
@@ -112,9 +112,9 @@ public class PacketSender {
             pos += temp.length;
         }
 
-        final HashMap<Byte, Skill> skills = c.getHotkeys();
+        final HashMap<Byte, Byte> hotkeys = c.getHotkeys();
         for (byte i = 0; i < Globals.NUM_HOTKEYS; i++) {
-            Skill skill = skills.get(i);
+            Skill skill = c.getSkills().get(hotkeys.get(i));
             temp = new byte[2];
             if (skill == null) {
                 temp[0] = -1;

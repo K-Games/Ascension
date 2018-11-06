@@ -4,10 +4,13 @@ import blockfighter.client.entities.items.Item;
 import blockfighter.client.entities.items.ItemEquip;
 import blockfighter.client.entities.items.ItemUpgrade;
 import blockfighter.client.entities.player.skills.Skill;
+import blockfighter.client.savedata.json.SaveDataReader;
+import blockfighter.client.savedata.json.SaveDataWriter;
 import blockfighter.shared.Globals;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -16,57 +19,36 @@ import org.apache.commons.io.FileUtils;
 
 public class SaveData {
 
-    private static final int LEGACY_SAVE_DATA_LENGTH = 45485;
-
-    public static final int SAVE_VERSION_0250 = 250;
-    public static final int SAVE_VERSION_0240 = 240;
-    public static final int SAVE_VERSION_0232 = 232;
-    public static final int SAVE_VERSION_0231 = 231;
-    private static final int CURRENT_SAVE_VERSION = SAVE_VERSION_0250;
-    private static final HashMap<Integer, Class<? extends SaveDataReader>> SAVE_READERS = new HashMap<>();
-    private static final HashMap<Integer, Class<? extends SaveDataWriter>> SAVE_WRITERS = new HashMap<>();
-
-    static {
-        SAVE_READERS.put(SAVE_VERSION_0250, blockfighter.client.savedata.ver_0_25_0.SaveDataReaderImpl.class);
-        SAVE_READERS.put(SAVE_VERSION_0240, blockfighter.client.savedata.ver_0_24_0.SaveDataReaderImpl.class);
-        SAVE_READERS.put(SAVE_VERSION_0232, blockfighter.client.savedata.ver_0_23_2.SaveDataReaderImpl.class);
-        SAVE_READERS.put(SAVE_VERSION_0231, blockfighter.client.savedata.ver_0_23_1.SaveDataReaderImpl.class);
-
-        SAVE_WRITERS.put(SAVE_VERSION_0250, blockfighter.client.savedata.ver_0_25_0.SaveDataWriterImpl.class);
-        SAVE_WRITERS.put(SAVE_VERSION_0240, blockfighter.client.savedata.ver_0_24_0.SaveDataWriterImpl.class);
-        SAVE_WRITERS.put(SAVE_VERSION_0232, blockfighter.client.savedata.ver_0_23_2.SaveDataWriterImpl.class);
-        SAVE_WRITERS.put(SAVE_VERSION_0231, blockfighter.client.savedata.ver_0_23_1.SaveDataWriterImpl.class);
-    }
-
-    private final double[] baseStats = new double[Globals.NUM_STATS],
-            totalStats = new double[Globals.NUM_STATS],
-            bonusStats = new double[Globals.NUM_STATS];
+    private double[] baseStats = new double[Globals.NUM_STATS];
 
     private UUID uniqueID;
-    private String name;
-    private final byte saveNum;
+    private String characterName;
 
-    private final ItemEquip[][] inventory = new ItemEquip[Globals.NUM_EQUIP_TABS][100];
-    private final ItemUpgrade[] upgrades = new ItemUpgrade[100];
-    private final ItemEquip[] equipment = new ItemEquip[Globals.NUM_EQUIP_SLOTS];
+    private HashMap<Integer, ItemEquip[]> inventory = new HashMap<>();
+    private ItemUpgrade[] upgrades = new ItemUpgrade[100];
+    private ItemEquip[] equipment = new ItemEquip[Globals.NUM_EQUIP_SLOTS];
 
-    private final HashMap<Byte, Skill> hotkeys = new HashMap<>(12);
-    private final HashMap<Byte, Skill> skills = new HashMap<>(Globals.NUM_SKILLS);
-    private final int[] keybinds = new int[Globals.NUM_KEYBINDS];
+    private HashMap<Byte, Byte> hotkeys = new HashMap<>(12);
+    private HashMap<Byte, Skill> skills = new HashMap<>(Globals.NUM_SKILLS);
+    private HashMap<Integer, Integer> keybinds = new HashMap<>(Globals.NUM_KEYBINDS);
 
-    public SaveData(final String n, final byte saveNumber) throws InstantiationException, IllegalAccessException {
-        this.saveNum = saveNumber;
-        this.name = n;
-        this.uniqueID = UUID.randomUUID();
-        // initalize skill list
-        for (Globals.SkillClassMap skill : Globals.SkillClassMap.values()) {
-            this.skills.put(skill.getByteCode(), skill.getClientClass().newInstance());
-            this.skills.get(skill.getByteCode()).updateDesc();
-        }
-        Arrays.fill(this.keybinds, -1);
+    private transient byte saveNum;
+    private final transient double[] totalStats = new double[Globals.NUM_STATS];
+    private final transient double[] bonusStats = new double[Globals.NUM_STATS];
+
+    public SaveData() {
     }
 
-    public void newCharacter(final boolean testMax) {
+    public SaveData(final String characterName) {
+        this.characterName = characterName;
+        this.uniqueID = UUID.randomUUID();
+    }
+
+    public void setSaveNumber(byte saveNumber) {
+        this.saveNum = saveNumber;
+    }
+
+    public void createNewCharacterLoadout(final boolean testMax) {
         // Set level 1
         this.baseStats[Globals.STAT_LEVEL] = (testMax) ? 100 : 1;
         this.baseStats[Globals.STAT_POWER] = 0;
@@ -75,9 +57,15 @@ public class SaveData {
         this.baseStats[Globals.STAT_EXP] = 0;
         this.baseStats[Globals.STAT_SKILLPOINTS] = 3 * this.baseStats[Globals.STAT_LEVEL];
 
+        // initalize skill list
+        for (Globals.SkillClassMap skill : Globals.SkillClassMap.values()) {
+            this.skills.put(skill.getByteCode(), new Skill(skill.getClientSkillInstance()));
+            this.skills.get(skill.getByteCode()).setLevel((byte) 0);
+        }
+
         // Empty inventory
-        for (int i = 0; i < this.inventory.length; i++) {
-            this.inventory[i] = new ItemEquip[100];
+        for (int i = 0; i < Globals.NUM_EQUIP_TABS; i++) {
+            this.inventory.put(i, new ItemEquip[100]);
         }
 
         if (testMax) {
@@ -98,96 +86,64 @@ public class SaveData {
             addItem(new ItemEquip(130000, this.baseStats[Globals.STAT_LEVEL], false));
         }
 
-        this.keybinds[Globals.KEYBIND_SKILL1] = KeyEvent.VK_Q;
-        this.keybinds[Globals.KEYBIND_SKILL2] = KeyEvent.VK_W;
-        this.keybinds[Globals.KEYBIND_SKILL3] = KeyEvent.VK_E;
-        this.keybinds[Globals.KEYBIND_SKILL4] = KeyEvent.VK_R;
-        this.keybinds[Globals.KEYBIND_SKILL5] = KeyEvent.VK_T;
-        this.keybinds[Globals.KEYBIND_SKILL6] = KeyEvent.VK_Y;
-        this.keybinds[Globals.KEYBIND_SKILL7] = KeyEvent.VK_A;
-        this.keybinds[Globals.KEYBIND_SKILL8] = KeyEvent.VK_S;
-        this.keybinds[Globals.KEYBIND_SKILL9] = KeyEvent.VK_D;
-        this.keybinds[Globals.KEYBIND_SKILL10] = KeyEvent.VK_F;
-        this.keybinds[Globals.KEYBIND_SKILL11] = KeyEvent.VK_G;
-        this.keybinds[Globals.KEYBIND_SKILL12] = KeyEvent.VK_H;
+        this.keybinds.put(Globals.KEYBIND_SKILL1, KeyEvent.VK_Q);
+        this.keybinds.put(Globals.KEYBIND_SKILL2, KeyEvent.VK_W);
+        this.keybinds.put(Globals.KEYBIND_SKILL3, KeyEvent.VK_E);
+        this.keybinds.put(Globals.KEYBIND_SKILL4, KeyEvent.VK_R);
+        this.keybinds.put(Globals.KEYBIND_SKILL5, KeyEvent.VK_T);
+        this.keybinds.put(Globals.KEYBIND_SKILL6, KeyEvent.VK_Y);
+        this.keybinds.put(Globals.KEYBIND_SKILL7, KeyEvent.VK_A);
+        this.keybinds.put(Globals.KEYBIND_SKILL8, KeyEvent.VK_S);
+        this.keybinds.put(Globals.KEYBIND_SKILL9, KeyEvent.VK_D);
+        this.keybinds.put(Globals.KEYBIND_SKILL10, KeyEvent.VK_F);
+        this.keybinds.put(Globals.KEYBIND_SKILL11, KeyEvent.VK_G);
+        this.keybinds.put(Globals.KEYBIND_SKILL12, KeyEvent.VK_H);
 
-        this.keybinds[Globals.KEYBIND_LEFT] = KeyEvent.VK_LEFT;
-        this.keybinds[Globals.KEYBIND_RIGHT] = KeyEvent.VK_RIGHT;
-        this.keybinds[Globals.KEYBIND_JUMP] = KeyEvent.VK_SPACE;
-        this.keybinds[Globals.KEYBIND_DOWN] = KeyEvent.VK_DOWN;
-        this.keybinds[Globals.KEYBIND_EMOTE1] = KeyEvent.VK_1;
-        this.keybinds[Globals.KEYBIND_EMOTE2] = KeyEvent.VK_2;
-        this.keybinds[Globals.KEYBIND_EMOTE3] = KeyEvent.VK_3;
-        this.keybinds[Globals.KEYBIND_EMOTE4] = KeyEvent.VK_4;
-        this.keybinds[Globals.KEYBIND_EMOTE5] = KeyEvent.VK_5;
-        this.keybinds[Globals.KEYBIND_EMOTE6] = KeyEvent.VK_6;
-        this.keybinds[Globals.KEYBIND_EMOTE7] = KeyEvent.VK_7;
-        this.keybinds[Globals.KEYBIND_EMOTE8] = KeyEvent.VK_8;
-        this.keybinds[Globals.KEYBIND_EMOTE9] = KeyEvent.VK_9;
-        this.keybinds[Globals.KEYBIND_EMOTE10] = KeyEvent.VK_0;
+        this.keybinds.put(Globals.KEYBIND_LEFT, KeyEvent.VK_LEFT);
+        this.keybinds.put(Globals.KEYBIND_RIGHT, KeyEvent.VK_RIGHT);
+        this.keybinds.put(Globals.KEYBIND_JUMP, KeyEvent.VK_SPACE);
+        this.keybinds.put(Globals.KEYBIND_DOWN, KeyEvent.VK_DOWN);
+        this.keybinds.put(Globals.KEYBIND_EMOTE1, KeyEvent.VK_1);
+        this.keybinds.put(Globals.KEYBIND_EMOTE2, KeyEvent.VK_2);
+        this.keybinds.put(Globals.KEYBIND_EMOTE3, KeyEvent.VK_3);
+        this.keybinds.put(Globals.KEYBIND_EMOTE4, KeyEvent.VK_4);
+        this.keybinds.put(Globals.KEYBIND_EMOTE5, KeyEvent.VK_5);
+        this.keybinds.put(Globals.KEYBIND_EMOTE6, KeyEvent.VK_6);
+        this.keybinds.put(Globals.KEYBIND_EMOTE7, KeyEvent.VK_7);
+        this.keybinds.put(Globals.KEYBIND_EMOTE8, KeyEvent.VK_8);
+        this.keybinds.put(Globals.KEYBIND_EMOTE9, KeyEvent.VK_9);
+        this.keybinds.put(Globals.KEYBIND_EMOTE10, KeyEvent.VK_0);
 
-        this.keybinds[Globals.KEYBIND_SCOREBOARD] = KeyEvent.VK_TAB;
+        this.keybinds.put(Globals.KEYBIND_SCOREBOARD, KeyEvent.VK_TAB);
+        completeSaveDataLoad();
     }
 
     public static void writeSaveData(final byte saveNum, final SaveData c) {
-        SaveDataWriter writer;
         try {
-            Globals.log(SaveData.class, "Grabbing Save Data Writer " + SAVE_READERS.get(CURRENT_SAVE_VERSION).getName(), Globals.LOG_TYPE_DATA);
-            writer = SAVE_WRITERS.get(CURRENT_SAVE_VERSION).newInstance();
-        } catch (InstantiationException | IllegalAccessException ex) {
-            Globals.logError("Failed to grab Save Data Writer " + SAVE_READERS.get(CURRENT_SAVE_VERSION).getName(), ex);
-            return;
-        }
-
-        try {
-            Globals.log(SaveData.class, "Writing Save Data with " + writer.getClass().getName(), Globals.LOG_TYPE_DATA);
-            FileUtils.writeByteArrayToFile(new File(Globals.SAVE_FILE_DIRECTORY, saveNum + ".tcdat"), writer.writeSaveData(c));
+            Globals.log(SaveData.class, "Writing Save Data with " + SaveDataWriter.class.getName(), Globals.LOG_TYPE_DATA);
+            FileUtils.writeByteArrayToFile(new File(Globals.SAVE_FILE_DIRECTORY, saveNum + ".tcdat"), SaveDataWriter.writeSaveData(c));
         } catch (final IOException ex) {
             Globals.logError(ex.toString(), ex);
         }
     }
 
-    public static SaveData readSaveData(final byte saveNum) throws InstantiationException, IllegalAccessException {
-        final SaveData c = new SaveData("", saveNum);
-        final int legacyLength = LEGACY_SAVE_DATA_LENGTH;
-        byte[] data;
+    public static SaveData readSaveData(final byte saveNum) throws InstantiationException, IllegalAccessException, IOException {
         try {
-            data = FileUtils.readFileToByteArray(new File(Globals.SAVE_FILE_DIRECTORY, saveNum + ".tcdat"));
-            Globals.log(SaveData.class, "Loading Save Data " + saveNum + "...", Globals.LOG_TYPE_DATA);
-        } catch (final IOException ex) {
+            SaveData saveData = SaveDataReader.readSaveData(FileUtils.readFileToByteArray(new File(Globals.SAVE_FILE_DIRECTORY, saveNum + ".tcdat")));
+            saveData.setSaveNum(saveNum);
+            saveData.completeSaveDataLoad();
+            return saveData;
+        } catch (Exception e) {
             return null;
         }
-
-        int saveVersion = SAVE_VERSION_0231;
-        if (data.length != legacyLength) {
-            byte[] temp = new byte[Integer.BYTES];
-            System.arraycopy(data, 0, temp, 0, temp.length);
-            saveVersion = Globals.bytesToInt(temp);
-        }
-
-        SaveDataReader reader;
-        try {
-            Globals.log(SaveData.class, "Grabbing Save Data Reader " + SAVE_READERS.get(saveVersion).getName(), Globals.LOG_TYPE_DATA);
-            reader = SAVE_READERS.get(saveVersion).newInstance();
-        } catch (InstantiationException | IllegalAccessException ex) {
-            Globals.logError("Failed to grab Save Data Reader " + SAVE_READERS.get(CURRENT_SAVE_VERSION).getName(), ex);
-            return null;
-        }
-
-        Globals.log(SaveData.class, "Reading Save Data with " + reader.getClass().getName(), Globals.LOG_TYPE_DATA);
-        return reader.readSaveData(c, data);
     }
 
-    public HashMap<Byte, Skill> getHotkeys() {
+    public HashMap<Byte, Byte> getHotkeys() {
         return this.hotkeys;
     }
 
     public HashMap<Byte, Skill> getSkills() {
         return this.skills;
-    }
-
-    public String getPlayerName() {
-        return this.name;
     }
 
     public double[] getBaseStats() {
@@ -310,12 +266,12 @@ public class SaveData {
         this.baseStats[Globals.STAT_MAXEXP] = Globals.calcEXPtoNxtLvl(this.baseStats[Globals.STAT_LEVEL]);
     }
 
-    public ItemEquip[][] getInventory() {
+    public HashMap<Integer, ItemEquip[]> getInventory() {
         return this.inventory;
     }
 
-    public ItemEquip[] getInventory(final byte type) {
-        return this.inventory[type];
+    public ItemEquip[] getInventory(final int type) {
+        return this.inventory.get(type);
     }
 
     public ItemEquip[] getEquip() {
@@ -326,7 +282,7 @@ public class SaveData {
         return this.upgrades;
     }
 
-    public int[] getKeyBind() {
+    public HashMap<Integer, Integer> getKeyBind() {
         return this.keybinds;
     }
 
@@ -386,10 +342,10 @@ public class SaveData {
         writeSaveData(this.saveNum, this);
     }
 
-    public void unequipItem(final byte equipTab, final byte equipSlot) {
-        for (int i = 0; i < this.inventory[equipTab].length; i++) {
-            if (this.inventory[equipTab][i] == null) {
-                this.inventory[equipTab][i] = this.equipment[equipSlot];
+    public void unequipItem(final int equipTab, final byte equipSlot) {
+        for (int i = 0; i < this.inventory.get(equipTab).length; i++) {
+            if (this.inventory.get(equipTab)[i] == null) {
+                this.inventory.get(equipTab)[i] = this.equipment[equipSlot];
                 this.equipment[equipSlot] = null;
                 break;
             }
@@ -399,20 +355,20 @@ public class SaveData {
     }
 
     public void equipItem(final int equipTab, int equipSlot, final int inventorySlot) {
-        final ItemEquip itemToEquip = this.inventory[equipTab][inventorySlot];
+        final ItemEquip itemToEquip = this.inventory.get(equipTab)[inventorySlot];
         if (itemToEquip != null) {
             if (itemToEquip.getBaseStats()[Globals.STAT_LEVEL] > this.baseStats[Globals.STAT_LEVEL]) {
                 return;
             }
         }
-        this.inventory[equipTab][inventorySlot] = this.equipment[equipSlot];
+        this.inventory.get(equipTab)[inventorySlot] = this.equipment[equipSlot];
         this.equipment[equipSlot] = itemToEquip;
         calcStats();
         writeSaveData(this.saveNum, this);
     }
 
     public void destroyItem(final int type, final int slot) {
-        this.inventory[type][slot] = null;
+        this.inventory.get(type)[slot] = null;
         writeSaveData(this.saveNum, this);
     }
 
@@ -422,8 +378,8 @@ public class SaveData {
     }
 
     public void destroyAll(final int type) {
-        for (int i = 0; i < this.inventory[type].length; i++) {
-            this.inventory[type][i] = null;
+        for (int i = 0; i < this.inventory.get(type).length; i++) {
+            this.inventory.get(type)[i] = null;
         }
         writeSaveData(this.saveNum, this);
     }
@@ -440,9 +396,9 @@ public class SaveData {
         if (equipTab == Globals.ITEM_SHIELD || equipTab == Globals.ITEM_ARROW || equipTab == Globals.ITEM_BOW) {
             equipTab = Globals.EQUIP_WEAPON;
         }
-        for (int i = 0; i < this.inventory[equipTab].length; i++) {
-            if (this.inventory[equipTab][i] == null) {
-                this.inventory[equipTab][i] = e;
+        for (int i = 0; i < this.inventory.get(equipTab).length; i++) {
+            if (this.inventory.get(equipTab)[i] == null) {
+                this.inventory.get(equipTab)[i] = e;
                 break;
             }
         }
@@ -456,21 +412,20 @@ public class SaveData {
                 break;
             }
         }
-        writeSaveData(this.saveNum, this);
     }
 
-    public void setKeyBind(final int k, final int keycode) {
-        this.keybinds[k] = keycode;
-        for (int i = 0; i < this.keybinds.length; i++) {
-            if (i != k && this.keybinds[i] == keycode) {
-                this.keybinds[i] = -1;
+    public void setKeyBind(final int actionKey, final int keycode) {
+        this.keybinds.put(actionKey, keycode);
+        ArrayList<Integer> keysToRemove = new ArrayList<>();
+        this.keybinds.keySet().forEach(key -> {
+            if (key != actionKey && this.keybinds.get(key) == keycode) {
+                keysToRemove.add(key);
             }
-        }
-        writeSaveData(this.saveNum, this);
-    }
+        });
 
-    public void setPlayerName(final String name) {
-        this.name = name;
+        keysToRemove.forEach(key -> {
+            this.keybinds.remove(key);
+        });
     }
 
     public void setUniqueID(final UUID id) {
@@ -484,9 +439,41 @@ public class SaveData {
 
     public void validate() {
         for (byte i = 0; i < Globals.NUM_HOTKEYS; i++) {
-            if (getHotkeys().get(i) != null && getTotalStats()[Globals.STAT_LEVEL] < getHotkeys().get(i).getReqLevel()) {
+            if (getHotkeys().get(i) != null && getTotalStats()[Globals.STAT_LEVEL] < getSkills().get(getHotkeys().get(i)).getReqLevel()) {
                 getHotkeys().remove(i);
             }
         }
     }
+
+    public void completeSaveDataLoad() {
+        this.inventory.forEach((itemTab, equips) -> {
+            for (ItemEquip equip : equips) {
+                if (equip != null) {
+                    equip.updateStats();
+                }
+            }
+        });
+
+        for (ItemEquip equip : this.equipment) {
+            if (equip != null) {
+                equip.updateStats();
+            }
+        }
+
+        this.skills.forEach((skillCode, skill) -> {
+            this.skills.put(skillCode, new Skill(Globals.SkillClassMap.get(skillCode).getClientSkillInstance()));
+            this.skills.get(skillCode).setLevel(skill.getLevel());
+        });
+
+        calcStats();
+    }
+
+    public void setSaveNum(byte saveNum) {
+        this.saveNum = saveNum;
+    }
+
+    public String getCharacterName() {
+        return characterName;
+    }
+
 }

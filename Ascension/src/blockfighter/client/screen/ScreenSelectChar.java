@@ -118,9 +118,9 @@ public class ScreenSelectChar extends ScreenMenu {
             } else {
                 final double[] stats = CHARACTER_DATA[j].getBaseStats(), bonus = CHARACTER_DATA[j].getBonusStats();
                 g.setFont(Globals.ARIAL_30PT);
-                drawStringOutline(g, CHARACTER_DATA[j].getPlayerName(), 120 + 420 * j, 380, 2);
+                drawStringOutline(g, CHARACTER_DATA[j].getCharacterName(), 120 + 420 * j, 380, 2);
                 g.setColor(Color.WHITE);
-                g.drawString(CHARACTER_DATA[j].getPlayerName(), 120 + 420 * j, 380);
+                g.drawString(CHARACTER_DATA[j].getCharacterName(), 120 + 420 * j, 380);
 
                 g.setFont(Globals.ARIAL_24PT);
                 String[] statString = {
@@ -199,9 +199,10 @@ public class ScreenSelectChar extends ScreenMenu {
                 if (i == 0) {
                     CREATE_NAMEFIELD.setText(CREATE_NAMEFIELD.getText().trim());
                     if (CREATE_NAMEFIELD.getText().length() <= 15 && CREATE_NAMEFIELD.getText().length() > 0) {
-                        final SaveData newChar = new SaveData(CREATE_NAMEFIELD.getText().trim(), this.selectNum);
-                        newChar.newCharacter(Globals.TEST_MAX_LEVEL);
-                        SaveData.writeSaveData(this.selectNum, newChar);
+                        final SaveData newSaveData = new SaveData(CREATE_NAMEFIELD.getText().trim());
+                        newSaveData.setSaveNum(selectNum);
+                        newSaveData.createNewCharacterLoadout(Globals.TEST_MAX_LEVEL);
+                        SaveData.writeSaveData(this.selectNum, newSaveData);
                         loadingData = false;
                         savesLoaded = false;
                     } else {

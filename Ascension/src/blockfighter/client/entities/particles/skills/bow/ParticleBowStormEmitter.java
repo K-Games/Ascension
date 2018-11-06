@@ -2,7 +2,7 @@ package blockfighter.client.entities.particles.skills.bow;
 
 import blockfighter.client.Core;
 import blockfighter.client.entities.particles.Particle;
-import blockfighter.client.entities.player.skills.bow.SkillBowStorm;
+import blockfighter.client.entities.player.skills.Skill;
 import blockfighter.shared.Globals;
 
 public class ParticleBowStormEmitter extends Particle {
@@ -12,7 +12,8 @@ public class ParticleBowStormEmitter extends Particle {
     public ParticleBowStormEmitter(final int x, final int y, final byte f) {
         super(x, y, f);
         this.frame = 0;
-        this.duration = new SkillBowStorm().getCustomValue(SkillBowStorm.CUSTOM_DATA_HEADERS[1]).intValue();
+        Skill skill = Globals.SkillClassMap.BOW_STORM.getClientSkillInstance();
+        this.duration = skill.getCustomValue(skill.getCustomDataHeaders()[1]).intValue();
         this.particleData = Globals.Particles.BOW_STORM_EMITTER;
     }
 

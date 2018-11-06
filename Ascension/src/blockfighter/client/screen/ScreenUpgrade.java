@@ -6,7 +6,6 @@ import blockfighter.client.entities.items.ItemUpgrade;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.client.entities.particles.menu.ParticleMenuUpgrade;
 import blockfighter.client.entities.particles.menu.ParticleMenuUpgradeSelect;
-import blockfighter.client.savedata.SaveData;
 import static blockfighter.client.screen.ScreenMenu.PARTICLES;
 import blockfighter.shared.Globals;
 import java.awt.Color;
@@ -110,7 +109,6 @@ public class ScreenUpgrade extends ScreenItemManagement {
                 }
 
                 this.character.calcStats();
-                SaveData.writeSaveData(this.character.getSaveNum(), this.character);
                 this.upgrading = false;
             }
 

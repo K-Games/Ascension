@@ -150,8 +150,8 @@ public class ScreenKeyBind extends ScreenMenu {
                 g.drawString(ASSIGN_KEY_TEXT, (int) (KEY_BOX[i].x + 40), (int) (KEY_BOX[i].y + 25));
             } else {
                 String key = UNASSIGNED_KEY_TEXT;
-                if (this.c.getKeyBind()[i] != -1) {
-                    key = KeyEvent.getKeyText(this.c.getKeyBind()[i]);
+                if (this.c.getKeyBind().get(i) != null) {
+                    key = KeyEvent.getKeyText(this.c.getKeyBind().get(i));
                 }
                 final int width = g.getFontMetrics().stringWidth(key);
                 drawStringOutline(g, key, (int) (KEY_BOX[i].x + 90 - width / 2), (int) (KEY_BOX[i].y + 25), 1);

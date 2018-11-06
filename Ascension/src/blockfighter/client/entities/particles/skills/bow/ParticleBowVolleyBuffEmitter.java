@@ -3,7 +3,7 @@ package blockfighter.client.entities.particles.skills.bow;
 import blockfighter.client.Core;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.client.entities.player.Player;
-import blockfighter.client.entities.player.skills.bow.SkillBowVolley;
+import blockfighter.client.entities.player.skills.Skill;
 import blockfighter.shared.Globals;
 import java.awt.Point;
 
@@ -14,7 +14,8 @@ public class ParticleBowVolleyBuffEmitter extends Particle {
     public ParticleBowVolleyBuffEmitter(final Player p) {
         super(p);
         this.frame = 0;
-        this.duration = (int) (SkillBowVolley.getBuffDuration());
+        Skill skill = Globals.SkillClassMap.BOW_VOLLEY.getClientSkillInstance();
+        this.duration = skill.getCustomValue(skill.getCustomDataHeaders()[1]).intValue();
         this.particleData = Globals.Particles.BOW_VOLLEY_BUFF_EMITTER;
     }
 
