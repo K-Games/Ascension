@@ -99,15 +99,16 @@ public class PacketSender {
         System.arraycopy(temp, 0, bytes, pos, temp.length);
         pos += temp.length;
 
-        final ItemEquip[] equip = c.getEquip();
-        for (ItemEquip equip1 : equip) {
-            if (equip1 == null) {
+        final ItemEquip[] equipData = new ItemEquip[Globals.NUM_EQUIP_SLOTS];
+        HashMap<Byte, ItemEquip> equipment = c.getEquip();
+        for (byte i = 0; i < equipData.length; i++) {
+            if (equipment.get(i) == null) {
                 temp = Globals.intToBytes(0);
                 System.arraycopy(temp, 0, bytes, pos, temp.length);
                 pos += temp.length;
                 continue;
             }
-            temp = Globals.intToBytes(equip1.getItemCode());
+            temp = Globals.intToBytes(equipment.get(i).getItemCode());
             System.arraycopy(temp, 0, bytes, pos, temp.length);
             pos += temp.length;
         }

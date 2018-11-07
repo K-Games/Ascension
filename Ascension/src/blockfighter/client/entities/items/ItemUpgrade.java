@@ -56,7 +56,7 @@ public class ItemUpgrade implements Item, Comparable<ItemUpgrade> {
             return 0;
         }
 
-        int power = (int) (e.getTotalStats()[Globals.STAT_LEVEL] + e.getUpgrades() - highestUpgrade.level);
+        int power = (int) (e.getTotalStats().get(Globals.STAT_LEVEL) + e.getUpgrades() - highestUpgrade.level);
         for (ItemUpgrade upgrade : upgrades) {
             if (upgrade != null && upgrade != highestUpgrade) {
                 power--;

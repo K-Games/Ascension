@@ -129,37 +129,37 @@ public abstract class ScreenItemManagement extends ScreenMenu {
         g.fillRoundRect(EQUIP_BOX_X - 10, EQUIP_BOX_Y - 10, 240, 360, 15, 15);
         final BufferedImage characterSprite = Globals.CHAR_SPRITE[Globals.PLAYER_ANIM_STATE_STAND][this.charFrame];
         final int x = EQUIP_BOX_X + 90 + characterSprite.getWidth() / 2, y = EQUIP_BOX_Y + 160 + characterSprite.getHeight();
-        if (this.character.getEquip()[Globals.EQUIP_OFFHAND] != null) {
-            this.character.getEquip()[Globals.EQUIP_OFFHAND].drawIngame(g, x, y, Globals.PLAYER_ANIM_STATE_STAND, charFrame, Globals.RIGHT, true);
+        if (this.character.getEquip().get(Globals.EQUIP_OFFHAND) != null) {
+            this.character.getEquip().get(Globals.EQUIP_OFFHAND).drawIngame(g, x, y, Globals.PLAYER_ANIM_STATE_STAND, charFrame, Globals.RIGHT, true);
         }
         g.drawImage(characterSprite, 1070, 170, null);
 
-        if (this.character.getEquip()[Globals.EQUIP_CHEST] != null) {
-            this.character.getEquip()[Globals.EQUIP_CHEST].drawIngame(g, x, y, Globals.PLAYER_ANIM_STATE_STAND, charFrame, Globals.RIGHT);
+        if (this.character.getEquip().get(Globals.EQUIP_CHEST) != null) {
+            this.character.getEquip().get(Globals.EQUIP_CHEST).drawIngame(g, x, y, Globals.PLAYER_ANIM_STATE_STAND, charFrame, Globals.RIGHT);
         }
-        if (this.character.getEquip()[Globals.EQUIP_SHOULDER] != null) {
-            this.character.getEquip()[Globals.EQUIP_SHOULDER].drawIngame(g, x, y, Globals.PLAYER_ANIM_STATE_STAND, charFrame, Globals.RIGHT);
+        if (this.character.getEquip().get(Globals.EQUIP_SHOULDER) != null) {
+            this.character.getEquip().get(Globals.EQUIP_SHOULDER).drawIngame(g, x, y, Globals.PLAYER_ANIM_STATE_STAND, charFrame, Globals.RIGHT);
         }
 
-        if (this.character.getEquip()[Globals.EQUIP_PANTS] != null) {
-            this.character.getEquip()[Globals.EQUIP_PANTS].drawIngame(g, x, y, Globals.PLAYER_ANIM_STATE_STAND, charFrame, Globals.RIGHT);
+        if (this.character.getEquip().get(Globals.EQUIP_PANTS) != null) {
+            this.character.getEquip().get(Globals.EQUIP_PANTS).drawIngame(g, x, y, Globals.PLAYER_ANIM_STATE_STAND, charFrame, Globals.RIGHT);
         }
-        if (this.character.getEquip()[Globals.EQUIP_SHOE] != null) {
-            this.character.getEquip()[Globals.EQUIP_SHOE].drawIngame(g, x, y, Globals.PLAYER_ANIM_STATE_STAND, charFrame, Globals.RIGHT);
+        if (this.character.getEquip().get(Globals.EQUIP_SHOE) != null) {
+            this.character.getEquip().get(Globals.EQUIP_SHOE).drawIngame(g, x, y, Globals.PLAYER_ANIM_STATE_STAND, charFrame, Globals.RIGHT);
         }
-        if (this.character.getEquip()[Globals.EQUIP_WEAPON] != null) {
-            this.character.getEquip()[Globals.EQUIP_WEAPON].drawIngame(g, x, y, Globals.PLAYER_ANIM_STATE_STAND, charFrame, Globals.RIGHT);
+        if (this.character.getEquip().get(Globals.EQUIP_WEAPON) != null) {
+            this.character.getEquip().get(Globals.EQUIP_WEAPON).drawIngame(g, x, y, Globals.PLAYER_ANIM_STATE_STAND, charFrame, Globals.RIGHT);
         }
-        if (this.character.getEquip()[Globals.EQUIP_GLOVE] != null) {
-            this.character.getEquip()[Globals.EQUIP_GLOVE].drawIngame(g, x, y, Globals.PLAYER_ANIM_STATE_STAND, charFrame, Globals.RIGHT);
+        if (this.character.getEquip().get(Globals.EQUIP_GLOVE) != null) {
+            this.character.getEquip().get(Globals.EQUIP_GLOVE).drawIngame(g, x, y, Globals.PLAYER_ANIM_STATE_STAND, charFrame, Globals.RIGHT);
         }
 
         final BufferedImage button = Globals.MENU_BUTTON[Globals.BUTTON_SLOT];
         // Equipment
-        for (int i = 0; i < EQUIP_SLOTS.length; i++) {
+        for (byte i = 0; i < EQUIP_SLOTS.length; i++) {
             g.drawImage(button, (int) EQUIP_SLOTS[i].x, (int) EQUIP_SLOTS[i].y, null);
-            if (this.character.getEquip()[i] != null) {
-                this.character.getEquip()[i].drawIcon(g, (int) EQUIP_SLOTS[i].x, (int) EQUIP_SLOTS[i].y, this.overlayColour);
+            if (this.character.getEquip().get(i) != null) {
+                this.character.getEquip().get(i).drawIcon(g, (int) EQUIP_SLOTS[i].x, (int) EQUIP_SLOTS[i].y, this.overlayColour);
             }
             String s = ItemEquip.getEquipTypeName((byte) i);
             if (i == Globals.EQUIP_WEAPON) {

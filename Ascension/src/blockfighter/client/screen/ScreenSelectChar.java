@@ -301,6 +301,8 @@ public class ScreenSelectChar extends ScreenMenu {
     public void unload() {
         if (panel != null) {
             panel.remove(CREATE_NAMEFIELD);
+            loadingData = false;
+            savesLoaded = false;
         }
     }
 

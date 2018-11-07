@@ -62,7 +62,7 @@ public class LogicModule implements Runnable {
             }
         }
 
-        if (this.selectedSaveData.getEquip()[Globals.EQUIP_WEAPON] != null) {
+        if (this.selectedSaveData.getEquip().get(Globals.EQUIP_WEAPON) != null) {
             equipReady = true;
         }
 

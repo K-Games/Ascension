@@ -11,10 +11,12 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map.Entry;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import org.apache.commons.io.FileUtils;
 
 public class SaveData {
@@ -24,9 +26,9 @@ public class SaveData {
     private UUID uniqueID;
     private String characterName;
 
-    private HashMap<Integer, ItemEquip[]> inventory = new HashMap<>();
-    private ItemUpgrade[] upgrades = new ItemUpgrade[100];
-    private ItemEquip[] equipment = new ItemEquip[Globals.NUM_EQUIP_SLOTS];
+    private HashMap<Integer, HashMap<Integer, ItemEquip>> inventory = new HashMap<>();
+    private HashMap<Integer, ItemUpgrade> upgrades = new HashMap<>();
+    private HashMap<Byte, ItemEquip> equipment = new HashMap<>(Globals.NUM_EQUIP_SLOTS);
 
     private HashMap<Byte, Byte> hotkeys = new HashMap<>(12);
     private HashMap<Byte, Skill> skills = new HashMap<>(Globals.NUM_SKILLS);
@@ -65,7 +67,7 @@ public class SaveData {
 
         // Empty inventory
         for (int i = 0; i < Globals.NUM_EQUIP_TABS; i++) {
-            this.inventory.put(i, new ItemEquip[100]);
+            this.inventory.put(i, new HashMap<>());
         }
 
         if (testMax) {
@@ -188,19 +190,19 @@ public class SaveData {
     }
 
     public void calcStats() {
-
         if (this.baseStats[Globals.STAT_LEVEL] > 100) {
             this.baseStats[Globals.STAT_LEVEL] = 100;
         }
 
-        for (int i = 0; i < this.bonusStats.length; i++) {
+        for (byte i = 0; i < this.bonusStats.length; i++) {
             this.bonusStats[i] = 0;
-            for (final ItemEquip e : this.equipment) {
-                if (i != Globals.STAT_LEVEL && e != null) {
-                    this.bonusStats[i] += e.getTotalStats()[i];
+            for (final ItemEquip e : this.equipment.values()) {
+                if (i != Globals.STAT_LEVEL && e != null && e.getTotalStats().get(i) != null) {
+                    this.bonusStats[i] += e.getTotalStats().get(i);
                 }
             }
         }
+
         double totalStatPoints = 0;
         for (int level = 1; level <= this.baseStats[Globals.STAT_LEVEL]; level++) {
             if (level <= 40) {
@@ -266,19 +268,19 @@ public class SaveData {
         this.baseStats[Globals.STAT_MAXEXP] = Globals.calcEXPtoNxtLvl(this.baseStats[Globals.STAT_LEVEL]);
     }
 
-    public HashMap<Integer, ItemEquip[]> getInventory() {
+    public HashMap<Integer, HashMap<Integer, ItemEquip>> getInventory() {
         return this.inventory;
     }
 
-    public ItemEquip[] getInventory(final int type) {
+    public HashMap<Integer, ItemEquip> getInventory(final int type) {
         return this.inventory.get(type);
     }
 
-    public ItemEquip[] getEquip() {
+    public HashMap<Byte, ItemEquip> getEquip() {
         return this.equipment;
     }
 
-    public ItemUpgrade[] getUpgrades() {
+    public HashMap<Integer, ItemUpgrade> getUpgrades() {
         return this.upgrades;
     }
 
@@ -343,10 +345,10 @@ public class SaveData {
     }
 
     public void unequipItem(final int equipTab, final byte equipSlot) {
-        for (int i = 0; i < this.inventory.get(equipTab).length; i++) {
-            if (this.inventory.get(equipTab)[i] == null) {
-                this.inventory.get(equipTab)[i] = this.equipment[equipSlot];
-                this.equipment[equipSlot] = null;
+        for (int i = 0; i < Globals.MAX_INVENTORY_SLOTS; i++) {
+            if (this.inventory.get(equipTab).get(i) == null) {
+                this.inventory.get(equipTab).put(i, this.equipment.get(equipSlot));
+                this.equipment.remove(equipSlot);
                 break;
             }
         }
@@ -354,40 +356,36 @@ public class SaveData {
         writeSaveData(this.saveNum, this);
     }
 
-    public void equipItem(final int equipTab, int equipSlot, final int inventorySlot) {
-        final ItemEquip itemToEquip = this.inventory.get(equipTab)[inventorySlot];
+    public void equipItem(final int equipTab, byte equipSlot, final int inventorySlot) {
+        final ItemEquip itemToEquip = this.inventory.get(equipTab).get(inventorySlot);
         if (itemToEquip != null) {
-            if (itemToEquip.getBaseStats()[Globals.STAT_LEVEL] > this.baseStats[Globals.STAT_LEVEL]) {
+            if (itemToEquip.getBaseStats().get(Globals.STAT_LEVEL) > this.baseStats[Globals.STAT_LEVEL]) {
                 return;
             }
         }
-        this.inventory.get(equipTab)[inventorySlot] = this.equipment[equipSlot];
-        this.equipment[equipSlot] = itemToEquip;
+        this.inventory.get(equipTab).put(inventorySlot, this.equipment.get(equipSlot));
+        this.equipment.put(equipSlot, itemToEquip);
         calcStats();
         writeSaveData(this.saveNum, this);
     }
 
     public void destroyItem(final int type, final int slot) {
-        this.inventory.get(type)[slot] = null;
+        this.inventory.get(type).remove(slot);
         writeSaveData(this.saveNum, this);
     }
 
     public void destroyItem(final int slot) {
-        this.upgrades[slot] = null;
+        this.upgrades.remove(slot);
         writeSaveData(this.saveNum, this);
     }
 
     public void destroyAll(final int type) {
-        for (int i = 0; i < this.inventory.get(type).length; i++) {
-            this.inventory.get(type)[i] = null;
-        }
+        this.inventory.get(type).clear();
         writeSaveData(this.saveNum, this);
     }
 
     public void destroyAllUpgrade() {
-        for (int i = 0; i < this.upgrades.length; i++) {
-            this.upgrades[i] = null;
-        }
+        this.upgrades.clear();
         writeSaveData(this.saveNum, this);
     }
 
@@ -396,21 +394,19 @@ public class SaveData {
         if (equipTab == Globals.ITEM_SHIELD || equipTab == Globals.ITEM_ARROW || equipTab == Globals.ITEM_BOW) {
             equipTab = Globals.EQUIP_WEAPON;
         }
-        for (int i = 0; i < this.inventory.get(equipTab).length; i++) {
-            if (this.inventory.get(equipTab)[i] == null) {
-                this.inventory.get(equipTab)[i] = e;
-                break;
-            }
+
+        int freeSlot = SaveData.getFirstOpenInventorySlot(inventory.get(equipTab));
+        if (freeSlot > -1) {
+            this.inventory.get(equipTab).put(freeSlot, e);
         }
+
         writeSaveData(this.saveNum, this);
     }
 
     public void addItem(final ItemUpgrade e) {
-        for (int i = 0; i < this.upgrades.length; i++) {
-            if (this.upgrades[i] == null) {
-                this.upgrades[i] = e;
-                break;
-            }
+        int freeSlot = SaveData.getFirstOpenInventorySlot(this.upgrades);
+        if (freeSlot > -1) {
+            this.upgrades.put(freeSlot, e);
         }
     }
 
@@ -433,7 +429,17 @@ public class SaveData {
     }
 
     public void sortUpgradeItems() {
-        Arrays.sort(this.upgrades, Comparator.nullsLast(Comparator.reverseOrder()));
+        List<Entry<Integer, ItemUpgrade>> list = new ArrayList<>(this.upgrades.entrySet());
+        list = list.stream().filter(entry -> entry.getValue() != null).collect(Collectors.toList());
+        list.sort(Entry.comparingByValue(Comparator.reverseOrder()));
+
+        int slot = 0;
+        this.upgrades.clear();
+        for (Entry<Integer, ItemUpgrade> upgrade : list) {
+            this.upgrades.put(slot, upgrade.getValue());
+            slot++;
+        }
+
         writeSaveData(this.saveNum, this);
     }
 
@@ -447,14 +453,14 @@ public class SaveData {
 
     public void completeSaveDataLoad() {
         this.inventory.forEach((itemTab, equips) -> {
-            for (ItemEquip equip : equips) {
+            for (ItemEquip equip : equips.values()) {
                 if (equip != null) {
                     equip.updateStats();
                 }
             }
         });
 
-        for (ItemEquip equip : this.equipment) {
+        for (ItemEquip equip : this.equipment.values()) {
             if (equip != null) {
                 equip.updateStats();
             }
@@ -476,4 +482,12 @@ public class SaveData {
         return characterName;
     }
 
+    private static int getFirstOpenInventorySlot(HashMap<Integer, ? extends Object> inventoryMap) {
+        for (int i = 0; i < Globals.MAX_INVENTORY_SLOTS; i++) {
+            if (inventoryMap.get(i) == null) {
+                return i;
+            }
+        }
+        return -1;
+    }
 }

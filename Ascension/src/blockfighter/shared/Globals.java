@@ -668,6 +668,8 @@ public class Globals {
 
     public final static byte NUM_HOTKEYS = 12;
 
+    public final static int MAX_INVENTORY_SLOTS = 100;
+
     public final static byte NUM_EQUIP_TABS = 10,
             EQUIP_TAB_WEAPON = 0,
             EQUIP_TAB_HEAD = 1,

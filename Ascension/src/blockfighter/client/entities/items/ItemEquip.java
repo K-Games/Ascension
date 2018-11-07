@@ -10,8 +10,12 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -63,11 +67,11 @@ public class ItemEquip implements Item {
     private static final String TIER_COMMON_STRING = "Common";
 
     private int equipCode;
-    private double[] baseStats = new double[Globals.NUM_STATS];
+    private HashMap<Byte, Double> baseStats = new HashMap<>();
     private int upgrades;
     private double bonusMult;
 
-    protected transient double[] totalStats = new double[Globals.NUM_STATS];
+    protected transient HashMap<Byte, Double> totalStats = new HashMap<>();
     protected transient byte tier = -1;
     protected transient byte equipType = -1, equipSlot = -1, equipTab = -1;
 
@@ -285,11 +289,11 @@ public class ItemEquip implements Item {
         });
     }
 
-    public double[] getTotalStats() {
+    public HashMap<Byte, Double> getTotalStats() {
         return this.totalStats;
     }
 
-    public double[] getBaseStats() {
+    public HashMap<Byte, Double> getBaseStats() {
         return this.baseStats;
     }
 
@@ -387,13 +391,13 @@ public class ItemEquip implements Item {
         return 0;
     }
 
-    public static double[] calcEquipStat(final int ic, final double level) {
-        final double[] stats = new double[Globals.NUM_STATS];
-        stats[Globals.STAT_LEVEL] = level;
+    public static HashMap<Byte, Double> calcEquipStat(final int ic, final double level) {
+        final HashMap<Byte, Double> stats = new HashMap<>();
+        stats.put(Globals.STAT_LEVEL, level);
 
-        int[] armorStatRollPool = {Globals.STAT_POWER, Globals.STAT_DEFENSE, Globals.STAT_SPIRIT};
-        int[] weaponStatRollPool = {Globals.STAT_CRITDMG, Globals.STAT_CRITCHANCE, Globals.STAT_ARMOUR, Globals.STAT_REGEN};
-        int[] trinketRollPool = {Globals.STAT_ARMOUR, Globals.STAT_REGEN, Globals.STAT_CRITCHANCE};
+        byte[] armorStatRollPool = {Globals.STAT_POWER, Globals.STAT_DEFENSE, Globals.STAT_SPIRIT};
+        byte[] weaponStatRollPool = {Globals.STAT_CRITDMG, Globals.STAT_CRITCHANCE, Globals.STAT_ARMOUR, Globals.STAT_REGEN};
+        byte[] trinketRollPool = {Globals.STAT_ARMOUR, Globals.STAT_REGEN, Globals.STAT_CRITCHANCE};
 
         switch (Globals.getEquipType(ic)) {
             case Globals.ITEM_SWORD:
@@ -402,10 +406,10 @@ public class ItemEquip implements Item {
             case Globals.ITEM_SHIELD:
                 for (byte numRolls = 0; numRolls < 2; numRolls++) {
                     int rng = Globals.rng(weaponStatRollPool.length);
-                    while (stats[weaponStatRollPool[rng]] != 0) {
+                    while (stats.get(weaponStatRollPool[rng]) != null) {
                         rng = Globals.rng(weaponStatRollPool.length);
                     }
-                    stats[weaponStatRollPool[rng]] = calcNewStat(level, weaponStatRollPool[rng]);
+                    stats.put(weaponStatRollPool[rng], calcNewStat(level, weaponStatRollPool[rng]));
                 }
                 break;
             case Globals.ITEM_CHEST:
@@ -414,33 +418,26 @@ public class ItemEquip implements Item {
             case Globals.ITEM_SHOULDER:
             case Globals.ITEM_SHOE:
             case Globals.ITEM_GLOVE:
-                for (int statID : armorStatRollPool) {
-                    stats[statID] = calcNewStat(level, statID);
+                for (byte statID : armorStatRollPool) {
+                    stats.put(statID, calcNewStat(level, statID));
                 }
-                stats[armorStatRollPool[Globals.rng(armorStatRollPool.length)]] = 0;
+                stats.remove(armorStatRollPool[Globals.rng(armorStatRollPool.length)]);
                 break;
             case Globals.ITEM_BELT:
             case Globals.ITEM_AMULET:
             case Globals.ITEM_RING:
-                //trinket
-                for (int statID : trinketRollPool) {
-                    stats[statID] = calcNewStat(level, statID);
+                for (byte statID : trinketRollPool) {
+                    stats.put(statID, calcNewStat(level, statID));
                 }
-                stats[trinketRollPool[Globals.rng(trinketRollPool.length)]] = 0;
+                stats.remove(trinketRollPool[Globals.rng(trinketRollPool.length)]);
                 break;
         }
-        stats[Globals.STAT_POWER] = Math.round(stats[Globals.STAT_POWER]);
-        stats[Globals.STAT_DEFENSE] = Math.round(stats[Globals.STAT_DEFENSE]);
-        stats[Globals.STAT_SPIRIT] = Math.round(stats[Globals.STAT_SPIRIT]);
+        for (byte armorStatId : armorStatRollPool) {
+            if (stats.get(armorStatId) != null) {
+                stats.put(armorStatId, Double.valueOf(Math.round(stats.get(armorStatId))));
+            }
+        }
         return stats;
-    }
-
-    public ItemEquip(final double[] bs, final int u, final double mult, final int ic) {
-        this(ic);
-        this.baseStats = bs;
-        this.upgrades = u;
-        this.bonusMult = mult;
-        updateStats();
     }
 
     @Override
@@ -454,27 +451,16 @@ public class ItemEquip implements Item {
         int x = (int) box.x;
         int boxHeight = 70, boxWidth;
 
-        if (getTotalStats()[Globals.STAT_POWER] > 0) {
+        List<Byte> drawableStatIDs = Arrays.asList(Globals.STAT_POWER, Globals.STAT_DEFENSE, Globals.STAT_SPIRIT,
+                Globals.STAT_REGEN, Globals.STAT_ARMOUR, Globals.STAT_CRITDMG, Globals.STAT_CRITCHANCE);
+        List<Map.Entry<Byte, Double>> statsToDraw = getTotalStats().entrySet().stream()
+                .filter(entry -> drawableStatIDs.contains(entry.getKey()))
+                .collect(Collectors.toList());
+
+        for (Map.Entry<Byte, Double> stat : statsToDraw) {
             boxHeight += 20;
         }
-        if (getTotalStats()[Globals.STAT_DEFENSE] > 0) {
-            boxHeight += 20;
-        }
-        if (getTotalStats()[Globals.STAT_SPIRIT] > 0) {
-            boxHeight += 20;
-        }
-        if (getTotalStats()[Globals.STAT_REGEN] > 0) {
-            boxHeight += 20;
-        }
-        if (getTotalStats()[Globals.STAT_ARMOUR] > 0) {
-            boxHeight += 20;
-        }
-        if (getTotalStats()[Globals.STAT_CRITDMG] > 0) {
-            boxHeight += 20;
-        }
-        if (getTotalStats()[Globals.STAT_CRITCHANCE] > 0) {
-            boxHeight += 20;
-        }
+
         if (EQUIP_DESC.containsKey(this.equipCode)) {
             final int lines = StringUtils.countMatches(EQUIP_DESC.get(this.equipCode), "\n") + 1;
             boxHeight += lines * 20;
@@ -492,26 +478,23 @@ public class ItemEquip implements Item {
 
         maxWidth = Math.max(maxWidth, g.getFontMetrics().stringWidth(itemHeader));
         maxWidth = Math.max(maxWidth, g.getFontMetrics().stringWidth("Type: " + EQUIP_TYPE_NAME.get(Globals.getEquipType(this.equipCode))));
-        maxWidth = Math.max(maxWidth, g.getFontMetrics().stringWidth("Level: " + (int) getTotalStats()[Globals.STAT_LEVEL]));
+        maxWidth = Math.max(maxWidth, g.getFontMetrics().stringWidth("Level: " + getTotalStats().get(Globals.STAT_LEVEL).intValue()));
 
-        for (byte i = 0; i < getTotalStats().length; i++) {
-            if (getTotalStats()[i] > 0) {
-                switch (i) {
-                    case Globals.STAT_CRITCHANCE:
-                    case Globals.STAT_CRITDMG:
-                        maxWidth = Math.max(maxWidth,
-                                g.getFontMetrics().stringWidth(Globals.getStatName(i) + Globals.COLON_SPACE_TEXT + Globals.NUMBER_FORMAT.format(getTotalStats()[i] * 100) + "%"));
-                        break;
+        for (Map.Entry<Byte, Double> stat : statsToDraw) {
+            switch (stat.getKey()) {
+                case Globals.STAT_CRITCHANCE:
+                case Globals.STAT_CRITDMG:
+                    maxWidth = Math.max(maxWidth,
+                            g.getFontMetrics().stringWidth(Globals.getStatName(stat.getKey()) + Globals.COLON_SPACE_TEXT + Globals.NUMBER_FORMAT.format(stat.getValue() * 100) + "%"));
+                    break;
 
-                    case Globals.STAT_REGEN:
-                        maxWidth = Math.max(maxWidth,
-                                g.getFontMetrics().stringWidth(Globals.getStatName(i) + Globals.COLON_SPACE_TEXT + Globals.NUMBER_FORMAT.format(getTotalStats()[i])));
-                        break;
-                    default:
-                        maxWidth = Math.max(maxWidth,
-                                g.getFontMetrics().stringWidth(Globals.getStatName(i) + Globals.COLON_SPACE_TEXT + (int) getTotalStats()[i]));
-                }
-
+                case Globals.STAT_REGEN:
+                    maxWidth = Math.max(maxWidth,
+                            g.getFontMetrics().stringWidth(Globals.getStatName(stat.getKey()) + Globals.COLON_SPACE_TEXT + Globals.NUMBER_FORMAT.format(stat.getValue())));
+                    break;
+                default:
+                    maxWidth = Math.max(maxWidth,
+                            g.getFontMetrics().stringWidth(Globals.getStatName(stat.getKey()) + Globals.COLON_SPACE_TEXT + stat.getValue().intValue()));
             }
         }
 
@@ -544,24 +527,23 @@ public class ItemEquip implements Item {
         int rowY = 40;
         g.drawString("Type: " + EQUIP_TYPE_NAME.get(Globals.getEquipType(this.equipCode)), x + 40, y + rowY);
         rowY += 20;
-        g.drawString(Globals.getStatName(Globals.STAT_LEVEL) + Globals.COLON_SPACE_TEXT + (int) getTotalStats()[Globals.STAT_LEVEL], x + 40, y + rowY);
+        g.drawString(Globals.getStatName(Globals.STAT_LEVEL) + Globals.COLON_SPACE_TEXT + getTotalStats().get(Globals.STAT_LEVEL).intValue(), x + 40, y + rowY);
 
         rowY += 20;
-        for (byte i = 0; i < getTotalStats().length; i++) {
-            if (getTotalStats()[i] > 0 && i != Globals.STAT_LEVEL) {
-                switch (i) {
-                    case Globals.STAT_CRITCHANCE:
-                    case Globals.STAT_CRITDMG:
-                        g.drawString(Globals.getStatName(i) + Globals.COLON_SPACE_TEXT + Globals.NUMBER_FORMAT.format(getTotalStats()[i] * 100) + "%", x + 40, y + rowY);
-                        break;
-                    case Globals.STAT_REGEN:
-                        g.drawString(Globals.getStatName(i) + Globals.COLON_SPACE_TEXT + Globals.NUMBER_FORMAT.format(getTotalStats()[i]), x + 40, y + rowY);
-                        break;
-                    default:
-                        g.drawString(Globals.getStatName(i) + Globals.COLON_SPACE_TEXT + (int) getTotalStats()[i], x + 40, y + rowY);
-                }
-                rowY += 20;
+
+        for (Map.Entry<Byte, Double> stat : statsToDraw) {
+            switch (stat.getKey()) {
+                case Globals.STAT_CRITCHANCE:
+                case Globals.STAT_CRITDMG:
+                    g.drawString(Globals.getStatName(stat.getKey()) + Globals.COLON_SPACE_TEXT + Globals.NUMBER_FORMAT.format(stat.getValue() * 100) + "%", x + 40, y + rowY);
+                    break;
+                case Globals.STAT_REGEN:
+                    g.drawString(Globals.getStatName(stat.getKey()) + Globals.COLON_SPACE_TEXT + Globals.NUMBER_FORMAT.format(stat.getValue()), x + 40, y + rowY);
+                    break;
+                default:
+                    g.drawString(Globals.getStatName(stat.getKey()) + Globals.COLON_SPACE_TEXT + stat.getValue().intValue(), x + 40, y + rowY);
             }
+            rowY += 20;
         }
 
         g.setFont(Globals.ARIAL_15PTITALIC);
@@ -596,7 +578,7 @@ public class ItemEquip implements Item {
             }
             g.setFont(Globals.ARIAL_12PT);
             g.setColor(Color.WHITE);
-            g.drawString(Integer.toString((int) getTotalStats()[Globals.STAT_LEVEL]), x + 2, y + 12);
+            g.drawString(Integer.toString(getTotalStats().get(Globals.STAT_LEVEL).intValue()), x + 2, y + 12);
         } else {
             loadItemIcon(this.equipCode);
         }
@@ -642,40 +624,54 @@ public class ItemEquip implements Item {
         setEquipTypeAndTab(this.equipCode);
         updateTier();
 
-        this.totalStats = new double[this.baseStats.length];
-        System.arraycopy(this.baseStats, 0, this.totalStats, 0, this.baseStats.length);
+        List<Byte> statsToRemove = new ArrayList<>();
+        this.baseStats.forEach((statID, value) -> {
+            if (value <= 0) {
+                statsToRemove.add(statID);
+            }
+        });
+        statsToRemove.forEach(statID -> this.baseStats.remove(statID));
 
-        this.totalStats[Globals.STAT_POWER] = this.baseStats[Globals.STAT_POWER];
-        this.totalStats[Globals.STAT_POWER] += (this.baseStats[Globals.STAT_POWER] > 0) ? this.upgrades * UPGRADE_STAT_FLATBONUS : 0;
-        this.totalStats[Globals.STAT_POWER] *= 1 + this.bonusMult + this.upgrades * UPGRADE_MULT;
-        this.totalStats[Globals.STAT_POWER] = Math.round(this.totalStats[Globals.STAT_POWER]);
+        this.totalStats = new HashMap<>(this.baseStats);
 
-        this.totalStats[Globals.STAT_DEFENSE] = this.baseStats[Globals.STAT_DEFENSE];
-        this.totalStats[Globals.STAT_DEFENSE] += (this.baseStats[Globals.STAT_DEFENSE] > 0) ? this.upgrades * UPGRADE_STAT_FLATBONUS : 0;
-        this.totalStats[Globals.STAT_DEFENSE] *= 1 + this.bonusMult + this.upgrades * UPGRADE_MULT;
-        this.totalStats[Globals.STAT_DEFENSE] = Math.round(this.totalStats[Globals.STAT_DEFENSE]);
+        List<Byte> primaryStatIDs = Arrays.asList(Globals.STAT_POWER, Globals.STAT_DEFENSE, Globals.STAT_SPIRIT);
+        for (Byte primaryStatID : primaryStatIDs) {
+            if (this.baseStats.get(primaryStatID) != null) {
+                double finalStatValue = this.baseStats.get(primaryStatID);
+                finalStatValue += this.upgrades * UPGRADE_STAT_FLATBONUS;
+                finalStatValue *= 1 + this.bonusMult + this.upgrades * UPGRADE_MULT;
+                finalStatValue = Math.round(finalStatValue);
+                this.totalStats.put(primaryStatID, finalStatValue);
+            }
+        }
 
-        this.totalStats[Globals.STAT_SPIRIT] = this.baseStats[Globals.STAT_SPIRIT];
-        this.totalStats[Globals.STAT_SPIRIT] += (this.baseStats[Globals.STAT_SPIRIT] > 0) ? this.upgrades * UPGRADE_STAT_FLATBONUS : 0;
-        this.totalStats[Globals.STAT_SPIRIT] *= 1 + this.bonusMult + this.upgrades * UPGRADE_MULT;
-        this.totalStats[Globals.STAT_SPIRIT] = Math.round(this.totalStats[Globals.STAT_SPIRIT]);
-
-        if (this.baseStats[Globals.STAT_CRITCHANCE] > 0) {
-            this.totalStats[Globals.STAT_CRITCHANCE] = this.baseStats[Globals.STAT_CRITCHANCE]
+        if (this.baseStats.get(Globals.STAT_CRITCHANCE) != null) {
+            double finalStatValue = this.baseStats.get(Globals.STAT_CRITCHANCE)
                     + (0.003 * (this.bonusMult / 0.05))
                     + this.upgrades * UPGRADE_CRITCHANCE;
+            this.totalStats.put(Globals.STAT_CRITCHANCE, finalStatValue);
         }
-        if (this.baseStats[Globals.STAT_CRITDMG] > 0) {
-            this.totalStats[Globals.STAT_CRITDMG] = this.baseStats[Globals.STAT_CRITDMG]
+        if (this.baseStats.get(Globals.STAT_CRITDMG) != null) {
+            double finalStatValue = this.baseStats.get(Globals.STAT_CRITDMG)
                     + (0.04 * (this.bonusMult / 0.05))
                     + this.upgrades * UPGRADE_CRITDMG;
+            this.totalStats.put(Globals.STAT_CRITDMG, finalStatValue);
         }
-        if (this.baseStats[Globals.STAT_ARMOUR] > 0) {
-            this.totalStats[Globals.STAT_ARMOUR] = Math.round((this.baseStats[Globals.STAT_ARMOUR] + this.upgrades * UPGRADE_ARMOUR) * (1 + this.bonusMult / 2D));
+
+        if (this.baseStats.get(Globals.STAT_ARMOUR) != null) {
+            double finalStatValue = Math.round((this.baseStats.get(Globals.STAT_ARMOUR)
+                    + this.upgrades * UPGRADE_ARMOUR)
+                    * (1 + this.bonusMult / 2D));
+            this.totalStats.put(Globals.STAT_ARMOUR, finalStatValue);
         }
-        if (this.baseStats[Globals.STAT_REGEN] > 0) {
-            this.totalStats[Globals.STAT_REGEN] = Math.round(10D * (this.baseStats[Globals.STAT_REGEN] + this.upgrades * UPGRADE_REGEN) * (2 + this.bonusMult)) / 10D;
+
+        if (this.baseStats.get(Globals.STAT_REGEN) != null) {
+            double finalStatValue = Math.round(10D * (this.baseStats.get(Globals.STAT_REGEN)
+                    + this.upgrades * UPGRADE_REGEN)
+                    * (2 + this.bonusMult)) / 10D;
+            this.totalStats.put(Globals.STAT_REGEN, finalStatValue);
         }
+
     }
 
     private void updateTier() {
