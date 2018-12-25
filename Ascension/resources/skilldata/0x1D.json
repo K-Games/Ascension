@@ -1,0 +1,20 @@
+{
+    "SKILLCODE": 29,
+    "CUSTOM_DATA_HEADERS": [],
+    "CUSTOM_VALUES": {},
+    "SKILL_NAME": "Static Charge",
+    "DESCRIPTION": [
+        "Shock a nearby enemy for damage based on your",
+        "Armour when you deal damage."
+    ],
+    "LEVEL_DESC": [
+        "20% Chance to shock a nearby enemy for %BV% of Armour as damage."
+    ],
+    "MAX_BONUS_DESC": [],
+    "IS_PASSIVE": true,
+    "CANT_LEVEL": false,
+    "MAX_COOLDOWN": 0,
+    "BASE_VALUE": 0.5,
+    "MULT_VALUE": 0.15,
+    "REQ_LEVEL": 20
+}

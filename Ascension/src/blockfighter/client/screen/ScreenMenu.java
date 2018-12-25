@@ -150,8 +150,8 @@ public abstract class ScreenMenu extends Screen {
                 if (MENU_BOX[i].contains(scaled)) {
                     if (!(Core.getLogicModule().getScreen().getClass() == SCREEN_CLASS.get(i))) {
                         try {
-                            Core.getLogicModule().setScreen(SCREEN_CLASS.get(i).newInstance());
-                        } catch (InstantiationException | IllegalAccessException ex) {
+                            Core.getLogicModule().setScreen(SCREEN_CLASS.get(i).getDeclaredConstructor(new Class[0]).newInstance());
+                        } catch (Exception ex) {
                             Globals.logError(ex.toString(), ex);
                         }
                     }

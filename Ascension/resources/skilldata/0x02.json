@@ -1,0 +1,37 @@
+{
+    "SKILLCODE": 2,
+    "CUSTOM_DATA_HEADERS": [
+        "buffduration",
+        "damageamp",
+        "burndamage",
+        "bonuscritchc"
+    ],
+    "CUSTOM_VALUES": {
+        "damageamp": 0.01,
+        "bonuscritchc": 1.0,
+        "buffduration": 4000.0,
+        "burndamage": 3.75
+    },
+    "SKILL_NAME": "Firebrand",
+    "DESCRIPTION": [
+        "Ignite your blade and inflict enemies with Burn."
+    ],
+    "LEVEL_DESC": [
+        "Deals %BV% damage",
+        "Burning enemies take %D(damageamp * lvl * 100, damageamp, lvl)^% increased damage for %T(buffduration / 1000, buffduration)^ seconds."
+    ],
+    "MAX_BONUS_DESC": [
+        "Burn also deals %D(burndamage * 100, burndamage)^% damage per second.",
+        "Firebrand has %D(bonuscritchc * 100, bonuscritchc)^% Critical Hit Chance."
+    ],
+    "IS_PASSIVE": false,
+    "CANT_LEVEL": false,
+    "REQ_WEAPON": 0,
+    "REQ_EQUIP_SLOT": 0,
+    "MAX_COOLDOWN": 12000,
+    "BASE_VALUE": 4.0,
+    "MULT_VALUE": 0.2,
+    "REQ_LEVEL": 17,
+    "CAST_PLAYER_STATE": 5,
+    "SKILL_DURATION": 250
+}

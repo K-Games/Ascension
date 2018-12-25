@@ -1,0 +1,34 @@
+{
+    "SKILLCODE": 16,
+    "CUSTOM_DATA_HEADERS": [
+        "basedefense",
+        "multdefense",
+        "maxlevelmult"
+    ],
+    "CUSTOM_VALUES": {
+        "basedefense": 15.0,
+        "maxlevelmult": 2.0,
+        "multdefense": 1.0
+    },
+    "SKILL_NAME": "Magnetize",
+    "DESCRIPTION": [
+        "Pull enemies within 400 range towards you and",
+        "deal damage based on your Defense."
+    ],
+    "LEVEL_DESC": [
+        "Deals %BV% damage + Defense multiplied by %D(basedefense + multdefense * lvl, basedefense, multdefense, lvl)^."
+    ],
+    "MAX_BONUS_DESC": [
+        "Deals %D(maxlevelmult, maxlevelmult)^x damage."
+    ],
+    "IS_PASSIVE": false,
+    "CANT_LEVEL": false,
+    "REQ_WEAPON": 10,
+    "REQ_EQUIP_SLOT": 10,
+    "MAX_COOLDOWN": 11000,
+    "BASE_VALUE": 1.5,
+    "MULT_VALUE": 0.15,
+    "REQ_LEVEL": 16,
+    "CAST_PLAYER_STATE": 20,
+    "SKILL_DURATION": 600
+}

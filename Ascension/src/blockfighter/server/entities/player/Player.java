@@ -6,8 +6,6 @@ import blockfighter.server.entities.GameEntity;
 import blockfighter.server.entities.buff.*;
 import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.player.skills.*;
-import blockfighter.server.entities.player.skills.passive.SkillPassiveDualSword;
-import blockfighter.server.entities.player.skills.passive.SkillPassiveShieldMastery;
 import blockfighter.server.entities.player.skills.shield.SkillShieldReflect;
 import blockfighter.server.maps.GameMap;
 import blockfighter.server.net.PacketSender;
@@ -386,12 +384,12 @@ public class Player implements GameEntity, Callable<Player> {
     public void setSkill(final byte skillCode, final byte level) {
         Skill newSkill = null;
         try {
-            Constructor<? extends Skill> constructor = Globals.SkillClassMap.get(skillCode).getServerClass().getDeclaredConstructor(LogicModule.class);
+            Constructor<? extends Skill> constructor = Globals.SkillClassMap.get(skillCode).getServerExecutionClass().getDeclaredConstructor(LogicModule.class);
             newSkill = constructor.newInstance(this.logic);
         } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
             Globals.logError(ex.toString(), ex);
         }
-        if (newSkill != null && getStats()[Globals.STAT_LEVEL] >= newSkill.getReqLevel()) {
+        if (newSkill != null && getStats()[Globals.STAT_LEVEL] >= newSkill.getSkillData().getReqLevel()) {
             newSkill.setLevel(level);
             this.skills.put(skillCode, newSkill);
         }
@@ -495,7 +493,7 @@ public class Player implements GameEntity, Callable<Player> {
     }
 
     private void castSkill(final byte skillCode) {
-        if (this.skills.get(skillCode).isPassive() || !this.skills.get(skillCode).canCast(this)) {
+        if (this.skills.get(skillCode).getSkillData().isPassive() || !this.skills.get(skillCode).canCast(this)) {
             return;
         }
         this.skillCounter = 0;
@@ -503,7 +501,7 @@ public class Player implements GameEntity, Callable<Player> {
         // Globals.log("DATA_PLAYER_CASTSKILL", "Key: " + key + " RoomData: " + logic.getRoomData() + " Player: " + getPlayerName() + " Skill: " +
         // data[3], Globals.LOG_TYPE_DATA, true);
 
-        queuePlayerState(this.skills.get(skillCode).castPlayerState());
+        queuePlayerState(this.skills.get(skillCode).getSkillData().castPlayerState());
         this.skills.get(skillCode).setCooldown();
         sendCooldown(skillCode);
     }
@@ -593,21 +591,21 @@ public class Player implements GameEntity, Callable<Player> {
                 double passiveReduct = 0;
                 // Defender Mastery Passive Reduction
                 if (hasSkill(Globals.PASSIVE_SHIELDMASTERY) && getSkill(Globals.PASSIVE_SHIELDMASTERY).canCast(this)) {
-                    double baseReduct = getSkill(Globals.PASSIVE_SHIELDMASTERY).getCustomValue(SkillPassiveShieldMastery.CUSTOM_DATA_HEADERS[0]);
-                    double multReduct = getSkill(Globals.PASSIVE_SHIELDMASTERY).getCustomValue(SkillPassiveShieldMastery.CUSTOM_DATA_HEADERS[1]);
+                    double baseReduct = getSkill(Globals.PASSIVE_SHIELDMASTERY).getCustomValue(0);
+                    double multReduct = getSkill(Globals.PASSIVE_SHIELDMASTERY).getCustomValue(1);
                     passiveReduct += baseReduct + multReduct * getSkillLevel(Globals.PASSIVE_SHIELDMASTERY);
                 }
 
                 //Passive Tough Skin
                 if (hasSkill(Globals.PASSIVE_TOUGH)) {
-                    double baseValue = getSkill(Globals.PASSIVE_TOUGH).getBaseValue();
-                    double multValue = getSkill(Globals.PASSIVE_TOUGH).getMultValue();
+                    double baseValue = getSkill(Globals.PASSIVE_TOUGH).getSkillData().getBaseValue();
+                    double multValue = getSkill(Globals.PASSIVE_TOUGH).getSkillData().getMultValue();
                     passiveReduct += baseValue + multValue * getSkillLevel(Globals.PASSIVE_TOUGH);
                 }
 
                 // Dual Wield Passive Reduction
                 if (hasSkill(Globals.PASSIVE_DUALSWORD) && getSkill(Globals.PASSIVE_DUALSWORD).canCast(this)) {
-                    double dmgReductMult = getSkill(Globals.PASSIVE_DUALSWORD).getCustomValue(SkillPassiveDualSword.CUSTOM_DATA_HEADERS[0]);
+                    double dmgReductMult = getSkill(Globals.PASSIVE_DUALSWORD).getCustomValue(0);
                     passiveReduct += dmgReductMult * getSkillLevel(Globals.PASSIVE_DUALSWORD);
                 }
                 finalDamage = finalDamage * (1 - passiveReduct);
@@ -649,12 +647,12 @@ public class Player implements GameEntity, Callable<Player> {
                 if (finalDamage > 0) {
                     sinceLastHPSend = 150;
                 }
-                if (hasSkill(Globals.PASSIVE_BARRIER) && this.skills.get(Globals.PASSIVE_BARRIER).canCast()) {
+                if (hasSkill(Globals.PASSIVE_BARRIER) && this.skills.get(Globals.PASSIVE_BARRIER).isOffCooldown()) {
                     this.barrierDmgTaken += finalDamage;
                     if (this.barrierDmgTaken >= this.stats[Globals.STAT_MAXHP] * 0.5) {
                         this.barrierDmgTaken = 0;
-                        double baseValue = getSkill(Globals.PASSIVE_BARRIER).getBaseValue();
-                        double multValue = getSkill(Globals.PASSIVE_BARRIER).getMultValue();
+                        double baseValue = getSkill(Globals.PASSIVE_BARRIER).getSkillData().getBaseValue();
+                        double multValue = getSkill(Globals.PASSIVE_BARRIER).getSkillData().getMultValue();
                         queueBuff(new BuffPassiveBarrier(this.logic,
                                 this.stats[Globals.STAT_MAXHP] * (baseValue + multValue * getSkillLevel(Globals.PASSIVE_BARRIER)),
                                 this));
@@ -667,7 +665,7 @@ public class Player implements GameEntity, Callable<Player> {
         }
 
         // Resistance Passive Snapshot HP
-        if (hasSkill(Globals.PASSIVE_RESIST) && this.skills.get(Globals.PASSIVE_RESIST).canCast()) {
+        if (hasSkill(Globals.PASSIVE_RESIST) && this.skills.get(Globals.PASSIVE_RESIST).isOffCooldown()) {
             if (resistDamageSum.size() >= Globals.SERVER_LOGIC_TICKS_PER_SEC * 2) {
                 resistDamageSum.poll();
             }
@@ -911,23 +909,23 @@ public class Player implements GameEntity, Callable<Player> {
         }
         // Defender Mastery Passive
         if (hasSkill(Globals.PASSIVE_SHIELDMASTERY) && getSkill(Globals.PASSIVE_SHIELDMASTERY).canCast(this)) {
-            double baseValue = getSkill(Globals.PASSIVE_SHIELDMASTERY).getBaseValue();
-            double multValue = getSkill(Globals.PASSIVE_SHIELDMASTERY).getMultValue();
+            double baseValue = getSkill(Globals.PASSIVE_SHIELDMASTERY).getSkillData().getBaseValue();
+            double multValue = getSkill(Globals.PASSIVE_SHIELDMASTERY).getSkillData().getMultValue();
             mult += baseValue + multValue * getSkillLevel(Globals.PASSIVE_SHIELDMASTERY);
         }
         // Power of Will Passive
         if (hasSkill(Globals.PASSIVE_WILLPOWER)) {
             // (5% + 0.5% Per Level) * %HP Left
-            double baseValue = getSkill(Globals.PASSIVE_WILLPOWER).getBaseValue();
-            double multValue = getSkill(Globals.PASSIVE_WILLPOWER).getMultValue();
+            double baseValue = getSkill(Globals.PASSIVE_WILLPOWER).getSkillData().getBaseValue();
+            double multValue = getSkill(Globals.PASSIVE_WILLPOWER).getSkillData().getMultValue();
             mult += (baseValue + multValue * getSkillLevel(Globals.PASSIVE_WILLPOWER))
                     * (this.stats[Globals.STAT_MINHP] / this.stats[Globals.STAT_MAXHP]);
         }
 
         //Passive Harmony
         if (hasSkill(Globals.PASSIVE_HARMONY)) {
-            double baseValue = getSkill(Globals.PASSIVE_HARMONY).getBaseValue();
-            double multValue = getSkill(Globals.PASSIVE_HARMONY).getMultValue();
+            double baseValue = getSkill(Globals.PASSIVE_HARMONY).getSkillData().getBaseValue();
+            double multValue = getSkill(Globals.PASSIVE_HARMONY).getSkillData().getMultValue();
             dmg += this.stats[Globals.STAT_MAXHP] * (baseValue + multValue * getSkillLevel(Globals.PASSIVE_HARMONY));
         }
 
@@ -946,14 +944,14 @@ public class Player implements GameEntity, Callable<Player> {
                 && Globals.getEquipType(this.equips[Globals.EQUIP_WEAPON]) == Globals.ITEM_SWORD
                 && Globals.getEquipType(this.equips[Globals.EQUIP_WEAPON]) == Globals.ITEM_SWORD) {
             // Check if has Dual Sword passive AND Mainhand/Offhand are both Swords.
-            double baseValue = getSkill(Globals.PASSIVE_DUALSWORD).getBaseValue();
-            double multValue = getSkill(Globals.PASSIVE_DUALSWORD).getMultValue();
+            double baseValue = getSkill(Globals.PASSIVE_DUALSWORD).getSkillData().getBaseValue();
+            double multValue = getSkill(Globals.PASSIVE_DUALSWORD).getSkillData().getMultValue();
             totalCritChance += baseValue + multValue * getSkillLevel(Globals.PASSIVE_DUALSWORD);
         }
         // Keen Eye Passive
         if (hasSkill(Globals.PASSIVE_KEENEYE)) {
-            double baseValue = getSkill(Globals.PASSIVE_KEENEYE).getBaseValue();
-            double multValue = getSkill(Globals.PASSIVE_KEENEYE).getMultValue();
+            double baseValue = getSkill(Globals.PASSIVE_KEENEYE).getSkillData().getBaseValue();
+            double multValue = getSkill(Globals.PASSIVE_KEENEYE).getSkillData().getMultValue();
             totalCritChance += baseValue + multValue * getSkillLevel(Globals.PASSIVE_KEENEYE);
         }
         return Globals.rng(10000) + 1 < (int) (totalCritChance * 10000);
@@ -967,14 +965,14 @@ public class Player implements GameEntity, Callable<Player> {
         double totalCritDmg = 1 + this.stats[Globals.STAT_CRITDMG] + bonusCritDmg;
         // Bow Mastery Passive
         if (hasSkill(Globals.PASSIVE_BOWMASTERY) && getSkill(Globals.PASSIVE_BOWMASTERY).canCast(this)) {
-            double baseValue = getSkill(Globals.PASSIVE_BOWMASTERY).getBaseValue();
-            double multValue = getSkill(Globals.PASSIVE_BOWMASTERY).getMultValue();
+            double baseValue = getSkill(Globals.PASSIVE_BOWMASTERY).getSkillData().getBaseValue();
+            double multValue = getSkill(Globals.PASSIVE_BOWMASTERY).getSkillData().getMultValue();
             totalCritDmg += baseValue + multValue * getSkillLevel(Globals.PASSIVE_BOWMASTERY);
         }
         // Keen Eye Passive
         if (hasSkill(Globals.PASSIVE_VITALHIT)) {
-            double baseValue = getSkill(Globals.PASSIVE_VITALHIT).getBaseValue();
-            double multValue = getSkill(Globals.PASSIVE_VITALHIT).getMultValue();
+            double baseValue = getSkill(Globals.PASSIVE_VITALHIT).getSkillData().getBaseValue();
+            double multValue = getSkill(Globals.PASSIVE_VITALHIT).getSkillData().getMultValue();
             totalCritDmg += baseValue + multValue * getSkillLevel(Globals.PASSIVE_VITALHIT);
         }
         return dmg * (totalCritDmg);
@@ -1175,7 +1173,7 @@ public class Player implements GameEntity, Callable<Player> {
 
     public void queueSkillUse(final byte[] data) {
         this.lastActionTime = this.logic.getTime();
-        if (hasSkill(data[3]) && !isDead() && !this.skills.get(data[3]).isPassive() && this.skills.get(data[3]).canCast(this) && !isUsingSkill()) {
+        if (hasSkill(data[3]) && !isDead() && !this.skills.get(data[3]).getSkillData().isPassive() && this.skills.get(data[3]).canCast(this) && !isUsingSkill()) {
             this.skillUseQueue.add(data);
         }
     }

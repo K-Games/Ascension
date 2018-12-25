@@ -4,7 +4,6 @@ import blockfighter.server.LogicModule;
 import blockfighter.server.entities.buff.BuffChargeCripple;
 import blockfighter.server.entities.buff.BuffStun;
 import blockfighter.server.entities.player.Player;
-import blockfighter.server.entities.player.skills.shield.SkillShieldCharge;
 import blockfighter.shared.Globals;
 import java.awt.geom.Rectangle2D;
 
@@ -24,8 +23,8 @@ public class ProjShieldCharge extends Projectile {
     @Override
     public int calculateDamage(final boolean isCrit) {
         final Player owner = getOwner();
-        double baseValue = owner.getSkill(Globals.SHIELD_CHARGE).getBaseValue();
-        double multValue = owner.getSkill(Globals.SHIELD_CHARGE).getMultValue();
+        double baseValue = owner.getSkill(Globals.SHIELD_CHARGE).getSkillData().getBaseValue();
+        double multValue = owner.getSkill(Globals.SHIELD_CHARGE).getSkillData().getMultValue();
         double damage = owner.rollDamage() * (baseValue + multValue * owner.getSkillLevel(Globals.SHIELD_CHARGE));
         damage = (isCrit) ? owner.criticalDamage(damage) : damage;
         return (int) damage;
@@ -36,7 +35,7 @@ public class ProjShieldCharge extends Projectile {
         super.applyDamage(target);
         final Player owner = getOwner();
         if (owner.isSkillMaxed(Globals.SHIELD_CHARGE)) {
-            double stunDuration = owner.getSkill(Globals.SHIELD_CHARGE).getCustomValue(SkillShieldCharge.CUSTOM_DATA_HEADERS[0]);
+            double stunDuration = owner.getSkill(Globals.SHIELD_CHARGE).getCustomValue(0);
             target.queueBuff(new BuffStun(this.logic, (int) stunDuration + 200));
         } else {
             target.queueBuff(new BuffStun(this.logic, 200));

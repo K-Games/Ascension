@@ -13,12 +13,12 @@ public class BuffTauntCripple extends Buff implements BuffSpeedDecrease {
 
     @Override
     public double getXSpeedDecrease() {
-        return getOwner().getSkill(Globals.SWORD_TAUNT_CRIPPLE).getBaseValue();
+        return getOwner().getSkill(Globals.SWORD_TAUNT_CRIPPLE).getSkillData().getBaseValue();
     }
 
     @Override
     public double getYSpeedDecrease() {
-        return getOwner().getSkill(Globals.SWORD_TAUNT_CRIPPLE).getBaseValue();
+        return getOwner().getSkill(Globals.SWORD_TAUNT_CRIPPLE).getSkillData().getBaseValue();
     }
 
 }

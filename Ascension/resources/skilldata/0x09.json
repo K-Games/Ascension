@@ -1,0 +1,38 @@
+{
+    "SKILLCODE": 9,
+    "CUSTOM_DATA_HEADERS": [
+        "basestun",
+        "maxlevelstun",
+        "maxlevelbonusproj",
+        "maxlevelbonusdamage"
+    ],
+    "CUSTOM_VALUES": {
+        "maxlevelstun": 2500.0,
+        "maxlevelbonusdamage": 2.5,
+        "basestun": 1500.0,
+        "maxlevelbonusproj": 2.0
+    },
+    "SKILL_NAME": "Frost Eruption",
+    "DESCRIPTION": [
+        "Enchant your bow to cause ice pillars to erupt",
+        "violently out of the ground, freezing targets hit."
+    ],
+    "LEVEL_DESC": [
+        "Deals %BV% damage.",
+        "Stuns for %T(basestun / 1000, basestun)^ seconds."
+    ],
+    "MAX_BONUS_DESC": [
+        "Stun now lasts for %T(maxlevelstun / 1000, maxlevelstun)^ seconds.",
+        "Hits an additional %D(maxlevelbonusproj , maxlevelbonusproj)^ times dealing %D(maxlevelbonusdamage *100, maxlevelbonusdamage)^% damage."
+    ],
+    "IS_PASSIVE": false,
+    "CANT_LEVEL": false,
+    "REQ_WEAPON": 11,
+    "REQ_EQUIP_SLOT": 0,
+    "MAX_COOLDOWN": 12000,
+    "BASE_VALUE": 1.0,
+    "MULT_VALUE": 0.2,
+    "REQ_LEVEL": 17,
+    "CAST_PLAYER_STATE": 12,
+    "SKILL_DURATION": 380
+}

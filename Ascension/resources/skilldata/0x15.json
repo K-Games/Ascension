@@ -1,0 +1,27 @@
+{
+    "SKILLCODE": 21,
+    "CUSTOM_DATA_HEADERS": [
+        "basedmgreduct",
+        "multdmgreduct"
+    ],
+    "CUSTOM_VALUES": {
+        "basedmgreduct": 0.04,
+        "multdmgreduct": 0.003
+    },
+    "SKILL_NAME": "Defender Mastery",
+    "DESCRIPTION": [
+        "When equipped with a Sword and Shield you deal",
+        "additional damage and take reduced damage."
+    ],
+    "LEVEL_DESC": [
+        "Deal additional %BV% damage.",
+        "Take %D((basedmgreduct + multdmgreduct * lvl) * 100, basedmgreduct, multdmgreduct, lvl)^% reduced damage."
+    ],
+    "MAX_BONUS_DESC": [],
+    "IS_PASSIVE": true,
+    "CANT_LEVEL": false,
+    "MAX_COOLDOWN": 0,
+    "BASE_VALUE": 0.09,
+    "MULT_VALUE": 0.002,
+    "REQ_LEVEL": 13
+}

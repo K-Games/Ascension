@@ -1,6 +1,6 @@
 package blockfighter.shared;
 
-import java.util.HashMap;
+import blockfighter.shared.data.skill.SkillData;
 import java.util.concurrent.TimeUnit;
 import static org.junit.Assert.*;
 import org.junit.Test;
@@ -195,103 +195,12 @@ public class GlobalsTest {
     }
 
     @Test
-    public void testGetDataHeaders() {
-        String[] data = new String[Globals.DATA_HEADERS.length];
-        System.arraycopy(Globals.DATA_HEADERS, 0, data, 0, Globals.DATA_HEADERS.length);
-
-        HashMap<String, Integer> result = Globals.getDataHeaders(data);
-        for (String header : data) {
-            assertTrue(result.containsKey(header));
-        }
-    }
-
-    @Test
-    public void testLoadBooleanValue() {
-        String[] customHeaders = {"[customvalues]", "[testBool]", "[testBool2]"};
-        String[] data = {customHeaders[0], "testBool,testBool2", customHeaders[1], "true", customHeaders[2], "false"};
-
-        HashMap<String, Integer> dataHeaders = Globals.getDataHeaders(data);
-        String[] headers = Globals.getSkillCustomHeaders(data, dataHeaders);
-        String header = headers[0];
-
-        boolean result = Globals.loadBooleanValue(data, dataHeaders, header);
-
-        assertTrue(result);
-
-        header = headers[1];
-        result = Globals.loadBooleanValue(data, dataHeaders, header);
-
-        assertFalse(result);
-    }
-
-    @Test
-    public void testLoadDoubleValue() {
-        String[] customHeaders = {"[customvalues]", "[testDouble]", "[testDouble2]"};
-        double[] customDataValue = {0.123, 10019239784.222};
-        String[] data = {customHeaders[0], "testDouble,testDouble2", customHeaders[1], String.valueOf(customDataValue[0]), customHeaders[2], String.valueOf(customDataValue[1])};
-
-        HashMap<String, Integer> dataHeaders = Globals.getDataHeaders(data);
-        String[] headers = Globals.getSkillCustomHeaders(data, dataHeaders);
-        String header = headers[0];
-        double result = Globals.loadDoubleValue(data, dataHeaders, header);
-
-        assertEquals(customDataValue[0], result, 0);
-
-        header = headers[1];
-        result = Globals.loadDoubleValue(data, dataHeaders, header);
-
-        assertEquals(customDataValue[1], result, 0);
-    }
-
-    @Test
-    public void testLoadReqWeapon() {
-        String[] data = {Globals.SKILL_REQWEAPON_HEADER, String.valueOf(Globals.NUM_EQUIP_TYPES + 1)};
-
-        HashMap<String, Integer> dataHeaders = Globals.getDataHeaders(data);
-
-        assertEquals(-1, Globals.loadSkillReqWeapon(data, dataHeaders));
-        for (int i = 0; i < Globals.NUM_EQUIP_TYPES; i++) {
-            data = new String[]{Globals.SKILL_REQWEAPON_HEADER, String.valueOf(i)};
-
-            byte result = Globals.loadSkillReqWeapon(data, dataHeaders);
-            dataHeaders = Globals.getDataHeaders(data);
-
-            assertEquals(i, result);
-        }
-    }
-
-    @Test
     public void testLoadSkillData() {
         Globals.LOGGING = false;
         for (byte i = 0; i < Globals.NUM_SKILLS; i++) {
-            String[] result = Globals.loadSkillRawData(i);
+            SkillData result = Globals.loadSkillData(i);
             assertNotNull(result);
         }
-    }
-
-    @Test
-    public void testLoadSkillDesc() {
-        String[] desc = {"Test Desc", "line2"};
-        String[] data = {Globals.SKILL_DESC_HEADER, String.valueOf(2), desc[0], desc[1]};
-
-        HashMap<String, Integer> dataHeaders = Globals.getDataHeaders(data);
-
-        String[] result = Globals.loadSkillDesc(data, dataHeaders);
-
-        assertTrue(result[0].equals(desc[0]));
-        assertTrue(result[1].equals(desc[1]));
-    }
-
-    @Test
-    public void testLoadSkillName() {
-        String name = "testName";
-        String[] data = {Globals.SKILL_NAME_HEADER, name};
-
-        HashMap<String, Integer> dataHeaders = Globals.getDataHeaders(data);
-
-        String result = Globals.loadSkillName(data, dataHeaders);
-
-        assertTrue(result.equals(name));
     }
 
     @Test

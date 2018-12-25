@@ -3,6 +3,7 @@ package blockfighter.server.entities.player.skills;
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.player.Player;
 import blockfighter.shared.Globals;
+import blockfighter.shared.data.skill.SkillData;
 import java.util.HashMap;
 
 public abstract class Skill {
@@ -20,61 +21,29 @@ public abstract class Skill {
         return null;
     }
 
+    public final Double getCustomValue(int customHeaderIndex) {
+        try {
+            return getCustomValue(getSkillData().getCustomDataHeaders().get(customHeaderIndex));
+        } catch (Exception e) {
+            Globals.logError("Error while getting custom value " + customHeaderIndex, e);
+            return null;
+        }
+    }
+
     public final Double getCustomValue(String customHeader) {
-        HashMap customValues = getStaticFieldValue("CUSTOM_VALUES", HashMap.class);
+        HashMap<String, Double> customValues = getSkillData().getCustomValues();
         if (customValues == null) {
             return null;
-
         }
-        return (Double) customValues.get(customHeader);
+        return customValues.get(customHeader);
     }
 
-    public long getMaxCooldown() {
-        return getStaticFieldValue("MAX_COOLDOWN", Long.class);
-    }
-
-    public final int getReqLevel() {
-        return getStaticFieldValue("REQ_LEVEL", Integer.class);
-    }
-
-    public final byte getReqWeapon() {
-        return getStaticFieldValue("REQ_WEAPON", Byte.class);
-    }
-
-    public final byte getSkillCode() {
+    public final Byte getSkillCode() {
         return getStaticFieldValue("SKILL_CODE", Byte.class);
     }
 
-    public final String getSkillName() {
-        return getStaticFieldValue("SKILL_NAME", String.class);
-    }
-
-    public final boolean isPassive() {
-        return getStaticFieldValue("IS_PASSIVE", Boolean.class);
-    }
-
-    public final boolean cantLevel() {
-        return getStaticFieldValue("CANT_LEVEL", Boolean.class);
-    }
-
-    public byte castPlayerState() {
-        return getStaticFieldValue("PLAYER_STATE", Byte.class);
-    }
-
-    public final double getBaseValue() {
-        return getStaticFieldValue("BASE_VALUE", Double.class);
-    }
-
-    public final double getMultValue() {
-        return getStaticFieldValue("MULT_VALUE", Double.class);
-    }
-
-    public byte getReqEquipSlot() {
-        return getStaticFieldValue("REQ_EQUIP_SLOT", Byte.class);
-    }
-
-    public int getSkillDuration() {
-        return getStaticFieldValue("SKILL_DURATION", Integer.class);
+    public final SkillData getSkillData() {
+        return Globals.SkillClassMap.get(getSkillCode()).getSkillData();
     }
 
     public Skill(final LogicModule l) {
@@ -106,12 +75,18 @@ public abstract class Skill {
     }
 
     public boolean canCast(final Player player) {
-        return !isPassive() && (getReqWeapon() == -1 || getReqEquipSlot() == -1 || Globals.getEquipType(player.getEquips()[getReqEquipSlot()]) == getReqWeapon())
-                && canCast() && player.getStats()[Globals.STAT_LEVEL] >= getReqLevel();
+        return !getSkillData().isPassive()
+                && isOffCooldown() && player.getStats()[Globals.STAT_LEVEL] >= getSkillData().getReqLevel()
+                && ((getSkillData().getReqWeapon() != null && getSkillData().getReqEquipSlot() != null
+                && Globals.getEquipType(player.getEquips()[getSkillData().getReqEquipSlot()]) == getSkillData().getReqWeapon()) || getSkillData().getReqWeapon() == null);
     }
 
-    public boolean canCast() {
+    public boolean isOffCooldown() {
         return this.getCooldown() >= getMaxCooldown() || Globals.DEBUG_MODE;
+    }
+
+    public long getMaxCooldown() {
+        return getSkillData().getMaxCooldown();
     }
 
     public void updateSkillUse(Player player) {

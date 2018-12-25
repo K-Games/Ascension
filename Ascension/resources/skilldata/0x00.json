@@ -1,0 +1,36 @@
+{
+    "SKILLCODE": 0,
+    "CUSTOM_DATA_HEADERS": [
+        "bonuscritchc",
+        "basebonuscritdamage",
+        "multbonuscritdamage"
+    ],
+    "CUSTOM_VALUES": {
+        "multbonuscritdamage": 0.03,
+        "bonuscritchc": 0.3,
+        "basebonuscritdamage": 0.4
+    },
+    "SKILL_NAME": "Vorpal Strike",
+    "DESCRIPTION": [
+        "Dash forward and strike 3 times."
+    ],
+    "LEVEL_DESC": [
+        "Deals %BV% damage per hit.",
+        "Critical Hits deal additional %D((basebonuscritdamage + multbonuscritdamage * lvl) * 100, basebonuscritdamage, multbonuscritdamage, lvl)^% Critical Damage.",
+        "%HYPERSTANCE"
+    ],
+    "MAX_BONUS_DESC": [
+        "Strikes 5 times.",
+        "Additional %D(bonuscritchc * 100, bonuscritchc)^% Critical Hit Chance."
+    ],
+    "IS_PASSIVE": false,
+    "CANT_LEVEL": false,
+    "REQ_WEAPON": 0,
+    "REQ_EQUIP_SLOT": 0,
+    "MAX_COOLDOWN": 8000,
+    "BASE_VALUE": 1.45,
+    "MULT_VALUE": 0.06,
+    "REQ_LEVEL": 0,
+    "CAST_PLAYER_STATE": 3,
+    "SKILL_DURATION": 400
+}

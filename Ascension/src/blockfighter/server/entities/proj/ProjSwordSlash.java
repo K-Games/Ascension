@@ -17,8 +17,8 @@ public class ProjSwordSlash extends Projectile {
     @Override
     public int calculateDamage(final boolean isCrit) {
         final Player owner = getOwner();
-        double baseValue = owner.getSkill(Globals.SWORD_SLASH).getBaseValue();
-        double multValue = owner.getSkill(Globals.SWORD_SLASH).getMultValue();
+        double baseValue = owner.getSkill(Globals.SWORD_SLASH).getSkillData().getBaseValue();
+        double multValue = owner.getSkill(Globals.SWORD_SLASH).getSkillData().getMultValue();
         double damage = owner.rollDamage() * (baseValue + multValue * owner.getSkillLevel(Globals.SWORD_SLASH));
         damage = (isCrit) ? owner.criticalDamage(damage) : damage;
         return (int) damage;

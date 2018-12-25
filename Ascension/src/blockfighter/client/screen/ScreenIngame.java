@@ -12,7 +12,7 @@ import blockfighter.client.entities.notification.Notification;
 import blockfighter.client.entities.particles.*;
 import blockfighter.client.entities.particles.skills.other.ParticleItemDrop;
 import blockfighter.client.entities.player.Player;
-import blockfighter.client.entities.player.skills.Skill;
+import blockfighter.client.entities.player.skills.PlayerSkillData;
 import blockfighter.client.maps.GameMap;
 import blockfighter.client.net.GameClient;
 import blockfighter.client.net.PacketSender;
@@ -105,8 +105,8 @@ public class ScreenIngame extends Screen {
             this.hotkeySlots[j] = new Rectangle2D.Double(Globals.WINDOW_WIDTH / 2 - Globals.HUD[0].getWidth() / 2 + 10 + (j * 66), 656, 60,
                     60);
         }
-        final HashMap<Byte, Skill> skills = this.c.getSkills();
-        for (final Skill skill : skills.values()) {
+        final HashMap<Byte, PlayerSkillData> skills = this.c.getSkills();
+        for (final PlayerSkillData skill : skills.values()) {
             if (skill != null) {
                 skill.resetCooldown();
             }
@@ -389,12 +389,12 @@ public class ScreenIngame extends Screen {
 
     private void drawHotkeys(final Graphics2D g) {
         final HashMap<Byte, Byte> hotkeys = this.c.getHotkeys();
-        for (int j = 0; j < this.hotkeySlots.length; j++) {
+        for (byte j = 0; j < this.hotkeySlots.length; j++) {
             if (hotkeys.get(j) != null) {
-                Skill skill = this.c.getSkills().get(hotkeys.get(j));
+                PlayerSkillData skill = this.c.getSkills().get(hotkeys.get(j));
                 skill.draw(g, (int) this.hotkeySlots[j].x, (int) this.hotkeySlots[j].y);
                 g.setColor(new Color(100, 100, 100, 125));
-                final int cdHeight = (int) ((skill.getCooldown() / (skill.getMaxCooldown() * 1D)) * this.hotkeySlots[j].height);
+                final int cdHeight = (int) ((skill.getCooldown() / (skill.getSkillData().getMaxCooldown() * 1D)) * this.hotkeySlots[j].height);
                 g.fillRect((int) this.hotkeySlots[j].x, (int) (this.hotkeySlots[j].y + this.hotkeySlots[j].height - cdHeight),
                         (int) this.hotkeySlots[j].width,
                         cdHeight);
@@ -529,7 +529,7 @@ public class ScreenIngame extends Screen {
         }
     }
 
-    private void drawSkillInfo(final Graphics2D g, final Rectangle2D.Double box, final Skill skill) {
+    private void drawSkillInfo(final Graphics2D g, final Rectangle2D.Double box, final PlayerSkillData skill) {
         skill.drawInfo(g, (int) box.x, (int) box.y);
     }
 

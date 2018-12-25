@@ -3,7 +3,7 @@ package blockfighter.client.net.hub.http;
 import blockfighter.client.Core;
 import blockfighter.client.screen.ScreenServerList;
 import blockfighter.shared.Globals;
-import blockfighter.shared.ServerInfo;
+import blockfighter.shared.data.net.hub.ServerInfo;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;

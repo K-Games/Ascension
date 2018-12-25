@@ -1,7 +1,7 @@
 package blockfighter.client.net;
 
 import blockfighter.client.entities.items.ItemEquip;
-import blockfighter.client.entities.player.skills.Skill;
+import blockfighter.client.entities.player.skills.PlayerSkillData;
 import blockfighter.client.savedata.SaveData;
 import blockfighter.shared.Globals;
 import java.nio.charset.StandardCharsets;
@@ -115,7 +115,7 @@ public class PacketSender {
 
         final HashMap<Byte, Byte> hotkeys = c.getHotkeys();
         for (byte i = 0; i < Globals.NUM_HOTKEYS; i++) {
-            Skill skill = c.getSkills().get(hotkeys.get(i));
+            PlayerSkillData skill = c.getSkills().get(hotkeys.get(i));
             temp = new byte[2];
             if (skill == null) {
                 temp[0] = -1;

@@ -1,0 +1,19 @@
+{
+    "SKILLCODE": 30,
+    "CUSTOM_DATA_HEADERS": [],
+    "CUSTOM_VALUES": {},
+    "SKILL_NAME": "Vorpal Strike: Ghost",
+    "DESCRIPTION": [
+        "Infuse Vorpal Strike with ghostly essence to pierce through armor.",
+        "Converts 3% of damage to True Damage.",
+        "True Damage does not apply to Vorpal Strike: Demise debuff."
+    ],
+    "LEVEL_DESC": [],
+    "MAX_BONUS_DESC": [],
+    "IS_PASSIVE": true,
+    "CANT_LEVEL": true,
+    "MAX_COOLDOWN": 0,
+    "BASE_VALUE": 0.03,
+    "MULT_VALUE": 0.0,
+    "REQ_LEVEL": 0
+}

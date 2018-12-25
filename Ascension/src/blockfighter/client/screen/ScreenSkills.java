@@ -1,7 +1,7 @@
 package blockfighter.client.screen;
 
 import blockfighter.client.Core;
-import blockfighter.client.entities.player.skills.Skill;
+import blockfighter.client.entities.player.skills.PlayerSkillData;
 import blockfighter.client.savedata.SaveData;
 import blockfighter.client.screen.window.skill.WindowSkill;
 import blockfighter.client.screen.window.skill.WindowSkillAll;
@@ -21,7 +21,7 @@ public class ScreenSkills extends ScreenMenu {
 
     private static final String RESET_SKILLS_TEXT = "Reset Skills";
     private static final String SKILL_POINTS_TEXT = "Skill Points: ";
-    private static final String UNKNOWN_KEY_TEXT = "Unknown Key";
+    private static final String UNKNOWN_KEY_TEXT = "?";
 
     private final SaveData saveData;
     // Slots(x,y) in the GUI
@@ -32,7 +32,7 @@ public class ScreenSkills extends ScreenMenu {
 
     // Actual skills stored
     private final HashMap<Byte, Byte> hotkeyList;
-    private final HashMap<Byte, Skill> skillList;
+    private final HashMap<Byte, PlayerSkillData> skillList;
 
     private byte drawInfoHotkey = -1;
     private byte dragHotkey = -1;
@@ -87,8 +87,8 @@ public class ScreenSkills extends ScreenMenu {
 
     private void drawSkillInfo(final Graphics2D g) {
         if (this.drawInfoHotkey != -1) {
-            Skill skill = this.skillList.get(this.hotkeyList.get(this.drawInfoHotkey));
-            if (this.saveData.getTotalStats()[Globals.STAT_LEVEL] >= skill.getReqLevel()) {
+            PlayerSkillData skill = this.skillList.get(this.hotkeyList.get(this.drawInfoHotkey));
+            if (this.saveData.getTotalStats()[Globals.STAT_LEVEL] >= skill.getSkillData().getReqLevel()) {
                 drawSkillInfo(g, HOTKEY_SLOTS[this.drawInfoHotkey], skill);
             }
         }
@@ -103,12 +103,12 @@ public class ScreenSkills extends ScreenMenu {
         for (byte i = 0; i < HOTKEY_SLOTS.length; i++) {
             g.drawImage(button, (int) HOTKEY_SLOTS[i].x, (int) HOTKEY_SLOTS[i].y, null);
             if (this.hotkeyList.get(i) != null) {
-                Skill skill = this.skillList.get(this.hotkeyList.get(i));
+                PlayerSkillData skill = this.skillList.get(this.hotkeyList.get(i));
                 skill.draw(g, (int) HOTKEY_SLOTS[i].x, (int) HOTKEY_SLOTS[i].y);
             }
             String key = UNKNOWN_KEY_TEXT;
-            if (this.saveData.getKeyBind().get((int) i) != -1) {
-                key = KeyEvent.getKeyText(this.saveData.getKeyBind().get((int) i));
+            if (this.saveData.getKeyBind().get(i) != null) {
+                key = KeyEvent.getKeyText(this.saveData.getKeyBind().get(i));
             }
             final int width = g.getFontMetrics().stringWidth(key);
             g.setFont(Globals.ARIAL_15PT);
@@ -119,7 +119,7 @@ public class ScreenSkills extends ScreenMenu {
 
     }
 
-    private void drawSkillInfo(final Graphics2D g, final Rectangle2D.Double box, final Skill skill) {
+    private void drawSkillInfo(final Graphics2D g, final Rectangle2D.Double box, final PlayerSkillData skill) {
         skill.drawInfo(g, (int) box.x, (int) box.y);
     }
 
@@ -165,7 +165,7 @@ public class ScreenSkills extends ScreenMenu {
             for (byte i = 0; i < HOTKEY_SLOTS.length; i++) {
                 if (HOTKEY_SLOTS[i].contains(scaled)) {
                     if (drSkill != -1) {
-                        if (this.saveData.getTotalStats()[Globals.STAT_LEVEL] >= this.skillList.get(drSkill).getReqLevel()) {
+                        if (this.saveData.getTotalStats()[Globals.STAT_LEVEL] >= this.skillList.get(drSkill).getSkillData().getReqLevel()) {
                             this.hotkeyList.put(i, this.skillList.get(drSkill).getSkillCode());
                         }
                         return;

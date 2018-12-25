@@ -1,0 +1,32 @@
+{
+    "SKILLCODE": 6,
+    "CUSTOM_DATA_HEADERS": [
+        "lifesteal",
+        "maxlifesteal"
+    ],
+    "CUSTOM_VALUES": {
+        "lifesteal": 0.05,
+        "maxlifesteal": 0.1
+    },
+    "SKILL_NAME": "Arc Shot",
+    "DESCRIPTION": [
+        "Fire 3 shots in an arc."
+    ],
+    "LEVEL_DESC": [
+        "Deals %BV% damage per hit."
+    ],
+    "MAX_BONUS_DESC": [
+        "Restore %D(lifesteal * 100, lifesteal)^% damage to HP.",
+        "Cannot exceed %D(maxlifesteal * 100, maxlifesteal)^% of Max HP."
+    ],
+    "IS_PASSIVE": false,
+    "CANT_LEVEL": false,
+    "REQ_WEAPON": 11,
+    "REQ_EQUIP_SLOT": 0,
+    "MAX_COOLDOWN": 500,
+    "BASE_VALUE": 0.8,
+    "MULT_VALUE": 0.02,
+    "REQ_LEVEL": 0,
+    "CAST_PLAYER_STATE": 9,
+    "SKILL_DURATION": 400
+}

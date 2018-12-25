@@ -42,7 +42,7 @@ public class ScreenKeyBind extends ScreenMenu {
     }
 
     private final SaveData c;
-    private int selectedKeyBox = -1;
+    private Byte selectedKeyBox;
 
     public ScreenKeyBind() {
         this.c = Core.getLogicModule().getSelectedChar();
@@ -68,13 +68,13 @@ public class ScreenKeyBind extends ScreenMenu {
     @Override
     public void keyReleased(final KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-            this.selectedKeyBox = -1;
+            this.selectedKeyBox = null;
             return;
         }
 
-        if (this.selectedKeyBox != -1) {
+        if (this.selectedKeyBox != null) {
             this.c.setKeyBind(this.selectedKeyBox, e.getKeyCode());
-            this.selectedKeyBox = -1;
+            this.selectedKeyBox = null;
         }
     }
 
@@ -121,7 +121,7 @@ public class ScreenKeyBind extends ScreenMenu {
             scaled = new Point2D.Double(e.getX(), e.getY());
         }
         super.mouseReleased(e);
-        for (int i = 0; i < KEY_BOX.length; i++) {
+        for (byte i = 0; i < KEY_BOX.length; i++) {
             if (KEY_BOX[i].contains(scaled)) {
                 this.selectedKeyBox = i;
                 return;
@@ -141,10 +141,10 @@ public class ScreenKeyBind extends ScreenMenu {
                 (int) ((KEY_BOX[16 + Globals.Emotes.values().length - 1].x + KEY_BOX[16 + Globals.Emotes.values().length - 1].width + 10) - (KEY_BOX[16].x - 10 - 50)),
                 (int) ((KEY_BOX[16 + Globals.Emotes.values().length - 1].y + KEY_BOX[16 + Globals.Emotes.values().length - 1].height + 10) - (KEY_BOX[16].y - 10)), 15, 15);
 
-        for (int i = 0; i < KEY_BOX.length; i++) {
+        for (byte i = 0; i < KEY_BOX.length; i++) {
             g.drawImage(button, (int) KEY_BOX[i].x, (int) KEY_BOX[i].y, null);
             g.setFont(Globals.ARIAL_18PT);
-            if (this.selectedKeyBox == i) {
+            if (this.selectedKeyBox != null && this.selectedKeyBox == i) {
                 drawStringOutline(g, ASSIGN_KEY_TEXT, (int) (KEY_BOX[i].x + 40), (int) (KEY_BOX[i].y + 25), 1);
                 g.setColor(Color.WHITE);
                 g.drawString(ASSIGN_KEY_TEXT, (int) (KEY_BOX[i].x + 40), (int) (KEY_BOX[i].y + 25));

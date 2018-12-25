@@ -1,0 +1,20 @@
+{
+    "SKILLCODE": 28,
+    "CUSTOM_DATA_HEADERS": [],
+    "CUSTOM_VALUES": {},
+    "SKILL_NAME": "Piercing Shadows",
+    "DESCRIPTION": [
+        "When you deal damage there is a chance a shadow blade",
+        "pierces that same target for 50% of the damage dealt"
+    ],
+    "LEVEL_DESC": [
+        "%D(basevalue + multvalue * lvl, basevalue, multvalue, lvl)^% chance to summon a shadow blade."
+    ],
+    "MAX_BONUS_DESC": [],
+    "IS_PASSIVE": true,
+    "CANT_LEVEL": false,
+    "MAX_COOLDOWN": 200,
+    "BASE_VALUE": 20.0,
+    "MULT_VALUE": 1.0,
+    "REQ_LEVEL": 27
+}

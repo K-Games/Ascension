@@ -3,7 +3,7 @@ package blockfighter.server.entities.proj;
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.buff.BuffKnockback;
 import blockfighter.server.entities.player.Player;
-import blockfighter.server.entities.player.skills.bow.SkillBowPower;
+import blockfighter.server.entities.player.skills.Skill;
 import blockfighter.shared.Globals;
 import java.awt.geom.Rectangle2D;
 
@@ -23,11 +23,12 @@ public class ProjBowPower extends Projectile {
     @Override
     public int calculateDamage(final boolean isCrit) {
         final Player owner = getOwner();
-        double baseValue = owner.getSkill(Globals.BOW_POWER).getBaseValue();
-        double multValue = owner.getSkill(Globals.BOW_POWER).getMultValue();
+        final Skill skill = owner.getSkill(Globals.BOW_POWER);
+        double baseValue = skill.getSkillData().getBaseValue();
+        double multValue = skill.getSkillData().getMultValue();
         double damage = owner.rollDamage() * (baseValue + multValue * owner.getSkillLevel(Globals.BOW_POWER));
         if (isCrit) {
-            double bonusCritDmg = (owner.getSkill(Globals.BOW_POWER).isMaxed()) ? owner.getSkill(Globals.BOW_POWER).getCustomValue(SkillBowPower.CUSTOM_DATA_HEADERS[0]) : 0;
+            double bonusCritDmg = (skill.isMaxed()) ? skill.getCustomValue(0) : 0;
             damage = owner.criticalDamage(damage, bonusCritDmg);
         }
         return (int) damage;

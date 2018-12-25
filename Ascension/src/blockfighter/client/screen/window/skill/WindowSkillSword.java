@@ -48,16 +48,16 @@ public class WindowSkillSword extends WindowSkill {
         g.fillRoundRect(BASIC_BOX_X, BASIC_BOX_Y, 210, 545, 15, 15);
         for (Entry<Byte, Rectangle2D.Double> entry : SKILL_SLOTS.entrySet()) {
             g.drawImage(button, (int) entry.getValue().x, (int) entry.getValue().y, null);
-            boolean disabled = this.saveData.getTotalStats()[Globals.STAT_LEVEL] < this.skillList.get(entry.getKey()).getReqLevel();
+            boolean disabled = this.saveData.getTotalStats()[Globals.STAT_LEVEL] < this.skillList.get(entry.getKey()).getSkillData().getReqLevel();
             this.skillList.get(entry.getKey()).draw(g, (int) entry.getValue().x, (int) entry.getValue().y, disabled);
             if (!disabled) {
                 this.skillList.get(entry.getKey()).draw(g, (int) entry.getValue().x, (int) entry.getValue().y);
                 g.setFont(Globals.ARIAL_15PT);
-                drawStringOutline(g, this.skillList.get(entry.getKey()).getSkillName(), (int) entry.getValue().x + 70, (int) entry.getValue().y + 20, 1);
+                drawStringOutline(g, this.skillList.get(entry.getKey()).getSkillData().getSkillName(), (int) entry.getValue().x + 70, (int) entry.getValue().y + 20, 1);
                 drawStringOutline(g, Globals.getStatName(Globals.STAT_LEVEL) + Globals.COLON_SPACE_TEXT + this.skillList.get(entry.getKey()).getLevel(), (int) entry.getValue().x + 70, (int) entry.getValue().y + 50,
                         1);
                 g.setColor(Color.WHITE);
-                g.drawString(this.skillList.get(entry.getKey()).getSkillName(), (int) entry.getValue().x + 70, (int) entry.getValue().y + 20);
+                g.drawString(this.skillList.get(entry.getKey()).getSkillData().getSkillName(), (int) entry.getValue().x + 70, (int) entry.getValue().y + 20);
                 g.drawString(Globals.getStatName(Globals.STAT_LEVEL) + Globals.COLON_SPACE_TEXT + this.skillList.get(entry.getKey()).getLevel(), (int) entry.getValue().x + 70, (int) entry.getValue().y + 50);
                 drawSkillAddButton(g, entry.getKey());
             } else {

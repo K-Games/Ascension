@@ -3,7 +3,6 @@ package blockfighter.server.entities.proj;
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.buff.BuffKnockback;
 import blockfighter.server.entities.player.Player;
-import blockfighter.server.entities.player.skills.bow.SkillBowStorm;
 import blockfighter.shared.Globals;
 import java.awt.geom.Rectangle2D;
 
@@ -13,7 +12,7 @@ public class ProjBowStorm extends Projectile {
     private static final long DAMAGE_INSTANCE_DELAY = 100;
 
     public ProjBowStorm(final LogicModule l, final Player o, final double x, final double y) {
-        super(l, o, x, y, o.getSkill(Globals.BOW_STORM).getCustomValue(SkillBowStorm.CUSTOM_DATA_HEADERS[1]).intValue());
+        super(l, o, x, y, o.getSkill(Globals.BOW_STORM).getCustomValue(1).intValue());
         lastDamageTime = this.logic.getTime();
         this.hitbox = new Rectangle2D.Double[1];
         if (o.getFacing() == Globals.RIGHT) {
@@ -26,13 +25,13 @@ public class ProjBowStorm extends Projectile {
     @Override
     public int calculateDamage(final boolean isCrit) {
         final Player owner = getOwner();
-        double dmgInstances = owner.getSkill(Globals.BOW_STORM).getCustomValue(SkillBowStorm.CUSTOM_DATA_HEADERS[1]) / DAMAGE_INSTANCE_DELAY;
-        double baseValue = owner.getSkill(Globals.BOW_STORM).getBaseValue() / dmgInstances;
-        double multValue = owner.getSkill(Globals.BOW_STORM).getMultValue() / dmgInstances;
+        double dmgInstances = owner.getSkill(Globals.BOW_STORM).getCustomValue(1) / DAMAGE_INSTANCE_DELAY;
+        double baseValue = owner.getSkill(Globals.BOW_STORM).getSkillData().getBaseValue() / dmgInstances;
+        double multValue = owner.getSkill(Globals.BOW_STORM).getSkillData().getMultValue() / dmgInstances;
 
         double damage = owner.rollDamage() * (baseValue + multValue * owner.getSkillLevel(Globals.BOW_STORM));
         if (isCrit) {
-            damage = owner.isSkillMaxed(Globals.BOW_STORM) ? owner.criticalDamage(damage, owner.getSkill(Globals.BOW_STORM).getCustomValue(SkillBowStorm.CUSTOM_DATA_HEADERS[0])) : owner.criticalDamage(damage);
+            damage = owner.isSkillMaxed(Globals.BOW_STORM) ? owner.criticalDamage(damage, owner.getSkill(Globals.BOW_STORM).getCustomValue(0)) : owner.criticalDamage(damage);
         }
         return (int) damage;
     }

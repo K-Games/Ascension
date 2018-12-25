@@ -3,7 +3,7 @@ package blockfighter.client.screen;
 import blockfighter.client.Core;
 import blockfighter.client.net.hub.http.HubServerInfoGetter;
 import blockfighter.shared.Globals;
-import blockfighter.shared.ServerInfo;
+import blockfighter.shared.data.net.hub.ServerInfo;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
@@ -482,7 +482,7 @@ public class ScreenServerList extends ScreenMenu {
         }
 
         private ServerInfo getSelectedServer() {
-            if (this.serverInfo.length == 0) {
+            if (this.serverInfo.length == 0 || this.selectedIndex == -1) {
                 return null;
             }
             return this.serverInfo[this.selectedIndex];

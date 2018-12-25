@@ -3,7 +3,7 @@ package blockfighter.client.entities.particles.skills.sword;
 import blockfighter.client.Core;
 import blockfighter.client.entities.particles.Particle;
 import blockfighter.client.entities.player.Player;
-import blockfighter.client.entities.player.skills.Skill;
+import blockfighter.shared.data.skill.SkillData;
 import blockfighter.shared.Globals;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -15,8 +15,8 @@ public class ParticleSwordTauntSurge extends Particle {
         super(p);
         this.frame = 0;
         this.frameDuration = 50;
-        Skill skill = Globals.SkillClassMap.SWORD_TAUNT_SURGE.getClientSkillInstance();
-        this.duration = skill.getCustomValue(skill.getCustomDataHeaders()[0]).intValue();
+        SkillData skill = Globals.SkillClassMap.SWORD_TAUNT_SURGE.getSkillData();
+        this.duration = skill.getCustomValues().get(skill.getCustomDataHeaders().get(0)).intValue();
         final Point point = this.owner.getPos();
         if (point != null) {
             this.x = point.x;

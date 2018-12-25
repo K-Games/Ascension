@@ -9,6 +9,7 @@ import blockfighter.client.entities.particles.skills.shield.*;
 import blockfighter.client.entities.particles.skills.sword.*;
 import blockfighter.client.entities.particles.skills.utility.*;
 import blockfighter.client.entities.player.Player;
+import blockfighter.shared.data.skill.SkillData;
 import com.esotericsoftware.minlog.Log;
 import static com.esotericsoftware.minlog.Log.*;
 import com.esotericsoftware.minlog.Log.Logger;
@@ -38,7 +39,6 @@ import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Random;
@@ -290,7 +290,7 @@ public class Globals {
 
         public blockfighter.server.maps.GameMap newServerGameMap() {
             try {
-                return this.serverGameMapClass.newInstance();
+                return this.serverGameMapClass.getDeclaredConstructor(new Class[0]).newInstance();
             } catch (Exception ex) {
                 logError(ex.toString(), ex);
             }
@@ -299,7 +299,7 @@ public class Globals {
 
         public blockfighter.client.maps.GameMap newClientGameMap() {
             try {
-                return this.clientGameMapClass.newInstance();
+                return this.clientGameMapClass.getDeclaredConstructor(new Class[0]).newInstance();
             } catch (Exception ex) {
                 logError(ex.toString(), ex);
             }
@@ -637,7 +637,7 @@ public class Globals {
             return this.STATUS_TEXT;
         }
     }
-    public final static int NUM_KEYBINDS = 27,
+    public final static byte NUM_KEYBINDS = 27,
             KEYBIND_SKILL1 = 0,
             KEYBIND_SKILL2 = 1,
             KEYBIND_SKILL3 = 2,
@@ -872,17 +872,14 @@ public class Globals {
         BOW_BUFF_PASSIVE1(Globals.BOW_BUFF_PASSIVE1, "bow.SkillBowBuffPassive1"),
         BOW_BUFF_PASSIVE2(Globals.BOW_BUFF_PASSIVE2, "bow.SkillBowBuffPassive2");
 
-        private blockfighter.client.entities.player.skills.Skill clientSkillInstance;
+        private blockfighter.shared.data.skill.SkillData skillData;
         private Class<? extends blockfighter.server.entities.player.skills.Skill> SERVER_CLASS;
         private final byte BYTE_CODE;
 
         SkillClassMap(final byte bytecode, final String className) {
             this.BYTE_CODE = bytecode;
             try {
-                if (CLIENT_MODE) {
-                    this.clientSkillInstance = new blockfighter.client.entities.player.skills.Skill();
-                    this.clientSkillInstance.setSkillCode(bytecode);
-                }
+                this.skillData = Globals.loadSkillData(bytecode);
                 if (SERVER_MODE) {
                     this.SERVER_CLASS = Class.forName("blockfighter.server.entities.player.skills." + className).asSubclass(blockfighter.server.entities.player.skills.Skill.class);
                 }
@@ -907,11 +904,11 @@ public class Globals {
             return this.BYTE_CODE;
         }
 
-        public blockfighter.client.entities.player.skills.Skill getClientSkillInstance() {
-            return this.clientSkillInstance;
+        public blockfighter.shared.data.skill.SkillData getSkillData() {
+            return this.skillData;
         }
 
-        public Class<? extends blockfighter.server.entities.player.skills.Skill> getServerClass() {
+        public Class<? extends blockfighter.server.entities.player.skills.Skill> getServerExecutionClass() {
             return this.SERVER_CLASS;
         }
     }
@@ -1212,139 +1209,15 @@ public class Globals {
         return result;
     }
 
-    public static HashMap<String, Integer> getDataHeaders(final String[] data) {
-        HashMap<String, Integer> dataHeader = new HashMap<>();
-        for (int i = 0; i < data.length; i++) {
-            for (String header : DATA_HEADERS) {
-                if (data[i].equalsIgnoreCase(header)) {
-                    dataHeader.put(header, i);
-                }
-            }
-        }
-
-        String customHeadersRaw = loadStringValue(data, dataHeader, SKILL_CUSTOM_VALUES_HEADER);
-        if (customHeadersRaw != null) {
-            String[] customDataHeaders = customHeadersRaw.split(",");
-            for (String customDataHeader : customDataHeaders) {
-                String formattedHeader = "[" + customDataHeader.trim().toLowerCase() + "]";
-                for (int j = 0; j < data.length; j++) {
-                    if (data[j].equalsIgnoreCase(formattedHeader)) {
-                        dataHeader.put(formattedHeader, j);
-                    }
-                }
-            }
-
-        }
-        return dataHeader;
-    }
-
-    public static String[] getSkillCustomHeaders(final String[] data, final HashMap<String, Integer> dataHeaders) {
+    public static SkillData loadSkillData(final byte skillCode) {
         try {
-            String[] value = loadStringValue(data, dataHeaders, SKILL_CUSTOM_VALUES_HEADER).split(",");
-            for (int i = 0; i < value.length; i++) {
-                value[i] = "[" + value[i].trim().toLowerCase() + "]";
-            }
-            return value;
-        } catch (Exception e) {
-        }
-        return new String[0];
-    }
-
-    public static String loadStringValue(final String[] data, final HashMap<String, Integer> dataHeaders, String header) {
-        try {
-            return data[dataHeaders.get(header) + 1];
-        } catch (Exception e) {
+            Globals.log(Globals.class, "Loading Skill " + String.format("0x%02X", skillCode) + " Data...", Globals.LOG_TYPE_DATA);
+            String json = FileUtils.readFileToString(new File("resources/skilldata/" + String.format("0x%02X", skillCode) + ".json"), "UTF-8");
+            return GSON.fromJson(json, SkillData.class);
+        } catch (IOException ex) {
+            logError("Failed to load skill data " + String.format("0x%02X", skillCode), ex);
         }
         return null;
-    }
-
-    public static boolean loadBooleanValue(final String[] data, final HashMap<String, Integer> dataHeaders, String header) {
-        try {
-            return Boolean.parseBoolean(data[dataHeaders.get(header) + 1]);
-        } catch (Exception e) {
-            Globals.logError("Cannot find header " + header, e);
-        }
-        return false;
-    }
-
-    public static double loadDoubleValue(final String[] data, final HashMap<String, Integer> dataHeaders, String header) {
-        try {
-            return Double.parseDouble(data[dataHeaders.get(header) + 1]);
-        } catch (Exception e) {
-            Globals.logError(e.toString(), e);
-        }
-        return 0;
-    }
-
-    public static byte loadSkillReqWeapon(final String[] data, final HashMap<String, Integer> dataHeaders) {
-        try {
-            byte weaponData = Byte.parseByte(data[dataHeaders.get(SKILL_REQWEAPON_HEADER) + 1]);
-            return (weaponData >= Globals.NUM_EQUIP_TYPES) ? -1 : weaponData;
-        } catch (Exception e) {
-            Globals.logError(e.toString(), e);
-        }
-        return -1;
-    }
-
-    public static String[] loadSkillRawData(final byte skillCode) {
-        Globals.log(Globals.class, "Loading Skill " + String.format("0x%02X", skillCode) + " Data...", Globals.LOG_TYPE_DATA);
-        try {
-            InputStream skillDataFile = Globals.loadResourceAsStream("skilldata/" + String.format("0x%02X", skillCode) + ".txt");
-            List<String> fileLines = IOUtils.readLines(skillDataFile, "UTF-8");
-            String[] data = fileLines.toArray(new String[fileLines.size()]);
-            HashMap<String, Integer> dataHeaders = Globals.getDataHeaders(data);
-            String name = Globals.loadSkillName(data, dataHeaders);
-            Globals.log(Globals.class, "Finished loading Skill " + String.format("0x%02X", skillCode) + "(" + name + ") Data...", Globals.LOG_TYPE_DATA);
-            return data;
-        } catch (IOException | NullPointerException e) {
-            Globals.logError("Could not load Skill " + String.format("0x%02X", skillCode) + " Data." + e.toString(), e);
-            System.exit(101);
-            return null;
-        }
-    }
-
-    public static String[] loadSkillDesc(final String[] data, final HashMap<String, Integer> dataHeaders, final String descHeader) {
-        try {
-            int numOfLines = Integer.parseInt(data[dataHeaders.get(descHeader) + 1]);
-            String[] description = new String[numOfLines];
-            for (int line = 0; line < numOfLines; line++) {
-                description[line] = data[dataHeaders.get(descHeader) + 2 + line];
-            }
-            return description;
-        } catch (Exception e) {
-        }
-        return new String[0];
-    }
-
-    public static String[] loadSkillDesc(final String[] data, final HashMap<String, Integer> dataHeaders) {
-        return loadSkillDesc(data, dataHeaders, SKILL_DESC_HEADER);
-    }
-
-    public static String[] loadSkillLevelDesc(final String[] data, final HashMap<String, Integer> dataHeaders) {
-        return loadSkillDesc(data, dataHeaders, SKILL_LEVEL_DESC_HEADER);
-
-    }
-
-    public static String[] loadSkillMaxBonusDesc(final String[] data, final HashMap<String, Integer> dataHeaders) {
-        return loadSkillDesc(data, dataHeaders, SKILL_MAX_BONUS_DESC_HEADER);
-    }
-
-    public static String loadSkillName(final String[] data, final HashMap<String, Integer> dataHeaders) {
-        try {
-            return data[dataHeaders.get(SKILL_NAME_HEADER) + 1];
-        } catch (Exception e) {
-            Globals.logError(e.toString(), e);
-        }
-        return "NO_NAME";
-    }
-
-    public static int loadSkillReqLevel(final String[] data, final HashMap<String, Integer> dataHeaders) {
-        try {
-            return Integer.parseInt(data[dataHeaders.get(SKILL_REQLEVEL_HEADER) + 1]);
-        } catch (Exception e) {
-            Globals.logError(e.toString(), e);
-        }
-        return 0;
     }
 
     public static void loadServer() {

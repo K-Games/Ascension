@@ -127,7 +127,7 @@ public class TestPacketSender {
                 continue;
             }
             temp[0] = skill;
-            temp[1] = 2;
+            temp[1] = (byte) (Math.random() * 31);
             System.arraycopy(temp, 0, bytes, pos, temp.length);
             pos += temp.length;
         }

@@ -1,0 +1,19 @@
+{
+    "SKILLCODE": 19,
+    "CUSTOM_DATA_HEADERS": [],
+    "CUSTOM_VALUES": {},
+    "SKILL_NAME": "Keen Eye",
+    "DESCRIPTION": [
+        "Increases Critical Hit Chance."
+    ],
+    "LEVEL_DESC": [
+        "Additional %BV% Critical Hit Chance"
+    ],
+    "MAX_BONUS_DESC": [],
+    "IS_PASSIVE": true,
+    "CANT_LEVEL": false,
+    "MAX_COOLDOWN": 0,
+    "BASE_VALUE": 0.05,
+    "MULT_VALUE": 0.003,
+    "REQ_LEVEL": 15
+}

@@ -1,0 +1,29 @@
+{
+    "SKILLCODE": 3,
+    "CUSTOM_DATA_HEADERS": [
+        "lifesteal"
+    ],
+    "CUSTOM_VALUES": {
+        "lifesteal": 0.0075
+    },
+    "SKILL_NAME": "Blade Flurry",
+    "DESCRIPTION": [
+        "Swing your blade 4 times."
+    ],
+    "LEVEL_DESC": [
+        "Deals %BV% damage per hit."
+    ],
+    "MAX_BONUS_DESC": [
+        "Restore %D(lifesteal * 100, lifesteal)^% HP per hit."
+    ],
+    "IS_PASSIVE": false,
+    "CANT_LEVEL": false,
+    "REQ_WEAPON": 0,
+    "REQ_EQUIP_SLOT": 0,
+    "MAX_COOLDOWN": 500,
+    "BASE_VALUE": 0.85,
+    "MULT_VALUE": 0.03,
+    "REQ_LEVEL": 0,
+    "CAST_PLAYER_STATE": 6,
+    "SKILL_DURATION": 450
+}

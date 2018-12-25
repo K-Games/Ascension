@@ -1,0 +1,31 @@
+{
+    "SKILLCODE": 8,
+    "CUSTOM_DATA_HEADERS": [
+        "maxleveldamagemult",
+        "maxlevelbonuschance"
+    ],
+    "CUSTOM_VALUES": {
+        "maxlevelbonuschance": 50.0,
+        "maxleveldamagemult": 2.0
+    },
+    "SKILL_NAME": "Rapid Fire",
+    "DESCRIPTION": [
+        "Fire 3 shots over 0.5 seconds."
+    ],
+    "LEVEL_DESC": [
+        "Deals %BV% damage per hit."
+    ],
+    "MAX_BONUS_DESC": [
+        "Each shot have %D(maxlevelbonuschance, maxlevelbonuschance)^% Chance to deal %D(maxleveldamagemult, maxleveldamagemult)^x damage."
+    ],
+    "IS_PASSIVE": false,
+    "CANT_LEVEL": false,
+    "REQ_WEAPON": 11,
+    "REQ_EQUIP_SLOT": 0,
+    "MAX_COOLDOWN": 700,
+    "BASE_VALUE": 0.8,
+    "MULT_VALUE": 0.02,
+    "REQ_LEVEL": 0,
+    "CAST_PLAYER_STATE": 11,
+    "SKILL_DURATION": 650
+}

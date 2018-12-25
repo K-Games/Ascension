@@ -1,0 +1,22 @@
+{
+    "SKILLCODE": 37,
+    "CUSTOM_DATA_HEADERS": [
+        "duration"
+    ],
+    "CUSTOM_VALUES": {
+        "duration": 2000.0
+    },
+    "SKILL_NAME": "Aggression: Surge",
+    "DESCRIPTION": [
+        "A rush of energy envelops you, increasing",
+        "movement speed by 60% for 2 seconds."
+    ],
+    "LEVEL_DESC": [],
+    "MAX_BONUS_DESC": [],
+    "IS_PASSIVE": true,
+    "CANT_LEVEL": true,
+    "MAX_COOLDOWN": 0,
+    "BASE_VALUE": 0.6,
+    "MULT_VALUE": 0.0,
+    "REQ_LEVEL": 0
+}

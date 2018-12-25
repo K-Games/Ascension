@@ -4,7 +4,6 @@ import blockfighter.server.LogicModule;
 import blockfighter.server.entities.buff.BuffKnockback;
 import blockfighter.server.entities.buff.BuffTauntCripple;
 import blockfighter.server.entities.player.Player;
-import blockfighter.server.entities.player.skills.sword.SkillSwordTauntCripple;
 import blockfighter.shared.Globals;
 import java.awt.geom.Rectangle2D;
 
@@ -24,8 +23,8 @@ public class ProjSwordTaunt extends Projectile {
     @Override
     public int calculateDamage(final boolean isCrit) {
         final Player owner = getOwner();
-        double baseValue = owner.getSkill(Globals.SWORD_TAUNT).getBaseValue();
-        double multValue = owner.getSkill(Globals.SWORD_TAUNT).getMultValue();
+        double baseValue = owner.getSkill(Globals.SWORD_TAUNT).getSkillData().getBaseValue();
+        double multValue = owner.getSkill(Globals.SWORD_TAUNT).getSkillData().getMultValue();
         double damage = owner.rollDamage() * (baseValue + multValue * owner.getSkillLevel(Globals.SWORD_TAUNT));
         damage = (isCrit) ? owner.criticalDamage(damage) : damage;
         return (int) damage;
@@ -39,7 +38,7 @@ public class ProjSwordTaunt extends Projectile {
             target.queueBuff(new BuffKnockback(this.logic, 300, (owner.getFacing() == Globals.RIGHT) ? 3 : -3, 6, owner, target));
         } else {
             target.queueBuff(new BuffKnockback(this.logic, 300, (owner.getFacing() == Globals.RIGHT) ? 1.5 : -1.5, 6, owner, target));
-            target.queueBuff(new BuffTauntCripple(logic, owner.getSkill(Globals.SWORD_TAUNT_CRIPPLE).getCustomValue(SkillSwordTauntCripple.CUSTOM_DATA_HEADERS[0]).intValue(), owner, owner));
+            target.queueBuff(new BuffTauntCripple(logic, owner.getSkill(Globals.SWORD_TAUNT_CRIPPLE).getCustomValue(0).intValue(), owner, owner));
         }
     }
 

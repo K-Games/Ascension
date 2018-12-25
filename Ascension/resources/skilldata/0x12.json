@@ -1,0 +1,25 @@
+{
+    "SKILLCODE": 18,
+    "CUSTOM_DATA_HEADERS": [
+        "dmgreductmult"
+    ],
+    "CUSTOM_VALUES": {
+        "dmgreductmult": 0.01
+    },
+    "SKILL_NAME": "Dual Wield Mastery",
+    "DESCRIPTION": [
+        "When equipped with 2 Swords you gain additional",
+        "Critical Hit Chance and take reduced damage."
+    ],
+    "LEVEL_DESC": [
+        "Additional %BV% Critical Hit Chance",
+        "Take %D(dmgreductmult * lvl * 100, dmgreductmult, lvl)^% reduced damage."
+    ],
+    "MAX_BONUS_DESC": [],
+    "IS_PASSIVE": true,
+    "CANT_LEVEL": false,
+    "MAX_COOLDOWN": 0,
+    "BASE_VALUE": 0.04,
+    "MULT_VALUE": 0.002,
+    "REQ_LEVEL": 13
+}

@@ -1,0 +1,18 @@
+{
+    "SKILLCODE": 44,
+    "CUSTOM_DATA_HEADERS": [],
+    "CUSTOM_VALUES": {},
+    "SKILL_NAME": "Wave",
+    "DESCRIPTION": [
+        "TODO"
+    ],
+    "LEVEL_DESC": [],
+    "MAX_BONUS_DESC": [],
+    "IS_PASSIVE": false,
+    "CANT_LEVEL": false,
+    "REQ_WEAPON": 0,
+    "MAX_COOLDOWN": 0,
+    "BASE_VALUE": 0.0,
+    "MULT_VALUE": 0.0,
+    "REQ_LEVEL": 0
+}

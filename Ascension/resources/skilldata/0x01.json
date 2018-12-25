@@ -1,0 +1,29 @@
+{
+    "SKILLCODE": 1,
+    "CUSTOM_DATA_HEADERS": [
+        "hppercent"
+    ],
+    "CUSTOM_VALUES": {
+        "hppercent": 0.03
+    },
+    "SKILL_NAME": "Phantom Reaper",
+    "DESCRIPTION": [
+        "Teleport multiple times to a random enemy",
+        "within a 350 radius and strike in their direction.",
+        "Invulnerable while the skill is active."
+    ],
+    "LEVEL_DESC": [
+        "Perform 5 attacks for %BV% damage."
+    ],
+    "MAX_BONUS_DESC": [],
+    "IS_PASSIVE": false,
+    "CANT_LEVEL": false,
+    "REQ_WEAPON": 0,
+    "REQ_EQUIP_SLOT": 0,
+    "MAX_COOLDOWN": 16000,
+    "BASE_VALUE": 0.75,
+    "MULT_VALUE": 0.2,
+    "REQ_LEVEL": 10,
+    "CAST_PLAYER_STATE": 4,
+    "SKILL_DURATION": 450
+}

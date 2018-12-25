@@ -1,0 +1,28 @@
+{
+    "SKILLCODE": 17,
+    "CUSTOM_DATA_HEADERS": [
+        "buffduration"
+    ],
+    "CUSTOM_VALUES": {
+        "buffduration": 5000.0
+    },
+    "SKILL_NAME": "Dash",
+    "DESCRIPTION": [
+        "Dash a short distance over 0.4 seconds and",
+        "increase damage dealt."
+    ],
+    "LEVEL_DESC": [
+        "Increases damage dealt by %BV% for %T(buffduration / 1000, buffduration)^ seconds."
+    ],
+    "MAX_BONUS_DESC": [
+        "Invulnerable during dash."
+    ],
+    "IS_PASSIVE": false,
+    "CANT_LEVEL": false,
+    "MAX_COOLDOWN": 6500,
+    "BASE_VALUE": 0.01,
+    "MULT_VALUE": 0.003,
+    "REQ_LEVEL": 22,
+    "CAST_PLAYER_STATE": 16,
+    "SKILL_DURATION": 400
+}

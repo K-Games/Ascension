@@ -1,7 +1,7 @@
 package blockfighter.server.net.hub.tcp;
 
 import blockfighter.shared.Globals;
-import blockfighter.shared.ServerInfo;
+import blockfighter.shared.data.net.hub.ServerInfo;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Listener;

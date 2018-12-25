@@ -1,0 +1,19 @@
+{
+    "SKILLCODE": 27,
+    "CUSTOM_DATA_HEADERS": [],
+    "CUSTOM_VALUES": {},
+    "SKILL_NAME": "Tough Skin",
+    "DESCRIPTION": [
+        "Boost your natural resilience to damage."
+    ],
+    "LEVEL_DESC": [
+        "Take %BV% reduced damage."
+    ],
+    "MAX_BONUS_DESC": [],
+    "IS_PASSIVE": true,
+    "CANT_LEVEL": false,
+    "MAX_COOLDOWN": 0,
+    "BASE_VALUE": 0.06,
+    "MULT_VALUE": 0.003,
+    "REQ_LEVEL": 15
+}

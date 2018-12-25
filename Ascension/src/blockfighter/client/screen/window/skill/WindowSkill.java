@@ -1,7 +1,7 @@
 package blockfighter.client.screen.window.skill;
 
 import blockfighter.client.Core;
-import blockfighter.client.entities.player.skills.Skill;
+import blockfighter.client.entities.player.skills.PlayerSkillData;
 import blockfighter.client.savedata.SaveData;
 import blockfighter.client.screen.Screen;
 import blockfighter.client.screen.ScreenSkills;
@@ -28,7 +28,7 @@ public abstract class WindowSkill extends Window {
 
     // Actual skills stored
     protected final SaveData saveData;
-    protected final HashMap<Byte, Skill> skillList;
+    protected final HashMap<Byte, PlayerSkillData> skillList;
 
     public WindowSkill(Screen parent) {
         super(parent);
@@ -89,7 +89,7 @@ public abstract class WindowSkill extends Window {
         if (SwingUtilities.isLeftMouseButton(e) && this.draggingSkillCode == -1) {
             for (Map.Entry<Byte, Rectangle2D.Double> entry : SKILL_SLOTS.entrySet()) {
                 if (entry.getValue().contains(this.mousePos) && entry.getValue() != null) {
-                    if (this.saveData.getTotalStats()[Globals.STAT_LEVEL] >= this.skillList.get(entry.getKey()).getReqLevel()) {
+                    if (this.saveData.getTotalStats()[Globals.STAT_LEVEL] >= this.skillList.get(entry.getKey()).getSkillData().getReqLevel()) {
                         this.draggingSkillCode = entry.getKey();
                     }
                     return;
@@ -107,7 +107,7 @@ public abstract class WindowSkill extends Window {
         if (SwingUtilities.isLeftMouseButton(e)) {
             for (Map.Entry<Byte, Rectangle2D.Double> entry : ADD_SKILL_BOX.entrySet()) {
                 if (entry.getValue().contains(this.mousePos)) {
-                    if (this.saveData.getTotalStats()[Globals.STAT_LEVEL] >= this.skillList.get(entry.getKey()).getReqLevel()) {
+                    if (this.saveData.getTotalStats()[Globals.STAT_LEVEL] >= this.skillList.get(entry.getKey()).getSkillData().getReqLevel()) {
                         this.saveData.addSkill(entry.getKey(), false);
                     }
                     return;
@@ -117,7 +117,7 @@ public abstract class WindowSkill extends Window {
 
             for (Map.Entry<Byte, Rectangle2D.Double> entry : ADD_MAX_SKILL_BOX.entrySet()) {
                 if (entry.getValue().contains(this.mousePos)) {
-                    if (this.saveData.getTotalStats()[Globals.STAT_LEVEL] >= this.skillList.get(entry.getKey()).getReqLevel()) {
+                    if (this.saveData.getTotalStats()[Globals.STAT_LEVEL] >= this.skillList.get(entry.getKey()).getSkillData().getReqLevel()) {
                         this.saveData.addSkill(entry.getKey(), true);
                     }
                     return;
@@ -147,13 +147,13 @@ public abstract class WindowSkill extends Window {
 
     public void drawSkillInfo(final Graphics2D g) {
         if (this.drawInfoSkillCode != -1) {
-            if (this.saveData.getTotalStats()[Globals.STAT_LEVEL] >= this.skillList.get(this.drawInfoSkillCode).getReqLevel()) {
+            if (this.saveData.getTotalStats()[Globals.STAT_LEVEL] >= this.skillList.get(this.drawInfoSkillCode).getSkillData().getReqLevel()) {
                 drawSkillInfo(g, this.skillList.get(this.drawInfoSkillCode));
             }
         }
     }
 
-    public void drawSkillInfo(final Graphics2D g, final Skill skill) {
+    public void drawSkillInfo(final Graphics2D g, final PlayerSkillData skill) {
         skill.drawInfo(g, (int) this.mousePos.x, (int) this.mousePos.y);
     }
 

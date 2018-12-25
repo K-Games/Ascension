@@ -1,0 +1,31 @@
+{
+    "SKILLCODE": 10,
+    "CUSTOM_DATA_HEADERS": [
+        "maxlevelbonuscritdamage",
+        "duration"
+    ],
+    "CUSTOM_VALUES": {
+        "maxlevelbonuscritdamage": 5.0,
+        "duration": 3500.0
+    },
+    "SKILL_NAME": "Bombardment",
+    "DESCRIPTION": [
+        "Launch a hail of arrows, bombarding the area."
+    ],
+    "LEVEL_DESC": [
+        "Deals %BV% damage per second for %T(duration / 1000, duration)^ seconds."
+    ],
+    "MAX_BONUS_DESC": [
+        "Critical Hits have bonus %D(maxlevelbonuscritdamage * 100, maxlevelbonuscritdamage)^% Critical Hit Damage."
+    ],
+    "IS_PASSIVE": false,
+    "CANT_LEVEL": false,
+    "REQ_WEAPON": 11,
+    "REQ_EQUIP_SLOT": 0,
+    "MAX_COOLDOWN": 12000,
+    "BASE_VALUE": 3.0,
+    "MULT_VALUE": 0.3,
+    "REQ_LEVEL": 5,
+    "CAST_PLAYER_STATE": 13,
+    "SKILL_DURATION": 200
+}

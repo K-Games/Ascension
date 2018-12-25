@@ -1,0 +1,31 @@
+{
+    "SKILLCODE": 4,
+    "CUSTOM_DATA_HEADERS": [
+        "buffduration",
+        "damagereduct"
+    ],
+    "CUSTOM_VALUES": {
+        "damagereduct": 0.1,
+        "buffduration": 2000.0
+    },
+    "SKILL_NAME": "Rend",
+    "DESCRIPTION": [
+        "Slash 3 times."
+    ],
+    "LEVEL_DESC": [
+        "Deals %BV% damage per hit."
+    ],
+    "MAX_BONUS_DESC": [
+        "Take %D(damagereduct * 100, damagereduct)^% less damage for %T(buffduration / 1000, buffduration)^ seconds."
+    ],
+    "IS_PASSIVE": false,
+    "CANT_LEVEL": false,
+    "REQ_WEAPON": 0,
+    "REQ_EQUIP_SLOT": 0,
+    "MAX_COOLDOWN": 400,
+    "BASE_VALUE": 1.0,
+    "MULT_VALUE": 0.05,
+    "REQ_LEVEL": 0,
+    "CAST_PLAYER_STATE": 7,
+    "SKILL_DURATION": 350
+}

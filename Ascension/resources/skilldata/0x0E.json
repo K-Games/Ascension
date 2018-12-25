@@ -1,0 +1,29 @@
+{
+    "SKILLCODE": 14,
+    "CUSTOM_DATA_HEADERS": [
+        "stunduration"
+    ],
+    "CUSTOM_VALUES": {
+        "stunduration": 1000.0
+    },
+    "SKILL_NAME": "Overwhelm",
+    "DESCRIPTION": [
+        "Charge and push forward enemies you hit."
+    ],
+    "LEVEL_DESC": [
+        "Deals %BV% damage."
+    ],
+    "MAX_BONUS_DESC": [
+        "Stun enemies hit for %T(stunduration / 1000, stunduration)^ seconds."
+    ],
+    "IS_PASSIVE": false,
+    "CANT_LEVEL": false,
+    "REQ_WEAPON": 10,
+    "REQ_EQUIP_SLOT": 10,
+    "MAX_COOLDOWN": 9000,
+    "BASE_VALUE": 1.5,
+    "MULT_VALUE": 0.2,
+    "REQ_LEVEL": 0,
+    "CAST_PLAYER_STATE": 15,
+    "SKILL_DURATION": 200
+}

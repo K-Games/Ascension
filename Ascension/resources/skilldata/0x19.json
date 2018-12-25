@@ -1,0 +1,20 @@
+{
+    "SKILLCODE": 25,
+    "CUSTOM_DATA_HEADERS": [],
+    "CUSTOM_VALUES": {},
+    "SKILL_NAME": "Power Of Will",
+    "DESCRIPTION": [
+        "Increase damage dealt based on your remaining HP.",
+        "More remaining HP grants more damage increase."
+    ],
+    "LEVEL_DESC": [
+        "Increase damage dealt up to %BV%."
+    ],
+    "MAX_BONUS_DESC": [],
+    "IS_PASSIVE": true,
+    "CANT_LEVEL": false,
+    "MAX_COOLDOWN": 0,
+    "BASE_VALUE": 0.05,
+    "MULT_VALUE": 0.005,
+    "REQ_LEVEL": 15
+}

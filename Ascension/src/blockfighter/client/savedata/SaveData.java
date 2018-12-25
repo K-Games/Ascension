@@ -3,7 +3,7 @@ package blockfighter.client.savedata;
 import blockfighter.client.entities.items.Item;
 import blockfighter.client.entities.items.ItemEquip;
 import blockfighter.client.entities.items.ItemUpgrade;
-import blockfighter.client.entities.player.skills.Skill;
+import blockfighter.client.entities.player.skills.PlayerSkillData;
 import blockfighter.client.savedata.json.SaveDataReader;
 import blockfighter.client.savedata.json.SaveDataWriter;
 import blockfighter.shared.Globals;
@@ -31,8 +31,8 @@ public class SaveData {
     private HashMap<Byte, ItemEquip> equipment = new HashMap<>(Globals.NUM_EQUIP_SLOTS);
 
     private HashMap<Byte, Byte> hotkeys = new HashMap<>(12);
-    private HashMap<Byte, Skill> skills = new HashMap<>(Globals.NUM_SKILLS);
-    private HashMap<Integer, Integer> keybinds = new HashMap<>(Globals.NUM_KEYBINDS);
+    private HashMap<Byte, PlayerSkillData> skills = new HashMap<>(Globals.NUM_SKILLS);
+    private HashMap<Byte, Integer> keybinds = new HashMap<>(Globals.NUM_KEYBINDS);
 
     private transient byte saveNum;
     private final transient double[] totalStats = new double[Globals.NUM_STATS];
@@ -61,8 +61,11 @@ public class SaveData {
 
         // initalize skill list
         for (Globals.SkillClassMap skill : Globals.SkillClassMap.values()) {
-            this.skills.put(skill.getByteCode(), new Skill(skill.getClientSkillInstance()));
-            this.skills.get(skill.getByteCode()).setLevel((byte) 0);
+            PlayerSkillData newSkillData = new PlayerSkillData();
+            newSkillData.setSkillCode(skill.getByteCode());
+            newSkillData.setLevel((byte) 0);
+
+            this.skills.put(skill.getByteCode(), newSkillData);
         }
 
         // Empty inventory
@@ -144,7 +147,7 @@ public class SaveData {
         return this.hotkeys;
     }
 
-    public HashMap<Byte, Skill> getSkills() {
+    public HashMap<Byte, PlayerSkillData> getSkills() {
         return this.skills;
     }
 
@@ -162,6 +165,7 @@ public class SaveData {
 
     public void addDrops(final int lvl, final Item dropItemCode) {
         if (dropItemCode instanceof ItemEquip) {
+            ((ItemEquip) dropItemCode).updateStats();
             addItem((ItemEquip) dropItemCode);
         }
         if (dropItemCode instanceof ItemUpgrade) {
@@ -231,7 +235,7 @@ public class SaveData {
         }
 
         int totalSP = 0;
-        for (final Skill s : this.skills.values()) {
+        for (final PlayerSkillData s : this.skills.values()) {
             totalSP += s.getLevel();
         }
         this.baseStats[Globals.STAT_SKILLPOINTS] = Globals.SP_PER_LEVEL * this.baseStats[Globals.STAT_LEVEL] - totalSP;
@@ -284,7 +288,7 @@ public class SaveData {
         return this.upgrades;
     }
 
-    public HashMap<Integer, Integer> getKeyBind() {
+    public HashMap<Byte, Integer> getKeyBind() {
         return this.keybinds;
     }
 
@@ -305,7 +309,7 @@ public class SaveData {
     }
 
     public void resetSkill() {
-        for (final Skill skill : this.skills.values()) {
+        for (final PlayerSkillData skill : this.skills.values()) {
             skill.setLevel((byte) 0);
         }
         calcStats();
@@ -313,7 +317,7 @@ public class SaveData {
     }
 
     public void addSkill(final byte skillCode, final boolean isMax) {
-        if (this.skills.get(skillCode).cantLevel() || this.baseStats[Globals.STAT_SKILLPOINTS] <= 0 || this.skills.get(skillCode).getLevel() >= 30) {
+        if (this.skills.get(skillCode).getSkillData().cantLevel() || this.baseStats[Globals.STAT_SKILLPOINTS] <= 0 || this.skills.get(skillCode).getLevel() >= 30) {
             return;
         }
         if (!isMax) {
@@ -410,9 +414,9 @@ public class SaveData {
         }
     }
 
-    public void setKeyBind(final int actionKey, final int keycode) {
+    public void setKeyBind(final byte actionKey, final int keycode) {
         this.keybinds.put(actionKey, keycode);
-        ArrayList<Integer> keysToRemove = new ArrayList<>();
+        ArrayList<Byte> keysToRemove = new ArrayList<>();
         this.keybinds.keySet().forEach(key -> {
             if (key != actionKey && this.keybinds.get(key) == keycode) {
                 keysToRemove.add(key);
@@ -445,7 +449,7 @@ public class SaveData {
 
     public void validate() {
         for (byte i = 0; i < Globals.NUM_HOTKEYS; i++) {
-            if (getHotkeys().get(i) != null && getTotalStats()[Globals.STAT_LEVEL] < getSkills().get(getHotkeys().get(i)).getReqLevel()) {
+            if (getHotkeys().get(i) != null && getTotalStats()[Globals.STAT_LEVEL] < getSkills().get(getHotkeys().get(i)).getSkillData().getReqLevel()) {
                 getHotkeys().remove(i);
             }
         }
@@ -467,8 +471,11 @@ public class SaveData {
         }
 
         this.skills.forEach((skillCode, skill) -> {
-            this.skills.put(skillCode, new Skill(Globals.SkillClassMap.get(skillCode).getClientSkillInstance()));
-            this.skills.get(skillCode).setLevel(skill.getLevel());
+            PlayerSkillData playerSkillData = new PlayerSkillData();
+            playerSkillData.setSkillCode(skillCode);
+            playerSkillData.setLevel(skill.getLevel());
+
+            this.skills.put(skillCode, playerSkillData);
         });
 
         calcStats();

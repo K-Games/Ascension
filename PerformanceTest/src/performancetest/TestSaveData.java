@@ -1,6 +1,6 @@
 package performancetest;
 
-import blockfighter.client.entities.player.skills.Skill;
+import blockfighter.client.entities.player.skills.PlayerSkillData;
 import blockfighter.shared.Globals;
 import java.util.HashMap;
 import java.util.UUID;
@@ -12,7 +12,7 @@ public class TestSaveData {
     private final String name;
     private final int aiType = Globals.rng(2);
 
-    private final HashMap<Byte, Skill> skills = new HashMap<>(Globals.NUM_SKILLS);
+    private final HashMap<Byte, PlayerSkillData> skills = new HashMap<>(Globals.NUM_SKILLS);
 
     public TestSaveData(String n) {
         name = n;
@@ -55,7 +55,7 @@ public class TestSaveData {
         return this.baseStats;
     }
 
-    public HashMap<Byte, Skill> getSkills() {
+    public HashMap<Byte, PlayerSkillData> getSkills() {
         return this.skills;
     }
 

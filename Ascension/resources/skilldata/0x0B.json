@@ -1,0 +1,32 @@
+{
+    "SKILLCODE": 11,
+    "CUSTOM_DATA_HEADERS": [
+        "maxlevelbuffdamage",
+        "maxlevelbuffduration"
+    ],
+    "CUSTOM_VALUES": {
+        "maxlevelbuffdamage": 0.01,
+        "maxlevelbuffduration": 7000.0
+    },
+    "SKILL_NAME": "Vortex Bolts",
+    "DESCRIPTION": [
+        "Fire 20 bolts over 2 seconds.",
+        "Can be interrupted by stuns and knockback."
+    ],
+    "LEVEL_DESC": [
+        "Deals %BV% damage per hit."
+    ],
+    "MAX_BONUS_DESC": [
+        "Each Critical Hit increases damage by %D(maxlevelbuffdamage  * 100, maxlevelbuffdamage)^% for %T(maxlevelbuffduration / 1000, maxlevelbuffduration)^ seconds."
+    ],
+    "IS_PASSIVE": false,
+    "CANT_LEVEL": false,
+    "REQ_WEAPON": 11,
+    "REQ_EQUIP_SLOT": 0,
+    "MAX_COOLDOWN": 11000,
+    "BASE_VALUE": 0.85,
+    "MULT_VALUE": 0.03,
+    "REQ_LEVEL": 0,
+    "CAST_PLAYER_STATE": 14,
+    "SKILL_DURATION": 1900
+}

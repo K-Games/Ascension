@@ -1,0 +1,20 @@
+{
+    "SKILLCODE": 22,
+    "CUSTOM_DATA_HEADERS": [],
+    "CUSTOM_VALUES": {},
+    "SKILL_NAME": "Barrier",
+    "DESCRIPTION": [
+        "After taking damage equal to 50% of HP, gain a barrier",
+        "that can absorb up to a percentage of your Max HP in damage."
+    ],
+    "LEVEL_DESC": [
+        "Absorbs up to %BV% of Max HP."
+    ],
+    "MAX_BONUS_DESC": [],
+    "IS_PASSIVE": true,
+    "CANT_LEVEL": false,
+    "MAX_COOLDOWN": 30000,
+    "BASE_VALUE": 0.1,
+    "MULT_VALUE": 0.005,
+    "REQ_LEVEL": 20
+}

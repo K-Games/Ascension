@@ -1,0 +1,35 @@
+{
+    "SKILLCODE": 13,
+    "CUSTOM_DATA_HEADERS": [
+        "stunduration",
+        "basedefense",
+        "multdefense",
+        "multbasedefense"
+    ],
+    "CUSTOM_VALUES": {
+        "stunduration": 2000.0,
+        "basedefense": 1.5,
+        "multbasedefense": 16.0,
+        "multdefense": 0.15
+    },
+    "SKILL_NAME": "Hellion Roar",
+    "DESCRIPTION": [
+        "Send enemies flying with a ferocious roar."
+    ],
+    "LEVEL_DESC": [
+        "Deals %BV% + Defense multiplied by %D(multbasedefense * (basedefense + multdefense * lvl), multbasedefense, basedefense, multdefense, lvl)^ damage."
+    ],
+    "MAX_BONUS_DESC": [
+        "Enemies are stunned for %T(stunduration / 1000, stunduration)^ seconds."
+    ],
+    "IS_PASSIVE": false,
+    "CANT_LEVEL": false,
+    "REQ_WEAPON": 10,
+    "REQ_EQUIP_SLOT": 10,
+    "MAX_COOLDOWN": 13000,
+    "BASE_VALUE": 1.5,
+    "MULT_VALUE": 0.15,
+    "REQ_LEVEL": 11,
+    "CAST_PLAYER_STATE": 18,
+    "SKILL_DURATION": 500
+}

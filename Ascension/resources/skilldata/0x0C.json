@@ -1,0 +1,35 @@
+{
+    "SKILLCODE": 12,
+    "CUSTOM_DATA_HEADERS": [
+        "buffduration",
+        "heal",
+        "movespeedbase",
+        "movespeedmult"
+    ],
+    "CUSTOM_VALUES": {
+        "movespeedbase": 0.2,
+        "buffduration": 5000.0,
+        "heal": 0.075,
+        "movespeedmult": 0.005
+    },
+    "SKILL_NAME": "Adrenaline",
+    "DESCRIPTION": [
+        "Increase your movement speed and reduce",
+        "damage taken for 5 seconds."
+    ],
+    "LEVEL_DESC": [
+        "Reduce damage taken by %BV%.",
+        "Increase movement speed by %D((movespeedbase + movespeedmult * lvl) * 100, movespeedbase, movespeedmult, lvl)^%."
+    ],
+    "MAX_BONUS_DESC": [
+        "Restore %D(heal * 100, heal)^% HP over %T(buffduration / 1000, buffduration)^ seconds."
+    ],
+    "IS_PASSIVE": false,
+    "CANT_LEVEL": false,
+    "MAX_COOLDOWN": 24000,
+    "BASE_VALUE": 0.05,
+    "MULT_VALUE": 0.007,
+    "REQ_LEVEL": 24,
+    "CAST_PLAYER_STATE": 17,
+    "SKILL_DURATION": 350
+}

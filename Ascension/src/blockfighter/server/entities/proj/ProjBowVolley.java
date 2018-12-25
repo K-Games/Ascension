@@ -5,7 +5,6 @@ import blockfighter.server.entities.buff.BuffBowVolley;
 import blockfighter.server.entities.buff.BuffKnockback;
 import blockfighter.server.entities.damage.DamageBuilder;
 import blockfighter.server.entities.player.Player;
-import blockfighter.server.entities.player.skills.bow.SkillBowVolley;
 import blockfighter.server.net.PacketSender;
 import blockfighter.shared.Globals;
 import java.awt.geom.Rectangle2D;
@@ -28,8 +27,8 @@ public class ProjBowVolley extends Projectile {
     @Override
     public int calculateDamage(final boolean isCrit) {
         final Player owner = getOwner();
-        double baseValue = owner.getSkill(Globals.BOW_VOLLEY).getBaseValue();
-        double multValue = owner.getSkill(Globals.BOW_VOLLEY).getMultValue();
+        double baseValue = owner.getSkill(Globals.BOW_VOLLEY).getSkillData().getBaseValue();
+        double multValue = owner.getSkill(Globals.BOW_VOLLEY).getSkillData().getMultValue();
 
         double damage = owner.rollDamage() * (baseValue + multValue * owner.getSkillLevel(Globals.BOW_VOLLEY));
         damage = (isCrit) ? owner.criticalDamage(damage) : damage;
@@ -45,8 +44,8 @@ public class ProjBowVolley extends Projectile {
             if (!this.buffed) {
                 this.buffed = true;
                 if (owner.isSkillMaxed(Globals.BOW_VOLLEY)) {
-                    int buffDuration = owner.getSkill(Globals.BOW_VOLLEY).getCustomValue(SkillBowVolley.CUSTOM_DATA_HEADERS[1]).intValue();
-                    double buffDamage = owner.getSkill(Globals.BOW_VOLLEY).getCustomValue(SkillBowVolley.CUSTOM_DATA_HEADERS[0]);
+                    int buffDuration = owner.getSkill(Globals.BOW_VOLLEY).getCustomValue(1).intValue();
+                    double buffDamage = owner.getSkill(Globals.BOW_VOLLEY).getCustomValue(0);
                     owner.queueBuff(new BuffBowVolley(this.logic, buffDuration, buffDamage, owner));
                     final byte[] bytes = new byte[Globals.PACKET_BYTE * 3];
                     bytes[0] = Globals.DATA_PARTICLE_EFFECT;

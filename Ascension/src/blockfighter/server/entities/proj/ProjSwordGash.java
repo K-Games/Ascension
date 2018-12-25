@@ -2,7 +2,6 @@ package blockfighter.server.entities.proj;
 
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.player.Player;
-import blockfighter.server.entities.player.skills.sword.SkillSwordGash;
 import blockfighter.shared.Globals;
 import java.awt.geom.Rectangle2D;
 
@@ -21,8 +20,8 @@ public class ProjSwordGash extends Projectile {
     @Override
     public int calculateDamage(final boolean isCrit) {
         final Player owner = getOwner();
-        double baseValue = owner.getSkill(Globals.SWORD_GASH).getBaseValue();
-        double multValue = owner.getSkill(Globals.SWORD_GASH).getMultValue();
+        double baseValue = owner.getSkill(Globals.SWORD_GASH).getSkillData().getBaseValue();
+        double multValue = owner.getSkill(Globals.SWORD_GASH).getSkillData().getMultValue();
         double damage = owner.rollDamage() * (baseValue + multValue * owner.getSkillLevel(Globals.SWORD_GASH));
         damage = (isCrit) ? owner.criticalDamage(damage) : damage;
         return (int) damage;
@@ -33,7 +32,7 @@ public class ProjSwordGash extends Projectile {
         super.applyDamage(target);
         final Player owner = getOwner();
         if (!this.healed && owner.isSkillMaxed(Globals.SWORD_GASH)) {
-            final double heal = owner.getStats()[Globals.STAT_MAXHP] * owner.getSkill(Globals.SWORD_GASH).getCustomValue(SkillSwordGash.CUSTOM_DATA_HEADERS[0]);
+            final double heal = owner.getStats()[Globals.STAT_MAXHP] * owner.getSkill(Globals.SWORD_GASH).getCustomValue(0);
             owner.queueHeal((int) heal);
             this.healed = true;
         }

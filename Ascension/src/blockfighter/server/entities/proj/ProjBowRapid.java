@@ -3,7 +3,6 @@ package blockfighter.server.entities.proj;
 import blockfighter.server.LogicModule;
 import blockfighter.server.entities.buff.BuffKnockback;
 import blockfighter.server.entities.player.Player;
-import blockfighter.server.entities.player.skills.bow.SkillBowRapid;
 import blockfighter.shared.Globals;
 import java.awt.geom.Rectangle2D;
 
@@ -23,12 +22,12 @@ public class ProjBowRapid extends Projectile {
     @Override
     public int calculateDamage(final boolean isCrit) {
         final Player owner = getOwner();
-        double baseValue = owner.getSkill(Globals.BOW_RAPID).getBaseValue();
-        double multValue = owner.getSkill(Globals.BOW_RAPID).getMultValue();
+        double baseValue = owner.getSkill(Globals.BOW_RAPID).getSkillData().getBaseValue();
+        double multValue = owner.getSkill(Globals.BOW_RAPID).getSkillData().getMultValue();
         double damage = owner.rollDamage() * (baseValue + multValue * owner.getSkillLevel(Globals.BOW_RAPID));
         damage = (isCrit) ? owner.criticalDamage(damage) : damage;
-        if (owner.isSkillMaxed(Globals.BOW_RAPID) && Globals.rng(100) + 1 <= owner.getSkill(Globals.BOW_RAPID).getCustomValue(SkillBowRapid.CUSTOM_DATA_HEADERS[1])) {
-            damage *= owner.getSkill(Globals.BOW_RAPID).getCustomValue(SkillBowRapid.CUSTOM_DATA_HEADERS[0]);
+        if (owner.isSkillMaxed(Globals.BOW_RAPID) && Globals.rng(100) + 1 <= owner.getSkill(Globals.BOW_RAPID).getCustomValue(1)) {
+            damage *= owner.getSkill(Globals.BOW_RAPID).getCustomValue(0);
         }
         return (int) damage;
     }

@@ -8,19 +8,4 @@ public abstract class SkillPassive extends Skill {
         super(l);
     }
 
-    @Override
-    public byte castPlayerState() {
-        return -1;
-    }
-
-    @Override
-    public byte getReqEquipSlot() {
-        return -1;
-    }
-
-    @Override
-    public int getSkillDuration() {
-        return 0;
-    }
-
 }

@@ -13,12 +13,6 @@ import blockfighter.server.entities.buff.BuffUtilityAdrenaline;
 import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.damage.DamageBuilder;
 import blockfighter.server.entities.player.skills.Skill;
-import blockfighter.server.entities.player.skills.passive.SkillPassiveDualSword;
-import blockfighter.server.entities.player.skills.passive.SkillPassiveShieldMastery;
-import blockfighter.server.entities.player.skills.shield.SkillShieldReflect;
-import blockfighter.server.entities.player.skills.sword.SkillSwordSlash;
-import blockfighter.server.entities.player.skills.sword.SkillSwordTaunt;
-import blockfighter.server.entities.player.skills.utility.SkillUtilityAdrenaline;
 import blockfighter.server.maps.GameMap;
 import blockfighter.server.maps.GameMapDebug;
 import blockfighter.shared.Globals;
@@ -98,8 +92,8 @@ public class PlayerTest {
         player.setEquip(Globals.EQUIP_WEAPON, 100000);
         player.setEquip(Globals.EQUIP_OFFHAND, 110000);
 
-        double baseReduct = player.getSkill(Globals.PASSIVE_SHIELDMASTERY).getCustomValue(SkillPassiveShieldMastery.CUSTOM_DATA_HEADERS[0]);
-        double multReduct = player.getSkill(Globals.PASSIVE_SHIELDMASTERY).getCustomValue(SkillPassiveShieldMastery.CUSTOM_DATA_HEADERS[1]);
+        double baseReduct = player.getSkill(Globals.PASSIVE_SHIELDMASTERY).getCustomValue(0);
+        double multReduct = player.getSkill(Globals.PASSIVE_SHIELDMASTERY).getCustomValue(1);
         double reduction = baseReduct + multReduct * player.getSkillLevel(Globals.PASSIVE_SHIELDMASTERY);
 
         testDamageReduction(player, reduction);
@@ -111,8 +105,8 @@ public class PlayerTest {
 
         player.setSkill(Globals.PASSIVE_TOUGH, (byte) 30);
 
-        double baseReduct = player.getSkill(Globals.PASSIVE_TOUGH).getBaseValue();
-        double multReduct = player.getSkill(Globals.PASSIVE_TOUGH).getMultValue();
+        double baseReduct = player.getSkill(Globals.PASSIVE_TOUGH).getSkillData().getBaseValue();
+        double multReduct = player.getSkill(Globals.PASSIVE_TOUGH).getSkillData().getMultValue();
         double reduction = baseReduct + multReduct * player.getSkillLevel(Globals.PASSIVE_TOUGH);
 
         testDamageReduction(player, reduction);
@@ -127,7 +121,7 @@ public class PlayerTest {
         player.setEquip(Globals.EQUIP_WEAPON, 100000);
         player.setEquip(Globals.EQUIP_OFFHAND, 100000);
 
-        double multReduct = player.getSkill(Globals.PASSIVE_DUALSWORD).getCustomValue(SkillPassiveDualSword.CUSTOM_DATA_HEADERS[0]);
+        double multReduct = player.getSkill(Globals.PASSIVE_DUALSWORD).getCustomValue(0);
         double reduction = multReduct * player.getSkillLevel(Globals.PASSIVE_DUALSWORD);
 
         testDamageReduction(player, reduction);
@@ -176,8 +170,9 @@ public class PlayerTest {
         Player player = newPlayer();
         player.setSkill(Globals.SWORD_SLASH, (byte) 30);
 
-        double buffduration = player.getSkill(Globals.SWORD_SLASH).getCustomValue(SkillSwordSlash.CUSTOM_DATA_HEADERS[0]);
-        BuffSwordSlash buff = new BuffSwordSlash(lm, (int) buffduration, player.getSkill(Globals.SWORD_SLASH).getCustomValue(SkillSwordSlash.CUSTOM_DATA_HEADERS[1]), player);
+        double buffduration = player.getSkill(Globals.SWORD_SLASH).getCustomValue(0);
+        BuffSwordSlash buff = new BuffSwordSlash(lm, (int) buffduration, player.getSkill(Globals.SWORD_SLASH).getCustomValue(1), player
+        );
         player.queueBuff(buff);
 
         testDamageReduction(player, buff.getDmgReduction());
@@ -189,11 +184,12 @@ public class PlayerTest {
 
         player.setSkill(Globals.SWORD_TAUNT, (byte) 30);
 
-        double buffDuration = player.getSkill(Globals.SWORD_TAUNT).getCustomValue(SkillSwordTaunt.CUSTOM_DATA_HEADERS[0]);
+        double buffDuration = player.getSkill(Globals.SWORD_TAUNT).getCustomValue(0);
         BuffSwordTaunt buff = new BuffSwordTaunt(lm, (int) buffDuration,
-                player.getSkill(Globals.SWORD_TAUNT).getCustomValue(SkillSwordTaunt.CUSTOM_DATA_HEADERS[2]),
-                player.getSkill(Globals.SWORD_TAUNT).getCustomValue(SkillSwordTaunt.CUSTOM_DATA_HEADERS[1]),
-                player);
+                player.getSkill(Globals.SWORD_TAUNT).getCustomValue(2),
+                player.getSkill(Globals.SWORD_TAUNT).getCustomValue(1),
+                player
+        );
         player.queueBuff(buff);
 
         testDamageReduction(player, buff.getDmgReduction());
@@ -207,9 +203,9 @@ public class PlayerTest {
 
         Skill skill = player.getSkill(Globals.UTILITY_ADRENALINE);
 
-        double buffDuration = skill.getCustomValue(SkillUtilityAdrenaline.CUSTOM_DATA_HEADERS[0]);
+        double buffDuration = skill.getCustomValue(0);
         BuffUtilityAdrenaline buff = new BuffUtilityAdrenaline(lm, (int) buffDuration,
-                skill.getBaseValue() + skill.getMultValue() * player.getSkillLevel(Globals.UTILITY_ADRENALINE),
+                skill.getSkillData().getBaseValue() + skill.getSkillData().getMultValue() * player.getSkillLevel(Globals.UTILITY_ADRENALINE),
                 player);
         player.queueBuff(buff);
 
@@ -225,11 +221,11 @@ public class PlayerTest {
 
         Skill skill = player.getSkill(Globals.SHIELD_REFLECT);
 
-        double buffDuration = skill.getCustomValue(SkillShieldReflect.CUSTOM_DATA_HEADERS[0]);
+        double buffDuration = skill.getCustomValue(0);
 
         BuffShieldReflect buff = new BuffShieldReflect(lm, (int) buffDuration,
-                skill.getBaseValue() + skill.getMultValue() * player.getSkillLevel(Globals.SHIELD_REFLECT),
-                player, player, skill.getCustomValue(SkillShieldReflect.CUSTOM_DATA_HEADERS[0]));
+                skill.getSkillData().getBaseValue() + skill.getSkillData().getMultValue() * player.getSkillLevel(Globals.SHIELD_REFLECT),
+                player, player, skill.getCustomValue(0));
 
         player.queueBuff(buff);
         testDamageReduction(player, buff.getDmgReduction());
@@ -252,26 +248,28 @@ public class PlayerTest {
 
         Buff[] buffs = new Buff[4];
 
-        double buffDuration = skills[0].getCustomValue(SkillShieldReflect.CUSTOM_DATA_HEADERS[0]);
+        double buffDuration = skills[0].getCustomValue(0);
         buffs[0] = new BuffShieldReflect(lm, (int) buffDuration,
-                skills[0].getBaseValue() + skills[0].getMultValue() * player.getSkillLevel(Globals.SHIELD_REFLECT),
-                player, player, skills[0].getCustomValue(SkillShieldReflect.CUSTOM_DATA_HEADERS[0]));
+                skills[0].getSkillData().getBaseValue() + skills[0].getSkillData().getMultValue() * player.getSkillLevel(Globals.SHIELD_REFLECT),
+                player, player, skills[0].getCustomValue(0));
 
-        buffDuration = skills[1].getCustomValue(SkillUtilityAdrenaline.CUSTOM_DATA_HEADERS[0]);
+        buffDuration = skills[1].getCustomValue(0);
         buffs[1] = new BuffUtilityAdrenaline(lm, (int) buffDuration,
-                skills[1].getBaseValue() + skills[1].getMultValue() * player.getSkillLevel(Globals.UTILITY_ADRENALINE),
+                skills[1].getSkillData().getBaseValue() + skills[1].getSkillData().getMultValue() * player.getSkillLevel(Globals.UTILITY_ADRENALINE),
                 player);
 
-        buffDuration = skills[2].getCustomValue(SkillSwordTaunt.CUSTOM_DATA_HEADERS[0]);
+        buffDuration = skills[2].getCustomValue(0);
         buffs[2] = new BuffSwordTaunt(lm, (int) buffDuration,
-                skills[2].getCustomValue(SkillSwordTaunt.CUSTOM_DATA_HEADERS[2]),
-                skills[2].getCustomValue(SkillSwordTaunt.CUSTOM_DATA_HEADERS[1]),
-                player);
+                skills[2].getCustomValue(2),
+                skills[2].getCustomValue(1),
+                player
+        );
 
-        buffDuration = skills[3].getCustomValue(SkillSwordSlash.CUSTOM_DATA_HEADERS[0]);
+        buffDuration = skills[3].getCustomValue(0);
         buffs[3] = new BuffSwordSlash(lm, (int) buffDuration,
-                skills[3].getCustomValue(SkillSwordSlash.CUSTOM_DATA_HEADERS[1]),
-                player);
+                skills[3].getCustomValue(1),
+                player
+        );
 
         double dmgReduct = 1;
         for (Buff buff : buffs) {

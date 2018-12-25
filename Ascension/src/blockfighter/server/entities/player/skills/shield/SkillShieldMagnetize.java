@@ -7,44 +7,12 @@ import blockfighter.server.entities.proj.ProjShieldMagnetize;
 import blockfighter.server.net.PacketSender;
 import blockfighter.shared.Globals;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class SkillShieldMagnetize extends Skill {
 
-    ArrayList<Player> playersCaught;
-
-    public static final String[] CUSTOM_DATA_HEADERS;
-    public static final HashMap<String, Double> CUSTOM_VALUES;
+    private ArrayList<Player> playersCaught;
 
     public static final byte SKILL_CODE = Globals.SHIELD_MAGNETIZE;
-    public static final boolean IS_PASSIVE;
-    public static final byte REQ_WEAPON;
-    public static final long MAX_COOLDOWN;
-
-    public static final double BASE_VALUE, MULT_VALUE;
-    public static final int REQ_LEVEL;
-    public static final byte REQ_EQUIP_SLOT = Globals.EQUIP_OFFHAND;
-    public static final byte PLAYER_STATE = Player.PLAYER_STATE_SHIELD_MAGNETIZE;
-    public static final int SKILL_DURATION = 600;
-
-    static {
-        String[] data = Globals.loadSkillRawData(SKILL_CODE);
-        HashMap<String, Integer> dataHeaders = Globals.getDataHeaders(data);
-
-        CUSTOM_DATA_HEADERS = Globals.getSkillCustomHeaders(data, dataHeaders);
-        CUSTOM_VALUES = new HashMap<>(CUSTOM_DATA_HEADERS.length);
-
-        REQ_WEAPON = Globals.loadSkillReqWeapon(data, dataHeaders);
-        MAX_COOLDOWN = (long) Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MAXCOOLDOWN_HEADER);
-        BASE_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_BASEVALUE_HEADER);
-        MULT_VALUE = Globals.loadDoubleValue(data, dataHeaders, Globals.SKILL_MULTVALUE_HEADER);
-        IS_PASSIVE = Globals.loadBooleanValue(data, dataHeaders, Globals.SKILL_PASSIVE_HEADER);
-        REQ_LEVEL = Globals.loadSkillReqLevel(data, dataHeaders);
-
-        for (String customHeader : CUSTOM_DATA_HEADERS) {
-            CUSTOM_VALUES.put(customHeader, Globals.loadDoubleValue(data, dataHeaders, customHeader));
-        }
-    }
 
     public SkillShieldMagnetize(final LogicModule l) {
         super(l);
@@ -93,7 +61,7 @@ public class SkillShieldMagnetize extends Skill {
             player.incrementSkillCounter();
         }
 
-        player.updateSkillEnd(duration, getSkillDuration(), false, false);
+        player.updateSkillEnd(duration, getSkillData().getSkillDuration(), false, false);
     }
 
     @Override

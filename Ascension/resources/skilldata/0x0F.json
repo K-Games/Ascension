@@ -1,0 +1,33 @@
+{
+    "SKILLCODE": 15,
+    "CUSTOM_DATA_HEADERS": [
+        "maxleveldmgreduct",
+        "buffduration"
+    ],
+    "CUSTOM_VALUES": {
+        "maxleveldmgreduct": 0.33,
+        "buffduration": 3000.0
+    },
+    "SKILL_NAME": "Reflect Damage",
+    "DESCRIPTION": [
+        "When you take damage, you explode dealing",
+        "a portion of damage taken."
+    ],
+    "LEVEL_DESC": [
+        "Deals %BV% of damage taken.",
+        "Lasts %T(buffduration / 1000, buffduration)^ seconds."
+    ],
+    "MAX_BONUS_DESC": [
+        "Reduce damage taken by %D(maxleveldmgreduct * 100, maxleveldmgreduct)^%."
+    ],
+    "IS_PASSIVE": false,
+    "CANT_LEVEL": false,
+    "REQ_WEAPON": 10,
+    "REQ_EQUIP_SLOT": 10,
+    "MAX_COOLDOWN": 9000,
+    "BASE_VALUE": 0.4,
+    "MULT_VALUE": 0.02,
+    "REQ_LEVEL": 6,
+    "CAST_PLAYER_STATE": 19,
+    "SKILL_DURATION": 250
+}

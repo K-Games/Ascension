@@ -76,7 +76,7 @@ public class Damage {
 
     public void proc() {
         if (this.canProc && this.owner != null) {
-            if (this.owner.hasSkill(Globals.PASSIVE_SHADOWATTACK) && this.owner.getSkill(Globals.PASSIVE_SHADOWATTACK).canCast()) {
+            if (this.owner.hasSkill(Globals.PASSIVE_SHADOWATTACK) && this.owner.getSkill(Globals.PASSIVE_SHADOWATTACK).isOffCooldown()) {
                 ((SkillPassiveShadowAttack) this.owner.getSkill(Globals.PASSIVE_SHADOWATTACK)).updateSkillUse(this.owner, this);
             }
 

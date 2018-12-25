@@ -20,8 +20,8 @@ public class ProjSwordPhantom extends Projectile {
     @Override
     public int calculateDamage(final boolean isCrit) {
         final Player owner = getOwner();
-        double baseValue = owner.getSkill(Globals.SWORD_PHANTOM).getBaseValue();
-        double multValue = owner.getSkill(Globals.SWORD_PHANTOM).getMultValue();
+        double baseValue = owner.getSkill(Globals.SWORD_PHANTOM).getSkillData().getBaseValue();
+        double multValue = owner.getSkill(Globals.SWORD_PHANTOM).getSkillData().getMultValue();
         double damage = owner.rollDamage() * (baseValue + multValue * owner.getSkillLevel(Globals.SWORD_PHANTOM));
         damage = (isCrit) ? owner.criticalDamage(damage) : damage;
         return (int) damage;

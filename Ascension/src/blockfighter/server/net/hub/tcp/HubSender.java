@@ -2,7 +2,7 @@ package blockfighter.server.net.hub.tcp;
 
 import blockfighter.server.AscensionServer;
 import blockfighter.shared.Globals;
-import blockfighter.shared.ServerInfo;
+import blockfighter.shared.data.net.hub.ServerInfo;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;

@@ -4,7 +4,6 @@ import blockfighter.server.LogicModule;
 import blockfighter.server.entities.damage.Damage;
 import blockfighter.server.entities.damage.DamageBuilder;
 import blockfighter.server.entities.player.Player;
-import blockfighter.server.entities.player.skills.sword.SkillSwordVorpalDemise;
 import blockfighter.server.net.PacketSender;
 import blockfighter.shared.Globals;
 
@@ -19,21 +18,21 @@ public class BuffVorpalDemise extends Buff implements BuffSpeedDecrease {
 
     @Override
     public double getXSpeedDecrease() {
-        return getOwner().getSkill(Globals.SWORD_VORPAL_DEMISE).getCustomValue(SkillSwordVorpalDemise.CUSTOM_DATA_HEADERS[1]);
+        return getOwner().getSkill(Globals.SWORD_VORPAL_DEMISE).getCustomValue(1);
     }
 
     @Override
     public double getYSpeedDecrease() {
-        return getOwner().getSkill(Globals.SWORD_VORPAL_DEMISE).getCustomValue(SkillSwordVorpalDemise.CUSTOM_DATA_HEADERS[1]);
+        return getOwner().getSkill(Globals.SWORD_VORPAL_DEMISE).getCustomValue(1);
     }
 
     @Override
     public void update() {
         super.update();
         long timeSinceStart = Globals.nsToMs(this.logic.getTime() - this.buffStartTime);
-        if (!damageDealt && timeSinceStart >= getOwner().getSkill(Globals.SWORD_VORPAL_DEMISE).getCustomValue(SkillSwordVorpalDemise.CUSTOM_DATA_HEADERS[0])) {
+        if (!damageDealt && timeSinceStart >= getOwner().getSkill(Globals.SWORD_VORPAL_DEMISE).getCustomValue(0)) {
             if (getTarget() != null) {
-                double damageRoll = getOwner().rollDamage() * getOwner().getSkill(Globals.SWORD_VORPAL_DEMISE).getBaseValue();
+                double damageRoll = getOwner().rollDamage() * getOwner().getSkill(Globals.SWORD_VORPAL_DEMISE).getSkillData().getBaseValue();
                 boolean isCrit = getOwner().rollCrit();
                 damageRoll = (isCrit) ? getOwner().criticalDamage(damageRoll) : damageRoll;
                 Damage dmg = new DamageBuilder()

@@ -4,7 +4,6 @@ import blockfighter.server.LogicModule;
 import blockfighter.server.entities.buff.BuffKnockback;
 import blockfighter.server.entities.damage.DamageBuilder;
 import blockfighter.server.entities.player.Player;
-import blockfighter.server.entities.player.skills.bow.SkillBowArc;
 import blockfighter.shared.Globals;
 import java.awt.geom.Rectangle2D;
 
@@ -24,8 +23,8 @@ public class ProjBowArc extends Projectile {
     @Override
     public int calculateDamage(final boolean isCrit) {
         final Player owner = getOwner();
-        double baseValue = owner.getSkill(Globals.BOW_ARC).getBaseValue();
-        double multValue = owner.getSkill(Globals.BOW_ARC).getMultValue();
+        double baseValue = owner.getSkill(Globals.BOW_ARC).getSkillData().getBaseValue();
+        double multValue = owner.getSkill(Globals.BOW_ARC).getSkillData().getMultValue();
         double damage = owner.rollDamage() * (baseValue + multValue * owner.getSkillLevel(Globals.BOW_ARC));
         damage = (isCrit) ? owner.criticalDamage(damage) : damage;
         return (int) damage;
@@ -43,8 +42,8 @@ public class ProjBowArc extends Projectile {
                 .setIsCrit(isCrit)
                 .build());
         if (owner.isSkillMaxed(Globals.BOW_ARC)) {
-            double lifesteal = owner.getSkill(Globals.BOW_ARC).getCustomValue(SkillBowArc.CUSTOM_DATA_HEADERS[0]) / 3;
-            double maxLifesteal = owner.getSkill(Globals.BOW_ARC).getCustomValue(SkillBowArc.CUSTOM_DATA_HEADERS[1]) / 3;
+            double lifesteal = owner.getSkill(Globals.BOW_ARC).getCustomValue(0) / 3;
+            double maxLifesteal = owner.getSkill(Globals.BOW_ARC).getCustomValue(1) / 3;
             double heal = damage * lifesteal;
             if (heal > owner.getStats()[Globals.STAT_MAXHP] * maxLifesteal) {
                 heal = owner.getStats()[Globals.STAT_MAXHP] * maxLifesteal;

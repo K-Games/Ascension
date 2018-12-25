@@ -48,7 +48,7 @@ public class WindowSkillDebug extends WindowSkill {
         g.setColor(Screen.BOX_BG_COLOR);
         for (Entry<Byte, Rectangle2D.Double> entry : SKILL_SLOTS.entrySet()) {
             g.drawImage(button, (int) entry.getValue().x, (int) entry.getValue().y, null);
-            boolean disabled = this.saveData.getTotalStats()[Globals.STAT_LEVEL] < this.skillList.get(entry.getKey()).getReqLevel();
+            boolean disabled = this.saveData.getTotalStats()[Globals.STAT_LEVEL] < this.skillList.get(entry.getKey()).getSkillData().getReqLevel();
             this.skillList.get(entry.getKey()).draw(g, (int) entry.getValue().x, (int) entry.getValue().y, disabled);
             if (!disabled) {
                 drawSkillAddButton(g, entry.getKey());

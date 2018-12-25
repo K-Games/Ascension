@@ -12,7 +12,7 @@ public class BuffTauntSurge extends Buff implements BuffXSpeedIncrease {
 
     @Override
     public double getXSpeedIncrease() {
-        return getOwner().getSkill(Globals.SWORD_TAUNT_SURGE).getBaseValue();
+        return getOwner().getSkill(Globals.SWORD_TAUNT_SURGE).getSkillData().getBaseValue();
     }
 
 }

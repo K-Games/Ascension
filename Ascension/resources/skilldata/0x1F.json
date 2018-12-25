@@ -1,0 +1,27 @@
+{
+    "SKILLCODE": 31,
+    "CUSTOM_DATA_HEADERS": [
+        "dmgtime",
+        "slowamount"
+    ],
+    "CUSTOM_VALUES": {
+        "slowamount": 0.05,
+        "dmgtime": 2000.0
+    },
+    "SKILL_NAME": "Vorpal Strike: Demise",
+    "DESCRIPTION": [
+        "Enemies hit by Vorpal Strike will be crippled,",
+        "slowing movement speed by 5% for 2 seconds.",
+        "After 2 seconds enemies will also receive 200% damage.",
+        "Each Vorpal Strike hit will apply a new Demise debuff.",
+        "Demise debuffs stack."
+    ],
+    "LEVEL_DESC": [],
+    "MAX_BONUS_DESC": [],
+    "IS_PASSIVE": true,
+    "CANT_LEVEL": true,
+    "MAX_COOLDOWN": 0,
+    "BASE_VALUE": 2.0,
+    "MULT_VALUE": 0.0,
+    "REQ_LEVEL": 0
+}

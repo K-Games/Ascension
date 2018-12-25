@@ -1,0 +1,36 @@
+{
+    "SKILLCODE": 5,
+    "CUSTOM_DATA_HEADERS": [
+        "buffduration",
+        "damageinc",
+        "damagereduct"
+    ],
+    "CUSTOM_VALUES": {
+        "damagereduct": 0.2,
+        "buffduration": 5000.0,
+        "damageinc": 0.2
+    },
+    "SKILL_NAME": "Aggression",
+    "DESCRIPTION": [
+        "Swing aggressively overhead for a deadly blow."
+    ],
+    "LEVEL_DESC": [
+        "Deals %BV% damage."
+    ],
+    "MAX_BONUS_DESC": [
+        "%HYPERSTANCE",
+        "Reduce damage taken by %D(damagereduct * 100, damagereduct)^%.",
+        "Increase damage by %D(damageinc * 100, damageinc)^%.",
+        "Lasts %T(buffduration / 1000, buffduration)^ seconds."
+    ],
+    "IS_PASSIVE": false,
+    "CANT_LEVEL": false,
+    "REQ_WEAPON": 0,
+    "REQ_EQUIP_SLOT": 0,
+    "MAX_COOLDOWN": 18000,
+    "BASE_VALUE": 6.5,
+    "MULT_VALUE": 0.2,
+    "REQ_LEVEL": 5,
+    "CAST_PLAYER_STATE": 8,
+    "SKILL_DURATION": 350
+}

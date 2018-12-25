@@ -5,7 +5,6 @@ import blockfighter.server.entities.buff.BuffKnockback;
 import blockfighter.server.entities.buff.BuffStun;
 import blockfighter.server.entities.player.Player;
 import blockfighter.server.entities.player.skills.Skill;
-import blockfighter.server.entities.player.skills.bow.SkillBowFrost;
 import blockfighter.shared.Globals;
 import java.awt.geom.Rectangle2D;
 
@@ -32,11 +31,11 @@ public class ProjBowFrost extends Projectile {
     @Override
     public int calculateDamage(final boolean isCrit) {
         final Player owner = getOwner();
-        double baseValue = owner.getSkill(Globals.BOW_FROST).getBaseValue();
-        double multValue = owner.getSkill(Globals.BOW_FROST).getMultValue();
+        double baseValue = owner.getSkill(Globals.BOW_FROST).getSkillData().getBaseValue();
+        double multValue = owner.getSkill(Globals.BOW_FROST).getSkillData().getMultValue();
         double damage = (!this.isSecondary)
                 ? (owner.rollDamage() * (baseValue + multValue * owner.getSkillLevel(Globals.BOW_FROST)))
-                : owner.rollDamage() * owner.getSkill(Globals.BOW_FROST).getCustomValue(SkillBowFrost.CUSTOM_DATA_HEADERS[3]);
+                : owner.rollDamage() * owner.getSkill(Globals.BOW_FROST).getCustomValue(3);
         damage = (isCrit) ? owner.criticalDamage(damage) : damage;
         return (int) damage;
     }
@@ -48,7 +47,7 @@ public class ProjBowFrost extends Projectile {
         target.queueBuff(new BuffKnockback(this.logic, 200, (owner.getFacing() == Globals.RIGHT) ? 1 : -1, -4, owner, target));
         if (!this.isSecondary) {
             Skill skill = owner.getSkill(Globals.BOW_FROST);
-            double stunDuration = (skill.isMaxed()) ? skill.getCustomValue(SkillBowFrost.CUSTOM_DATA_HEADERS[1]) : skill.getCustomValue(SkillBowFrost.CUSTOM_DATA_HEADERS[0]);
+            double stunDuration = (skill.isMaxed()) ? skill.getCustomValue(1) : skill.getCustomValue(0);
             target.queueBuff(new BuffStun(this.logic, (int) stunDuration));
         }
     }
